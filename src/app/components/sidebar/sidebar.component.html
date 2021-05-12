@@ -1,0 +1,14 @@
+<div>
+  <nav>
+    <ng-template ngFor let-item [ngForOf]="menuItems">
+      <li routerLinkActive="active" [class]="item.class" *ngIf="!item.excluded">
+        <a class="nav-link" [routerLink]="[item.path]">
+          <p>
+            <fa-icon [icon]="item.icon"></fa-icon>
+            {{item.title}}
+          </p>
+        </a>
+      </li>
+    </ng-template>
+  </nav>
+</div>

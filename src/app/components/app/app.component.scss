@@ -1,4 +1,4 @@
-@import '../../variables';
+@import '../../../variables';
 
 .gezc-application {
     font-family: "Roboto", sans-serif;
@@ -34,7 +34,7 @@
 
 .main {
     height: calc(100vh - #{$footer-height});
-    
+
     background-color: getColor("main");
 }
 
