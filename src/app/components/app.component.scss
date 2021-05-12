@@ -1,0 +1,40 @@
+@import '../../variables';
+
+.gezc-application {
+    font-family: "Roboto", sans-serif;
+    line-height: 1.5;
+
+    background: linear-gradient(270deg, getColor("canvas1"),getColor("canvas2"));
+    background-size: 400% 400%;
+
+    -webkit-animation: CanvasAnimation 11s ease infinite;
+    -moz-animation: CanvasAnimation 11s ease infinite;
+    animation: CanvasAnimation 11s ease infinite;
+}
+
+@-webkit-keyframes CanvasAnimation {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+@-moz-keyframes CanvasAnimation {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+@keyframes CanvasAnimation {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+
+.sidebar {
+    background-color: getColor("sidebar");
+}
+
+.main {
+    height: calc(100vh - #{$footer-height});
+    
+    background-color: getColor("main");
+}
+

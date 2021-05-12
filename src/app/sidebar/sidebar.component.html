@@ -1,0 +1,11 @@
+
+<div>
+    <nav ngbNav #nav="ngbNav" class="nav-tabs">
+        <li routerLinkActive="active" *ngFor="let menuItem of menuItems" [class]="menuItem.class" nav-item>
+            <a class="nav-link" [routerLink]="[menuItem.path]">
+                
+                <p><fa-icon [icon]="menuItem.icon"></fa-icon> {{menuItem.title}}</p>
+            </a>
+        </li>
+    </nav>
+</div>
