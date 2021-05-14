@@ -1,5 +1,5 @@
-/* You can add global styles to this file, and also import other style files */
-/* You can add global styles to this file, and also import other style files */
+@import "variables";
+
 body {
   background-color: #eee;
 }
@@ -9,8 +9,7 @@ body {
   text-align: center;
 }
 
-.card.card-cascade h3,
-.card.card-cascade h4,
+.card.card-cascade h3, .card.card-cascade h4,
 {
   margin-bottom: 0px;
 }
@@ -43,6 +42,14 @@ body {
 
 .sidebar-fixed .logo-wrapper img {
   max-height: 50px
+}
+
+main{
+  min-height: calc(100vh - #{$footer-height});
+}
+
+footer{
+  height: $footer-height;
 }
 
 @media (min-width: 1200px) {

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { CascadingCardComponent } from './cascading-card.component';
+import { ProfileComponent } from './profile.component';
 
-describe('CascadingCardComponent', () => {
-  let component: CascadingCardComponent;
-  let fixture: ComponentFixture<CascadingCardComponent>;
+describe('Profile1Component', () => {
+  let component: ProfileComponent;
+  let fixture: ComponentFixture<ProfileComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ CascadingCardComponent ]
+      declarations: [ ProfileComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CascadingCardComponent);
+    fixture = TestBed.createComponent(ProfileComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

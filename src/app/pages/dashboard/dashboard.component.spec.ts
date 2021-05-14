@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
-import { ModalsComponent } from './modals.component';
-import { ModalModule } from '../../typescripts/free/modals/';
+import { DashboardComponent } from './dashboard.component';
+import { StatsCardComponent } from '../../shared/components/stats-card/stats-card.component';
 
-describe('ModalsComponent', () => {
-  let component: ModalsComponent;
-  let fixture: ComponentFixture<ModalsComponent>;
+describe('Dashboard1Component', () => {
+  let component: DashboardComponent;
+  let fixture: ComponentFixture<DashboardComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        ModalModule.forRoot()
+      declarations: [
+        DashboardComponent,
+        StatsCardComponent
       ],
-      declarations: [ ModalsComponent ],
       schemas: [
         NO_ERRORS_SCHEMA,
         CUSTOM_ELEMENTS_SCHEMA
@@ -23,7 +23,7 @@ describe('ModalsComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ModalsComponent);
+    fixture = TestBed.createComponent(DashboardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-profile1',
-  templateUrl: './profile1.component.html',
-  styleUrls: ['./profile1.component.scss']
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.scss']
 })
-export class Profile1Component implements OnInit {
+export class ProfileComponent implements OnInit {
   imagesBasic = [
     {
       img: 'https://mdbootstrap.com/img/Photos/Horizontal/Nature/12-col/img%20(117).jpg',

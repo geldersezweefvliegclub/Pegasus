@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {routes} from '../../app.module';
 
 
 @Component({
@@ -7,19 +8,12 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
   styleUrls: ['./navigation.component.scss']
 })
 export class NavigationComponent implements OnInit {
-  @ViewChild('sidenav', {static: true}) sidenav: ElementRef;
-
-  clicked: boolean;
+  routes = routes;
 
   constructor() {
-    this.clicked = this.clicked === undefined ? false : true;
   }
 
   ngOnInit() {
-  }
-
-  setClicked(val: boolean): void {
-    this.clicked = val;
   }
 
 }

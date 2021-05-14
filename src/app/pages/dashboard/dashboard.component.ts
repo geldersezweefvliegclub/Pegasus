@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-dashboard1',
-  templateUrl: './dashboard1.component.html',
-  styleUrls: ['./dashboard1.component.scss']
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss']
 })
-export class Dashboard1Component implements OnInit {
+export class DashboardComponent implements OnInit {
 
   public map: any = { lat: 51.678418, lng: 7.809007 };
   public chart1Type:string = 'bar';
@@ -56,7 +56,7 @@ export class Dashboard1Component implements OnInit {
   };
 
   constructor() {
-  
+
   }
 
   ngOnInit() {
