@@ -1,9 +1,0 @@
-@import '../../../variables';
-
-.test{
-    color: getColor('primary');
-
-    &:hover{
-        color:aqua;
-    }
-}
