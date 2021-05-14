@@ -24,6 +24,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.15.2",
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
     "bootstrap": "^5.0.0-beta3",
+    "js-base64": "^3.6.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.3"
@@ -38,6 +39,7 @@
     "@angular/cli": "~11.2.11",
     "@angular/compiler-cli": "~11.2.12",
     "@types/jasmine": "~3.6.0",
+    "@types/js-base64": "^3.0.0",
     "@types/node": "^12.11.1",
     "@typescript-eslint/eslint-plugin": "4.16.1",
     "@typescript-eslint/parser": "4.16.1",
