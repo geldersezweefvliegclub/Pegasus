@@ -8,6 +8,7 @@ import { HomePageComponent } from './pages/home/home-page.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { LoginPageComponent } from './pages/login-page/login-page.component';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     HomePageComponent,
     FooterComponent,
     SidebarComponent,
+    LoginPageComponent,
   ],
   imports: [
     BrowserModule,

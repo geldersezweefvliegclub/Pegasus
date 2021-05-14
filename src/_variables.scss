@@ -3,13 +3,18 @@
 }
 
 $theme-colors: (
-    "canvas1": #f5f3f3,
-    "canvas2": #cecccc,
-    "main": #00ff00,
-    "sidebar": #212121, 
+  "primary": #007bff,
+  "secondary": #ffc107,
+  "danger": #dc3545,
+  "success": #28a745,
+  "warning": #ffc107,
+  "background": #f5f3f3,
+  "background2": #cecccc,
+  "dark": #212121,
 );
 
 $footer-height: 2.5em;
+$headings-color: getColor('primary');
 
 
 

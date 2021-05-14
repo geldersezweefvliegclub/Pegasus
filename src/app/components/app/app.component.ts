@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {NavigationEnd, Router} from '@angular/router';
+import {LoginService} from '../../services/login.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,18 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'Pegasus';
+
+  constructor(private readonly router: Router, private readonly loginService: LoginService) {
+    router.events.subscribe((val) => {
+      if (val instanceof NavigationEnd) {
+        this.navigeerNaarLogin();
+      }
+    });
+  }
+
+  private navigeerNaarLogin() {
+    if (!this.loginService.isIngelogd()) {
+      this.router.navigate(['login']).then()
+    }
+  }
 }

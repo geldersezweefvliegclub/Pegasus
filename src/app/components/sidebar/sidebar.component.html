@@ -1,14 +1,16 @@
-<div>
+<div class="sidebar">
   <nav>
-    <ng-template ngFor let-item [ngForOf]="menuItems">
-      <li routerLinkActive="active" [class]="item.class" *ngIf="!item.excluded">
-        <a class="nav-link" [routerLink]="[item.path]">
-          <p>
-            <fa-icon [icon]="item.icon"></fa-icon>
-            {{item.title}}
-          </p>
-        </a>
-      </li>
-    </ng-template>
+    <ul class="nav">
+      <ng-template ngFor let-item [ngForOf]="menuItems">
+        <li class="nav-item my-2" [class]="item.class" *ngIf="!item.excluded">
+          <a class="nav-link" routerLinkActive="active" [routerLink]="[item.path]">
+            <p class="my-0 p-1">
+              <fa-icon [icon]="item.icon"></fa-icon>
+              {{item.title}}
+            </p>
+          </a>
+        </li>
+      </ng-template>
+    </ul>
   </nav>
 </div>

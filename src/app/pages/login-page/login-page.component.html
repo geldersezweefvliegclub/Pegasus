@@ -1,0 +1,30 @@
+<div class="row justify-content-center pt-4">
+  <div class="col-4 card">
+    <div class="card-body">
+      <h1 class="card-title">Inloggen</h1>
+      <form #form="ngForm">
+        <div class="row">
+          <div class="col">
+            <label for="gebruikersnaam" class="form-label">Gebruikersnaam</label>
+            <input id="gebruikersnaam" type="text" class="form-control mb-2" [(ngModel)]="gebruikersnaam"
+                   name="Gebruikersnaam">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label for="wachtwoord" class="form-label">Wachtwoord</label>
+            <input id="wachtwoord" type="password" class="form-control" [(ngModel)]="wachtwoord" name="Wachtwoord">
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col d-flex justify-content-end">
+            <button class="btn btn-primary">
+              <span *ngIf="!isLoading">Login</span>
+              <span *ngIf="isLoading"><fa-icon [icon]="spinner" [spin]="true"></fa-icon></span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
