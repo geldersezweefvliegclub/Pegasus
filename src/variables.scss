@@ -1,1 +1,11 @@
+/*
+  Overrides
+ */
+$primary-color: #4253D5;
+$primary-color-dark:   darken($primary-color, 10);
+$secondary-color: #DABF22;
+$secondary-color-dark: darken($secondary-color, 10);
+
+
 $footer-height: 4em;
+@import "~angular-bootstrap-md/assets/scss/core/colors";

@@ -3,7 +3,6 @@ import {Route, RouterModule} from '@angular/router';
 import {DashboardPageComponent} from './pages/dashboard/dashboard-page.component';
 import {HelpPageComponent} from './pages/help/help-page.component';
 import {ProfilePageComponent} from './pages/profile/profile-page.component';
-import {BasicTableComponent} from './pages/tables/basic-table/basic-table.component';
 import {NotFoundComponent} from './pages/not-found/not-found.component';
 import {LoginPageComponent} from './pages/login-page/login-page.component';
 
@@ -14,15 +13,12 @@ export interface CustomRoute extends Route {
 }
 
 export const routes: CustomRoute[] = [
-  {path: '', pathMatch: 'full', redirectTo: 'dashboard/v1', excluded: true, icon: 'user', text: 'EXCLUDED'},
+  {path: '', pathMatch: 'full', redirectTo: 'dashboard', excluded: true, icon: 'user', text: 'EXCLUDED'},
   {path: 'dashboard', component: DashboardPageComponent, excluded: false, icon: 'chart-pie', text: 'Dashboard'},
   {path: 'help', component: HelpPageComponent, excluded: false, icon: 'key', text: 'Help'},
   {path: 'login', component: LoginPageComponent, excluded: true, icon: 'key', text: 'Help'},
   {
     path: 'profiles', component: ProfilePageComponent, excluded: false, icon: 'user', text: 'Profile'
-  },
-  {
-    path: 'tables', component: BasicTableComponent, excluded: false, icon: 'th', text: 'Tables'
   },
   {path: '**', component: NotFoundComponent, excluded: true, icon: 'user', text: 'EXCLUDED'},
 

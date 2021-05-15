@@ -4,13 +4,11 @@ import {CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from '@angular/core';
 import {RouterTestingModule} from '@angular/router/testing';
 
 import {AppComponent} from './app.component';
-import {NavigationModule} from './main-layout/navigation/navigation.module';
 
 describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        NavigationModule,
         FormsModule,
         RouterTestingModule
       ],

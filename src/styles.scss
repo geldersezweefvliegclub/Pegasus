@@ -21,6 +21,11 @@ body {
   text-align: center;
 }
 
+.list-group-item.active{
+  background: $primary-color;
+  border-color: $primary-color;
+}
+
 main{
   min-height: calc(100vh - #{$footer-height});
 }

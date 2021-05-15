@@ -1,0 +1,14 @@
+<mdb-card cascade="true" class="cascading-admin-card">
+    <div class="admin-up">
+        <div class="icon" [class]="color + '-color'">
+            <mdb-icon fas [icon]="icon"></mdb-icon>
+        </div>
+        <div class="data">
+            <h4 [class]="'text-' + color"><strong>{{titel}}</strong></h4>
+            <p class="my-0">{{subtitel}}</p>
+        </div>
+    </div>
+    <mdb-card-body>
+        <ng-content></ng-content>
+    </mdb-card-body>
+</mdb-card>

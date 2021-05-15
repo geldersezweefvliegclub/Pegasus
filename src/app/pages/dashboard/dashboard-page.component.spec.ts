@@ -2,7 +2,7 @@ import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from '@angular/core';
 
 import {DashboardPageComponent} from './dashboard-page.component';
-import {StatsCardComponent} from '../../shared/components/stats-card/stats-card.component';
+import {IconCardComponent} from '../../shared/components/stats-card/icon-card.component';
 
 describe('Dashboard1Component', () => {
   let component: DashboardPageComponent;
@@ -12,7 +12,7 @@ describe('Dashboard1Component', () => {
     TestBed.configureTestingModule({
       declarations: [
         DashboardPageComponent,
-        StatsCardComponent
+        IconCardComponent
       ],
       schemas: [
         NO_ERRORS_SCHEMA,
