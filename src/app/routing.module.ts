@@ -7,9 +7,9 @@ import {BasicTableComponent} from './pages/tables/basic-table/basic-table.compon
 import {NotFoundComponent} from './pages/not-found/not-found.component';
 
 export interface CustomRoute extends Route {
-  excluded: boolean,
-  icon: string,
-  text: string,
+  excluded: boolean;
+  icon: string;
+  text: string;
 }
 
 export const routes: CustomRoute[] = [

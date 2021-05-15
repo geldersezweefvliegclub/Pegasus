@@ -7,7 +7,7 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class ModalComponent implements OnInit {
 
-  @Input() type= '';
+  @Input() type = '';
   @Input() side = '';
   @Input() size = '';
 
@@ -60,4 +60,4 @@ export class ModalComponent implements OnInit {
           return '';
       }
     };
-  };
+  }

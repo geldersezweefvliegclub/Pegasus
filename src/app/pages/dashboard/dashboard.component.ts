@@ -8,11 +8,11 @@ import {Component, OnInit} from '@angular/core';
 export class DashboardComponent implements OnInit {
 
   public map: any = { lat: 51.678418, lng: 7.809007 };
-  public chart1Type:string = 'bar';
-  public chart2Type:string = 'pie';
-  public chart3Type:string = 'line';
-  public chart4Type:string = 'radar';
-  public chart5Type:string = 'doughnut';
+  public chart1Type = 'bar';
+  public chart2Type = 'pie';
+  public chart3Type = 'line';
+  public chart4Type = 'radar';
+  public chart5Type = 'doughnut';
 
 
   public chartType = 'line';
@@ -25,7 +25,7 @@ export class DashboardComponent implements OnInit {
 
   public chartLabels: Array<any> = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
 
-  public chartColors:Array<any> = [
+  public chartColors: Array<any> = [
 
   ];
 

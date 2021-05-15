@@ -1,4 +1,3 @@
-import {AgmCoreModule} from '@agm/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
@@ -20,9 +19,6 @@ import {RoutingModule} from './routing.module';
     FooterComponent
   ],
   imports: [
-    AgmCoreModule.forRoot({
-      apiKey: ''
-    }),
     BrowserModule,
     BrowserAnimationsModule,
     RoutingModule,
