@@ -1,23 +1,19 @@
-<header>
-
-    <div class="sidebar-fixed position-fixed">
-
-        <a class="logo-wrapper waves-effect">
-            <img src="../../../../assets/img/angular-mdb.png" class="img-fluid" alt="">
-        </a>
-
-        <div class="list-group list-group-flush">
-            <ng-template ngFor let-route [ngForOf]="routes">
-                <a
-                        class="list-group-item list-group-item-action waves-effect"
-                        routerLinkActive="active"
-                        *ngIf="!route.excluded"
-                        [routerLink]="route.path"
-                >
-                    <mdb-icon fas [icon]="route.icon" class="mr-3"></mdb-icon>
-                    {{route.text}}
-                </a>
-            </ng-template>
-        </div>
-    </div>
-</header>
+<nav>
+    <mdb-card class="min-vh-100">
+        <mdb-card-body>
+            <div class="list-group list-group-flush min-vh-100">
+                <ng-template ngFor let-route [ngForOf]="routes">
+                    <a
+                            class="list-group-item list-group-item-action waves-effect"
+                            routerLinkActive="active"
+                            *ngIf="!route.excluded"
+                            [routerLink]="route.path"
+                    >
+                        <mdb-icon fas [icon]="route.icon" class="mr-3"></mdb-icon>
+                        {{route.text}}
+                    </a>
+                </ng-template>
+            </div>
+        </mdb-card-body>
+    </mdb-card>
+</nav>

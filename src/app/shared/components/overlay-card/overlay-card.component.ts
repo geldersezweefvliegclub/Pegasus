@@ -1,18 +1,13 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
-  selector: 'overlay-card',
+  selector: 'app-overlay-card',
   templateUrl: './overlay-card.component.html',
   styleUrls: ['./overlay-card.component.scss']
 })
-export class OverlayCardComponent implements OnInit {
+export class OverlayCardComponent {
 
   @Input() alignment = 'center';
   @Input() src = '';
   @Input() color = '';
-  constructor() { }
-
-  ngOnInit() {
-  }
-
 }

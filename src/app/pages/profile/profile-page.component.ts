@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-profile1',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+  templateUrl: './profile-page.component.html',
+  styleUrls: ['./profile-page.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfilePageComponent {
   imagesBasic = [
     {
       img: 'https://mdbootstrap.com/img/Photos/Horizontal/Nature/12-col/img%20(117).jpg',
@@ -53,9 +53,6 @@ export class ProfileComponent implements OnInit {
       description: 'Image 9'
     }
 ];
-  constructor() { }
 
-  ngOnInit() {
-  }
 
 }

@@ -94,21 +94,17 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
             ]
           }
         }
       }
     },
-    "pegasus": {
+    "pegasus-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "prefix": "",
@@ -123,15 +119,6 @@
             "production": {
               "devServerTarget": "pegasus:serve:production"
             }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "e2e/tsconfig.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
           }
         }
       }

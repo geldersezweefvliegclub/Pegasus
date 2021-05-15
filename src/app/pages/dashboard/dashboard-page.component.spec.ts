@@ -1,17 +1,17 @@
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from '@angular/core';
 
-import {DashboardComponent} from './dashboard.component';
+import {DashboardPageComponent} from './dashboard-page.component';
 import {StatsCardComponent} from '../../shared/components/stats-card/stats-card.component';
 
 describe('Dashboard1Component', () => {
-  let component: DashboardComponent;
-  let fixture: ComponentFixture<DashboardComponent>;
+  let component: DashboardPageComponent;
+  let fixture: ComponentFixture<DashboardPageComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
-        DashboardComponent,
+        DashboardPageComponent,
         StatsCardComponent
       ],
       schemas: [
@@ -23,7 +23,7 @@ describe('Dashboard1Component', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DashboardComponent);
+    fixture = TestBed.createComponent(DashboardPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

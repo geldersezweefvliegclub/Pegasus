@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-dashboard1',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  templateUrl: './dashboard-page.component.html',
+  styleUrls: ['./dashboard-page.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardPageComponent {
 
   public map: any = { lat: 51.678418, lng: 7.809007 };
   public chart1Type = 'bar';
@@ -54,12 +54,5 @@ export class DashboardComponent implements OnInit {
       }]
     }
   };
-
-  constructor() {
-
-  }
-
-  ngOnInit() {
-  }
 
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {routes} from '../../routing.module';
 
 
@@ -7,13 +7,7 @@ import {routes} from '../../routing.module';
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss']
 })
-export class NavigationComponent implements OnInit {
+export class NavigationComponent {
   routes = routes;
-
-  constructor() {
-  }
-
-  ngOnInit() {
-  }
 
 }

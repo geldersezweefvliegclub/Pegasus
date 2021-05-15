@@ -1,20 +1,16 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
-  selector: 'modal',
+  selector: 'app-modal',
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss']
 })
-export class ModalComponent implements OnInit {
+export class ModalComponent {
 
   @Input() type = '';
   @Input() side = '';
   @Input() size = '';
 
-  constructor() { }
-
-  ngOnInit() {
-  }
   getClass = function() {
     const type = this.type;
     const size = this.size;

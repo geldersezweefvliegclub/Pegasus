@@ -8,10 +8,11 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {SharedModule} from '../shared/shared.module';
 import {BasicTableComponent} from './tables/basic-table/basic-table.component';
 import {StatsCardComponent} from '../shared/components/stats-card/stats-card.component';
-import {DashboardComponent} from './dashboard/dashboard.component';
-import {ProfileComponent} from './profile/profile.component';
-import {HelpComponent} from './help/help.component';
+import {DashboardPageComponent} from './dashboard/dashboard-page.component';
+import {ProfilePageComponent} from './profile/profile-page.component';
+import {HelpPageComponent} from './help/help-page.component';
 import {NotFoundComponent} from './not-found/not-found.component';
+import {LoginPageComponent} from './login-page/login-page.component';
 
 
 @NgModule({
@@ -26,15 +27,16 @@ import {NotFoundComponent} from './not-found/not-found.component';
   declarations: [
     BasicTableComponent,
     StatsCardComponent,
-    DashboardComponent,
-    ProfileComponent,
-    HelpComponent,
-    NotFoundComponent
+    DashboardPageComponent,
+    ProfilePageComponent,
+    HelpPageComponent,
+    NotFoundComponent,
+    LoginPageComponent
   ],
   exports: [
     BasicTableComponent,
     StatsCardComponent,
-    DashboardComponent
+    DashboardPageComponent
   ],
   schemas: [NO_ERRORS_SCHEMA]
 })
