@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { OverlayCardComponent } from './overlay-card.component';
+import {OverlayCardComponent} from './overlay-card.component';
 
 describe('OverlayCardComponent', () => {
   let component: OverlayCardComponent;

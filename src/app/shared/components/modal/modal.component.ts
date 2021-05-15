@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'modal',
@@ -19,7 +19,7 @@ export class ModalComponent implements OnInit {
     const type = this.type;
     const size = this.size;
     const side = this.side;
- 
+
     if (type === 'central') {
       if (size === 'small') {
         return 'modal-sm';

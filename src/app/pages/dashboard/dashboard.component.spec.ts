@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from '@angular/core';
 
-import { DashboardComponent } from './dashboard.component';
-import { StatsCardComponent } from '../../shared/components/stats-card/stats-card.component';
+import {DashboardComponent} from './dashboard.component';
+import {StatsCardComponent} from '../../shared/components/stats-card/stats-card.component';
 
 describe('Dashboard1Component', () => {
   let component: DashboardComponent;

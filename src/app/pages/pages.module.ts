@@ -4,9 +4,7 @@ import {RouterModule} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {AgmCoreModule} from '@agm/core';
 
-import {CalendarModule,} from 'angular-calendar';
 import {SharedModule} from '../shared/shared.module';
 import {BasicTableComponent} from './tables/basic-table/basic-table.component';
 import {StatsCardComponent} from '../shared/components/stats-card/stats-card.component';
@@ -24,11 +22,6 @@ import {NotFoundComponent} from './not-found/not-found.component';
     BrowserModule,
     BrowserAnimationsModule,
     SharedModule,
-    AgmCoreModule.forRoot({
-      // https://developers.google.com/maps/documentation/javascript/get-api-key?hl=en#key
-      apiKey: ''
-    }),
-    CalendarModule.forRoot()
   ],
   declarations: [
     BasicTableComponent,

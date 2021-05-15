@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {routes} from '../../app.module';
+import {routes} from '../../routing.module';
 
 
 @Component({

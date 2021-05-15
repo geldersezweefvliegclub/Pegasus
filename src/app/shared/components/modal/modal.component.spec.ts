@@ -1,7 +1,7 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { ModalComponent } from './modal.component';
-import { ModalModule } from '../../../typescripts/free/modals/';
+import {ModalComponent} from './modal.component';
+import {ModalModule} from '../../../typescripts/free/modals/';
 
 describe('ModalComponent', () => {
   let component: ModalComponent;

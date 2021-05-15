@@ -1,10 +1,8 @@
-import { ModalComponent } from './components/modal/modal.component';
-import { MDBBootstrapModule } from 'angular-bootstrap-md';
-import { NgModule, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { CascadingPanelComponent } from './components/cascading-panel/cascading-panel.component';
-import { OverlayCardComponent } from './components/overlay-card/overlay-card.component';
-import { PanelComponent } from './components/panel/panel.component';
+import {ModalComponent} from './components/modal/modal.component';
+import {MDBBootstrapModule} from 'angular-bootstrap-md';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {OverlayCardComponent} from './components/overlay-card/overlay-card.component';
 
 @NgModule({
   imports: [
@@ -12,16 +10,12 @@ import { PanelComponent } from './components/panel/panel.component';
     MDBBootstrapModule.forRoot(),
   ],
   declarations: [
-    CascadingPanelComponent,
     OverlayCardComponent,
-    PanelComponent,
     ModalComponent,
   ],
   exports: [
     MDBBootstrapModule,
-    CascadingPanelComponent,
     OverlayCardComponent,
-    PanelComponent,
     ModalComponent,
   ],
   providers: [
