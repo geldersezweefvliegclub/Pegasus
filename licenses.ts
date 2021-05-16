@@ -1,0 +1,1 @@
+export const aggridLicense = 'Saab_Technologies_BV_single__single_1_Devs__27_January_2021_[v2]_MTYxMTcwNTYwMDAwMA==6118f465133b6e0ef71c1399d0d57050'

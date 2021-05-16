@@ -2,7 +2,7 @@ import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA} from '@angular/core';
 
 import {DashboardPageComponent} from './dashboard-page.component';
-import {IconCardComponent} from '../../shared/components/stats-card/icon-card.component';
+import {IconCardComponent} from '../../shared/components/icon-card/icon-card.component';
 
 describe('Dashboard1Component', () => {
   let component: DashboardPageComponent;
