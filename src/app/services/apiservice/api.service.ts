@@ -5,10 +5,10 @@ import {KeyValueString} from '../../types/Utils';
   providedIn: 'root'
 })
 export class APIService {
-  private URL = 'https://development.helios.org/'
+  private URL = 'https://development.gezc.org/'
 
   async post(): Promise<unknown> {
-    throw Error('Post not implmented')
+    throw Error('Post not implemented')
   }
 
   async put(): Promise<unknown> {
