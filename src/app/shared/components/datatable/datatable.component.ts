@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {GridOptions} from 'ag-grid-community';
+import {GridApi, GridOptions} from 'ag-grid-community';
 
 @Component({
   selector: 'app-datatable',
@@ -7,26 +7,20 @@ import {GridOptions} from 'ag-grid-community';
   styleUrls: ['./datatable.component.scss']
 })
 export class DatatableComponent {
-  @Input() columns = [
-    {field: 'make', sortable: true},
-    {field: 'model', sortable: true},
-    {field: 'price', sortable: true}
-  ];
-  @Input() data = [
-    {make: 'Toyota', model: 'Celica', price: 35000},
-    {make: 'Ford', model: 'Mondeo', price: 32000},
-    {make: 'Porsche', model: 'Boxter', price: 72000}
-  ];
-
+  @Input() columns = [];
+  @Input() data = []
   options: GridOptions = {
     pagination: true,
     paginationAutoPageSize: true,
     columnDefs: this.columns,
     rowData: this.data
   }
-  constructor() {
-    for (let i = 1; i <= 500; i++) {
-      this.data.push({make: `test${i}`, model: 'Test', price: i * 64.13});
-    }
+  private api: GridApi;
+  
+
+  gridReady(ready: any) {
+    this.api = ready.api
+    this.api.setColumnDefs(this.columns)
+    this.api.addItems(this.data)
   }
 }

@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {APIService} from '../apiservice/api.service';
-import {Base64} from 'js-base64';
 import {CookieService} from '../cookieservice/cookie.service';
 
 @Injectable({
@@ -12,7 +11,7 @@ export class LoginService {
   }
 
   isIngelogd(): boolean {
-    return false;
+    return true;
   }
 
   async login(gebruikersnaam: string, wachtwoord: string, token?: string): Promise<void> {
