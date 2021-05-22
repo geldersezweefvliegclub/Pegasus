@@ -2,7 +2,7 @@ import {ModalComponent} from './components/modal/modal.component';
 import {MDBBootstrapModule} from 'angular-bootstrap-md';
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ErrorComponent} from './components/error/error.component';
+import { ErrorComponent } from './components/error/error.component';
 import {DatatableComponent} from './components/datatable/datatable.component';
 import {AgGridModule} from 'ag-grid-angular';
 
@@ -21,6 +21,7 @@ import {AgGridModule} from 'ag-grid-angular';
     MDBBootstrapModule,
     ModalComponent,
     DatatableComponent,
+    ErrorComponent
   ],
   providers: [],
   schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

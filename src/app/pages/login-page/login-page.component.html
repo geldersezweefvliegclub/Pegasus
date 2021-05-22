@@ -12,7 +12,8 @@
                                 type="text"
                                 class="form-control mb-2"
                                 [(ngModel)]="gebruikersnaam"
-                                name="Gebruikersnaam">
+                                name="gebruikersnaam"
+                                minlength="2" required>
                     </div>
                 </div>
                 <div class="row">
@@ -23,12 +24,25 @@
                                 type="password"
                                 class="form-control"
                                 [(ngModel)]="wachtwoord"
-                                name="Wachtwoord">
+                                name="wachtwoord"
+                                minlength="2" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="cinput" class="form-label">Code</label>
+                        <code-input id="cinput" [codeLength]="8" (codeChanged)="onSecurityCodeChanged($event)">
+                        </code-input>
                     </div>
                 </div>
                 <div class="row mt-4">
                     <div class="col d-flex justify-content-end">
-                        <button class="btn btn-primary" type="submit">
+                        <button class="btn btn-secondary mr-2" type="button" (click)="sendSMS()" [disabled]="form.invalid">
+                            <span *ngIf="!isLoading">SMS</span>
+                            <span *ngIf="isLoading"><mdb-icon fas icon="circle-notch" class="spin"></mdb-icon></span>
+                        </button>
+                        <button class="btn btn-primary" type="submit" [disabled]="form.invalid">
                             <span *ngIf="!isLoading">Login</span>
                             <span *ngIf="isLoading"><mdb-icon fas icon="circle-notch" class="spin"></mdb-icon></span>
                         </button>

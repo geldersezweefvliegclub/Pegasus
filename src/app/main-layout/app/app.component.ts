@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
-import {LoginService} from '../../services/loginservice/login.service';
+import {UserService} from '../../services/userservice/user.service';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +11,7 @@ import {LoginService} from '../../services/loginservice/login.service';
 
 export class AppComponent {
 
-  constructor(private readonly router: Router, private readonly loginService: LoginService) {
+  constructor(private readonly router: Router, private readonly loginService: UserService) {
     router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
         this.navigeerNaarLogin();

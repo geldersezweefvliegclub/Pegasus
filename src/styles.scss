@@ -49,3 +49,14 @@ footer {
     transform: rotate(360deg);
   }
 }
+
+// formaat van google authenticator code
+#cinput :nth-child(4) {
+
+  padding-right: 1.2em;
+}
+
+input.ng-dirty.ng-invalid{
+  border: 1px solid red;
+}
+

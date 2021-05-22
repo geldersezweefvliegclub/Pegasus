@@ -12,7 +12,7 @@ import {ProfilePageComponent} from './profile/profile-page.component';
 import {HelpPageComponent} from './help/help-page.component';
 import {NotFoundComponent} from './not-found/not-found.component';
 import {LoginPageComponent} from './login-page/login-page.component';
-
+import {CodeInputModule} from 'angular-code-input';
 
 @NgModule({
   imports: [
@@ -22,6 +22,7 @@ import {LoginPageComponent} from './login-page/login-page.component';
     BrowserModule,
     BrowserAnimationsModule,
     SharedModule,
+    CodeInputModule,
   ],
   declarations: [
     IconCardComponent,
@@ -33,7 +34,8 @@ import {LoginPageComponent} from './login-page/login-page.component';
   ],
   exports: [
     IconCardComponent,
-    DashboardPageComponent
+    DashboardPageComponent,
+    CodeInputModule
   ],
   schemas: [NO_ERRORS_SCHEMA]
 })
