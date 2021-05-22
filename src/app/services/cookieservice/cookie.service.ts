@@ -7,21 +7,10 @@ export class CookieService {
 
   constructor() { }
 
-
-  /** Plaatst cookie voor token
-   * @param token: token om in cookie te zetten
-   * @param domain: Het domein waar de cookie vandaan komt.
-   */
-  setToken(token: string, domain: string): void {
-    // todo fix domain
-    console.log(domain)
-    document.cookie = `PHPSESSID=${token};domain=localhost;SameSite=lax;path=/`;
-  }
-
   /** haalt token op uit cookies
    * @return token als string
    */
-  getToken(): string {
+  getToken(): string | undefined{
     const key = 'PHPSESSID=';
     const decodedCookie = decodeURIComponent(document.cookie);
     const ca = decodedCookie.split(';');
@@ -33,14 +22,7 @@ export class CookieService {
         return c.substring(key.length, c.length);
       }
     }
-    return '';
-  }
-
-  /** checkt of de gebruiker is ingelogd
-   * @return boolean, als de token bestaat stuurt dit true terug, anders false
-   */
-  isIngelogd(): boolean {
-    return this.getToken() !== '';
+    return undefined;
   }
 
   logUit(): void {

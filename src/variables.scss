@@ -1,11 +1,17 @@
-/*
-  Overrides
- */
-$primary-color: #4253D5;
-$primary-color-dark:   darken($primary-color, 10);
-$secondary-color: #DABF22;
-$secondary-color-dark: darken($secondary-color, 10);
+@import "~angular-bootstrap-md/assets/scss/core/colors";
 
+
+@function getColor($key) {
+  @return map-get($theme-colors, $key);
+}
+
+$theme-colors: (
+        "primary": #113e6d,
+        "secondary":  $secondary-color,
+        "success":    $success-color,
+        "info":       $info-color,
+        "warning":    $warning-color,
+        "danger":     $danger-color
+);
 
 $footer-height: 4em;
-@import "~angular-bootstrap-md/assets/scss/core/colors";

@@ -25,8 +25,8 @@ body {
 }
 
 .list-group-item.active {
-  background: $primary-color;
-  border-color: $primary-color;
+  background: getColor('primary');
+  border-color: getColor('primary');
 }
 
 .corrected-height {
@@ -48,4 +48,8 @@ footer {
   to {
     transform: rotate(360deg);
   }
+}
+
+.primary-color{
+  background: getColor("primary") !important;
 }
