@@ -5,7 +5,7 @@ import {KeyValueString} from '../../types/Utils';
   providedIn: 'root'
 })
 export class APIService {
-  private URL = 'https://development.gezc.org/'
+  private URL = 'http://localhost:4200/api/'
 
   async post(): Promise<unknown> {
     throw Error('Post not implemented')
