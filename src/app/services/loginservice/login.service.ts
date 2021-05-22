@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {APIService} from '../apiservice/api.service';
 import {CookieService} from '../cookieservice/cookie.service';
+import {Base64} from 'js-base64';
 
 @Injectable({
   providedIn: 'root'
@@ -11,34 +12,19 @@ export class LoginService {
   }
 
   isIngelogd(): boolean {
-    return true;
+    return false;
   }
 
   async login(gebruikersnaam: string, wachtwoord: string, token?: string): Promise<void> {
-    //todo fix
-    /*
-        const headers = new Headers();
-        const base64encoded = Base64.encode(`${gebruikersnaam}:${wachtwoord}`);
-        headers.append('Authorization', `Basic ${base64encoded}`);
 
-        const response = await this.APIService.get('Login/Login', headers);
-        console.log(response);
-        console.log('token', token);
-        //todo zet token van api
-        // postman geeft voorbeeld in code gen :)
-        this.cookieService.setToken('mocktoken', '.gezc.org');
+    const headers = new Headers();
+    const base64encoded = Base64.encode(`${gebruikersnaam}:${wachtwoord}`);
+    headers.append('Authorization', `Basic ${base64encoded}`);
+    const response = await this.APIService.get('Login/GetUserInfo', headers);
+    console.log(response.headers);
+    console.log('token', token);
 
-     */
-
-    var myHeaders = new Headers();
-    myHeaders.append('Authorization', 'Basic cmljaGFyZGo6am9ua2Vy');
-    // myHeaders.append('Cookie', 'PHPSESSID=774d87e107e4bfe269d33ef5e6861167');
-
-
-    await fetch('https://development.gezc.org/Login/Login', {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow'
-    });
+    //todo zet token van api
+    // this.cookieService.setToken('mocktoken', '.gezc.org');
   }
 }
