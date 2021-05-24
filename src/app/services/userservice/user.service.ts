@@ -39,7 +39,7 @@ export class UserService {
       urlParams = "?token=" + token
     }
 
-    const response = await this.APIService.get('Login/Login' + urlParams, headers);
+    const response:Response = await this.APIService.get('Login/Login' + urlParams, headers);
 
     if (response.ok) {
       await this.getUserInfo();
@@ -62,7 +62,7 @@ export class UserService {
       urlParams = "?DATUM=" + datum.toISOString().split('T')[0];
     }
 
-    const response = await this.APIService.get('Login/GetUserInfo' + urlParams);
+    const response:Response = await this.APIService.get('Login/GetUserInfo' + urlParams);
     if (response.ok) {
       this.userInfo = await response.json();
       this.storageService.opslaan("userInfo", this.userInfo);

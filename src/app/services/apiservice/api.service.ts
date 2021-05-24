@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
-import {KeyValueString} from '../../types/Utils';
+import {KeyValueString, CustomError} from '../../types/Utils';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -15,14 +16,21 @@ export class APIService {
     throw Error('Put not implemented')
   }
 
-  async get(url: string, headers?: Headers, params?: KeyValueString[]): Promise<unknown> {
-    if (params) url = this.prepareEndpoint(url, params)
+  async get(url: string, headers?: Headers, params?: KeyValueString[]): Promise<Response> {
+    if (params) {
+      url = this.prepareEndpoint(url, params);
+    }
 
-    return fetch(`${this.URL}${url}`, {
-      method: "GET",
+    const response = await fetch(`${environment.helios}${url}`, {
+      method: 'GET',
       headers,
-      credentials: "include"
-    })
+      credentials: 'include'
+    });
+
+    if (!response.ok) {
+      throw this.handleError(response);
+    }
+    return response;
   }
 
   private prepareEndpoint(url: string, params: KeyValueString[]): string {
@@ -39,6 +47,12 @@ export class APIService {
       })
     }
 
-    return url
+    return url;
+  }
+
+  // Vul customer error  met http status code en de beschrijving uit X-Error-Messag
+  private handleError(response: Response): CustomError {
+    const error: CustomError = { responseCode: response.status, beschrijving: response.headers.get('X-Error-Message') }
+    return error;
   }
 }

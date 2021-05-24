@@ -14,6 +14,7 @@ export class LoginPageComponent {
   wachtwoord: string = '';
   secret: string = '';
   isLoading = false;
+  showSecret: boolean = false;
   error: CustomError | undefined;
 
   constructor(private readonly loginService: UserService, private readonly router:Router) {
@@ -29,8 +30,14 @@ export class LoginPageComponent {
       this.isLoading = false;
       this.router.navigate(['/']);
     }).catch(e => {
-      this.error = e;
       this.isLoading = false;
+
+      if (e.responseCode == 406) {
+        this.showSecret = true;
+      }
+      else {
+        this.error = e;
+      }
     })    
   }
 

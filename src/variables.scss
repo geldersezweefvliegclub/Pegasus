@@ -1,5 +1,9 @@
 @import "~angular-bootstrap-md/assets/scss/core/colors";
 
+$primary-color: #4253D5;
+$primary-color-dark:   darken($primary-color, 10);
+$secondary-color: #bab69b;
+$secondary-color-dark: darken($secondary-color, 10);
 
 @function getColor($key) {
   @return map-get($theme-colors, $key);
@@ -15,3 +19,4 @@ $theme-colors: (
 );
 
 $footer-height: 4em;
+

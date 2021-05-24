@@ -22,23 +22,23 @@
                         <input
                                 id="wachtwoord"
                                 type="password"
-                                class="form-control"
+                                class="form-control mb-2"
                                 [(ngModel)]="wachtwoord"
                                 name="wachtwoord"
                                 minlength="2" required>
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row" *ngIf="showSecret" >
                     <div class="col">
                         <label for="cinput" class="form-label">Code</label>
-                        <code-input id="cinput" [codeLength]="8" (codeChanged)="onSecurityCodeChanged($event)">
+                        <code-input id="cinput" [codeLength]="6" (codeChanged)="onSecurityCodeChanged($event)">
                         </code-input>
                     </div>
                 </div>
                 <div class="row mt-4">
                     <div class="col d-flex justify-content-end">
-                        <button class="btn btn-secondary mr-2" type="button" (click)="sendSMS()" [disabled]="form.invalid">
+                        <button class="btn btn-secondary mr-2" type="button" (click)="sendSMS()" [disabled]="form.invalid" *ngIf="showSecret">
                             <span *ngIf="!isLoading">SMS</span>
                             <span *ngIf="isLoading"><mdb-icon fas icon="circle-notch" class="spin"></mdb-icon></span>
                         </button>
