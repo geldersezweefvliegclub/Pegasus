@@ -11,6 +11,8 @@ import {UserService} from '../../services/userservice/user.service';
 
 export class AppComponent {
 
+  isIngelogd:boolean = this.loginService.isIngelogd();
+
   constructor(private readonly router: Router, private readonly loginService: UserService) {
     router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
@@ -20,7 +22,7 @@ export class AppComponent {
   }
 
   private navigeerNaarLogin() {
-    if (!this.loginService.isIngelogd()) {
+    if (!this.isIngelogd) {
       this.router.navigate(['login']).then();
     }
   }

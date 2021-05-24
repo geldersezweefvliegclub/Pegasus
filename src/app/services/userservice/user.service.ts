@@ -35,7 +35,7 @@ export class UserService {
 
     let urlParams: string = "";
 
-    if (token != null)  {
+    if ((token) && (token !== ""))  {
       urlParams = "?token=" + token
     }
 

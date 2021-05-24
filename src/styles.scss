@@ -30,7 +30,7 @@ body {
 }
 
 .corrected-height {
-  min-height: calc(100vh - #{($footer-height + 3em)});
+  height: calc(100vh - #{($footer-height + 3em)});
 }
 
 footer {

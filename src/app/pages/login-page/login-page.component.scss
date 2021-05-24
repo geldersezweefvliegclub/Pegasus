@@ -2,3 +2,25 @@ code-input {
     --item-height: 3em;
 }
 
+#carousel {
+    width:100%;
+    height: 100%;
+    z-index: 0;
+}
+
+#loginForm {
+    position: absolute;
+    z-index: 9;
+    left: 50%;
+    top: 5em;
+}
+
+.carousel-item {
+    img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center top;
+    }
+}
+

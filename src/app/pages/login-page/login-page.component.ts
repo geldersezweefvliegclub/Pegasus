@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {UserService} from '../../services/userservice/user.service';
 import {CustomError} from '../../types/Utils';
 import {Router} from "@angular/router";
@@ -9,15 +9,20 @@ import {Router} from "@angular/router";
   styleUrls: ['./login-page.component.scss']
 })
 
-export class LoginPageComponent {
+export class LoginPageComponent implements OnInit {
   gebruikersnaam: string = '';
   wachtwoord: string = '';
   secret: string = '';
   isLoading = false;
   showSecret: boolean = false;
   error: CustomError | undefined;
+  toonFoto: number = 2; //Math.floor(Math.random() * 17)+1;
 
   constructor(private readonly loginService: UserService, private readonly router:Router) {
+  }
+
+  ngOnInit() {
+    setInterval(() => { this.toonFoto = Math.floor(Math.random() * 17)+1}, 10000005000)
   }
 
   onSecurityCodeChanged(code: string) {
