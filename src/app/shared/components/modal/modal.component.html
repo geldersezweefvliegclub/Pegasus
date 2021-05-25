@@ -1,10 +1,20 @@
-
-<!-- Button -->
-<button type="button" class="btn btn-primary relative waves-light" (click)="basicModal.show()" mdbWavesEffect>Launch demo modal</button>
-<!-- /Button -->
-
-<div mdbModal #basicModal="mdb-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel" aria-hidden="true" [config]="{backdrop: false, ignoreBackdropClick: true}">
-    <div class="modal-dialog" [ngClass]="getClass()" role="document">
-            <ng-content></ng-content>
+<ng-template #content let-modal>
+    <div class="modal-header bg-primary text-white">
+        <h4 class="modal-title" id="modal-basic-title">{{titel}}</h4>
+        <button type="button" class="btn btn-outline-secondary" aria-label="Close" (click)="modal.dismiss()">
+            <span aria-hidden="true"><fa-icon [icon]="cross"></fa-icon> </span>
+        </button>
     </div>
-</div>
+    <div class="modal-body">
+        <ng-content select="[body]"></ng-content>
+    </div>
+    <div class="modal-footer">
+        <ng-content select="[footer]"></ng-content>
+    </div>
+</ng-template>
+
+<button class="btn btn-lg btn-outline-primary" (click)="open()">Launch demo modal</button>
+
+<hr>
+
+<pre>{{ closeResult }}</pre>

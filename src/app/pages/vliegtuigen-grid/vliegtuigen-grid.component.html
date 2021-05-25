@@ -1,9 +1,12 @@
-<app-icon-card titel="Vliegtuigen" subtitel="Een overzicht van de vliegtuigen">
+<app-icon-card titel="Vliegtuigen" subtitel="Een overzicht van de vliegtuigen" [icon]="vliegtuig">
     <div class="box">
         <app-datatable
                 [rowData]="data"
                 [columnDefs]="columns"
                 [frameworkComponents]="frameworkComponents"
+                (rowDoubleClicked)="openEditor($event)"
                 style="height:1500px;" class="mt-n4"></app-datatable>
     </div>
+
+    <app-vliegtuig-editor></app-vliegtuig-editor>
 </app-icon-card>

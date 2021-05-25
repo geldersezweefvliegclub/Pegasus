@@ -7,6 +7,7 @@ import {AgGridModule} from 'ag-grid-angular';
 import {CheckboxRenderComponent} from './components/datatable/checkbox-render/checkbox-render.component';
 import {LoaderComponent} from './components/loader/loader.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import { VliegtuigEditorComponent } from './components/editors/vliegtuig-editor/vliegtuig-editor.component';
 
 @NgModule({
   imports: [
@@ -20,12 +21,14 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
     DatatableComponent,
     CheckboxRenderComponent,
     LoaderComponent,
+    VliegtuigEditorComponent,
   ],
   exports: [
     ModalComponent,
     DatatableComponent,
     ErrorComponent,
-    LoaderComponent
+    LoaderComponent,
+    VliegtuigEditorComponent
   ],
   providers: [],
   schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

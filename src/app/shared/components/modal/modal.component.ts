@@ -1,4 +1,6 @@
-import {Component, Input} from '@angular/core';
+import {Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {ModalDismissReasons, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {faTimes} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-modal',
@@ -6,54 +8,29 @@ import {Component, Input} from '@angular/core';
   styleUrls: ['./modal.component.scss']
 })
 export class ModalComponent {
+  @Input() titel: string = 'Editor';
+  @ViewChild('content') content: ElementRef;
+  closeResult = '';
+  cross = faTimes;
 
-  @Input() type = '';
-  @Input() side = '';
-  @Input() size = '';
-
-  getClass = function() {
-    const type = this.type;
-    const size = this.size;
-    const side = this.side;
-
-    if (type === 'central') {
-      if (size === 'small') {
-        return 'modal-sm';
-      } else if (size === 'large') {
-        return 'modal-lg';
-      } else if (size === 'fluid') {
-        return 'modal-fluid';
-      } else {
-        return '';
-      }
-    } else if (type === 'side') {
-        if (side === 'top-left') {
-          return 'modal-side modal-top-left';
-        } else if (side === 'bottom-left') {
-          return 'modal-side modal-bottom-left';
-        } else if (side === 'bottom-right') {
-          return 'modal-side modal-bottom-right';
-        } else {
-          return 'modal-side modal-top-right';
-        }
-    } else if (type === 'fluid') {
-        if (side === 'right') {
-          return 'modal-full-height modal-right';
-        } else if (side === 'left') {
-          return 'modal-full-height modal-left';
-        } else if (side === 'bottom') {
-          return 'modal-full-height modal-bottom';
-        } else {
-          return 'modal-full-height modal-top';
-        }
-    } else if (type === 'frame') {
-        if (side === 'bottom') {
-          return 'modal-frame modal-bottom';
-        } else {
-        return 'modal-frame modal-top';
-        }
-      } else {
-          return '';
-      }
-    };
+  constructor(private modalService: NgbModal) {
   }
+
+  open() {
+    this.modalService.open(this.content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
+}
