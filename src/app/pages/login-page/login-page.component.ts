@@ -10,19 +10,39 @@ import {Router} from "@angular/router";
 })
 
 export class LoginPageComponent implements OnInit {
-  gebruikersnaam: string = '';
-  wachtwoord: string = '';
-  secret: string = '';
-  isLoading = false;
-  showSecret: boolean = false;
-  error: CustomError | undefined;
-  toonFoto: number = 2; //Math.floor(Math.random() * 17)+1;
+    gebruikersnaam: string = '';
+    wachtwoord: string = '';
+    secret: string = '';
+    isLoading = false;
+    showSecret: boolean = false;
+    error: CustomError | undefined;
+
+    fotoAlbum = [
+        "/assets/img/15143.jpg",
+        "/assets/img/17424.jpg",
+        "/assets/img/17552.jpg",
+        "/assets/img/17924.jpg",
+        "/assets/img/18473.jpg",
+        "/assets/img/18498.jpg",
+        "/assets/img/19172.jpg",
+        "/assets/img/19348.jpg",
+        "/assets/img/19715.jpg",
+        "/assets/img/17424.jpg",
+        "/assets/img/17562.jpg",
+        "/assets/img/18455.jpg",
+        "/assets/img/18492.jpg",
+        "/assets/img/18500.jpg",
+        "/assets/img/19218.jpg",
+        "/assets/img/19507.jpg",
+        "/assets/img/50832.jpg"
+    ];
+  toonFoto: number = Math.floor(Math.random() * this.fotoAlbum.length);
 
   constructor(private readonly loginService: UserService, private readonly router:Router) {
   }
 
   ngOnInit() {
-    setInterval(() => { this.toonFoto = Math.floor(Math.random() * 17)+1}, 10000005000)
+    setInterval(() => { this.toonFoto = Math.floor(Math.random() * this.fotoAlbum.length)}, 15000)
   }
 
   onSecurityCodeChanged(code: string) {
@@ -32,8 +52,8 @@ export class LoginPageComponent implements OnInit {
   login(): void {
     this.isLoading = true;
     this.loginService.login(this.gebruikersnaam, this.wachtwoord, this.secret).then(() => {
-      this.isLoading = false;
-      this.router.navigate(['/']);
+        this.isLoading = false;
+        this.router.navigate(['/']);
     }).catch(e => {
       this.isLoading = false;
 

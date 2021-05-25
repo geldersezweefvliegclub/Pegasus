@@ -1,5 +1,7 @@
 import {Component} from '@angular/core';
 import {routes} from '../../routing.module';
+import {UserService} from "../../services/userservice/user.service";
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -10,4 +12,11 @@ import {routes} from '../../routing.module';
 export class NavigationComponent {
   routes = routes;
 
+  constructor(private readonly loginService: UserService, private readonly router:Router) {
+  }
+
+  Uitloggen(): void {
+    this.loginService.uitloggen();
+    this.router.navigate(['/login']);
+  }
 }

@@ -35,4 +35,9 @@ export class StorageService {
     }
     return item.value;
   }
+
+
+  public verwijder(key: string): void {
+    localStorage.removeItem(key)
+  }
 }

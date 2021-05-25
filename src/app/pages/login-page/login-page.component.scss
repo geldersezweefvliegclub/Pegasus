@@ -1,8 +1,9 @@
 code-input {
     --item-height: 3em;
+    --item-background: #c4c2c1
 }
 
-#carousel {
+#album {
     width:100%;
     height: 100%;
     z-index: 0;
@@ -11,16 +12,15 @@ code-input {
 #loginForm {
     position: absolute;
     z-index: 9;
-    left: 50%;
+    left: calc(50% - 200px);
     top: 5em;
+    width: 400px;
 }
 
-.carousel-item {
-    img{
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center top;
-    }
+.foto {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
 }
 
