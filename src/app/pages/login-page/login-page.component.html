@@ -55,8 +55,6 @@
 </div>
 
 
-<div id="album">
-    <img *ngFor ="let foto of fotoAlbum;let i=index" style="position: relative;"
-        class="foto" [class]="toonFoto==i ? 'active' : 'd-none'" [src]="foto" />
+<div id="foto" [style.background-image]="'url(' + toonFoto +')'">
 </div>
 

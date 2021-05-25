@@ -36,13 +36,18 @@ export class LoginPageComponent implements OnInit {
         "/assets/img/19507.jpg",
         "/assets/img/50832.jpg"
     ];
-  toonFoto: number = Math.floor(Math.random() * this.fotoAlbum.length);
+  toonFoto: string = this.urlFoto();
 
   constructor(private readonly loginService: UserService, private readonly router:Router) {
   }
 
   ngOnInit() {
-    setInterval(() => { this.toonFoto = Math.floor(Math.random() * this.fotoAlbum.length)}, 15000)
+    setInterval(() => { this.toonFoto = this.urlFoto()}, 15000)
+  }
+
+  urlFoto(): string {
+      const index = Math.floor(Math.random() * this.fotoAlbum.length)
+      return this.fotoAlbum[index];
   }
 
   onSecurityCodeChanged(code: string) {
