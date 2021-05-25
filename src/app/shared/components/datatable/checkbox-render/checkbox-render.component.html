@@ -1,5 +1,2 @@
-<input
-    type="checkbox"
-    disabled
-    checked={this.boolWaarde}
-/>
+<fa-icon *ngIf="boolWaarde" [icon]="check" class="text-success"></fa-icon>
+<span *ngIf="!boolWaarde" class="text-center">-</span>
