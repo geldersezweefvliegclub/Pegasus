@@ -17,6 +17,18 @@ html {
 
 body {
   background-color: #eee;
+  font-size: 0.8rem;
+}
+
+
+element.style {
+}
+.mb-2, .my-2 {
+  margin-bottom: 0.5rem !important;
+}
+
+.form-control {
+  font-size: 0.8rem;
 }
 
 .card.card-cascade .view.gradient-card-header {
@@ -30,7 +42,7 @@ body {
 }
 
 .corrected-height {
-  height: calc(100vh - #{($footer-height + 3em)});
+  height: calc(100vh - #{($footer-height + 2em)});
 }
 
 footer {

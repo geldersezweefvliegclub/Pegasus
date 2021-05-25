@@ -1,7 +1,9 @@
 <ag-grid-angular
-        style="width: 100%; height: 100%;"
+        style="width: 100%; height:100%;"
         class="ag-theme-material mt-4"
         [gridOptions]="options"
+        [defaultColDef]="defaultColDef"
+        [frameworkComponents]="frameworkComponents"
         (gridReady)="gridReady($event)"
 >
 </ag-grid-angular>

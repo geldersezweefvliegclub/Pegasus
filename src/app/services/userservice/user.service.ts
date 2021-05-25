@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {APIService} from '../apiservice/api.service';
 import {Base64} from 'js-base64';
 
-import { Userinfo } from '../../types/helios';
+import { HeliosUserinfo } from '../../types/Helios';
 import {StorageService} from "../storage/storage.service";
 
 
@@ -12,7 +12,7 @@ import {StorageService} from "../storage/storage.service";
 })
 export class UserService {
 
-  userInfo: Userinfo | null = null;
+  userInfo: HeliosUserinfo | null = null;
 
   constructor(private readonly APIService: APIService, private readonly storageService: StorageService) {
   }
@@ -23,6 +23,7 @@ export class UserService {
         return false;
       }
       this.userInfo = this.storageService.ophalen("userInfo");
+      console.log(this.userInfo);
     }
     return true;
   }
@@ -52,13 +53,13 @@ export class UserService {
     const base64encoded = Base64.encode(`${gebruikersnaam}:${wachtwoord}`);
     headers.append('Authorization', `Basic ${base64encoded}`);
 
-    const response = await this.APIService.get('Login/SendSMS', headers);
+    await this.APIService.get('Login/SendSMS', headers);
   }
 
   async getUserInfo(datum?: Date): Promise<void> {
 
     let urlParams: string = "";
-    if (datum != null) {
+    if (datum) {
       urlParams = "?DATUM=" + datum.toISOString().split('T')[0];
     }
 
@@ -66,7 +67,11 @@ export class UserService {
     if (response.ok) {
       this.userInfo = await response.json();
       this.storageService.opslaan("userInfo", this.userInfo);
-      console.log("done");
     }
+  }
+
+  uitloggen(): void {
+    this.userInfo = null;
+    this.storageService.verwijder ("userInfo");
   }
 }

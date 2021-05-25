@@ -13,7 +13,16 @@
                         {{route.text}}
                     </a>
                 </ng-template>
+                <a
+                    class="list-group-item list-group-item-action waves-effect"
+                    (click)="Uitloggen()"
+                >
+                    <mdb-icon fas icon="sign-out-alt" class="mr-3"></mdb-icon>
+                    Uitloggen
+                </a>
+
             </div>
+
         </mdb-card-body>
     </mdb-card>
 </nav>

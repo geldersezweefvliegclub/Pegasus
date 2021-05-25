@@ -5,6 +5,7 @@ import {CommonModule} from '@angular/common';
 import { ErrorComponent } from './components/error/error.component';
 import {DatatableComponent} from './components/datatable/datatable.component';
 import {AgGridModule} from 'ag-grid-angular';
+import { CheckboxRenderComponent } from './components/datatable/checkbox-render/checkbox-render.component';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import {AgGridModule} from 'ag-grid-angular';
     ModalComponent,
     ErrorComponent,
     DatatableComponent,
+    CheckboxRenderComponent,
   ],
   exports: [
     MDBBootstrapModule,

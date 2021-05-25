@@ -13,6 +13,8 @@ import {HelpPageComponent} from './help/help-page.component';
 import {NotFoundComponent} from './not-found/not-found.component';
 import {LoginPageComponent} from './login-page/login-page.component';
 import {CodeInputModule} from 'angular-code-input';
+import { VliegtuigenGridComponent } from './vliegtuigen-grid/vliegtuigen-grid.component';
+import { ZitplaatsRenderComponent } from './vliegtuigen-grid/zitplaats-render/zitplaats-render.component';
 
 @NgModule({
   imports: [
@@ -30,7 +32,9 @@ import {CodeInputModule} from 'angular-code-input';
     ProfilePageComponent,
     HelpPageComponent,
     NotFoundComponent,
-    LoginPageComponent
+    LoginPageComponent,
+    VliegtuigenGridComponent,
+    ZitplaatsRenderComponent
   ],
   exports: [
     IconCardComponent,
