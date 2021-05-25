@@ -1,4 +1,6 @@
 import {Component, Input} from '@angular/core';
+import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
+import {faQuestionCircle} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-icon-card',
@@ -6,8 +8,7 @@ import {Component, Input} from '@angular/core';
   styleUrls: ['./icon-card.component.scss']
 })
 export class IconCardComponent {
-  @Input() color: string = 'primary-color';
-  @Input() icon : string = 'question-circle'
+  @Input() icon : IconDefinition = faQuestionCircle
   @Input() titel: string;
   @Input() subtitel: string;
 }

@@ -1,28 +1,25 @@
 <nav>
-    <mdb-card class="min-vh-100">
-        <mdb-card-body>
-            <div class="list-group list-group-flush min-vh-100">
+    <div class="card min-vh-100 ps-0 rounded-0">
+        <div>
+            <div class="list-group list-group-flush p-3">
                 <ng-template ngFor let-route [ngForOf]="routes">
                     <a
-                            class="list-group-item list-group-item-action waves-effect"
+                            class="list-group-item list-group-item-action waves-effect py-2"
                             routerLinkActive="active"
                             *ngIf="!route.excluded"
                             [routerLink]="route.path"
                     >
-                        <mdb-icon fas [icon]="route.icon" class="mr-3"></mdb-icon>
+                        <fa-icon [icon]="route.icon" class="me-3"></fa-icon>
                         {{route.text}}
                     </a>
                 </ng-template>
                 <a
-                    class="list-group-item list-group-item-action waves-effect"
-                    (click)="Uitloggen()"
-                >
-                    <mdb-icon fas icon="sign-out-alt" class="mr-3"></mdb-icon>
+                        class="list-group-item list-group-item-action waves-effect"
+                        (click)="Uitloggen()">
+                    <fa-icon [icon]="logUit" class="me-3"></fa-icon>
                     Uitloggen
                 </a>
-
             </div>
-
-        </mdb-card-body>
-    </mdb-card>
+        </div>
+    </div>
 </nav>

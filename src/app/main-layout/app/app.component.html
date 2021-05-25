@@ -1,13 +1,13 @@
 <div class="row mx-0">
-    <div class="col-1 col-md-2 pl-0" *ngIf="isIngelogd">
+    <div class="col-1 col-md-2 ps-0" *ngIf="isIngelogd">
         <app-navigation></app-navigation>
     </div>
     <main class="col-12 p-4 corrected-height" [class]="isIngelogd ? 'col-md-10' : 'col-md-12'">
-        <mdb-card class="h-100">
-            <mdb-card-body>
+        <div class="card h-100">
+            <div class="card-body">
                 <router-outlet></router-outlet>
-            </mdb-card-body>
-        </mdb-card>
+            </div>
+        </div>
         <app-footer></app-footer>
     </main>
 </div>

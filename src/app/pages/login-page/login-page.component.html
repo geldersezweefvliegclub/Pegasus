@@ -41,11 +41,11 @@
                     <div class="col d-flex justify-content-end">
                         <button class="btn btn-secondary mr-2" type="button" (click)="sendSMS()" [disabled]="form.invalid" *ngIf="showSecret">
                             <span *ngIf="!isLoading">SMS</span>
-                            <span *ngIf="isLoading"><mdb-icon fas icon="circle-notch" class="spin"></mdb-icon></span>
+                            <span *ngIf="isLoading"><app-loader></app-loader></span>
                         </button>
                         <button class="btn btn-primary" type="submit" [disabled]="form.invalid">
                             <span *ngIf="!isLoading">Login</span>
-                            <span *ngIf="isLoading"><mdb-icon fas icon="circle-notch" class="spin"></mdb-icon></span>
+                            <span *ngIf="isLoading"><app-loader></app-loader></span>
                         </button>
                     </div>
                 </div>

@@ -1,10 +1,9 @@
 @import "variables";
+@import "~bootstrap/scss/bootstrap";
 @import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
 @import "~@fortawesome/fontawesome-free/scss/solid.scss";
 @import "~@fortawesome/fontawesome-free/scss/regular.scss";
 @import "~@fortawesome/fontawesome-free/scss/brands.scss";
-@import "~angular-bootstrap-md/assets/scss/bootstrap/bootstrap.scss";
-@import "~angular-bootstrap-md/assets/scss/mdb.scss";
 @import "~animate.css/animate.css";
 @import "~ag-grid-community/dist/styles/ag-grid.css";
 @import "~ag-grid-community/dist/styles/ag-theme-material.css";
@@ -17,12 +16,9 @@ html {
 
 body {
   background-color: #eee;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
 }
 
-
-element.style {
-}
 .mb-2, .my-2 {
   margin-bottom: 0.5rem !important;
 }
@@ -37,8 +33,8 @@ element.style {
 }
 
 .list-group-item.active {
-  background: $primary-color;
-  border-color: $primary-color;
+  background: getColor('primary');
+  border-color: getColor('primary');
 }
 
 .corrected-height {
@@ -49,22 +45,8 @@ footer {
   height: $footer-height;
 }
 
-.spin {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 // formaat van google authenticator code
 #cinput :nth-child(3) {
-
   padding-right: 1.3em;
 }
 

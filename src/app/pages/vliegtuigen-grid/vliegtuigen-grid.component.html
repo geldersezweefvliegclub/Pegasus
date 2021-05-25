@@ -1,4 +1,4 @@
-<app-icon-card titel="Vliegtuigen" icon="plane" subtitel="Een overzicht van de vliegtuigen" color="primary">
+<app-icon-card titel="Vliegtuigen" [icon]="vliegtuig" subtitel="Een overzicht van de vliegtuigen">
     <div class="box">
       <app-datatable [rowData]="data" [columnDefs]="columns" [frameworkComponents]="frameworkComponents" style="height:100%;" class="mt-n4"></app-datatable>
     </div>

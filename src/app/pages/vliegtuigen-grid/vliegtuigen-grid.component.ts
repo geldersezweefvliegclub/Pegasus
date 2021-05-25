@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {VliegtuigenService} from "../../services/vliegtuigen/vliegtuigen.service";
 import { ZitplaatsRenderComponent } from './zitplaats-render/zitplaats-render.component';
 import { CheckboxRenderComponent } from '../../shared/components/datatable/checkbox-render/checkbox-render.component';
+import {faPlane, faUser} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-vliegtuigen-grid',
@@ -26,11 +27,17 @@ export class VliegtuigenGridComponent implements OnInit {
   frameworkComponents = {
     zitplaatsRender: ZitplaatsRenderComponent,
     checkboxRender: CheckboxRenderComponent
-  }
+  };
+  user = faUser;
+  vliegtuig = faPlane;
 
-  constructor(private readonly vliegtuigenService: VliegtuigenService) { }
+  constructor(private readonly vliegtuigenService: VliegtuigenService) {
+  }
 
   ngOnInit(): void {
-    this.vliegtuigenService.getVliegtuigen().then((dataset) => { this.data = dataset;});
+    this.vliegtuigenService.getVliegtuigen().then((dataset) => {
+      this.data = dataset;
+    });
   }
 }
+

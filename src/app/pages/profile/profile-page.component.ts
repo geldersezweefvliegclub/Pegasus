@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {faCamera} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-profile1',
@@ -52,7 +53,8 @@ export class ProfilePageComponent {
       thumb: 'https://mdbootstrap.com/img/Photos/Horizontal/Nature/12-col/img%20(133).jpg',
       description: 'Image 9'
     }
-];
+  ];
+  camera = faCamera;
 
 
 }
