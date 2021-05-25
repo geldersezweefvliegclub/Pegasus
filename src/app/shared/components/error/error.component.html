@@ -1,5 +1,9 @@
-<div id="errorOverlay" [ngClass]="showError == true ? 'show' : ''" class="alert alert-dismissable alert alert-danger" *ngIf="error" role="alert">
-  
-  <div class="fw-bold">Foutmelding!</div>
-  <div>{{error.beschrijving}}</div>
+<div
+        id="errorOverlay"
+        [ngClass]="showError == true ? 'show' : ''"
+        class="alert alert-dismissable alert-danger"
+        *ngIf="error" role="alert">
+
+    <div class="fw-bold">Foutmelding!</div>
+    <div>{{error.beschrijving}}</div>
 </div>
