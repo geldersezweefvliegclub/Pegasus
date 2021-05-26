@@ -1,4 +1,19 @@
-<app-modal titel="Vliegtuig bewerken">
-    <div body>Test</div>
-    <div footer>Test</div>
+<app-modal [titel]="vliegtuig.ID !== undefined ? 'Vliegtuig bewerken' : 'Vliegtuig aanmaken'">
+    <div body>
+        <form #ngForm="ngForm" (ngSubmit)="submit()">
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <label for="REGISTRATIE" class="form-label">Registratie</label>
+                    <input required name="registratie" type="email" class="form-control" id="REGISTRATIE"
+                           [(ngModel)]="vliegtuig.REGISTRATIE">
+                </div>
+                <div class="col-12 col-md-6">
+                    <label for="CALLSIGN" class="form-label">Callsign</label>
+                    <input required name="callsign" type="email" class="form-control" id="CALLSIGN"
+                           [(ngModel)]="vliegtuig.CALLSIGN">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div footer (click)="log()">Footer</div>
 </app-modal>

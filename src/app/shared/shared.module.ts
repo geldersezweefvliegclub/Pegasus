@@ -8,12 +8,14 @@ import {CheckboxRenderComponent} from './components/datatable/checkbox-render/ch
 import {LoaderComponent} from './components/loader/loader.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import { VliegtuigEditorComponent } from './components/editors/vliegtuig-editor/vliegtuig-editor.component';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   imports: [
     CommonModule,
     AgGridModule.withComponents([]),
-    FontAwesomeModule
+    FontAwesomeModule,
+    FormsModule
   ],
   declarations: [
     ModalComponent,
