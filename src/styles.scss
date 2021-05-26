@@ -27,11 +27,6 @@ body {
   font-size: 0.8rem;
 }
 
-.card.card-cascade .view.gradient-card-header {
-  padding: 1rem 1rem;
-  text-align: center;
-}
-
 .list-group-item.active {
   background: getColor('primary');
   border-color: getColor('primary');
@@ -45,11 +40,17 @@ footer {
   height: $footer-height;
 }
 
-// formaat van google authenticator code
+// formaat van google authenticator code bij login scherm
 #cinput :nth-child(3) {
   padding-right: 1.3em;
 }
 
+// rode rand om input velden wanneer data ongeldig is
 input.ng-dirty.ng-invalid{
   border: 1px solid red;
+}
+
+// anders zijn we een beetje vn de text kwijt
+.ag-theme-material .ag-paging-panel {
+  height: 60px !important;
 }

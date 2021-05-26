@@ -1,5 +1,5 @@
 .box {
   display: flex;
   flex-flow: column;
-  height: 100%;
+  overflow-y: hidden;
 }
