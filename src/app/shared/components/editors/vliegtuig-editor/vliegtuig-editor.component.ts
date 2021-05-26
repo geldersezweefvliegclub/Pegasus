@@ -1,6 +1,8 @@
 import {Component, ViewChild} from '@angular/core';
 import {ModalComponent} from '../../modal/modal.component';
-import {HeliosVliegtuig} from '../../../../types/Helios';
+import {HeliosType, HeliosVliegtuig} from '../../../../types/Helios';
+import {VliegtuigenService} from '../../../../services/vliegtuigen/vliegtuigen.service';
+import {TypesService} from '../../../../services/types/types.service';
 
 @Component({
   selector: 'app-vliegtuig-editor',
@@ -22,15 +24,26 @@ export class VliegtuigEditorComponent {
     TYPE_ID: undefined,
     VOLGORDE: undefined,
   };
+  vliegtuigTypes: HeliosType[];
+
+  constructor(
+    private readonly vliegtuigenService: VliegtuigenService,
+    private readonly typesService: TypesService
+  ) {
+    this.typesService.getTypes(4).then(types => this.vliegtuigTypes = types);
+  }
 
   openPopup(data: []) {
     this.haalVliegtuigOp(data);
     this.popup.open();
   }
 
-  haalVliegtuigOp(data: []): void {
-    console.log(data);
-    // todo haal data op als niet undefined
+  haalVliegtuigOp(data: HeliosVliegtuig | undefined): void {
+    if (data) {
+      this.vliegtuigenService.getVliegtuig(data.ID as number).then((vliegtuig) => {
+        this.vliegtuig = vliegtuig;
+      });
+    }
   }
 
   submit() {

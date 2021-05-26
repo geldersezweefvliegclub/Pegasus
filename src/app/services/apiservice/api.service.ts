@@ -16,14 +16,14 @@ export class APIService {
     throw Error('Put not implemented')
   }
 
-  async get(url: string, headers?: Headers, params?: KeyValueString[]): Promise<Response> {
+  async get(url: string, params?: KeyValueString[], headers?: Headers): Promise<Response> {
     if (params) {
       url = this.prepareEndpoint(url, params);
     }
 
     const response = await fetch(`${environment.helios}${url}`, {
       method: 'GET',
-      headers,
+      headers: headers,
       credentials: 'include'
     });
 

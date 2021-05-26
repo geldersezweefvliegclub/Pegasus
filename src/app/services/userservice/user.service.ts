@@ -37,10 +37,10 @@ export class UserService {
     let urlParams: string = "";
 
     if ((token) && (token !== ""))  {
-      urlParams = "?token=" + token
+      urlParams = token
     }
 
-    const response:Response = await this.APIService.get('Login/Login' + urlParams, headers);
+    const response:Response = await this.APIService.get('Login/Login', [{'token': urlParams as string}],headers);
 
     if (response.ok) {
       await this.getUserInfo();
@@ -53,7 +53,7 @@ export class UserService {
     const base64encoded = Base64.encode(`${gebruikersnaam}:${wachtwoord}`);
     headers.append('Authorization', `Basic ${base64encoded}`);
 
-    await this.APIService.get('Login/SendSMS', headers);
+    await this.APIService.get('Login/SendSMS', undefined,headers);
   }
 
   async getUserInfo(datum?: Date): Promise<void> {
