@@ -54,3 +54,7 @@ input.ng-dirty.ng-invalid{
 .ag-theme-material .ag-paging-panel {
   height: 60px !important;
 }
+
+.ag-cell-focus, .ag-cell {
+  border: none !important;
+}

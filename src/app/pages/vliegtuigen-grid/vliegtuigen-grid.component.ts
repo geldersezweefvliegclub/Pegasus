@@ -42,7 +42,6 @@ export class VliegtuigenGridComponent implements OnInit {
     this.vliegtuigenService.getVliegtuigen().then((dataset) => {
       this.data = dataset;
     });
-    setTimeout(() =>this.openEditor() , 500)
   }
 
   openEditor(event?: RowDoubleClickedEvent) {

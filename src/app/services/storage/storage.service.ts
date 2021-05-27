@@ -4,16 +4,21 @@ import {Injectable} from '@angular/core';
   providedIn: 'root'
 })
 export class StorageService {
-  vervalTijd: number = 1000 * 60 * 60;  // 1 uur (1000 msec * 60 sec = 1 min * 60)
+  vervalTijd: number = 60;  // 60 min
 
-  constructor() { }
-
-  public opslaan(key:string, value:any): void {
+  public opslaan(key:string, value:any, tijd : number = this.vervalTijd): void {
     const now = new Date()
+
+    const tijdMsec = tijd * 1000 * 60 // van minuten naar msec
+    let expireTimestamp = now.getTime() + tijdMsec;
+
+    if (tijd < 0) {
+      expireTimestamp = now.setDate(now.getDate() + 5000);  // 5000 dagen vooruit
+    }
 
     const item = {
       value: value,
-      expiry: now.getTime() + this.vervalTijd
+      expiry: expireTimestamp
     }
     localStorage.setItem(key, JSON.stringify(item))
   }
