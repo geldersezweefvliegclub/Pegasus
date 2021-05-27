@@ -1,9 +1,6 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {GridApi, GridOptions, RowDoubleClickedEvent} from 'ag-grid-community';
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
-import {ColumnSt, GridApi, GridOptions, RowDoubleClickedEvent} from 'ag-grid-community';
-import {Observable} from 'rxjs';
-import {StorageService} from "../../../services/storage/storage.service";
+import {GridApi, GridOptions, RowDoubleClickedEvent} from 'ag-grid-community';
+import {StorageService} from '../../../services/storage/storage.service';
 
 @Component({
     selector: 'app-datatable',
