@@ -1,6 +1,7 @@
 <app-icon-card titel="Vliegtuigen" subtitel="Een overzicht van de vliegtuigen" [icon]="vliegtuig">
     <div class="box h-100">
         <app-datatable
+                id = "vliegtuiggrid"
                 [rowData]="data"
                 [columnDefs]="columns"
                 [frameworkComponents]="frameworkComponents"
