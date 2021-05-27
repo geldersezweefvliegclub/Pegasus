@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {KeyValueString, CustomError} from '../../types/Utils';
+import {CustomError, KeyValueString} from '../../types/Utils';
 import {environment} from '../../../environments/environment';
 
 @Injectable({

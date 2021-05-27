@@ -1,5 +1,4 @@
-import {Component, Input, ViewChild, OnChanges, ElementRef, SimpleChanges} from '@angular/core';
-import { error } from 'selenium-webdriver';
+import {Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
 import {CustomError} from '../../../types/Utils';
 
 @Component({

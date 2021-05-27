@@ -9,8 +9,8 @@ import {SharedModule} from './shared/shared.module';
 import {RoutingModule} from './routing.module';
 import {NavigationComponent} from './main-layout/navigation/navigation.component';
 import {FooterComponent} from './main-layout/footer/footer.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [

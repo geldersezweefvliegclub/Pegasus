@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {GridApi, GridOptions, RowDoubleClickedEvent} from 'ag-grid-community';
-import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-datatable',

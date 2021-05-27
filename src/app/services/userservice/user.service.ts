@@ -2,9 +2,8 @@ import {Injectable} from '@angular/core';
 import {APIService} from '../apiservice/api.service';
 import {Base64} from 'js-base64';
 
-import { HeliosUserinfo } from '../../types/Helios';
-import {StorageService} from "../storage/storage.service";
-
+import {HeliosUserinfo} from '../../types/Helios';
+import {StorageService} from '../storage/storage.service';
 
 
 @Injectable({

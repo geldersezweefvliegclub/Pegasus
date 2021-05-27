@@ -3,6 +3,7 @@ import {ModalComponent} from '../../modal/modal.component';
 import {HeliosType, HeliosVliegtuig} from '../../../../types/Helios';
 import {VliegtuigenService} from '../../../../services/vliegtuigen/vliegtuigen.service';
 import {TypesService} from '../../../../services/types/types.service';
+import {faEdit, faPlus} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-vliegtuig-editor',
@@ -25,6 +26,9 @@ export class VliegtuigEditorComponent {
     VOLGORDE: undefined,
   };
   vliegtuigTypes: HeliosType[];
+  aanmakenIcon = faPlus;
+  isLoading = false;
+  bewerkIcon= faEdit;
 
   constructor(
     private readonly vliegtuigenService: VliegtuigenService,

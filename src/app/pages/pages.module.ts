@@ -13,9 +13,9 @@ import {HelpPageComponent} from './help/help-page.component';
 import {NotFoundComponent} from './not-found/not-found.component';
 import {LoginPageComponent} from './login-page/login-page.component';
 import {CodeInputModule} from 'angular-code-input';
-import { VliegtuigenGridComponent } from './vliegtuigen-grid/vliegtuigen-grid.component';
-import { ZitplaatsRenderComponent } from './vliegtuigen-grid/zitplaats-render/zitplaats-render.component';
-import { LedenGridComponent } from './leden-grid/leden-grid.component';
+import {VliegtuigenGridComponent} from './vliegtuigen-grid/vliegtuigen-grid.component';
+import {ZitplaatsRenderComponent} from './vliegtuigen-grid/zitplaats-render/zitplaats-render.component';
+import {LedenGridComponent} from './leden-grid/leden-grid.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 @NgModule({

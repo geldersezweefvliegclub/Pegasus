@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {routes} from '../../routing.module';
-import {UserService} from "../../services/userservice/user.service";
-import {Router} from "@angular/router";
+import {UserService} from '../../services/userservice/user.service';
+import {Router} from '@angular/router';
 import {faSignOutAlt} from '@fortawesome/free-solid-svg-icons';
 
 
