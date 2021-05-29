@@ -34,6 +34,8 @@ export class APIService {
   }
 
   private prepareEndpoint(url: string, params: KeyValueString[]): string {
+    let args: string = "";
+
     // Loop door de array met parameters
     for (let index = 0; index < params.length; index++) {
       const param = params[index]
@@ -41,13 +43,17 @@ export class APIService {
       // Loop vervolgens door het key:value object heen
       // Als het object op index 0 is, voeg vraagteken toe. Als object niet op de laatste plek staat, voeg & toe.
       Object.entries(param).forEach(([key, value]) => {
-        if (index == 0) url = url.concat('?')
-        url = url.concat(`${key}=${value}`)
-        if (index != params.length - 1) url = url.concat('&')
+        if (args == "") {
+          args = args.concat('?');
+        }
+        else {
+          args = args.concat('&');
+        }
+        args = args.concat(`${key}=${value}`)
       })
     }
 
-    return url;
+    return url + args;
   }
 
   // Vul customer error  met http status code en de beschrijving uit X-Error-Messag
