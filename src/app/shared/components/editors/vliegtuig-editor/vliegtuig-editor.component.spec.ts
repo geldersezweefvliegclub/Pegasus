@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { VliegtuigEditorComponent } from './vliegtuig-editor.component';
+import {VliegtuigEditorComponent} from './vliegtuig-editor.component';
 
 describe('VliegtuigEditorComponent', () => {
   let component: VliegtuigEditorComponent;

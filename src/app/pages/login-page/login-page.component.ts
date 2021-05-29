@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from '../../services/userservice/user.service';
 import {CustomError} from '../../types/Utils';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
@@ -68,7 +68,7 @@ export class LoginPageComponent implements OnInit {
       else {
         this.error = e;
       }
-    })    
+    })
   }
 
   sendSMS(): void {
@@ -78,6 +78,6 @@ export class LoginPageComponent implements OnInit {
     }).catch(e => {
       this.error = e;
       this.isLoading = false;
-    })    
+    })
   }
 }
