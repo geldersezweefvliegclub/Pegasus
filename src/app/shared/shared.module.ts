@@ -8,8 +8,9 @@ import {CheckboxRenderComponent} from './components/datatable/checkbox-render/ch
 import {LoaderComponent} from './components/loader/loader.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {VliegtuigEditorComponent} from './components/editors/vliegtuig-editor/vliegtuig-editor.component';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, NG_VALIDATORS} from '@angular/forms';
 import { IconButtonComponent } from './components/icon-button/icon-button.component';
+import { RegistratieDirective } from './directives/registratie/registratie.directive';
 
 
 @NgModule({
@@ -27,7 +28,7 @@ import { IconButtonComponent } from './components/icon-button/icon-button.compon
     LoaderComponent,
     VliegtuigEditorComponent,
     IconButtonComponent,
-
+    RegistratieDirective,
   ],
   exports: [
     ModalComponent,

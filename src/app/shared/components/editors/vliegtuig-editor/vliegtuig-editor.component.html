@@ -5,7 +5,7 @@
                 <div class="col-12 col-md-6">
                     <label for="REGISTRATIE" class="form-label">Registratie</label>
                     <input required name="registratie" type="text" class="form-control" id="REGISTRATIE"
-                           [(ngModel)]="vliegtuig.REGISTRATIE">
+                           [(ngModel)]="vliegtuig.REGISTRATIE" appRegistratie>
                 </div>
                 <div class="col-12 col-md-6">
                     <label for="CALLSIGN" class="form-label">Callsign</label>
@@ -71,14 +71,9 @@
         </form>
     </div>
     <div footer>
-        <button class="btn btn-primary" [disabled]="ngForm.invalid">
-            <span *ngIf="!isLoading && vliegtuig.ID !== undefined">
-                <fa-icon [icon]="bewerkIcon"></fa-icon>
-            </span>
-            <span *ngIf="!isLoading && vliegtuig.ID === undefined">
-                <fa-icon [icon]="aanmakenIcon"></fa-icon>
-            </span>
-            <span *ngIf="isLoading"><app-loader></app-loader></span>
-        </button>
+        <app-icon-button *ngIf="!isLoading && vliegtuig.ID !== undefined" iconNaam="fas Edit" btnColor="btn-primary" tekst="Opslaan" type="submit"></app-icon-button>
+        <app-icon-button *ngIf="!isLoading && vliegtuig.ID === undefined" iconNaam="fas Plus" btnColor="btn-primary" tekst="Opslaan" type="submit"></app-icon-button>
+
+        <span *ngIf="isLoading"><app-loader></app-loader></span>
     </div>
 </app-modal>
