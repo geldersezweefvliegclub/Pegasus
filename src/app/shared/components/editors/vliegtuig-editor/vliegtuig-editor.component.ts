@@ -47,17 +47,11 @@ export class VliegtuigEditorComponent {
     if (data) {
       this.vliegtuigenService.getVliegtuig(data.ID as number).then((vliegtuig) => {
         this.vliegtuig = vliegtuig;
-        console.log(data);
-        console.log(this.vliegtuig)
       });
     }
   }
 
   submit() {
     console.log('submit');
-  }
-
-  log() {
-    console.log(this.vliegtuig);
   }
 }

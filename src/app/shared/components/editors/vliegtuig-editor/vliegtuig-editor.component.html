@@ -70,7 +70,7 @@
             </div>
         </form>
     </div>
-    <div footer (click)="log()">
+    <div footer>
         <button class="btn btn-primary" [disabled]="ngForm.invalid">
             <span *ngIf="!isLoading && vliegtuig.ID !== undefined">
                 <fa-icon [icon]="bewerkIcon"></fa-icon>
