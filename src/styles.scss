@@ -23,10 +23,6 @@ body {
   margin-bottom: 0.5rem !important;
 }
 
-.form-control {
-  font-size: 0.8rem;
-}
-
 .list-group-item.active {
   background: getColor('primary');
   border-color: getColor('primary');
@@ -50,11 +46,10 @@ input.ng-dirty.ng-invalid{
   border: 1px solid red;
 }
 
-// anders zijn we een beetje vn de text kwijt
-.ag-theme-material .ag-paging-panel {
-  height: 60px !important;
-}
-
 .ag-cell-focus, .ag-cell {
   border: none !important;
+}
+
+.card-body {
+  padding-bottom: 0.5rem;
 }

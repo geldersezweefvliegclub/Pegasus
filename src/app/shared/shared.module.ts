@@ -9,6 +9,8 @@ import {LoaderComponent} from './components/loader/loader.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {VliegtuigEditorComponent} from './components/editors/vliegtuig-editor/vliegtuig-editor.component';
 import {FormsModule} from '@angular/forms';
+import { IconButtonComponent } from './components/icon-button/icon-button.component';
+
 
 @NgModule({
   imports: [
@@ -24,13 +26,16 @@ import {FormsModule} from '@angular/forms';
     CheckboxRenderComponent,
     LoaderComponent,
     VliegtuigEditorComponent,
+    IconButtonComponent,
+
   ],
   exports: [
     ModalComponent,
     DatatableComponent,
     ErrorComponent,
     LoaderComponent,
-    VliegtuigEditorComponent
+    VliegtuigEditorComponent,
+    IconButtonComponent
   ],
   providers: [],
   schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

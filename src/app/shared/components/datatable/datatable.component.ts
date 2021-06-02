@@ -17,6 +17,8 @@ export class DatatableComponent implements OnChanges, OnDestroy {
 
     options: GridOptions = {
         pagination: true,
+        rowHeight: 40,
+        headerHeight:20,
         paginationAutoPageSize: true,
         rowSelection: 'single',
         onRowDoubleClicked: this.onRowDoubleClicked.bind(this),

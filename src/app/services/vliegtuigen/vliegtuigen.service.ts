@@ -3,6 +3,7 @@ import {APIService} from '../apiservice/api.service';
 
 import {HeliosVliegtuig, HeliosVliegtuigen} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
+import {getPackageManager} from "@angular/cli/utilities/package-manager";
 
 @Injectable({
   providedIn: 'root'
@@ -14,20 +15,31 @@ export class VliegtuigenService {
 
   }
 
-  async getVliegtuigen(): Promise<[]> {
+  async getVliegtuigen(zoekString?:string): Promise<[]> {
     let hash: string = '';
 
     if (((this.vliegtuigen == null)) && (this.storageService.ophalen('vliegtuigen') != null)) {
       this.vliegtuigen = this.storageService.ophalen('vliegtuigen');
     }
 
+
+    interface parameters {
+      [key: string]: string;
+    }
+    let getParams:parameters = {};
+
     if (this.vliegtuigen != null) { // we hebben eerder de lijst opgehaald
       hash = this.vliegtuigen.hash as string;
+      getParams['HASH'] = hash;
+    }
+
+    if (zoekString) {
+      getParams['SELECTIE'] = zoekString;
     }
 
     try {
       const response: Response = await this.APIService.get('Vliegtuigen/GetObjects', [
-        {'HASH': hash}
+        getParams
       ]);
 
       this.vliegtuigen = await response.json();

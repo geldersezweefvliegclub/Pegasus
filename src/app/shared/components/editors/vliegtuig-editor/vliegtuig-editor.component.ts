@@ -4,6 +4,7 @@ import {HeliosType, HeliosVliegtuig} from '../../../../types/Helios';
 import {VliegtuigenService} from '../../../../services/vliegtuigen/vliegtuigen.service';
 import {TypesService} from '../../../../services/types/types.service';
 import {faEdit, faPlus} from '@fortawesome/free-solid-svg-icons';
+import {coerceStringArray} from "@angular/cdk/coercion";
 
 @Component({
   selector: 'app-vliegtuig-editor',
@@ -46,6 +47,8 @@ export class VliegtuigEditorComponent {
     if (data) {
       this.vliegtuigenService.getVliegtuig(data.ID as number).then((vliegtuig) => {
         this.vliegtuig = vliegtuig;
+        console.log(data);
+        console.log(this.vliegtuig)
       });
     }
   }
