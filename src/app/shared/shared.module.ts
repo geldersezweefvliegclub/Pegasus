@@ -11,6 +11,8 @@ import {VliegtuigEditorComponent} from './components/editors/vliegtuig-editor/vl
 import {FormsModule, NG_VALIDATORS} from '@angular/forms';
 import { IconButtonComponent } from './components/icon-button/icon-button.component';
 import { RegistratieDirective } from './directives/registratie/registratie.directive';
+import { DeleteActionComponent } from './components/datatable/delete-action/delete-action.component';
+import { RestoreActionComponent } from './components/datatable/restore-action/restore-action.component';
 
 
 @NgModule({
@@ -29,6 +31,8 @@ import { RegistratieDirective } from './directives/registratie/registratie.direc
     VliegtuigEditorComponent,
     IconButtonComponent,
     RegistratieDirective,
+    DeleteActionComponent,
+    RestoreActionComponent,
   ],
   exports: [
     ModalComponent,

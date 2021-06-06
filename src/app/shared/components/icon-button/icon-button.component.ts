@@ -12,7 +12,6 @@ export class IconButtonComponent implements OnInit {
   @Input() iconNaam: string;
   @Input() btnColor: string = 'btn-secondary';
   @Input() type: 'button' | 'submit' = 'button';
-  @Output() OnClicked: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
   faIcon: IconDefinition;
 
@@ -30,12 +29,10 @@ export class IconButtonComponent implements OnInit {
       }
 
       if (!this.faIcon) {
+        console.log('fa' + parts[1]);
+        console.log(fas);
         this.faIcon = fas['faExclamation'];
       }
     }
-  }
-
-  buttonClicked(event: MouseEvent) {
-    this.OnClicked.emit(event);
   }
 }

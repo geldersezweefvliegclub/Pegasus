@@ -1,7 +1,7 @@
 <ng-template #content let-modal>
     <div class="modal-header bg-primary text-white">
         <h4 class="modal-title" id="modal-basic-title">{{titel}}</h4>
-        <button type="button" class="btn btn-outline-secondary" aria-label="Close" (click)="modal.dismiss()">
+        <button type="button" class="btn btn-outline-secondary" aria-label="Close" (click)="this.close()">
             <span aria-hidden="true"><fa-icon [icon]="cross"></fa-icon> </span>
         </button>
     </div>

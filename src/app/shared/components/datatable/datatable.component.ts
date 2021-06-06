@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
-import {GridApi, GridOptions, RowDoubleClickedEvent} from 'ag-grid-community';
+import {ColDef, GridApi, GridOptions, RowDoubleClickedEvent} from 'ag-grid-community';
 import {StorageService} from '../../../services/storage/storage.service';
 
 @Component({
@@ -24,8 +24,7 @@ export class DatatableComponent implements OnChanges, OnDestroy {
         onRowDoubleClicked: this.onRowDoubleClicked.bind(this),
     };
 
-    defaultColDef = {
-        width: 200,                   // set every column width
+    defaultColDef: ColDef = {
         editable: false,              // Gaan niet editen in grid
         filter: 'agTextColumnFilter', // use 'text' filter by default
     };
@@ -54,11 +53,12 @@ export class DatatableComponent implements OnChanges, OnDestroy {
                 this.api.sizeColumnsToFit();
             }
         }
-        this.columnStateTimer = setInterval(() => this.StoreColumnState(), 5000)
+        this.columnStateTimer = setInterval(() => this.StoreColumnState(), 10000)
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         if (this.api) {
+            this.api.setColumnDefs(this.columnDefs);
             this.api.setRowData(this.rowData);
         }
     }

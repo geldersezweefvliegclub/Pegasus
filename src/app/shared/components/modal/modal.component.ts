@@ -18,4 +18,8 @@ export class ModalComponent {
   open() {
     this.modalService.open(this.content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {}, (reason) => {});
   }
+
+  close() {
+    this.modalService.dismissAll()
+  }
 }

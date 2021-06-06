@@ -53,3 +53,30 @@ input.ng-dirty.ng-invalid{
 .card-body {
   padding-bottom: 0.5rem;
 }
+
+.recycleBtn:checked {
+  color: #fff;
+  background-color: #656565;;
+  border-color: #656565;
+}
+
+
+// button in editor
+.editorRestoreBtn {
+  background-color: #ffc107;
+  border-color: #ffc107;
+}
+
+.editorDeleteBtn {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+// wijzig de zwarte kleur in disabled forms
+.form-control:disabled, .form-control[readonly] {
+  color: #9a9a9a;
+}
+
+.form-select:disabled {
+  color: #9a9a9a;
+}

@@ -1,4 +1,6 @@
-<app-icon-card titel="Vliegtuigen" subtitel="Een overzicht van de vliegtuigen" [icon]="vliegtuig">
+<app-error [error]="error"></app-error>
+
+<app-icon-card titel="Vliegtuigen" subtitel="Een overzicht van de vliegtuigen" [icon]="iconCardIcon">
     <div class="box h-100">
         <div class="row h-100" style="overflow: hidden;">
             <app-datatable
@@ -10,30 +12,47 @@
                     style="height:100%;" class="mt-n8"></app-datatable>
         </div>
         <div class="row justify-content-start" id="toolbar">
-            <div class="col-4">
+            <div class="col-2">
+                <app-icon-button class="toolbarBtn" tekst="Toevoegen" iconNaam="far PlusSquare" (click)="addVliegtuig()"
+                                 btnColor="btn-primary" *ngIf="!this.deleteMode"></app-icon-button>
 
-                    <app-icon-button class="toolbarBtn" tekst="Toevoegen" iconNaam="far PlusSquare"
-                                     btnColor="btn-primary"></app-icon-button>
-
-                    <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
-                                     btnColor="btn-secondary"></app-icon-button>
+                <div *ngIf="this.deleteMode">
+                    <input type="checkbox" class="btn-check" id="trashBtn" name="prullenbakMode"
+                           [(ngModel)]="trashMode"
+                           (ngModelChange)="trashModeJaNee()">
+                    <label class="btn btn-outline-primary recycleBtn" for="trashBtn">
+                        <fa-icon [icon]="prullenbakIcon"></fa-icon>
+                        Prullenbak
+                    </label>
                 </div>
-            <div class="col-8">
-            <div class="d-flex" style="align-items: baseline">
-                    <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>
-                    <input id="zoekInput"
-                           type="search"
-                           class="form-control"
-                           [(ngModel)]="zoekString"
-                           name="zoekString"
-                           (keyup)="opvragen()"
-                           (search)="opvragen()"
-                           >
+            </div>
+            <div class="col-10">
+                <div class="row justify-content-between" id="zoekbar">
+                    <div class="col-10">
+                        <div class="d-flex" style="align-items: baseline">
+                            <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>
+                            <input id="zoekInput"
+                                   type="search"
+                                   class="form-control"
+                                   [(ngModel)]="zoekString"
+                                   name="zoekString"
+                                   (keyup)="opvragen()"
+                                   (search)="opvragen()"
+                            >
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div style="display: flex;" class="float-end">
+                            <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
+                                             btnColor="btn-secondary" (click)="deleteModeJaNee()"></app-icon-button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <app-vliegtuig-editor></app-vliegtuig-editor>
-
+    <app-vliegtuig-editor
+            (onAdd)="Toevoegen($event)"  (onUpdate)="Aanpassen($event)" (onDelete)="Verwijderen($event)" (onRestore)="Herstellen($event)"
+    ></app-vliegtuig-editor>
 </app-icon-card>
