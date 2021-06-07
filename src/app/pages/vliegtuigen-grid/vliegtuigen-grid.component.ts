@@ -12,6 +12,7 @@ import {HeliosVliegtuig} from "../../types/Helios";
 import {CustomError} from "../../types/Utils";
 
 import * as xlsx from 'xlsx';
+import {UserService} from "../../services/userservice/user.service";
 
 @Component({
     selector: 'app-vliegtuigen-grid',
@@ -82,14 +83,24 @@ export class VliegtuigenGridComponent implements OnInit {
     trashMode: boolean = false;
     prullenbakIcon = faRecycle;
     error: CustomError | undefined;
+    private magToevoegen: boolean = false;
+    private magVerwijderen: boolean = false;
+    private magWijzigen: boolean = false;
+    private magExporten: boolean = false;
 
-    constructor(private readonly vliegtuigenService: VliegtuigenService) {
+    constructor(private readonly vliegtuigenService: VliegtuigenService, private readonly loginService: UserService) {
     }
 
     ngOnInit(): void {
         this.vliegtuigenService.getVliegtuigen().then((dataset) => {
             this.data = dataset;
         });
+
+        let ui = this.loginService.userInfo?.Userinfo;
+        this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
+        this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
+        this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
+        this.magExporten = (!ui?.isDDWV) ? true : false;
     }
 
     addVliegtuig(): void {
@@ -177,7 +188,7 @@ export class VliegtuigenGridComponent implements OnInit {
         var ws = xlsx.utils.json_to_sheet(this.data);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
-        xlsx.writeFile(wb, 'vliegtuigen.xlsx');
+        xlsx.writeFile(wb, 'vliegtuigen ' + new Date().toJSON().slice(0,10) +'.xlsx');
     }
 }
 

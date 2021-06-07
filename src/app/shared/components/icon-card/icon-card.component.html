@@ -9,7 +9,7 @@
                 <p class="my-0">{{subtitel}}</p>
             </div>
         </div>
-        <div class="excel" *ngIf="hasExportListener">
+        <div class="excel" *ngIf="hasExportListener && exportEnabled">
             <img class="logo" src="/assets/img/excel-logo.png"  (click)="this.export()" />
         </div>
     </div>

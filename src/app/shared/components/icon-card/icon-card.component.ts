@@ -11,6 +11,7 @@ export class IconCardComponent {
     @Input() icon: IconDefinition = faQuestionCircle
     @Input() titel: string;
     @Input() subtitel: string;
+    @Input() exportEnabled: boolean = true;
     @Output() excelExport: EventEmitter<void> = new EventEmitter<void>();
 
     private hasExportListener: boolean;
