@@ -29,7 +29,7 @@
             <div class="col-10">
                 <div class="row justify-content-between" id="zoekbar">
                     <div class="col-10">
-                        <div class="d-flex" style="align-items: baseline">
+                        <div class="d-flex" style="align-items: flex-end">
                             <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>
                             <input id="zoekInput"
                                    type="search"
@@ -39,6 +39,8 @@
                                    (keyup)="opvragen()"
                                    (search)="opvragen()"
                             >
+                            <app-icon-button class="toolbarBtn"  iconNaam="fas Redo"
+                                             btnColor="btn-primary" (click)="opvragen()"></app-icon-button>
                         </div>
                     </div>
                     <div class="col-2">

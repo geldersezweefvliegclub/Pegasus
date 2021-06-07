@@ -8,7 +8,7 @@ import {far, IconDefinition} from '@fortawesome/free-regular-svg-icons';
   styleUrls: ['./icon-button.component.scss']
 })
 export class IconButtonComponent implements OnInit {
-  @Input() tekst: string;
+  @Input() tekst: string = "";
   @Input() iconNaam: string;
   @Input() btnColor: string = 'btn-secondary';
   @Input() type: 'button' | 'submit' = 'button';
