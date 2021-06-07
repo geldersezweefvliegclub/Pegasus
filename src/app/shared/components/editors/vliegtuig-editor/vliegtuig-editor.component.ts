@@ -12,10 +12,10 @@ import {coerceStringArray} from "@angular/cdk/coercion";
     styleUrls: ['./vliegtuig-editor.component.scss']
 })
 export class VliegtuigEditorComponent {
-    @Output() onAdd: EventEmitter<HeliosVliegtuig> = new EventEmitter<HeliosVliegtuig>();
-    @Output() onUpdate: EventEmitter<HeliosVliegtuig> = new EventEmitter<HeliosVliegtuig>();
-    @Output() onDelete: EventEmitter<number> = new EventEmitter<number>();
-    @Output() onRestore: EventEmitter<number> = new EventEmitter<number>();
+    @Output() add: EventEmitter<HeliosVliegtuig> = new EventEmitter<HeliosVliegtuig>();
+    @Output() update: EventEmitter<HeliosVliegtuig> = new EventEmitter<HeliosVliegtuig>();
+    @Output() delete: EventEmitter<number> = new EventEmitter<number>();
+    @Output() restore: EventEmitter<number> = new EventEmitter<number>();
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
@@ -88,18 +88,18 @@ export class VliegtuigEditorComponent {
 
     uitvoeren() {
         if (this.isRestoreMode) {
-            this.onRestore.emit(this.vliegtuig.ID);
+            this.restore.emit(this.vliegtuig.ID);
         }
 
         if (this.isVerwijderMode) {
-            this.onDelete.emit(this.vliegtuig.ID);
+            this.delete.emit(this.vliegtuig.ID);
         }
 
         if (!this.isVerwijderMode && !this.isRestoreMode) {
             if (this.vliegtuig.ID) {
-                this.onUpdate.emit(this.vliegtuig);
+                this.update.emit(this.vliegtuig);
             } else {
-                this.onAdd.emit(this.vliegtuig);
+                this.add.emit(this.vliegtuig);
             }
         }
     }

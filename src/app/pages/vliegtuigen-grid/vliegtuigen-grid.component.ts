@@ -11,6 +11,8 @@ import {RestoreActionComponent} from "../../shared/components/datatable/restore-
 import {HeliosVliegtuig} from "../../types/Helios";
 import {CustomError} from "../../types/Utils";
 
+import * as xlsx from 'xlsx';
+
 @Component({
     selector: 'app-vliegtuigen-grid',
     templateUrl: './vliegtuigen-grid.component.html',
@@ -169,6 +171,13 @@ export class VliegtuigenGridComponent implements OnInit {
             this.opvragen();
             this.editor.closePopup();
         });
+    }
+
+    exportDataset() {
+        var ws = xlsx.utils.json_to_sheet(this.data);
+        const wb: xlsx.WorkBook = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
+        xlsx.writeFile(wb, 'vliegtuigen.xlsx');
     }
 }
 

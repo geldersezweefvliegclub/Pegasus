@@ -1,6 +1,7 @@
 <app-error [error]="error"></app-error>
 
-<app-icon-card titel="Vliegtuigen" subtitel="Een overzicht van de vliegtuigen" [icon]="iconCardIcon">
+<app-icon-card titel="Vliegtuigen" subtitel="Een overzicht van de vliegtuigen" [icon]="iconCardIcon"
+               (excelExport)="exportDataset()">
     <div class="box h-100">
         <div class="row h-100" style="overflow: hidden;">
             <app-datatable
@@ -28,8 +29,8 @@
             </div>
             <div class="col-10">
                 <div class="row justify-content-between" id="zoekbar">
-                    <div class="col-10">
-                        <div class="d-flex" style="align-items: flex-end">
+                    <div class="col-8">
+                        <div class="d-flex justify-content-begin align-items-end">
                             <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>
                             <input id="zoekInput"
                                    type="search"
@@ -39,12 +40,12 @@
                                    (keyup)="opvragen()"
                                    (search)="opvragen()"
                             >
-                            <app-icon-button class="toolbarBtn"  iconNaam="fas Redo"
+                            <app-icon-button class="toolbarBtn" iconNaam="fas Redo"
                                              btnColor="btn-primary" (click)="opvragen()"></app-icon-button>
                         </div>
                     </div>
-                    <div class="col-2">
-                        <div style="display: flex;" class="float-end">
+                    <div class="col-4">
+                        <div class="d-flex justify-content-end">
                             <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
                                              btnColor="btn-secondary" (click)="deleteModeJaNee()"></app-icon-button>
                         </div>
@@ -55,6 +56,7 @@
     </div>
 
     <app-vliegtuig-editor
-            (onAdd)="Toevoegen($event)"  (onUpdate)="Aanpassen($event)" (onDelete)="Verwijderen($event)" (onRestore)="Herstellen($event)"
+            (add)="Toevoegen($event)" (update)="Aanpassen($event)" (delete)="Verwijderen($event)"
+            (restore)="Herstellen($event)"
     ></app-vliegtuig-editor>
 </app-icon-card>
