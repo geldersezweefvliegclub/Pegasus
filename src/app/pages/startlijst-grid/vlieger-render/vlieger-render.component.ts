@@ -1,8 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {ICellRendererParams} from "ag-grid-community";
-import {AgRendererComponent} from "ag-grid-angular";
-import {NgbDate} from "@ng-bootstrap/ng-bootstrap";
-import {DateTime} from "luxon";
+import {Component} from '@angular/core';
+import {ICellRendererParams} from 'ag-grid-community';
+import {AgRendererComponent} from 'ag-grid-angular';
 
 @Component({
     selector: 'app-vlieger-render',

@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {APIService} from '../apiservice/api.service';
 
-import {HeliosStarts, HeliosVliegtuig, HeliosVliegdagen, HeliosStart} from '../../types/Helios';
+import {HeliosStart, HeliosStarts, HeliosVliegdagen} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
-import {KeyValueString} from "../../types/Utils";
-import {DateTime} from "luxon";
+import {KeyValueString} from '../../types/Utils';
+import {DateTime} from 'luxon';
 
 @Injectable({
     providedIn: 'root'

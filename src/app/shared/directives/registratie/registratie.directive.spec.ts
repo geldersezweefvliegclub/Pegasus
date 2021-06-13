@@ -1,4 +1,4 @@
-import { RegistratieDirective } from './registratie.directive';
+import {RegistratieDirective} from './registratie.directive';
 import {FormControl} from '@angular/forms';
 
 describe('RegistratieDirective', () => {

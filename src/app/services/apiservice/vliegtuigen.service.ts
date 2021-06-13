@@ -3,7 +3,7 @@ import {APIService} from './api.service';
 
 import {HeliosVliegtuig, HeliosVliegtuigen} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
-import {KeyValueString} from "../../types/Utils";
+import {KeyValueString} from '../../types/Utils';
 
 @Injectable({
     providedIn: 'root'

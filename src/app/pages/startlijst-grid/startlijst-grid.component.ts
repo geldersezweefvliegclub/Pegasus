@@ -1,33 +1,26 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {StartlijstService} from '../../services/apiservice/startlijst.service';
 import {CheckboxRenderComponent} from '../../shared/components/datatable/checkbox-render/checkbox-render.component';
-import {faPlane, faRecycle, faUser} from '@fortawesome/free-solid-svg-icons';
+import {faRecycle} from '@fortawesome/free-solid-svg-icons';
 import {VliegtuigEditorComponent} from '../../shared/components/editors/vliegtuig-editor/vliegtuig-editor.component';
 import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {DeleteActionComponent} from "../../shared/components/datatable/delete-action/delete-action.component";
-import {RestoreActionComponent} from "../../shared/components/datatable/restore-action/restore-action.component";
-import {HeliosStart, HeliosStartDataset} from "../../types/Helios";
-import {CustomError, KeyValueString, nummerSort, tijdSort} from "../../types/Utils";
+import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
+import {DeleteActionComponent} from '../../shared/components/datatable/delete-action/delete-action.component';
+import {RestoreActionComponent} from '../../shared/components/datatable/restore-action/restore-action.component';
+import {HeliosStart, HeliosStartDataset} from '../../types/Helios';
+import {CustomError, KeyValueString, nummerSort, tijdSort} from '../../types/Utils';
 import * as xlsx from 'xlsx';
-import {UserService} from "../../services/apiservice/user.service";
-import {faClipboardList} from "@fortawesome/free-solid-svg-icons/faClipboardList";
-import {NgbDateFRParserFormatter} from "../../shared/ngb-date-fr-parser-formatter";
-import {DateTime} from "luxon";
-import {ZitplaatsRenderComponent} from "../vliegtuigen-grid/zitplaats-render/zitplaats-render.component";
-import {VliegerRenderComponent} from "./vlieger-render/vlieger-render.component";
-import {InzittendeRenderComponent} from "./inzittende-render/inzittende-render.component";
-import {faFilter} from "@fortawesome/free-solid-svg-icons/faFilter";
-import {
-    NgbDate,
-    NgbCalendar,
-    NgbDateStruct,
-    NgbDateParserFormatter,
-    NgbDatepickerNavigateEvent
-} from "@ng-bootstrap/ng-bootstrap";
-import {StarttijdRenderComponent} from "./starttijd-render/starttijd-render.component";
-import {LandingstijdRenderComponent} from "./landingstijd-render/landingstijd-render.component";
-import {TijdInvoerComponent} from "../../shared/components/editors/tijd-invoer/tijd-invoer.component";
+import {UserService} from '../../services/apiservice/user.service';
+import {faClipboardList} from '@fortawesome/free-solid-svg-icons/faClipboardList';
+import {NgbDateFRParserFormatter} from '../../shared/ngb-date-fr-parser-formatter';
+import {DateTime} from 'luxon';
+import {VliegerRenderComponent} from './vlieger-render/vlieger-render.component';
+import {InzittendeRenderComponent} from './inzittende-render/inzittende-render.component';
+import {faFilter} from '@fortawesome/free-solid-svg-icons/faFilter';
+import {NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDatepickerNavigateEvent, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
+import {StarttijdRenderComponent} from './starttijd-render/starttijd-render.component';
+import {LandingstijdRenderComponent} from './landingstijd-render/landingstijd-render.component';
+import {TijdInvoerComponent} from '../../shared/components/editors/tijd-invoer/tijd-invoer.component';
 
 
 @Component({

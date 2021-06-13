@@ -1,7 +1,7 @@
 import {Component, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../modal/modal.component";
-import {HeliosStart, HeliosStartDataset} from "../../../../types/Helios";
-import {StartlijstService} from "../../../../services/apiservice/startlijst.service";
+import {ModalComponent} from '../../modal/modal.component';
+import {HeliosStart, HeliosStartDataset} from '../../../../types/Helios';
+import {StartlijstService} from '../../../../services/apiservice/startlijst.service';
 
 @Component({
     selector: 'app-tijd-invoer',

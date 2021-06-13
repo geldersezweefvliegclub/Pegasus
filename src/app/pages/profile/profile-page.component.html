@@ -1,267 +1,125 @@
-<div class="row">
-    <div class="col-md-3">
-
-
-        <!--Card-->
-        <div class="card">
-
-            <!--Card image-->
-            <div class="view overlay hm-white-slight waves-light" mdbWavesEffect>
-                <img src="https://mdbootstrap.com/img/Photos/Horizontal/People/6-col/img%20%283%29.jpg"
-                     class="img-fluid">
-                <a>
-                    <div class="mask"></div>
-                </a>
-            </div>
-            <!--/Card image-->
-
-            <!--Card content-->
-            <div class="card-body text-center">
-                <!--Title-->
-                <h4 class="card-title font-bold mb-2"><strong>Alice Mayer</strong></h4>
-                <h5 class="indigo-text"><strong>Photographer</strong></h5>
-
-                <h6 class='text-justify'><strong>About:</strong></h6>
-                <p class='text-justify'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ratione perferendis
-                    quod animi dignissimos consectetur
-                    quibusdam numquam laboriosam, minus, provident...</p>
-
-                <div class="text-right">
-                    <button type="button" mdbBtn outline="true" color="primary" rounded="true" size="sm" mdbWavesEffect>
-                        More...
-                    </button>
+<form #profielForm (ngSubmit)="submit()">
+    <div class="row">
+        <div class="col-8">
+            <app-icon-card titel="Aanpassen profiel" subtitel="Instellen van uw gegevens en voorkeuren" class="h-100">
+                <div #persoonGroup="ngModelGroup" ngModelGroup="persoonGroup">
+                    <div class="row">
+                        <div class="col-5">
+                            <label for="voornaam" class="form-label">Voornaam</label>
+                            <input type="text" name="voornaam" class="form-control" id="voornaam">
+                        </div>
+                        <div class="col-2">
+                            <label for="tussenvoegsel" class="form-label">Tussenvoegsel</label>
+                            <input type="text" name="tussenvoegsel" class="form-control" id="tussenvoegsel">
+                        </div>
+                        <div class="col-5">
+                            <label for="achternaam" class="form-label">Achternaam</label>
+                            <input type="text" name="achternaam" class="form-control" id="achternaam">
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-5">
+                            <label for="adres" class="form-label">Adres</label>
+                            <input type="text" name="adres" class="form-control" id="adres">
+                        </div>
+                        <div class="col-2">
+                            <label for="postcode" class="form-label">Postcode</label>
+                            <input type="text" name="postcode" class="form-control" id="postcode">
+                        </div>
+                        <div class="col-5">
+                            <label for="woonplaats" class="form-label">Woonplaats</label>
+                            <input type="text" name="woonplaats" class="form-control" id="woonplaats">
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-4">
+                            <label for="telefoon" class="form-label">Telefoon</label>
+                            <input type="tel" name="telefoon" class="form-control" id="telefoon">
+                        </div>
+                        <div class="col-4">
+                            <label for="mobiel" class="form-label">Mobiel</label>
+                            <input type="tel" name="mobiel" class="form-control" id="mobiel">
+                        </div>
+                        <div class="col-4">
+                            <label for="noodnummer" class="form-label">Noodnummer</label>
+                            <input type="tel" name="noodnummer" class="form-control" id="noodnummer">
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-4">
+<!--                            <label for="telefoon" class="form-label">Telefoon</label>-->
+<!--                            <input type="text" name="telefoon" class="form-control" id="telefoon">-->
+                        </div>
+                        <div class="col-4">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control" id="email">
+                        </div>
+                        <div class="col-4">
+                            <label for="noodnummer" class="form-label">Noodnummer</label>
+                            <input type="text" name="noodnummer" class="form-control" id="noodnummer">
+                        </div>
+                    </div>
                 </div>
-
-            </div>
-            <!--/.Card content-->
-
+            </app-icon-card>
         </div>
-        <!--/.Card-->
-
+        <div class="col-4">
+            <app-icon-card titel="Lidinformatie"
+                           subtitel="Toegekende functies en andere informatie over het lidmaatschap"
+                           [icon]="informatieIcon">
+                <div #informatieGroup="ngModelGroup" ngModelGroup="informatieGroup">
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="gebruiker" class="form-label">Gebruiker</label>
+                            <input type="text" name="gebruiker" class="form-control" id="gebruiker">
+                        </div>
+                        <div class="col-4">
+                            <label for="gebruiker" class="form-label">Lidnummer</label>
+                            <input type="text" name="lidnummer" class="form-control" id="lidnummer">
+                        </div>
+                        <div class="col-4">
+                            <label for="lidmaatschap" class="form-label">Lidmaatschap</label>
+                            <select class="form-select" id="lidmaatschap" name="lidmaatschap">
+                                <option selected>Open this select menu</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-6 mt-4">
+                            <div>
+                                <input class="form-check-input" type="checkbox" id="betaald" name="betaald">
+                                <label class="form-check-label ms-1" for="betaald">
+                                    Heeft betaald
+                                </label>
+                            </div>
+                            <div>
+                                <input class="form-check-input" type="checkbox" id="googleAuth" name="googleAuth">
+                                <label class="form-check-label ms-1" for="googleAuth">
+                                    Google Auth.
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="rollen" class="form-label">Rollen</label>
+                            <select class="form-select" id="rollen" name="rollen">
+                                <option selected>Rollen</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <label class="form-label" for="limitaties">Limitaties</label>
+                            <textarea class="form-control" id="limitaties" name="limitaties"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </app-icon-card>
+        </div>
     </div>
+</form>
 
-    <div class="col-md-9">
-
-        <!--Projects section v.2-->
-        <section class="section text-center pb-3">
-
-            <!--Section heading-->
-            <!-- <h2 class="section-heading h1 pt-4"><strong>Latest projects:</strong></h2> -->
-            <!--Section description-->
-
-            <!--Grid row-->
-            <div class="row d-flex justify-content-center">
-
-                <!--Grid column-->
-                <div class="col-lg-6 col-xl-5 mb-3">
-
-                    <!--Card-->
-                    <mdb-card cascade="true" narrower="true" class="d-flex mb-5">
-
-                        <!--Card image-->
-                        <div class="view overlay hm-white-slight">
-                            <img src="https://mdbootstrap.com/img/Mockups/Horizontal/6-col/pro-profile-page.jpg"
-                                 class="img-fluid" alt="">
-                            <a href="#">
-                                <div class="mask"></div>
-                            </a>
-                        </div>
-
-                        <!--Card content-->
-                        <div class="card-body">
-                            <!--Title-->
-                            <h4 class="card-title font-bold mb-3"><strong>Project name</strong></h4>
-                            <!--Text-->
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                                of the card's content.
-                            </p>
-                        </div>
-
-                        <!--Card footer-->
-                        <div class="card-footer links-light">
-                            <span class="right">
-                                <a href=""
-                                   class="waves-effect p-2">Live Preview
-                                    <fa-icon [icon]="camera" class="ml-1"></fa-icon></a>
-                            </span>
-                        </div>
-
-                    </mdb-card>
-                    <!--/.Card-->
-
-                </div>
-                <!--Grid column-->
-
-                <!--Grid column-->
-                <div class="col-lg-6 col-xl-5 mb-3">
-
-                    <!--Card-->
-                    <div class="card d-flex mb-5">
-
-                        <!--Card image-->
-                        <div class="view overlay hm-white-slight">
-                            <img src="https://mdbootstrap.com/img/Mockups/Horizontal/6-col/pro-signup.jpg"
-                                 class="img-fluid" alt="">
-                            <a href="#">
-                                <div class="mask"></div>
-                            </a>
-                        </div>
-
-                        <!--Card content-->
-                        <div class="card-body">
-                            <!--Title-->
-                            <h4 class="card-title font-bold mb-3"><strong>Project name</strong></h4>
-                            <!--Text-->
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                                of the card's content.
-                            </p>
-                        </div>
-
-                        <!--Card footer-->
-                        <div class="card-footer links-light">
-                            <span class="right">
-                                <a href="" class="waves-effect p-2">Live Preview
-                                    <fa-icon [icon]="camera" class="ml-1"></fa-icon></a>
-                            </span>
-                        </div>
-
-                    </div>
-                    <!--/.Card-->
-
-                </div>
-                <!--Grid column-->
-
-            </div>
-            <!--Grid row-->
-
-            <!--Grid row-->
-            <div class="row d-flex justify-content-center">
-
-                <!--Grid column-->
-                <div class="col-lg-6 col-xl-5 mb-3">
-
-                    <!--Card-->
-                    <div class="card d-flex mb-5">
-
-                        <!--Card image-->
-                        <div class="view overlay hm-white-slight">
-                            <img src="https://mdbootstrap.com/img/Mockups/Horizontal/6-col/pro-pricing.jpg"
-                                 class="img-fluid" alt="">
-                            <a href="#">
-                                <div class="mask"></div>
-                            </a>
-                        </div>
-
-                        <!--Card content-->
-                        <div class="card-body">
-                            <!--Title-->
-                            <h4 class="card-title font-bold mb-3"><strong>Project name</strong></h4>
-                            <!--Text-->
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                                of the card's content.
-                            </p>
-                        </div>
-
-                        <!--Card footer-->
-                        <div class="card-footer links-light">
-                            <span class="right">
-                                <a href="" class="waves-effect p-2">Live Preview
-                                    <fa-icon [icon]="camera" class="ms-1"></fa-icon></a>
-                            </span>
-                        </div>
-
-                    </div>
-                    <!--/.Card-->
-
-                </div>
-                <!--Grid column-->
-
-                <!--Grid column-->
-                <div class="col-lg-6 col-xl-5 mb-3">
-
-                    <!--Card-->
-                    <div class="card d-flex mb-5">
-
-                        <!--Card image-->
-                        <div class="view overlay hm-white-slight">
-                            <img src="https://mdbootstrap.com/img/Mockups/Horizontal/6-col/pro-landing.jpg"
-                                 class="img-fluid" alt="">
-                            <a href="#">
-                                <div class="mask"></div>
-                            </a>
-                        </div>
-
-                        <!--Card content-->
-                        <div class="card-body">
-                            <!--Title-->
-                            <h4 class="card-title font-bold mb-3"><strong>Project name</strong></h4>
-                            <!--Text-->
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                                of the card's content.
-                            </p>
-
-                        </div>
-
-                        <!--Card footer-->
-                        <div class="card-footer links-light">
-                            <span class="right">
-                                <a href="" class="waves-effect p-2">Live Preview
-                                    <fa-icon [icon]="camera" class="ms-1"></fa-icon></a>
-                            </span>
-                        </div>
-
-                    </div>
-                    <!--/.Card-->
-
-                </div>
-                <!--Grid column-->
-                <div class="col-lg-12">
-                    <div class="text-center">
-
-                        <!--Pagination -->
-                        <nav class="my-4">
-                            <ul class="pagination pagination-circle pg-blue mb-0">
-
-                                <!--First-->
-                                <li class="page-item disabled"><a class="page-link">First</a></li>
-
-                                <!--Arrow left-->
-                                <li class="page-item disabled">
-                                    <a class="page-link" aria-label="Previous">
-                                        <span aria-hidden="true">«</span>
-                                        <span class="sr-only">Previous</span>
-                                    </a>
-                                </li>
-
-                                <!--Numbers-->
-                                <li class="page-item active"><a class="page-link">1</a></li>
-                                <li class="page-item"><a class="page-link">2</a></li>
-                                <li class="page-item"><a class="page-link">3</a></li>
-                                <li class="page-item"><a class="page-link">4</a></li>
-                                <li class="page-item"><a class="page-link">5</a></li>
-
-                                <!--Arrow right-->
-                                <li class="page-item">
-                                    <a class="page-link" aria-label="Next">
-                                        <span aria-hidden="true">»</span>
-                                        <span class="sr-only">Next</span>
-                                    </a>
-                                </li>
-
-                                <!--First-->
-                                <li class="page-item"><a class="page-link">Last</a></li>
-
-                            </ul>
-                        </nav>
-                        <!--/Pagination -->
-                    </div>
-                </div>
-            </div>
-            <!--Grid row-->
-
-        </section>
-        <!--/Projects section v.2-->
-    </div>
-
-
-</div>
