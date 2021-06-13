@@ -8,7 +8,7 @@ import {ICellRendererParams} from 'ag-grid-community';
   styleUrls: ['./zitplaats-render.component.scss']
 })
 export class ZitplaatsRenderComponent implements AgRendererComponent {
-  private stoelen: string;
+  stoelen: number;
   constructor() { }
 
   agInit(params: ICellRendererParams): void {
@@ -18,6 +18,4 @@ export class ZitplaatsRenderComponent implements AgRendererComponent {
   refresh(params: ICellRendererParams): boolean {
     return false;
   }
-
-
 }

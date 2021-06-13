@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  "/Types/CreateTable": {
+  "/AanwezigVliegtuigen/CreateTable": {
     post: {
       parameters: {
         query: {
@@ -20,7 +20,7 @@ export interface paths {
       };
     };
   };
-  "/Types/CreateViews": {
+  "/AanwezigVliegtuigen/CreateViews": {
     post: {
       responses: {
         /** Aangemaakt, View toegevoegd */
@@ -30,19 +30,23 @@ export interface paths {
       };
     };
   };
-  "/Types/GetObject": {
+  "/AanwezigVliegtuigen/GetObject": {
     get: {
       parameters: {
         query: {
-          /** Database ID van het type record */
-          ID: number;
+          /** Database ID van het aanwezig record */
+          ID?: number;
+          /** Vliegtuig ID (ID uit ref_vliegtuigen). Werkt alleen als ID null is. Bovendien is DATUM vereist */
+          VLIEGTUIG_ID?: number;
+          /** DATUM van de vliegdag. Werkt alleen als ID null is. Bovendien is LID_ID vereist */
+          DATUM?: string;
         };
       };
       responses: {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["ref_types"];
+            "application/json": components["schemas"]["oper_aanwezig_vliegtuigen"];
           };
         };
         /** Data niet gevonden */
@@ -56,7 +60,7 @@ export interface paths {
       };
     };
   };
-  "/Types/GetObjects": {
+  "/AanwezigVliegtuigen/GetObjects": {
     get: {
       parameters: {
         query: {
@@ -68,7 +72,7 @@ export interface paths {
           LAATSTE_AANPASSING?: boolean;
           /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
           HASH?: string;
-          /** Sortering van de velden in ORDER BY formaat. Default = CLUBKIST DESC, VOLGORDE, REGISTRATIE */
+          /** Sortering van de velden in ORDER BY formaat. Default = NAAM */
           SORT?: string;
           /** Maximum aantal records in de dataset. Gebruikt in LIMIT query */
           MAX?: number;
@@ -76,15 +80,21 @@ export interface paths {
           START?: number;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
-          /** Haal alle types op van een specieke groep */
-          GROEP?: number;
+          /** Zoek in de NAAM van de aanwezige */
+          SELECTIE?: string;
+          /** Een of meerdere vliegtuigen database IDs in CSV formaat. AND conditie als er geen andere parameters zijn, anders OR conditie */
+          IN?: string;
+          /** Begin datum (inclusief deze dag) */
+          BEGIN_DATUM?: string;
+          /** Eind datum (inclusief deze dag) */
+          EIND_DATUM?: string;
         };
       };
       responses: {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["view_types"];
+            "application/json": components["schemas"]["view_aanwezig_vliegtuigen"];
           };
         };
         /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
@@ -96,18 +106,86 @@ export interface paths {
       };
     };
   };
-  "/Types/DeleteObject": {
+  "/AanwezigVliegtuigen/Aanmelden": {
+    post: {
+      responses: {
+        /** OK, data succesvol aangepast */
+        200: {
+          content: {
+            "application/json": components["schemas"]["oper_aanwezig_vliegtuigen"];
+          };
+        };
+        /** Niet geautoriseerd, geen schrijfrechten */
+        401: unknown;
+        /** Data niet gevonden */
+        404: unknown;
+        /** Methode niet toegestaan, input validatie error */
+        405: unknown;
+        /** Niet aanvaardbaar, input ontbreekt */
+        406: unknown;
+        /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
+        500: unknown;
+      };
+      /** Lid data */
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["oper_aanwezig_vliegtuigen_in"] &
+            ({
+              /** Tijdstip van de aanmelding. Indien afwezig, huidige tijd. ISO8601 */
+              TIJDSTIP?: string;
+            } & { [key: string]: any }) & { [key: string]: any };
+        };
+      };
+    };
+  };
+  "/AanwezigVliegtuigen/Afmelden": {
+    post: {
+      responses: {
+        /** OK, data succesvol aangepast */
+        200: {
+          content: {
+            "application/json": components["schemas"]["oper_aanwezig_vliegtuigen"];
+          };
+        };
+        /** Niet geautoriseerd, geen schrijfrechten */
+        401: unknown;
+        /** Lid is niet aanwezig */
+        404: unknown;
+        /** Methode niet toegestaan, input validatie error */
+        405: unknown;
+        /** Niet aanvaardbaar, input ontbreekt */
+        406: unknown;
+        /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
+        500: unknown;
+      };
+      /** Lid data */
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["oper_aanwezig_vliegtuigen_in"] &
+            ({
+              /** Tijdstip van de afmelding. Indien afwezig, huidige tijd. ISO8601 */
+              TIJDSTIP?: string;
+            } & { [key: string]: any }) & { [key: string]: any };
+        };
+      };
+    };
+  };
+  "/AanwezigVliegtuigen/DeleteObject": {
     delete: {
       parameters: {
         query: {
-          /** Database ID van het record. Meerdere ID's in CSV formaat */
-          ID: number;
+          /** Database ID van het aanwezig record. Meerdere ID's in CSV formaat */
+          ID?: string;
+          /** Datum van de vliegdag */
+          DATUM?: string;
+          /** Het vliegtuig ID. Verwijzing naar vliegtuigen tabel */
+          VLIEGTUIG_ID?: number;
           /** Controleer of record bestaat voordat het verwijderd wordt. Default = true */
           VERIFICATIE?: boolean;
         };
       };
       responses: {
-        /** Type verwijderd */
+        /** Aanwezig record verwijderd */
         204: never;
         /** Niet geautoriseerd, geen schrijfrechten */
         401: unknown;
@@ -122,12 +200,12 @@ export interface paths {
       };
     };
   };
-  "/Types/RestoreObject": {
+  "/AanwezigVliegtuigen/RestoreObject": {
     patch: {
       parameters: {
         query: {
           /** Database ID van het record. Meerdere ID's in CSV formaat */
-          ID: number;
+          ID: string;
         };
       };
       responses: {
@@ -146,13 +224,13 @@ export interface paths {
       };
     };
   };
-  "/Types/SaveObject": {
+  "/AanwezigVliegtuigen/SaveObject": {
     put: {
       responses: {
         /** OK, data succesvol aangepast */
         200: {
           content: {
-            "application/json": components["schemas"]["ref_types"];
+            "application/json": components["schemas"]["oper_aanwezig_vliegtuigen"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -163,13 +241,15 @@ export interface paths {
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
         406: unknown;
+        /** Conflict, lid is al/niet aanwezig op deze dag */
+        409: unknown;
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** type data */
+      /** Aanmelding data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["ref_types_in"];
+          "application/json": components["schemas"]["oper_aanwezig_vliegtuigen_in"];
         };
       };
     };
@@ -178,7 +258,7 @@ export interface paths {
         /** OK, data succesvol toegevoegd */
         200: {
           content: {
-            "application/json": components["schemas"]["ref_types"];
+            "application/json": components["schemas"]["oper_aanwezig_vliegtuigen"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -187,15 +267,15 @@ export interface paths {
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
         406: unknown;
-        /** Conflict, record bestaat al */
+        /** Conflict, lid is al aanwezig */
         409: unknown;
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** type data */
+      /** Aanmelding data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["ref_types_in"];
+          "application/json": components["schemas"]["oper_aanwezig_vliegtuigen_in"];
         };
       };
     };
@@ -204,30 +284,39 @@ export interface paths {
 
 export interface components {
   schemas: {
-    ref_types_in: {
-      /** Database ID van het record */
+    oper_aanwezig_vliegtuigen_in: {
+      /** Database ID van het aanwezig record */
       ID?: number;
-      /** Type groep */
-      GROEP?: number;
-      /** Zeer korte beschrijving van de code */
-      CODE?: string;
-      /** Hoe kennen andere systemen / organisatie deze code */
-      EXT_REF?: string;
-      /** Volledige omschrijving van het type */
-      OMSCHRIJVING?: string;
-      /** Volgorde in de HMI */
-      SORTEER_VOLGORDE?: number;
-      /** Is dit record (met ID) hard gecodeerd in de source code. Zo ja, dan niet aanpassen. */
-      READ_ONLY?: boolean;
+      /** Datum van de vliegdag */
+      DATUM?: string;
+      /** Het vliegtuig ID. Verwijzing naar vliegtuigen tabel */
+      VLIEGTUIG_ID?: number;
+      /** Aankomsttijd van het vliegtuig. ISO8601 */
+      AANKOMST?: string;
+      /** Vertrektijd van het vliegtuig. ISO8601 */
+      VERTREK?: string;
+      /** Positie van het vliegtuig in latitude */
+      LATITUDE?: number;
+      /** Positie van het vliegtuig in longitude */
+      LONGITUDE?: number;
+      /** Hoogte van het vliegtuig in meters */
+      HOOGTE?: number;
+      /** Snelheid van het vliegtuig in km/h */
+      SNELHEID?: number;
     } & { [key: string]: any };
-    ref_types: components["schemas"]["ref_types_in"] &
+    oper_aanwezig_vliegtuigen: components["schemas"]["oper_aanwezig_vliegtuigen_in"] &
       ({
         /** Is dit record gemarkeerd als verwijderd? */
         VERWIJDERD?: boolean;
         /** Tijdstempel van laaste aanpassing in de database */
         LAATSTE_AANPASSING?: string;
       } & { [key: string]: any }) & { [key: string]: any };
-    view_types: {
+    view_aanwezig_vliegtuigen_dataset: components["schemas"]["oper_aanwezig_vliegtuigen"] &
+      ({
+        /** Vliegtuig registratie en callsign van het vliegtuig */
+        REG_CALL?: string;
+      } & { [key: string]: any }) & { [key: string]: any };
+    view_aanwezig_vliegtuigen: {
       /** Aantal records dat voldoet aan de criteria in de database */
       totaal?: number;
       /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
@@ -235,7 +324,7 @@ export interface components {
       /** hash van de dataset */
       hash?: string;
       /** De dataset met records */
-      dataset?: components["schemas"]["ref_types"][];
+      dataset?: components["schemas"]["view_aanwezig_vliegtuigen_dataset"][];
     } & { [key: string]: any };
   };
 }

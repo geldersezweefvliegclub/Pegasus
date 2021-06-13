@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  "/Types/CreateTable": {
+  "/Rooster/CreateTable": {
     post: {
       parameters: {
         query: {
@@ -20,7 +20,7 @@ export interface paths {
       };
     };
   };
-  "/Types/CreateViews": {
+  "/Rooster/CreateViews": {
     post: {
       responses: {
         /** Aangemaakt, View toegevoegd */
@@ -30,19 +30,21 @@ export interface paths {
       };
     };
   };
-  "/Types/GetObject": {
+  "/Rooster/GetObject": {
     get: {
       parameters: {
         query: {
-          /** Database ID van het type record */
-          ID: number;
+          /** Database ID van het rooster record */
+          ID?: number;
+          /** Datum van het rooster */
+          DATUM?: string;
         };
       };
       responses: {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["ref_types"];
+            "application/json": components["schemas"]["oper_rooster"];
           };
         };
         /** Data niet gevonden */
@@ -56,7 +58,7 @@ export interface paths {
       };
     };
   };
-  "/Types/GetObjects": {
+  "/Rooster/GetObjects": {
     get: {
       parameters: {
         query: {
@@ -68,7 +70,7 @@ export interface paths {
           LAATSTE_AANPASSING?: boolean;
           /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
           HASH?: string;
-          /** Sortering van de velden in ORDER BY formaat. Default = CLUBKIST DESC, VOLGORDE, REGISTRATIE */
+          /** Sortering van de velden in ORDER BY formaat. Default = DATUM DESC */
           SORT?: string;
           /** Maximum aantal records in de dataset. Gebruikt in LIMIT query */
           MAX?: number;
@@ -76,15 +78,15 @@ export interface paths {
           START?: number;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
-          /** Haal alle types op van een specieke groep */
-          GROEP?: number;
+          /** Zoek op datum */
+          DATUM?: string;
         };
       };
       responses: {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["view_types"];
+            "application/json": components["schemas"]["view_rooster"];
           };
         };
         /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
@@ -96,18 +98,20 @@ export interface paths {
       };
     };
   };
-  "/Types/DeleteObject": {
+  "/Rooster/DeleteObject": {
     delete: {
       parameters: {
         query: {
-          /** Database ID van het record. Meerdere ID's in CSV formaat */
-          ID: number;
+          /** Database ID van het rooster record. Meerdere ID's in CSV formaat */
+          ID?: string;
+          /** Datum van het rooster */
+          DATUM?: string;
           /** Controleer of record bestaat voordat het verwijderd wordt. Default = true */
           VERIFICATIE?: boolean;
         };
       };
       responses: {
-        /** Type verwijderd */
+        /** Rooster verwijderd */
         204: never;
         /** Niet geautoriseerd, geen schrijfrechten */
         401: unknown;
@@ -122,12 +126,12 @@ export interface paths {
       };
     };
   };
-  "/Types/RestoreObject": {
+  "/Rooster/RestoreObject": {
     patch: {
       parameters: {
         query: {
           /** Database ID van het record. Meerdere ID's in CSV formaat */
-          ID: number;
+          ID: string;
         };
       };
       responses: {
@@ -146,13 +150,13 @@ export interface paths {
       };
     };
   };
-  "/Types/SaveObject": {
+  "/Rooster/SaveObject": {
     put: {
       responses: {
         /** OK, data succesvol aangepast */
         200: {
           content: {
-            "application/json": components["schemas"]["ref_types"];
+            "application/json": components["schemas"]["oper_rooster"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -163,13 +167,15 @@ export interface paths {
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
         406: unknown;
+        /** Conflict, datum bestaat al */
+        409: unknown;
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** type data */
+      /** Rooster data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["ref_types_in"];
+          "application/json": components["schemas"]["oper_rooster_in"];
         };
       };
     };
@@ -178,7 +184,7 @@ export interface paths {
         /** OK, data succesvol toegevoegd */
         200: {
           content: {
-            "application/json": components["schemas"]["ref_types"];
+            "application/json": components["schemas"]["oper_rooster"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -187,15 +193,15 @@ export interface paths {
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
         406: unknown;
-        /** Conflict, record bestaat al */
+        /** Conflict, datum bestaat al */
         409: unknown;
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** type data */
+      /** Rooster data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["ref_types_in"];
+          "application/json": components["schemas"]["oper_rooster_in"];
         };
       };
     };
@@ -204,30 +210,67 @@ export interface paths {
 
 export interface components {
   schemas: {
-    ref_types_in: {
-      /** Database ID van het record */
+    oper_rooster_in: {
+      /** Database ID van het rooster record */
       ID?: number;
-      /** Type groep */
-      GROEP?: number;
-      /** Zeer korte beschrijving van de code */
-      CODE?: string;
-      /** Hoe kennen andere systemen / organisatie deze code */
-      EXT_REF?: string;
-      /** Volledige omschrijving van het type */
-      OMSCHRIJVING?: string;
-      /** Volgorde in de HMI */
-      SORTEER_VOLGORDE?: number;
-      /** Is dit record (met ID) hard gecodeerd in de source code. Zo ja, dan niet aanpassen. */
-      READ_ONLY?: boolean;
+      /** Datum van de vliegdag */
+      DATUM?: string;
+      /** De DDI voor het ochtend bedrijf. Link naar leden tabel */
+      OCHTEND_DDI_ID?: number;
+      /** De instructeur voor het ochtend bedrijf. Link naar leden tabel */
+      OCHTEND_INSTRUCTEUR_ID?: number;
+      /** De startleider voor het ochtend bedrijf. Link naar leden tabel */
+      OCHTEND_STARTLEIDER_ID?: number;
+      /** De lierist voor het ochtend bedrijf. Link naar leden tabel */
+      OCHTEND_LIERIST_ID?: number;
+      /** De hulplierist voor het ochtend bedrijf. Link naar leden tabel */
+      OCHTEND_HULPLIERIST_ID?: number;
+      /** De DDI voor het middag bedrijf. Link naar leden tabel */
+      MIDDAG_DDI_ID?: number;
+      /** De instructeur voor het middag bedrijf. Link naar leden tabel */
+      MIDDAG_INSTRUCTEUR_ID?: number;
+      /** De startleider voor het middag bedrijf. Link naar leden tabel */
+      MIDDAG_STARTLEIDER_ID?: number;
+      /** De lierist voor het middag bedrijf. Link naar leden tabel */
+      MIDDAG_LIERIST_ID?: number;
+      /** De hulplierist voor het middag bedrijf. Link naar leden tabel */
+      MIDDAG_HULPLIERIST_ID?: number;
+      /** Is het een DDWV dag? */
+      DDWV?: boolean;
+      /** Is er een clubbedrijf */
+      CLUB_BEDRIJF?: boolean;
     } & { [key: string]: any };
-    ref_types: components["schemas"]["ref_types_in"] &
+    oper_rooster: components["schemas"]["oper_rooster_in"] &
       ({
         /** Is dit record gemarkeerd als verwijderd? */
         VERWIJDERD?: boolean;
         /** Tijdstempel van laaste aanpassing in de database */
         LAATSTE_AANPASSING?: string;
       } & { [key: string]: any }) & { [key: string]: any };
-    view_types: {
+    view_rooster_dataset: components["schemas"]["oper_rooster"] &
+      ({
+        /** De naam van de DDI voor het ochtend bedrijf */
+        OCHTEND_DDI?: string;
+        /** De naam van de instructeur voor het ochtend bedrijf */
+        OCHTEND_INSTRUCTEUR?: string;
+        /** De naam van de startleider voor het ochtend bedrijf */
+        OCHTEND_STARTLEIDER?: string;
+        /** De naam van de lierist voor het ochtend bedrijf */
+        OCHTEND_LIERIST?: string;
+        /** De naam van de hulplierist voor het ochtend bedrijf */
+        OCHTEND_HULPLIERIST?: string;
+        /** De naam van de DDI voor het middag bedrijf */
+        MIDDAG_DDI?: string;
+        /** De naam van de instructeur voor het middag bedrijf */
+        MIDDAG_INSTRUCTEUR?: string;
+        /** De naam van de startleider voor het middag bedrijf */
+        MIDDAG_STARTLEIDER?: string;
+        /** De naam van de lierist voor het middag bedrijf */
+        MIDDAG_LIERIST?: string;
+        /** De naam van de hulplierist voor het middag bedrijf */
+        MIDDAG_HULPLIERIST?: string;
+      } & { [key: string]: any }) & { [key: string]: any };
+    view_rooster: {
       /** Aantal records dat voldoet aan de criteria in de database */
       totaal?: number;
       /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
@@ -235,7 +278,7 @@ export interface components {
       /** hash van de dataset */
       hash?: string;
       /** De dataset met records */
-      dataset?: components["schemas"]["ref_types"][];
+      dataset?: components["schemas"]["view_rooster_dataset"][];
     } & { [key: string]: any };
   };
 }

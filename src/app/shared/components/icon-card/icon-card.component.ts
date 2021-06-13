@@ -14,7 +14,7 @@ export class IconCardComponent {
     @Input() exportEnabled: boolean = true;
     @Output() excelExport: EventEmitter<void> = new EventEmitter<void>();
 
-    private hasExportListener: boolean;
+    hasExportListener: boolean;
 
     ngOnInit(): void {
         this.hasExportListener = this.excelExport.observers.length > 0

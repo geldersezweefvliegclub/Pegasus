@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {APIService} from '../apiservice/api.service';
+import {APIService} from './api.service';
 
 import {HeliosVliegtuig, HeliosVliegtuigen} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
-import {getPackageManager} from "@angular/cli/utilities/package-manager";
+import {KeyValueString} from "../../types/Utils";
 
 @Injectable({
     providedIn: 'root'
@@ -22,12 +22,7 @@ export class VliegtuigenService {
             this.vliegtuigen = this.storageService.ophalen('vliegtuigen');
         }
 
-
-        interface parameters {
-            [key: string]: string;
-        }
-
-        let getParams: parameters = {};
+        let getParams: KeyValueString = {};
 
         if (this.vliegtuigen != null) { // we hebben eerder de lijst opgehaald
             hash = this.vliegtuigen.hash as string;
@@ -43,9 +38,7 @@ export class VliegtuigenService {
         }
 
         try {
-            const response: Response = await this.APIService.get('Vliegtuigen/GetObjects', [
-                getParams
-            ]);
+            const response: Response = await this.APIService.get('Vliegtuigen/GetObjects', getParams);
 
             this.vliegtuigen = await response.json();
             this.storageService.opslaan('vliegtuigen', this.vliegtuigen);
@@ -58,7 +51,7 @@ export class VliegtuigenService {
     }
 
     async getVliegtuig(id: number): Promise<HeliosVliegtuig> {
-        const response: Response = await this.APIService.get('Vliegtuigen/GetObject', [{'ID': id.toString()}]);
+        const response: Response = await this.APIService.get('Vliegtuigen/GetObject', {'ID': id.toString()});
 
         return response.json();
     }
@@ -76,7 +69,7 @@ export class VliegtuigenService {
 
     async deleteVliegtuig(id: number) {
         try {
-            await this.APIService.delete('Vliegtuigen/DeleteObject', [{'ID': id.toString()}]);
+            await this.APIService.delete('Vliegtuigen/DeleteObject', {'ID': id.toString()});
         } catch (e) {
             throw(e);
 
@@ -85,7 +78,7 @@ export class VliegtuigenService {
 
     async restoreVliegtuig(id: number) {
         try {
-            await this.APIService.patch('Vliegtuigen/RestoreObject', [{'ID': id.toString()}]);
+            await this.APIService.patch('Vliegtuigen/RestoreObject', {'ID': id.toString()});
         } catch (e) {
             throw(e);
 

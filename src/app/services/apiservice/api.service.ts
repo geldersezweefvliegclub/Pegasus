@@ -8,7 +8,7 @@ import {environment} from '../../../environments/environment';
 export class APIService {
     private URL = 'http://localhost:4200/api/'
 
-    async get(url: string, params?: KeyValueString[], headers?: Headers): Promise<Response> {
+    async get(url: string, params?: KeyValueString, headers?: Headers): Promise<Response> {
         if (params) {
             url = this.prepareEndpoint(url, params);
         }
@@ -54,7 +54,7 @@ export class APIService {
     }
 
     // Aanroepen delete request om record te verwijderen
-    async delete(url: string, params: KeyValueString[]): Promise<void> {
+    async delete(url: string, params: KeyValueString): Promise<void> {
         if (params) {
             url = this.prepareEndpoint(url, params);
         }
@@ -69,7 +69,7 @@ export class APIService {
     }
 
     // Aanroepen patch request om verwijderen record ongedaan te maken
-    async patch(url: string, params: KeyValueString[]): Promise<void> {
+    async patch(url: string, params: KeyValueString): Promise<void> {
         if (params) {
             url = this.prepareEndpoint(url, params);
         }
@@ -83,24 +83,19 @@ export class APIService {
         }
     }
 
-    private prepareEndpoint(url: string, params: KeyValueString[]): string {
+    private prepareEndpoint(url: string, params: KeyValueString): string {
         let args: string = "";
 
-        // Loop door de array met parameters
-        for (let index = 0; index < params.length; index++) {
-            const param = params[index]
-
-            // Loop vervolgens door het key:value object heen
-            // Als het object op index 0 is, voeg vraagteken toe. Als object niet op de laatste plek staat, voeg & toe.
-            Object.entries(param).forEach(([key, value]) => {
-                if (args == "") {
-                    args = args.concat('?');
-                } else {
-                    args = args.concat('&');
-                }
-                args = args.concat(`${key}=${value}`)
-            })
-        }
+        // Loop vervolgens door het key:value object heen
+        // Als het object op index 0 is, voeg vraagteken toe. Als object niet op de laatste plek staat, voeg & toe.
+        Object.entries(params).forEach(([key, value]) => {
+            if (args == "") {
+                args = args.concat('?');
+            } else {
+                args = args.concat('&');
+            }
+            args = args.concat(`${key}=${value}`)
+        })
 
         return url + args;
     }

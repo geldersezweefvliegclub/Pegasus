@@ -30,7 +30,8 @@ export class IconButtonComponent implements OnInit {
 
       if (!this.faIcon) {
         console.log('fa' + parts[1]);
-        console.log(fas);
+        console.log("fas", fas);
+        console.log("far", far);
         this.faIcon = fas['faExclamation'];
       }
     }

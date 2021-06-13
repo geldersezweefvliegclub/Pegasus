@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  "/Vliegtuigen/CreateTable": {
+  "/Leden/CreateTable": {
     post: {
       parameters: {
         query: {
@@ -20,7 +20,7 @@ export interface paths {
       };
     };
   };
-  "/Vliegtuigen/CreateViews": {
+  "/Leden/CreateViews": {
     post: {
       responses: {
         /** Aangemaakt, View toegevoegd */
@@ -30,11 +30,11 @@ export interface paths {
       };
     };
   };
-  "/Vliegtuigen/GetObject": {
+  "/Leden/GetObject": {
     get: {
       parameters: {
         query: {
-          /** Database ID van het vliegtuig record */
+          /** Database ID van het lid record */
           ID: number;
         };
       };
@@ -42,7 +42,7 @@ export interface paths {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["ref_vliegtuigen"];
+            "application/json": components["schemas"]["ref_leden"];
           };
         };
         /** Data niet gevonden */
@@ -56,7 +56,7 @@ export interface paths {
       };
     };
   };
-  "/Vliegtuigen/GetObjects": {
+  "/Leden/GetObjects": {
     get: {
       parameters: {
         query: {
@@ -68,7 +68,7 @@ export interface paths {
           LAATSTE_AANPASSING?: boolean;
           /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
           HASH?: string;
-          /** Sortering van de velden in ORDER BY formaat. Default = CLUBKIST DESC, VOLGORDE, REGISTRATIE */
+          /** Sortering van de velden in ORDER BY formaat. Default = NAAM */
           SORT?: string;
           /** Maximum aantal records in de dataset. Gebruikt in LIMIT query */
           MAX?: number;
@@ -76,29 +76,29 @@ export interface paths {
           START?: number;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
-          /** Zoek in de REGISTRATIE, CALLSIGN, FLARM_CODE */
+          /** Zoek in de NAAM, TELEFOON, MOBIEL, NOODNUMMER, EMAIL */
           SELECTIE?: string;
-          /** Een of meerdere vliegtuig database IDs in CSV formaat. AND conditie als er geen andere parameters zijn, anders OR conditie */
+          /** Meerdere lid database IDs in CSV formaat */
           IN?: string;
-          /** Zoek op een of meerder type vliegtuig(en). Types als CSV formaat */
+          /** Zoek op een of meerder lid types. Types als CSV formaat */
           TYPES?: string;
-          /** Zoek op zitplaatsen 1/2 */
-          ZITPLAATSEN?: number;
-          /** Haal alle clubvliegtuigen op */
-          CLUBKIST?: boolean;
-          /** Haal alle zelfstarters op. */
-          ZELFSTART?: boolean;
-          /** Haal alle sleepkisten op. */
-          SLEEPKIST?: boolean;
-          /** Haal alle TMGs op. */
-          TMG?: boolean;
+          /** Wanneer 'true', toon alleen de leden */
+          CLUBLEDEN?: boolean;
+          /** Wanneer 'true', toon alleen de instructeurs */
+          INSTRUCTEURS?: boolean;
+          /** Wanneer 'true', toon alleen de DDWV crew */
+          DDWV_CREW?: boolean;
+          /** Wanneer 'true', toon alleen de lieristen */
+          LIERISTEN?: boolean;
+          /** Wanneer 'true', toon alleen de startleiders */
+          STARTLEIDERS?: boolean;
         };
       };
       responses: {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["view_vliegtuigen"];
+            "application/json": components["schemas"]["view_leden"];
           };
         };
         /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
@@ -110,18 +110,18 @@ export interface paths {
       };
     };
   };
-  "/Vliegtuigen/DeleteObject": {
+  "/Leden/DeleteObject": {
     delete: {
       parameters: {
         query: {
-          /** Database ID van het vliegtuig record. Meerdere ID's in CSV formaat */
+          /** Database ID van het lid record. Meerdere ID's in CSV formaat */
           ID: string;
           /** Controleer of record bestaat voordat het verwijderd wordt. Default = true */
           VERIFICATIE?: boolean;
         };
       };
       responses: {
-        /** Vliegtuig verwijderd */
+        /** Lid verwijderd */
         204: never;
         /** Niet geautoriseerd, geen schrijfrechten */
         401: unknown;
@@ -136,7 +136,7 @@ export interface paths {
       };
     };
   };
-  "/Vliegtuigen/RestoreObject": {
+  "/Leden/RestoreObject": {
     patch: {
       parameters: {
         query: {
@@ -160,13 +160,41 @@ export interface paths {
       };
     };
   };
-  "/Vliegtuigen/SaveObject": {
+  "/Leden/UploadAvatar": {
+    post: {
+      parameters: {
+        query: {
+          /** Database ID van het lid record */
+          ID: number;
+          /** Afbeelding ('gif','jpg','jpe','jpeg','png') */
+          FILE: string;
+        };
+      };
+      responses: {
+        /** OK, avatar succesvol opgeslagen */
+        200: {
+          content: {
+            "application/json": string;
+          };
+        };
+        /** Lid ID niet gevonden */
+        404: unknown;
+        /** Methode niet toegestaan, input validatie error */
+        405: unknown;
+        /** Ongeldige bestand extentie */
+        422: unknown;
+        /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
+        500: unknown;
+      };
+    };
+  };
+  "/Leden/SaveObject": {
     put: {
       responses: {
         /** OK, data succesvol aangepast */
         200: {
           content: {
-            "application/json": components["schemas"]["ref_vliegtuigen"];
+            "application/json": components["schemas"]["ref_leden"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -177,15 +205,15 @@ export interface paths {
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
         406: unknown;
-        /** Conflict, registratie bestaat al */
+        /** Conflict, lidnummer bestaat al */
         409: unknown;
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** Vliegtuig data */
+      /** lid data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["ref_vliegtuigen_in"];
+          "application/json": components["schemas"]["ref_leden_in"];
         };
       };
     };
@@ -194,7 +222,7 @@ export interface paths {
         /** OK, data succesvol toegevoegd */
         200: {
           content: {
-            "application/json": components["schemas"]["ref_vliegtuigen"];
+            "application/json": components["schemas"]["ref_leden"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -203,15 +231,15 @@ export interface paths {
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
         406: unknown;
-        /** Conflict, registratie bestaat al */
+        /** Conflict, lidnummer bestaat al */
         409: unknown;
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** Vliegtuig data */
+      /** lid data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["ref_vliegtuigen_in"];
+          "application/json": components["schemas"]["ref_leden_in"];
         };
       };
     };
@@ -220,45 +248,95 @@ export interface paths {
 
 export interface components {
   schemas: {
-    ref_vliegtuigen_in: {
-      /** Database ID van het vliegtuig record */
+    ref_leden_in: {
+      /** Database ID van het lid record */
       ID?: number;
-      /** Het registratie nummer van het vliegtuig */
-      REGISTRATIE?: string;
-      /** Optioneel het callsign van het vliegtuig */
-      CALLSIGN?: string;
-      /** De flarmcode zoals deze wordt uitgezonden. Zo kunnen we ontvangen flarm data herleiden naar een vliegtuig uit de database */
-      FLARMCODE?: string;
-      /** Het aantal zitplaatsen. Is 1 of 2. */
-      ZITPLAATSEN?: number;
-      /** Kan het vliegtuig op eigen kracht starten. */
-      ZELFSTART?: boolean;
-      /** Is het een club vliegtuig? */
-      CLUBKIST?: boolean;
-      /** Is het een TMG? */
-      TMG?: boolean;
-      /** Is het een sleepvliegtuig? */
-      SLEEPKIST?: boolean;
-      /** Link naar vliegtuig type tabel. Alleen nodig voor clubvliegtuigen */
-      TYPE_ID?: number;
-      /** Volgorde van vliegtuiglijst, bedoeld voor club vliegtuigen */
-      VOLGORDE?: number;
+      /** De volledige naam van het lid */
+      NAAM?: string;
+      /** De voornaam van het lid */
+      VOORNAAM?: string;
+      /** De tussenvoegsel van het lid */
+      TUSSENVOEGSEL?: string;
+      /** De achternaam van het lid zonder tussenvoegsels */
+      ACHTERNAAM?: string;
+      /** Het (post) adres waar het lid woont */
+      ADRES?: string;
+      /** De postcode die bij het adres hoort */
+      POSTCODE?: string;
+      /** De plaatsnaam */
+      WOONPLAATS?: string;
+      /** Telefoon nummer van het lid */
+      TELEFOON?: string;
+      /** Mobiel telefoon nummer van het lid */
+      MOBIEL?: string;
+      /** Het telefoonnummer van een naaste, kan gebruikt worden in noodgevallen */
+      NOODNUMMER?: string;
+      /** email adres van het lid */
+      EMAIL?: string;
+      /** Het lidnummer zoals dat in de leden administratie bekend is */
+      LIDNR?: string;
+      /** Het soort lid (jeugdlid, lid, donateur). Verwijzing naar type tabel */
+      LIDTYPE_ID?: number;
+      /** Zusterclub lidmaatschap van lid. Nodig voor DDWV. */
+      ZUSTERCLUB_ID?: number;
+      /** Mag dit lid lieren? */
+      LIERIST?: boolean;
+      /** Kan dit lid het startbedrijf leiden? */
+      STARTLEIDER?: boolean;
+      /** Heeft dit lid een instructie bevoegdheid? */
+      INSTRUCTEUR?: boolean;
+      /** Werkt dit lid mee in het DDWV bedrijf */
+      DDWV_CREW?: boolean;
+      /** Is dit lid de beheerder van het DDWV bedrijf, heeft toegang tot DDWV gerelateede data */
+      DDWV_BEHEERDER?: boolean;
+      /** Is dit lid de beheerder van deze omgeving, heeft toegang tot alles */
+      BEHEERDER?: boolean;
+      /** Dit account wordt gebruikt om starts in de start toren in te voeren */
+      STARTTOREN?: boolean;
+      /** Is dit lid  belast met het maken van roosters */
+      ROOSTER?: boolean;
+      /** Moet clubblad per post verstuurd worden */
+      CLUBBLAD_POST?: boolean;
+      /** Verloopdatum van het medical */
+      MEDICAL?: string;
+      /** Geboorte datum van het lid */
+      GEBOORTE_DATUM?: string;
+      /** De inlognaam van het lid */
+      INLOGNAAM?: string;
+      /** Het geheime password, bij ophalen van data altijd "****". Wachtwoord wordt als hash opgeslagen in de database */
+      WACHTWOORD?: string;
+      /** Wachtwoord in Helios hash formaat. Data wordt direct in database opgeslagen zonder encryptie, dat is namelijk al gebeurd. Alleen van toepassing voor SaveObject, komt dus niet terug in GetObject of GetObjects */
+      WACHTWOORD_HASH?: string;
+      /** 2Factor authenticatie voor deze gebruiker */
+      AUTH?: boolean;
+      /** Heef het lid de factuur van dit jaar betaald? */
+      HEEFT_BETAALD?: boolean;
+      /** Staat privacy mode (AVG / GDPR) uit/aan */
+      PRIVACY?: boolean;
+      /** Wat zijn de beperkingen (vliegen / diensten) voor dit lid */
+      BEPERKINGEN?: string;
+      /** Extra text om opmerkingen toe te voegen */
+      OPMERKINGEN?: string;
     } & { [key: string]: any };
-    ref_vliegtuigen: components["schemas"]["ref_vliegtuigen_in"] &
+    ref_leden: components["schemas"]["ref_leden_in"] &
       ({
+        /** Readonly, URL om image op te halen. Zetten via UploadAvatar functie */
+        AVATAR?: string;
+        /** Readonly, **** voor gewone gebruikers, URL om QRcode op te halen voor beheerders */
+        SECRET?: string;
         /** Is dit record gemarkeerd als verwijderd? */
         VERWIJDERD?: boolean;
         /** Tijdstempel van laaste aanpassing in de database */
         LAATSTE_AANPASSING?: string;
       } & { [key: string]: any }) & { [key: string]: any };
-    view_vliegtuigen_dataset: components["schemas"]["ref_vliegtuigen"] &
+    view_leden_dataset: components["schemas"]["ref_leden"] &
       ({
-        /** Beschrijving van het vliegtuig type */
-        VLIEGTUIGTYPE?: string;
-        /** Vliegtuig registratie en callsign */
-        REG_CALL?: string;
+        /** Lidtype in text */
+        LIDTYPE?: string;
+        /** Naam van de zusterclub */
+        ZUSTERCLUB?: string;
       } & { [key: string]: any }) & { [key: string]: any };
-    view_vliegtuigen: {
+    view_leden: {
       /** Aantal records dat voldoet aan de criteria in de database */
       totaal?: number;
       /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
@@ -266,7 +344,7 @@ export interface components {
       /** hash van de dataset */
       hash?: string;
       /** De dataset met records */
-      dataset?: components["schemas"]["view_vliegtuigen_dataset"][];
+      dataset?: components["schemas"]["view_leden_dataset"][];
     } & { [key: string]: any };
   };
 }

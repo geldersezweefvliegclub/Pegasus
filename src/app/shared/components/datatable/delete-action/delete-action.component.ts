@@ -24,6 +24,6 @@ export class DeleteActionComponent implements AgRendererComponent {
     }
 
     buttonClicked() {
-        this.params.onDeleteClicked(this.params.value);
+        this.params.onDeleteClicked(this.params.data.ID);
     }
 }

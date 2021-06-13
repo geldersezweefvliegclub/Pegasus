@@ -1,0 +1,108 @@
+<app-error [error]="error"></app-error>
+
+<app-icon-card titel="Startlijst"
+               subtitel="Een overzicht van de starts"
+               [icon]="iconCardIcon"
+               [exportEnabled]="this.magExporten"
+               (excelExport)="exportDataset()">
+    <div class="box h-100">
+        <div class="row h-100 overflow-hidden">
+            <app-datatable
+                    id="startlijstgrid"
+                    [rowData]="data"
+                    [columnDefs]="columns"
+                    [frameworkComponents]="frameworkComponents"
+                    (rowDoubleClicked)="openEditor($event)"
+                    class="h-100 mt-n8"></app-datatable>
+        </div>
+        <div class="row justify-content-start" id="toolbar">
+            <div class="col-3">
+                <div class="d-flex flex-row">
+                    <input type="checkbox" class="btn-check" id="filterBtn" name="filterMode"
+                           [(ngModel)]="filterOn"
+                           (click)="filter()">
+                    <label class="btn btn-outline-primary recycleBtn" for="filterBtn">
+                        <fa-icon [icon]="filterIcon"></fa-icon>
+                        Filter
+                    </label>
+
+                    <div *ngIf="this.magToevoegen">
+                        <app-icon-button class="toolbarBtn"
+                                         tekst="Toevoegen"
+                                         iconNaam="far PlusSquare" (click)="addStart()"
+                                         btnColor="btn-primary" *ngIf="!this.deleteMode"></app-icon-button>
+
+                        <div *ngIf="this.deleteMode">
+                            <input type="checkbox" class="btn-check" id="trashBtn" name="prullenbakMode"
+                                   [(ngModel)]="trashMode"
+                                   (ngModelChange)="trashModeJaNee()">
+                            <label class="btn btn-outline-primary recycleBtn" for="trashBtn">
+                                <fa-icon [icon]="prullenbakIcon"></fa-icon>
+                                Prullenbak
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="row justify-content-between" id="zoekbar">
+                    <div class="col-8">
+                        <div class="d-flex justify-content-begin align-items-end">
+                            <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>
+                            <input id="zoekInput"
+                                   type="search"
+                                   class="form-control"
+                                   [(ngModel)]="zoekString"
+                                   name="zoekString"
+                                   (keyup)="opvragen()"
+                                   (search)="opvragen()"
+                            >
+                            <app-icon-button class="toolbarBtn" iconNaam="fas Redo" (click)="opvragen()"
+                                             btnColor="btn-primary"></app-icon-button>
+
+                            <div *ngIf="this.magDatumKiezen">
+                                <div id="datumInvoer" class="input-group">
+                                    <input name="dp" class="form-control" placeholder="dd-mm-yyyy"
+                                           [dayTemplate]="t"
+                                           [footerTemplate]="footerTemplate"
+                                           (navigate)="KalenderAndereMaand($event)"
+                                           (dateSelect)="NieuweDatum($event)"
+                                           (keyup)="NieuweDatum()"
+                                           [(ngModel)]="kalenderInput"
+                                           ngbDatepicker #d="ngbDatepicker">
+
+                                    <div class="input-group-append">
+                                        <app-icon-button class="" iconNaam="far Calendar" (click)="d.toggle()"
+                                                         btnColor="btn-primary"></app-icon-button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="d-flex justify-content-end">
+                            <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
+                                             btnColor="btn-secondary" *ngIf="this.magVerwijderen"
+                                             (click)="deleteModeJaNee()"></app-icon-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #t let-date>
+        <span class="custom-day calendarDag">
+            <div [ngClass]="cssCustomDay(date)">{{ date.day }} </div>
+        </span>
+    </ng-template>
+
+    <ng-template #footerTemplate>
+        <hr class="my-0">
+        <button class="btn btn-primary btn-sm m-2 float-left" (click)="kalenderInput = vandaag; d.close()">Vandaag
+        </button>
+    </ng-template>
+
+    <app-tijd-invoer></app-tijd-invoer>
+</app-icon-card>

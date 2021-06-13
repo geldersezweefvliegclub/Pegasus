@@ -1,6 +1,6 @@
 {
     "/api": {
-      "target": "https://development.gezc.org",
+      "target": "https://helios.gezc.org",
       "secure": true,
       "changeOrigin": true,
       "pathRewrite": {

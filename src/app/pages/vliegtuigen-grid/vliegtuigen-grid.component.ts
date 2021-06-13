@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {VliegtuigenService} from '../../services/vliegtuigen/vliegtuigen.service';
+import {VliegtuigenService} from '../../services/apiservice/vliegtuigen.service';
 import {ZitplaatsRenderComponent} from './zitplaats-render/zitplaats-render.component';
 import {CheckboxRenderComponent} from '../../shared/components/datatable/checkbox-render/checkbox-render.component';
 import {faPlane, faRecycle, faUser} from '@fortawesome/free-solid-svg-icons';
@@ -9,10 +9,10 @@ import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {DeleteActionComponent} from "../../shared/components/datatable/delete-action/delete-action.component";
 import {RestoreActionComponent} from "../../shared/components/datatable/restore-action/restore-action.component";
 import {HeliosVliegtuig} from "../../types/Helios";
-import {CustomError} from "../../types/Utils";
+import {CustomError, nummerSort} from "../../types/Utils";
 
 import * as xlsx from 'xlsx';
-import {UserService} from "../../services/userservice/user.service";
+import {UserService} from "../../services/apiservice/user.service";
 
 @Component({
     selector: 'app-vliegtuigen-grid',
@@ -25,7 +25,7 @@ export class VliegtuigenGridComponent implements OnInit {
     data = [];
 
     dataColumns: ColDef[] = [
-        {field: 'ID', headerName: 'ID', sortable: true, hide: true},
+        {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
         {field: 'REGISTRATIE', headerName: 'Registratie', sortable: true},
         {field: 'CALLSIGN', headerName: 'Callsign', sortable: true},
         {field: 'VOLGORDE', headerName: 'Volgorde', sortable: true, hide: true},
@@ -41,10 +41,9 @@ export class VliegtuigenGridComponent implements OnInit {
     columns: ColDef[] = this.dataColumns;
 
     deleteColumn: ColDef[] = [{
-        field: 'ID',
         pinned: 'left',
-        maxWidth: 75,
-        initialWidth: 75,
+        maxWidth: 100,
+        initialWidth: 100,
         resizable: false,
         hide: false,
         cellRenderer: 'deleteAction', headerName: '', sortable: false,
@@ -56,10 +55,9 @@ export class VliegtuigenGridComponent implements OnInit {
     }];
 
     restoreColumn: ColDef[] = [{
-        field: 'ID',
         pinned: 'left',
-        maxWidth: 75,
-        initialWidth: 75,
+        maxWidth: 100,
+        initialWidth: 100,
         resizable: false,
         hide: false,
         cellRenderer: 'restoreAction', headerName: '', sortable: false,
@@ -83,10 +81,10 @@ export class VliegtuigenGridComponent implements OnInit {
     trashMode: boolean = false;
     prullenbakIcon = faRecycle;
     error: CustomError | undefined;
-    private magToevoegen: boolean = false;
-    private magVerwijderen: boolean = false;
-    private magWijzigen: boolean = false;
-    private magExporten: boolean = false;
+    magToevoegen: boolean = false;
+    magVerwijderen: boolean = false;
+    magWijzigen: boolean = false;
+    magExporten: boolean = false;
 
     constructor(private readonly vliegtuigenService: VliegtuigenService, private readonly loginService: UserService) {
     }
@@ -166,7 +164,7 @@ export class VliegtuigenGridComponent implements OnInit {
         this.vliegtuigenService.deleteVliegtuig(id).then(() => {
             this.deleteMode = false;
             this.trashMode = false;
-            this.kolomDefinitie();
+            this.kolomDefinitie();      // verwijderen van de kolom met delete icons
 
             this.opvragen();
             this.editor.closePopup();
@@ -177,13 +175,14 @@ export class VliegtuigenGridComponent implements OnInit {
         this.vliegtuigenService.restoreVliegtuig(id).then(() => {
             this.deleteMode = false;
             this.trashMode = false;
-            this.kolomDefinitie();
+            this.kolomDefinitie();  // verwijderen van de kolom met herstel icons
 
             this.opvragen();
             this.editor.closePopup();
         });
     }
 
+    // Export naar excel
     exportDataset() {
         var ws = xlsx.utils.json_to_sheet(this.data);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();

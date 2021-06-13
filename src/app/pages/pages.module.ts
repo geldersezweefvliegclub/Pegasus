@@ -17,18 +17,28 @@ import {VliegtuigenGridComponent} from './vliegtuigen-grid/vliegtuigen-grid.comp
 import {ZitplaatsRenderComponent} from './vliegtuigen-grid/zitplaats-render/zitplaats-render.component';
 import {LedenGridComponent} from './leden-grid/leden-grid.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import { StartlijstGridComponent } from './startlijst-grid/startlijst-grid.component';
+import {NgbDatepickerModule} from "@ng-bootstrap/ng-bootstrap";
+import { VliegerRenderComponent } from './startlijst-grid/vlieger-render/vlieger-render.component';
+import { InzittendeRenderComponent } from './startlijst-grid/inzittende-render/inzittende-render.component';
+import { StarttijdRenderComponent } from './startlijst-grid/starttijd-render/starttijd-render.component';
+import { LandingstijdRenderComponent } from './startlijst-grid/landingstijd-render/landingstijd-render.component';
+import { TijdInvoerComponent } from '../shared/components/editors/tijd-invoer/tijd-invoer.component';
+import {NgSelectModule} from "@ng-select/ng-select";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule,
-    FormsModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    SharedModule,
-    CodeInputModule,
-    FontAwesomeModule,
-  ],
+    imports: [
+        CommonModule,
+        RouterModule,
+        FormsModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        SharedModule,
+        CodeInputModule,
+        FontAwesomeModule,
+        NgbDatepickerModule,
+        NgSelectModule,
+    ],
   declarations: [
     IconCardComponent,
     DashboardPageComponent,
@@ -38,7 +48,13 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
     LoginPageComponent,
     VliegtuigenGridComponent,
     ZitplaatsRenderComponent,
-    LedenGridComponent
+    LedenGridComponent,
+    StartlijstGridComponent,
+    VliegerRenderComponent,
+    InzittendeRenderComponent,
+    StarttijdRenderComponent,
+    LandingstijdRenderComponent,
+    TijdInvoerComponent
   ],
   exports: [
     IconCardComponent,
