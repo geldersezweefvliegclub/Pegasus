@@ -1,0 +1,4 @@
+<p *ngIf="this.startTijd">{{startTijd}}</p>
+
+<app-icon-button class="toolbarBtn" iconNaam="fas PlaneDeparture" (click)="tijdClicked()" *ngIf="!this.startTijd"
+                 btnColor="startBtn"></app-icon-button>

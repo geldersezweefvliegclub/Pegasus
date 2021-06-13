@@ -59,6 +59,8 @@ export class DatatableComponent implements OnChanges, OnDestroy {
     ngOnChanges(changes: SimpleChanges): void {
         if (this.api) {
             this.api.setColumnDefs(this.columnDefs);
+            this.RestoreColumnState();
+
             this.api.setRowData(this.rowData);
         }
     }
@@ -68,7 +70,7 @@ export class DatatableComponent implements OnChanges, OnDestroy {
     }
 
     RestoreColumnState() {
-        if (this.id) {
+         if (this.id) {
             let indeling = this.storageService.ophalen(this.id);
 
             if (indeling != null) {

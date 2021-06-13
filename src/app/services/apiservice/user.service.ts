@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {APIService} from '../apiservice/api.service';
+import {APIService} from './api.service';
 import {Base64} from 'js-base64';
 
 import {HeliosUserinfo} from '../../types/Helios';
@@ -22,7 +22,6 @@ export class UserService {
         return false;
       }
       this.userInfo = this.storageService.ophalen("userInfo");
-      console.log(this.userInfo);
     }
     return true;
   }
@@ -39,7 +38,7 @@ export class UserService {
       urlParams = token
     }
 
-    const response:Response = await this.APIService.get('Login/Login', [{'token': urlParams as string}],headers);
+    const response:Response = await this.APIService.get('Login/Login', {'token': urlParams as string},headers);
 
     if (response.ok) {
       await this.getUserInfo();

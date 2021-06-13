@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
 import {ModalComponent} from '../../modal/modal.component';
 import {HeliosType, HeliosVliegtuig} from '../../../../types/Helios';
-import {VliegtuigenService} from '../../../../services/vliegtuigen/vliegtuigen.service';
-import {TypesService} from '../../../../services/types/types.service';
+import {VliegtuigenService} from '../../../../services/apiservice/vliegtuigen.service';
+import {TypesService} from '../../../../services/apiservice/types.service';
 import {faEdit, faPlus, faTrashAlt, faUndo} from '@fortawesome/free-solid-svg-icons';
 import {coerceStringArray} from "@angular/cdk/coercion";
 
@@ -65,9 +65,16 @@ export class VliegtuigEditorComponent {
     }
 
     haalVliegtuigOp(id: number): void {
-        this.vliegtuigenService.getVliegtuig(id).then((vliegtuig) => {
-            this.vliegtuig = vliegtuig;
-        });
+        this.isLoading = true;
+
+        try {
+            this.vliegtuigenService.getVliegtuig(id).then((vliegtuig) => {
+                this.vliegtuig = vliegtuig;
+                this.isLoading = false;
+            });
+        } catch (e) {
+            this.isLoading = false;
+        }
     }
 
     openVerwijderPopup(id: number) {

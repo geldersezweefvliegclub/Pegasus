@@ -5,9 +5,12 @@ import {HelpPageComponent} from './pages/help/help-page.component';
 import {ProfilePageComponent} from './pages/profile/profile-page.component';
 import {NotFoundComponent} from './pages/not-found/not-found.component';
 import {LoginPageComponent} from './pages/login-page/login-page.component';
-import {VliegtuigenGridComponent} from './pages/vliegtuigen-grid/vliegtuigen-grid.component';
+
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {faChartPie, faKey, faPlane, faUser} from '@fortawesome/free-solid-svg-icons';
+import {faClipboardList} from "@fortawesome/free-solid-svg-icons/faClipboardList";
+import {StartlijstGridComponent} from "./pages/startlijst-grid/startlijst-grid.component";
+import {VliegtuigenGridComponent} from './pages/vliegtuigen-grid/vliegtuigen-grid.component';
 
 export interface CustomRoute extends Route {
   excluded: boolean;
@@ -18,7 +21,7 @@ export interface CustomRoute extends Route {
 export const routes: CustomRoute[] = [
   {path: '', pathMatch: 'full', redirectTo: 'dashboard', excluded: true, icon: faUser, text: 'EXCLUDED'},
   {path: 'dashboard', component: DashboardPageComponent, excluded: false, icon: faChartPie, text: 'Dashboard'},
-  {path: 'help', component: HelpPageComponent, excluded: false, icon: faKey, text: 'Help'},
+  {path: 'startlijst', component: StartlijstGridComponent, excluded: false, icon: faClipboardList, text: 'Startlijst'},
   {path: 'vliegtuigen', component: VliegtuigenGridComponent, excluded: false, icon: faPlane, text: 'Vliegtuigen'},
   {path: 'login', component: LoginPageComponent, excluded: true, icon: faKey, text: 'Help'},
   {

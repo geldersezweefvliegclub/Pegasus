@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  "/Types/CreateTable": {
+  "/Progressie/CreateTable": {
     post: {
       parameters: {
         query: {
@@ -20,7 +20,7 @@ export interface paths {
       };
     };
   };
-  "/Types/CreateViews": {
+  "/Progressie/CreateViews": {
     post: {
       responses: {
         /** Aangemaakt, View toegevoegd */
@@ -30,7 +30,7 @@ export interface paths {
       };
     };
   };
-  "/Types/GetObject": {
+  "/Progressie/GetObject": {
     get: {
       parameters: {
         query: {
@@ -42,7 +42,7 @@ export interface paths {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["ref_types"];
+            "application/json": components["schemas"]["ref_progressie"];
           };
         };
         /** Data niet gevonden */
@@ -56,7 +56,7 @@ export interface paths {
       };
     };
   };
-  "/Types/GetObjects": {
+  "/Progressie/GetObjects": {
     get: {
       parameters: {
         query: {
@@ -76,15 +76,15 @@ export interface paths {
           START?: number;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
-          /** Haal alle types op van een specieke groep */
-          GROEP?: number;
+          /** Haal alle types op van een specieke leerfase */
+          LEERFASE_ID?: string;
         };
       };
       responses: {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["view_types"];
+            "application/json": components["schemas"]["view_progressie"];
           };
         };
         /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
@@ -96,12 +96,12 @@ export interface paths {
       };
     };
   };
-  "/Types/DeleteObject": {
+  "/Progressie/DeleteObject": {
     delete: {
       parameters: {
         query: {
           /** Database ID van het record. Meerdere ID's in CSV formaat */
-          ID: number;
+          ID: string;
           /** Controleer of record bestaat voordat het verwijderd wordt. Default = true */
           VERIFICATIE?: boolean;
         };
@@ -122,12 +122,12 @@ export interface paths {
       };
     };
   };
-  "/Types/RestoreObject": {
+  "/Progressie/RestoreObject": {
     patch: {
       parameters: {
         query: {
           /** Database ID van het record. Meerdere ID's in CSV formaat */
-          ID: number;
+          ID: string;
         };
       };
       responses: {
@@ -146,13 +146,13 @@ export interface paths {
       };
     };
   };
-  "/Types/SaveObject": {
+  "/Progressie/SaveObject": {
     put: {
       responses: {
         /** OK, data succesvol aangepast */
         200: {
           content: {
-            "application/json": components["schemas"]["ref_types"];
+            "application/json": components["schemas"]["ref_progressie"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -169,7 +169,7 @@ export interface paths {
       /** type data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["ref_types_in"];
+          "application/json": components["schemas"]["ref_progressie_in"];
         };
       };
     };
@@ -178,7 +178,7 @@ export interface paths {
         /** OK, data succesvol toegevoegd */
         200: {
           content: {
-            "application/json": components["schemas"]["ref_types"];
+            "application/json": components["schemas"]["ref_progressie"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -195,7 +195,7 @@ export interface paths {
       /** type data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["ref_types_in"];
+          "application/json": components["schemas"]["ref_progressie_in"];
         };
       };
     };
@@ -204,30 +204,41 @@ export interface paths {
 
 export interface components {
   schemas: {
-    ref_types_in: {
+    ref_progressie_in: {
       /** Database ID van het record */
       ID?: number;
-      /** Type groep */
-      GROEP?: number;
-      /** Zeer korte beschrijving van de code */
-      CODE?: string;
-      /** Hoe kennen andere systemen / organisatie deze code */
-      EXT_REF?: string;
-      /** Volledige omschrijving van het type */
-      OMSCHRIJVING?: string;
-      /** Volgorde in de HMI */
-      SORTEER_VOLGORDE?: number;
-      /** Is dit record (met ID) hard gecodeerd in de source code. Zo ja, dan niet aanpassen. */
-      READ_ONLY?: boolean;
+      /** Lid ID (ID uit ref_leden) */
+      LID_ID?: number;
+      /** Welke comptententie heeft dit lid zich eigen gemaakt. Verwijzing naar ref_competenties */
+      COMPETENTIE_ID?: number;
+      /** Door wie is de competentie toegevoegd voor de lid */
+      INSTRUCTEUR_ID?: number;
+      /** Opmerking over de behaalde competentie */
+      OPMERKINGEN?: string;
     } & { [key: string]: any };
-    ref_types: components["schemas"]["ref_types_in"] &
+    ref_progressie: components["schemas"]["ref_progressie_in"] &
       ({
+        /** Tijdstempel wanneer record is toegevoegd */
+        INGEVOERD?: string;
+        /** Verwijzing naar eerder ingevoerde data */
+        LINK_ID?: number;
         /** Is dit record gemarkeerd als verwijderd? */
         VERWIJDERD?: boolean;
         /** Tijdstempel van laaste aanpassing in de database */
         LAATSTE_AANPASSING?: string;
       } & { [key: string]: any }) & { [key: string]: any };
-    view_types: {
+    view_progressie_dataset: components["schemas"]["ref_progressie"] &
+      ({
+        /** Fase van de vliegopleiding */
+        LEERFASE?: string;
+        /** Volledige omschrijving van de compententie */
+        COMPETENTIE?: string;
+        /** De volledige naam van het lid */
+        LID_NAAM?: string;
+        /** De volledige naam van de instrcuteur die de competentie heeft toegevoegd */
+        INSTRUCTEUR_NAAM?: string;
+      } & { [key: string]: any }) & { [key: string]: any };
+    view_progressie: {
       /** Aantal records dat voldoet aan de criteria in de database */
       totaal?: number;
       /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
@@ -235,7 +246,21 @@ export interface components {
       /** hash van de dataset */
       hash?: string;
       /** De dataset met records */
-      dataset?: components["schemas"]["ref_types"][];
+      dataset?: components["schemas"]["view_progressie_dataset"][];
+    } & { [key: string]: any };
+    competenties_kaart: {
+      /** Aantal records van de comptentie kaart */
+      totaal?: number;
+      /** Tijdstempel van laaste aanpassing in de database op de progressei tabel */
+      laatste_aanpassing?: string;
+      /** hash van de dataset */
+      hash?: string;
+      /** De dataset met records */
+      dataset?: (any &
+        ({
+          /** Fase van de vliegopleiding */
+          LEERFASE?: string;
+        } & { [key: string]: any }) & { [key: string]: any })[];
     } & { [key: string]: any };
   };
 }

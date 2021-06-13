@@ -7,6 +7,7 @@
 @import "~animate.css/animate.css";
 @import "~ag-grid-community/dist/styles/ag-grid.css";
 @import "~ag-grid-community/dist/styles/ag-theme-material.css";
+@import "~@ng-select/ng-select/themes/default.theme.css";
 
 
 html {
@@ -79,4 +80,67 @@ input.ng-dirty.ng-invalid{
 
 .form-select:disabled {
   color: #9a9a9a;
+}
+
+// knop voor invullen starttijd
+.startBtn {
+  background-color: #28a745;
+  color: white;
+  margin-bottom: 8px;
+  padding-bottom: 1px;
+  width: 35px;
+  padding-left: 7px;
+}
+
+// knop voor invullen landingstijd
+.landingsBtn {
+  background-color: #f80000;
+  color: white;
+  margin-bottom: 8px;
+  padding-bottom: 1px;
+  width: 35px;
+  padding-left: 7px;
+}
+
+
+// Tonen van waarschuwing dat er geen vlier ingevuld is
+// Maar vlucht is nog niet gestart
+.geenVliegerWarning {
+  color: #ffc107;
+  font-size: 25px;
+  padding-top: 8px;
+}
+
+.geenVliegerError {
+  color: #ff0f07;
+  font-size: 25px;
+  padding-top: 8px;
+}
+
+// Laat knipperen van icon
+@keyframes flickerAnimation {
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+@-o-keyframes flickerAnimation{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+@-moz-keyframes flickerAnimation{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+@-webkit-keyframes flickerAnimation{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+.animate-flicker {
+  -webkit-animation: flickerAnimation 2s infinite;
+  -moz-animation: flickerAnimation 2s infinite;
+  -o-animation: flickerAnimation 2s infinite;
+  animation: flickerAnimation 2s infinite;
 }

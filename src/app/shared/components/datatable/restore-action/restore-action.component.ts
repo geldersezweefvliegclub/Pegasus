@@ -24,6 +24,6 @@ export class RestoreActionComponent implements AgRendererComponent {
   }
 
   buttonClicked() {
-    this.params.onRestoreClicked(this.params.value);
+    this.params.onRestoreClicked(this.params.data.ID);
   }
 }

@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  "/Types/CreateTable": {
+  "/Tracks/CreateTable": {
     post: {
       parameters: {
         query: {
@@ -20,7 +20,7 @@ export interface paths {
       };
     };
   };
-  "/Types/CreateViews": {
+  "/Tracks/CreateViews": {
     post: {
       responses: {
         /** Aangemaakt, View toegevoegd */
@@ -30,11 +30,11 @@ export interface paths {
       };
     };
   };
-  "/Types/GetObject": {
+  "/Tracks/GetObject": {
     get: {
       parameters: {
         query: {
-          /** Database ID van het type record */
+          /** Database ID van het track record */
           ID: number;
         };
       };
@@ -42,7 +42,7 @@ export interface paths {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["ref_types"];
+            "application/json": components["schemas"]["oper_tracks"];
           };
         };
         /** Data niet gevonden */
@@ -56,7 +56,7 @@ export interface paths {
       };
     };
   };
-  "/Types/GetObjects": {
+  "/Tracks/GetObjects": {
     get: {
       parameters: {
         query: {
@@ -76,15 +76,17 @@ export interface paths {
           START?: number;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
-          /** Haal alle types op van een specieke groep */
-          GROEP?: number;
+          /** Haal alle tracks op van een specifiek lid */
+          LID_ID?: string;
+          /** Haal alle tracks op die door deze instrcuteur zijn toegevoegd */
+          INSTRUCTEUR_ID?: string;
         };
       };
       responses: {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["view_types"];
+            "application/json": components["schemas"]["oper_tracks"];
           };
         };
         /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
@@ -96,18 +98,18 @@ export interface paths {
       };
     };
   };
-  "/Types/DeleteObject": {
+  "/Tracks/DeleteObject": {
     delete: {
       parameters: {
         query: {
           /** Database ID van het record. Meerdere ID's in CSV formaat */
-          ID: number;
+          ID: string;
           /** Controleer of record bestaat voordat het verwijderd wordt. Default = true */
           VERIFICATIE?: boolean;
         };
       };
       responses: {
-        /** Type verwijderd */
+        /** Track verwijderd */
         204: never;
         /** Niet geautoriseerd, geen schrijfrechten */
         401: unknown;
@@ -122,12 +124,12 @@ export interface paths {
       };
     };
   };
-  "/Types/RestoreObject": {
+  "/Tracks/RestoreObject": {
     patch: {
       parameters: {
         query: {
           /** Database ID van het record. Meerdere ID's in CSV formaat */
-          ID: number;
+          ID: string;
         };
       };
       responses: {
@@ -146,13 +148,13 @@ export interface paths {
       };
     };
   };
-  "/Types/SaveObject": {
+  "/Tracks/SaveObject": {
     put: {
       responses: {
         /** OK, data succesvol aangepast */
         200: {
           content: {
-            "application/json": components["schemas"]["ref_types"];
+            "application/json": components["schemas"]["oper_tracks"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -166,10 +168,10 @@ export interface paths {
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** type data */
+      /** track data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["ref_types_in"];
+          "application/json": components["schemas"]["oper_tracks_in"];
         };
       };
     };
@@ -178,7 +180,7 @@ export interface paths {
         /** OK, data succesvol toegevoegd */
         200: {
           content: {
-            "application/json": components["schemas"]["ref_types"];
+            "application/json": components["schemas"]["oper_tracks"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -192,10 +194,10 @@ export interface paths {
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** type data */
+      /** track data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["ref_types_in"];
+          "application/json": components["schemas"]["oper_tracks_in"];
         };
       };
     };
@@ -204,30 +206,37 @@ export interface paths {
 
 export interface components {
   schemas: {
-    ref_types_in: {
+    oper_tracks_in: {
       /** Database ID van het record */
       ID?: number;
-      /** Type groep */
-      GROEP?: number;
-      /** Zeer korte beschrijving van de code */
-      CODE?: string;
-      /** Hoe kennen andere systemen / organisatie deze code */
-      EXT_REF?: string;
-      /** Volledige omschrijving van het type */
-      OMSCHRIJVING?: string;
-      /** Volgorde in de HMI */
-      SORTEER_VOLGORDE?: number;
-      /** Is dit record (met ID) hard gecodeerd in de source code. Zo ja, dan niet aanpassen. */
-      READ_ONLY?: boolean;
+      /** Voor welk lid is deze tekst bedoeld */
+      LID_ID?: number;
+      /** Door wie is de tekst ingevoerd */
+      INSTRUCTEUR_ID?: number;
+      /** De tekst */
+      TEKST?: number;
+      /** Verwijzing naar een start. Verwijzing naar oper_startlijst */
+      START_ID?: number;
     } & { [key: string]: any };
-    ref_types: components["schemas"]["ref_types_in"] &
+    oper_tracks: components["schemas"]["oper_tracks_in"] &
       ({
+        /** Tijdstempel wanneer record is toegevoegd */
+        INGEVOERD?: string;
+        /** Verwijzing naar eerder ingevoerde data */
+        LINK_ID?: number;
         /** Is dit record gemarkeerd als verwijderd? */
         VERWIJDERD?: boolean;
         /** Tijdstempel van laaste aanpassing in de database */
         LAATSTE_AANPASSING?: string;
       } & { [key: string]: any }) & { [key: string]: any };
-    view_types: {
+    view_tracks_dataset: components["schemas"]["oper_tracks"] &
+      ({
+        /** De naam van het lid waar de tekst over gaat */
+        LID_NAAM?: string;
+        /** De naam van de instructeur die de tekst heeft ingevoerd */
+        INSTRUCTEUR_NAAM?: string;
+      } & { [key: string]: any }) & { [key: string]: any };
+    view_tracks: {
       /** Aantal records dat voldoet aan de criteria in de database */
       totaal?: number;
       /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
@@ -235,7 +244,7 @@ export interface components {
       /** hash van de dataset */
       hash?: string;
       /** De dataset met records */
-      dataset?: components["schemas"]["ref_types"][];
+      dataset?: components["schemas"]["view_tracks_dataset"][];
     } & { [key: string]: any };
   };
 }
