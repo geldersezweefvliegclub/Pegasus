@@ -7,28 +7,28 @@
                     </div>
                     <div class="col-3 col-md-6">
                         <div class="d-flex justify-content-end">
+                            <input id="tijdInvoer"
+                                   #tijdInvoerElement
+                                   type="search"
+                                   class="form-control"
+                                   [(ngModel)]="tijdIngevoerd"
+                                   [ngbTypeahead]="search"
+                                   (ngModelChange)="veldInvoer($event)"
+                                   (keydown)="keyDown($event)"
+                            />
+                            <app-icon-button class="timeUpBtn" iconNaam="fas ArrowUp" (btnClicked)="timeDown()"
+                                             btnColor="btn-secondary"></app-icon-button>
 
-                            <div class="overflow-box">
-                                <ng-select id="tijdInvoer"
-                                           placeholder="hh:mm"
-                                           bindLabel="label"
-                                           bindValue="value"
-                                           [items]="overdag"
-                                           [closeOnSelect]="true"
-                                           [(ngModel)]="tijd">
-                                </ng-select>
-                            </div>
+                            <app-icon-button class="timeDownBtn" iconNaam="fas ArrowDown" (btnClicked)="timeUp()"
+                                             btnColor="btn-secondary"></app-icon-button>
+
                         </div>
                     </div>
                 </div>
             </fieldset>
-
-        <br>
-        Selected city ID: {{tijd}}
-
     </div>
     <div footer>
-        <app-icon-button *ngIf="!isLoading" iconNaam="fas Edit" btnColor="btn-primary"
-                         tekst="Opslaan" (click)="opslaan()"></app-icon-button>
+        <app-icon-button *ngIf="!isLoading" iconNaam="fas Edit" btnColor="btn-primary" [disabled]="!tijdOK"
+                         tekst="Opslaan" (btnClicked)="opslaan()"></app-icon-button>
     </div>
 </app-modal>

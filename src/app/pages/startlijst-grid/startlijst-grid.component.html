@@ -29,7 +29,7 @@
                     <div *ngIf="this.magToevoegen">
                         <app-icon-button class="toolbarBtn"
                                          tekst="Toevoegen"
-                                         iconNaam="far PlusSquare" (click)="addStart()"
+                                         iconNaam="far PlusSquare" (btnClicked)="addStart()"
                                          btnColor="btn-primary" *ngIf="!this.deleteMode"></app-icon-button>
 
                         <div *ngIf="this.deleteMode">
@@ -57,7 +57,7 @@
                                    (keyup)="opvragen()"
                                    (search)="opvragen()"
                             >
-                            <app-icon-button class="toolbarBtn" iconNaam="fas Redo" (click)="opvragen()"
+                            <app-icon-button class="toolbarBtn" iconNaam="fas Redo" (btnClicked)="opvragen()"
                                              btnColor="btn-primary"></app-icon-button>
 
                             <div *ngIf="this.magDatumKiezen">
@@ -67,12 +67,12 @@
                                            [footerTemplate]="footerTemplate"
                                            (navigate)="KalenderAndereMaand($event)"
                                            (dateSelect)="NieuweDatum($event)"
-                                           (keyup)="NieuweDatum()"
+                                           (keyup)="NieuweDatum(null)"
                                            [(ngModel)]="kalenderInput"
                                            ngbDatepicker #d="ngbDatepicker">
 
                                     <div class="input-group-append">
-                                        <app-icon-button class="" iconNaam="far Calendar" (click)="d.toggle()"
+                                        <app-icon-button class="" iconNaam="far Calendar" (btnClicked)="d.toggle()"
                                                          btnColor="btn-primary"></app-icon-button>
                                     </div>
                                 </div>
@@ -84,7 +84,7 @@
                         <div class="d-flex justify-content-end">
                             <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
                                              btnColor="btn-secondary" *ngIf="this.magVerwijderen"
-                                             (click)="deleteModeJaNee()"></app-icon-button>
+                                             (btnClicked)="deleteModeJaNee()"></app-icon-button>
                         </div>
                     </div>
                 </div>
@@ -100,9 +100,9 @@
 
     <ng-template #footerTemplate>
         <hr class="my-0">
-        <button class="btn btn-primary btn-sm m-2 float-left" (click)="kalenderInput = vandaag; d.close()">Vandaag
+        <button class="btn btn-primary btn-sm m-2 float-left" (click)="kalenderInput = vandaag; NieuweDatum(null); ">Vandaag
         </button>
     </ng-template>
 
-    <app-tijd-invoer></app-tijd-invoer>
+    <app-tijd-invoer (OpslaanStarttijd)="opslaanStartTijd($event)" (OpslaanLandingstijd)="opslaanLandingsTijd($event)"></app-tijd-invoer>
 </app-icon-card>

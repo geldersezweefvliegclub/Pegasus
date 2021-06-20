@@ -5,7 +5,7 @@
                     <div class="col-12 col-md-6">
                         <label for="REGISTRATIE" class="form-label">Registratie</label>
                         <input required name="registratie" type="text" class="form-control" id="REGISTRATIE"
-                               [(ngModel)]="vliegtuig.REGISTRATIE" appRegistratie>
+                               [(ngModel)]="vliegtuig.REGISTRATIE" appRegistratieDirective>
                     </div>
                     <div class="col-12 col-md-6">
                         <label for="CALLSIGN" class="form-label">Callsign</label>
@@ -80,13 +80,13 @@
     </div>
     <div footer>
         <app-icon-button *ngIf="!isLoading && vliegtuig.ID !== undefined && !isRestoreMode && !isVerwijderMode" iconNaam="fas Edit" btnColor="btn-primary"
-                         tekst="Opslaan" (click)="uitvoeren()"></app-icon-button>
+                         tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
         <app-icon-button *ngIf="!isLoading && vliegtuig.ID === undefined && !isRestoreMode && !isVerwijderMode" iconNaam="fas Plus" btnColor="btn-primary"
-                         tekst="Opslaan" (click)="uitvoeren()"></app-icon-button>
+                         tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
         <app-icon-button *ngIf="!isLoading && isVerwijderMode" iconNaam="fas TrashAlt" btnColor="btn-primary editorDeleteBtn"
-                         tekst="Verwijderen" (click)="uitvoeren()"></app-icon-button>
+                         tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
         <app-icon-button *ngIf="!isLoading && isRestoreMode" iconNaam="fas Undo" btnColor="btn-primary editorRestoreBtn"
-                         tekst="Herstellen" (click)="uitvoeren()"></app-icon-button>
+                         tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
         <span *ngIf="isLoading"><app-loader></app-loader></span>
     </div>
 </app-modal>

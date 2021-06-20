@@ -112,4 +112,17 @@ export class StartlijstService {
             throw(e);
         }
     }
+
+    async startTijd(id: number, tijd: string) {
+
+        const response: Response = await this.APIService.put('Startlijst/SaveObject', JSON.stringify({ID: id,STARTTIJD: (tijd) ? tijd : null }));
+
+        return response.json();
+    }
+
+    async landingsTijd(id: number, tijd: string) {
+        const response: Response = await this.APIService.put('Startlijst/SaveObject', JSON.stringify({ID: id,LANDINGSTIJD: (tijd) ? tijd : null }));
+
+        return response.json();
+    }
 }

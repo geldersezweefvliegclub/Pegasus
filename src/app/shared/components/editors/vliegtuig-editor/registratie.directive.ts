@@ -2,7 +2,7 @@ import {Directive} from '@angular/core';
 import {AbstractControl, NG_VALIDATORS, Validator, ValidatorFn} from '@angular/forms';
 
 @Directive({
-  selector: '[appRegistratie]',
+  selector: '[appRegistratieDirective]',
   providers: [[{provide: NG_VALIDATORS, useExisting: RegistratieDirective, multi: true}]]
 })
 export class RegistratieDirective implements Validator {

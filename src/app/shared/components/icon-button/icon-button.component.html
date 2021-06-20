@@ -1,4 +1,3 @@
-<button class="btn" [ngClass]="btnColor"  [type]="type">
-    <!-- <fa-icon [icon]="faIcon" class="me-3"></fa-icon>{{tekst}} -->
+<button class="btn" [ngClass]="btnColor"  [type]="type" [disabled]="disabled" (click)="buttonClicked()">
     <fa-icon [icon]="faIcon" [ngClass]="{'me-3': tekst.length > 0}"></fa-icon>{{tekst}}
 </button>

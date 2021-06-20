@@ -1,7 +1,7 @@
 import {NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
@@ -18,7 +18,7 @@ import {ZitplaatsRenderComponent} from './vliegtuigen-grid/zitplaats-render/zitp
 import {LedenGridComponent} from './leden-grid/leden-grid.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import { StartlijstGridComponent } from './startlijst-grid/startlijst-grid.component';
-import {NgbDatepickerModule} from "@ng-bootstrap/ng-bootstrap";
+import {NgbDatepickerModule, NgbTypeaheadModule} from "@ng-bootstrap/ng-bootstrap";
 import { VliegerRenderComponent } from './startlijst-grid/vlieger-render/vlieger-render.component';
 import { InzittendeRenderComponent } from './startlijst-grid/inzittende-render/inzittende-render.component';
 import { StarttijdRenderComponent } from './startlijst-grid/starttijd-render/starttijd-render.component';
@@ -38,6 +38,8 @@ import {NgSelectModule} from "@ng-select/ng-select";
         FontAwesomeModule,
         NgbDatepickerModule,
         NgSelectModule,
+        ReactiveFormsModule,
+        NgbTypeaheadModule,
     ],
   declarations: [
     IconCardComponent,

@@ -19,7 +19,7 @@
             <div class="col-2" *ngIf="this.magToevoegen">
                 <app-icon-button class="toolbarBtn"
                                  tekst="Toevoegen"
-                                 iconNaam="far PlusSquare" (click)="addVliegtuig()"
+                                 iconNaam="far PlusSquare" (btnClicked)="addVliegtuig()"
                                  btnColor="btn-primary" *ngIf="!this.deleteMode"></app-icon-button>
 
                 <div *ngIf="this.deleteMode">
@@ -45,7 +45,7 @@
                                    (keyup)="opvragen()"
                                    (search)="opvragen()"
                             >
-                            <app-icon-button class="toolbarBtn" iconNaam="fas Redo" (click)="opvragen()"
+                            <app-icon-button class="toolbarBtn" iconNaam="fas Redo" (btnClicked)="opvragen()"
                                              btnColor="btn-primary"  ></app-icon-button>
                         </div>
                     </div>
@@ -53,7 +53,7 @@
                         <div class="d-flex justify-content-end">
                             <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
                                              btnColor="btn-secondary" *ngIf="this.magVerwijderen"
-                                             (click)="deleteModeJaNee()"></app-icon-button>
+                                             (btnClicked)="deleteModeJaNee()"></app-icon-button>
                         </div>
                     </div>
                 </div>

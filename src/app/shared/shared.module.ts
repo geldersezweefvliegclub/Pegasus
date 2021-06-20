@@ -10,7 +10,7 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {VliegtuigEditorComponent} from './components/editors/vliegtuig-editor/vliegtuig-editor.component';
 import {FormsModule, NG_VALIDATORS} from '@angular/forms';
 import { IconButtonComponent } from './components/icon-button/icon-button.component';
-import { RegistratieDirective } from './directives/registratie/registratie.directive';
+import { RegistratieDirective } from './components/editors/vliegtuig-editor/registratie.directive';
 import { DeleteActionComponent } from './components/datatable/delete-action/delete-action.component';
 import { RestoreActionComponent } from './components/datatable/restore-action/restore-action.component';
 
@@ -40,7 +40,7 @@ import { RestoreActionComponent } from './components/datatable/restore-action/re
     ErrorComponent,
     LoaderComponent,
     VliegtuigEditorComponent,
-    IconButtonComponent
+    IconButtonComponent,
   ],
   providers: [],
   schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

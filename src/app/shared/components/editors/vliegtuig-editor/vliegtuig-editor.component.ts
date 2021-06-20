@@ -3,8 +3,6 @@ import {ModalComponent} from '../../modal/modal.component';
 import {HeliosType, HeliosVliegtuig} from '../../../../types/Helios';
 import {VliegtuigenService} from '../../../../services/apiservice/vliegtuigen.service';
 import {TypesService} from '../../../../services/apiservice/types.service';
-import {faEdit, faPlus, faTrashAlt, faUndo} from '@fortawesome/free-solid-svg-icons';
-import {coerceStringArray} from "@angular/cdk/coercion";
 
 @Component({
     selector: 'app-vliegtuig-editor',

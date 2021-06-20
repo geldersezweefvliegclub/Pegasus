@@ -325,6 +325,18 @@ export class StartlijstGridComponent implements OnInit {
         this.filterOn = !this.filterOn;
         this.opvragen();
     }
+
+    opslaanStartTijd(start: HeliosStart) {
+        this.startlijstService.startTijd(start.ID as number, start.STARTTIJD as string);
+        this.opvragen();
+        this.tijdInvoerEditor.closePopup();
+    }
+
+    opslaanLandingsTijd(start: HeliosStart) {
+        this.startlijstService.landingsTijd(start.ID as number, start.LANDINGSTIJD as string);
+        this.opvragen();
+        this.tijdInvoerEditor.closePopup();
+    }
 }
 
 

@@ -11,7 +11,9 @@ export class IconButtonComponent implements OnInit {
   @Input() tekst: string = "";
   @Input() iconNaam: string;
   @Input() btnColor: string = 'btn-secondary';
+  @Input() disabled: boolean = false;
   @Input() type: 'button' | 'submit' = 'button';
+  @Output() btnClicked: EventEmitter<void> = new EventEmitter<void>();
 
   faIcon: IconDefinition;
 
@@ -35,5 +37,9 @@ export class IconButtonComponent implements OnInit {
         this.faIcon = fas['faExclamation'];
       }
     }
+  }
+
+  buttonClicked() {
+    this.btnClicked.emit();
   }
 }

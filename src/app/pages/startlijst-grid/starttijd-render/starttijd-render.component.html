@@ -1,4 +1,4 @@
-<p *ngIf="this.startTijd">{{startTijd}}</p>
+<div *ngIf="this.startTijd" class="starttijd" (click)="tijdClicked()">{{startTijd}}</div>
 
-<app-icon-button class="toolbarBtn" iconNaam="fas PlaneDeparture" (click)="tijdClicked()" *ngIf="!this.startTijd"
+<app-icon-button class="toolbarBtn" iconNaam="fas PlaneDeparture" (btnClicked)="tijdClicked()" *ngIf="!this.startTijd"
                  btnColor="startBtn"></app-icon-button>
