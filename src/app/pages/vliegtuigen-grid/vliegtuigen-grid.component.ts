@@ -1,18 +1,18 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {VliegtuigenService} from '../../services/apiservice/vliegtuigen.service';
 import {ZitplaatsRenderComponent} from './zitplaats-render/zitplaats-render.component';
 import {CheckboxRenderComponent} from '../../shared/components/datatable/checkbox-render/checkbox-render.component';
-import {faPlane, faRecycle, faUser} from '@fortawesome/free-solid-svg-icons';
+import {faPlane, faRecycle} from '@fortawesome/free-solid-svg-icons';
 import {VliegtuigEditorComponent} from '../../shared/components/editors/vliegtuig-editor/vliegtuig-editor.component';
 import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {DeleteActionComponent} from "../../shared/components/datatable/delete-action/delete-action.component";
-import {RestoreActionComponent} from "../../shared/components/datatable/restore-action/restore-action.component";
-import {HeliosVliegtuig} from "../../types/Helios";
-import {CustomError, nummerSort} from "../../types/Utils";
+import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
+import {DeleteActionComponent} from '../../shared/components/datatable/delete-action/delete-action.component';
+import {RestoreActionComponent} from '../../shared/components/datatable/restore-action/restore-action.component';
+import {HeliosVliegtuig} from '../../types/Helios';
+import {CustomError, nummerSort} from '../../types/Utils';
 
 import * as xlsx from 'xlsx';
-import {UserService} from "../../services/apiservice/user.service";
+import {UserService} from '../../services/apiservice/user.service';
 
 @Component({
     selector: 'app-vliegtuigen-grid',
