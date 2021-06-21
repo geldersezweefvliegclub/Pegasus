@@ -39,3 +39,4 @@ testem.log
 Thumbs.db
 
 licenses.ts
+package-lock.json
