@@ -1,0 +1,148 @@
+<app-modal [titel]="formTitel">
+    <div body>
+        <fieldset [disabled]="isVerwijderMode || isRestoreMode">
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <app-vliegtuig-invoer id="VLIEGTUIG"
+                                          [disabled]="isVerwijderMode || isRestoreMode"
+                                          [VLIEGTUIG_ID]="start.VLIEGTUIG_ID"
+                                          [aanwezig]="aanwezigVliegtuigen"
+                                          [vliegtuigen]="vliegtuigen"
+                                          (VliegtuigChanged)="vliegtuigGeselecteerd($event)"
+                                          label="Vliegtuig"
+                    ></app-vliegtuig-invoer>
+                </div>
+                <div class="col-12 col-md-6" *ngIf="start.VLIEGTUIG_ID">
+                    <label for="VELD" class="form-label">Veld</label>
+                    <ng-select id="VELD"
+                               [disabled]="isVerwijderMode || isRestoreMode"
+                               [items]="veldenTypes$ | async"
+                               placeholder="Start veld"
+                               bindLabel="OMSCHRIJVING"
+                               bindValue="ID"
+                               closeOnSelect="true"
+                               openOnEnter="true"
+                               [(ngModel)]="start.VELD_ID">
+                    </ng-select>
+                </div>
+            </div>
+
+            <div class="row my-2" *ngIf="start.VLIEGTUIG_ID">
+                <div class="col-12 col-md-6 flex-row">
+                    <div class="col-12" *ngFor="let radiobutton of startMethodeTypesFiltered">
+                        <label>
+                            <input type="radio" name="options" (click)="start.STARTMETHODE_ID = radiobutton.ID"
+                                   [checked]="radiobutton === radiobutton.ID"><span
+                                class="ms-3">{{radiobutton.OMSCHRIJVING}}</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="start.STARTMETHODE_ID == 501">
+                <div class="col-12 col-md-6">
+                    <label for="SLEEPVLIEGTUIG" class="form-label">Sleepkist</label>
+                    <app-vliegtuig-invoer id="SLEEPVLIEGTUIG"
+                                          Sleep="true"
+                                          [disabled]="isVerwijderMode || isRestoreMode"
+                                          [aanwezig]="aanwezigVliegtuigen"
+                                          [vliegtuigen]="vliegtuigen"
+                                          (VliegtuigChanged)="start.SLEEPKIST_ID = $event"
+                    ></app-vliegtuig-invoer>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label for="SLEEPHOOGTE" class="form-label">Sleep hoogte</label>
+                    <input name="sleephoogte" type="number" class="form-control" id="SLEEPHOOGTE"
+                           [(ngModel)]="start.SLEEP_HOOGTE"
+                           placeholder="Invullen indien bekend"
+                           min="300" max="1500" step="50"
+                    >
+                </div>
+            </div>
+
+            <div class="row my-2" *ngIf="start.VLIEGTUIG_ID">
+                <div class="col-10 col-md-10">
+                    <div class="row my-2" *ngIf="start.VLIEGTUIG_ID">
+                        <div class="col-12 col-md-12">
+                            <app-lid-invoer id="VLIEGER"
+                                            placeholder="Selecteer vlieger"
+                                            label="Vlieger"
+                                            [LID_ID]="start.VLIEGER_ID"
+                                            [disabled]="isVerwijderMode || isRestoreMode"
+                                            [aanwezig]="aanwezigLeden"
+                                            [excludeLidTypes]="exclLidtypeAlsVlieger"
+                                            [leden]="leden"
+                                            [vliegtuig]="gekozenVliegtuig"
+                                            (LidChanged)="vliegerGeselecteerd($event)"
+                            ></app-lid-invoer>
+                        </div>
+                    </div>
+                    <div class="row my-2" *ngIf="!toonVliegerNaam && gekozenVliegtuig?.ZITPLAATSEN == 2">
+                        <div class="col-12 col-md-12">
+                            <app-lid-invoer id="INZITTENDE"
+                                            placeholder="Selecteer inzittende"
+                                            label="Inzittende"
+                                            [LID_ID]="start.INZITTENDE_ID"
+                                            [disabled]="isVerwijderMode || isRestoreMode"
+                                            [aanwezig]="aanwezigLeden"
+                                            [excludeLidTypes]="exclLidtypeAlsInzittende"
+                                            [leden]="leden"
+                                            (LidChanged)="start.INZITTENDE_ID = $event"
+                            ></app-lid-invoer>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2 col-md-2 row align-items-end">
+                    <app-icon-button id="switchVoorAchter" class="toolbarBtn display-1" iconNaam="fas ArrowsAltV" (btnClicked)="omwisselen()"
+                                     *ngIf="!toonVliegerNaam && gekozenVliegtuig?.ZITPLAATSEN == 2"
+                                     btnColor="btn-secondary"></app-icon-button>
+
+                </div>
+            </div>
+            <div class="row my-2 namenInvullen" *ngIf="toonVliegerNaam">
+                <div>
+                    <label for="VLIEGER_NAAM" class="form-label">Naam van de vlieger</label>
+                    <input required name="vliegernaam" type="text" class="form-control" id="VLIEGER_NAAM"
+                           [(ngModel)]="start.VLIEGERNAAM"
+                           placeholder="Vul de volledige naam in"
+                           min="0"
+                    >
+                </div>
+
+                <div *ngIf="gekozenVliegtuig?.ZITPLAATSEN == 2">
+                    <label for="INZITTENDE_NAAM" class="form-label">Naam van de inzittende</label>
+                    <input required name="inzittende" type="text" class="form-control" id="INZITTENDE_NAAM"
+                           [(ngModel)]="start.VLIEGERNAAM"
+                           placeholder="Vul de volledige naam in"
+                           min="0"
+                    >
+                </div>
+            </div>
+
+            <div class="row my-2"
+                 *ngIf="(!isVerwijderMode && start.VLIEGTUIG_ID) || (isVerwijderMode && start.OPMERKINGEN)">
+                <div class="opmerkingInvoer">
+                    <label for="OPMERKINGEN" class="form-label">Opmerkingen</label>
+                    <input required name="inzittende" type="text" class="form-control" id="OPMERKINGEN"
+                           [(ngModel)]="start.OPMERKINGEN"
+                           placeholder="Opmerking, bijv naam inzittende, vliegveld etc"
+                    >
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div footer>
+        <app-icon-button *ngIf="!isLoading && start.ID !== undefined && !isRestoreMode && !isVerwijderMode"
+                         iconNaam="fas Edit" btnColor="btn-primary"
+                         tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button *ngIf="!isLoading && start.ID === undefined && !isRestoreMode && !isVerwijderMode"
+                         iconNaam="fas Plus" btnColor="btn-primary"
+                         tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button *ngIf="!isLoading && isVerwijderMode" iconNaam="fas TrashAlt"
+                         btnColor="btn-primary editorDeleteBtn"
+                         tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button *ngIf="!isLoading && isRestoreMode" iconNaam="fas Undo" btnColor="btn-primary editorRestoreBtn"
+                         tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
+        <span *ngIf="isLoading"><app-loader></app-loader></span>
+    </div>
+</app-modal>

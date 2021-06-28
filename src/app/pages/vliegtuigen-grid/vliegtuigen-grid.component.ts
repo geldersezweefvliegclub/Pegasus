@@ -8,7 +8,7 @@ import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {DeleteActionComponent} from '../../shared/components/datatable/delete-action/delete-action.component';
 import {RestoreActionComponent} from '../../shared/components/datatable/restore-action/restore-action.component';
-import {HeliosVliegtuig} from '../../types/Helios';
+import {HeliosVliegtuig, HeliosVliegtuigenDataset} from '../../types/Helios';
 import {CustomError, nummerSort} from '../../types/Utils';
 
 import * as xlsx from 'xlsx';
@@ -22,7 +22,7 @@ import {UserService} from '../../services/apiservice/user.service';
 export class VliegtuigenGridComponent implements OnInit {
     @ViewChild(VliegtuigEditorComponent) editor: VliegtuigEditorComponent;
 
-    data = [];
+    data:HeliosVliegtuigenDataset[] = [];
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},

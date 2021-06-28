@@ -105,4 +105,9 @@
     </ng-template>
 
     <app-tijd-invoer (OpslaanStarttijd)="opslaanStartTijd($event)" (OpslaanLandingstijd)="opslaanLandingsTijd($event)"></app-tijd-invoer>
+
+    <app-start-editor *ngIf="this.magToevoegen || this.magWijzigen || this.magVerwijderen"
+                          (add)="Toevoegen($event)" (update)="Aanpassen($event)" (delete)="Verwijderen($event)"
+                          (restore)="Herstellen($event)"
+    ></app-start-editor>
 </app-icon-card>

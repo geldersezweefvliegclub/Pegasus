@@ -328,7 +328,7 @@ export interface components {
       /** Lid wil graag overland met dit vliegtuig. Verwijzing naar vliegtuig tabel */
       OVERLAND_VLIEGTUIG_ID?: number;
       /** Op welke type wil dit lid vandaag vliegen? Types als CSV formaat */
-      VOORKEUR_VLIEGTUIG_TYPE?: number;
+      VOORKEUR_VLIEGTUIG_TYPE?: string;
       /** Opmerking over de vliegdag */
       OPMERKINGEN?: string;
     } & { [key: string]: any };
@@ -339,18 +339,72 @@ export interface components {
         /** Tijdstempel van laaste aanpassing in de database */
         LAATSTE_AANPASSING?: string;
       } & { [key: string]: any }) & { [key: string]: any };
-    view_aanwezig_leden_dataset: components["schemas"]["oper_aanwezig_leden_in"] &
+    view_aanwezig_leden_dataset: components["schemas"]["oper_aanwezig_leden"] &
       ({
-        /** De volledige naam van het lid */
-        VLIEGER?: string;
-        /** Het soort lid (jeugdlid, lid, donateur). Verwijzing naar type tabel */
-        LIDTYPE_ID?: number;
         /** Korte beschrijving van het vliegtuig types */
         VLIEGTUIGTYPE_CODE?: string;
         /** Beschrijving van het vliegtuig types */
         VLIEGTUIGTYPE_OMS?: string;
         /** Vliegtuig registratie en callsign van overland vliegtuig */
         REG_CALL?: string;
+        /** De volledige naam van het lid */
+        NAAM?: string;
+        /** De voornaam van het lid */
+        VOORNAAM?: string;
+        /** De tussenvoegsel van het lid */
+        TUSSENVOEGSEL?: string;
+        /** De achternaam van het lid zonder tussenvoegsels */
+        ACHTERNAAM?: string;
+        /** Het (post) adres waar het lid woont */
+        ADRES?: string;
+        /** De postcode die bij het adres hoort */
+        POSTCODE?: string;
+        /** De plaatsnaam */
+        WOONPLAATS?: string;
+        /** Telefoon nummer van het lid */
+        TELEFOON?: string;
+        /** Mobiel telefoon nummer van het lid */
+        MOBIEL?: string;
+        /** Het telefoonnummer van een naaste, kan gebruikt worden in noodgevallen */
+        NOODNUMMER?: string;
+        /** email adres van het lid */
+        EMAIL?: string;
+        /** Het lidnummer zoals dat in de leden administratie bekend is */
+        LIDNR?: string;
+        /** Het soort lid (jeugdlid, lid, donateur). Verwijzing naar type tabel */
+        LIDTYPE_ID?: number;
+        /** Zusterclub lidmaatschap van lid. Nodig voor DDWV. */
+        ZUSTERCLUB_ID?: number;
+        /** Mag dit lid lieren? */
+        LIERIST?: boolean;
+        /** Kan dit lid het startbedrijf leiden? */
+        STARTLEIDER?: boolean;
+        /** Heeft dit lid een instructie bevoegdheid? */
+        INSTRUCTEUR?: boolean;
+        /** Werkt dit lid mee in het DDWV bedrijf */
+        DDWV_CREW?: boolean;
+        /** Is dit lid de beheerder van het DDWV bedrijf, heeft toegang tot DDWV gerelateede data */
+        DDWV_BEHEERDER?: boolean;
+        /** Is dit lid de beheerder van deze omgeving, heeft toegang tot alles */
+        BEHEERDER?: boolean;
+        /** Dit account wordt gebruikt om starts in de start toren in te voeren */
+        STARTTOREN?: boolean;
+        /** Is dit lid  belast met het maken van roosters */
+        ROOSTER?: boolean;
+        /** Moet clubblad per post verstuurd worden */
+        CLUBBLAD_POST?: boolean;
+        /** Verloopdatum van het medical */
+        MEDICAL?: string;
+        /** Geboorte datum van het lid */
+        GEBOORTE_DATUM?: string;
+        /** De inlognaam van het lid */
+        INLOGNAAM?: string;
+        /** Readonly, URL om image op te halen. Zetten via UploadAvatar functie */
+        AVATAR?: string;
+        /** Heef het lid de factuur van dit jaar betaald? */
+        HEEFT_BETAALD?: boolean;
+        /** Staat privacy mode (AVG / GDPR) uit/aan */
+        PRIVACY?: boolean;
       } & { [key: string]: any }) & { [key: string]: any };
     view_aanwezig_leden: {
       /** Aantal records dat voldoet aan de criteria in de database */

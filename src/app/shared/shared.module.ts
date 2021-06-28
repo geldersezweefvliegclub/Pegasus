@@ -13,15 +13,20 @@ import { IconButtonComponent } from './components/icon-button/icon-button.compon
 import { RegistratieDirective } from './components/editors/vliegtuig-editor/registratie.directive';
 import { DeleteActionComponent } from './components/datatable/delete-action/delete-action.component';
 import { RestoreActionComponent } from './components/datatable/restore-action/restore-action.component';
+import { StartEditorComponent } from './components/editors/start-editor/start-editor.component';
+import {NgSelectModule} from "@ng-select/ng-select";
+import { VliegtuigInvoerComponent } from './components/editors/start-editor/vliegtuig-invoer/vliegtuig-invoer.component';
+import { LidInvoerComponent } from './components/editors/start-editor/lid-invoer/lid-invoer.component';
 
 
 @NgModule({
-  imports: [
-    CommonModule,
-    AgGridModule.withComponents([]),
-    FontAwesomeModule,
-    FormsModule
-  ],
+    imports: [
+        CommonModule,
+        AgGridModule.withComponents([]),
+        FontAwesomeModule,
+        FormsModule,
+        NgSelectModule
+    ],
   declarations: [
     ModalComponent,
     ErrorComponent,
@@ -33,6 +38,9 @@ import { RestoreActionComponent } from './components/datatable/restore-action/re
     RegistratieDirective,
     DeleteActionComponent,
     RestoreActionComponent,
+    StartEditorComponent,
+    VliegtuigInvoerComponent,
+    LidInvoerComponent,
   ],
   exports: [
     ModalComponent,
@@ -41,6 +49,7 @@ import { RestoreActionComponent } from './components/datatable/restore-action/re
     LoaderComponent,
     VliegtuigEditorComponent,
     IconButtonComponent,
+    StartEditorComponent,
   ],
   providers: [],
   schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

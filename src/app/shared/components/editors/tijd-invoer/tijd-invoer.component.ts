@@ -98,7 +98,6 @@ export class TijdInvoerComponent {
             }
         });
 
-
         this.formTitel = 'Vlucht: #' + record.DAGNUMMER + ', ' + record.REG_CALL;
         this.label = 'Landing';
 

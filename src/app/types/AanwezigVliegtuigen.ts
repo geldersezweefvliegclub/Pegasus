@@ -313,6 +313,26 @@ export interface components {
       } & { [key: string]: any }) & { [key: string]: any };
     view_aanwezig_vliegtuigen_dataset: components["schemas"]["oper_aanwezig_vliegtuigen"] &
       ({
+        /** Het registratie nummer van het vliegtuig */
+        REGISTRATIE?: string;
+        /** Optioneel het callsign van het vliegtuig */
+        CALLSIGN?: string;
+        /** De flarmcode zoals deze wordt uitgezonden. Zo kunnen we ontvangen flarm data herleiden naar een vliegtuig uit de database */
+        FLARMCODE?: string;
+        /** Het aantal zitplaatsen. Is 1 of 2. */
+        ZITPLAATSEN?: number;
+        /** Kan het vliegtuig op eigen kracht starten. */
+        ZELFSTART?: boolean;
+        /** Is het een club vliegtuig? */
+        CLUBKIST?: boolean;
+        /** Is het een TMG? */
+        TMG?: boolean;
+        /** Is het een sleepvliegtuig? */
+        SLEEPKIST?: boolean;
+        /** Link naar vliegtuig type tabel. Alleen nodig voor clubvliegtuigen */
+        TYPE_ID?: number;
+        /** Volgorde van vliegtuiglijst, bedoeld voor club vliegtuigen */
+        VOLGORDE?: number;
         /** Vliegtuig registratie en callsign van het vliegtuig */
         REG_CALL?: string;
       } & { [key: string]: any }) & { [key: string]: any };

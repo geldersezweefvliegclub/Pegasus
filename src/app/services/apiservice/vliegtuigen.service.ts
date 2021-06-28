@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {APIService} from './api.service';
 
-import {HeliosVliegtuig, HeliosVliegtuigen} from '../../types/Helios';
+import {HeliosVliegtuig, HeliosVliegtuigen, HeliosVliegtuigenDataset} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
 import {KeyValueString} from '../../types/Utils';
 
@@ -15,7 +15,7 @@ export class VliegtuigenService {
 
     }
 
-    async getVliegtuigen(verwijderd: boolean = false, zoekString?: string): Promise<[]> {
+    async getVliegtuigen(verwijderd: boolean = false, zoekString?: string): Promise<HeliosVliegtuigenDataset[]> {
         let hash: string = '';
 
         if (((this.vliegtuigen == null)) && (this.storageService.ophalen('vliegtuigen') != null)) {
@@ -47,7 +47,7 @@ export class VliegtuigenService {
                 throw(e);
             }
         }
-        return this.vliegtuigen?.dataset as [];
+        return this.vliegtuigen?.dataset as HeliosVliegtuigenDataset[];
     }
 
     async getVliegtuig(id: number): Promise<HeliosVliegtuig> {

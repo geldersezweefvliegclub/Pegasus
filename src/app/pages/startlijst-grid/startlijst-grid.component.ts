@@ -2,7 +2,6 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {StartlijstService} from '../../services/apiservice/startlijst.service';
 import {CheckboxRenderComponent} from '../../shared/components/datatable/checkbox-render/checkbox-render.component';
 import {faRecycle} from '@fortawesome/free-solid-svg-icons';
-import {VliegtuigEditorComponent} from '../../shared/components/editors/vliegtuig-editor/vliegtuig-editor.component';
 import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {DeleteActionComponent} from '../../shared/components/datatable/delete-action/delete-action.component';
@@ -21,6 +20,7 @@ import {NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDatepickerNavigateEvent
 import {StarttijdRenderComponent} from './starttijd-render/starttijd-render.component';
 import {LandingstijdRenderComponent} from './landingstijd-render/landingstijd-render.component';
 import {TijdInvoerComponent} from '../../shared/components/editors/tijd-invoer/tijd-invoer.component';
+import {StartEditorComponent} from "../../shared/components/editors/start-editor/start-editor.component";
 
 
 @Component({
@@ -30,10 +30,10 @@ import {TijdInvoerComponent} from '../../shared/components/editors/tijd-invoer/t
     providers: [{provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter}]
 })
 export class StartlijstGridComponent implements OnInit {
-    @ViewChild(VliegtuigEditorComponent) editor: VliegtuigEditorComponent;
+    @ViewChild(StartEditorComponent) editor: StartEditorComponent;
     @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
 
-    data: [];
+    data: HeliosStartDataset[] = [];
     vliegdagen: string = "";
 
     dataColumns: ColDef[] = [
@@ -169,11 +169,23 @@ export class StartlijstGridComponent implements OnInit {
     }
 
     addStart(): void {
-        this.editor.openPopup(null);
+        let datum: DateTime = DateTime.fromObject({
+            year: this.kalenderInput.year,
+            month: this.kalenderInput.month,
+            day: this.kalenderInput.day
+        })
+
+        this.editor.openPopup(null, datum.toISODate());
     }
 
     openEditor(event?: RowDoubleClickedEvent) {
-        this.editor.openPopup(event?.data.ID);
+        let datum: DateTime = DateTime.fromObject({
+            year: this.kalenderInput.year,
+            month: this.kalenderInput.month,
+            day: this.kalenderInput.day
+        })
+
+        this.editor.openPopup(event?.data.ID, datum.toISODate());
     }
 
     deleteModeJaNee() {

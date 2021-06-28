@@ -1,0 +1,13 @@
+<label for="LID" class="form-label">{{label}}</label>
+<ng-select id="LID"
+           [items]="ledenSelectie$ | async"
+           [disabled]="disabled"
+           [placeholder]="placeholder"
+           bindLabel="NAAM"
+           bindValue="LID_ID"
+           closeOnSelect="true"
+           openOnEnter="true"
+           (ngModelChange)="inputChange($event)"
+           [typeahead]="lidInput$"
+           [(ngModel)]="LID_ID">
+</ng-select>

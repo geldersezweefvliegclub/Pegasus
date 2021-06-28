@@ -1,0 +1,51 @@
+import { Injectable } from '@angular/core';
+import {StorageService} from "../storage/storage.service";
+import {DateTime} from "luxon";
+import {KeyValueString} from "../../types/Utils";
+import {APIService} from '../apiservice/api.service';
+import {HeliosAanwezigVliegtuigen, HeliosAanwezigVliegtuigenDataset} from '../../types/Helios';
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AanwezigVliegtuigService {
+  aanwezig: HeliosAanwezigVliegtuigen | null = null;
+
+  constructor(private readonly APIService: APIService, private readonly storageService: StorageService) {
+  }
+
+  async getAanwezig(startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueString = {}): Promise<HeliosAanwezigVliegtuigenDataset[]> {
+    let hash: string = '';
+
+    if (((this.aanwezig == null)) && (this.storageService.ophalen('aanwezigVliegtuigen') != null)) {
+      this.aanwezig = this.storageService.ophalen('aanwezigVliegtuigen');
+    }
+
+    let getParams: KeyValueString = params;
+
+    if (this.aanwezig != null) { // we hebben eerder de lijst opgehaald
+      hash = this.aanwezig.hash as string;
+      getParams['HASH'] = hash;
+    }
+
+    getParams['BEGIN_DATUM'] = startDatum.toISODate();
+    getParams['EIND_DATUM'] = eindDatum.toISODate();
+
+    if (zoekString) {
+      getParams['SELECTIE'] = zoekString;
+    }
+
+    try {
+      const response: Response = await this.APIService.get('AanwezigVliegtuigen/GetObjects', getParams );
+
+      this.aanwezig = await response.json();
+      this.storageService.opslaan('aanwezigVliegtuigen', this.aanwezig);
+    } catch (e) {
+      if (e.responseCode !== 304) { // server bevat dezelfde data als cache
+        throw(e);
+      }
+    }
+    return this.aanwezig?.dataset as HeliosAanwezigVliegtuigenDataset[];
+  }
+}

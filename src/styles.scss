@@ -74,12 +74,23 @@ input.ng-dirty.ng-invalid{
 }
 
 // wijzig de zwarte kleur in disabled forms
-.form-control:disabled, .form-control[readonly] {
+.form-control:disabled, .form-control[readonly], input:disabled {
   color: #9a9a9a;
 }
 
 .form-select:disabled {
   color: #9a9a9a;
+}
+
+.ng-select.ng-select-disabled>.ng-select-container {
+  background-color: #e9ecef;
+}
+
+// hoge knop voor omwisselen vlieger - inzittende in de start editor
+#switchVoorAchter button {
+  height: 110px;
+  font-size: 40px;
+  color: rgb(95 94 94 / 55%);
 }
 
 // knop voor invullen starttijd
