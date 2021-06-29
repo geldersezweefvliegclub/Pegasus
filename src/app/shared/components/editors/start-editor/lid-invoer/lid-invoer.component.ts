@@ -61,6 +61,7 @@ export class LidInvoerComponent implements OnChanges {
 
     // De Input datasets zijn gewijzigd, zorg dat combobox goede data krijgt via ledenSelectie$
     ngOnChanges(changes: SimpleChanges) {
+        console.log(this.excludeLidTypes)
         if (!this.excludeLidTypes) {
             this.aanwezigFiltered = this.aanwezig;
             this.ledenFiltered = this.leden;
@@ -84,11 +85,25 @@ export class LidInvoerComponent implements OnChanges {
             return (lid.OVERLAND_VLIEGTUIG_ID == this.vliegtuig?.ID)
         });
 
-        if (defaultLijst.length > 0) {
+        const inDefault = defaultLijst.findIndex(lid => lid.LID_ID == this.LID_ID) >= 0;
+        const inAanwezig = this.aanwezigFiltered.findIndex(lid => lid.LID_ID == this.LID_ID) >= 0;
+        const inLeden = this.ledenFiltered.findIndex(lid => lid.LID_ID == this.LID_ID) >= 0;
+
+        // niet alle leden staan in aanwezig (denk aan zusterclubs), voor edit moeten we goede lijst kiezen
+        if (inDefault) {
+            this.ledenSelectie$ = of(defaultLijst);           // leden die graag op dit vliegtuig vliegen
+        } else if (inAanwezig) {
+            this.ledenSelectie$ = of(this.aanwezigFiltered);  // alle aanwezig leden
+        } else if (inLeden) {
+            this.ledenSelectie$ = of(this.ledenFiltered);     // complete ledenlijst
+        } else if (defaultLijst.length > 0) {
+            console.log(defaultLijst)
             this.ledenSelectie$ = of(defaultLijst);           // leden die graag op dit vliegtuig vliegen
         } else if (this.aanwezig.length > 0) {
+            console.log(this.aanwezigFiltered)
             this.ledenSelectie$ = of(this.aanwezigFiltered);  // alle aanwezig leden
         } else {
+            console.log(this.ledenFiltered)
             this.ledenSelectie$ = of(this.ledenFiltered);     // complete ledenlijst
         }
     }

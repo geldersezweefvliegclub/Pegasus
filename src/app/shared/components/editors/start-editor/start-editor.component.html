@@ -27,7 +27,7 @@
                 </div>
             </div>
 
-            <div class="row my-2" *ngIf="start.VLIEGTUIG_ID">
+            <div class="row my-2" *ngIf="start.VLIEGTUIG_ID && toonStartMethode">
                 <div class="col-12 col-md-6 flex-row">
                     <div class="col-12" *ngFor="let radiobutton of startMethodeTypesFiltered">
                         <label>

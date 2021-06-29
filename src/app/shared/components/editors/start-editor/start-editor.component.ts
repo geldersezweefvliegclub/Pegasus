@@ -33,6 +33,7 @@ export class StartEditorComponent {
 
     start: HeliosStart = {};
     toonVliegerNaam: boolean = false;
+    toonStartMethode: boolean = true;
 
     startMethodeTypes: HeliosType[];
     startMethodeTypesFiltered: HeliosType[];
@@ -46,9 +47,10 @@ export class StartEditorComponent {
     // 609 = nieuwlid
     // 610 = oprotkabel
     // 612 = penningmeester
+    // 613 = systeem gebruiker
     // 625 = DDWV'er
-    exclLidtypeAlsInzittende: string = "607,609,610,612,625"
-    exclLidtypeAlsVlieger: string = ""
+    exclLidtypeAlsInzittende: string = "607,609,610,612,613,625"
+    exclLidtypeAlsVlieger: string = "613"
     leden: HeliosAanwezigLedenDataset[] = [];
     aanwezigLeden: HeliosAanwezigLedenDataset[] = [];
 
@@ -193,21 +195,31 @@ export class StartEditorComponent {
             // 501 = Slepen
             // 550 = Lierstart
             if (!this.gekozenVliegtuig.TMG && !this.gekozenVliegtuig.SLEEPKIST) {
+                this.toonStartMethode = true;
                 this.startMethodeTypesFiltered.push(this.startMethodeTypes.find(type => type.ID == 501) as HeliosType);
                 this.startMethodeTypesFiltered.push(this.startMethodeTypes.find(type => type.ID == 550) as HeliosType);
             }
 
             // 507 = Zelfstart
-            if (this.gekozenVliegtuig.ZELFSTART || this.gekozenVliegtuig.TMG || this.gekozenVliegtuig.SLEEPKIST) {
+            if (this.gekozenVliegtuig.ZELFSTART) {
+                this.toonStartMethode = true;
                 this.startMethodeTypesFiltered.push(this.startMethodeTypes.find(type => type.ID == 507) as HeliosType);
+            }
+
+            // Deze kunnen niet gesleept of gelierd worden
+            if (this.gekozenVliegtuig.TMG || this.gekozenVliegtuig.SLEEPKIST) {
+                this.startMethodeTypesFiltered.push(this.startMethodeTypes.find(type => type.ID == 507) as HeliosType);
+                this.start.STARTMETHODE_ID = 507;
+                this.toonStartMethode = false;
             }
         }
 
         // Indien clubkist dan mogen er een aantal lidtypes hierop niet vliegen
         // 607 = zusterclub
         // 610 = oprotkabel
+        // 613 = systeem gebruiker
         // 625 = DDWV'er
-        this.exclLidtypeAlsVlieger = (this.gekozenVliegtuig?.CLUBKIST) ? "607,610,625" : "";
+        this.exclLidtypeAlsVlieger = (this.gekozenVliegtuig?.CLUBKIST) ? "607,610,613,625" : "613";
     }
 
     // De vlieger is nu ingevoerd
