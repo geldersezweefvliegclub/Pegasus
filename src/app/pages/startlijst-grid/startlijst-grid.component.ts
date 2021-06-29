@@ -21,6 +21,7 @@ import {StarttijdRenderComponent} from './starttijd-render/starttijd-render.comp
 import {LandingstijdRenderComponent} from './landingstijd-render/landingstijd-render.component';
 import {TijdInvoerComponent} from '../../shared/components/editors/tijd-invoer/tijd-invoer.component';
 import {StartEditorComponent} from "../../shared/components/editors/start-editor/start-editor.component";
+import {ActivatedRoute} from "@angular/router";
 
 
 @Component({
@@ -142,7 +143,7 @@ export class StartlijstGridComponent implements OnInit {
     filterIcon = faFilter;
     error: CustomError | undefined;
 
-    kalenderInput: NgbDateStruct;
+    kalenderInput: NgbDateStruct;                       // de gekozen dag
     kalenderMaand: { year: number, month: number };
     vandaag = this.calendar.getToday();
 
@@ -152,11 +153,23 @@ export class StartlijstGridComponent implements OnInit {
     magExporten: boolean = false;
     magDatumKiezen: boolean = false;
 
-    constructor(private readonly startlijstService: StartlijstService, private readonly loginService: UserService, private calendar: NgbCalendar) {
+    constructor(private readonly startlijstService: StartlijstService,
+                private readonly loginService: UserService,
+                private calendar: NgbCalendar,
+                private activatedRoute: ActivatedRoute) {
+
+        this.activatedRoute.queryParams.subscribe(params => {
+            let datumParts = params['datum'].split('-')
+            console.log(datumParts);
+
+            this.kalenderInput = new NgbDate(+datumParts[0], +datumParts[1], +datumParts[2]);
+        })
     }
 
     ngOnInit(): void {
-        this.kalenderInput = this.vandaag;
+        if (!this.kalenderInput) {
+            this.kalenderInput = this.vandaag;
+        }
 
         let ui = this.loginService.userInfo?.Userinfo;
         this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur) ? true : false;
