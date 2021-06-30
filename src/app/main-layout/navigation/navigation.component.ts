@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {routes} from '../../routing.module';
-import {UserService} from '../../services/apiservice/user.service';
+import {LoginService} from '../../services/apiservice/login.service';
 import {Router} from '@angular/router';
 import {faSignOutAlt} from '@fortawesome/free-solid-svg-icons';
 
@@ -14,7 +14,7 @@ export class NavigationComponent {
   routes = routes;
   logUit = faSignOutAlt;
 
-  constructor(private readonly loginService: UserService, private readonly router:Router) {
+  constructor(private readonly loginService: LoginService, private readonly router:Router) {
   }
 
   Uitloggen(): void {

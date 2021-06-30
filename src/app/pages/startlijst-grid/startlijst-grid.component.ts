@@ -9,7 +9,7 @@ import {RestoreActionComponent} from '../../shared/components/datatable/restore-
 import {HeliosStart, HeliosStartDataset} from '../../types/Helios';
 import {CustomError, KeyValueString, nummerSort, tijdSort} from '../../types/Utils';
 import * as xlsx from 'xlsx';
-import {UserService} from '../../services/apiservice/user.service';
+import {LoginService} from '../../services/apiservice/login.service';
 import {faClipboardList} from '@fortawesome/free-solid-svg-icons/faClipboardList';
 import {NgbDateFRParserFormatter} from '../../shared/ngb-date-fr-parser-formatter';
 import {DateTime} from 'luxon';
@@ -154,7 +154,7 @@ export class StartlijstGridComponent implements OnInit {
     magDatumKiezen: boolean = false;
 
     constructor(private readonly startlijstService: StartlijstService,
-                private readonly loginService: UserService,
+                private readonly loginService: LoginService,
                 private calendar: NgbCalendar,
                 private activatedRoute: ActivatedRoute) {
 

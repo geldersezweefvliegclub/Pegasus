@@ -6,57 +6,76 @@
                     <div class="row">
                         <div class="col-5">
                             <label for="voornaam" class="form-label">Voornaam</label>
-                            <input type="text" name="voornaam" class="form-control" id="voornaam">
+                            <input type="text" name="voornaam" class="form-control" id="voornaam"
+                                   [(ngModel)]="persoon.LidData.VOORNAAM">
                         </div>
                         <div class="col-2">
                             <label for="tussenvoegsel" class="form-label">Tussenvoegsel</label>
-                            <input type="text" name="tussenvoegsel" class="form-control" id="tussenvoegsel">
+                            <input type="text" name="tussenvoegsel" class="form-control" id="tussenvoegsel"
+                                   [(ngModel)]="persoon.LidData.TUSSENVOEGSEL">
                         </div>
                         <div class="col-5">
                             <label for="achternaam" class="form-label">Achternaam</label>
-                            <input type="text" name="achternaam" class="form-control" id="achternaam">
+                            <input type="text" name="achternaam" class="form-control" id="achternaam"
+                                   [(ngModel)]="persoon.LidData.ACHTERNAAM">
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-5">
                             <label for="adres" class="form-label">Adres</label>
-                            <input type="text" name="adres" class="form-control" id="adres">
+                            <input type="text" name="adres" class="form-control" id="adres"
+                                   [(ngModel)]="persoon.LidData.ADRES">
                         </div>
                         <div class="col-2">
                             <label for="postcode" class="form-label">Postcode</label>
-                            <input type="text" name="postcode" class="form-control" id="postcode">
+                            <input type="text" name="postcode" class="form-control" id="postcode"
+                                   [(ngModel)]="persoon.LidData.POSTCODE">
                         </div>
                         <div class="col-5">
                             <label for="woonplaats" class="form-label">Woonplaats</label>
-                            <input type="text" name="woonplaats" class="form-control" id="woonplaats">
+                            <input type="text" name="woonplaats" class="form-control" id="woonplaats"
+                                   [(ngModel)]="persoon.LidData.WOONPLAATS">
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-4">
                             <label for="telefoon" class="form-label">Telefoon</label>
-                            <input type="tel" name="telefoon" class="form-control" id="telefoon">
+                            <input type="tel" name="telefoon" class="form-control" id="telefoon"
+                                   [(ngModel)]="persoon.LidData.TELEFOON">
                         </div>
                         <div class="col-4">
                             <label for="mobiel" class="form-label">Mobiel</label>
-                            <input type="tel" name="mobiel" class="form-control" id="mobiel">
+                            <input type="tel" name="mobiel" class="form-control" id="mobiel"
+                                   [(ngModel)]="persoon.LidData.MOBIEL">
                         </div>
                         <div class="col-4">
                             <label for="noodnummer" class="form-label">Noodnummer</label>
-                            <input type="tel" name="noodnummer" class="form-control" id="noodnummer">
+                            <input type="tel" name="noodnummer" class="form-control" id="noodnummer"
+                                   [(ngModel)]="persoon.LidData.NOODNUMMER">
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-4">
-<!--                            <label for="telefoon" class="form-label">Telefoon</label>-->
-<!--                            <input type="text" name="telefoon" class="form-control" id="telefoon">-->
+                            <label class="form-label" for="geboortedatum">Geboortedatum</label>
+                            <div class="input-group">
+                                <input name="geboortedatum" class="form-control" placeholder="dd-mm-yyyy"
+                                       ngbDatepicker #d="ngbDatepicker"
+                                       id="geboortedatum"
+                                       [(ngModel)]="persoon.LidData.GEBOORTEDATUM">
+                                <div class="input-group-append">
+                                    <app-icon-button class="" iconNaam="far Calendar" (btnClicked)="d.toggle()"
+                                                     btnColor="btn-primary"></app-icon-button>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-4">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control" id="email">
+                            <input type="email" name="email" class="form-control" id="email" email required>
                         </div>
-                        <div class="col-4">
-                            <label for="noodnummer" class="form-label">Noodnummer</label>
-                            <input type="text" name="noodnummer" class="form-control" id="noodnummer">
+                        <div class="col-4 d-flex align-items-center mt-4">
+                            <input type="checkbox" name="privacy" class="form-check-inline" id="privacy"
+                                   [(ngModel)]="persoon.LidData.PRIVACY">
+                            <label for="privacy" class="form-check-label">Privacy</label>
                         </div>
                     </div>
                 </div>
@@ -89,14 +108,14 @@
                     <div class="row mt-2">
                         <div class="col-6 mt-4">
                             <div>
-                                <input class="form-check-input" type="checkbox" id="betaald" name="betaald">
-                                <label class="form-check-label ms-1" for="betaald">
+                                <input class="form-check-inline" type="checkbox" id="betaald" name="betaald">
+                                <label class="form-check-label" for="betaald">
                                     Heeft betaald
                                 </label>
                             </div>
                             <div>
-                                <input class="form-check-input" type="checkbox" id="googleAuth" name="googleAuth">
-                                <label class="form-check-label ms-1" for="googleAuth">
+                                <input class="form-check-inline" type="checkbox" id="googleAuth" name="googleAuth">
+                                <label class="form-check-label" for="googleAuth">
                                     Google Auth.
                                 </label>
                             </div>

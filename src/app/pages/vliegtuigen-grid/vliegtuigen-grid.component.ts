@@ -12,7 +12,7 @@ import {HeliosVliegtuig, HeliosVliegtuigenDataset} from '../../types/Helios';
 import {CustomError, nummerSort} from '../../types/Utils';
 
 import * as xlsx from 'xlsx';
-import {UserService} from '../../services/apiservice/user.service';
+import {LoginService} from '../../services/apiservice/login.service';
 
 @Component({
     selector: 'app-vliegtuigen-grid',
@@ -86,7 +86,7 @@ export class VliegtuigenGridComponent implements OnInit {
     magWijzigen: boolean = false;
     magExporten: boolean = false;
 
-    constructor(private readonly vliegtuigenService: VliegtuigenService, private readonly loginService: UserService) {
+    constructor(private readonly vliegtuigenService: VliegtuigenService, private readonly loginService: LoginService) {
     }
 
     ngOnInit(): void {
