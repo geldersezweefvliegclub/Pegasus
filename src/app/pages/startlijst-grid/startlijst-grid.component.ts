@@ -155,7 +155,6 @@ export class StartlijstGridComponent implements OnInit {
     datumAbonnement: Subscription;
     datum: DateTime;                       // de gekozen dag
 
-
     magToevoegen: boolean = false;
     magVerwijderen: boolean = false;
     magWijzigen: boolean = false;

@@ -13,8 +13,8 @@ export class SharedService {
 
     nu = new Date()
     vandaag:NgbDateStruct = { year: this.nu.getFullYear(),
-                              month: this.nu.getMonth(),
-                              day: this.nu.getDay() };
+                              month: this.nu.getMonth()+1,
+                              day: this.nu.getDate() };
 
     private datumStore = new BehaviorSubject(this.vandaag);
     ingegevenDatum = this.datumStore.asObservable();
