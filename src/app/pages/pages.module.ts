@@ -24,6 +24,7 @@ import { InzittendeRenderComponent } from './startlijst-grid/inzittende-render/i
 import { StarttijdRenderComponent } from './startlijst-grid/starttijd-render/starttijd-render.component';
 import { LandingstijdRenderComponent } from './startlijst-grid/landingstijd-render/landingstijd-render.component';
 import { TijdInvoerComponent } from '../shared/components/editors/tijd-invoer/tijd-invoer.component';
+import { DaginfoComponent } from './daginfo/daginfo.component';
 
 @NgModule({
     imports: [
@@ -53,7 +54,8 @@ import { TijdInvoerComponent } from '../shared/components/editors/tijd-invoer/ti
     InzittendeRenderComponent,
     StarttijdRenderComponent,
     LandingstijdRenderComponent,
-    TijdInvoerComponent
+    TijdInvoerComponent,
+    DaginfoComponent
   ],
   exports: [
     IconCardComponent,

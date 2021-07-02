@@ -86,6 +86,16 @@ input.ng-dirty.ng-invalid{
   background-color: #e9ecef;
 }
 
+
+// center kalender in navigatie balk
+.navCalendar .ngb-dp-content.ngb-dp-months {
+  justify-content: space-around;
+}
+
+.navCalendar .ngb-dp-day {
+  line-height: 2rem;
+}
+
 // hoge knop voor omwisselen vlieger - inzittende in de start editor
 #switchVoorAchter button {
   height: 110px;

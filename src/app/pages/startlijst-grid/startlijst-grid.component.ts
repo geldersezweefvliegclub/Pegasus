@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {StartlijstService} from '../../services/apiservice/startlijst.service';
 import {CheckboxRenderComponent} from '../../shared/components/datatable/checkbox-render/checkbox-render.component';
 import {faRecycle} from '@fortawesome/free-solid-svg-icons';
@@ -16,30 +16,30 @@ import {DateTime} from 'luxon';
 import {VliegerRenderComponent} from './vlieger-render/vlieger-render.component';
 import {InzittendeRenderComponent} from './inzittende-render/inzittende-render.component';
 import {faFilter} from '@fortawesome/free-solid-svg-icons/faFilter';
-import {NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDatepickerNavigateEvent, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {StarttijdRenderComponent} from './starttijd-render/starttijd-render.component';
 import {LandingstijdRenderComponent} from './landingstijd-render/landingstijd-render.component';
 import {TijdInvoerComponent} from '../../shared/components/editors/tijd-invoer/tijd-invoer.component';
 import {StartEditorComponent} from "../../shared/components/editors/start-editor/start-editor.component";
-import {ActivatedRoute} from "@angular/router";
+import {Subscription} from "rxjs";
+import {SharedService} from "../../services/shared/shared.service";
+import {NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
 
 
 @Component({
     selector: 'app-startlijst-grid',
     templateUrl: './startlijst-grid.component.html',
-    styleUrls: ['./startlijst-grid.component.scss'],
-    providers: [{provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter}]
+    styleUrls: ['./startlijst-grid.component.scss']
 })
 export class StartlijstGridComponent implements OnInit {
+
     @ViewChild(StartEditorComponent) editor: StartEditorComponent;
     @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
 
     data: HeliosStartDataset[] = [];
-    vliegdagen: string = "";
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
-        {field: 'DAGNUMMER', headerName: '#', sortable: true, },
+        {field: 'DAGNUMMER', headerName: '#', sortable: true,},
 
         {field: 'REGISTRATIE', headerName: 'Registratie', sortable: true, hide: true, enableRowGroup: true},
         {field: 'CALLSIGN', headerName: 'Callsign', sortable: true, hide: true, enableRowGroup: true},
@@ -64,7 +64,12 @@ export class StartlijstGridComponent implements OnInit {
         },
 
         {
-            field: 'STARTTIJD', headerName: 'Starttijd', sortable: true, hide: false, cellRenderer: 'startTijdRender', comparator: tijdSort,
+            field: 'STARTTIJD',
+            headerName: 'Starttijd',
+            sortable: true,
+            hide: false,
+            cellRenderer: 'startTijdRender',
+            comparator: tijdSort,
             cellRendererParams: {
                 tijdClicked: (record: HeliosStartDataset) => {
                     this.tijdInvoerEditor.openStarttijdPopup(record);
@@ -72,7 +77,11 @@ export class StartlijstGridComponent implements OnInit {
             },
         },
         {
-            field: 'LANDINGSTIJD', headerName: 'Landingstijd', sortable: true, cellRenderer: 'landingsTijdRender', comparator: tijdSort,
+            field: 'LANDINGSTIJD',
+            headerName: 'Landingstijd',
+            sortable: true,
+            cellRenderer: 'landingsTijdRender',
+            comparator: tijdSort,
             cellRendererParams: {
                 tijdClicked: (record: HeliosStartDataset) => {
                     this.tijdInvoerEditor.openLandingsTijdPopup(record);
@@ -143,9 +152,9 @@ export class StartlijstGridComponent implements OnInit {
     filterIcon = faFilter;
     error: CustomError | undefined;
 
-    kalenderInput: NgbDateStruct;                       // de gekozen dag
-    kalenderMaand: { year: number, month: number };
-    vandaag = this.calendar.getToday();
+    datumAbonnement: Subscription;
+    datum: DateTime;                       // de gekozen dag
+
 
     magToevoegen: boolean = false;
     magVerwijderen: boolean = false;
@@ -155,50 +164,39 @@ export class StartlijstGridComponent implements OnInit {
 
     constructor(private readonly startlijstService: StartlijstService,
                 private readonly loginService: UserService,
-                private calendar: NgbCalendar,
-                private activatedRoute: ActivatedRoute) {
-
-        this.activatedRoute.queryParams.subscribe(params => {
-            let datumParts = params['datum'].split('-')
-            console.log(datumParts);
-
-            this.kalenderInput = new NgbDate(+datumParts[0], +datumParts[1], +datumParts[2]);
-        })
+                private readonly sharedService: SharedService) {
     }
 
     ngOnInit(): void {
-        if (!this.kalenderInput) {
-            this.kalenderInput = this.vandaag;
-        }
+        // de datum zoals die in de kalender gekozen is
+        this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
+            this.datum = DateTime.fromObject({
+                year: datum.year,
+                month: datum.month,
+                day: datum.day
+            })
+            this.opvragen();
+        })
 
         let ui = this.loginService.userInfo?.Userinfo;
         this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur) ? true : false;
         this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur) ? true : false;
         this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur) ? true : false;
         this.magExporten = (!ui?.isDDWV) ? true : false;
-        this.magDatumKiezen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isInstructeur || ui?.isCIMT || ui?.isInstructeur) ? true : false;
-
-        this.opvragen();
     }
 
     addStart(): void {
         let datum: DateTime = DateTime.fromObject({
-            year: this.kalenderInput.year,
-            month: this.kalenderInput.month,
-            day: this.kalenderInput.day
+            year: this.datum.year,
+            month: this.datum.month,
+            day: this.datum.day
         })
 
         this.editor.openPopup(null, datum.toISODate());
     }
 
     openEditor(event?: RowDoubleClickedEvent) {
-        let datum: DateTime = DateTime.fromObject({
-            year: this.kalenderInput.year,
-            month: this.kalenderInput.month,
-            day: this.kalenderInput.day
-        })
-
-        this.editor.openPopup(event?.data.ID, datum.toISODate());
+        this.editor.openPopup(event?.data.ID, this.datum.toISODate());
     }
 
     deleteModeJaNee() {
@@ -224,28 +222,16 @@ export class StartlijstGridComponent implements OnInit {
     }
 
     opvragen() {
-        clearTimeout(this.zoekTimer);
-        this.zoekTimer = setTimeout(() => {
-            if (this.kalenderInput.year < 2000 || (this.kalenderInput.year == undefined)) {
-                // geen goede datum ingave
-                this.data = [];
-            } else {
-                let datum: DateTime = DateTime.fromObject({
-                    year: this.kalenderInput.year,
-                    month: this.kalenderInput.month,
-                    day: this.kalenderInput.day
-                })
-                let queryParams: KeyValueString = {};
+        let queryParams: KeyValueString = {};
 
-                if (this.filterOn) {
-                    queryParams["OPEN_STARTS"] = "true"
-                }
+        if (this.filterOn) {
+            queryParams["OPEN_STARTS"] = "true"
+        }
 
-                this.startlijstService.getStarts(this.trashMode, datum, datum, this.zoekString, queryParams).then((dataset) => {
-                    this.data = dataset;
-                });
-            }
-        }, 400);
+        this.startlijstService.getStarts(this.trashMode, this.datum, this.datum, this.zoekString, queryParams).then((dataset) => {
+            this.data = dataset;
+        });
+
     }
 
     Toevoegen(start: HeliosStart) {
@@ -288,48 +274,12 @@ export class StartlijstGridComponent implements OnInit {
         });
     }
 
-    // nieuwe datum gekozen
-    NieuweDatum($nweDatum: NgbDate) {
-        this.opvragen();
-    }
-
-    // de kalender popup toont andere maand, ophalen vliegdagen
-    KalenderAndereMaand($event: NgbDatepickerNavigateEvent) {
-        this.kalenderMaand = $event.next;
-
-        let maanden = [31, 28, 31, 30, 31, 30, 30, 31, 30, 31, 30, 31];
-        let startDatum: DateTime = DateTime.fromObject({
-            year: this.kalenderMaand.year,
-            month: this.kalenderMaand.month,
-            day: 1
-        })
-        let eindDatum: DateTime = DateTime.fromObject({
-            year: this.kalenderMaand.year,
-            month: this.kalenderMaand.month,
-            day: maanden[this.kalenderMaand.month - 1]
-        })
-
-        this.startlijstService.getVliegdagen(startDatum, eindDatum).then((dataset) => {
-            this.vliegdagen = JSON.stringify(dataset);
-        });
-    }
-
-    // highlight de dag als er starts zijn geweest
-    cssCustomDay(date: NgbDate): string {
-        let datum: DateTime = DateTime.fromObject({year: date.year, month: date.month, day: date.day})
-
-        if (this.vliegdagen.includes(datum.toISODate()))
-            return "vliegdag";
-
-        return "";
-    }
-
     // Export naar excel
     exportDataset() {
         let datum: DateTime = DateTime.fromObject({
-            year: this.kalenderInput.year,
-            month: this.kalenderInput.month,
-            day: this.kalenderInput.day
+            year: this.datum.year,
+            month: this.datum.month,
+            day: this.datum.day
         })
 
         var ws = xlsx.utils.json_to_sheet(this.data);
