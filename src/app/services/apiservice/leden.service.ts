@@ -11,7 +11,7 @@ import {KeyValueString} from '../../types/Utils';
 export class LedenService {
   leden: HeliosLeden | null = null;
 
-  constructor(private readonly APIService: APIService, private readonly storageService: StorageService) {
+  constructor(private readonly apiService: APIService, private readonly storageService: StorageService) {
 
   }
 
@@ -38,7 +38,7 @@ export class LedenService {
     }
 
     try {
-      const response: Response = await this.APIService.get('Leden/GetObjects', getParams);
+      const response: Response = await this.apiService.get('Leden/GetObjects', getParams);
 
       this.leden = await response.json();
       this.storageService.opslaan('leden', this.leden);
@@ -51,25 +51,25 @@ export class LedenService {
   }
 
   async getLid(id: number): Promise<HeliosLid> {
-    const response: Response = await this.APIService.get('Leden/GetObject', {'ID': id.toString()});
+    const response: Response = await this.apiService.get('Leden/GetObject', {'ID': id.toString()});
 
     return response.json();
   }
 
   async nieuwLid(lid: HeliosLid) {
-    const response: Response = await this.APIService.post('Leden/SaveObject', JSON.stringify(lid));
+    const response: Response = await this.apiService.post('Leden/SaveObject', JSON.stringify(lid));
     return response.json();
   }
 
   async updateLid(lid: HeliosLid) {
-    const response: Response = await this.APIService.put('Leden/SaveObject', JSON.stringify(lid));
+    const response: Response = await this.apiService.put('Leden/SaveObject', JSON.stringify(lid));
 
     return response.json();
   }
 
   async deleteVLid(id: number) {
     try {
-      await this.APIService.delete('Leden/DeleteObject', {'ID': id.toString()});
+      await this.apiService.delete('Leden/DeleteObject', {'ID': id.toString()});
     } catch (e) {
       throw(e);
     }
@@ -77,7 +77,7 @@ export class LedenService {
 
   async restoreVLid(id: number) {
     try {
-      await this.APIService.patch('Leden/RestoreObject', {'ID': id.toString()});
+      await this.apiService.patch('Leden/RestoreObject', {'ID': id.toString()});
     } catch (e) {
       throw(e);
     }

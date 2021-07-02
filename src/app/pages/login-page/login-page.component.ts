@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {UserService} from '../../services/apiservice/user.service';
+import {LoginService} from '../../services/apiservice/login.service';
 import {CustomError} from '../../types/Utils';
 import {Router} from '@angular/router';
 
@@ -38,7 +38,7 @@ export class LoginPageComponent implements OnInit {
     ];
   toonFoto: string = this.urlFoto();
 
-  constructor(private readonly loginService: UserService, private readonly router:Router) {
+  constructor(private readonly loginService: LoginService, private readonly router:Router) {
   }
 
   ngOnInit() {

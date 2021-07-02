@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {routes} from '../../routing.module';
-import {UserService} from '../../services/apiservice/user.service';
+import {LoginService} from '../../services/apiservice/login.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {faSignOutAlt} from '@fortawesome/free-solid-svg-icons';
 import {NgbCalendar, NgbDate, NgbDatepickerNavigateEvent, NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
@@ -26,7 +26,7 @@ export class NavigationComponent {
   vliegdagen: string = "";
   daginfo: string = "";
 
-  constructor(private readonly loginService: UserService,
+  constructor(private readonly loginService: LoginService,
               private readonly startlijstService: StartlijstService,
               private readonly daginfoService: DaginfoService,
               private readonly sharedService: SharedService,

@@ -25,6 +25,7 @@ import { StarttijdRenderComponent } from './startlijst-grid/starttijd-render/sta
 import { LandingstijdRenderComponent } from './startlijst-grid/landingstijd-render/landingstijd-render.component';
 import { TijdInvoerComponent } from '../shared/components/editors/tijd-invoer/tijd-invoer.component';
 import { DaginfoComponent } from './daginfo/daginfo.component';
+import {CustomFormsModule} from 'ng2-validation';
 
 @NgModule({
     imports: [
@@ -38,6 +39,7 @@ import { DaginfoComponent } from './daginfo/daginfo.component';
         FontAwesomeModule,
         NgbDatepickerModule,
         NgbTypeaheadModule,
+        CustomFormsModule
     ],
   declarations: [
     IconCardComponent,

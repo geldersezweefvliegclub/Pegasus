@@ -9,7 +9,7 @@ import {StorageService} from '../storage/storage.service';
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class LoginService {
 
   userInfo: HeliosUserinfo | null = null;
 

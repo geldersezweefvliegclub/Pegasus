@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
-import {UserService} from '../../services/apiservice/user.service';
+import {LoginService} from '../../services/apiservice/login.service';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +12,7 @@ export class AppComponent {
   isIngelogd:boolean = this.loginService.isIngelogd();
 
 
-  constructor(private readonly router: Router, private readonly loginService: UserService) {
+  constructor(private readonly router: Router, private readonly loginService: LoginService) {
     router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
         this.navigeerNaarLogin();
