@@ -26,6 +26,7 @@ import { LandingstijdRenderComponent } from './startlijst-grid/landingstijd-rend
 import { TijdInvoerComponent } from '../shared/components/editors/tijd-invoer/tijd-invoer.component';
 import { DaginfoComponent } from './daginfo/daginfo.component';
 import {CustomFormsModule} from 'ng2-validation';
+import {NgSelectModule} from "@ng-select/ng-select";
 
 @NgModule({
     imports: [
@@ -39,7 +40,8 @@ import {CustomFormsModule} from 'ng2-validation';
         FontAwesomeModule,
         NgbDatepickerModule,
         NgbTypeaheadModule,
-        CustomFormsModule
+        CustomFormsModule,
+        NgSelectModule
     ],
   declarations: [
     IconCardComponent,

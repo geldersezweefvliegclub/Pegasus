@@ -80,10 +80,19 @@ export class DaginfoService {
     return this.DagInfo?.dataset as [];
   }
 
-  async getDagInfo(id: number): Promise<HeliosDagInfo> {
-    const response: Response = await this.APIService.get('Daginfo/GetObject', {'ID': id.toString()});
+  async getDagInfo(id: number | undefined, datum: DateTime|undefined): Promise<HeliosDagInfo> {
 
-    return response.json();
+    if (id) {
+      const response: Response = await this.APIService.get('Daginfo/GetObject', {'ID': id.toString()});
+      return response.json();
+    }
+
+    if (datum) {
+      const response: Response = await this.APIService.get('Daginfo/GetObject', {'DATUM': datum.toISODate()});
+      return response.json();
+    }
+    console.error("Onjuiste aanroep getDagInfo()");
+    return {};  // dit mag nooit
   }
 
   async nieuweDagInfo(vliegtuig: HeliosDagInfo) {
