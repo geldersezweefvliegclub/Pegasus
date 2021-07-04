@@ -32,7 +32,7 @@ export type HeliosLid = ledenComponents['schemas']['ref_leden_in'];
 
 export type HeliosDagInfoDagen = DaginfoComponents['schemas']['view_daginfo'];
 export type HeliosDagInfosDataset = DaginfoComponents['schemas']['view_daginfo_dataset'];
-export type HeliosDagInfo = DaginfoComponents['schemas']['oper_daginfo_in'];
+export type HeliosDagInfo = DaginfoComponents['schemas']['oper_daginfo'];
 
 export type HeliosType = typesComponents['schemas']['ref_types_in']
 export type HeliosTypes = typesComponents['schemas']['view_types']

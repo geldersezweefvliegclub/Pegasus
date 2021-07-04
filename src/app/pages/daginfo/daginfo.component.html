@@ -34,6 +34,19 @@
                                    openOnEnter="true"
                                    [(ngModel)]="data.BAAN_ID">
                         </ng-select>
+                        <div class="mt-2 d-flex flex-row justify-content-between">
+                            <div>
+                                <input type="checkbox" id="LINKERHAND" class="form-check-inline" [(ngModel)]="data.DDWV">
+                                <label for="DDWV" class="form-check-label">Linkerhand</label>
+                            </div>
+
+                            <div>
+                                <input type="checkbox" id="RECHTERHAND" class="form-check-inline"
+                                       [(ngModel)]="data.CLUB_BEDRIJF">
+                                <label for="RECHTERHAND" class="form-check-label">Rechterhand</label>
+
+                            </div>
+                        </div>
                     </app-icon-card>
                 </div>
                 <div class="col-3">
@@ -66,12 +79,12 @@
                         </ng-select>
                         <div class="mt-2 d-flex flex-row justify-content-between">
                             <div>
-                                <input type="checkbox" id="DDWV" name="rememberMe" [(ngModel)]="data.DDWV">
+                                <input type="checkbox" id="DDWV" class="form-check-inline" [(ngModel)]="data.DDWV">
                                 <label for="DDWV" class="form-check-label">DDWV</label>
                             </div>
 
                             <div>
-                                <input type="checkbox" id="CLUBBEDRIJF" name="rememberMe"
+                                <input type="checkbox" id="CLUBBEDRIJF" class="form-check-inline"
                                        [(ngModel)]="data.CLUB_BEDRIJF">
                                 <label for="CLUBBEDRIJF" class="form-check-label">Club bedrijf</label>
 
@@ -112,7 +125,6 @@
                         <textarea [(ngModel)]="data.ROLLENDMATERIEEL" name="Ingave"
                                   placeholder="Deze ingave is publiek leesbaar" class="w-100 text-invoer"
                                   rows="6"></textarea>
-
                     </app-icon-card>
                 </div>
             </div>
@@ -125,9 +137,14 @@
                                    subtitel="Weersomstandigheden op de vliegdag"
                                    [icon]="iconMeteo">
 
+                        <div class="d-flex align-items-end">
                         <textarea [(ngModel)]="data.METEO" name="Ingave"
                                   placeholder="Deze ingave is publiek leesbaar" class="w-100 text-invoer"
                                   rows="6"></textarea>
+
+                            <app-icon-button class="toolbarBtn" iconNaam="fas PencilAlt" (btnClicked)="opvragen()"
+                                             btnColor="btn-primary"></app-icon-button>
+                        </div>
                     </app-icon-card>
                 </div>
                 <div class="col-6">
@@ -150,14 +167,14 @@
                 <app-icon-button class="toolbarBtn"
                                  tekst="Opslaan"
                                  iconNaam="far PlusSquare" (btnClicked)="opslaanDagInfo()"
-                                 btnColor="btn-primary" ></app-icon-button>
+                                 btnColor="btn-primary"></app-icon-button>
             </div>
 
             <div class="col-6">
                 <div class="d-flex justify-content-end">
                     <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
-                                     btnColor="btn-secondary" *ngIf="this.magVerwijderen"
-                                     (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                                     btnColor="btn-secondary" *ngIf="this.magVerwijderen && this.data.ID != undefined"
+                                     (btnClicked)="bevestigVerwijderen()" ></app-icon-button>
                 </div>
             </div>
         </div>
