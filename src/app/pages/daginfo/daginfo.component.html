@@ -1,0 +1,166 @@
+<app-error [error]="error"></app-error>
+
+<app-icon-card titel="Dag info"
+               subtitel="Informatie over de vliegdag"
+               [icon]="iconCardIcon">
+    <div class="box h-100">
+        <div class="h-100 overflow-hidden">
+            <div class="row mt-n8 rowDagInfo1">
+                <div class="col-3">
+                    <app-icon-card id="veldCard"
+                                   class="kleineKaart"
+                                   titel="Vliegveld"
+                                   subtitel="Waar we vliegen"
+                                   [icon]="iconVliegveld">
+
+                        <label for="VELD" class="form-label">Vliegveld</label>
+                        <ng-select id="VELD"
+                                   [items]="veldTypes$ | async"
+                                   placeholder="Vliegveld waar we starten"
+                                   bindLabel="OMSCHRIJVING"
+                                   bindValue="ID"
+                                   closeOnSelect="true"
+                                   openOnEnter="true"
+                                   [(ngModel)]="data.VELD_ID">
+                        </ng-select>
+
+                        <label for="BAAN" class="form-label">Baan</label>
+                        <ng-select id="BAAN"
+                                   [items]="baanTypes$ | async"
+                                   placeholder="Baan"
+                                   bindLabel="OMSCHRIJVING"
+                                   bindValue="ID"
+                                   closeOnSelect="true"
+                                   openOnEnter="true"
+                                   [(ngModel)]="data.BAAN_ID">
+                        </ng-select>
+                    </app-icon-card>
+                </div>
+                <div class="col-3">
+                    <app-icon-card id="bedrijfCard"
+                                   class="kleineKaart"
+                                   titel="Bedrijf"
+                                   subtitel="Operationele data"
+                                   [icon]="iconBedrijf">
+
+                        <label for="CLUB" class="form-label">Club</label>
+                        <ng-select id="CLUB"
+                                   [items]="clubTypes$ | async"
+                                   placeholder="Wie heeft de leiding"
+                                   bindLabel="OMSCHRIJVING"
+                                   bindValue="ID"
+                                   closeOnSelect="true"
+                                   openOnEnter="true"
+                                   [(ngModel)]="data.BEDRIJF_ID">
+                        </ng-select>
+
+                        <label for="STARTMETHODE" class="form-label">StartMethode</label>
+                        <ng-select id="STARTMETHODE"
+                                   [items]="startMethodeTypes$ | async"
+                                   placeholder="Standaard start methode"
+                                   bindLabel="OMSCHRIJVING"
+                                   bindValue="ID"
+                                   closeOnSelect="true"
+                                   openOnEnter="true"
+                                   [(ngModel)]="data.STARTMETHODE_ID">
+                        </ng-select>
+                        <div class="mt-2 d-flex flex-row justify-content-between">
+                            <div>
+                                <input type="checkbox" id="DDWV" name="rememberMe" [(ngModel)]="data.DDWV">
+                                <label for="DDWV" class="form-label labelruimte">DDWV</label>
+                            </div>
+
+                            <div>
+
+                                <input type="checkbox" id="CLUBBEDRIJF" name="rememberMe"
+                                       [(ngModel)]="data.CLUB_BEDRIJF">
+                                <label for="CLUBBEDRIJF" class="form-label labelruimte">Club bedrijf</label>
+
+                            </div>
+                        </div>
+                    </app-icon-card>
+                </div>
+                <div class="col-6">
+                    <app-icon-card id="dienstenCard"
+                                   class="kleineKaart"
+                                   titel="Diensten"
+                                   subtitel="Wie zijn aanwezig en wie niet"
+                                   [icon]="iconDiensten">
+                    </app-icon-card>
+                </div>
+            </div>
+
+            <div class="row rowDagInfo2">
+                <div class="col-6">
+                    <app-icon-card id="vliegendCard"
+                                   class="kleineKaart"
+                                   titel="Vliegend"
+                                   subtitel="Bijzonderheden over het vliegtuigen"
+                                   [icon]="iconVliegend">
+
+                        <textarea [(ngModel)]="data.VLIEGENDMATERIEEL" name="Ingave" mdInput
+                                  placeholder="Deze ingave is publiek leesbaar" class="w-100"
+                                  rows="6"></textarea>
+                    </app-icon-card>
+                </div>
+                <div class="col-6">
+                    <app-icon-card id="rollendCard"
+                                   class="kleineKaart"
+                                   titel="Rollend"
+                                   subtitel="Bijzonderheden over het rollende materieel"
+                                   [icon]="iconRollend">
+
+                        <textarea [(ngModel)]="data.ROLLENDMATERIEEL" name="Ingave" mdInput
+                                  placeholder="Deze ingave is publiek leesbaar" class="w-100"
+                                  rows="6"></textarea>
+
+                    </app-icon-card>
+                </div>
+            </div>
+
+            <div class="row rowDagInfo3">
+                <div class="col-6">
+                    <app-icon-card id="meteoCard"
+                                   class="kleineKaart"
+                                   titel="Meteo"
+                                   subtitel="Weersomstandigheden op de vliegdag"
+                                   [icon]="iconMeteo">
+
+                        <textarea [(ngModel)]="data.METEO" name="Ingave" mdInput
+                                  placeholder="Deze ingave is publiek leesbaar" class="w-100"
+                                  rows="6"></textarea>
+                    </app-icon-card>
+                </div>
+                <div class="col-6">
+                    <app-icon-card id="verslagCard"
+                                   class="kleineKaart"
+                                   titel="Verslag"
+                                   subtitel="Toelichting en bijzonderheden"
+                                   [icon]="iconVerslag">
+
+
+                        <textarea [(ngModel)]="data.VERSLAG" name="Ingave" mdInput
+                                  placeholder="Deze ingave is beperkt leesbaar" class="w-100"
+                                  rows="6"></textarea>
+                    </app-icon-card>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-start" id="toolbar">
+            <div class="col-2" *ngIf="this.magToevoegen">
+                <app-icon-button class="toolbarBtn"
+                                 tekst="Toevoegen"
+                                 iconNaam="far PlusSquare" (btnClicked)="addVliegtuig()"
+                                 btnColor="btn-primary" *ngIf="!this.deleteMode"></app-icon-button>
+            </div>
+
+            <div class="col-10">
+                <div class="d-flex justify-content-end">
+                    <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
+                                     btnColor="btn-secondary" *ngIf="this.magVerwijderen"
+                                     (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-icon-card>

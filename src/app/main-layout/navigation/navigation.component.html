@@ -1,6 +1,6 @@
 <nav>
     <div class="card min-vh-100 ps-0 rounded-0">
-        <div>
+        <div class="d-flex flex-column justify-content-between vh-100">
             <div class="list-group list-group-flush p-3">
                 <ng-template ngFor let-route [ngForOf]="routes">
                     <a
@@ -20,6 +20,28 @@
                     Uitloggen
                 </a>
             </div>
+
+            <div class="calArea align-self-center mt-auto w-100">
+                <ngb-datepicker
+                    #d
+                    name="datumIngave"
+                    class="navCalendar w-100"
+                    outsideDays="hidden"
+                    [(ngModel)]="kalenderIngave"
+                    (dateSelect)="NieuweDatum($event)"
+                    (navigate)="KalenderAndereMaand($event)"
+
+                    [dayTemplate]="t">
+                </ngb-datepicker>
+            </div>
         </div>
     </div>
+
+    <ng-template #t let-date>
+        <span class="custom-day calendarDag">
+            <div [ngClass]="cssCustomDay(date)">{{ date.day }} </div>
+        </span>
+    </ng-template>
 </nav>
+
+

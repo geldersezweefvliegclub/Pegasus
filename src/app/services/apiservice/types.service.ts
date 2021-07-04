@@ -16,7 +16,7 @@ export class TypesService {
   async getTypes(groep: number): Promise<HeliosType[]> {
     let hash: string = '';
 
-    if (((this.types == null)) && (this.storageService.ophalen('types-'+groep) != null)) {
+    if (this.storageService.ophalen('types-'+groep) != null) {
       this.types = this.storageService.ophalen('types-'+groep);
     }
 

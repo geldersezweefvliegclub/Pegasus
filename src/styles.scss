@@ -86,6 +86,16 @@ input.ng-dirty.ng-invalid{
   background-color: #e9ecef;
 }
 
+
+// center kalender in navigatie balk
+.navCalendar .ngb-dp-content.ngb-dp-months {
+  justify-content: space-around;
+}
+
+.navCalendar .ngb-dp-day {
+  line-height: 2rem;
+}
+
 // hoge knop voor omwisselen vlieger - inzittende in de start editor
 #switchVoorAchter button {
   height: 110px;
@@ -154,4 +164,27 @@ input.ng-dirty.ng-invalid{
   -moz-animation: flickerAnimation 2s infinite;
   -o-animation: flickerAnimation 2s infinite;
   animation: flickerAnimation 2s infinite;
+}
+
+
+// kleine kaart moet alles kleiner worden
+.kleineKaart > div > div.admin-up > div {
+  margin-top: 0px;
+
+  > div.data.h-100 {
+    margin-top: 5px;
+
+    > h4 {
+      margin-bottom: 0px;
+    }
+  }
+
+  > div.icon.bg-primary {
+    font-size: 1.2em;
+    background-color: rgb(213, 172, 73) !important;
+  }
+}
+
+.kleineKaart > div > div.card-body.h-100 {
+  margin-top: -10px;
 }

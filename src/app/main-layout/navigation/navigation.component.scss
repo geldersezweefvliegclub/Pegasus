@@ -5,3 +5,38 @@
   -webkit-border-radius: 5px;
   border-radius: 5px
 }
+
+.calArea {
+
+}
+
+.vliegdag {
+  background-color: rgb(213, 172, 73);
+  border-radius: .25rem;
+  height: 1.9rem;
+  line-height: 2rem;
+  text-align: center;
+  width: 1.9rem;
+  color: #fff;
+}
+
+.gekozenDatum {
+  border: 2px;
+  border-style: solid;
+  border-radius: .25rem;
+  border-color: #202021;
+  height: 1.9rem;
+  line-height: 1.8rem;
+  text-align: center;
+  width: 1.9rem;
+}
+
+.daginfo {
+  font-size: 20px;
+}
+
+.calendarDag {
+  text-align: center;
+}
+
+
