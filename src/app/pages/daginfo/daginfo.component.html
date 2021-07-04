@@ -67,13 +67,13 @@
                         <div class="mt-2 d-flex flex-row justify-content-between">
                             <div>
                                 <input type="checkbox" id="DDWV" name="rememberMe" [(ngModel)]="data.DDWV">
-                                <label for="DDWV" class="form-label labelruimte">DDWV</label>
+                                <label for="DDWV" class="form-check-label">DDWV</label>
                             </div>
 
                             <div>
                                 <input type="checkbox" id="CLUBBEDRIJF" name="rememberMe"
                                        [(ngModel)]="data.CLUB_BEDRIJF">
-                                <label for="CLUBBEDRIJF" class="form-label labelruimte">Club bedrijf</label>
+                                <label for="CLUBBEDRIJF" class="form-check-label">Club bedrijf</label>
 
                             </div>
                         </div>
@@ -97,8 +97,8 @@
                                    subtitel="Bijzonderheden over het vliegtuigen"
                                    [icon]="iconVliegend">
 
-                        <textarea [(ngModel)]="data.VLIEGENDMATERIEEL" name="Ingave" mdInput
-                                  placeholder="Deze ingave is publiek leesbaar" class="w-100"
+                        <textarea [(ngModel)]="data.VLIEGENDMATERIEEL" name="Ingave"
+                                  placeholder="Deze ingave is publiek leesbaar" class="w-100 text-invoer"
                                   rows="6"></textarea>
                     </app-icon-card>
                 </div>
@@ -109,8 +109,8 @@
                                    subtitel="Bijzonderheden over het rollende materieel"
                                    [icon]="iconRollend">
 
-                        <textarea [(ngModel)]="data.ROLLENDMATERIEEL" name="Ingave" mdInput
-                                  placeholder="Deze ingave is publiek leesbaar" class="w-100"
+                        <textarea [(ngModel)]="data.ROLLENDMATERIEEL" name="Ingave"
+                                  placeholder="Deze ingave is publiek leesbaar" class="w-100 text-invoer"
                                   rows="6"></textarea>
 
                     </app-icon-card>
@@ -125,8 +125,8 @@
                                    subtitel="Weersomstandigheden op de vliegdag"
                                    [icon]="iconMeteo">
 
-                        <textarea [(ngModel)]="data.METEO" name="Ingave" mdInput
-                                  placeholder="Deze ingave is publiek leesbaar" class="w-100"
+                        <textarea [(ngModel)]="data.METEO" name="Ingave"
+                                  placeholder="Deze ingave is publiek leesbaar" class="w-100 text-invoer"
                                   rows="6"></textarea>
                     </app-icon-card>
                 </div>
@@ -138,8 +138,8 @@
                                    [icon]="iconVerslag">
 
 
-                        <textarea [(ngModel)]="data.VERSLAG" name="Ingave" mdInput
-                                  placeholder="Deze ingave is beperkt leesbaar" class="w-100"
+                        <textarea [(ngModel)]="data.VERSLAG" name="Ingave"
+                                  placeholder="Deze ingave is beperkt leesbaar" class="w-100 text-invoer"
                                   rows="6"></textarea>
                     </app-icon-card>
                 </div>
@@ -149,8 +149,8 @@
             <div class="col-6" *ngIf="this.magToevoegen">
                 <app-icon-button class="toolbarBtn"
                                  tekst="Opslaan"
-                                 iconNaam="far PlusSquare" (btnClicked)="addVliegtuig()"
-                                 btnColor="btn-primary" *ngIf="!this.deleteMode"></app-icon-button>
+                                 iconNaam="far PlusSquare" (btnClicked)="opslaanDagInfo()"
+                                 btnColor="btn-primary" ></app-icon-button>
             </div>
 
             <div class="col-6">
