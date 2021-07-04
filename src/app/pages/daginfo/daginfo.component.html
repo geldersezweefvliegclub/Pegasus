@@ -3,8 +3,8 @@
 <app-icon-card titel="Dag info"
                subtitel="Informatie over de vliegdag"
                [icon]="iconCardIcon">
-    <div class="box h-100">
-        <div class="h-100 overflow-hidden">
+    <div class="d-flex flex-column justify-content-between  box h-100">
+        <div class="mb-2">
             <div class="row mt-n8 rowDagInfo1">
                 <div class="col-3">
                     <app-icon-card id="veldCard"
@@ -71,7 +71,6 @@
                             </div>
 
                             <div>
-
                                 <input type="checkbox" id="CLUBBEDRIJF" name="rememberMe"
                                        [(ngModel)]="data.CLUB_BEDRIJF">
                                 <label for="CLUBBEDRIJF" class="form-label labelruimte">Club bedrijf</label>
@@ -146,15 +145,15 @@
                 </div>
             </div>
         </div>
-        <div class="row justify-content-start" id="toolbar">
-            <div class="col-2" *ngIf="this.magToevoegen">
+        <div class="row" id="toolbar">
+            <div class="col-6" *ngIf="this.magToevoegen">
                 <app-icon-button class="toolbarBtn"
-                                 tekst="Toevoegen"
+                                 tekst="Opslaan"
                                  iconNaam="far PlusSquare" (btnClicked)="addVliegtuig()"
                                  btnColor="btn-primary" *ngIf="!this.deleteMode"></app-icon-button>
             </div>
 
-            <div class="col-10">
+            <div class="col-6">
                 <div class="d-flex justify-content-end">
                     <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
                                      btnColor="btn-secondary" *ngIf="this.magVerwijderen"
