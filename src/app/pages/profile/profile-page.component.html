@@ -1,8 +1,9 @@
+<app-error [error]="error"></app-error>
 <form #profielForm (ngSubmit)="submit()">
     <div class="row">
         <div class="col-8">
             <app-icon-card titel="Aanpassen profiel" subtitel="Instellen van uw gegevens en voorkeuren" class="h-100">
-                <div #persoonGroup="ngModelGroup" ngModelGroup="persoonGroup">
+                <div #persoonGroup="ngModelGroup" ngModelGroup="persoonGroup" appWachtwoordMatchValidator>
                     <div class="row">
                         <div class="col-5">
                             <label for="voornaam" class="form-label">Voornaam</label>
@@ -41,16 +42,19 @@
                         <div class="col-4">
                             <label for="telefoon" class="form-label">Telefoon</label>
                             <input type="tel" name="telefoon" class="form-control" id="telefoon"
+                                   appTelefoonValidator
                                    [(ngModel)]="persoon.LidData.TELEFOON">
                         </div>
                         <div class="col-4">
                             <label for="mobiel" class="form-label">Mobiel</label>
                             <input type="tel" name="mobiel" class="form-control" id="mobiel"
+                                   appTelefoonValidator
                                    [(ngModel)]="persoon.LidData.MOBIEL">
                         </div>
                         <div class="col-4">
                             <label for="noodnummer" class="form-label">Noodnummer</label>
                             <input type="tel" name="noodnummer" class="form-control" id="noodnummer"
+                                   appTelefoonValidator
                                    [(ngModel)]="persoon.LidData.NOODNUMMER">
                         </div>
                     </div>
@@ -61,7 +65,9 @@
                                 <input name="geboortedatum" class="form-control" placeholder="dd-mm-yyyy"
                                        ngbDatepicker #d="ngbDatepicker"
                                        id="geboortedatum"
-                                       [(ngModel)]="persoon.LidData.GEBOORTEDATUM">
+                                       [(ngModel)]="persoon.LidData.GEBOORTE_DATUM"
+                                       (ngModelChange)="persoon.LidData.GEBOORTE_DATUM = converteerDatumNaarISO($event)"
+                                >
                                 <div class="input-group-append">
                                     <app-icon-button class="" iconNaam="far Calendar" (btnClicked)="d.toggle()"
                                                      btnColor="btn-primary"></app-icon-button>
@@ -70,12 +76,69 @@
                         </div>
                         <div class="col-4">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control" id="email" email required>
+                            <input type="email" name="email" [(ngModel)]="persoon.LidData.EMAIL" class="form-control"
+                                   id="email" email required>
                         </div>
                         <div class="col-4 d-flex align-items-center mt-4">
-                            <input type="checkbox" name="privacy" class="form-check-inline" id="privacy"
-                                   [(ngModel)]="persoon.LidData.PRIVACY">
-                            <label for="privacy" class="form-check-label">Privacy</label>
+                            <div class="row w-100">
+                                <div class="col-6">
+                                    <input type="checkbox" name="privacy" class="form-check-inline" id="privacy"
+                                           [(ngModel)]="persoon.LidData.PRIVACY">
+                                    <label for="privacy" class="form-check-label">Privacy</label>
+                                </div>
+                                <div class="col-6">
+                                    <input class="form-check-inline" type="checkbox" id="CLUBBLAD_POST"
+                                           name="CLUBBLAD_POST"
+                                           [(ngModel)]="persoon.LidData.CLUBBLAD_POST">
+                                    <label class="form-check-label" for="CLUBBLAD_POST">
+                                        Clubblad post
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-4">
+                            <label class="form-label" for="MEDICAL">Geldigheid medical</label>
+                            <div class="input-group">
+                                <input name="MEDICAL" class="form-control" placeholder="dd-mm-yyyy"
+                                       ngbDatepicker #medical="ngbDatepicker"
+                                       id="MEDICAL"
+                                       [(ngModel)]="persoon.LidData.MEDICAL"
+                                >
+                                <div class="input-group-append">
+                                    <app-icon-button iconNaam="far Calendar" (btnClicked)="medical.toggle()"
+                                                     btnColor="btn-primary"></app-icon-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label class="form-label" for="wachtwoord">
+                                Wachtwoord
+                            </label>
+                            <div class="input-group">
+                                <input class="form-control" [type]="wachtwoordVerborgen ? 'password' : 'text'"
+                                       id="wachtwoord"
+                                       name="wachtwoord"
+                                       [(ngModel)]="persoon.LidData.WACHTWOORD">
+                                <span class="input-group-text" (click)="verbergWachtwoord()"><fa-icon
+                                        [icon]="oogIcon"></fa-icon></span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label" for="herhaalwachtwoord">
+                                Herhaal wachtwoord
+                            </label>
+                            <div class="input-group">
+                                <input class="form-control" [type]="wachtwoordVerborgen ? 'password' : 'text'"
+                                       id="herhaalwachtwoord"
+                                       name="herhaalwachtwoord"
+                                       [(ngModel)]="controleWachtwoord">
+                                <span class="input-group-text" (click)="verbergWachtwoord()"><fa-icon
+                                        [icon]="oogIcon"></fa-icon></span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -89,51 +152,98 @@
                     <div class="row">
                         <div class="col-4">
                             <label for="gebruiker" class="form-label">Gebruiker</label>
-                            <input type="text" name="gebruiker" class="form-control" id="gebruiker">
+                            <input type="text" name="gebruiker" class="form-control" id="gebruiker"
+                                   [(ngModel)]="persoon.LidData.INLOGNAAM">
                         </div>
                         <div class="col-4">
                             <label for="gebruiker" class="form-label">Lidnummer</label>
-                            <input type="text" name="lidnummer" class="form-control" id="lidnummer">
+                            <input type="text" name="lidnummer" class="form-control" id="lidnummer"
+                                   [(ngModel)]="persoon.LidData.LIDNR">
                         </div>
                         <div class="col-4">
                             <label for="lidmaatschap" class="form-label">Lidmaatschap</label>
-                            <select class="form-select" id="lidmaatschap" name="lidmaatschap">
-                                <option selected>Open this select menu</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                            <select class="form-select" id="lidmaatschap" name="lidmaatschap"
+                                    [(ngModel)]="persoon.LidData.LIDTYPE_ID">
+                                <option
+                                        *ngFor="let type of types"
+                                        [value]="type.ID"
+                                >{{type.OMSCHRIJVING}}</option>
                             </select>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-4 mt-4">
+                            <div>
+                                <input class="form-check-inline" type="checkbox" id="isLierist" name="isLierist"
+                                       [(ngModel)]="persoon.LidData.LIERIST">
+                                <label class="form-check-label" for="isLierist">
+                                    Lierist
+                                </label>
+                            </div>
+                            <div>
+                                <input class="form-check-inline" type="checkbox" id="isStartleider" name="isStartleider"
+                                       [(ngModel)]="persoon.LidData.INSTRUCTEUR">
+                                <label class="form-check-label" for="isStartleider">
+                                    Instructeur
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-4 mt-4">
+                            <div>
+                                <input class="form-check-inline" type="checkbox" id="CIMT" name="CIMT"
+                                       [(ngModel)]="persoon.LidData.CIMT">
+                                <label class="form-check-label" for="CIMT">
+                                    CIMT
+                                </label>
+                            </div>
+                            <div>
+                                <input class="form-check-inline" type="checkbox" id="DDWV_CREW" name="DDWV_CREW"
+                                       [(ngModel)]="persoon.LidData.DDWV_CREW">
+                                <label class="form-check-label" for="DDWV_CREW">
+                                    DDWV-Crew
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-4 mt-4">
+                            <div>
+                                <input class="form-check-inline" type="checkbox" id="STARTTOREN" name="STARTTOREN"
+                                       [(ngModel)]="persoon.LidData.STARTTOREN">
+                                <label class="form-check-label" for="STARTTOREN">
+                                    Starttoren
+                                </label>
+                            </div>
+                            <div>
+                                <input class="form-check-inline" type="checkbox" id="ROOSTER" name="ROOSTER"
+                                       [(ngModel)]="persoon.LidData.ROOSTER">
+                                <label class="form-check-label" for="ROOSTER">
+                                    Rooster
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-6 mt-4">
                             <div>
-                                <input class="form-check-inline" type="checkbox" id="betaald" name="betaald">
+                                <input class="form-check-inline" type="checkbox" id="betaald" name="betaald"
+                                       [(ngModel)]="persoon.LidData.HEEFT_BETAALD">
                                 <label class="form-check-label" for="betaald">
                                     Heeft betaald
                                 </label>
                             </div>
                             <div>
-                                <input class="form-check-inline" type="checkbox" id="googleAuth" name="googleAuth">
+                                <input class="form-check-inline" type="checkbox" id="googleAuth" name="googleAuth"
+                                       [(ngModel)]="persoon.LidData.AUTH">
                                 <label class="form-check-label" for="googleAuth">
                                     Google Auth.
                                 </label>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <label for="rollen" class="form-label">Rollen</label>
-                            <select class="form-select" id="rollen" name="rollen">
-                                <option selected>Rollen</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
-                        </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-12">
                             <label class="form-label" for="limitaties">Limitaties</label>
-                            <textarea class="form-control" id="limitaties" name="limitaties"></textarea>
+                            <textarea class="form-control" id="limitaties" name="limitaties"
+                                      [(ngModel)]="persoon.LidData.BEPERKINGEN"></textarea>
                         </div>
                     </div>
                 </div>
@@ -141,4 +251,6 @@
         </div>
     </div>
 </form>
-
+<p>
+    {{this.persoon.LidData | json}}
+</p>

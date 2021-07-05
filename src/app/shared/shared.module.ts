@@ -17,6 +17,8 @@ import { StartEditorComponent } from './components/editors/start-editor/start-ed
 import {NgSelectModule} from "@ng-select/ng-select";
 import { VliegtuigInvoerComponent } from './components/editors/start-editor/vliegtuig-invoer/vliegtuig-invoer.component';
 import { LidInvoerComponent } from './components/editors/start-editor/lid-invoer/lid-invoer.component';
+import { TelefoonValidatorDirective } from './directives/TelefoonValidator/telefoon-validator.directive';
+import { WachtwoordMatchValidatorDirective } from './directives/WachtwoordMatchValidator/wachtwoord-match-validator.directive';
 
 
 @NgModule({
@@ -41,6 +43,8 @@ import { LidInvoerComponent } from './components/editors/start-editor/lid-invoer
     StartEditorComponent,
     VliegtuigInvoerComponent,
     LidInvoerComponent,
+    TelefoonValidatorDirective,
+    WachtwoordMatchValidatorDirective,
   ],
   exports: [
     ModalComponent,
@@ -50,6 +54,8 @@ import { LidInvoerComponent } from './components/editors/start-editor/lid-invoer
     VliegtuigEditorComponent,
     IconButtonComponent,
     StartEditorComponent,
+    TelefoonValidatorDirective,
+    WachtwoordMatchValidatorDirective,
   ],
   providers: [],
   schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

@@ -281,7 +281,7 @@ export class StartlijstGridComponent implements OnInit {
             day: this.datum.day
         })
 
-        var ws = xlsx.utils.json_to_sheet(this.data);
+        const ws = xlsx.utils.json_to_sheet(this.data);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
         xlsx.writeFile(wb, 'startlijst ' + datum.toISODate() + '.xlsx');
