@@ -95,13 +95,13 @@ export class DaginfoService {
     return {};  // dit mag nooit
   }
 
-  async nieuweDagInfo(vliegtuig: HeliosDagInfo) {
-    const response: Response = await this.APIService.post('Daginfo/SaveObject', JSON.stringify(vliegtuig));
+  async nieuweDagInfo(daginfo: HeliosDagInfo) {
+    const response: Response = await this.APIService.post('Daginfo/SaveObject', JSON.stringify(daginfo));
     return response.json();
   }
 
-  async updateDagInfo(vliegtuig: HeliosDagInfo) {
-    const response: Response = await this.APIService.put('Daginfo/SaveObject', JSON.stringify(vliegtuig));
+  async updateDagInfo(daginfo: HeliosDagInfo) {
+    const response: Response = await this.APIService.put('Daginfo/SaveObject', JSON.stringify(daginfo));
 
     return response.json();
   }

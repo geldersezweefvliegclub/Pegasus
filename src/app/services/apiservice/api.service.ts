@@ -1,12 +1,17 @@
 import {Injectable} from '@angular/core';
-import {CustomError, KeyValueString} from '../../types/Utils';
+import {CustomError, HeliosActie, KeyValueString} from '../../types/Utils';
 import {environment} from '../../../environments/environment';
+import {SharedService} from "../shared/shared.service";
 
 @Injectable({
     providedIn: 'root'
 })
 export class APIService {
     private URL = 'http://localhost:4200/api/'
+
+    constructor(private readonly sharedService: SharedService) {
+
+    }
 
     async get(url: string, params?: KeyValueString, headers?: Headers): Promise<Response> {
         if (params) {
@@ -36,6 +41,10 @@ export class APIService {
         if (response.status != 200) {  // 200 is normaal voor post
             throw this.handleError(response);
         }
+        response.clone().json().then((d) => {
+            this.sharedService.fireHeliosEvent({actie: HeliosActie.Add, tabel: url.split('/')[0], data: d});
+        });
+
         return response;
     }
 
@@ -50,6 +59,9 @@ export class APIService {
         if (response.status != 200) {  // 200 is normaal voor put
             throw this.handleError(response);
         }
+        response.clone().json().then((d) => {
+            this.sharedService.fireHeliosEvent({actie: HeliosActie.Update, tabel: url.split('/')[0], data: d});
+        });
         return response;
     }
 
@@ -66,6 +78,7 @@ export class APIService {
         if (response.status != 204) { // 204 is normaal voor delete
             throw this.handleError(response);
         }
+        this.sharedService.fireHeliosEvent({actie: HeliosActie.Delete, tabel: url.split('/')[0], data: params[0]});
     }
 
     // Aanroepen patch request om verwijderen record ongedaan te maken
@@ -81,6 +94,7 @@ export class APIService {
         if (response.status != 202) { // 204 is normaal voor patch
             throw this.handleError(response);
         }
+        this.sharedService.fireHeliosEvent({actie: HeliosActie.Restore, tabel: url.split('/')[0], data: params[0]});
     }
 
     private prepareEndpoint(url: string, params: KeyValueString): string {

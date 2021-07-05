@@ -1,13 +1,32 @@
 
 export interface KeyValueString {
   [key: string]: string
-}
+};
 
 export type CustomError = {
     responseCode?: number | null,
     beschrijving: string | null
+};
+
+export type KalenderMaand = {
+    year: number,
+    month: number
+};
+
+export enum HeliosActie {
+    Add,
+    Update,
+    Delete,
+    Restore
 }
 
+// Interactie database events
+export class HeliosEvent
+{
+    tabel: string;
+    actie: HeliosActie;
+    data: any;
+}
 
 export const nummerSort = (num1: number, num2: number) => {
     return (num1 > num2) ? 1 : -1;

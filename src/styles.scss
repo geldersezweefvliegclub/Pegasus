@@ -64,8 +64,8 @@ input.ng-dirty.ng-invalid{
 
 // button in editor
 .editorRestoreBtn {
-  background-color: #ffc107;
-  border-color: #ffc107;
+  background-color: getColor('secondary');
+  border-color: getColor('secondary');
 }
 
 .editorDeleteBtn {
@@ -181,7 +181,7 @@ input.ng-dirty.ng-invalid{
 
   > div.icon.bg-primary {
     font-size: 1.2em;
-    background-color: rgb(213, 172, 73) !important;
+    background-color: getColor('secondary') !important;
   }
 }
 

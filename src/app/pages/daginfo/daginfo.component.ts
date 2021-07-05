@@ -83,17 +83,26 @@ export class DaginfoComponent  {
   opvragen() {
     let queryParams: KeyValueString = {};
 
-    try {
-      this.daginfoService.getDagInfo(undefined, this.datum).then((di) => {
-        this.data = di;
-      });
+    this.daginfoService.getDagInfo(undefined, this.datum)
+        .then((di) => { this.data = di; })
+        .catch((e) => {
+          this.data = {};
+
+          if (e.responseCode != 404) { // 404 = daginfo nog niet ingevuld
+            this.error = e;
+          }
+        });
+  }
+
+  opslaanDagInfo() {
+    if (this.data.ID == undefined) {
+      this.data.DATUM = this.datum.toISODate();
+      this.daginfoService.nieuweDagInfo(this.data).then((di) => this.data = di);
     }
-    catch (e) {
-      this.data = {};
-      if (e.responseCode != 404) { // 404 = daginfo nog niet ingevuld
-          this.error = e;
-      }
+    else {
+      this.daginfoService.updateDagInfo(this.data).then((di) => this.data = di);
     }
+
   }
 }
 

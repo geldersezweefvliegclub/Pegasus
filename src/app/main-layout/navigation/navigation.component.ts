@@ -8,6 +8,7 @@ import {SharedService} from "../../services/shared/shared.service";
 import {DateTime} from "luxon";
 import {StartlijstService} from "../../services/apiservice/startlijst.service";
 import {DaginfoService} from "../../services/apiservice/daginfo.service";
+import {KalenderMaand} from "../../types/Utils";
 
 
 @Component({
@@ -19,7 +20,7 @@ export class NavigationComponent {
   routes = routes;
   logUit = faSignOutAlt;
 
-  kalenderMaand: { year: number, month: number };
+  kalenderMaand: KalenderMaand;
   vandaag = this.calendar.getToday();
   kalenderIngave: NgbDateStruct = {year: this.vandaag.year, month: this.vandaag.month, day: this.vandaag.day};  // de gekozen dag
 
@@ -35,6 +36,10 @@ export class NavigationComponent {
               private activatedRoute: ActivatedRoute) {
     console.log(routes);
     console.log(activatedRoute);
+
+    this.sharedService.heliosEventFired.subscribe(ev => {
+      console.log(ev);
+    });
   }
 
   Uitloggen(): void {
@@ -61,6 +66,8 @@ export class NavigationComponent {
       month: this.kalenderMaand.month,
       day: maanden[this.kalenderMaand.month - 1]
     })
+
+    this.sharedService.zetKalenderMaand(this.kalenderMaand);
 
     this.startlijstService.getVliegdagen(startDatum, eindDatum).then((dataset) => {
       this.vliegdagen = JSON.stringify(dataset);
