@@ -27,6 +27,8 @@ import { TijdInvoerComponent } from '../shared/components/editors/tijd-invoer/ti
 import { DaginfoComponent } from './daginfo/daginfo.component';
 import {CustomFormsModule} from 'ng2-validation';
 import {NgSelectModule} from "@ng-select/ng-select";
+import { ComposeMeteoComponent } from './daginfo/compose-meteo/compose-meteo.component';
+import { ComposeBedrijfComponent } from './daginfo/compose-bedrijf/compose-bedrijf.component';
 
 @NgModule({
     imports: [
@@ -59,7 +61,9 @@ import {NgSelectModule} from "@ng-select/ng-select";
     StarttijdRenderComponent,
     LandingstijdRenderComponent,
     TijdInvoerComponent,
-    DaginfoComponent
+    DaginfoComponent,
+    ComposeMeteoComponent,
+    ComposeBedrijfComponent
   ],
   exports: [
     IconCardComponent,

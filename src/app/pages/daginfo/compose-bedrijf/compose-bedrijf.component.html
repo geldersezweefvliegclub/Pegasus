@@ -1,0 +1,82 @@
+<app-modal titel="Vliegbedrijf wizard">
+    <div body>
+        <div class="row">
+            <div class="col-6">
+                <div class="">
+                    <label for="CLUB" class="form-label">Leiding</label>
+                    <ng-select id="CLUB"
+                               [items]="clubTypes$ | async"
+                               bindLabel="OMSCHRIJVING"
+                               bindValue="OMSCHRIJVING"
+                               closeOnSelect="true"
+                               openOnEnter="true"
+                               [(ngModel)]="club">
+                    </ng-select>
+                </div>
+
+                <div class="">
+                    <label for="BAAN" class="form-label">Baan</label>
+                    <ng-select id="Baan"
+                               [items]="baanTypes$ | async"
+                               bindLabel="OMSCHRIJVING"
+                               bindValue="OMSCHRIJVING"
+                               closeOnSelect="true"
+                               openOnEnter="true"
+                               [(ngModel)]="baan">
+                    </ng-select>
+                </div>
+
+                <div class="mt-2">Circuit</div>
+                <div class="mt-2 d-flex flex-column ">
+                    <div>
+                        <input type="checkbox"
+                               id="LH" class="form-check-inline"
+                               (ngModelChange)="zetLH($event)"
+                               [(ngModel)]="linkerhandCircuit">
+                        <label for="LH" class="form-check-label">Linkerhand</label>
+                    </div>
+                    <div>
+                        <input type="checkbox"
+                               id="RH" class="form-check-inline"
+                               (ngModelChange)="zetRH($event)"
+                               [(ngModel)]="rechterhandCircuit">
+                        <label for="RH" class="form-check-label">Rechterhand</label>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-6">
+                <div>
+                    <label for="STARTMETHODE" class="form-label">Start methode</label>
+                    <ng-select id="STARTMETHODE"
+                               [items]="startMethodeTypes$ | async"
+                               placeholder="Alle methodes"
+                               bindLabel="OMSCHRIJVING"
+                               bindValue="OMSCHRIJVING"
+                               openOnEnter="true"
+                               [closeOnSelect]="false"
+                               [multiple]="true"
+                               [(ngModel)]="startMethodes">
+                    </ng-select>
+                </div>
+
+                <div>
+                    <label for="LUCHTRUIM" class="form-label">Beschikbaar luchtruim</label>
+                    <ng-select id="LUCHTRUIM"
+                               [items]="luchtruimTypes$ | async"
+                               bindLabel="OMSCHRIJVING"
+                               bindValue="OMSCHRIJVING"
+                               openOnEnter="true"
+                               [closeOnSelect]="false"
+                               [multiple]="true"
+                               [(ngModel)]="luchtruim">
+                    </ng-select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div footer>
+        <app-icon-button iconNaam="fas Edit" btnColor="btn-primary"
+                         tekst="Opslaan" (btnClicked)="Compose()"></app-icon-button>
+    </div>
+</app-modal>

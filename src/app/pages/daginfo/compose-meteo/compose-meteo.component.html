@@ -1,0 +1,97 @@
+<app-modal titel="Meteo wizard">
+    <div body>
+        <div class="row">
+            <div class="col-6">
+                <div class="">
+                    <label for="WINDRICHTING" class="form-label">Windrichting</label>
+                    <ng-select id="WINDRICHTING"
+                               [items]="windRichtingTypes$ | async"
+                               bindLabel="OMSCHRIJVING"
+                               bindValue="OMSCHRIJVING"
+                               closeOnSelect="true"
+                               openOnEnter="true"
+                               [(ngModel)]="windRichting">
+                    </ng-select>
+                </div>
+                <div class="mt-2">
+                    <label for="WINDKRACHT" class="form-label">Windkracht</label>
+                    <ng-select id="WINDKRACHT"
+                               [items]="windSterkteTypes$ | async"
+                               bindLabel="OMSCHRIJVING"
+                               bindValue="OMSCHRIJVING"
+                               closeOnSelect="true"
+                               openOnEnter="true"
+                               [(ngModel)]="windKracht">
+                    </ng-select>
+                </div>
+                <div class="mt-2">
+                    <label for="EIGENSCHAPPEN" class="form-label">Wind eigenschappen</label>
+                    <ng-select id="EIGENSCHAPPEN"
+                               [items]="windEigenschappenTypes$ | async"
+                               bindLabel="OMSCHRIJVING"
+                               bindValue="OMSCHRIJVING"
+                               closeOnSelect="true"
+                               openOnEnter="true"
+                               [(ngModel)]="windEigenschappen">
+                    </ng-select>
+                </div>
+                <div class="mt-2">
+                    <label for="TERMIEK" class="form-label">Gemiddeld stijgen</label>
+                    <ng-select id="TERMIEK"
+                               [items]="stijgenTypes$ | async"
+                               bindLabel="OMSCHRIJVING"
+                               bindValue="CODE"
+                               closeOnSelect="true"
+                               openOnEnter="true"
+                               [(ngModel)]="gemiddeldStijgen">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="">
+                    <label for="ZICHT" class="form-label">Zicht</label>
+                    <ng-select id="ZICHT"
+                               [items]="zichtTypes$ | async"
+                               bindLabel="OMSCHRIJVING"
+                               bindValue="OMSCHRIJVING"
+                               closeOnSelect="true"
+                               openOnEnter="true"
+                               [(ngModel)]="zicht">
+                    </ng-select>
+                </div>
+                <div class="mt-2">
+                    <label for="BEWOLKING" class="form-label">Bewolking</label>
+                    <ng-select id="BEWOLKING"
+                               [items]="bewolkingTypes$ | async"
+                               bindLabel="OMSCHRIJVING"
+                               bindValue="OMSCHRIJVING"
+                               closeOnSelect="true"
+                               openOnEnter="true"
+                               [(ngModel)]="bewolking">
+                    </ng-select>
+                </div>
+                <div class="mt-2">
+                    <label for="BEDEKKING" class="form-label">Bedekkingsgraad</label>
+                    <ng-select id="BEDEKKING"
+                               [items]="dekkingTypes$ | async"
+                               bindLabel="OMSCHRIJVING"
+                               bindValue="OMSCHRIJVING"
+                               closeOnSelect="true"
+                               openOnEnter="true"
+                               [(ngModel)]="bewolkingDekking">
+                    </ng-select>
+                </div>
+                <div class="mt-2">
+                    <label for="WOLKENBASIS" class="form-label">Wolkenbasis</label>
+                    <input name="Wolkenbasis" type="number" class="form-control" id="WOLKENBASIS"
+                           [(ngModel)]="wolkenBasis"
+                           min="300" max="1500" step="100">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div footer>
+        <app-icon-button iconNaam="fas Edit" btnColor="btn-primary"
+                         tekst="Opslaan" (btnClicked)="Compose()"></app-icon-button>
+    </div>
+</app-modal>

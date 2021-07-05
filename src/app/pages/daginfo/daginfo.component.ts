@@ -10,9 +10,19 @@ import {CustomError, KeyValueString} from "../../types/Utils";
 import {HeliosDagInfo, HeliosType} from "../../types/Helios";
 import {TypesService} from "../../services/apiservice/types.service";
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faCloudSunRain, faFlagCheckered, faInfo, faPlane, faTruck, faUsers} from "@fortawesome/free-solid-svg-icons";
+import {
+    faCloudSunRain, faFileImport,
+    faFlagCheckered,
+    faFrown,
+    faInfo,
+    faPlane,
+    faTruck,
+    faUsers
+} from "@fortawesome/free-solid-svg-icons";
 import {faArtstation} from "@fortawesome/free-brands-svg-icons";
 import {faPaperPlane} from "@fortawesome/free-solid-svg-icons/faPaperPlane";
+import {ComposeMeteoComponent} from "./compose-meteo/compose-meteo.component";
+import {ComposeBedrijfComponent} from "./compose-bedrijf/compose-bedrijf.component";
 
 
 @Component({
@@ -21,6 +31,9 @@ import {faPaperPlane} from "@fortawesome/free-solid-svg-icons/faPaperPlane";
     styleUrls: ['./daginfo.component.scss']
 })
 export class DaginfoComponent {
+    @ViewChild(ComposeMeteoComponent) meteoWizard: ComposeMeteoComponent;
+    @ViewChild(ComposeBedrijfComponent) bedrijfWizard: ComposeBedrijfComponent;
+
     iconCardIcon: IconDefinition = faInfo;
     iconBedrijf: IconDefinition = faArtstation;
     iconVliegveld: IconDefinition = faPlane;
@@ -29,17 +42,16 @@ export class DaginfoComponent {
     iconVliegend: IconDefinition = faPaperPlane;
     iconRollend: IconDefinition = faTruck;
     iconVerslag: IconDefinition = faFlagCheckered;
+    iconIncident: IconDefinition = faFrown;
+    iconDefault: IconDefinition = faFileImport;
 
     datumAbonnement: Subscription;
     datum: DateTime;                       // de gekozen dag
 
     data: HeliosDagInfo = {};
-    clubTypes$: Observable<HeliosType[]>;
+
     veldTypes$: Observable<HeliosType[]>;
-    baanTypes$: Observable<HeliosType[]>;
     startMethodeTypes$: Observable<HeliosType[]>;
-    windSterkteTypes$: Observable<HeliosType[]>;
-    windRichtingTypes$: Observable<HeliosType[]>;
 
     magToevoegen: boolean = false;
     magVerwijderen: boolean = false;
@@ -53,14 +65,8 @@ export class DaginfoComponent {
                 private readonly typesService: TypesService,
                 private readonly loginService: LoginService) {
 
-        this.typesService.getTypes(1).then(types => this.baanTypes$ = of(types));
-        this.typesService.getTypes(2).then(types => this.windRichtingTypes$ = of(types));
-        this.typesService.getTypes(3).then(types => this.windSterkteTypes$ = of(types));
-
         this.typesService.getTypes(5).then(types => this.startMethodeTypes$ = of(types));
-
         this.typesService.getTypes(9).then(types => this.veldTypes$ = of(types));
-        this.typesService.getTypes(15).then(types => this.clubTypes$ = of(types));
     }
 
     ngOnInit(): void {
@@ -87,8 +93,7 @@ export class DaginfoComponent {
             .then((di) => {
                 if (di.VERWIJDERD == true) {
                     this.data = {};
-                }
-                else {
+                } else {
                     this.data = di;
                 }
             })
@@ -119,6 +124,14 @@ export class DaginfoComponent {
                 this.data = {};
             }
         }
+    }
+
+    invullenMeteo() {
+        this.meteoWizard.openPopup();
+    }
+
+    invullenVliegbedrijf() {
+        this.bedrijfWizard.openPopup();
     }
 }
 

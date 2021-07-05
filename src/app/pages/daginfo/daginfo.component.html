@@ -24,50 +24,16 @@
                                    [(ngModel)]="data.VELD_ID">
                         </ng-select>
 
-                        <label for="BAAN" class="form-label">Baan</label>
-                        <ng-select id="BAAN"
-                                   [items]="baanTypes$ | async"
-                                   placeholder="Baan"
-                                   bindLabel="OMSCHRIJVING"
-                                   bindValue="ID"
-                                   closeOnSelect="true"
-                                   openOnEnter="true"
-                                   [(ngModel)]="data.BAAN_ID">
-                        </ng-select>
-                        <div class="mt-2 d-flex flex-row justify-content-between">
-                            <div>
-                                <input type="checkbox" id="LINKERHAND" class="form-check-inline" [(ngModel)]="data.DDWV">
-                                <label for="DDWV" class="form-check-label">Linkerhand</label>
-                            </div>
-
-                            <div>
-                                <input type="checkbox" id="RECHTERHAND" class="form-check-inline"
-                                       [(ngModel)]="data.CLUB_BEDRIJF">
-                                <label for="RECHTERHAND" class="form-check-label">Rechterhand</label>
-
-                            </div>
-                        </div>
                     </app-icon-card>
                 </div>
                 <div class="col-3">
-                    <app-icon-card id="bedrijfCard"
+                    <app-icon-card id="defaultCard"
                                    class="kleineKaart"
-                                   titel="Bedrijf"
-                                   subtitel="Operationele data"
-                                   [icon]="iconBedrijf">
+                                   titel="Standaard"
+                                   subtitel="Start gegevens"
+                                   [icon]="iconDefault">
 
-                        <label for="CLUB" class="form-label">Club</label>
-                        <ng-select id="CLUB"
-                                   [items]="clubTypes$ | async"
-                                   placeholder="Wie heeft de leiding"
-                                   bindLabel="OMSCHRIJVING"
-                                   bindValue="ID"
-                                   closeOnSelect="true"
-                                   openOnEnter="true"
-                                   [(ngModel)]="data.BEDRIJF_ID">
-                        </ng-select>
-
-                        <label for="STARTMETHODE" class="form-label">StartMethode</label>
+                        <label for="STARTMETHODE" class="form-label">Start methode</label>
                         <ng-select id="STARTMETHODE"
                                    [items]="startMethodeTypes$ | async"
                                    placeholder="Standaard start methode"
@@ -100,19 +66,57 @@
                                    [icon]="iconDiensten">
                     </app-icon-card>
                 </div>
+
+
             </div>
 
             <div class="row rowDagInfo2">
                 <div class="col-6">
+                    <app-icon-card id="meteoCard"
+                                   class="kleineKaart"
+                                   titel="Meteo"
+                                   subtitel="Weersomstandigheden op de vliegdag"
+                                   [icon]="iconMeteo">
+
+                        <div class="d-flex align-items-end">
+                        <textarea [(ngModel)]="data.METEO" name="Ingave"
+                                  class="w-100 text-invoer"
+                                  rows="4"></textarea>
+
+                            <app-icon-button class="ms-2" iconNaam="fas PencilAlt" (btnClicked)="invullenMeteo()"
+                                             btnColor="btn-primary"></app-icon-button>
+                        </div>
+                    </app-icon-card>
+                </div>
+                <div class="col-6">
+                    <app-icon-card id="bedrijfCard"
+                                   class="kleineKaart"
+                                   titel="Vliegbedrijf"
+                                   subtitel="Operationele data"
+                                   [icon]="iconBedrijf">
+                        <div class="d-flex align-items-end mb-2">
+                        <textarea [(ngModel)]="data.VLIEGBEDRIJF" name="Ingave"
+                                  class="w-100 text-invoer"
+                                  rows="4"></textarea>
+
+                            <app-icon-button class="ms-2" iconNaam="fas PencilAlt" (btnClicked)="invullenVliegbedrijf()"
+                                             btnColor="btn-primary"></app-icon-button>
+                        </div>
+                    </app-icon-card>
+                </div>
+            </div>
+
+            <div class="row rowDagInfo3">
+                <div class="col-6">
                     <app-icon-card id="vliegendCard"
                                    class="kleineKaart"
                                    titel="Vliegend"
-                                   subtitel="Bijzonderheden over het vliegtuigen"
+                                   subtitel="Bijzonderheden over de vliegtuigen"
                                    [icon]="iconVliegend">
 
                         <textarea [(ngModel)]="data.VLIEGENDMATERIEEL" name="Ingave"
-                                  placeholder="Deze ingave is publiek leesbaar" class="w-100 text-invoer"
-                                  rows="6"></textarea>
+                                  class="w-100 text-invoer"
+                                  rows="4"></textarea>
                     </app-icon-card>
                 </div>
                 <div class="col-6">
@@ -123,30 +127,13 @@
                                    [icon]="iconRollend">
 
                         <textarea [(ngModel)]="data.ROLLENDMATERIEEL" name="Ingave"
-                                  placeholder="Deze ingave is publiek leesbaar" class="w-100 text-invoer"
-                                  rows="6"></textarea>
+                                  class="w-100 text-invoer"
+                                  rows="4"></textarea>
                     </app-icon-card>
                 </div>
             </div>
 
-            <div class="row rowDagInfo3">
-                <div class="col-6">
-                    <app-icon-card id="meteoCard"
-                                   class="kleineKaart"
-                                   titel="Meteo"
-                                   subtitel="Weersomstandigheden op de vliegdag"
-                                   [icon]="iconMeteo">
-
-                        <div class="d-flex align-items-end">
-                        <textarea [(ngModel)]="data.METEO" name="Ingave"
-                                  placeholder="Deze ingave is publiek leesbaar" class="w-100 text-invoer"
-                                  rows="6"></textarea>
-
-                            <app-icon-button class="toolbarBtn" iconNaam="fas PencilAlt" (btnClicked)="opvragen()"
-                                             btnColor="btn-primary"></app-icon-button>
-                        </div>
-                    </app-icon-card>
-                </div>
+            <div class="row rowDagInfo4">
                 <div class="col-6">
                     <app-icon-card id="verslagCard"
                                    class="kleineKaart"
@@ -154,13 +141,25 @@
                                    subtitel="Toelichting en bijzonderheden"
                                    [icon]="iconVerslag">
 
-
                         <textarea [(ngModel)]="data.VERSLAG" name="Ingave"
-                                  placeholder="Deze ingave is beperkt leesbaar" class="w-100 text-invoer"
-                                  rows="6"></textarea>
+                                  class="w-100 text-invoer"
+                                  rows="4"></textarea>
+                    </app-icon-card>
+                </div>
+                <div class="col-6">
+                    <app-icon-card id="incidentCard"
+                                   class="kleineKaart"
+                                   titel="Incidenten"
+                                   subtitel="Gevaarlijke situaties waar we van kunnen leren"
+                                   [icon]="iconIncident">
+
+                        <textarea [(ngModel)]="data.OPMERKINGEN" name="Ingave"
+                                  class="w-100 text-invoer"
+                                  rows="4"></textarea>
                     </app-icon-card>
                 </div>
             </div>
+
         </div>
         <div class="row" id="toolbar">
             <div class="col-6" *ngIf="this.magToevoegen">
@@ -174,9 +173,13 @@
                 <div class="d-flex justify-content-end">
                     <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
                                      btnColor="btn-secondary" *ngIf="this.magVerwijderen && this.data.ID != undefined"
-                                     (btnClicked)="bevestigVerwijderen()" ></app-icon-button>
+                                     (btnClicked)="bevestigVerwijderen()"></app-icon-button>
                 </div>
             </div>
         </div>
     </div>
 </app-icon-card>
+
+
+<app-compose-meteo (opslaan)="data.METEO = $event"></app-compose-meteo>
+<app-compose-bedrijf (opslaan)="data.VLIEGBEDRIJF = $event" [datum]="datum"></app-compose-bedrijf>
