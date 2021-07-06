@@ -21,6 +21,7 @@ import {faArtstation} from "@fortawesome/free-brands-svg-icons";
 import {faPaperPlane} from "@fortawesome/free-solid-svg-icons/faPaperPlane";
 import {ComposeMeteoComponent} from "./compose-meteo/compose-meteo.component";
 import {ComposeBedrijfComponent} from "./compose-bedrijf/compose-bedrijf.component";
+import {StorageService} from "../../services/storage/storage.service";
 
 
 @Component({
@@ -58,9 +59,11 @@ export class DaginfoComponent {
     magExporten: boolean = false;
 
     error: CustomError | undefined;
+    tekstRegels: number = 4;
 
     constructor(private readonly daginfoService: DaginfoService,
                 private readonly sharedService: SharedService,
+                private readonly storageService: StorageService,
                 private readonly typesService: TypesService,
                 private readonly loginService: LoginService) {
 
@@ -77,6 +80,11 @@ export class DaginfoComponent {
         })
 
         this.dagInfoAbonnement = this.daginfoService.dagInfoChange.subscribe(di => { this.dagInfo = di})
+        const dagInfoTekstRegels = this.storageService.ophalen('dagInfoTekstRegels');
+        if (dagInfoTekstRegels) {
+            this.tekstRegels = 1*dagInfoTekstRegels;
+        }
+
     }
 
     ngOnInit(): void {
@@ -109,5 +117,9 @@ export class DaginfoComponent {
 
     invullenVliegbedrijf() {
         this.bedrijfWizard.openPopup();
+    }
+
+    storeTextRegels() {
+        this.storageService.opslaan('dagInfoTekstRegels', this.tekstRegels, -1);
     }
 }

@@ -80,7 +80,7 @@
                         <div class="d-flex align-items-end">
                         <textarea [(ngModel)]="dagInfo.METEO" name="Ingave"
                                   class="w-100 text-invoer"
-                                  rows="4"></textarea>
+                                  [rows]="tekstRegels"></textarea>
 
                             <app-icon-button class="ms-2" iconNaam="fas PencilAlt" (btnClicked)="invullenMeteo()"
                                              btnColor="btn-primary"></app-icon-button>
@@ -96,7 +96,7 @@
                         <div class="d-flex align-items-end mb-2">
                         <textarea [(ngModel)]="dagInfo.VLIEGBEDRIJF" name="Ingave"
                                   class="w-100 text-invoer"
-                                  rows="4"></textarea>
+                                  [rows]="tekstRegels"></textarea>
 
                             <app-icon-button class="ms-2" iconNaam="fas PencilAlt" (btnClicked)="invullenVliegbedrijf()"
                                              btnColor="btn-primary"></app-icon-button>
@@ -115,7 +115,7 @@
 
                         <textarea [(ngModel)]="dagInfo.VLIEGENDMATERIEEL" name="Ingave"
                                   class="w-100 text-invoer"
-                                  rows="4"></textarea>
+                                  [rows]="tekstRegels"></textarea>
                     </app-icon-card>
                 </div>
                 <div class="col-6">
@@ -127,7 +127,7 @@
 
                         <textarea [(ngModel)]="dagInfo.ROLLENDMATERIEEL" name="Ingave"
                                   class="w-100 text-invoer"
-                                  rows="4"></textarea>
+                                  [rows]="tekstRegels"></textarea>
                     </app-icon-card>
                 </div>
             </div>
@@ -142,7 +142,7 @@
 
                         <textarea [(ngModel)]="dagInfo.VERSLAG" name="Ingave"
                                   class="w-100 text-invoer"
-                                  rows="4"></textarea>
+                                  [rows]="tekstRegels"></textarea>
                     </app-icon-card>
                 </div>
                 <div class="col-6">
@@ -154,7 +154,7 @@
 
                         <textarea [(ngModel)]="dagInfo.INCIDENTEN" name="Ingave"
                                   class="w-100 text-invoer"
-                                  rows="4"></textarea>
+                                  [rows]="tekstRegels"></textarea>
                     </app-icon-card>
                 </div>
             </div>
@@ -162,16 +162,27 @@
         </div>
         <div class="row" id="toolbar">
             <div class="col-6" *ngIf="this.magToevoegen">
-                <app-icon-button class="toolbarBtn"
-                                 tekst="Opslaan"
-                                 iconNaam="far PlusSquare" (btnClicked)="opslaanDagInfo()"
-                                 btnColor="btn-primary"></app-icon-button>
+                <div class="d-flex">
+                    <app-icon-button class="toolbarBtn"
+                                     tekst="Opslaan"
+                                     iconNaam="far PlusSquare" (btnClicked)="opslaanDagInfo()"
+                                     btnColor="btn-primary"></app-icon-button>
+
+                    <div class="d-flex justify-content-begin align-items-end">
+                        <label for="TEKSTREGELS" class="form-label ms-4">Tekst regels</label>
+                        <input name="TekstRegels" type="number" class="ms-2 mb-1" id="TEKSTREGELS"
+                               [(ngModel)]="tekstRegels" (ngModelChange)="storeTextRegels()"
+                               min="1" max="15">
+                    </div>
+                </div>
             </div>
+
 
             <div class="col-6">
                 <div class="d-flex justify-content-end">
                     <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
-                                     btnColor="btn-secondary" *ngIf="this.magVerwijderen && this.dagInfo.ID != undefined"
+                                     btnColor="btn-secondary"
+                                     *ngIf="this.magVerwijderen && this.dagInfo.ID != undefined"
                                      (btnClicked)="bevestigVerwijderen()"></app-icon-button>
                 </div>
             </div>
