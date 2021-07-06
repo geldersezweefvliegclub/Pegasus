@@ -80,6 +80,10 @@ export interface paths {
           VELDEN?: string;
           /** Zoek op datum */
           DATUM?: string;
+          /** Begin datum (inclusief deze dag) */
+          BEGIN_DATUM?: string;
+          /** Eind datum (inclusief deze dag) */
+          EIND_DATUM?: string;
         };
       };
       responses: {
@@ -217,16 +221,12 @@ export interface components {
       DATUM?: string;
       /** Welke vliegveld vliegen we vandaag. Kan afwijken voor vliegkamp. Verwijzing naar type tabel. */
       VELD_ID?: number;
-      /** Welke baan is in gebruik. Verwijzing naar type tabel. */
-      BAAN_ID?: number;
-      /** Welke club is in verantwoordelijk voor het vliegbedrijf. Verwijzing naar type tabel. */
-      BEDRIJF_ID?: number;
       /** Is het een DDWV dag? */
       DDWV?: boolean;
       /** Is er een clubbedrijf */
       CLUB_BEDRIJF?: boolean;
-      /** Opmerking over de vliegdag */
-      OPMERKINGEN?: string;
+      /** Incidenten om iets van te leren */
+      INCIDENTEN?: string;
       /** Beschrijving van de situatie op het veld */
       VLIEGBEDRIJF?: string;
       /** Beschrijving van de weerscondities */
