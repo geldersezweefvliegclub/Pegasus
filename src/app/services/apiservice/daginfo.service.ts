@@ -1,19 +1,44 @@
 import { Injectable } from '@angular/core';
 import {APIService} from './api.service';
 import {DateTime} from "luxon";
-import {KeyValueString} from "../../types/Utils";
+import {HeliosActie, KeyValueString} from "../../types/Utils";
 import {HeliosDagInfo, HeliosDagInfoDagen} from "../../types/Helios";
 import {StorageService} from "../storage/storage.service";
+import {BehaviorSubject, Subscription} from "rxjs";
+import {SharedService} from "../shared/shared.service";
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class DaginfoService {
-  DagInfo: HeliosDagInfoDagen | null = null;
-  dagen: HeliosDagInfoDagen | null = null;
+  private dagInfoTotaal: HeliosDagInfoDagen | null = null;
+  private dagen: HeliosDagInfoDagen | null = null;
+  public dagInfo: HeliosDagInfo = {};
 
-  constructor(private readonly APIService: APIService, private readonly storageService: StorageService) { }
+  datumAbonnement: Subscription;
+  datum: DateTime;                       // de gekozen dag in de kalender
+
+  private dagInfoStore = new BehaviorSubject(this.dagInfo);
+  public readonly dagInfoChange = this.dagInfoStore.asObservable();      // nieuwe dagInfo beschikbaar
+
+  constructor(private readonly APIService: APIService,
+              private readonly sharedService: SharedService,
+              private readonly storageService: StorageService)
+  {
+    // de datum zoals die in de kalender gekozen is
+    this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
+      this.datum = DateTime.fromObject({
+        year: datum.year,
+        month: datum.month,
+        day: datum.day
+      })
+      this.getDagInfo(undefined, this.datum).then(di => {
+        this.dagInfo = di ;
+        this.dagInfoStore.next(this.dagInfo)
+      });
+    })
+  }
 
 
   async getDagen(startDatum: DateTime, eindDatum: DateTime): Promise<[]> {
@@ -45,14 +70,14 @@ export class DaginfoService {
   async getDagInfoDagen(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueString = {}): Promise<[]> {
     let hash: string = '';
 
-    if (((this.DagInfo == null)) && (this.storageService.ophalen('daginfo') != null)) {
-      this.DagInfo = this.storageService.ophalen('daginfo');
+    if (((this.dagInfoTotaal == null)) && (this.storageService.ophalen('daginfo') != null)) {
+      this.dagInfoTotaal = this.storageService.ophalen('daginfo');
     }
 
     let getParams: KeyValueString = params;
 
-    if (this.DagInfo != null) { // we hebben eerder de lijst opgehaald
-      hash = this.DagInfo.hash as string;
+    if (this.dagInfoTotaal != null) { // we hebben eerder de lijst opgehaald
+      hash = this.dagInfoTotaal.hash as string;
       getParams['HASH'] = hash;
     }
 
@@ -70,39 +95,55 @@ export class DaginfoService {
     try {
       const response: Response = await this.APIService.get('Daginfo/GetObjects', getParams );
 
-      this.DagInfo = await response.json();
-      this.storageService.opslaan('starts', this.DagInfo);
+      this.dagInfoTotaal = await response.json();
+      this.storageService.opslaan('starts', this.dagInfoTotaal);
     } catch (e) {
       if (e.responseCode !== 304) { // server bevat dezelfde data als cache
         throw(e);
       }
     }
-    return this.DagInfo?.dataset as [];
+    return this.dagInfoTotaal?.dataset as [];
   }
 
   async getDagInfo(id: number | undefined, datum: DateTime|undefined): Promise<HeliosDagInfo> {
 
-    if (id) {
-      const response: Response = await this.APIService.get('Daginfo/GetObject', {'ID': id.toString()});
-      return response.json();
-    }
+    try {
+      if (id) {
+        const response: Response = await this.APIService.get('Daginfo/GetObject', {'ID': id.toString()});
+        return response.json();
+      }
 
-    if (datum) {
-      const response: Response = await this.APIService.get('Daginfo/GetObject', {'DATUM': datum.toISODate()});
-      return response.json();
+      if (datum) {
+        const response: Response = await this.APIService.get('Daginfo/GetObject', {'DATUM': datum.toISODate()});
+        return response.json();
+      }
+    }
+    catch (e) {
+      return { DATUM:this.datum.toISODate() };
     }
     console.error("Onjuiste aanroep getDagInfo()");
-    return {};  // dit mag nooit
+    return { DATUM:this.datum.toISODate() };  // dit mag nooit
   }
 
   async nieuweDagInfo(daginfo: HeliosDagInfo) {
     const response: Response = await this.APIService.post('Daginfo/SaveObject', JSON.stringify(daginfo));
+
+    // opslaan als class variable en fire event
+    response.clone().json().then((di) => {
+      this.dagInfo = di ;
+      this.dagInfoStore.next(this.dagInfo)
+    });
     return response.json();
   }
 
   async updateDagInfo(daginfo: HeliosDagInfo) {
     const response: Response = await this.APIService.put('Daginfo/SaveObject', JSON.stringify(daginfo));
 
+    // opslaan als class variable en fire event
+    response.clone().json().then((di) => {
+      this.dagInfo = di ;
+      this.dagInfoStore.next(this.dagInfo)
+    });
     return response.json();
   }
 

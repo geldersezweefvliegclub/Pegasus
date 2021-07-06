@@ -21,7 +21,7 @@
                                    bindValue="ID"
                                    closeOnSelect="true"
                                    openOnEnter="true"
-                                   [(ngModel)]="data.VELD_ID">
+                                   [(ngModel)]="dagInfo.VELD_ID">
                         </ng-select>
 
                     </app-icon-card>
@@ -41,17 +41,17 @@
                                    bindValue="ID"
                                    closeOnSelect="true"
                                    openOnEnter="true"
-                                   [(ngModel)]="data.STARTMETHODE_ID">
+                                   [(ngModel)]="dagInfo.STARTMETHODE_ID">
                         </ng-select>
                         <div class="mt-2 d-flex flex-row justify-content-between">
                             <div>
-                                <input type="checkbox" id="DDWV" class="form-check-inline" [(ngModel)]="data.DDWV">
+                                <input type="checkbox" id="DDWV" class="form-check-inline" [(ngModel)]="dagInfo.DDWV">
                                 <label for="DDWV" class="form-check-label">DDWV</label>
                             </div>
 
                             <div>
                                 <input type="checkbox" id="CLUBBEDRIJF" class="form-check-inline"
-                                       [(ngModel)]="data.CLUB_BEDRIJF">
+                                       [(ngModel)]="dagInfo.CLUB_BEDRIJF">
                                 <label for="CLUBBEDRIJF" class="form-check-label">Club bedrijf</label>
 
                             </div>
@@ -79,7 +79,7 @@
                                    [icon]="iconMeteo">
 
                         <div class="d-flex align-items-end">
-                        <textarea [(ngModel)]="data.METEO" name="Ingave"
+                        <textarea [(ngModel)]="dagInfo.METEO" name="Ingave"
                                   class="w-100 text-invoer"
                                   rows="4"></textarea>
 
@@ -95,7 +95,7 @@
                                    subtitel="Operationele data"
                                    [icon]="iconBedrijf">
                         <div class="d-flex align-items-end mb-2">
-                        <textarea [(ngModel)]="data.VLIEGBEDRIJF" name="Ingave"
+                        <textarea [(ngModel)]="dagInfo.VLIEGBEDRIJF" name="Ingave"
                                   class="w-100 text-invoer"
                                   rows="4"></textarea>
 
@@ -114,7 +114,7 @@
                                    subtitel="Bijzonderheden over de vliegtuigen"
                                    [icon]="iconVliegend">
 
-                        <textarea [(ngModel)]="data.VLIEGENDMATERIEEL" name="Ingave"
+                        <textarea [(ngModel)]="dagInfo.VLIEGENDMATERIEEL" name="Ingave"
                                   class="w-100 text-invoer"
                                   rows="4"></textarea>
                     </app-icon-card>
@@ -126,7 +126,7 @@
                                    subtitel="Bijzonderheden over het rollende materieel"
                                    [icon]="iconRollend">
 
-                        <textarea [(ngModel)]="data.ROLLENDMATERIEEL" name="Ingave"
+                        <textarea [(ngModel)]="dagInfo.ROLLENDMATERIEEL" name="Ingave"
                                   class="w-100 text-invoer"
                                   rows="4"></textarea>
                     </app-icon-card>
@@ -141,7 +141,7 @@
                                    subtitel="Toelichting en bijzonderheden"
                                    [icon]="iconVerslag">
 
-                        <textarea [(ngModel)]="data.VERSLAG" name="Ingave"
+                        <textarea [(ngModel)]="dagInfo.VERSLAG" name="Ingave"
                                   class="w-100 text-invoer"
                                   rows="4"></textarea>
                     </app-icon-card>
@@ -153,7 +153,7 @@
                                    subtitel="Gevaarlijke situaties waar we van kunnen leren"
                                    [icon]="iconIncident">
 
-                        <textarea [(ngModel)]="data.OPMERKINGEN" name="Ingave"
+                        <textarea [(ngModel)]="dagInfo.OPMERKINGEN" name="Ingave"
                                   class="w-100 text-invoer"
                                   rows="4"></textarea>
                     </app-icon-card>
@@ -172,7 +172,7 @@
             <div class="col-6">
                 <div class="d-flex justify-content-end">
                     <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
-                                     btnColor="btn-secondary" *ngIf="this.magVerwijderen && this.data.ID != undefined"
+                                     btnColor="btn-secondary" *ngIf="this.magVerwijderen && this.dagInfo.ID != undefined"
                                      (btnClicked)="bevestigVerwijderen()"></app-icon-button>
                 </div>
             </div>
@@ -181,5 +181,5 @@
 </app-icon-card>
 
 
-<app-compose-meteo (opslaan)="data.METEO = $event"></app-compose-meteo>
-<app-compose-bedrijf (opslaan)="data.VLIEGBEDRIJF = $event" [datum]="datum"></app-compose-bedrijf>
+<app-compose-meteo (opslaan)="dagInfo.METEO = $event"></app-compose-meteo>
+<app-compose-bedrijf (opslaan)="dagInfo.VLIEGBEDRIJF = $event" [datum]="datum"></app-compose-bedrijf>

@@ -32,14 +32,14 @@
                     <div class="col-12" *ngFor="let radiobutton of startMethodeTypesFiltered">
                         <label>
                             <input type="radio" name="options" (click)="start.STARTMETHODE_ID = radiobutton.ID"
-                                   [checked]="radiobutton === radiobutton.ID"><span
+                                   [checked]="start.STARTMETHODE_ID === radiobutton.ID"><span
                                 class="ms-3">{{radiobutton.OMSCHRIJVING}}</span>
                         </label>
                     </div>
                 </div>
             </div>
 
-            <div class="row" *ngIf="start.STARTMETHODE_ID == 501">
+            <div class="row" *ngIf="start.VLIEGTUIG_ID && start.STARTMETHODE_ID == 501">
                 <div class="col-12 col-md-6">
                     <label for="SLEEPVLIEGTUIG" class="form-label">Sleepkist</label>
                     <app-vliegtuig-invoer id="SLEEPVLIEGTUIG"

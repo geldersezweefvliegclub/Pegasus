@@ -4,7 +4,7 @@ import {
     HeliosStart,
     HeliosVliegtuigenDataset,
     HeliosLedenDataset,
-    HeliosAanwezigLedenDataset
+    HeliosAanwezigLedenDataset, HeliosDagInfo
 } from "../../../../types/Helios";
 import {TypesService} from "../../../../services/apiservice/types.service";
 import {ModalComponent} from "../../modal/modal.component";
@@ -12,11 +12,13 @@ import {StartlijstService} from "../../../../services/apiservice/startlijst.serv
 import {VliegtuigenService} from "../../../../services/apiservice/vliegtuigen.service";
 import {AanwezigVliegtuigService} from "../../../../services/apiservice/aanwezig-vliegtuig.service";
 
-import {Observable, of} from "rxjs";
+import {Observable, of, Subscription} from "rxjs";
 
 import {DateTime} from "luxon";
 import {LedenService} from "../../../../services/apiservice/leden.service";
 import {AanwezigLedenService} from "../../../../services/apiservice/aanwezig-leden.service";
+import {SharedService} from "../../../../services/shared/shared.service";
+import {DaginfoService} from "../../../../services/apiservice/daginfo.service";
 
 @Component({
     selector: 'app-start-editor',
@@ -54,6 +56,9 @@ export class StartEditorComponent {
     leden: HeliosAanwezigLedenDataset[] = [];
     aanwezigLeden: HeliosAanwezigLedenDataset[] = [];
 
+    datumAbonnement: Subscription;
+    datum: DateTime;                       // de gekozen dag inn de kalender
+
     isLoading: boolean = false;
 
     isVerwijderMode: boolean = false;
@@ -66,8 +71,10 @@ export class StartEditorComponent {
         private readonly aanwezigVliegtuigenService: AanwezigVliegtuigService,
         private readonly ledenService: LedenService,
         private readonly aanwezigLedenService: AanwezigLedenService,
-        private readonly typesService: TypesService
-    ) {
+        private readonly typesService: TypesService,
+        private readonly daginfoService: DaginfoService,
+        private readonly sharedService: SharedService)
+    {
         this.typesService.getTypes(5).then(types => this.startMethodeTypes = types);
         this.typesService.getTypes(9).then(types => this.veldenTypes$ = of(types));
 
@@ -91,36 +98,44 @@ export class StartEditorComponent {
         });
     }
 
-    openPopup(id: number | null, datum?: string) {
-        const d:DateTime = (datum) ? DateTime.fromSQL(datum) : DateTime.fromSQL(new Date().toISOString().split('T')[0]);
+    openPopup(id: number | null) {
+        // de datum zoals die in de kalender gekozen is, we halen dan de dag afhankelijke gegevens op
+        this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
+            this.datum = DateTime.fromObject({
+                year: datum.year,
+                month: datum.month,
+                day: datum.day
+            })
 
-        // ophalen welke vliegtuigen vandaag aanwezig zijn
-        this.aanwezigVliegtuigenService.getAanwezig(d, d).then((dataset) => {
-            // Als er data is, even in juiste formaat zetten. Aanwezig moet hetzelfde formaat hebben als vliegtuigen
-            this.aanwezigVliegtuigen = [];
+            // ophalen welke leden vandaag aanwezig zijn
+            this.aanwezigLedenService.getAanwezig(this.datum, this.datum).then((dataset) => {
+                // alle aanwezig leden
+                this.aanwezigLeden = dataset;
+            });
 
-            for (let i = 0; i < dataset.length; i++) {
-                this.aanwezigVliegtuigen.push(
-                    {
-                        ID: dataset[i].VLIEGTUIG_ID,
-                        REGISTRATIE: dataset[i].REGISTRATIE,
-                        REG_CALL: dataset[i].REG_CALL,
-                        CALLSIGN: dataset[i].CALLSIGN,
-                        TYPE_ID: dataset[i].TYPE_ID,
-                        SLEEPKIST: dataset[i].SLEEPKIST,
-                        TMG: dataset[i].TMG,
-                        ZELFSTART: dataset[i].ZELFSTART,
-                        CLUBKIST: dataset[i].CLUBKIST,
-                        ZITPLAATSEN: dataset[i].ZITPLAATSEN
-                    });
-            }
-        });
+            // ophalen welke vliegtuigen vandaag aanwezig zijn
+            this.aanwezigVliegtuigenService.getAanwezig(this.datum, this.datum).then((dataset) => {
+                // Als er data is, even in juiste formaat zetten. Aanwezig moet hetzelfde formaat hebben als vliegtuigen
+                this.aanwezigVliegtuigen = [];
 
-        // ophalen welke leden vandaag aanwezig zijn
-        this.aanwezigLedenService.getAanwezig(d, d).then((dataset) => {
-            // alle aanwezig leden
-            this.aanwezigLeden = dataset;
-        });
+                for (let i = 0; i < dataset.length; i++) {
+                    this.aanwezigVliegtuigen.push(
+                        {
+                            ID: dataset[i].VLIEGTUIG_ID,
+                            REGISTRATIE: dataset[i].REGISTRATIE,
+                            REG_CALL: dataset[i].REG_CALL,
+                            CALLSIGN: dataset[i].CALLSIGN,
+                            TYPE_ID: dataset[i].TYPE_ID,
+                            SLEEPKIST: dataset[i].SLEEPKIST,
+                            TMG: dataset[i].TMG,
+                            ZELFSTART: dataset[i].ZELFSTART,
+                            CLUBKIST: dataset[i].CLUBKIST,
+                            ZITPLAATSEN: dataset[i].ZITPLAATSEN
+                        });
+                }
+            });
+        })
+
 
         if (id) {
             this.formTitel = 'Start bewerken';
@@ -129,7 +144,7 @@ export class StartEditorComponent {
             this.formTitel = 'Start aanmaken';
             this.start = {
                 ID: undefined,
-                DATUM: datum,
+                DATUM: this.datum.toISODate(),
                 DAGNUMMER: undefined,
                 VLIEGTUIG_ID: undefined,
                 VLIEGER_ID: undefined,
@@ -139,14 +154,15 @@ export class StartEditorComponent {
                 STARTTIJD: undefined,
                 LANDINGSTIJD: undefined,
 
-                STARTMETHODE_ID: undefined,
-                VELD_ID: undefined,
+                STARTMETHODE_ID: this.daginfoService.dagInfo.STARTMETHODE_ID,
+                VELD_ID: this.daginfoService.dagInfo.VELD_ID,
                 SLEEPKIST_ID: undefined,
                 SLEEP_HOOGTE: undefined,
 
                 OPMERKINGEN: undefined,
                 EXTERNAL_ID: undefined
             };
+console.log(this.start);
             // zet de juiste parameters (doe alsof er invoer heeft plaatsgevonden)
             this.vliegtuigGeselecteerd(this.start.VLIEGTUIG_ID);
             this.vliegerGeselecteerd(this.start.VLIEGER_ID)

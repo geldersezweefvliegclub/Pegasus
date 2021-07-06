@@ -27,29 +27,29 @@ export class NavigationComponent {
     vandaag = this.calendar.getToday();
     kalenderIngave: NgbDateStruct = {year: this.vandaag.year, month: this.vandaag.month, day: this.vandaag.day};  // de gekozen dag
 
-    vliegdagen: string = "";
-    daginfo: string = "";
+    vliegdagen: string = "";    // vliegdagen van deze maand in json formaat
+    daginfo: string = "";       // daginfos van deze maand in json formaat
 
     constructor(private readonly loginService: LoginService,
                 private readonly startlijstService: StartlijstService,
                 private readonly daginfoService: DaginfoService,
                 private readonly sharedService: SharedService,
                 private readonly router: Router,
-                private readonly calendar: NgbCalendar,
-                private activatedRoute: ActivatedRoute) {
-        console.log(routes);
-        console.log(activatedRoute);
-
+                private readonly calendar: NgbCalendar)
+    {
+        // Als daginfo of startlijst is aangepast, moet we kalender achtergrond ook updaten
         this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Daginfo") {
                 if (ev.actie == HeliosActie.Delete || ev.actie == HeliosActie.Restore) {
+
+                    // bij verwijderen-restore, gaan we altijd dagen opvragen
                     this.daginfoService.getDagen(this.startDatum, this.eindDatum).then((dataset) => {
                         this.daginfo = JSON.stringify(dataset);
                     });
                 }
                 else if (!this.daginfo.includes(ev.data.DATUM)) {
-                    // nieuwe daginfo ophalen als we deze dag nog niet hebben
 
+                    // nieuwe daginfo ophalen als we deze dag nog niet hebben (include faalt)
                     this.daginfoService.getDagen(this.startDatum, this.eindDatum).then((dataset) => {
                         this.daginfo = JSON.stringify(dataset);
                     });
@@ -58,12 +58,14 @@ export class NavigationComponent {
 
             if (ev.tabel == "Startlijst") {
                 if (ev.actie == HeliosActie.Delete || ev.actie == HeliosActie.Restore) {
+
+                    // bij verwijderen-restore, gaan we altijd dagen opvragen
                     this.startlijstService.getVliegdagen(this.startDatum, this.eindDatum).then((dataset) => {
                         this.vliegdagen = JSON.stringify(dataset);
                     });
                 } else if (!this.vliegdagen.includes(ev.data.DATUM)) {
-                    // nieuwe vliegdagen ophalen als we deze dag nog niet hebben
 
+                    // nieuwe vliegdagen ophalen als we deze dag nog niet hebben (include faalt)
                     this.startlijstService.getVliegdagen(this.startDatum, this.eindDatum).then((dataset) => {
                         this.vliegdagen = JSON.stringify(dataset);
                     });
@@ -72,11 +74,13 @@ export class NavigationComponent {
         });
     }
 
+    // het is voorbij en we gaan terug naar de login pagina
     Uitloggen(): void {
         this.loginService.uitloggen();
         this.router.navigate(['/login']);
     }
 
+    // laat iedereen weten dat er een nieuwe datum is gekozen
     NieuweDatum(datum: NgbDate) {
         this.sharedService.zetKalenderDatum(this.kalenderIngave)
     }
@@ -84,6 +88,8 @@ export class NavigationComponent {
     // de kalender popup toont andere maand, ophalen vliegdagen
     KalenderAndereMaand($event: NgbDatepickerNavigateEvent) {
         this.kalenderMaand = $event.next;
+
+        // laat iedereen weten dat we een ander maand-jaar hebben
         this.sharedService.zetKalenderMaand(this.kalenderMaand);
 
         let maanden = [31, 28, 31, 30, 31, 30, 30, 31, 30, 31, 30, 31];

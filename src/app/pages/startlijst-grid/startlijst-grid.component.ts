@@ -40,11 +40,9 @@ export class StartlijstGridComponent implements OnInit {
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
         {field: 'DAGNUMMER', headerName: '#', sortable: true,},
-
         {field: 'REGISTRATIE', headerName: 'Registratie', sortable: true, hide: true, enableRowGroup: true},
         {field: 'CALLSIGN', headerName: 'Callsign', sortable: true, hide: true, enableRowGroup: true},
         {field: 'REG_CALL', headerName: 'RegCall', sortable: true, enableRowGroup: true},
-
         {field: 'CLUBKIST', headerName: 'Clubkist', sortable: true, cellRenderer: 'checkboxRender', hide: true},
         {field: 'STARTMETHODE', headerName: 'Start methode', sortable: true, hide: true, enableRowGroup: true},
 
@@ -89,22 +87,17 @@ export class StartlijstGridComponent implements OnInit {
             },
         },
         {field: 'DUUR', headerName: 'Duur', sortable: true, comparator: tijdSort},
-
         {field: 'OPMERKINGEN', headerName: 'Opmerkingen', sortable: true},
-
         {field: 'VLIEGTUIG_ID', headerName: 'Vliegtuig ID', sortable: true, hide: true},
         {field: 'STARTMETHODE_ID', headerName: 'Startmethode ID', sortable: true, hide: true, comparator: nummerSort},
         {field: 'VLIEGER_ID', headerName: 'Vlieger ID', sortable: true, hide: true, comparator: nummerSort},
         {field: 'INZITTENDE_ID', headerName: 'Inzittende ID', sortable: true, hide: true, comparator: nummerSort},
         {field: 'SLEEPKIST_ID', headerName: 'Sleepkist ID', sortable: true, hide: true, comparator: nummerSort},
         {field: 'SLEEP_HOOGTE', headerName: 'Sleep hoogte', sortable: true, hide: true, comparator: nummerSort},
-
         {field: 'VELD', headerName: 'Veld', sortable: true, hide: true},
-
     ];
 
     columns: ColDef[] = this.dataColumns;
-
     deleteColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 100,
@@ -118,7 +111,6 @@ export class StartlijstGridComponent implements OnInit {
             }
         },
     }];
-
     restoreColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 100,
@@ -153,13 +145,12 @@ export class StartlijstGridComponent implements OnInit {
     error: CustomError | undefined;
 
     datumAbonnement: Subscription;
-    datum: DateTime;                       // de gekozen dag
+    datum: DateTime;                       // de gekozen dag in de kalender
 
     magToevoegen: boolean = false;
     magVerwijderen: boolean = false;
     magWijzigen: boolean = false;
     magExporten: boolean = false;
-    magDatumKiezen: boolean = false;
 
     constructor(private readonly startlijstService: StartlijstService,
                 private readonly loginService: LoginService,
@@ -191,11 +182,11 @@ export class StartlijstGridComponent implements OnInit {
             day: this.datum.day
         })
 
-        this.editor.openPopup(null, datum.toISODate());
+        this.editor.openPopup(null);
     }
 
     openEditor(event?: RowDoubleClickedEvent) {
-        this.editor.openPopup(event?.data.ID, this.datum.toISODate());
+        this.editor.openPopup(event?.data.ID);
     }
 
     deleteModeJaNee() {
@@ -230,7 +221,6 @@ export class StartlijstGridComponent implements OnInit {
         this.startlijstService.getStarts(this.trashMode, this.datum, this.datum, this.zoekString, queryParams).then((dataset) => {
             this.data = dataset;
         });
-
     }
 
     Toevoegen(start: HeliosStart) {
@@ -305,5 +295,3 @@ export class StartlijstGridComponent implements OnInit {
         this.tijdInvoerEditor.closePopup();
     }
 }
-
-

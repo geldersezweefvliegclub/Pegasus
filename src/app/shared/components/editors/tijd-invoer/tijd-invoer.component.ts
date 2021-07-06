@@ -94,7 +94,6 @@ export class TijdInvoerComponent {
             } else if (!this.overdag.includes(this.tijdIngevoerd)) {
                 this.tijdIngevoerd = "";    // actuele tijd buiten daglicht periode
                 this.tijdOK = false;
-                console.log("leeg")
             }
         });
 

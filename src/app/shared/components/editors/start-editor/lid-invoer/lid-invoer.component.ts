@@ -43,7 +43,6 @@ export class LidInvoerComponent implements OnChanges {
     private zoekLid(term: string | null): HeliosAanwezigLedenDataset[] {
         const searchTerm = term ? term : '';
 
-        console.log("s", searchTerm)
         // bekijk of aanwezige leden voldoen
         const nweLijst = this.aanwezigFiltered.filter((lid: HeliosAanwezigLedenDataset) => {
             return lid.NAAM!.toLowerCase().includes(searchTerm.toLowerCase());
@@ -61,7 +60,6 @@ export class LidInvoerComponent implements OnChanges {
 
     // De Input datasets zijn gewijzigd, zorg dat combobox goede data krijgt via ledenSelectie$
     ngOnChanges(changes: SimpleChanges) {
-        console.log(this.excludeLidTypes)
         if (!this.excludeLidTypes) {
             this.aanwezigFiltered = this.aanwezig;
             this.ledenFiltered = this.leden;
@@ -97,13 +95,10 @@ export class LidInvoerComponent implements OnChanges {
         } else if (inLeden) {
             this.ledenSelectie$ = of(this.ledenFiltered);     // complete ledenlijst
         } else if (defaultLijst.length > 0) {
-            console.log(defaultLijst)
             this.ledenSelectie$ = of(defaultLijst);           // leden die graag op dit vliegtuig vliegen
         } else if (this.aanwezig.length > 0) {
-            console.log(this.aanwezigFiltered)
             this.ledenSelectie$ = of(this.aanwezigFiltered);  // alle aanwezig leden
         } else {
-            console.log(this.ledenFiltered)
             this.ledenSelectie$ = of(this.ledenFiltered);     // complete ledenlijst
         }
     }
