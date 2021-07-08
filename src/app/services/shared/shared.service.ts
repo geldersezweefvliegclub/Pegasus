@@ -2,9 +2,17 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from "rxjs";
 import {NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
 import {HeliosEvent, KalenderMaand} from "../../types/Utils";
-import {HeliosDagInfo} from "../../types/Helios";
-import {DaginfoService} from "../apiservice/daginfo.service";
-import {DateTime} from "luxon";
+
+
+export interface FilterLedenData {
+    leden: boolean,
+    ddwv: boolean,
+    crew: boolean,
+    lieristen: boolean,
+    startleiders: boolean,
+    instructeurs: boolean,
+}
+
 
 @Injectable({
     providedIn: 'root'
@@ -31,6 +39,16 @@ export class SharedService {
 
     public readonly ingegevenDatum = this.datumStore.asObservable();                // nieuwe datum gekozen
     public readonly kalenderMaandChange = this.kalenderMaandStore.asObservable();   // nieuwe maand / jaar gekozen in de kalender
+
+    // om de ledenlijst te filteren
+    public ledenlijstFilter: FilterLedenData = {
+        leden: true,
+        ddwv: false,
+        crew: false,
+        instructeurs: false,
+        startleiders: false,
+        lieristen: false
+    }
 
     // laat andere component weten dat er iets in de database is aangepast
     public readonly heliosEventFired: Observable<HeliosEvent> = this.heliosEventSubject.asObservable();

@@ -15,6 +15,9 @@ import {AvatarRenderComponent} from "./avatar/avatar-render.component";
 import {AdresRenderComponent} from "./adres-render/adres-render.component";
 import {TelefoonRenderComponent} from "./telefoon-render/telefoon-render.component";
 import {EmailRenderComponent} from "./email-render/email-render.component";
+import {FilterComponent} from "./filter/filter.component";
+import {SharedService} from "../../services/shared/shared.service";
+
 
 @Component({
     selector: 'app-leden-grid',
@@ -22,18 +25,20 @@ import {EmailRenderComponent} from "./email-render/email-render.component";
     styleUrls: ['./leden-grid.component.scss']
 })
 export class LedenGridComponent {
+    @ViewChild(FilterComponent) ledenFilter: FilterComponent;
     @ViewChild(VliegtuigEditorComponent) editor: VliegtuigEditorComponent;      // TODO
 
-    data: HeliosLedenDataset[] = [];
+    leden: HeliosLedenDataset[] = [];
+    dataset: HeliosLedenDataset[] = [];
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
-        {field: 'AVATAR', headerName: '', sortable: false, cellRenderer: 'avatarRender'},
+        {field: 'AVATAR', headerName: 'Avatar', sortable: false, cellRenderer: 'avatarRender', width: 120, resizable: false},
         {field: 'NAAM', headerName: 'Naam', sortable: true},
 
         {field: 'VOORNAAM', headerName: 'Voornaam', sortable: true, hide: true},
         {field: 'ACHTERNAAM', headerName: 'Achternaam', sortable: true, hide: true},
-        {field: 'EMAIL', headerName: 'Email', sortable: false, cellRenderer: 'emailRender'},
+        {field: 'EMAIL', headerName: 'Email', sortable: false, cellRenderer: 'emailRender', width: 50},
 
         {field: 'ADRES', headerName: 'Adres', sortable: true, cellRenderer: 'adresRender'},
         {field: 'TELEFOON', headerName: 'Telefoon', sortable: false, cellRenderer: 'telefoonRender'},
@@ -41,10 +46,10 @@ export class LedenGridComponent {
         {field: 'LIDTYPE', headerName: 'Lidtype', sortable: true, hide: true},
         {field: 'ZUSTERCLUB', headerName: 'Club', sortable: true, hide: true},
 
-        {field: 'INSTRUCTEUR', headerName: 'Instructeur',  sortable: true, cellRenderer: 'checkboxRender'},
+        {field: 'INSTRUCTEUR', headerName: 'Instructeur', sortable: true, cellRenderer: 'checkboxRender'},
         {field: 'LIERIST', headerName: 'Lierist', sortable: true, cellRenderer: 'checkboxRender'},
         {field: 'STARTLEIDER', headerName: 'Startleider', sortable: true, cellRenderer: 'checkboxRender'},
-        {field: 'DDWV_CREW', headerName: 'DDWV crew', sortable: true, cellRenderer: 'checkboxRender'},
+        {field: 'DDWV_CREW', headerName: 'DDWV crew', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
 
         {
             field: 'CLUBBLAD_POST',
@@ -90,7 +95,7 @@ export class LedenGridComponent {
         adresRender: AdresRenderComponent,
         telefoonRender: TelefoonRenderComponent,
         checkboxRender: CheckboxRenderComponent,
-        emailRender:EmailRenderComponent,
+        emailRender: EmailRenderComponent,
         deleteAction: DeleteActionComponent,
         restoreAction: RestoreActionComponent
     };
@@ -106,13 +111,13 @@ export class LedenGridComponent {
     magWijzigen: boolean = false;
     magExporten: boolean = false;
 
-    constructor(private readonly ledenService: LedenService, private readonly loginService: LoginService) {
+    constructor(private readonly ledenService: LedenService,
+                private readonly loginService: LoginService,
+                private readonly sharedService: SharedService) {
     }
 
     ngOnInit(): void {
-        this.ledenService.getLeden().then((dataset) => {
-            this.data = dataset;
-        });
+        this.opvragen();
 
         let ui = this.loginService.userInfo?.Userinfo;
         this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
@@ -148,7 +153,6 @@ export class LedenGridComponent {
             } else {
                 this.columns = this.deleteColumn.concat(this.dataColumns)
             }
-
         }
     }
 
@@ -157,7 +161,8 @@ export class LedenGridComponent {
 
         this.zoekTimer = setTimeout(() => {
             this.ledenService.getLeden(this.trashMode, this.zoekString).then((dataset) => {
-                this.data = dataset;
+                this.dataset = dataset;
+                this.applyFilter();
             });
         }, 400);
     }
@@ -202,9 +207,37 @@ export class LedenGridComponent {
         });
     }
 
+    filterPopup() {
+        this.ledenFilter.openPopup();
+    }
+
+    applyFilter() {
+        // filter de dataset naar de lijst
+        this.leden = [];
+        for (let i = 0; i < this.dataset.length; i++) {
+
+            // 601 = Erelid
+            // 602 = Lid
+            // 603 = Jeugdlid
+            let isLid = false;
+            if ((this.dataset[i].LIDTYPE_ID == 601) || (this.dataset[i].LIDTYPE_ID == 602) || (this.dataset[i].LIDTYPE_ID == 603)) {
+                isLid = true;
+            }
+
+            if (this.sharedService.ledenlijstFilter.leden && isLid == false) continue;
+            if (this.sharedService.ledenlijstFilter.ddwv && this.dataset[i].LIDTYPE_ID != 625) continue;
+            if (this.sharedService.ledenlijstFilter.startleiders && this.dataset[i].STARTLEIDER == false) continue;
+            if (this.sharedService.ledenlijstFilter.lieristen && this.dataset[i].LIERIST == false) continue;
+            if (this.sharedService.ledenlijstFilter.instructeurs && this.dataset[i].INSTRUCTEUR == false) continue;
+            if (this.sharedService.ledenlijstFilter.crew && this.dataset[i].DDWV_CREW == false) continue;
+
+            this.leden.push(this.dataset[i]);
+        }
+    }
+
     // Export naar excel
     exportDataset() {
-        let ws = xlsx.utils.json_to_sheet(this.data);
+        let ws = xlsx.utils.json_to_sheet(this.leden);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
         xlsx.writeFile(wb, 'vliegtuigen ' + new Date().toJSON().slice(0, 10) + '.xlsx');

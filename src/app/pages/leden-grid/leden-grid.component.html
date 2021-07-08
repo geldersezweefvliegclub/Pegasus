@@ -10,30 +10,39 @@
             <app-datatable
                     id="ledengrid"
                     rowHeight=70
-                    [rowData]="data"
+                    [rowData]="leden"
                     [columnDefs]="columns"
                     [frameworkComponents]="frameworkComponents"
                     (rowDoubleClicked)="openEditor($event)"
                     class="h-100 mt-n8"></app-datatable>
         </div>
         <div class="row justify-content-start" id="toolbar">
-            <div class="col-2" *ngIf="this.magToevoegen">
-                <app-icon-button class="toolbarBtn"
-                                 tekst="Toevoegen"
-                                 iconNaam="far PlusSquare" (btnClicked)="addVliegtuig()"
-                                 btnColor="btn-primary" *ngIf="!this.deleteMode"></app-icon-button>
+            <div class="col-4">
+                <div class="d-flex">
+                    <app-icon-button class="toolbarBtn"
+                                     tekst="Filter"
+                                     iconNaam="fas Filter" (btnClicked)="filterPopup()"
+                                     btnColor="btn-primary"></app-icon-button>
 
-                <div *ngIf="this.deleteMode">
-                    <input type="checkbox" class="btn-check" id="trashBtn" name="prullenbakMode"
-                           [(ngModel)]="trashMode"
-                           (ngModelChange)="trashModeJaNee()">
-                    <label class="btn btn-outline-primary recycleBtn" for="trashBtn">
-                        <fa-icon [icon]="prullenbakIcon"></fa-icon>
-                        Prullenbak
-                    </label>
+                    <div *ngIf="this.magToevoegen">
+                        <app-icon-button class="toolbarBtn"
+                                         tekst="Toevoegen"
+                                         iconNaam="far PlusSquare" (btnClicked)="addVliegtuig()"
+                                         btnColor="btn-primary" *ngIf="!this.deleteMode"></app-icon-button>
+
+                        <div *ngIf="this.deleteMode">
+                            <input type="checkbox" class="btn-check" id="trashBtn" name="prullenbakMode"
+                                   [(ngModel)]="trashMode"
+                                   (ngModelChange)="trashModeJaNee()">
+                            <label class="btn btn-outline-primary recycleBtn" for="trashBtn">
+                                <fa-icon [icon]="prullenbakIcon"></fa-icon>
+                                Prullenbak
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-10">
+            <div class="col-8">
                 <div class="row justify-content-between" id="zoekbar">
                     <div class="col-8">
                         <div class="d-flex justify-content-begin align-items-end">
@@ -47,7 +56,7 @@
                                    (search)="opvragen()"
                             >
                             <app-icon-button class="toolbarBtn" iconNaam="fas Redo" (btnClicked)="opvragen()"
-                                             btnColor="btn-primary"  ></app-icon-button>
+                                             btnColor="btn-primary"></app-icon-button>
                         </div>
                     </div>
                     <div class="col-4">
@@ -64,7 +73,9 @@
 
 
     <app-leden-editor *ngIf="this.magToevoegen || this.magWijzigen || this.magVerwijderen"
-                          (add)="Toevoegen($event)" (update)="Aanpassen($event)" (delete)="Verwijderen($event)"
-                          (restore)="Herstellen($event)"
+                      (add)="Toevoegen($event)" (update)="Aanpassen($event)" (delete)="Verwijderen($event)"
+                      (restore)="Herstellen($event)"
     ></app-leden-editor>
+
+    <app-filter (filterChanged)="applyFilter()"> </app-filter>
 </app-icon-card>

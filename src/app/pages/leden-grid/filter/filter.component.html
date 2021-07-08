@@ -1,0 +1,56 @@
+<app-modal titel="Ledenlijst filter">
+    <div body>
+        <div class="row">
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <div>
+                        <input type="checkbox"
+                               id="Instructeurs" class="form-check-inline"
+                               [(ngModel)]="this.sharedService.ledenlijstFilter.instructeurs"
+                               (ngModelChange)="filterDataChanged()">
+                        <label for="Instructeurs" class="form-check-label">Instructeurs</label>
+                    </div>
+                    <div>
+                        <input type="checkbox"
+                               id="Startleiders" class="form-check-inline"
+                               [(ngModel)]="sharedService.ledenlijstFilter.startleiders"
+                               (ngModelChange)="filterDataChanged()">
+                        <label for="Startleiders" class="form-check-label">Startleiders</label>
+                    </div>
+                    <div>
+                        <input type="checkbox"
+                               id="Lieristen" class="form-check-inline"
+                               [(ngModel)]="this.sharedService.ledenlijstFilter.lieristen"
+                               (ngModelChange)="filterDataChanged()">
+                        <label for="Lieristen" class="form-check-label">Lieristen</label>
+                    </div>
+                    <div>
+                        <input type="checkbox"
+                               id="DDWV-Crew" class="form-check-inline"
+                               [(ngModel)]="sharedService.ledenlijstFilter.crew"
+                               (ngModelChange)="filterDataChanged()">
+                        <label for="DDWV-Crew" class="form-check-label">DDWV crew</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <div>
+                        <input type="checkbox"
+                               id="Leden" class="form-check-inline"
+                               [(ngModel)]="sharedService.ledenlijstFilter.leden"
+                               (ngModelChange)="filterLedenChanged($event)">
+                        <label for="Leden" class="form-check-label">Alleen leden</label>
+                    </div>
+                    <div>
+                        <input type="checkbox"
+                               id="DDWV" class="form-check-inline"
+                               [(ngModel)]="sharedService.ledenlijstFilter.ddwv"
+                               (ngModelChange)="filterDDWVChanged($event)">
+                        <label for="DDWV" class="form-check-label">Alleen DDWV</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-modal>

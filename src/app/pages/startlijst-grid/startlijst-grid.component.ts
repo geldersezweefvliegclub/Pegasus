@@ -11,7 +11,6 @@ import {CustomError, KeyValueString, nummerSort, tijdSort} from '../../types/Uti
 import * as xlsx from 'xlsx';
 import {LoginService} from '../../services/apiservice/login.service';
 import {faClipboardList} from '@fortawesome/free-solid-svg-icons/faClipboardList';
-import {NgbDateFRParserFormatter} from '../../shared/ngb-date-fr-parser-formatter';
 import {DateTime} from 'luxon';
 import {VliegerRenderComponent} from './vlieger-render/vlieger-render.component';
 import {InzittendeRenderComponent} from './inzittende-render/inzittende-render.component';
@@ -22,8 +21,6 @@ import {TijdInvoerComponent} from '../../shared/components/editors/tijd-invoer/t
 import {StartEditorComponent} from "../../shared/components/editors/start-editor/start-editor.component";
 import {Subscription} from "rxjs";
 import {SharedService} from "../../services/shared/shared.service";
-import {NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
-
 
 @Component({
     selector: 'app-startlijst-grid',
