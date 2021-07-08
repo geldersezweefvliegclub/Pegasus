@@ -1,0 +1,24 @@
+.box {
+  display: flex;
+  flex-flow: column;
+  overflow-y: hidden;
+}
+.row {
+  --bs-gutter-x: 0;
+}
+
+.toolbarBtn {
+  margin-left: 0.4em;
+  margin-right: 0.4em;
+}
+
+
+
+#zoekLabel {
+  margin-right: 2em;
+
+
+}
+#zoekInput {
+  width: 30%;
+}

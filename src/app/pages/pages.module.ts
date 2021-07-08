@@ -29,6 +29,11 @@ import {CustomFormsModule} from 'ng2-validation';
 import {NgSelectModule} from "@ng-select/ng-select";
 import { ComposeMeteoComponent } from './daginfo/compose-meteo/compose-meteo.component';
 import { ComposeBedrijfComponent } from './daginfo/compose-bedrijf/compose-bedrijf.component';
+import { AvatarRenderComponent } from './leden-grid/avatar/avatar-render.component';
+import { AdresRenderComponent } from './leden-grid/adres-render/adres-render.component';
+import { TelefoonRenderComponent } from './leden-grid/telefoon-render/telefoon-render.component';
+import {LazyLoadImageModule} from "ng-lazyload-image";
+import { EmailRenderComponent } from './leden-grid/email-render/email-render.component';
 
 @NgModule({
     imports: [
@@ -43,7 +48,8 @@ import { ComposeBedrijfComponent } from './daginfo/compose-bedrijf/compose-bedri
         NgbDatepickerModule,
         NgbTypeaheadModule,
         CustomFormsModule,
-        NgSelectModule
+        NgSelectModule,
+        LazyLoadImageModule
     ],
   declarations: [
     IconCardComponent,
@@ -63,7 +69,11 @@ import { ComposeBedrijfComponent } from './daginfo/compose-bedrijf/compose-bedri
     TijdInvoerComponent,
     DaginfoComponent,
     ComposeMeteoComponent,
-    ComposeBedrijfComponent
+    ComposeBedrijfComponent,
+    AvatarRenderComponent,
+    AdresRenderComponent,
+    TelefoonRenderComponent,
+    EmailRenderComponent
   ],
   exports: [
     IconCardComponent,

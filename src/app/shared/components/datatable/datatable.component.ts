@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
 import {ColDef, GridApi, GridOptions, RowDoubleClickedEvent} from 'ag-grid-community';
 import {StorageService} from '../../../services/storage/storage.service';
 
@@ -7,12 +7,14 @@ import {StorageService} from '../../../services/storage/storage.service';
     templateUrl: './datatable.component.html',
     styleUrls: ['./datatable.component.scss']
 })
-export class DatatableComponent implements OnChanges, OnDestroy {
+export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     @Input() columnDefs = [];
     @Input() rowData = [];
     @Input() frameworkComponents: any;
     @Input() id: string;
     @Input() sizeToFit: boolean = true;
+    @Input() autoHeight: boolean = false;
+    @Input() rowHeight: number =40;
     @Output() rowDoubleClicked: EventEmitter<RowDoubleClickedEvent> = new EventEmitter<RowDoubleClickedEvent>();
 
     options: GridOptions = {
@@ -26,6 +28,7 @@ export class DatatableComponent implements OnChanges, OnDestroy {
 
     defaultColDef: ColDef = {
         editable: false,              // Gaan niet editen in grid
+        autoHeight: this.autoHeight,
         filter: 'agTextColumnFilter', // use 'text' filter by default
     };
 
@@ -33,6 +36,11 @@ export class DatatableComponent implements OnChanges, OnDestroy {
     private columnStateTimer: number | null = null;
 
     constructor(private readonly storageService: StorageService) {
+    }
+
+    ngOnInit()
+    {
+      this.defaultColDef.autoHeight = this.autoHeight;
     }
 
     ngOnDestroy() {

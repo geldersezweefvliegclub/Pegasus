@@ -67,7 +67,7 @@ export class LedenService {
     return response.json();
   }
 
-  async deleteVLid(id: number) {
+  async deleteLid(id: number) {
     try {
       await this.apiService.delete('Leden/DeleteObject', {'ID': id.toString()});
     } catch (e) {
@@ -75,7 +75,7 @@ export class LedenService {
     }
   }
 
-  async restoreVLid(id: number) {
+  async restoreLid(id: number) {
     try {
       await this.apiService.patch('Leden/RestoreObject', {'ID': id.toString()});
     } catch (e) {

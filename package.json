@@ -38,6 +38,7 @@
     "core-js": "^3.12.1",
     "js-base64": "^3.6.0",
     "luxon": "^1.27.0",
+    "ng-lazyload-image": "^9.1.0",
     "ng2-validation": "^4.2.0",
     "rxjs": "~6.5.2",
     "sunrise-sunset-js": "^2.2.1",

@@ -1,5 +1,70 @@
-<app-icon-card titel="Vliegtuigen" [icon]="plane" subtitel="Een overzicht van de vliegtuigen">
-    <div style="height: 1500px">
-        <!--        <app-datatable [rowData]="data" [columnDefs]="columns" [frameworkComponents]="frameworkComponents"></app-datatable>-->
+<app-error [error]="error"></app-error>
+
+<app-icon-card titel="Ledenlijst"
+               subtitel="De ledenlijst"
+               [icon]="iconCardIcon"
+               [exportEnabled]="this.magExporten"
+               (excelExport)="exportDataset()">
+    <div class="box h-100">
+        <div class="row h-100 overflow-hidden">
+            <app-datatable
+                    id="ledengrid"
+                    rowHeight=70
+                    [rowData]="data"
+                    [columnDefs]="columns"
+                    [frameworkComponents]="frameworkComponents"
+                    (rowDoubleClicked)="openEditor($event)"
+                    class="h-100 mt-n8"></app-datatable>
+        </div>
+        <div class="row justify-content-start" id="toolbar">
+            <div class="col-2" *ngIf="this.magToevoegen">
+                <app-icon-button class="toolbarBtn"
+                                 tekst="Toevoegen"
+                                 iconNaam="far PlusSquare" (btnClicked)="addVliegtuig()"
+                                 btnColor="btn-primary" *ngIf="!this.deleteMode"></app-icon-button>
+
+                <div *ngIf="this.deleteMode">
+                    <input type="checkbox" class="btn-check" id="trashBtn" name="prullenbakMode"
+                           [(ngModel)]="trashMode"
+                           (ngModelChange)="trashModeJaNee()">
+                    <label class="btn btn-outline-primary recycleBtn" for="trashBtn">
+                        <fa-icon [icon]="prullenbakIcon"></fa-icon>
+                        Prullenbak
+                    </label>
+                </div>
+            </div>
+            <div class="col-10">
+                <div class="row justify-content-between" id="zoekbar">
+                    <div class="col-8">
+                        <div class="d-flex justify-content-begin align-items-end">
+                            <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>
+                            <input id="zoekInput"
+                                   type="search"
+                                   class="form-control"
+                                   [(ngModel)]="zoekString"
+                                   name="zoekString"
+                                   (keyup)="opvragen()"
+                                   (search)="opvragen()"
+                            >
+                            <app-icon-button class="toolbarBtn" iconNaam="fas Redo" (btnClicked)="opvragen()"
+                                             btnColor="btn-primary"  ></app-icon-button>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="d-flex justify-content-end">
+                            <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
+                                             btnColor="btn-secondary" *ngIf="this.magVerwijderen"
+                                             (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+
+    <app-leden-editor *ngIf="this.magToevoegen || this.magWijzigen || this.magVerwijderen"
+                          (add)="Toevoegen($event)" (update)="Aanpassen($event)" (delete)="Verwijderen($event)"
+                          (restore)="Herstellen($event)"
+    ></app-leden-editor>
 </app-icon-card>

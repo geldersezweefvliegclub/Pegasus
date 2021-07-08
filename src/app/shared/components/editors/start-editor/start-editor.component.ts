@@ -77,7 +77,9 @@ export class StartEditorComponent {
     {
         this.typesService.getTypes(5).then(types => this.startMethodeTypes = types);
         this.typesService.getTypes(9).then(types => this.veldenTypes$ = of(types));
+    }
 
+    openPopup(id: number | null) {
         // Alle vliegtuigen ophalen
         this.vliegtuigenService.getVliegtuigen().then((dataset) => {
             this.vliegtuigen = dataset;
@@ -96,9 +98,7 @@ export class StartEditorComponent {
                     });
             }
         });
-    }
 
-    openPopup(id: number | null) {
         // de datum zoals die in de kalender gekozen is, we halen dan de dag afhankelijke gegevens op
         this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
             this.datum = DateTime.fromObject({
@@ -162,7 +162,7 @@ export class StartEditorComponent {
                 OPMERKINGEN: undefined,
                 EXTERNAL_ID: undefined
             };
-console.log(this.start);
+
             // zet de juiste parameters (doe alsof er invoer heeft plaatsgevonden)
             this.vliegtuigGeselecteerd(this.start.VLIEGTUIG_ID);
             this.vliegerGeselecteerd(this.start.VLIEGER_ID)
