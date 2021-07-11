@@ -33,7 +33,7 @@ export class LedenGridComponent {
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
-        {field: 'AVATAR', headerName: 'Avatar', sortable: false, cellRenderer: 'avatarRender', width: 120, resizable: false},
+        {field: 'AVATAR', headerName: '', sortable: false, cellRenderer: 'avatarRender', width: 110, resizable: false, cellClass: "avatarCell"},
         {field: 'NAAM', headerName: 'Naam', sortable: true},
 
         {field: 'VOORNAAM', headerName: 'Voornaam', sortable: true, hide: true},
@@ -43,7 +43,7 @@ export class LedenGridComponent {
         {field: 'ADRES', headerName: 'Adres', sortable: true, cellRenderer: 'adresRender'},
         {field: 'TELEFOON', headerName: 'Telefoon', sortable: false, cellRenderer: 'telefoonRender'},
 
-        {field: 'LIDTYPE', headerName: 'Lidtype', sortable: true, hide: true},
+        {field: 'LIDTYPE', headerName: 'Lidmaatschap', sortable: true, hide: true},
         {field: 'ZUSTERCLUB', headerName: 'Club', sortable: true, hide: true},
 
         {field: 'INSTRUCTEUR', headerName: 'Instructeur', sortable: true, cellRenderer: 'checkboxRender'},
@@ -219,8 +219,12 @@ export class LedenGridComponent {
             // 601 = Erelid
             // 602 = Lid
             // 603 = Jeugdlid
+            // 606 = Donateur
             let isLid = false;
-            if ((this.dataset[i].LIDTYPE_ID == 601) || (this.dataset[i].LIDTYPE_ID == 602) || (this.dataset[i].LIDTYPE_ID == 603)) {
+            if ((this.dataset[i].LIDTYPE_ID == 601) ||
+                (this.dataset[i].LIDTYPE_ID == 602) ||
+                (this.dataset[i].LIDTYPE_ID == 603) ||
+                (this.dataset[i].LIDTYPE_ID == 606)) {
                 isLid = true;
             }
 

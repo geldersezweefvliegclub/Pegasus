@@ -1,7 +1,13 @@
 import {Injectable} from '@angular/core';
 import {APIService} from '../apiservice/api.service';
 
-import {HeliosStart, HeliosStarts, HeliosVliegdagen} from '../../types/Helios';
+import {
+    HeliosStart,
+    HeliosStarts,
+    HeliosVliegdagen,
+    HeliosVliegtuigLogboek,
+    HeliosVliegtuigLogboekTotalen
+} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
 import {KeyValueString} from '../../types/Utils';
 import {DateTime} from 'luxon';
@@ -12,6 +18,8 @@ import {DateTime} from 'luxon';
 export class StartlijstService {
     starts: HeliosStarts | null = null;
     vliegdagen: HeliosVliegdagen | null = null;
+    vliegtuigLogboek: HeliosVliegtuigLogboek| null = null;
+    vliegtuigLogboekTotalen: HeliosVliegtuigLogboekTotalen;
 
     constructor(private readonly APIService: APIService, private readonly storageService: StorageService) {
     }
@@ -38,7 +46,52 @@ export class StartlijstService {
             }
         }
         return this.vliegdagen?.dataset as [];
+    }
 
+    async getVliegtuigLogboek(id: number, startDatum: DateTime, eindDatum: DateTime): Promise<[]> {
+        interface parameters {
+            [key: string]: string;
+        }
+
+        let getParams: parameters = {};
+        getParams['ID'] = id.toString();
+        getParams['BEGIN_DATUM'] = startDatum.toISODate();
+        getParams['EIND_DATUM'] = eindDatum.toISODate();
+
+        try {
+            const response: Response = await this.APIService.get('Startlijst/GetVliegtuigLogboek',
+                getParams
+            );
+
+            this.vliegtuigLogboek = await response.json();
+
+        } catch (e) {
+            if (e.responseCode !== 404) { // er is geen data
+                throw(e);
+            }
+        }
+        return this.vliegtuigLogboek?.dataset as [];
+    }
+
+    async getVliegtuigLogboekTotalen(id: number, jaar:number): Promise<HeliosVliegtuigLogboekTotalen> {
+        interface parameters {
+            [key: string]: string;
+        }
+
+        let getParams: parameters = {};
+        getParams['ID'] = id.toString();
+        getParams['JAAR'] = jaar.toString();
+
+        try {
+            const response: Response = await this.APIService.get('Startlijst/GetVliegtuigLogboekTotalen',
+                getParams
+            );
+
+            this.vliegtuigLogboekTotalen = await response.json();
+        } catch (e) {
+            throw(e);
+        }
+        return this.vliegtuigLogboekTotalen;
     }
 
     async getStarts(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueString = {}): Promise<[]> {

@@ -1,0 +1,67 @@
+<app-error [error]="error"></app-error>
+
+<app-icon-card titel="Logboek {{vliegtuig.REGISTRATIE}} {{vliegtuig.CALLSIGN}}"
+               subtitel="Cummulatieven per vliegdag"
+               [icon]="iconCardIcon"
+               [exportEnabled]="this.magExporten"
+               (excelExport)="exportDataset()">
+    <div class="box h-100">
+        <div class="d-flex pe-3">
+            <div class="card col-6 grafiekCard me-2">
+                <div style="display: block">
+                    <canvas baseChart
+                            [datasets]="barChartData"
+                            [labels]="barChartLabels"
+                            [options]="barChartOptions"
+                            [plugins]="barChartPlugins"
+                            [legend]="barChartLegend"
+                            [chartType]="barChartType">
+                    </canvas>
+                </div>
+                <div class="d-flex GrafiekFooter">
+                    <h4 class="GrafiekFooterIcon">
+                        <fa-icon [icon]="planeDepartureIcon"></fa-icon>
+                    </h4>
+                    <div class="GrafiekFooterTitel">
+                        Aantal vluchten
+                    </div>
+                </div>
+                <div class="d-flex GrafiekFooterSamenvatting">
+                    <h4 class="GrafiekFooterSamenvattingIcon">
+                        <fa-icon [icon]="bookmarkIcon"></fa-icon>
+                    </h4>
+                    <div class="GrafiekFooterSamenvattingTekst" *ngIf="totalen">
+                        Totaal in {{datum.year}}, {{totalen.totalen.VLUCHTEN}} starts waarvan {{totalen.totalen.LIERSTARTS}} lierstart en {{totalen.totalen.SLEEPSTARTS}} sleepstarts
+                    </div>
+                </div>
+            </div>
+            <div class="card col-6 grafiekCard ms-1">
+                <div class="d-flex GrafiekFooter">
+                    <h4 class="GrafiekFooterIcon">
+                        <fa-icon [icon]="clockIcon"></fa-icon>
+                    </h4>
+                    <div class="GrafiekFooterTitel">
+                        Tijd
+                    </div>
+                </div>
+                <div class="d-flex GrafiekFooterSamenvatting">
+                    <h4 class="GrafiekFooterSamenvattingIcon">
+                        <fa-icon [icon]="bookmarkIcon"></fa-icon>
+                    </h4>
+                    <div class="GrafiekFooterSamenvattingTekst" *ngIf="totalen">
+                        Totaal in {{datum.year}}, {{totalen.totalen.VLIEGTIJD}} uren
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row vliegtuiggrid overflow-hidden">
+            <app-datatable
+                    id="vliegtuiggrid"
+                    [rowData]="data"
+                    [columnDefs]="columns"
+                    [frameworkComponents]="frameworkComponents"
+                    class="h-100 mt-n8"></app-datatable>
+        </div>
+    </div>
+</app-icon-card>

@@ -23,6 +23,8 @@ export type HeliosVliegtuig = vliegtuigenComponents['schemas']['ref_vliegtuigen_
 export type HeliosStarts = startlijstComponents['schemas']['view_startlijst'];
 export type HeliosStartDataset = startlijstComponents['schemas']['view_startlijst_dataset'];
 export type HeliosStart = startlijstComponents['schemas']['oper_startlijst_in'];
+export type HeliosVliegtuigLogboek = startlijstComponents['schemas']['vliegtuig_logboek'];
+export type HeliosVliegtuigLogboekTotalen = startlijstComponents['schemas']['vliegtuig_logboek_totalen'];
 
 export type HeliosVliegdagen = startlijstComponents['schemas']['vliegdagen'];
 

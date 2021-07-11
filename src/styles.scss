@@ -167,7 +167,7 @@ input.ng-dirty.ng-invalid{
 }
 
 
-// kleine kaart moet alles kleiner worden
+// kleine icon-kaart moet alles kleiner worden
 .kleineKaart > div > div.admin-up > div {
   margin-top: 0px;
 
@@ -188,4 +188,9 @@ input.ng-dirty.ng-invalid{
 .kleineKaart > div > div.card-body.h-100 {
   margin-top: -10px;
   padding-bottom: 5px;
+}
+
+// ander komen er drie ... bij de avatar in het ledengrid
+.avatarCell {
+  text-overflow: clip;
 }

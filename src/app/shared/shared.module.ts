@@ -19,6 +19,7 @@ import { VliegtuigInvoerComponent } from './components/editors/start-editor/vlie
 import { LidInvoerComponent } from './components/editors/start-editor/lid-invoer/lid-invoer.component';
 import { TelefoonValidatorDirective } from './directives/TelefoonValidator/telefoon-validator.directive';
 import { WachtwoordMatchValidatorDirective } from './directives/WachtwoordMatchValidator/wachtwoord-match-validator.directive';
+import { DatumRenderComponent } from './render/datum-render/datum-render.component';
 
 
 @NgModule({
@@ -45,6 +46,7 @@ import { WachtwoordMatchValidatorDirective } from './directives/WachtwoordMatchV
     LidInvoerComponent,
     TelefoonValidatorDirective,
     WachtwoordMatchValidatorDirective,
+    DatumRenderComponent,
   ],
   exports: [
     ModalComponent,

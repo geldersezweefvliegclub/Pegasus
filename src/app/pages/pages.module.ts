@@ -35,6 +35,7 @@ import { TelefoonRenderComponent } from './leden-grid/telefoon-render/telefoon-r
 import {LazyLoadImageModule} from "ng-lazyload-image";
 import { EmailRenderComponent } from './leden-grid/email-render/email-render.component';
 import { FilterComponent } from './leden-grid/filter/filter.component';
+import { VliegtuigLogboekComponent } from './vliegtuig-logboek/vliegtuig-logboek.component';
 
 @NgModule({
     imports: [
@@ -75,7 +76,8 @@ import { FilterComponent } from './leden-grid/filter/filter.component';
     AdresRenderComponent,
     TelefoonRenderComponent,
     EmailRenderComponent,
-    FilterComponent
+    FilterComponent,
+    VliegtuigLogboekComponent
   ],
   exports: [
     IconCardComponent,
