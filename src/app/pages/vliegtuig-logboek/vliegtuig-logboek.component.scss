@@ -7,19 +7,20 @@
   margin-bottom: 10px;
 }
 
+.inlineGrafiek {
+  height: calc(100% - 90px);
+}
+
 .barchart-wrapper {
   background-color: #28a745;
   border-radius: 10px;
   margin: 10px;
-  height: calc(100% - 90px);
-
 }
 
 .linechart-wrapper {
   background-color: rgb(89, 173, 239);
   border-radius: 10px;
   margin: 10px;
-  height: calc(100% - 90px);
 }
 
 .clearBarChart {
@@ -32,7 +33,7 @@
 
 
 .vliegtuiggrid {
-  height: calc(100% - 16em - 10px);
+  height: calc(60% + 10px);
 }
 
 .GrafiekFooter {

@@ -8,14 +8,14 @@
     <div class="box h-100">
         <div class="d-flex pe-3 headerCards">
             <div class="card col-6 grafiekCard me-2" *ngIf="barChartData.length > 0">
-
                 <div class="clearBarChart">
                     <a (click)="clearGrafiekData()">
                         <fa-icon [icon]="clearChartIcon"></fa-icon>
                     </a>
                 </div>
-                <div class="barchart-wrapper">
+                <div class="barchart-wrapper inlineGrafiek">
                     <canvas baseChart
+                            (chartClick)="toonVluchtenDetail()"
                             [datasets]="barChartData"
                             [labels]="barChartLabels"
                             [options]="barChartOptions"
@@ -49,8 +49,9 @@
                         <fa-icon [icon]="clearChartIcon"></fa-icon>
                     </a>
                 </div>
-                <div class="linechart-wrapper">
+                <div class="linechart-wrapper inlineGrafiek">
                     <canvas baseChart
+                            (chartClick)="toonTijdDetail()"
                             [datasets]="lineChartData"
                             [labels]="lineChartLabels"
                             [options]="lineChartOptions"
@@ -88,3 +89,33 @@
         </div>
     </div>
 </app-icon-card>
+
+<app-modal popupClass="popupGrafiek" [titel]="DetailGrafiekTitel">
+    <div body *ngIf="toonVluchtenDetailGrafiek">
+        <div class="barchart-wrapper popupChartWrapper">
+            <canvas baseChart
+                    (chartClick)="toonVluchtenDetail()"
+                    [datasets]="barChartData"
+                    [labels]="barChartLabels"
+                    [options]="barChartOptions"
+                    [plugins]="barChartPlugins"
+                    [legend]="barChartLegend"
+                    [chartType]="barChartType">
+            </canvas>
+        </div>
+    </div>
+
+    <div body *ngIf="toonVliegtijdDetailGrafiek">
+        <div class="linechart-wrapper popupChartWrapper">
+            <canvas baseChart
+                    (chartClick)="toonTijdDetail()"
+                    [datasets]="lineChartData"
+                    [labels]="lineChartLabels"
+                    [options]="lineChartOptions"
+                    [plugins]="lineChartPlugins"
+                    [legend]="lineChartLegend"
+                    [chartType]="lineChartType">
+            </canvas>
+        </div>
+    </div>
+</app-modal>

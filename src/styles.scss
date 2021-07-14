@@ -190,7 +190,15 @@ input.ng-dirty.ng-invalid{
   padding-bottom: 5px;
 }
 
-// ander komen er drie ... bij de avatar in het ledengrid
-.avatarCell {
+// ander komen er drie ... in grid
+.geenDots {
   text-overflow: clip;
+}
+
+body > .popupGrafiek > div {
+  max-width: 90%;
+}
+
+.popupChartWrapper {
+  height: 400px;
 }

@@ -33,7 +33,7 @@ export class LedenGridComponent {
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
-        {field: 'AVATAR', headerName: '', sortable: false, cellRenderer: 'avatarRender', width: 110, resizable: false, cellClass: "avatarCell"},
+        {field: 'AVATAR', headerName: '', sortable: false, cellRenderer: 'avatarRender', width: 110, resizable: false, cellClass: "geenDots"},
         {field: 'NAAM', headerName: 'Naam', sortable: true},
 
         {field: 'VOORNAAM', headerName: 'Voornaam', sortable: true, hide: true},

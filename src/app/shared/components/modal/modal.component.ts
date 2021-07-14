@@ -3,23 +3,26 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {faTimes} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-modal',
-  templateUrl: './modal.component.html',
-  styleUrls: ['./modal.component.scss']
+    selector: 'app-modal',
+    templateUrl: './modal.component.html',
+    styleUrls: ['./modal.component.scss']
 })
 export class ModalComponent {
-  @Input() titel: string = 'Editor';
-  @ViewChild('content') content: ElementRef;
-  cross = faTimes;
+    @Input() titel: string = 'Editor';
+    @Input() popupClass: string;
+    @ViewChild('content') content: ElementRef;
+    cross = faTimes;
 
-  constructor(private modalService: NgbModal) {
-  }
+    constructor(private modalService: NgbModal) {
+    }
 
-  open() {
-    this.modalService.open(this.content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {}, (reason) => {});
-  }
+    open() {
+        this.modalService.open(this.content, {ariaLabelledBy: 'modal-basic-title', windowClass: this.popupClass}).result.then((result) => {
+        }, (reason) => {
+        });
+    }
 
-  close() {
-    this.modalService.dismissAll()
-  }
+    close() {
+        this.modalService.dismissAll()
+    }
 }

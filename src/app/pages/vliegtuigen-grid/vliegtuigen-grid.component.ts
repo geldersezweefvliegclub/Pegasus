@@ -1,18 +1,23 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {VliegtuigenService} from '../../services/apiservice/vliegtuigen.service';
-import {ZitplaatsRenderComponent} from './zitplaats-render/zitplaats-render.component';
-import {CheckboxRenderComponent} from '../../shared/components/datatable/checkbox-render/checkbox-render.component';
+
 import {faPlane, faRecycle} from '@fortawesome/free-solid-svg-icons';
 import {VliegtuigEditorComponent} from '../../shared/components/editors/vliegtuig-editor/vliegtuig-editor.component';
 import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {DeleteActionComponent} from '../../shared/components/datatable/delete-action/delete-action.component';
 import {RestoreActionComponent} from '../../shared/components/datatable/restore-action/restore-action.component';
+import {LogboekRenderComponent} from "../../shared/components/datatable/logboek-render/logboek-render.component";
+import {ZitplaatsRenderComponent} from './zitplaats-render/zitplaats-render.component';
+import {CheckboxRenderComponent} from '../../shared/components/datatable/checkbox-render/checkbox-render.component';
+
 import {HeliosVliegtuig, HeliosVliegtuigenDataset} from '../../types/Helios';
 import {CustomError, nummerSort} from '../../types/Utils';
 
 import * as xlsx from 'xlsx';
 import {LoginService} from '../../services/apiservice/login.service';
+import {Router} from "@angular/router";
+
 
 @Component({
     selector: 'app-vliegtuigen-grid',
@@ -37,8 +42,6 @@ export class VliegtuigenGridComponent implements OnInit {
         {field: 'SLEEPKIST', headerName: 'Sleepkist', sortable: true, cellRenderer: 'checkboxRender'},
         {field: 'TMG', headerName: 'TMG', sortable: true, cellRenderer: 'checkboxRender'}
     ];
-
-    columns: ColDef[] = this.dataColumns;
 
     deleteColumn: ColDef[] = [{
         pinned: 'left',
@@ -68,9 +71,27 @@ export class VliegtuigenGridComponent implements OnInit {
         },
     }];
 
+    logboekColumn: ColDef[] = [{
+        pinned: 'left',
+        maxWidth: 100,
+        initialWidth: 100,
+        resizable: false,
+        hide: false,
+        cellClass: "geenDots",
+        cellRenderer: 'logboekRender', headerName: 'Logboek', sortable: false,
+        cellRendererParams: {
+            onLogboekClicked: (ID: number) => {
+                this.openVliegtuigLogboek(ID);
+            }
+        },
+    }];
+
+    columns: ColDef[];
+
     frameworkComponents = {
         zitplaatsRender: ZitplaatsRenderComponent,
         checkboxRender: CheckboxRenderComponent,
+        logboekRender: LogboekRenderComponent,
         deleteAction: DeleteActionComponent,
         restoreAction: RestoreActionComponent
     };
@@ -86,7 +107,10 @@ export class VliegtuigenGridComponent implements OnInit {
     magWijzigen: boolean = false;
     magExporten: boolean = false;
 
-    constructor(private readonly vliegtuigenService: VliegtuigenService, private readonly loginService: LoginService) {
+    constructor(private readonly vliegtuigenService: VliegtuigenService,
+                private readonly loginService: LoginService,
+                private readonly router: Router) {
+        this.kolomDefinitie();
     }
 
     ngOnInit(): void {
@@ -121,12 +145,12 @@ export class VliegtuigenGridComponent implements OnInit {
 
     kolomDefinitie() {
         if (!this.deleteMode) {
-            this.columns = this.dataColumns;
+            this.columns = this.logboekColumn.concat(this.dataColumns);
         } else {
             if (this.trashMode) {
-                this.columns = this.restoreColumn.concat(this.dataColumns)
+                this.columns = this.restoreColumn.concat(this.dataColumns);
             } else {
-                this.columns = this.deleteColumn.concat(this.dataColumns)
+                this.columns = this.deleteColumn.concat(this.dataColumns);
             }
 
         }
@@ -188,6 +212,10 @@ export class VliegtuigenGridComponent implements OnInit {
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
         xlsx.writeFile(wb, 'vliegtuigen ' + new Date().toJSON().slice(0,10) +'.xlsx');
+    }
+
+    private openVliegtuigLogboek(ID: number) {
+        this.router.navigate(['/vlogboek'],{ queryParams: { vliegtuigID: ID } });
     }
 }
 

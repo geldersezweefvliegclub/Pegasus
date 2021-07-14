@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {AgRendererComponent} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 import {faMinusCircle} from '@fortawesome/free-solid-svg-icons';
+import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 
 @Component({
     selector: 'app-delete-action',
@@ -10,7 +11,7 @@ import {faMinusCircle} from '@fortawesome/free-solid-svg-icons';
 })
 export class DeleteActionComponent implements AgRendererComponent {
     private params: any;
-    deleteIcon = faMinusCircle;
+    deleteIcon:IconDefinition = faMinusCircle;
 
     constructor() {
     }

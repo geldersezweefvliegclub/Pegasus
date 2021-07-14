@@ -22,10 +22,12 @@ import {StartlijstService} from "../../services/apiservice/startlijst.service";
 import {Subscription} from "rxjs";
 import {DateTime} from "luxon";
 import {SharedService} from "../../services/shared/shared.service";
-import {DatumRenderComponent} from "../../shared/render/datum-render/datum-render.component";
+import {DatumRenderComponent} from "../../shared/components/datatable/datum-render/datum-render.component";
 import {VliegtuigenService} from "../../services/apiservice/vliegtuigen.service";
 import {ChartDataSets, ChartOptions, ChartType, ScaleTitleOptions} from "chart.js";
 import {Color, Label} from "ng2-charts";
+import {ModalComponent} from "../../shared/components/modal/modal.component";
+import {ActivatedRoute} from "@angular/router";
 
 
 @Component({
@@ -34,6 +36,8 @@ import {Color, Label} from "ng2-charts";
     styleUrls: ['./vliegtuig-logboek.component.scss']
 })
 export class VliegtuigLogboekComponent implements OnInit {
+    @ViewChild(ModalComponent) private popup: ModalComponent;
+
     data: HeliosVliegtuigenDataset[] = [];
     totalen: HeliosVliegtuigLogboekTotalen;
     vliegtuig: HeliosVliegtuig = {};
@@ -63,9 +67,6 @@ export class VliegtuigLogboekComponent implements OnInit {
     };
 
     columns: ColDef[] = this.dataColumns;
-
-
-    error: CustomError | undefined;
     magExporten: boolean = false;
 
     /*-BarChart-----------*/
@@ -100,7 +101,8 @@ export class VliegtuigLogboekComponent implements OnInit {
                     fontColor: '#e7e7e7',
                     fontFamily: 'Roboto, sans-serif',
                     fontSize: 12,
-                    fontStyle: '300'
+                    fontStyle: '300',
+                    beginAtZero: true
                 }
             }]
         }
@@ -144,13 +146,12 @@ export class VliegtuigLogboekComponent implements OnInit {
                     fontColor: '#e7e7e7',
                     fontFamily: 'Roboto, sans-serif',
                     fontSize: 12,
-                    fontStyle: '300'
+                    fontStyle: '300',
+                    beginAtZero: true
                 }
             }]
         }
     };
-
-
     lineChartLabels: Label[] = this.barChartLabels
     lineChartType: ChartType = 'line';
     lineChartLegend = true;
@@ -158,11 +159,20 @@ export class VliegtuigLogboekComponent implements OnInit {
 
     lineChartData: ChartDataSets[] = [];
 
+    /*--popup voor grafiek--*/
+    DetailGrafiekTitel: string;
+    toonVluchtenDetailGrafiek: boolean;
+    toonVliegtijdDetailGrafiek: boolean;
 
     constructor(private readonly startlijstService: StartlijstService,
                 private readonly vliegtuigenService: VliegtuigenService,
                 private readonly loginService: LoginService,
-                private readonly sharedService: SharedService) {
+                private readonly sharedService: SharedService,
+                private activatedRoute: ActivatedRoute) {
+
+        this.activatedRoute.queryParams.subscribe(params => {
+            this.vliegtuigID = params['vliegtuigID'];
+        });
     }
 
     ngOnInit(): void {
@@ -178,7 +188,6 @@ export class VliegtuigLogboekComponent implements OnInit {
 
         let ui = this.loginService.userInfo?.Userinfo;
         this.magExporten = (!ui?.isDDWV) ? true : false;
-
     }
 
     opvragen() {
@@ -220,7 +229,7 @@ export class VliegtuigLogboekComponent implements OnInit {
 
                 const lineReeks: ChartDataSets = {
                     label: this.datum.year.toString(),
-
+                    lineTension: 0,
                     backgroundColor: this.getColor(this.lineChartData.length, 0.4),
                     borderColor: this.getColor(this.lineChartData.length, 1),
                     pointBackgroundColor: 'rgba(148,159,177,1)',
@@ -303,6 +312,22 @@ export class VliegtuigLogboekComponent implements OnInit {
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
         xlsx.writeFile(wb, 'vliegtuigen ' + new Date().toJSON().slice(0, 10) + '.xlsx');
+    }
+
+    toonVluchtenDetail() {
+        this.DetailGrafiekTitel = "Vluchten grafiek";
+        this.toonVluchtenDetailGrafiek = true;
+        this.toonVliegtijdDetailGrafiek = false;
+
+        this.popup.open();
+    }
+
+    toonTijdDetail() {
+        this.DetailGrafiekTitel = "Vliegtijd grafiek";
+        this.toonVluchtenDetailGrafiek = false;
+        this.toonVliegtijdDetailGrafiek = true;
+
+        this.popup.open();
     }
 }
 
