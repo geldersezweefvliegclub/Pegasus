@@ -6,9 +6,15 @@
                [exportEnabled]="this.magExporten"
                (excelExport)="exportDataset()">
     <div class="box h-100">
-        <div class="d-flex pe-3">
-            <div class="card col-6 grafiekCard me-2">
-                <div style="display: block">
+        <div class="d-flex pe-3 headerCards">
+            <div class="card col-6 grafiekCard me-2" *ngIf="barChartData.length > 0">
+
+                <div class="clearBarChart">
+                    <a (click)="clearGrafiekData()">
+                        <fa-icon [icon]="clearChartIcon"></fa-icon>
+                    </a>
+                </div>
+                <div class="barchart-wrapper">
                     <canvas baseChart
                             [datasets]="barChartData"
                             [labels]="barChartLabels"
@@ -31,11 +37,28 @@
                         <fa-icon [icon]="bookmarkIcon"></fa-icon>
                     </h4>
                     <div class="GrafiekFooterSamenvattingTekst" *ngIf="totalen">
-                        Totaal in {{datum.year}}, {{totalen.totalen.VLUCHTEN}} starts waarvan {{totalen.totalen.LIERSTARTS}} lierstart en {{totalen.totalen.SLEEPSTARTS}} sleepstarts
+                        Totaal in {{datum.year}}, {{totalen.totalen.VLUCHTEN}} starts
+                        waarvan {{totalen.totalen.LIERSTARTS}} lierstart en {{totalen.totalen.SLEEPSTARTS}} sleepstarts
                     </div>
                 </div>
             </div>
-            <div class="card col-6 grafiekCard ms-1">
+
+            <div class="card col-6 grafiekCard ms-1" *ngIf="lineChartData.length > 0">
+                <div class="clearBarChart">
+                    <a (click)="clearGrafiekData()">
+                        <fa-icon [icon]="clearChartIcon"></fa-icon>
+                    </a>
+                </div>
+                <div class="linechart-wrapper">
+                    <canvas baseChart
+                            [datasets]="lineChartData"
+                            [labels]="lineChartLabels"
+                            [options]="lineChartOptions"
+                            [plugins]="lineChartPlugins"
+                            [legend]="lineChartLegend"
+                            [chartType]="lineChartType">
+                    </canvas>
+                </div>
                 <div class="d-flex GrafiekFooter">
                     <h4 class="GrafiekFooterIcon">
                         <fa-icon [icon]="clockIcon"></fa-icon>
@@ -57,7 +80,7 @@
         </div>
         <div class="row vliegtuiggrid overflow-hidden">
             <app-datatable
-                    id="vliegtuiggrid"
+                    id="vliegtuiglogboekgrid"
                     [rowData]="data"
                     [columnDefs]="columns"
                     [frameworkComponents]="frameworkComponents"

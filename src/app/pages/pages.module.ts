@@ -36,6 +36,7 @@ import {LazyLoadImageModule} from "ng-lazyload-image";
 import { EmailRenderComponent } from './leden-grid/email-render/email-render.component';
 import { FilterComponent } from './leden-grid/filter/filter.component';
 import { VliegtuigLogboekComponent } from './vliegtuig-logboek/vliegtuig-logboek.component';
+import {ChartsModule} from "ng2-charts";
 
 @NgModule({
     imports: [
@@ -51,7 +52,8 @@ import { VliegtuigLogboekComponent } from './vliegtuig-logboek/vliegtuig-logboek
         NgbTypeaheadModule,
         CustomFormsModule,
         NgSelectModule,
-        LazyLoadImageModule
+        LazyLoadImageModule,
+        ChartsModule
     ],
   declarations: [
     IconCardComponent,
@@ -82,7 +84,8 @@ import { VliegtuigLogboekComponent } from './vliegtuig-logboek/vliegtuig-logboek
   exports: [
     IconCardComponent,
     DashboardPageComponent,
-    CodeInputModule
+    CodeInputModule,
+    ChartsModule
   ],
   schemas: [NO_ERRORS_SCHEMA]
 })

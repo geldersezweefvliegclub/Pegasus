@@ -8,7 +8,7 @@ import {ICellRendererParams} from "ag-grid-community";
     styleUrls: ['./datum-render.component.scss']
 })
 export class DatumRenderComponent implements AgRendererComponent {
-    datum: string;
+    public datum: string;
 
     constructor() {
     }
