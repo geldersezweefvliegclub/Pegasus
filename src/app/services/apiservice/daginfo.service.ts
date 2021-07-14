@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {APIService} from './api.service';
-import {DateTime} from "luxon";
-import {HeliosActie, KeyValueString} from "../../types/Utils";
-import {HeliosDagInfo, HeliosDagInfoDagen} from "../../types/Helios";
-import {StorageService} from "../storage/storage.service";
-import {BehaviorSubject, Subscription} from "rxjs";
-import {SharedService} from "../shared/shared.service";
+import {DateTime} from 'luxon';
+import {KeyValueString} from '../../types/Utils';
+import {HeliosDagInfo, HeliosDagInfoDagen} from '../../types/Helios';
+import {StorageService} from '../storage/storage.service';
+import {BehaviorSubject, Subscription} from 'rxjs';
+import {SharedService} from '../shared/shared.service';
 
 
 @Injectable({

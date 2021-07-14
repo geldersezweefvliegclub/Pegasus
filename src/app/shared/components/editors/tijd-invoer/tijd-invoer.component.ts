@@ -1,15 +1,15 @@
 import {Component, ElementRef, EventEmitter, Output, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../modal/modal.component";
-import {HeliosStart, HeliosStartDataset} from "../../../../types/Helios";
-import {StartlijstService} from "../../../../services/apiservice/startlijst.service";
+import {ModalComponent} from '../../modal/modal.component';
+import {HeliosStart, HeliosStartDataset} from '../../../../types/Helios';
+import {StartlijstService} from '../../../../services/apiservice/startlijst.service';
 
 import {Observable} from 'rxjs';
 import {NgbTypeaheadConfig} from '@ng-bootstrap/ng-bootstrap';
 import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import {getSunrise, getSunset} from 'sunrise-sunset-js';
-import {environment} from "../../../../../environments/environment";
-import {DateTime} from "luxon";
-import {CustomError} from "../../../../types/Utils";
+import {environment} from '../../../../../environments/environment';
+import {DateTime} from 'luxon';
+import {CustomError} from '../../../../types/Utils';
 
 enum TypeTijdInvoer {
     Starttijd,

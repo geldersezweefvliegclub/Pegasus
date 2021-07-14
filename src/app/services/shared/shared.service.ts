@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, Subject} from "rxjs";
-import {NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
-import {HeliosEvent, KalenderMaand} from "../../types/Utils";
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
+import {HeliosEvent, KalenderMaand} from '../../types/Utils';
 
 
 export interface FilterLedenData {

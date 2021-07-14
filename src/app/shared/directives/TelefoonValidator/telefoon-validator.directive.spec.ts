@@ -1,4 +1,4 @@
-import { TelefoonValidatorDirective } from './telefoon-validator.directive';
+import {TelefoonValidatorDirective} from './telefoon-validator.directive';
 
 describe('TelefoonDirective', () => {
   it('should create an instance', () => {

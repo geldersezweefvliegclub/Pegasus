@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../../shared/components/modal/modal.component";
-import {SharedService} from "../../../services/shared/shared.service";
+import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
+import {ModalComponent} from '../../../shared/components/modal/modal.component';
+import {SharedService} from '../../../services/shared/shared.service';
 
 
 @Component({

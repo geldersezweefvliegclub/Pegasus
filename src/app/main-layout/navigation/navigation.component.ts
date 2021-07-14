@@ -1,14 +1,14 @@
 import {Component} from '@angular/core';
 import {routes} from '../../routing.module';
 import {LoginService} from '../../services/apiservice/login.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {faSignOutAlt} from '@fortawesome/free-solid-svg-icons';
-import {NgbCalendar, NgbDate, NgbDatepickerNavigateEvent, NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
-import {SharedService} from "../../services/shared/shared.service";
-import {DateTime} from "luxon";
-import {StartlijstService} from "../../services/apiservice/startlijst.service";
-import {DaginfoService} from "../../services/apiservice/daginfo.service";
-import {HeliosActie, KalenderMaand} from "../../types/Utils";
+import {NgbCalendar, NgbDate, NgbDatepickerNavigateEvent, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
+import {SharedService} from '../../services/shared/shared.service';
+import {DateTime} from 'luxon';
+import {StartlijstService} from '../../services/apiservice/startlijst.service';
+import {DaginfoService} from '../../services/apiservice/daginfo.service';
+import {HeliosActie, KalenderMaand} from '../../types/Utils';
 
 
 @Component({

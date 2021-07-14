@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import {StorageService} from "../storage/storage.service";
-import {DateTime} from "luxon";
-import {KeyValueString} from "../../types/Utils";
+import {Injectable} from '@angular/core';
+import {StorageService} from '../storage/storage.service';
+import {DateTime} from 'luxon';
+import {KeyValueString} from '../../types/Utils';
 import {APIService} from '../apiservice/api.service';
 import {HeliosAanwezigVliegtuigen, HeliosAanwezigVliegtuigenDataset} from '../../types/Helios';
 

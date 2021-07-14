@@ -1,8 +1,8 @@
-import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
-import {Observable, of} from "rxjs";
-import {TypesService} from "../../../services/apiservice/types.service";
-import {HeliosType} from "../../../types/Helios";
-import {ModalComponent} from "../../../shared/components/modal/modal.component";
+import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
+import {Observable, of} from 'rxjs';
+import {TypesService} from '../../../services/apiservice/types.service';
+import {HeliosType} from '../../../types/Helios';
+import {ModalComponent} from '../../../shared/components/modal/modal.component';
 
 @Component({
   selector: 'app-compose-meteo',

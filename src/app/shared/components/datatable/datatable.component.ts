@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {ColDef, GridApi, GridOptions, RowDoubleClickedEvent} from 'ag-grid-community';
 import {StorageService} from '../../../services/storage/storage.service';
 

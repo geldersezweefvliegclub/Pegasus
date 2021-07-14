@@ -1,0 +1,10 @@
+@import "../../../../../variables";
+
+.logboekBtn {
+  color: getColor('secondary');
+}
+
+.btn-noborder {
+  outline: none !important;
+  box-shadow: none;
+}

@@ -1,27 +1,28 @@
 import {Component, ViewChild} from '@angular/core';
-import {LoginService} from "../../services/apiservice/login.service";
-import {DaginfoService} from "../../services/apiservice/daginfo.service";
-import {SharedService} from "../../services/shared/shared.service";
-import {DateTime} from "luxon";
-import {Observable, of, Subscription} from "rxjs";
-import {CustomError} from "../../types/Utils";
-import {HeliosDagInfo, HeliosType} from "../../types/Helios";
-import {TypesService} from "../../services/apiservice/types.service";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import {LoginService} from '../../services/apiservice/login.service';
+import {DaginfoService} from '../../services/apiservice/daginfo.service';
+import {SharedService} from '../../services/shared/shared.service';
+import {DateTime} from 'luxon';
+import {Observable, of, Subscription} from 'rxjs';
+import {CustomError} from '../../types/Utils';
+import {HeliosDagInfo, HeliosType} from '../../types/Helios';
+import {TypesService} from '../../services/apiservice/types.service';
+import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {
-    faCloudSunRain, faFileImport,
-    faFlagCheckered,
-    faFrown,
-    faInfo,
-    faPlane,
-    faTruck,
-    faUsers
-} from "@fortawesome/free-solid-svg-icons";
-import {faArtstation} from "@fortawesome/free-brands-svg-icons";
-import {faPaperPlane} from "@fortawesome/free-solid-svg-icons/faPaperPlane";
-import {ComposeMeteoComponent} from "./compose-meteo/compose-meteo.component";
-import {ComposeBedrijfComponent} from "./compose-bedrijf/compose-bedrijf.component";
-import {StorageService} from "../../services/storage/storage.service";
+  faCloudSunRain,
+  faFileImport,
+  faFlagCheckered,
+  faFrown,
+  faInfo,
+  faPlane,
+  faTruck,
+  faUsers
+} from '@fortawesome/free-solid-svg-icons';
+import {faArtstation} from '@fortawesome/free-brands-svg-icons';
+import {faPaperPlane} from '@fortawesome/free-solid-svg-icons/faPaperPlane';
+import {ComposeMeteoComponent} from './compose-meteo/compose-meteo.component';
+import {ComposeBedrijfComponent} from './compose-bedrijf/compose-bedrijf.component';
+import {StorageService} from '../../services/storage/storage.service';
 
 
 @Component({
