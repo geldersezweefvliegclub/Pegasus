@@ -1,22 +1,22 @@
 import {Component, ViewChild} from '@angular/core';
 import {faRecycle, faUsers} from '@fortawesome/free-solid-svg-icons';
-import {VliegtuigEditorComponent} from "../../shared/components/editors/vliegtuig-editor/vliegtuig-editor.component";
-import {HeliosLedenDataset, HeliosLid} from "../../types/Helios";
-import {ColDef, RowDoubleClickedEvent} from "ag-grid-community";
-import {CustomError, nummerSort} from "../../types/Utils";
-import {CheckboxRenderComponent} from "../../shared/components/datatable/checkbox-render/checkbox-render.component";
-import {DeleteActionComponent} from "../../shared/components/datatable/delete-action/delete-action.component";
-import {RestoreActionComponent} from "../../shared/components/datatable/restore-action/restore-action.component";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {LoginService} from "../../services/apiservice/login.service";
-import * as xlsx from "xlsx";
-import {LedenService} from "../../services/apiservice/leden.service";
-import {AvatarRenderComponent} from "./avatar/avatar-render.component";
-import {AdresRenderComponent} from "./adres-render/adres-render.component";
-import {TelefoonRenderComponent} from "./telefoon-render/telefoon-render.component";
-import {EmailRenderComponent} from "./email-render/email-render.component";
-import {FilterComponent} from "./filter/filter.component";
-import {SharedService} from "../../services/shared/shared.service";
+import {VliegtuigEditorComponent} from '../../shared/components/editors/vliegtuig-editor/vliegtuig-editor.component';
+import {HeliosLedenDataset, HeliosLid} from '../../types/Helios';
+import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
+import {CustomError, nummerSort} from '../../types/Utils';
+import {CheckboxRenderComponent} from '../../shared/components/datatable/checkbox-render/checkbox-render.component';
+import {DeleteActionComponent} from '../../shared/components/datatable/delete-action/delete-action.component';
+import {RestoreActionComponent} from '../../shared/components/datatable/restore-action/restore-action.component';
+import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
+import {LoginService} from '../../services/apiservice/login.service';
+import * as xlsx from 'xlsx';
+import {LedenService} from '../../services/apiservice/leden.service';
+import {AvatarRenderComponent} from './avatar/avatar-render.component';
+import {AdresRenderComponent} from './adres-render/adres-render.component';
+import {TelefoonRenderComponent} from './telefoon-render/telefoon-render.component';
+import {EmailRenderComponent} from './email-render/email-render.component';
+import {FilterComponent} from './filter/filter.component';
+import {SharedService} from '../../services/shared/shared.service';
 
 
 @Component({

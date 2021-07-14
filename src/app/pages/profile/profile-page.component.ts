@@ -23,6 +23,7 @@ export class ProfilePageComponent {
   wachtwoordVerborgen: boolean = true;
   oogIcon = faEye;
   controleWachtwoord = '';
+  dummyWachtwoord = '';
 
   constructor(
     private readonly lidService: LedenService,
@@ -39,13 +40,14 @@ export class ProfilePageComponent {
 
   submit() {
     // Gebruik lidservice
+    console.log('Submitten')
   }
 
   converteerDatumNaarISO($event: NgbDate): string {
-    const unformatted = DateTime.fromObject($event);
+    const unformatted = DateTime.fromObject($event)
     const test = unformatted.isValid ? unformatted.toISODate().toString() : '';
-    console.log('returning: ', test);
-    return test;
+    console.log(test)
+    return test
   }
 
   verbergWachtwoord() {

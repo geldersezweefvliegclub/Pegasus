@@ -1,24 +1,24 @@
 import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
 import {
-    HeliosType,
-    HeliosStart,
-    HeliosVliegtuigenDataset,
-    HeliosLedenDataset,
-    HeliosAanwezigLedenDataset, HeliosDagInfo
-} from "../../../../types/Helios";
-import {TypesService} from "../../../../services/apiservice/types.service";
-import {ModalComponent} from "../../modal/modal.component";
-import {StartlijstService} from "../../../../services/apiservice/startlijst.service";
-import {VliegtuigenService} from "../../../../services/apiservice/vliegtuigen.service";
-import {AanwezigVliegtuigService} from "../../../../services/apiservice/aanwezig-vliegtuig.service";
+  HeliosAanwezigLedenDataset,
+  HeliosLedenDataset,
+  HeliosStart,
+  HeliosType,
+  HeliosVliegtuigenDataset
+} from '../../../../types/Helios';
+import {TypesService} from '../../../../services/apiservice/types.service';
+import {ModalComponent} from '../../modal/modal.component';
+import {StartlijstService} from '../../../../services/apiservice/startlijst.service';
+import {VliegtuigenService} from '../../../../services/apiservice/vliegtuigen.service';
+import {AanwezigVliegtuigService} from '../../../../services/apiservice/aanwezig-vliegtuig.service';
 
-import {Observable, of, Subscription} from "rxjs";
+import {Observable, of, Subscription} from 'rxjs';
 
-import {DateTime} from "luxon";
-import {LedenService} from "../../../../services/apiservice/leden.service";
-import {AanwezigLedenService} from "../../../../services/apiservice/aanwezig-leden.service";
-import {SharedService} from "../../../../services/shared/shared.service";
-import {DaginfoService} from "../../../../services/apiservice/daginfo.service";
+import {DateTime} from 'luxon';
+import {LedenService} from '../../../../services/apiservice/leden.service';
+import {AanwezigLedenService} from '../../../../services/apiservice/aanwezig-leden.service';
+import {SharedService} from '../../../../services/shared/shared.service';
+import {DaginfoService} from '../../../../services/apiservice/daginfo.service';
 
 @Component({
     selector: 'app-start-editor',

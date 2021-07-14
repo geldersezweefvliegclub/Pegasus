@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {APIService} from './api.service';
 
-import {HeliosLid, HeliosLeden, HeliosLedenDataset} from '../../types/Helios';
+import {HeliosLeden, HeliosLedenDataset, HeliosLid} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
 import {KeyValueString} from '../../types/Utils';
 

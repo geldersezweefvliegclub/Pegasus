@@ -1,8 +1,7 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {AgRendererComponent} from "ag-grid-angular";
-import {ICellRendererParams} from "ag-grid-community";
-import { LazyLoadImageModule } from 'ng-lazyload-image';
-import {ModalComponent} from "../../../shared/components/modal/modal.component";
+import {Component, ViewChild} from '@angular/core';
+import {AgRendererComponent} from 'ag-grid-angular';
+import {ICellRendererParams} from 'ag-grid-community';
+import {ModalComponent} from '../../../shared/components/modal/modal.component';
 
 @Component({
   selector: 'app-avatar',

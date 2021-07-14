@@ -1,9 +1,9 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../../shared/components/modal/modal.component";
-import {Observable, of} from "rxjs";
-import {HeliosAanwezigLedenDataset, HeliosType} from "../../../types/Helios";
-import {TypesService} from "../../../services/apiservice/types.service";
-import {DateTime} from "luxon";
+import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {ModalComponent} from '../../../shared/components/modal/modal.component';
+import {Observable, of} from 'rxjs';
+import {HeliosType} from '../../../types/Helios';
+import {TypesService} from '../../../services/apiservice/types.service';
+import {DateTime} from 'luxon';
 
 @Component({
     selector: 'app-compose-bedrijf',

@@ -8,18 +8,18 @@ import {CheckboxRenderComponent} from './components/datatable/checkbox-render/ch
 import {LoaderComponent} from './components/loader/loader.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {VliegtuigEditorComponent} from './components/editors/vliegtuig-editor/vliegtuig-editor.component';
-import {FormsModule, NG_VALIDATORS} from '@angular/forms';
-import { IconButtonComponent } from './components/icon-button/icon-button.component';
-import { RegistratieDirective } from './components/editors/vliegtuig-editor/registratie.directive';
-import { DeleteActionComponent } from './components/datatable/delete-action/delete-action.component';
-import { RestoreActionComponent } from './components/datatable/restore-action/restore-action.component';
-import { StartEditorComponent } from './components/editors/start-editor/start-editor.component';
-import {NgSelectModule} from "@ng-select/ng-select";
-import { VliegtuigInvoerComponent } from './components/editors/start-editor/vliegtuig-invoer/vliegtuig-invoer.component';
-import { LidInvoerComponent } from './components/editors/start-editor/lid-invoer/lid-invoer.component';
-import { TelefoonValidatorDirective } from './directives/TelefoonValidator/telefoon-validator.directive';
-import { WachtwoordMatchValidatorDirective } from './directives/WachtwoordMatchValidator/wachtwoord-match-validator.directive';
-import { DatumRenderComponent } from './render/datum-render/datum-render.component';
+import {FormsModule} from '@angular/forms';
+import {IconButtonComponent} from './components/icon-button/icon-button.component';
+import {RegistratieDirective} from './components/editors/vliegtuig-editor/registratie.directive';
+import {DeleteActionComponent} from './components/datatable/delete-action/delete-action.component';
+import {RestoreActionComponent} from './components/datatable/restore-action/restore-action.component';
+import {StartEditorComponent} from './components/editors/start-editor/start-editor.component';
+import {NgSelectModule} from '@ng-select/ng-select';
+import {VliegtuigInvoerComponent} from './components/editors/start-editor/vliegtuig-invoer/vliegtuig-invoer.component';
+import {LidInvoerComponent} from './components/editors/start-editor/lid-invoer/lid-invoer.component';
+import {TelefoonValidatorDirective} from './directives/TelefoonValidator/telefoon-validator.directive';
+import {WachtwoordMatchValidatorDirective} from './directives/WachtwoordMatchValidator/wachtwoord-match-validator.directive';
+import {DatumRenderComponent} from './render/datum-render/datum-render.component';
 
 
 @NgModule({

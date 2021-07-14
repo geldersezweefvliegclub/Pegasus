@@ -18,9 +18,9 @@ import {faFilter} from '@fortawesome/free-solid-svg-icons/faFilter';
 import {StarttijdRenderComponent} from './starttijd-render/starttijd-render.component';
 import {LandingstijdRenderComponent} from './landingstijd-render/landingstijd-render.component';
 import {TijdInvoerComponent} from '../../shared/components/editors/tijd-invoer/tijd-invoer.component';
-import {StartEditorComponent} from "../../shared/components/editors/start-editor/start-editor.component";
-import {Subscription} from "rxjs";
-import {SharedService} from "../../services/shared/shared.service";
+import {StartEditorComponent} from '../../shared/components/editors/start-editor/start-editor.component';
+import {Subscription} from 'rxjs';
+import {SharedService} from '../../services/shared/shared.service';
 
 @Component({
     selector: 'app-startlijst-grid',

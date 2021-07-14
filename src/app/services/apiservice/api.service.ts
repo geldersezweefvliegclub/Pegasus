@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {CustomError, HeliosActie, KeyValueString} from '../../types/Utils';
 import {environment} from '../../../environments/environment';
-import {SharedService} from "../shared/shared.service";
+import {SharedService} from '../shared/shared.service';
 
 @Injectable({
     providedIn: 'root'

@@ -1,31 +1,19 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {VliegtuigEditorComponent} from "../../shared/components/editors/vliegtuig-editor/vliegtuig-editor.component";
-import {HeliosVliegtuig, HeliosVliegtuigenDataset, HeliosVliegtuigLogboekTotalen} from "../../types/Helios";
-import {ColDef, RowDoubleClickedEvent} from "ag-grid-community";
-import {CustomError, nummerSort, tijdSort} from "../../types/Utils";
-import {ZitplaatsRenderComponent} from "../vliegtuigen-grid/zitplaats-render/zitplaats-render.component";
-import {CheckboxRenderComponent} from "../../shared/components/datatable/checkbox-render/checkbox-render.component";
-import {DeleteActionComponent} from "../../shared/components/datatable/delete-action/delete-action.component";
-import {RestoreActionComponent} from "../../shared/components/datatable/restore-action/restore-action.component";
-import {faClock, IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {
-    faBookmark,
-    faCalendarDay,
-    faClipboardList,
-    faPlane,
-    faPlaneDeparture,
-    faTimesCircle
-} from "@fortawesome/free-solid-svg-icons";
-import {LoginService} from "../../services/apiservice/login.service";
-import * as xlsx from "xlsx";
-import {StartlijstService} from "../../services/apiservice/startlijst.service";
-import {Subscription} from "rxjs";
-import {DateTime} from "luxon";
-import {SharedService} from "../../services/shared/shared.service";
-import {DatumRenderComponent} from "../../shared/render/datum-render/datum-render.component";
-import {VliegtuigenService} from "../../services/apiservice/vliegtuigen.service";
-import {ChartDataSets, ChartOptions, ChartType, ScaleTitleOptions} from "chart.js";
-import {Color, Label} from "ng2-charts";
+import {Component, OnInit} from '@angular/core';
+import {HeliosVliegtuig, HeliosVliegtuigenDataset, HeliosVliegtuigLogboekTotalen} from '../../types/Helios';
+import {ColDef} from 'ag-grid-community';
+import {CustomError, nummerSort, tijdSort} from '../../types/Utils';
+import {faClock, IconDefinition} from '@fortawesome/free-regular-svg-icons';
+import {faBookmark, faClipboardList, faPlaneDeparture, faTimesCircle} from '@fortawesome/free-solid-svg-icons';
+import {LoginService} from '../../services/apiservice/login.service';
+import * as xlsx from 'xlsx';
+import {StartlijstService} from '../../services/apiservice/startlijst.service';
+import {Subscription} from 'rxjs';
+import {DateTime} from 'luxon';
+import {SharedService} from '../../services/shared/shared.service';
+import {DatumRenderComponent} from '../../shared/render/datum-render/datum-render.component';
+import {VliegtuigenService} from '../../services/apiservice/vliegtuigen.service';
+import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
+import {Label} from 'ng2-charts';
 
 
 @Component({
@@ -299,7 +287,7 @@ export class VliegtuigLogboekComponent implements OnInit {
 
     // Export naar excel
     exportDataset() {
-        var ws = xlsx.utils.json_to_sheet(this.data);
+        const ws = xlsx.utils.json_to_sheet(this.data);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
         xlsx.writeFile(wb, 'vliegtuigen ' + new Date().toJSON().slice(0, 10) + '.xlsx');

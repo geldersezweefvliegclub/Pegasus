@@ -62,14 +62,15 @@
                         <div class="col-4">
                             <label class="form-label" for="geboortedatum">Geboortedatum</label>
                             <div class="input-group">
-                                <input name="geboortedatum" class="form-control" placeholder="dd-mm-yyyy"
-                                       ngbDatepicker #d="ngbDatepicker"
+                                <input name="GEBOORTEDATUM" class="form-control" placeholder="dd-mm-yyyy"
+                                       ngbDatepicker #geboortedatum="ngbDatepicker"
                                        id="geboortedatum"
-                                       [(ngModel)]="persoon.LidData.GEBOORTE_DATUM"
-                                       (ngModelChange)="persoon.LidData.GEBOORTE_DATUM = converteerDatumNaarISO($event)"
+                                       [value]="persoon.LidData.GEBOORTE_DATUM"
+                                       (dateSelect)="persoon.LidData.GEBOORTE_DATUM = converteerDatumNaarISO($event)"
                                 >
                                 <div class="input-group-append">
-                                    <app-icon-button class="" iconNaam="far Calendar" (btnClicked)="d.toggle()"
+                                    <app-icon-button class="" iconNaam="far Calendar"
+                                                     (btnClicked)="geboortedatum.toggle()"
                                                      btnColor="btn-primary"></app-icon-button>
                                 </div>
                             </div>
@@ -104,7 +105,8 @@
                                 <input name="MEDICAL" class="form-control" placeholder="dd-mm-yyyy"
                                        ngbDatepicker #medical="ngbDatepicker"
                                        id="MEDICAL"
-                                       [(ngModel)]="persoon.LidData.MEDICAL"
+                                       [value]="persoon.LidData.MEDICAL"
+                                       (dateSelect)="persoon.LidData.MEDICAL = converteerDatumNaarISO($event)"
                                 >
                                 <div class="input-group-append">
                                     <app-icon-button iconNaam="far Calendar" (btnClicked)="medical.toggle()"
@@ -115,30 +117,38 @@
                     </div>
                     <div class="row mt-2">
                         <div class="col-6">
-                            <label class="form-label" for="wachtwoord">
-                                Wachtwoord
-                            </label>
+                            <label for="herhaalwachtwoord" class="form-label">Herhaal wachtwoord</label>
                             <div class="input-group">
-                                <input class="form-control" [type]="wachtwoordVerborgen ? 'password' : 'text'"
-                                       id="wachtwoord"
-                                       name="wachtwoord"
-                                       [(ngModel)]="persoon.LidData.WACHTWOORD">
+                                <input [type]="wachtwoordVerborgen ? 'password' : 'text'" name="wachtwoord"
+                                       class="form-control" id="wachtwoord"
+                                       [(ngModel)]="dummyWachtwoord"
+                                       (ngModelChange)="persoon.LidData.WACHTWOORD = $event">
                                 <span class="input-group-text" (click)="verbergWachtwoord()"><fa-icon
                                         [icon]="oogIcon"></fa-icon></span>
                             </div>
                         </div>
                         <div class="col-6">
-                            <label class="form-label" for="herhaalwachtwoord">
-                                Herhaal wachtwoord
-                            </label>
+                            <label for="herhaalwachtwoord" class="form-label">Herhaal wachtwoord</label>
                             <div class="input-group">
-                                <input class="form-control" [type]="wachtwoordVerborgen ? 'password' : 'text'"
-                                       id="herhaalwachtwoord"
-                                       name="herhaalwachtwoord"
+                                <input [type]="wachtwoordVerborgen ? 'password' : 'text'" name="herhaalwachtwoord"
+                                       class="form-control" id="herhaalwachtwoord"
                                        [(ngModel)]="controleWachtwoord">
                                 <span class="input-group-text" (click)="verbergWachtwoord()"><fa-icon
                                         [icon]="oogIcon"></fa-icon></span>
                             </div>
+                            <!--
+                            <label class="form-label" for="herhaalwachtwoord">
+                                 Herhaal wachtwoord
+                             </label>
+                             <div class="input-group">
+                                 <input class="form-control" [type]="wachtwoordVerborgen ? 'password' : 'text'"
+                                        id="herhaalwachtwoord"
+                                        name="herhaalwachtwoord"
+                                 >
+                                 <span class="input-group-text" (click)="verbergWachtwoord()"><fa-icon
+                                         [icon]="oogIcon"></fa-icon></span>
+                             </div>
+                             -->
                         </div>
                     </div>
                 </div>
@@ -148,7 +158,7 @@
             <app-icon-card titel="Lidinformatie"
                            subtitel="Toegekende functies en andere informatie over het lidmaatschap"
                            [icon]="informatieIcon">
-                <div #informatieGroup="ngModelGroup" ngModelGroup="informatieGroup">
+                <div #lidInformatieGroup="ngModelGroup" ngModelGroup="informatieGroup">
                     <div class="row">
                         <div class="col-4">
                             <label for="gebruiker" class="form-label">Gebruiker</label>
@@ -250,7 +260,11 @@
             </app-icon-card>
         </div>
     </div>
+    <div class="d-flex justify-content-end mt-1">
+        <app-icon-button [disabled]="lidInformatieGroup.invalid || persoonGroup.invalid" type="submit"
+                         iconNaam="fas Save" tekst="Opslaan"></app-icon-button>
+    </div>
 </form>
-<p>
+<pre>
     {{this.persoon.LidData | json}}
-</p>
+</pre>

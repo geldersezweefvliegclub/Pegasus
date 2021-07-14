@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {Observable, of, Subject} from "rxjs";
-import {HeliosAanwezigLedenDataset, HeliosVliegtuigenDataset} from "../../../../../types/Helios";
+import {Observable, of, Subject} from 'rxjs';
+import {HeliosAanwezigLedenDataset, HeliosVliegtuigenDataset} from '../../../../../types/Helios';
 
 @Component({
     selector: 'app-lid-invoer',
