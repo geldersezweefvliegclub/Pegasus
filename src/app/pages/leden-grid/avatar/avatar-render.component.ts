@@ -1,11 +1,10 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {AgRendererComponent} from "ag-grid-angular";
 import {ICellRendererParams} from "ag-grid-community";
-import { LazyLoadImageModule } from 'ng-lazyload-image';
 import {ModalComponent} from "../../../shared/components/modal/modal.component";
 
 @Component({
-  selector: 'app-avatar',
+  selector: 'app-avatar-render',
   templateUrl: './avatar-render.component.html',
   styleUrls: ['./avatar-render.component.scss']
 })
@@ -14,7 +13,6 @@ export class AvatarRenderComponent implements AgRendererComponent {
   naam: string;
 
   @ViewChild(ModalComponent) private popup: ModalComponent;
-  formTitel: any;
 
   constructor() { }
 

@@ -1,0 +1,40 @@
+{
+    "url": "http://localhost:4200/api/",
+    "pvb" :  [
+        {
+            "Type": "ASK21",
+            "Lokaal": 251,
+            "Overland": 261
+        },
+        {
+            "Type": "LS4",
+            "Lokaal": 252,
+            "Overland": 262
+        },
+        {
+            "Type": "Discus",
+            "Lokaal": 253,
+            "Overland": 263
+        },
+        {
+            "Type": "LS8",
+            "Lokaal": 254,
+            "Overland": 264
+        },
+        {
+            "Type": "ASG29",
+            "Lokaal": 256,
+            "Overland": 266
+        },
+        {
+            "Type": "DuoDiscus",
+            "Lokaal": 255,
+            "Overland": 265
+        },
+        {
+            "Type": "Arcus",
+            "Lokaal": 257,
+            "Overland": 267
+        }
+    ]
+}

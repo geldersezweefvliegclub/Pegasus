@@ -1,4 +1,19 @@
 import {Component} from '@angular/core';
+import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import {
+  faBookmark, faCalendarAlt, faCalendarDay, faChartLine, faChartPie,
+  faClipboardCheck,
+  faClipboardList,
+  faInfo,
+  faTachometerAlt,
+  faTrafficLight
+} from "@fortawesome/free-solid-svg-icons";
+import {LoginService} from "../../services/apiservice/login.service";
+import {HeliosLid, HeliosType, HeliosTypes} from "../../types/Helios";
+import {ActivatedRoute} from "@angular/router";
+import {LedenService} from "../../services/apiservice/leden.service";
+import {TypesService} from "../../services/apiservice/types.service";
+import {faAvianex} from "@fortawesome/free-brands-svg-icons";
 
 @Component({
   selector: 'app-dashboard',
@@ -6,14 +21,42 @@ import {Component} from '@angular/core';
   styleUrls: ['./dashboard-page.component.scss']
 })
 export class DashboardPageComponent {
-  data = [
-    {make: 'Toyota', model: 'Celica', price: 35000},
-    {make: 'Ford', model: 'Mondeo', price: 32000},
-    {make: 'Porsche', model: 'Boxter', price: 72000}
-  ];
-  columns = [{field: 'make', sortable: true},
-    {field: 'model', sortable: true},
-    {field: 'price', sortable: true}];
-  constructor() {
+  iconCardIcon: IconDefinition = faChartPie;
+  iconProgressie: IconDefinition = faChartLine;
+  iconLogboek: IconDefinition = faClipboardList;
+  iconRooster: IconDefinition = faCalendarAlt;
+  iconRecency: IconDefinition = faTachometerAlt;
+  iconPVB: IconDefinition = faAvianex;
+  iconStatus: IconDefinition = faBookmark;
+
+  lidTypes: HeliosType[] = [];
+  lidData: HeliosLid;
+
+  constructor(private readonly ledenService: LedenService,
+              private readonly loginService: LoginService,
+              private readonly typesService: TypesService,
+              private activatedRoute: ActivatedRoute) {
+
+    this.typesService.getTypes(6).then(types => this.lidTypes = types);
+
+    this.activatedRoute.queryParams.subscribe(params => {
+
+      if (params['lidID']) {
+        const lidID = params['lidID'];
+        this.ledenService.getLid(lidID).then((l) => this.lidData = l);
+      }
+      else  {
+        this.lidData = this.loginService.userInfo?.LidData as HeliosLid;
+      }
+      console.log(this.lidData)
+    });
+  }
+
+  getLidType(): string {
+    const t = this.lidTypes.find(type => type.ID == this.lidData.LIDTYPE_ID) as HeliosType;
+    if (t) {
+      return t.OMSCHRIJVING!;
+    }
+    return "";
   }
 }

@@ -1,1 +1,86 @@
-<h1>Dashboard</h1>
+<app-icon-card titel="Dashboard"
+               subtitel="Een verzameling van nuttige info"
+               [icon]="iconCardIcon">
+
+    <div class="d-flex">
+        <div class="col-12 headerLidData">
+            <div class="d-flex" *ngIf="lidData">
+                <div class="lidNaam mr-auto">
+                    <p class="mb-0">{{lidData.NAAM}}</p>
+                </div>
+                <div class="d-flex">
+                    <div class="me-5 lidData">
+                        <p class="mb-0">{{getLidType()}}</p>
+                        <p class="mb-0">{{lidData.LIDNR}}</p>
+                    </div>
+                    <app-avatar [url]="lidData.AVATAR" [naam]="lidData.NAAM" class="me-5">
+                    </app-avatar>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-n8 rowDashboard1">
+        <div class="col-3">
+            <app-icon-card id="statusCard"
+                           class="kleineKaart"
+                           titel="Status"
+                           subtitel="Vliegstatus"
+                           [icon]="iconStatus">
+            </app-icon-card>
+        </div>
+        <div class="col-3">
+            <app-icon-card id="pvbCard"
+                           class="kleineKaart"
+                           titel="PVB"
+                           subtitel="Proef van bekwaamheid"
+                           [icon]="iconPVB">
+                <app-pvb [VliegerID]="lidData.ID"></app-pvb>
+            </app-icon-card>
+        </div>
+
+        <div class="col-3">
+            <app-icon-card id="recencyCard"
+                           class="kleineKaart"
+                           titel="Recency"
+                           subtitel="Currency barameter"
+                           [icon]="iconRecency">
+                <app-recency [VliegerID]="lidData.ID"></app-recency>
+            </app-icon-card>
+        </div>
+
+        <div class="col-3">
+            <app-icon-card id="roosterCard"
+                           class="kleineKaart"
+                           titel="Rooster"
+                           subtitel="Ingeroosterde diensten"
+                           [icon]="iconRooster">
+
+
+            </app-icon-card>
+        </div>
+    </div>
+    <div class="row mt-n8 rowDashboard2">
+        <div class="col-6">
+            <app-icon-card id="logboekCard"
+                           class="kleineKaart"
+                           titel="Logboek"
+                           subtitel="Overzicht van de vluchten"
+                           [icon]="iconLogboek">
+
+                <app-vlieger-logboek [VliegerID]="lidData.ID"></app-vlieger-logboek>
+            </app-icon-card>
+        </div>
+        <div class="col-6">
+            <app-icon-card id="progressieCard"
+                           class="kleineKaart"
+                           titel="Progressiekaart"
+                           subtitel="Bevoegdheden"
+                           [icon]="iconProgressie">
+            </app-icon-card>
+        </div>
+    </div>
+
+</app-icon-card>
+
+

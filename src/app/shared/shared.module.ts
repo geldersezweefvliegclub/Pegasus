@@ -9,18 +9,23 @@ import {LoaderComponent} from './components/loader/loader.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {VliegtuigEditorComponent} from './components/editors/vliegtuig-editor/vliegtuig-editor.component';
 import {FormsModule, NG_VALIDATORS} from '@angular/forms';
-import { IconButtonComponent } from './components/icon-button/icon-button.component';
-import { RegistratieDirective } from './components/editors/vliegtuig-editor/registratie.directive';
-import { DeleteActionComponent } from './components/datatable/delete-action/delete-action.component';
-import { RestoreActionComponent } from './components/datatable/restore-action/restore-action.component';
-import { StartEditorComponent } from './components/editors/start-editor/start-editor.component';
+import {IconButtonComponent} from './components/icon-button/icon-button.component';
+import {RegistratieDirective} from './components/editors/vliegtuig-editor/registratie.directive';
+import {DeleteActionComponent} from './components/datatable/delete-action/delete-action.component';
+import {RestoreActionComponent} from './components/datatable/restore-action/restore-action.component';
+import {StartEditorComponent} from './components/editors/start-editor/start-editor.component';
 import {NgSelectModule} from "@ng-select/ng-select";
-import { VliegtuigInvoerComponent } from './components/editors/start-editor/vliegtuig-invoer/vliegtuig-invoer.component';
-import { LidInvoerComponent } from './components/editors/start-editor/lid-invoer/lid-invoer.component';
-import { TelefoonValidatorDirective } from './directives/TelefoonValidator/telefoon-validator.directive';
-import { WachtwoordMatchValidatorDirective } from './directives/WachtwoordMatchValidator/wachtwoord-match-validator.directive';
-import { DatumRenderComponent } from './components/datatable/datum-render/datum-render.component';
-import { LogboekRenderComponent } from './components/datatable/logboek-render/logboek-render.component';
+import {VliegtuigInvoerComponent} from './components/editors/start-editor/vliegtuig-invoer/vliegtuig-invoer.component';
+import {LidInvoerComponent} from './components/editors/start-editor/lid-invoer/lid-invoer.component';
+import {TelefoonValidatorDirective} from './directives/TelefoonValidator/telefoon-validator.directive';
+import {WachtwoordMatchValidatorDirective} from './directives/WachtwoordMatchValidator/wachtwoord-match-validator.directive';
+import {DatumRenderComponent} from './components/datatable/datum-render/datum-render.component';
+import {LogboekRenderComponent} from './components/datatable/logboek-render/logboek-render.component';
+import {AvatarComponent} from './components/avatar/avatar.component';
+import {LazyLoadImageModule} from "ng-lazyload-image";
+import { VliegerLogboekComponent } from './components/vlieger-logboek/vlieger-logboek.component';
+import { PvbComponent } from './components/pvb/pvb.component';
+import { RecencyComponent } from './components/recency/recency.component';
 
 
 @NgModule({
@@ -29,40 +34,49 @@ import { LogboekRenderComponent } from './components/datatable/logboek-render/lo
         AgGridModule.withComponents([]),
         FontAwesomeModule,
         FormsModule,
-        NgSelectModule
+        NgSelectModule,
+        LazyLoadImageModule
     ],
-  declarations: [
-    ModalComponent,
-    ErrorComponent,
-    DatatableComponent,
-    CheckboxRenderComponent,
-    LoaderComponent,
-    VliegtuigEditorComponent,
-    IconButtonComponent,
-    RegistratieDirective,
-    DeleteActionComponent,
-    RestoreActionComponent,
-    StartEditorComponent,
-    VliegtuigInvoerComponent,
-    LidInvoerComponent,
-    TelefoonValidatorDirective,
-    WachtwoordMatchValidatorDirective,
-    DatumRenderComponent,
-    LogboekRenderComponent,
-  ],
-  exports: [
-    ModalComponent,
-    DatatableComponent,
-    ErrorComponent,
-    LoaderComponent,
-    VliegtuigEditorComponent,
-    IconButtonComponent,
-    StartEditorComponent,
-    TelefoonValidatorDirective,
-    WachtwoordMatchValidatorDirective,
-  ],
-  providers: [],
-  schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]
+    declarations: [
+        ModalComponent,
+        ErrorComponent,
+        DatatableComponent,
+        CheckboxRenderComponent,
+        LoaderComponent,
+        VliegtuigEditorComponent,
+        IconButtonComponent,
+        RegistratieDirective,
+        DeleteActionComponent,
+        RestoreActionComponent,
+        StartEditorComponent,
+        VliegtuigInvoerComponent,
+        LidInvoerComponent,
+        TelefoonValidatorDirective,
+        WachtwoordMatchValidatorDirective,
+        DatumRenderComponent,
+        LogboekRenderComponent,
+        AvatarComponent,
+        VliegerLogboekComponent,
+        PvbComponent,
+        RecencyComponent
+    ],
+    exports: [
+        AvatarComponent,
+        ModalComponent,
+        DatatableComponent,
+        ErrorComponent,
+        LoaderComponent,
+        VliegtuigEditorComponent,
+        IconButtonComponent,
+        StartEditorComponent,
+        TelefoonValidatorDirective,
+        WachtwoordMatchValidatorDirective,
+        VliegerLogboekComponent,
+        PvbComponent,
+        RecencyComponent,
+    ],
+    providers: [],
+    schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SharedModule {
 }

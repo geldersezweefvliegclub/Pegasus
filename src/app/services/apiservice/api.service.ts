@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {CustomError, HeliosActie, KeyValueString} from '../../types/Utils';
 import {environment} from '../../../environments/environment';
 import {SharedService} from '../shared/shared.service';
+import {PegasusConfigService} from "../shared/pegasus-config.service";
 
 @Injectable({
     providedIn: 'root'
@@ -9,8 +10,11 @@ import {SharedService} from '../shared/shared.service';
 export class APIService {
     private URL = 'http://localhost:4200/api/'
 
-    constructor(private readonly sharedService: SharedService) {
+    constructor(private readonly sharedService: SharedService,
+                private readonly configService: PegasusConfigService,) {
 
+        const url = configService.getURL();
+        if (url) this.URL = url;
     }
 
     async get(url: string, params?: KeyValueString, headers?: Headers): Promise<Response> {

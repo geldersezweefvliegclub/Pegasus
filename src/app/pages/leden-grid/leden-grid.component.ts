@@ -33,7 +33,7 @@ export class LedenGridComponent {
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
-        {field: 'AVATAR', headerName: '', sortable: false, cellRenderer: 'avatarRender', width: 110, resizable: false, cellClass: "geenDots"},
+        {field: 'AVATAR', headerName: '', sortable: false, cellRenderer: 'avatarRender', initialWidth:  100, width: 110, resizable: false, cellClass: "geenDots"},
         {field: 'NAAM', headerName: 'Naam', sortable: true},
 
         {field: 'VOORNAAM', headerName: 'Voornaam', sortable: true, hide: true},
@@ -119,7 +119,7 @@ export class LedenGridComponent {
     ngOnInit(): void {
         this.opvragen();
 
-        let ui = this.loginService.userInfo?.Userinfo;
+        const ui = this.loginService.userInfo?.Userinfo;
         this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
         this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
         this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;

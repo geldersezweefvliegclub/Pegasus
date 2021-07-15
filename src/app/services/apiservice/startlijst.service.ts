@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {APIService} from '../apiservice/api.service';
 
 import {
+    HeliosLogboek, HeliosRecency,
     HeliosStart,
     HeliosStarts,
     HeliosVliegdagen,
@@ -18,6 +19,7 @@ import {DateTime} from 'luxon';
 export class StartlijstService {
     starts: HeliosStarts | null = null;
     vliegdagen: HeliosVliegdagen | null = null;
+    logboek: HeliosLogboek[] | null = null;
     vliegtuigLogboek: HeliosVliegtuigLogboek| null = null;
     vliegtuigLogboekTotalen: HeliosVliegtuigLogboekTotalen;
 
@@ -46,6 +48,34 @@ export class StartlijstService {
             }
         }
         return this.vliegdagen?.dataset as [];
+    }
+
+    async getLogboek(id: number, jaar: number, maxRecords?: number): Promise<[]> {
+        interface parameters {
+            [key: string]: string;
+        }
+
+        let getParams: parameters = {};
+        getParams['LID_ID'] = id.toString();
+        getParams['JAAR'] = jaar.toString();
+
+        if (maxRecords) {
+            getParams['MAX'] = maxRecords.toString();
+        }
+
+        try {
+            const response: Response = await this.APIService.get('Startlijst/GetLogboek',
+                getParams
+            );
+
+            this.vliegtuigLogboek = await response.json();
+
+        } catch (e) {
+            if (e.responseCode !== 404) { // er is geen data
+                throw(e);
+            }
+        }
+        return this.vliegtuigLogboek?.dataset as [];
     }
 
     async getVliegtuigLogboek(id: number, startDatum: DateTime, eindDatum: DateTime): Promise<[]> {
@@ -134,6 +164,12 @@ export class StartlijstService {
 
     async getStart(id: number): Promise<HeliosStart> {
         const response: Response = await this.APIService.get('Startlijst/GetObject', {'ID': id.toString()});
+
+        return response.json();
+    }
+
+    async getRecency(lidID: number): Promise<HeliosRecency> {
+        const response: Response = await this.APIService.get('Startlijst/GetRecency', {'VLIEGER_ID': lidID.toString()});
 
         return response.json();
     }

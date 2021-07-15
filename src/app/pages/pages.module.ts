@@ -52,42 +52,42 @@ import {ChartsModule} from 'ng2-charts';
         NgbTypeaheadModule,
         CustomFormsModule,
         NgSelectModule,
-        LazyLoadImageModule,
+        ChartsModule,
+        LazyLoadImageModule
+    ],
+    declarations: [
+        IconCardComponent,
+        DashboardPageComponent,
+        ProfilePageComponent,
+        HelpPageComponent,
+        NotFoundComponent,
+        LoginPageComponent,
+        VliegtuigenGridComponent,
+        ZitplaatsRenderComponent,
+        LedenGridComponent,
+        StartlijstGridComponent,
+        VliegerRenderComponent,
+        InzittendeRenderComponent,
+        StarttijdRenderComponent,
+        LandingstijdRenderComponent,
+        TijdInvoerComponent,
+        DaginfoComponent,
+        ComposeMeteoComponent,
+        ComposeBedrijfComponent,
+        AvatarRenderComponent,
+        AdresRenderComponent,
+        TelefoonRenderComponent,
+        EmailRenderComponent,
+        FilterComponent,
+        VliegtuigLogboekComponent
+    ],
+    exports: [
+        IconCardComponent,
+        DashboardPageComponent,
+        CodeInputModule,
         ChartsModule
     ],
-  declarations: [
-    IconCardComponent,
-    DashboardPageComponent,
-    ProfilePageComponent,
-    HelpPageComponent,
-    NotFoundComponent,
-    LoginPageComponent,
-    VliegtuigenGridComponent,
-    ZitplaatsRenderComponent,
-    LedenGridComponent,
-    StartlijstGridComponent,
-    VliegerRenderComponent,
-    InzittendeRenderComponent,
-    StarttijdRenderComponent,
-    LandingstijdRenderComponent,
-    TijdInvoerComponent,
-    DaginfoComponent,
-    ComposeMeteoComponent,
-    ComposeBedrijfComponent,
-    AvatarRenderComponent,
-    AdresRenderComponent,
-    TelefoonRenderComponent,
-    EmailRenderComponent,
-    FilterComponent,
-    VliegtuigLogboekComponent
-  ],
-  exports: [
-    IconCardComponent,
-    DashboardPageComponent,
-    CodeInputModule,
-    ChartsModule
-  ],
-  schemas: [NO_ERRORS_SCHEMA]
+    schemas: [NO_ERRORS_SCHEMA]
 })
 export class PagesModule {
 }
