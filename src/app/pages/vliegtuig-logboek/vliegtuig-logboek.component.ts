@@ -41,6 +41,7 @@ export class VliegtuigLogboekComponent implements OnInit {
     data: HeliosVliegtuigenDataset[] = [];
     totalen: HeliosVliegtuigLogboekTotalen;
     vliegtuig: HeliosVliegtuig = {};
+    REG_CALL: string = "";
 
     planeDepartureIcon: IconDefinition = faPlaneDeparture;
     clockIcon: IconDefinition = faClock;
@@ -259,6 +260,12 @@ export class VliegtuigLogboekComponent implements OnInit {
 
         this.vliegtuigenService.getVliegtuig(this.vliegtuigID).then((vliegtuig) => {
             this.vliegtuig = vliegtuig;
+
+            this.REG_CALL = vliegtuig.REGISTRATIE as string;
+            if (vliegtuig.CALLSIGN) {
+                this.REG_CALL += ' (' + vliegtuig.CALLSIGN + ')';
+            }
+
         });
     }
 
@@ -315,19 +322,29 @@ export class VliegtuigLogboekComponent implements OnInit {
     }
 
     toonVluchtenDetail() {
-        this.DetailGrafiekTitel = "Vluchten grafiek";
-        this.toonVluchtenDetailGrafiek = true;
-        this.toonVliegtijdDetailGrafiek = false;
+        if (this.toonVluchtenDetailGrafiek) {
+            this.toonVluchtenDetailGrafiek = false;
+            this.popup.close();
+        } else {
+            this.DetailGrafiekTitel = 'Vluchten grafiek ' + this.REG_CALL;
+            this.toonVluchtenDetailGrafiek = true;
+            this.toonVliegtijdDetailGrafiek = false;
 
-        this.popup.open();
+            this.popup.open();
+        }
     }
 
     toonTijdDetail() {
-        this.DetailGrafiekTitel = "Vliegtijd grafiek";
-        this.toonVluchtenDetailGrafiek = false;
-        this.toonVliegtijdDetailGrafiek = true;
+        if (this.toonVliegtijdDetailGrafiek) {
+            this.toonVliegtijdDetailGrafiek = false;
+            this.popup.close();
+        } else {
+            this.DetailGrafiekTitel = 'Vliegtijd grafiek ' + this.REG_CALL;
+            this.toonVluchtenDetailGrafiek = false;
+            this.toonVliegtijdDetailGrafiek = true;
 
-        this.popup.open();
+            this.popup.open();
+        }
     }
 }
 
