@@ -14,6 +14,7 @@ export class InzittendeRenderComponent implements AgRendererComponent {
   constructor() {
   }
 
+  // Als de inzittende geen clublid is, dan is de naam handmatig ingevoerd
   agInit(params: ICellRendererParams): void {
     if (params.data.INZITTENDENAAM) {
       this.grid_inzittendenaam = params.data.INZITTENDERNAAM

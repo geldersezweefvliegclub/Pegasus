@@ -16,6 +16,7 @@ export class VliegerRenderComponent implements AgRendererComponent {
     constructor() {
     }
 
+    // Als de vlieger geen clublid is, dan is de naam handmatig ingevoerd
     agInit(params: ICellRendererParams): void {
         if (params.data.VLIEGERNAAM) {
             this.grid_vliegernaam = params.data.VLIEGERNAAM_LID + "(" + params.data.VLIEGERNAAM + ")"
@@ -23,9 +24,9 @@ export class VliegerRenderComponent implements AgRendererComponent {
             this.grid_vliegernaam = params.data.VLIEGERNAAM_LID;
         } else {
             if (params.data.STARTTIJD) {
-                this.error = true;
+                this.error = true;    // Wel starttijd, geen vlieger bekend. PROBLEEM !!!
             } else {
-                this.warning = true;
+                this.warning = true;  // Vlieger is nog niet beked, maar gelukkig is er nog niet gestart
             }
         }
     }
@@ -34,6 +35,7 @@ export class VliegerRenderComponent implements AgRendererComponent {
         return false;
     }
 
+    // Waarschuwing als de vlieger niet is ingevuld
     cssWarningLevel(): string {
         if (this.error) {
             return "animate-flicker geenVliegerError";

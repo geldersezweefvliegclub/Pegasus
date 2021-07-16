@@ -95,11 +95,14 @@ export class StartlijstGridComponent implements OnInit {
     ];
 
     columns: ColDef[] = this.dataColumns;
+
+    // kolom om record te verwijderen
     deleteColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 100,
         initialWidth: 100,
         resizable: false,
+        suppressSizeToFit:true,
         hide: false,
         cellRenderer: 'deleteAction', headerName: '', sortable: false,
         cellRendererParams: {
@@ -108,11 +111,14 @@ export class StartlijstGridComponent implements OnInit {
             }
         },
     }];
+
+    // kolom om terug te kunnen terughalen
     restoreColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 100,
         initialWidth: 100,
         resizable: false,
+        suppressSizeToFit:true,
         hide: false,
         cellRenderer: 'restoreAction', headerName: '', sortable: false,
         cellRendererParams: {
@@ -132,16 +138,19 @@ export class StartlijstGridComponent implements OnInit {
         restoreAction: RestoreActionComponent
     };
     iconCardIcon: IconDefinition = faClipboardList;
+    filterIcon: IconDefinition = faFilter;
+    prullenbakIcon: IconDefinition  = faRecycle;
+
     zoekString: string;
-    zoekTimer: number;
-    deleteMode: boolean = false;
-    trashMode: boolean = false;
+    zoekTimer: number;                  // kleine vertraging om data ophalen te beperken
+    deleteMode: boolean = false;        // zitten we in delete mode om starts te kunnen verwijderen
+    trashMode: boolean = false;         // zitten in restore mode om starts te kunnen terughalen
+
     filterOn: boolean = false;
-    prullenbakIcon = faRecycle;
-    filterIcon = faFilter;
+
     error: CustomError | undefined;
 
-    datumAbonnement: Subscription;
+    datumAbonnement: Subscription;         // volg de keuze van de kalender
     datum: DateTime;                       // de gekozen dag in de kalender
 
     magToevoegen: boolean = false;
@@ -172,30 +181,29 @@ export class StartlijstGridComponent implements OnInit {
         this.magExporten = (!ui?.isDDWV) ? true : false;
     }
 
+    // openen van popup om nieuwe start te kunnen invoeren
     addStart(): void {
-        let datum: DateTime = DateTime.fromObject({
-            year: this.datum.year,
-            month: this.datum.month,
-            day: this.datum.day
-        })
-
         this.editor.openPopup(null);
     }
 
+    // openen van popup om bestaande start te kunnen aanpassen
     openEditor(event?: RowDoubleClickedEvent) {
         this.editor.openPopup(event?.data.ID);
     }
 
+    // schakelen tussen deleteMode JA/NEE. In deleteMode kun je starts verwijderen
     deleteModeJaNee() {
         this.deleteMode = !this.deleteMode;
         this.kolomDefinitie();
     }
 
+    // schakelen tussen trashMode JA/NEE. In trashMode worden te verwijderde starts getoond
     trashModeJaNee() {
         this.kolomDefinitie();
         this.opvragen();
     }
 
+    // Welke kolommen moet worden getoond in het grid
     kolomDefinitie() {
         if (!this.deleteMode) {
             this.columns = this.dataColumns;
@@ -208,6 +216,7 @@ export class StartlijstGridComponent implements OnInit {
         }
     }
 
+    // Opvragen van de data via de api
     opvragen() {
         let queryParams: KeyValueString = {};
 
@@ -220,6 +229,7 @@ export class StartlijstGridComponent implements OnInit {
         });
     }
 
+    // nieuwe start is ingevoerd, nu opslaan
     Toevoegen(start: HeliosStart) {
         this.startlijstService.nieuweStart(start).then(() => {
             this.opvragen();
@@ -229,6 +239,7 @@ export class StartlijstGridComponent implements OnInit {
         })
     }
 
+    // bestaande start is aangepast, nu opslaan
     Aanpassen(start: HeliosStart) {
         this.startlijstService.updateStart(start).then(() => {
             this.opvragen();
@@ -238,6 +249,7 @@ export class StartlijstGridComponent implements OnInit {
         })
     }
 
+    // markeer een start als verwijderd
     Verwijderen(id: number) {
         this.startlijstService.deleteStart(id).then(() => {
             this.deleteMode = false;
@@ -249,6 +261,7 @@ export class StartlijstGridComponent implements OnInit {
         });
     }
 
+    // de start moet hersteld worden, haal de markering 'verwijderd' weg
     Herstellen(id: number) {
         this.startlijstService.restoreStart(id).then(() => {
             this.deleteMode = false;
@@ -280,12 +293,14 @@ export class StartlijstGridComponent implements OnInit {
         this.opvragen();
     }
 
+    // De starttijd is ingevoerd/aangepast. Opslaan van de starttijd
     opslaanStartTijd(start: HeliosStart) {
         this.startlijstService.startTijd(start.ID as number, start.STARTTIJD as string);
         this.opvragen();
         this.tijdInvoerEditor.closePopup();
     }
 
+    // De landingstijd is ingevoerd/aangepast. Opslaan van de landingstijd
     opslaanLandingsTijd(start: HeliosStart) {
         this.startlijstService.landingsTijd(start.ID as number, start.LANDINGSTIJD as string);
         this.opvragen();

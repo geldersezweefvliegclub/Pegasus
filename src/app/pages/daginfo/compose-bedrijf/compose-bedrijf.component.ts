@@ -37,18 +37,19 @@ export class ComposeBedrijfComponent {
         this.typesService.getTypes(15).then(types => this.clubTypes$ = of(types));
     }
 
+    // open het popup scherm voor de wizard
     openPopup() {
         this.popup.open();
     }
 
-    // linkerhand circuit, dus niet rechtsom
+    // linkerhand circuit, dus niet rechtsom. Of LH = true of RH = true, beide false mag wel
     zetLH(waarde: any) {
         if (waarde) {
             this.rechterhandCircuit = false;
         }
     }
 
-    // rechterhand circuit, dus niet linksom
+    // rechterhand circuit, dus niet linksom. Of LH = true of RH = true, beide false mag wel
     zetRH(waarde: any) {
         if (waarde) {
             this.linkerhandCircuit = false;
@@ -56,7 +57,6 @@ export class ComposeBedrijfComponent {
     }
 
     Compose() {
-
         // dag van de week in een string stoppen
         let dagVDweek = "";
         switch (this.datum.weekday) {
@@ -164,6 +164,8 @@ export class ComposeBedrijfComponent {
             luchtuim += ".";    // de zin netje afsluiten met een .
         }
 
+        // Alle tags beginnen met * en eindigen met #. Via replace worden de tags vervangen door werkelijke waarde
+        // die hierboven bepaald is
         let tekst: string = "Het dagverslag van #DAG_VD_WEEK# #DMJ# " +
             "onder leiding van de #CLUB#. " +
             "Het vliegbedrijf bevatte de volgende aspect(en): #START_METHODES# op de #BAAN# #CIRCUIT#";

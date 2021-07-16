@@ -47,8 +47,14 @@ export class LedenGridComponent {
 
         {field: 'VOORNAAM', headerName: 'Voornaam', sortable: true, hide: true},
         {field: 'ACHTERNAAM', headerName: 'Achternaam', sortable: true, hide: true},
-        {field: 'EMAIL', headerName: 'Email', sortable: false, cellRenderer: 'emailRender', width: 50},
-
+        {
+            field: 'EMAIL',
+            headerName: 'Email',
+            sortable: false,
+            cellRenderer: 'emailRender',
+            width: 50,
+            suppressSizeToFit:true
+        },
         {field: 'ADRES', headerName: 'Adres', sortable: true, cellRenderer: 'adresRender'},
         {field: 'TELEFOON', headerName: 'Telefoon', sortable: false, cellRenderer: 'telefoonRender'},
 
@@ -71,11 +77,13 @@ export class LedenGridComponent {
 
     columns: ColDef[] = this.dataColumns;
 
+    // kolom om record te verwijderen
     deleteColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 100,
         initialWidth: 100,
         resizable: false,
+        suppressSizeToFit:true,
         hide: false,
         cellRenderer: 'deleteAction', headerName: '', sortable: false,
         cellRendererParams: {
@@ -85,11 +93,13 @@ export class LedenGridComponent {
         },
     }];
 
+    // kolom om terug te kunnen terughalen
     restoreColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 100,
         initialWidth: 100,
         resizable: false,
+        suppressSizeToFit:true,
         hide: false,
         cellRenderer: 'restoreAction', headerName: '', sortable: false,
         cellRendererParams: {
@@ -109,11 +119,13 @@ export class LedenGridComponent {
         restoreAction: RestoreActionComponent
     };
     iconCardIcon: IconDefinition = faUsers;
+    prullenbakIcon: IconDefinition = faRecycle;
+
     zoekString: string;
-    zoekTimer: number;
-    deleteMode: boolean = false;
-    trashMode: boolean = false;
-    prullenbakIcon = faRecycle;
+    zoekTimer: number;                  // kleine vertraging om data ophalen te beperken
+    deleteMode: boolean = false;        // zitten we in delete mode om leden te kunnen verwijderen
+    trashMode: boolean = false;         // zitten in restore mode om leden te kunnen terughalen
+
     error: CustomError | undefined;
     magToevoegen: boolean = false;
     magVerwijderen: boolean = false;
@@ -135,24 +147,29 @@ export class LedenGridComponent {
         this.magExporten = (!ui?.isDDWV) ? true : false;
     }
 
-    addVliegtuig(): void {
+    // openen van popup om lid data van een nieuw lid te kunnen invoeren
+    addLid(): void {
         this.editor.openPopup(null);
     }
 
+    // openen van popup om gegevens van een bestaand lid aan te passen
     openEditor(event?: RowDoubleClickedEvent) {
         this.editor.openPopup(event?.data.ID);
     }
 
+    // schakelen tussen deleteMode JA/NEE. In deleteMode kun je leden verwijderen
     deleteModeJaNee() {
         this.deleteMode = !this.deleteMode;
         this.kolomDefinitie();
     }
 
+    // schakelen tussen trashMode JA/NEE. In trashMode worden te verwijderde leden getoond
     trashModeJaNee() {
         this.kolomDefinitie();
         this.opvragen();
     }
 
+    // Welke kolommen moet worden getoond in het grid
     kolomDefinitie() {
         if (!this.deleteMode) {
             this.columns = this.dataColumns;
@@ -165,9 +182,11 @@ export class LedenGridComponent {
         }
     }
 
+    // Opvragen van de data via de api
     opvragen() {
         clearTimeout(this.zoekTimer);
 
+        // Wacht even de gebruiker kan nog aan het typen zijn
         this.zoekTimer = setTimeout(() => {
             this.ledenService.getLeden(this.trashMode, this.zoekString).then((dataset) => {
                 this.dataset = dataset;
@@ -176,6 +195,7 @@ export class LedenGridComponent {
         }, 400);
     }
 
+    // Mooi, we hebben een nieuw lid ingevoerd. Opslaan van de data
     Toevoegen(lid: HeliosLid) {
         this.ledenService.nieuwLid(lid).then(() => {
             this.opvragen();
@@ -185,6 +205,7 @@ export class LedenGridComponent {
         })
     }
 
+    // De data van een bestaand lid is aangepast. Opslaan van de data
     Aanpassen(lid: HeliosLid) {
         this.ledenService.updateLid(lid).then(() => {
             this.opvragen();
@@ -194,6 +215,7 @@ export class LedenGridComponent {
         })
     }
 
+    // Minder mooi, lid is geen lid meer. Markeer lid als verwijderd
     Verwijderen(id: number) {
         this.ledenService.deleteLid(id).then(() => {
             this.deleteMode = false;
@@ -205,6 +227,7 @@ export class LedenGridComponent {
         });
     }
 
+    // Gelukkig, een oud lid is opnieuw lid geworden. Haal de verwijderd markering weg.
     Herstellen(id: number) {
         this.ledenService.restoreLid(id).then(() => {
             this.deleteMode = false;
@@ -216,10 +239,13 @@ export class LedenGridComponent {
         });
     }
 
+    // Open van het filter dialoog
     filterPopup() {
         this.ledenFilter.openPopup();
     }
 
+    // Er is een aanpassing gemaakt in het filter dialoog. We filteren de volledige dataset tot wat nodig is
+    // We hoeven dus niet terug naar de server om data opnieuw op te halen (minder data verkeer)
     applyFilter() {
         // filter de dataset naar de lijst
         this.leden = [];
@@ -237,7 +263,7 @@ export class LedenGridComponent {
                 isLid = true;
             }
 
-            if (this.sharedService.ledenlijstFilter.leden && isLid == false) continue;
+            if (this.sharedService.ledenlijstFilter.leden && !isLid) continue;
             if (this.sharedService.ledenlijstFilter.ddwv && this.dataset[i].LIDTYPE_ID != 625) continue;
             if (this.sharedService.ledenlijstFilter.startleiders && this.dataset[i].STARTLEIDER == false) continue;
             if (this.sharedService.ledenlijstFilter.lieristen && this.dataset[i].LIERIST == false) continue;

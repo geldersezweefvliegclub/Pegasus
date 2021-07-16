@@ -11,7 +11,6 @@ import {LoginService} from '../../services/apiservice/login.service';
 export class AppComponent {
   isIngelogd:boolean = this.loginService.isIngelogd();
 
-
   constructor(private readonly router: Router, private readonly loginService: LoginService) {
     router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {

@@ -16,14 +16,17 @@ export class FilterComponent {
     constructor(private readonly sharedService: SharedService) {
     }
 
+    // Open filter dialoog met de filter opties
     openPopup() {
         this.popup.open();
     }
 
+    // Er is een filter gewijzigd, meteen aan parent melden zodat data opgehaald kan worden
     filterDataChanged() {
         this.filterChanged.emit();
     }
 
+    // DDWV en leden mogen niet tegelijk 'aan' staan, dan is dataset altijd leeg
     filterLedenChanged(checked: any) {
         if ((checked) && (this.sharedService.ledenlijstFilter.ddwv)) {
             this.sharedService.ledenlijstFilter.ddwv = false;
@@ -31,6 +34,7 @@ export class FilterComponent {
         this.filterChanged.emit();
     }
 
+    // DDWV en leden mogen niet tegelijk 'aan' staan, dan is dataset altijd leeg
     filterDDWVChanged(checked: any) {
         if ((checked) && (this.sharedService.ledenlijstFilter.leden)) {
             this.sharedService.ledenlijstFilter.leden = false;

@@ -17,6 +17,7 @@ export class AdresRenderComponent implements AgRendererComponent {
     this.regel1 = params.data.ADRES;
     this.regel2 = params.data.POSTCODE;
 
+    // Als postcode aanwezig is dan spatie tussen postcode en woonplaats
     if (this.regel2) {
       this.regel2 += " ";
     }
@@ -25,6 +26,7 @@ export class AdresRenderComponent implements AgRendererComponent {
       this.regel2 += params.data.WOONPLAATS;
     }
 
+    // verwijder eventuele spatie aan het einde (als er geen woonplaats is)
     if (this.regel2) {
       this.regel2 = this.regel2.trim();
     }

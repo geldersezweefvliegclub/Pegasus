@@ -1,18 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {VliegtuigEditorComponent} from "../../shared/components/editors/vliegtuig-editor/vliegtuig-editor.component";
 import {HeliosVliegtuig, HeliosVliegtuigenDataset, HeliosVliegtuigLogboekTotalen} from "../../types/Helios";
-import {ColDef, RowDoubleClickedEvent} from "ag-grid-community";
-import {CustomError, nummerSort, tijdSort} from "../../types/Utils";
-import {ZitplaatsRenderComponent} from "../vliegtuigen-grid/zitplaats-render/zitplaats-render.component";
-import {CheckboxRenderComponent} from "../../shared/components/datatable/checkbox-render/checkbox-render.component";
-import {DeleteActionComponent} from "../../shared/components/datatable/delete-action/delete-action.component";
-import {RestoreActionComponent} from "../../shared/components/datatable/restore-action/restore-action.component";
+import {ColDef} from "ag-grid-community";
+import {nummerSort, tijdSort} from "../../types/Utils";
 import {faClock, IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {
     faBookmark,
-    faCalendarDay,
     faClipboardList,
-    faPlane,
     faPlaneDeparture,
     faTimesCircle
 } from "@fortawesome/free-solid-svg-icons";
@@ -24,8 +17,8 @@ import {DateTime} from "luxon";
 import {SharedService} from "../../services/shared/shared.service";
 import {DatumRenderComponent} from "../../shared/components/datatable/datum-render/datum-render.component";
 import {VliegtuigenService} from "../../services/apiservice/vliegtuigen.service";
-import {ChartDataSets, ChartOptions, ChartType, ScaleTitleOptions} from "chart.js";
-import {Color, Label} from "ng2-charts";
+import {ChartDataSets, ChartOptions, ChartType} from "chart.js";
+import {Label} from "ng2-charts";
 import {ModalComponent} from "../../shared/components/modal/modal.component";
 import {ActivatedRoute} from "@angular/router";
 
@@ -171,6 +164,7 @@ export class VliegtuigLogboekComponent implements OnInit {
                 private readonly sharedService: SharedService,
                 private activatedRoute: ActivatedRoute) {
 
+        // het vliegtuig ID wordt via de url meegegeven
         this.activatedRoute.queryParams.subscribe(params => {
             this.vliegtuigID = params['vliegtuigID'];
         });
@@ -191,6 +185,7 @@ export class VliegtuigLogboekComponent implements OnInit {
         this.magExporten = (!ui?.isDDWV) ? true : false;
     }
 
+    // Opvragen van de data via de api
     opvragen() {
         const startDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 1, day: 1});
         const eindDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 12, day: 31});
@@ -202,7 +197,7 @@ export class VliegtuigLogboekComponent implements OnInit {
         this.startlijstService.getVliegtuigLogboekTotalen(this.vliegtuigID, this.datum.year).then((t) => {
             this.totalen = t;
 
-            // de grafiek beval al data van dit jaar
+            // de grafiek bevat al data van dit jaar, dus niet nogmaals toevoegen
             const alGedaan = this.barChartData.find(reeks => reeks.label == this.datum.year.toString())
 
             if (!alGedaan) {
@@ -258,6 +253,7 @@ export class VliegtuigLogboekComponent implements OnInit {
             }
         });
 
+        // ophalen van vliegtuig data om REG_CALL in titel te zetten
         this.vliegtuigenService.getVliegtuig(this.vliegtuigID).then((vliegtuig) => {
             this.vliegtuig = vliegtuig;
 
@@ -269,6 +265,7 @@ export class VliegtuigLogboekComponent implements OnInit {
         });
     }
 
+    // welke kleur krijgt de grafiek, voor beide grafieken dezelfde kleur
     getColor(kleurIndex: number, alpha: number): string {
         switch (kleurIndex) {
             case 0:
@@ -282,24 +279,26 @@ export class VliegtuigLogboekComponent implements OnInit {
             case 4:
                 return 'rgba(51,51,0,' + alpha + ')';
         }
-        return 'rgba(255,255,255,' + alpha + ')';
+        return 'rgba(255,255,255,' + alpha + ')';       // na 5 kleuren is het altijd wit
     }
 
-    // Wissen van data, laatste blijft jaar zichtbaar
+    // Wissen van data, gekozen jaar blijft jaar zichtbaar (en wordt kleur 0)
+    // aantal items in beide grafiek arrays zijn altijd hetzelfde
     clearGrafiekData(): void {
+        // index van het gekozen jaar in de kalender
         const index = this.barChartData.findIndex((reeks => reeks.label == this.datum.year.toString()));
 
         if (this.barChartData.length > 0) {
-            const barReeks = this.barChartData[index]
-            barReeks.backgroundColor = this.getColor(0, 0.8)
-            this.barChartData = [barReeks];
+            const barReeks = this.barChartData[index]                           // bewaren van grafiek data
+            barReeks.backgroundColor = this.getColor(0, 0.8)    // zet kleur 0
+            this.barChartData = [barReeks];                                     // blijft nu nu 1 element over in array
         }
 
         if (this.lineChartData.length > 0) {
-            const lineReeks = this.lineChartData[index]
-            lineReeks.backgroundColor = this.getColor(0, 0.4);
+            const lineReeks = this.lineChartData[index]                         // bewaren van grafiek data
+            lineReeks.backgroundColor = this.getColor(0, 0.4);  // zet kleur 0
             lineReeks.borderColor = this.getColor(0, 1);
-            this.lineChartData = [lineReeks];
+            this.lineChartData = [lineReeks];                                   // blijft nu nu 1 element over in array
         }
     }
 
@@ -321,6 +320,7 @@ export class VliegtuigLogboekComponent implements OnInit {
         xlsx.writeFile(wb, 'vliegtuigen ' + new Date().toJSON().slice(0, 10) + '.xlsx');
     }
 
+    // Tonen van de vluchten grafiek in popup window, is beter leesbaar
     toonVluchtenDetail() {
         if (this.toonVluchtenDetailGrafiek) {
             this.toonVluchtenDetailGrafiek = false;
@@ -334,6 +334,7 @@ export class VliegtuigLogboekComponent implements OnInit {
         }
     }
 
+    // Tonen van de vliegtijd grafiek in popup window, is beter leesbaar
     toonTijdDetail() {
         if (this.toonVliegtijdDetailGrafiek) {
             this.toonVliegtijdDetailGrafiek = false;

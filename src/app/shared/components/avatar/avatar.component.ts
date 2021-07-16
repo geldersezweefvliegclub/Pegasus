@@ -14,6 +14,7 @@ export class AvatarComponent {
 
   constructor() { }
 
+  // Toon grote avatar in in popup window
   showPopup() {
     this.popup.open();
   }

@@ -45,15 +45,18 @@ export class LoginPageComponent implements OnInit {
     setInterval(() => { this.toonFoto = this.urlFoto()}, 15000)
   }
 
+  // geef de url terug van een willekeurige foto
   urlFoto(): string {
       const index = Math.floor(Math.random() * this.fotoAlbum.length)
       return this.fotoAlbum[index];
   }
 
+  // De Google authenticator is aangepast. Variable opslaan in this.secret
   onSecurityCodeChanged(code: string) {
       this.secret = code;
   }
 
+  // Nu gaan we inloggen
   login(): void {
     this.isLoading = true;
     this.loginService.login(this.gebruikersnaam, this.wachtwoord, this.secret).then(() => {
@@ -71,6 +74,7 @@ export class LoginPageComponent implements OnInit {
     })
   }
 
+  // Als je geen Google authenticator hebt, kan de code per SMS verstuurd worden door het backend
   sendSMS(): void {
     this.isLoading = true;
     this.loginService.sendSMS(this.gebruikersnaam, this.wachtwoord).then(() => {

@@ -40,6 +40,7 @@ export class ComposeMeteoComponent {
     this.typesService.getTypes(17).then(types => this.dekkingTypes$ = of(types));
   }
 
+  // Alle tags beginnen met * en eindigen met #. Via replace worden de tags vervangen door werkelijke waarde
   Compose() {
     let tekst: string = "Het zicht was #ZICHT#. De windrichting was #RICHTING# met #KRACHT#. " +
         "De wind had de volgende eigenschap(pen): #WIND_EIGENSCHAPPEN#. " +
@@ -59,6 +60,7 @@ export class ComposeMeteoComponent {
     this.popup.close();
   }
 
+  // Tonen van het popup window met de wizard velden
   openPopup() {
     this.popup.open();
   }

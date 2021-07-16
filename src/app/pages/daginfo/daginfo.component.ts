@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {LoginService} from '../../services/apiservice/login.service';
 import {DaginfoService} from '../../services/apiservice/daginfo.service';
 import {SharedService} from '../../services/shared/shared.service';
@@ -30,7 +30,7 @@ import {StorageService} from '../../services/storage/storage.service';
     templateUrl: './daginfo.component.html',
     styleUrls: ['./daginfo.component.scss']
 })
-export class DaginfoComponent {
+export class DaginfoComponent implements OnInit{
     @ViewChild(ComposeMeteoComponent) meteoWizard: ComposeMeteoComponent;
     @ViewChild(ComposeBedrijfComponent) bedrijfWizard: ComposeBedrijfComponent;
 
@@ -45,7 +45,7 @@ export class DaginfoComponent {
     iconIncident: IconDefinition = faFrown;
     iconDefault: IconDefinition = faFileImport;
 
-    datumAbonnement: Subscription;
+    datumAbonnement: Subscription;         // volg de keuze van de kalender
     datum: DateTime;                       // de gekozen dag
 
     dagInfoAbonnement: Subscription;
@@ -66,10 +66,10 @@ export class DaginfoComponent {
                 private readonly sharedService: SharedService,
                 private readonly storageService: StorageService,
                 private readonly typesService: TypesService,
-                private readonly loginService: LoginService) {
+                private readonly loginService: LoginService)  {
 
-        this.typesService.getTypes(5).then(types => this.startMethodeTypes$ = of(types));
-        this.typesService.getTypes(9).then(types => this.veldTypes$ = of(types));
+        this.typesService.getTypes(5).then(types => this.startMethodeTypes$ = of(types));   // startmethodes
+        this.typesService.getTypes(9).then(types => this.veldTypes$ = of(types));           // vliegvelden
 
         // de datum zoals die in de kalender gekozen is
         this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
@@ -80,10 +80,13 @@ export class DaginfoComponent {
             })
         })
 
+        // aboneer op wijziging van kalender dataum
         this.dagInfoAbonnement = this.daginfoService.dagInfoChange.subscribe(di => { this.dagInfo = di})
+
+        // aantal regels dat we tonen in de tekst invoer. Kan ingesteld worden te verkoming van scrollbars
         const dagInfoTekstRegels = this.storageService.ophalen('dagInfoTekstRegels');
         if (dagInfoTekstRegels) {
-            this.tekstRegels = 1*dagInfoTekstRegels;
+            this.tekstRegels = +dagInfoTekstRegels;    // conversie van string naar number
         }
 
     }
@@ -95,14 +98,16 @@ export class DaginfoComponent {
         this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
     }
 
+    // opslaan van de ingevoerde dag rapport
     opslaanDagInfo() {
         if (this.dagInfo.ID == undefined) {
             this.daginfoService.nieuweDagInfo(this.dagInfo).then((di) => this.dagInfo = di);
         } else {
             this.daginfoService.updateDagInfo(this.dagInfo).then((di) => this.dagInfo = di);
-        };
+        }
     }
 
+    // Extra vraag voordat de daginfo als verwijderd gemarkeerd wordt
     bevestigVerwijderen() {
         if (this.dagInfo.ID != undefined) {
             if (confirm("Weet u zeker dat de daginfo verwijderd mag worden?")) {
@@ -112,14 +117,17 @@ export class DaginfoComponent {
         }
     }
 
+    // Wizard om tekst te genereren voor meteo input. Tekst kan daarna aangepast worden
     invullenMeteo() {
         this.meteoWizard.openPopup();
     }
 
+    // Wizard om tekst te genereren voor vliegbedrijf. Tekst kan daarna aangepast worden
     invullenVliegbedrijf() {
         this.bedrijfWizard.openPopup();
     }
 
+    // als we meer tekst op scherm kunnen tonen, dan is dat de volgende keer ook zo, dus opslaan
     storeTextRegels() {
         this.storageService.opslaan('dagInfoTekstRegels', this.tekstRegels, -1);
     }

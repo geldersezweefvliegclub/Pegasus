@@ -6,7 +6,7 @@ import {
   faTachometerAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import {LoginService} from "../../services/apiservice/login.service";
-import {HeliosLid, HeliosType, HeliosTypes} from "../../types/Helios";
+import {HeliosLid, HeliosType} from "../../types/Helios";
 import {ActivatedRoute} from "@angular/router";
 import {LedenService} from "../../services/apiservice/leden.service";
 import {TypesService} from "../../services/apiservice/types.service";
@@ -34,10 +34,10 @@ export class DashboardPageComponent {
               private readonly typesService: TypesService,
               private activatedRoute: ActivatedRoute) {
 
-    this.typesService.getTypes(6).then(types => this.lidTypes = types);
+    this.typesService.getTypes(6).then(types => this.lidTypes = types); // ophalen lidtypes
 
+    // Als lidID is meegegeven in URL, moeten we de lidData ophalen
     this.activatedRoute.queryParams.subscribe(params => {
-
       if (params['lidID']) {
         const lidID = params['lidID'];
         this.ledenService.getLid(lidID).then((l) => this.lidData = l);
@@ -48,6 +48,7 @@ export class DashboardPageComponent {
     });
   }
 
+  // Met welk lidmaatschap hebben te maken, geef de omschrijving
   getLidType(): string {
     const t = this.lidTypes.find(type => type.ID == this.lidData.LIDTYPE_ID) as HeliosType;
     if (t) {

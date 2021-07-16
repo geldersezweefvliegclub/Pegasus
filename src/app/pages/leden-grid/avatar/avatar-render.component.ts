@@ -25,6 +25,7 @@ export class AvatarRenderComponent implements AgRendererComponent {
     return false;
   }
 
+  // Toon grote avatar in in popup window
   showPopup() {
     this.popup.open();
   }

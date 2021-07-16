@@ -43,11 +43,13 @@ export class VliegtuigenGridComponent implements OnInit {
         {field: 'TMG', headerName: 'TMG', sortable: true, cellRenderer: 'checkboxRender'}
     ];
 
+    // kolom om record te verwijderen
     deleteColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 100,
         initialWidth: 100,
         resizable: false,
+        suppressSizeToFit:true,
         hide: false,
         cellRenderer: 'deleteAction', headerName: '', sortable: false,
         cellRendererParams: {
@@ -57,11 +59,13 @@ export class VliegtuigenGridComponent implements OnInit {
         },
     }];
 
+    // kolom om terug te kunnen terughalen
     restoreColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 100,
         initialWidth: 100,
         resizable: false,
+        suppressSizeToFit:true,
         hide: false,
         cellRenderer: 'restoreAction', headerName: '', sortable: false,
         cellRendererParams: {
@@ -71,11 +75,13 @@ export class VliegtuigenGridComponent implements OnInit {
         },
     }];
 
+    // kolom om logboek te zien
     logboekColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 100,
         initialWidth: 100,
         resizable: false,
+        suppressSizeToFit:true,
         hide: false,
         cellClass: "geenDots",
         cellRenderer: 'logboekRender', headerName: 'Logboek', sortable: false,
@@ -96,11 +102,13 @@ export class VliegtuigenGridComponent implements OnInit {
         restoreAction: RestoreActionComponent
     };
     iconCardIcon: IconDefinition = faPlane;
+    prullenbakIcon: IconDefinition = faRecycle;
+
     zoekString: string;
-    zoekTimer: number;
-    deleteMode: boolean = false;
-    trashMode: boolean = false;
-    prullenbakIcon = faRecycle;
+    zoekTimer: number;                  // kleine vertraging om data ophalen te beperken
+    deleteMode: boolean = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
+    trashMode: boolean = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
+
     error: CustomError | undefined;
     magToevoegen: boolean = false;
     magVerwijderen: boolean = false;
@@ -125,24 +133,29 @@ export class VliegtuigenGridComponent implements OnInit {
         this.magExporten = (!ui?.isDDWV) ? true : false;
     }
 
+    // openen van popup om de data van een nieuw vliegtuig te kunnen invoeren
     addVliegtuig(): void {
         this.editor.openPopup(null);
     }
 
+    // openen van popup om gegevens van een bestaand vliegtuig aan te passen
     openEditor(event?: RowDoubleClickedEvent) {
         this.editor.openPopup(event?.data.ID);
     }
 
+    // schakelen tussen deleteMode JA/NEE. In deleteMode kun je vliegtuigen verwijderen
     deleteModeJaNee() {
         this.deleteMode = !this.deleteMode;
         this.kolomDefinitie();
     }
 
+    // schakelen tussen trashMode JA/NEE. In trashMode worden te verwijderde vliegtuigen getoond
     trashModeJaNee() {
         this.kolomDefinitie();
         this.opvragen();
     }
 
+    // Welke kolommen moet worden getoond in het grid
     kolomDefinitie() {
         if (!this.deleteMode) {
             this.columns = this.logboekColumn.concat(this.dataColumns);
@@ -156,6 +169,7 @@ export class VliegtuigenGridComponent implements OnInit {
         }
     }
 
+    // Opvragen van de data via de api
     opvragen() {
         clearTimeout(this.zoekTimer);
 
@@ -166,6 +180,7 @@ export class VliegtuigenGridComponent implements OnInit {
         }, 400);
     }
 
+    // opslaan van de data van een nieuw vliegtuig
     Toevoegen(vliegtuig: HeliosVliegtuig) {
         this.vliegtuigenService.nieuwVliegtuig(vliegtuig).then(() => {
             this.opvragen();
@@ -175,6 +190,7 @@ export class VliegtuigenGridComponent implements OnInit {
         })
     }
 
+    // bestaand vl;iegtuig is aangepast. Opslaan van de data
     Aanpassen(vliegtuig: HeliosVliegtuig) {
         this.vliegtuigenService.updateVliegtuig(vliegtuig).then(() => {
             this.opvragen();
@@ -184,6 +200,7 @@ export class VliegtuigenGridComponent implements OnInit {
         })
     }
 
+    // markeer een vliegtuig als verwijderd
     Verwijderen(id: number) {
         this.vliegtuigenService.deleteVliegtuig(id).then(() => {
             this.deleteMode = false;
@@ -195,6 +212,7 @@ export class VliegtuigenGridComponent implements OnInit {
         });
     }
 
+    // de vliegtuig is weer terug, haal de markering 'verwijderd' weg
     Herstellen(id: number) {
         this.vliegtuigenService.restoreVliegtuig(id).then(() => {
             this.deleteMode = false;
@@ -214,6 +232,7 @@ export class VliegtuigenGridComponent implements OnInit {
         xlsx.writeFile(wb, 'vliegtuigen ' + new Date().toJSON().slice(0,10) +'.xlsx');
     }
 
+    // wijzig de route naar vliegtuig logboek. Vliegtuig logboek is te groot voor popup
     private openVliegtuigLogboek(ID: number) {
         this.router.navigate(['/vlogboek'],{ queryParams: { vliegtuigID: ID } });
     }
