@@ -1,40 +1,87 @@
 {
-    "url": "http://localhost:4200/api/",
-    "pvb" :  [
-        {
-            "Type": "ASK21",
-            "Lokaal": 251,
-            "Overland": 261
-        },
-        {
-            "Type": "LS4",
-            "Lokaal": 252,
-            "Overland": 262
-        },
-        {
-            "Type": "Discus",
-            "Lokaal": 253,
-            "Overland": 263
-        },
-        {
-            "Type": "LS8",
-            "Lokaal": 254,
-            "Overland": 264
-        },
-        {
-            "Type": "ASG29",
-            "Lokaal": 256,
-            "Overland": 266
-        },
-        {
-            "Type": "DuoDiscus",
-            "Lokaal": 255,
-            "Overland": 265
-        },
-        {
-            "Type": "Arcus",
-            "Lokaal": 257,
-            "Overland": 267
-        }
+  "url": "http://localhost:4200/api/",
+
+  "pvb": [
+    {
+      "Type": "ASK21",
+      "Lokaal": 251,
+      "Overland": 261
+    },
+    {
+      "Type": "LS4",
+      "Lokaal": 252,
+      "Overland": 262
+    },
+    {
+      "Type": "Discus",
+      "Lokaal": 253,
+      "Overland": 263
+    },
+    {
+      "Type": "LS8",
+      "Lokaal": 254,
+      "Overland": 264
+    },
+    {
+      "Type": "ASG29",
+      "Lokaal": 256,
+      "Overland": 266
+    },
+    {
+      "Type": "DuoDiscus",
+      "Lokaal": 255,
+      "Overland": 265
+    },
+    {
+      "Type": "Arcus",
+      "Lokaal": 257,
+      "Overland": 267
+    }
+  ],
+
+  "checks":
+  {
+    "Jaren": [2021, 2020 ],
+    "Check": [
+      {
+        "Omschrijving": "Jaar check",
+        "CompetentieID": [ 305, 302 ]
+      },
+      {
+        "Omschrijving": "Vragenlijst XLT",
+        "CompetentieID": [ 306, 303 ]
+      },
+      {
+        "Omschrijving": "Vragenlijst Arcus",
+        "CompetentieID": [ 307, -1 ]
+      }
     ]
+  },
+  "overig": [
+    {
+      "Omschrijving": "Doellandingen",
+      "CompetentieID": 168
+    },
+    {
+      "Omschrijving": "Passagiers",
+      "CompetentieID": 271
+    },
+    {
+      "Omschrijving": "Turbo gebruik",
+      "CompetentieID": 286
+    },
+    {
+      "Omschrijving": "TurboInstructeur",
+      "CompetentieID": -1
+    },
+    {
+      "Omschrijving": "DDWV",
+      "CompetentieID": 287
+    }
+  ],
+  "airport":
+  {
+    "Latitude": 52.0507,
+    "Longitude": 5.9292
+  }
 }

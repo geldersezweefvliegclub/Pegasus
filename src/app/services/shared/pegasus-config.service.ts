@@ -6,7 +6,6 @@ import {HttpClient} from "@angular/common/http";
 })
 
 
-
 export class PegasusConfigService {
     private configURL = '/assets/pegasus.config.json';
     private pegasusConfig: IPegasusConfig;
@@ -24,7 +23,7 @@ export class PegasusConfigService {
             });
             */
 
-            this.http.get(this.configURL).toPromise().then((response : IPegasusConfig) => {
+            this.http.get(this.configURL).toPromise().then((response: IPegasusConfig) => {
                 this.pegasusConfig = <IPegasusConfig>response;
 
                 resolve(this.pegasusConfig);
@@ -44,14 +43,44 @@ export class PegasusConfigService {
     public getPVB(): any[] {
         return this.pegasusConfig.pvb;
     }
+
+    public getChecks(): any {
+        return this.pegasusConfig.checks;
+    }
+
+    public getOverig(): any {
+        return this.pegasusConfig.overig;
+    }
+
+    public getAirport(): any {
+        return this.pegasusConfig.airport;
+    }
 }
 
-export interface IPegasusConfig{
+export interface IPegasusConfig {
     url: string,
 
     pvb: [{
-        Type: string,
-        Lokaal: number,
-        Overland: number
+        Type: string,           // Vliegtuig type
+        Lokaal: number,         // Competentie ID voor lokaal vliegen
+        Overland: number        // Competentie ID voor overland
+    }],
+
+    checks: [{
+        Jaren: [number],            // Voor welk jaren zijn de checks
+        Check: [{
+            Omschrijving: string      // Wat voor een check (checkstart, vragenlijst etc)
+            CompetentieID: [number]  // Competentie ID voor jaarcheck voor het jaar XX
+        }]
+    }],
+
+    overig: [{
+        Omschrijving: string,
+        CompetentieID: number
     }]
+
+    airport: {
+        Latitude: number,
+        Longitude: number
+    }
 }

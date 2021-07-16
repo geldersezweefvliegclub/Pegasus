@@ -4,9 +4,6 @@
 
 export const environment = {
   production: false,
-  helios: 'http://localhost:4200/api/',
-  latitude: 52.0507,
-  longitude: 5.9292
 };
 
 /*

@@ -51,6 +51,17 @@ input.ng-dirty.ng-invalid{
   border: none !important;
 }
 
+.ag-cell {
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+}
+
+.ag-theme-material .ag-header-cell, .ag-theme-material .ag-header-group-cell {
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+}
+
+
 .card-body {
   padding-bottom: 0.5rem;
 }

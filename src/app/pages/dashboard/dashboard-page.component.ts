@@ -1,12 +1,9 @@
 import {Component} from '@angular/core';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {
-  faBookmark, faCalendarAlt, faCalendarDay, faChartLine, faChartPie,
-  faClipboardCheck,
+  faBookmark, faCalendarAlt, faChartLine, faChartPie,
   faClipboardList,
-  faInfo,
   faTachometerAlt,
-  faTrafficLight
 } from "@fortawesome/free-solid-svg-icons";
 import {LoginService} from "../../services/apiservice/login.service";
 import {HeliosLid, HeliosType, HeliosTypes} from "../../types/Helios";
@@ -48,7 +45,6 @@ export class DashboardPageComponent {
       else  {
         this.lidData = this.loginService.userInfo?.LidData as HeliosLid;
       }
-      console.log(this.lidData)
     });
   }
 

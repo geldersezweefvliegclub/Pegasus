@@ -26,6 +26,7 @@ import {LazyLoadImageModule} from "ng-lazyload-image";
 import { VliegerLogboekComponent } from './components/vlieger-logboek/vlieger-logboek.component';
 import { PvbComponent } from './components/pvb/pvb.component';
 import { RecencyComponent } from './components/recency/recency.component';
+import { StatusComponent } from './components/status/status.component';
 
 
 @NgModule({
@@ -58,7 +59,8 @@ import { RecencyComponent } from './components/recency/recency.component';
         AvatarComponent,
         VliegerLogboekComponent,
         PvbComponent,
-        RecencyComponent
+        RecencyComponent,
+        StatusComponent
     ],
     exports: [
         AvatarComponent,
@@ -74,6 +76,7 @@ import { RecencyComponent } from './components/recency/recency.component';
         VliegerLogboekComponent,
         PvbComponent,
         RecencyComponent,
+        StatusComponent,
     ],
     providers: [],
     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

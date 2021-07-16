@@ -10,6 +10,7 @@ import {getSunrise, getSunset} from 'sunrise-sunset-js';
 import {environment} from '../../../../../environments/environment';
 import {DateTime} from 'luxon';
 import {CustomError} from '../../../../types/Utils';
+import {PegasusConfigService} from "../../../../services/shared/pegasus-config.service";
 
 enum TypeTijdInvoer {
     Starttijd,
@@ -43,7 +44,9 @@ export class TijdInvoerComponent {
 
     Invoer: TypeTijdInvoer = TypeTijdInvoer.Starttijd;
 
-    constructor(private readonly startlijstService: StartlijstService, config: NgbTypeaheadConfig) {
+    constructor(private readonly startlijstService: StartlijstService,
+                private readonly configService: PegasusConfigService,
+                config: NgbTypeaheadConfig) {
         config.showHint = true;
     }
 
@@ -152,8 +155,9 @@ export class TijdInvoerComponent {
 
     // De eerste tjd
     vanTijd(): Date {
+        const airport = this.configService.getAirport();
         const d = new Date(this.start.DATUM as string);
-        const sunrise: Date = getSunrise(environment.latitude, environment.longitude, d);
+        const sunrise: Date = getSunrise(airport.Latitude, airport.Longitude, d);
 
         let begin: Date = sunrise;
 
@@ -172,8 +176,9 @@ export class TijdInvoerComponent {
 
     // wat is de laatste tijd die ingevoerd mag worden
     totTijd(): Date {
+        const airport = this.configService.getAirport();
         const d = new Date(this.start.DATUM as string);
-        let sunset: Date = getSunset(environment.latitude, environment.longitude, d);
+        let sunset: Date = getSunset(airport.Latitude, airport.Longitude, d);
         sunset.setHours(sunset.getHours() + 1); // 1 uurtje extra voor landing in schemer
 
         // VELD_ID = xxx Starten op ander veld, dan klopt sunset niet. Dan maar tot 22:00

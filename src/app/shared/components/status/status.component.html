@@ -1,0 +1,29 @@
+<table class="statusTabel">
+    <tr class="headerRow">
+        <th></th>
+        <th>{{cheks.Jaren[0]}}</th>
+        <th>{{cheks.Jaren[1]}}</th>
+    </tr>
+    <tr *ngFor="let c of cheks.Check;">
+        <td class="kolom1">
+            {{c.Omschrijving}}
+        </td>
+        <td class="kolom2">
+            <input type="checkbox" id="L{{c.CompetentieID[0]}}" class="form-check-inline" [checked]="CheckGehaald(c.CompetentieID[0])">
+        </td>
+        <td class="kolom3">
+            <input type="checkbox" id="O{{c.CompetentieID[1]}}" class="form-check-inline" [checked]="CheckGehaald(c.CompetentieID[1])">
+        </td>
+    </tr>
+</table>
+
+<table class="overigTabel">
+    <tr *ngFor="let o of overig;">
+        <td class="col1">
+            {{o.Omschrijving}}
+        </td>
+        <td class="kolom2">
+            <input type="checkbox" id="L{{o.CompetentieID}}" class="form-check-inline" [checked]="CheckGehaald(o.CompetentieID)">
+        </td>
+    </tr>
+</table>

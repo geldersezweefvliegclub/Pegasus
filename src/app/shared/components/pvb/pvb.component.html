@@ -1,0 +1,18 @@
+<table class="pvbTabel">
+    <tr class="headerRow">
+        <th></th>
+        <th>Lokaal</th>
+        <th>Overland</th>
+    </tr>
+    <tr *ngFor="let p of PVBs; let i=index;">
+        <td class="kolom1">
+            {{p.Type}}
+        </td>
+        <td class="kolom2">
+            <input type="checkbox" id="L{{p.Type}}" class="form-check-inline" [checked]="PVBgehaald(p.Lokaal)">
+        </td>
+        <td class="kolom3">
+            <input type="checkbox" id="O{{p.Type}}" class="form-check-inline" [checked]="PVBgehaald(p.Overland)">
+        </td>
+    </tr>
+</table>

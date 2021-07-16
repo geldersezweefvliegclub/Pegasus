@@ -1,0 +1,28 @@
+<div *ngIf="recency">
+    <div class="d-flex flex-column  groen" *ngIf="recency.STATUS_BAROMETER == 'groen'">
+        <p class="niveau">Groene zone</p>
+        <p class="nivTekst">Recente vliegervaring is op orde</p>
+    </div>
+    <div class="d-flex flex-column  geel" *ngIf="recency.STATUS_BAROMETER == 'geel'">
+        <p class="niveau">Gele zone</p>
+        <p class="nivTekst">Meer oefening kan geen kwaad</p>
+    </div>
+    <div class="d-flex flex-column rood" *ngIf="recency.STATUS_BAROMETER == 'rood'">
+        <p class="niveau">Rode zone</p>
+        <p class="currency">{{recency.STARTS_BAROMETER}} starts en {{recency.UREN_BAROMETER}} uur</p>
+        <p class="nivTekst">Onvoldoende recente ervaring</p>
+    </div>
+
+    <div>
+        <p class="titel">Laatste 3 maanden</p>
+        <p class="beschrijving">{{recency.STARTS_DRIE_MND}} starts en {{recency.UREN_DRIE_MND}} uur</p>
+    </div>
+    <div>
+        <p class="titel">Dit jaar</p>
+        <p class="beschrijving">{{recency.STARTS_DIT_JAAR}} starts en {{recency.UREN_DIT_JAAR}} uur</p>
+    </div>
+    <div>
+        <p class="titel">Vorig jaar</p>
+        <p class="beschrijving">{{recency.STARTS_VORIG_JAAR}} starts en {{recency.UREN_VORIG_JAAR}} uur</p>
+    </div>
+</div>

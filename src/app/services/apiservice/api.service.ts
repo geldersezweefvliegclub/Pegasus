@@ -11,7 +11,7 @@ export class APIService {
     private URL = 'http://localhost:4200/api/'
 
     constructor(private readonly sharedService: SharedService,
-                private readonly configService: PegasusConfigService,) {
+                private readonly configService: PegasusConfigService) {
 
         const url = configService.getURL();
         if (url) this.URL = url;
@@ -22,7 +22,7 @@ export class APIService {
             url = this.prepareEndpoint(url, params);
         }
 
-        const response = await fetch(`${environment.helios}${url}`, {
+        const response = await fetch(`${this.URL}${url}`, {
             method: 'GET',
             headers: headers,
             credentials: 'include'
@@ -37,7 +37,7 @@ export class APIService {
     // Aanroepen post request om het aanmaken van nieuw record
     async post(url: string, body: string): Promise<Response> {
 
-        const response = await fetch(`${environment.helios}${url}`, {
+        const response = await fetch(`${this.URL}${url}`, {
             method: 'POST',
             body: body,
         });
@@ -55,7 +55,7 @@ export class APIService {
     // Aanroepen put request om record te wijzigen
     async put(url: string, body: string): Promise<Response> {
 
-        const response = await fetch(`${environment.helios}${url}`, {
+        const response = await fetch(`${this.URL}${url}`, {
             method: 'PUT',
             body: body,
         });
@@ -75,7 +75,7 @@ export class APIService {
             url = this.prepareEndpoint(url, params);
         }
 
-        const response = await fetch(`${environment.helios}${url}`, {
+        const response = await fetch(`${this.URL}${url}`, {
             method: 'DELETE',
         });
 
@@ -91,7 +91,7 @@ export class APIService {
             url = this.prepareEndpoint(url, params);
         }
 
-        const response = await fetch(`${environment.helios}${url}`, {
+        const response = await fetch(`${this.URL}${url}`, {
             method: 'PATCH',
         });
 
