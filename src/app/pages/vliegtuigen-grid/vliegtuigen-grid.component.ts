@@ -118,10 +118,12 @@ export class VliegtuigenGridComponent implements OnInit {
     constructor(private readonly vliegtuigenService: VliegtuigenService,
                 private readonly loginService: LoginService,
                 private readonly router: Router) {
-        this.kolomDefinitie();
     }
 
     ngOnInit(): void {
+        // plaats de juiste kolommen in het grid
+        this.kolomDefinitie();
+
         this.vliegtuigenService.getVliegtuigen().then((dataset) => {
             this.data = dataset;
         });

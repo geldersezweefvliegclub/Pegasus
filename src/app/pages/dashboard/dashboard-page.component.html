@@ -68,7 +68,11 @@
                            titel="Logboek"
                            subtitel="Overzicht van de vluchten"
                            [icon]="iconLogboek">
-
+                <div class="expandLogboek">
+                    <a (click)="toonLogboekGroot()">
+                        <fa-icon [icon]="iconExpand"></fa-icon>
+                    </a>
+                </div>
                 <app-vlieger-logboek [VliegerID]="lidData.ID"></app-vlieger-logboek>
             </app-icon-card>
         </div>
@@ -85,5 +89,13 @@
     </div>
 
 </app-icon-card>
+
+<app-modal popupClass="popupLarge" titel="Logboek van {{lidData.NAAM}} voor">
+    <div body *ngIf="lidData">
+        <div class="popupLargeWrapper">
+            <app-vlieger-logboek [VliegerID]="lidData.ID"></app-vlieger-logboek>
+        </div>
+    </div>
+</app-modal>
 
 

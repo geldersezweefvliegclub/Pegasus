@@ -138,6 +138,8 @@ export class LedenGridComponent {
     }
 
     ngOnInit(): void {
+        // plaats de juiste kolommen in het grid
+        this.kolomDefinitie();
         this.opvragen();
 
         const ui = this.loginService.userInfo?.Userinfo;

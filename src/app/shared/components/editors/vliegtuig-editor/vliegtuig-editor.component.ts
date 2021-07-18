@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {ModalComponent} from '../../modal/modal.component';
 import {HeliosType, HeliosVliegtuig} from '../../../../types/Helios';
 import {VliegtuigenService} from '../../../../services/apiservice/vliegtuigen.service';
@@ -9,7 +9,7 @@ import {TypesService} from '../../../../services/apiservice/types.service';
     templateUrl: './vliegtuig-editor.component.html',
     styleUrls: ['./vliegtuig-editor.component.scss']
 })
-export class VliegtuigEditorComponent {
+export class VliegtuigEditorComponent  implements  OnInit {
     @Output() add: EventEmitter<HeliosVliegtuig> = new EventEmitter<HeliosVliegtuig>();
     @Output() update: EventEmitter<HeliosVliegtuig> = new EventEmitter<HeliosVliegtuig>();
     @Output() delete: EventEmitter<number> = new EventEmitter<number>();
@@ -41,7 +41,9 @@ export class VliegtuigEditorComponent {
     constructor(
         private readonly vliegtuigenService: VliegtuigenService,
         private readonly typesService: TypesService
-    ) {
+    ) {}
+
+    ngOnInit(): void {
         this.typesService.getTypes(4).then(types => this.vliegtuigTypes = types);
     }
 

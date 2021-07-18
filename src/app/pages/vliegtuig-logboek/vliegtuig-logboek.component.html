@@ -88,9 +88,9 @@
     </div>
 </app-icon-card>
 
-<app-modal popupClass="popupGrafiek" [titel]="DetailGrafiekTitel">
+<app-modal popupClass="popupLarge" [titel]="DetailGrafiekTitel">
     <div body *ngIf="toonVluchtenDetailGrafiek">
-        <div class="barchart-wrapper popupChartWrapper">
+        <div class="barchart-wrapper popupLargeWrapper">
             <canvas baseChart
                     (chartClick)="toonVluchtenDetail()"
                     [datasets]="barChartData"
@@ -104,7 +104,7 @@
     </div>
 
     <div body *ngIf="toonVliegtijdDetailGrafiek">
-        <div class="linechart-wrapper popupChartWrapper">
+        <div class="linechart-wrapper popupLargeWrapper">
             <canvas baseChart
                     (chartClick)="toonTijdDetail()"
                     [datasets]="lineChartData"

@@ -50,7 +50,7 @@ export class TijdInvoerComponent {
         config.showHint = true;
     }
 
-    // opbouwen van popup lijst
+    // opbouwen van popup lijst met tijden (wordt getoond bij toetsenbord invoer)
     search = (text$: Observable<string>) =>
         text$.pipe(
             debounceTime(300),
@@ -252,6 +252,11 @@ export class TijdInvoerComponent {
 
         if ((event.key.match(/[0-9]/)) && (this.tijdIngevoerd.length < 5)) {
             return;
+        }
+
+        if (event.key == "Enter") {
+            this.opslaan();
+
         }
 
         event.preventDefault();

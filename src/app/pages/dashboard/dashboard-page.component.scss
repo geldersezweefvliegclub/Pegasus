@@ -31,3 +31,14 @@
     padding-top: 30px;
     height: 400px;
 }
+
+.expandLogboek {
+    position: absolute;
+    align-self: flex-end;
+    right: 15px;
+    top: 12px;
+    color: #bebebe;
+    font-size: 20px;
+
+    cursor: zoom-in;
+}

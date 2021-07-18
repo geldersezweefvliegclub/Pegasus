@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Observable, of, Subject} from 'rxjs';
 import {HeliosAanwezigLedenDataset, HeliosVliegtuigenDataset} from '../../../../../types/Helios';
 
@@ -7,7 +7,7 @@ import {HeliosAanwezigLedenDataset, HeliosVliegtuigenDataset} from '../../../../
     templateUrl: './lid-invoer.component.html',
     styleUrls: ['./lid-invoer.component.scss']
 })
-export class LidInvoerComponent implements OnChanges {
+export class LidInvoerComponent implements OnInit, OnChanges {
     @Input() leden: HeliosAanwezigLedenDataset[] = [];
     @Input() aanwezig: HeliosAanwezigLedenDataset[] = [];
     @Input() placeholder: string = "";
@@ -25,7 +25,9 @@ export class LidInvoerComponent implements OnChanges {
     aanwezigFiltered: HeliosAanwezigLedenDataset[] = [];
     ledenSelectie$: Observable<HeliosAanwezigLedenDataset[]>;
 
-    constructor() {
+    constructor() {}
+
+    ngOnInit(): void {
         this.lidInput$.subscribe((newTerm) => {
             const nweLijst = this.zoekLid(newTerm);
 

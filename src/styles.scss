@@ -206,10 +206,10 @@ input.ng-dirty.ng-invalid{
   text-overflow: clip;
 }
 
-body > .popupGrafiek > div {
+body > .popupLarge > div {
   max-width: 90%;
 }
 
-.popupChartWrapper {
+.popupLargeWrapper {
   height: calc(100vh * 0.66);
 }

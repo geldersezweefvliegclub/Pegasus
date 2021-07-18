@@ -164,6 +164,9 @@ export class StartlijstGridComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        // plaats de juiste kolommen in het grid
+        this.kolomDefinitie();
+
         // de datum zoals die in de kalender gekozen is
         this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
             this.datum = DateTime.fromObject({

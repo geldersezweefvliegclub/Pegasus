@@ -3,6 +3,7 @@ import {CustomError, HeliosActie, KeyValueString} from '../../types/Utils';
 import {environment} from '../../../environments/environment';
 import {SharedService} from '../shared/shared.service';
 import {PegasusConfigService} from "../shared/pegasus-config.service";
+import {Base64} from "js-base64";
 
 @Injectable({
     providedIn: 'root'
@@ -21,6 +22,7 @@ export class APIService {
         if (params) {
             url = this.prepareEndpoint(url, params);
         }
+
 
         const response = await fetch(`${this.URL}${url}`, {
             method: 'GET',

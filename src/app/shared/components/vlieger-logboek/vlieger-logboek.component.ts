@@ -51,6 +51,9 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
         datumRender: DatumRenderComponent
     };
 
+    constructor(private readonly startlijstService: StartlijstService,
+                private readonly sharedService: SharedService) {}
+
     ngOnInit(): void {
         // de datum zoals die in de kalender gekozen is
         this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
@@ -61,11 +64,6 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
             })
             this.opvragen();
         })
-    }
-
-    constructor(private readonly startlijstService: StartlijstService,
-                private readonly sharedService: SharedService) {
-
     }
 
     opvragen() {

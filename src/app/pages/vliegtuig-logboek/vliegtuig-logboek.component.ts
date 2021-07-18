@@ -163,14 +163,14 @@ export class VliegtuigLogboekComponent implements OnInit {
                 private readonly loginService: LoginService,
                 private readonly sharedService: SharedService,
                 private activatedRoute: ActivatedRoute) {
+    }
 
+    ngOnInit(): void {
         // het vliegtuig ID wordt via de url meegegeven
         this.activatedRoute.queryParams.subscribe(params => {
             this.vliegtuigID = params['vliegtuigID'];
         });
-    }
 
-    ngOnInit(): void {
         // de datum zoals die in de kalender gekozen is
         this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
             this.datum = DateTime.fromObject({

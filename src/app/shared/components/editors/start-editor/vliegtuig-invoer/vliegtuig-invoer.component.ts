@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Observable, of, Subject} from 'rxjs';
 import {HeliosVliegtuigenDataset} from '../../../../../types/Helios';
 
@@ -7,7 +7,7 @@ import {HeliosVliegtuigenDataset} from '../../../../../types/Helios';
     templateUrl: './vliegtuig-invoer.component.html',
     styleUrls: ['./vliegtuig-invoer.component.scss']
 })
-export class VliegtuigInvoerComponent implements OnChanges {
+export class VliegtuigInvoerComponent implements OnInit, OnChanges {
     @Input() vliegtuigen: HeliosVliegtuigenDataset[] = [];
     @Input() aanwezig: HeliosVliegtuigenDataset[] = [];
     @Input() label: string = "";
@@ -22,6 +22,9 @@ export class VliegtuigInvoerComponent implements OnChanges {
     vliegtuigenSelectie$: Observable<HeliosVliegtuigenDataset[]>;
 
     constructor() {
+    }
+
+    ngOnInit(): void {
         this.vliegtuigInput$.subscribe((newTerm) => {
             const nweLijst = this.zoekVliegtuig(newTerm);
             this.vliegtuigenSelectie$ = of(nweLijst);

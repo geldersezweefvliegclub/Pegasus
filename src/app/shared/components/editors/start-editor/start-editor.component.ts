@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {
   HeliosAanwezigLedenDataset,
   HeliosLedenDataset,
@@ -25,7 +25,7 @@ import {DaginfoService} from '../../../../services/apiservice/daginfo.service';
     templateUrl: './start-editor.component.html',
     styleUrls: ['./start-editor.component.scss']
 })
-export class StartEditorComponent {
+export class StartEditorComponent implements OnInit {
     @Output() add: EventEmitter<HeliosStart> = new EventEmitter<HeliosStart>();
     @Output() update: EventEmitter<HeliosStart> = new EventEmitter<HeliosStart>();
     @Output() delete: EventEmitter<number> = new EventEmitter<number>();
@@ -74,7 +74,9 @@ export class StartEditorComponent {
         private readonly typesService: TypesService,
         private readonly daginfoService: DaginfoService,
         private readonly sharedService: SharedService)
-    {
+    {}
+
+    ngOnInit(): void {
         this.typesService.getTypes(5).then(types => this.startMethodeTypes = types);
         this.typesService.getTypes(9).then(types => this.veldenTypes$ = of(types));
     }

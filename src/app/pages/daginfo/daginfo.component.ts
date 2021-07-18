@@ -68,6 +68,14 @@ export class DaginfoComponent implements OnInit{
                 private readonly typesService: TypesService,
                 private readonly loginService: LoginService)  {
 
+    }
+
+    ngOnInit(): void {
+        let ui = this.loginService.userInfo?.Userinfo;
+        this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
+        this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
+        this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
+
         this.typesService.getTypes(5).then(types => this.startMethodeTypes$ = of(types));   // startmethodes
         this.typesService.getTypes(9).then(types => this.veldTypes$ = of(types));           // vliegvelden
 
@@ -88,14 +96,6 @@ export class DaginfoComponent implements OnInit{
         if (dagInfoTekstRegels) {
             this.tekstRegels = +dagInfoTekstRegels;    // conversie van string naar number
         }
-
-    }
-
-    ngOnInit(): void {
-        let ui = this.loginService.userInfo?.Userinfo;
-        this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
-        this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
-        this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
     }
 
     // opslaan van de ingevoerde dag rapport
