@@ -61,7 +61,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
                 this.api.sizeColumnsToFit();
             }
         }
-        this.columnStateTimer = setInterval(() => this.StoreColumnState(), 10000)
+        this.columnStateTimer = window.setInterval(() => this.StoreColumnState(), 10000)
     }
 
     ngOnChanges(changes: SimpleChanges): void {

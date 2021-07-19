@@ -89,6 +89,6 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
 
     inputChange(id: number | undefined) {
         clearTimeout(this.EventEmitterDelay);
-        this.EventEmitterDelay = setTimeout(() => this.VliegtuigChanged.emit(id), 1000);
+        this.EventEmitterDelay = window.setTimeout(() => this.VliegtuigChanged.emit(id), 1000);
     }
 }

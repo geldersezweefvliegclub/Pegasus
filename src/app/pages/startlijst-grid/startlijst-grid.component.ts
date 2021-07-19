@@ -15,8 +15,8 @@ import {DateTime} from 'luxon';
 import {VliegerRenderComponent} from './vlieger-render/vlieger-render.component';
 import {InzittendeRenderComponent} from './inzittende-render/inzittende-render.component';
 import {faFilter} from '@fortawesome/free-solid-svg-icons/faFilter';
-import {StarttijdRenderComponent} from './starttijd-render/starttijd-render.component';
-import {LandingstijdRenderComponent} from './landingstijd-render/landingstijd-render.component';
+import {StarttijdRenderComponent} from '../../shared/components/datatable/starttijd-render/starttijd-render.component';
+import {LandingstijdRenderComponent} from '../../shared/components/datatable/landingstijd-render/landingstijd-render.component';
 import {TijdInvoerComponent} from '../../shared/components/editors/tijd-invoer/tijd-invoer.component';
 import {StartEditorComponent} from '../../shared/components/editors/start-editor/start-editor.component';
 import {Subscription} from 'rxjs';
@@ -28,7 +28,6 @@ import {SharedService} from '../../services/shared/shared.service';
     styleUrls: ['./startlijst-grid.component.scss']
 })
 export class StartlijstGridComponent implements OnInit {
-
     @ViewChild(StartEditorComponent) editor: StartEditorComponent;
     @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
 
@@ -298,15 +297,13 @@ export class StartlijstGridComponent implements OnInit {
 
     // De starttijd is ingevoerd/aangepast. Opslaan van de starttijd
     opslaanStartTijd(start: HeliosStart) {
-        this.startlijstService.startTijd(start.ID as number, start.STARTTIJD as string);
-        this.opvragen();
+        this.startlijstService.startTijd(start.ID as number, start.STARTTIJD as string).then((s) => { this.opvragen(); });
         this.tijdInvoerEditor.closePopup();
     }
 
     // De landingstijd is ingevoerd/aangepast. Opslaan van de landingstijd
     opslaanLandingsTijd(start: HeliosStart) {
-        this.startlijstService.landingsTijd(start.ID as number, start.LANDINGSTIJD as string);
-        this.opvragen();
+        this.startlijstService.landingsTijd(start.ID as number, start.LANDINGSTIJD as string).then((s) => { this.opvragen(); });
         this.tijdInvoerEditor.closePopup();
     }
 }

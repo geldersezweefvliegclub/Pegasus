@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {APIService} from '../apiservice/api.service';
 
 import {
-    HeliosLogboek, HeliosRecency,
+    HeliosLogboek, HeliosLogboekDataset, HeliosRecency,
     HeliosStart,
     HeliosStarts,
     HeliosVliegdagen,
@@ -19,7 +19,7 @@ import {DateTime} from 'luxon';
 export class StartlijstService {
     starts: HeliosStarts | null = null;
     vliegdagen: HeliosVliegdagen | null = null;
-    logboek: HeliosLogboek[] | null = null;
+    logboek: HeliosLogboek | null = null;         // logboek vlieger
     vliegtuigLogboek: HeliosVliegtuigLogboek| null = null;
     vliegtuigLogboekTotalen: HeliosVliegtuigLogboekTotalen;
 
@@ -50,12 +50,23 @@ export class StartlijstService {
         return this.vliegdagen?.dataset as [];
     }
 
-    async getLogboek(id: number, jaar: number, maxRecords?: number): Promise<[]> {
+    async getLogboek(id: number, jaar: number, maxRecords?: number): Promise<HeliosLogboekDataset[]> {
+        let hash: string = '';
+
         interface parameters {
             [key: string]: string;
         }
+        if (this.storageService.ophalen('vlogboek-'+id.toString()) != null) {
+            this.logboek = this.storageService.ophalen('vlogboek-'+id.toString());
+        }
 
         let getParams: parameters = {};
+
+        if (this.logboek != null) {             // we hebben eerder de lijst opgehaald
+            hash = (this.logboek) ? this.logboek.hash as string : '';
+            getParams['HASH'] = hash;
+        }
+
         getParams['LID_ID'] = id.toString();
         getParams['JAAR'] = jaar.toString();
 
@@ -64,21 +75,19 @@ export class StartlijstService {
         }
 
         try {
-            const response: Response = await this.APIService.get('Startlijst/GetLogboek',
-                getParams
-            );
+            const response: Response = await this.APIService.get('Startlijst/GetLogboek', getParams);
 
-            this.vliegtuigLogboek = await response.json();
-
+            this.logboek = await response.json();
+            this.storageService.opslaan('vlogboek-'+id.toString(), this.logboek);
         } catch (e) {
-            if (e.responseCode !== 404) { // er is geen data
+            if ((e.responseCode !== 304) && (e.responseCode !== 404)) { // er is geen data, of data is ongewijzigd
                 throw(e);
             }
         }
-        return this.vliegtuigLogboek?.dataset as [];
+        return this.logboek?.dataset as HeliosLogboekDataset[];
     }
 
-    async getVliegtuigLogboek(id: number, startDatum: DateTime, eindDatum: DateTime): Promise<[]> {
+    async getVliegtuigLogboek(id: number, startDatum: DateTime, eindDatum: DateTime): Promise<HeliosLogboekDataset[]> {
         interface parameters {
             [key: string]: string;
         }

@@ -27,6 +27,7 @@ import { VliegerLogboekComponent } from './components/vlieger-logboek/vlieger-lo
 import { PvbComponent } from './components/pvb/pvb.component';
 import { RecencyComponent } from './components/recency/recency.component';
 import { StatusComponent } from './components/status/status.component';
+import {TijdInvoerComponent} from "./components/editors/tijd-invoer/tijd-invoer.component";
 
 
 @NgModule({
@@ -60,7 +61,8 @@ import { StatusComponent } from './components/status/status.component';
         VliegerLogboekComponent,
         PvbComponent,
         RecencyComponent,
-        StatusComponent
+        StatusComponent,
+        TijdInvoerComponent,
     ],
     exports: [
         AvatarComponent,
@@ -77,6 +79,7 @@ import { StatusComponent } from './components/status/status.component';
         PvbComponent,
         RecencyComponent,
         StatusComponent,
+        TijdInvoerComponent,
     ],
     providers: [],
     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

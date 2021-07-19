@@ -107,6 +107,6 @@ export class LidInvoerComponent implements OnInit, OnChanges {
 
     inputChange (id: number | undefined) {
         clearTimeout(this.EventEmitterDelay);
-        this.EventEmitterDelay = setTimeout(() => this.LidChanged.emit(id), 1000);
+        this.EventEmitterDelay = window.setTimeout(() => this.LidChanged.emit(id), 1000);
     }
 }

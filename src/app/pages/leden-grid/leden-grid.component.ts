@@ -189,7 +189,7 @@ export class LedenGridComponent {
         clearTimeout(this.zoekTimer);
 
         // Wacht even de gebruiker kan nog aan het typen zijn
-        this.zoekTimer = setTimeout(() => {
+        this.zoekTimer = window.setTimeout(() => {
             this.ledenService.getLeden(this.trashMode, this.zoekString).then((dataset) => {
                 this.dataset = dataset;
                 this.applyFilter();

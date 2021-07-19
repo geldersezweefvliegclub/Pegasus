@@ -1,12 +1,15 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {ColDef} from "ag-grid-community";
 import {nummerSort, tijdSort} from "../../../types/Utils";
-import {HeliosLogboek} from "../../../types/Helios";
+import {HeliosLogboek, HeliosLogboekDataset, HeliosStart, HeliosStartDataset} from "../../../types/Helios";
 import {DateTime} from "luxon";
 import {Subscription} from "rxjs";
 import {StartlijstService} from "../../../services/apiservice/startlijst.service";
 import {SharedService} from "../../../services/shared/shared.service";
 import {DatumRenderComponent} from "../datatable/datum-render/datum-render.component";
+import {StarttijdRenderComponent} from "../datatable/starttijd-render/starttijd-render.component";
+import {LandingstijdRenderComponent} from "../datatable/landingstijd-render/landingstijd-render.component";
+import {TijdInvoerComponent} from "../editors/tijd-invoer/tijd-invoer.component";
 
 @Component({
     selector: 'app-vlieger-logboek',
@@ -16,8 +19,10 @@ import {DatumRenderComponent} from "../datatable/datum-render/datum-render.compo
 
 export class VliegerLogboekComponent implements OnInit, OnChanges {
     @Input() VliegerID: number;
-    data: HeliosLogboek[] = [];
 
+    @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
+
+    data: HeliosLogboekDataset[] = [];
     datumAbonnement: Subscription;
     datum: DateTime;                       // de gekozen dag in de kalender
 
@@ -35,6 +40,11 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
             hide: false,
             cellRenderer: 'startTijdRender',
             comparator: tijdSort,
+            cellRendererParams: {
+                tijdClicked: (record: HeliosStartDataset) => {
+                    this.tijdInvoerEditor.openStarttijdPopup(record);
+                }
+            },
         },
         {
             field: 'LANDINGSTIJD',
@@ -42,13 +52,20 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
             sortable: true,
             cellRenderer: 'landingsTijdRender',
             comparator: tijdSort,
+            cellRendererParams: {
+                tijdClicked: (record: HeliosStartDataset) => {
+                    this.tijdInvoerEditor.openLandingsTijdPopup(record);
+                }
+            },
         },
         {field: 'DUUR', headerName: 'Duur', sortable: true, comparator: tijdSort},
         {field: 'OPMERKINGEN', headerName: 'Opmerkingen', sortable: true}
     ];
 
     frameworkComponents = {
-        datumRender: DatumRenderComponent
+        datumRender: DatumRenderComponent,
+        startTijdRender: StarttijdRenderComponent,
+        landingsTijdRender: LandingstijdRenderComponent,
     };
 
     constructor(private readonly startlijstService: StartlijstService,
@@ -66,12 +83,25 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
         })
     }
 
+    // opvragen van het vlieger logboek
     opvragen() {
         if (this.datum) {
             this.startlijstService.getLogboek(this.VliegerID, this.datum.year).then((dataset) => {
                 this.data = dataset;
             });
         }
+    }
+
+    // De starttijd is ingevoerd/aangepast. Opslaan van de starttijd
+    opslaanStartTijd(start: HeliosStart) {
+        this.startlijstService.startTijd(start.ID as number, start.STARTTIJD as string).then((s) => { this.opvragen(); });
+        this.tijdInvoerEditor.closePopup();
+    }
+
+    // De landingstijd is ingevoerd/aangepast. Opslaan van de landingstijd
+    opslaanLandingsTijd(start: HeliosStart) {
+        this.startlijstService.landingsTijd(start.ID as number, start.LANDINGSTIJD as string).then((s) => { this.opvragen(); });
+        this.tijdInvoerEditor.closePopup();
     }
 
     ngOnChanges(changes: SimpleChanges) {

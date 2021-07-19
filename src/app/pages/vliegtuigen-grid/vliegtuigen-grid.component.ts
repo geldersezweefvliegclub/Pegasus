@@ -175,7 +175,7 @@ export class VliegtuigenGridComponent implements OnInit {
     opvragen() {
         clearTimeout(this.zoekTimer);
 
-        this.zoekTimer = setTimeout(() => {
+        this.zoekTimer = window.setTimeout(() => {
             this.vliegtuigenService.getVliegtuigen(this.trashMode, this.zoekString).then((dataset) => {
                 this.data = dataset;
             });

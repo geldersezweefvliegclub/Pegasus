@@ -77,6 +77,7 @@
     "karma-jasmine-html-reporter": "^1.5.0",
     "ng2-charts-schematics": "^0.1.7",
     "openapi-typescript": "^3.2.4",
+    "openapi-typescript-codegen": "^0.9.3",
     "protractor": "~7.0.0",
     "ts-node": "~7.0.0",
     "tsickle": "^0.39.1",

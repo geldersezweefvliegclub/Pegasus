@@ -20,9 +20,8 @@ import {StartlijstGridComponent} from './startlijst-grid/startlijst-grid.compone
 import {NgbDatepickerModule, NgbTypeaheadModule} from '@ng-bootstrap/ng-bootstrap';
 import {VliegerRenderComponent} from './startlijst-grid/vlieger-render/vlieger-render.component';
 import {InzittendeRenderComponent} from './startlijst-grid/inzittende-render/inzittende-render.component';
-import {StarttijdRenderComponent} from './startlijst-grid/starttijd-render/starttijd-render.component';
-import {LandingstijdRenderComponent} from './startlijst-grid/landingstijd-render/landingstijd-render.component';
-import {TijdInvoerComponent} from '../shared/components/editors/tijd-invoer/tijd-invoer.component';
+import {StarttijdRenderComponent} from '../shared/components/datatable/starttijd-render/starttijd-render.component';
+import {LandingstijdRenderComponent} from '../shared/components/datatable/landingstijd-render/landingstijd-render.component';
 import {DaginfoComponent} from './daginfo/daginfo.component';
 import {CustomFormsModule} from 'ng2-validation';
 import {NgSelectModule} from '@ng-select/ng-select';
@@ -68,7 +67,6 @@ import {ChartsModule} from 'ng2-charts';
         InzittendeRenderComponent,
         StarttijdRenderComponent,
         LandingstijdRenderComponent,
-        TijdInvoerComponent,
         DaginfoComponent,
         ComposeMeteoComponent,
         ComposeBedrijfComponent,

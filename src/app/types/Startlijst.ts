@@ -429,35 +429,33 @@ export interface components {
       OPMERKINGEN?: string;
       /** Extra text om ID van extern systeem op te slaan */
       EXTERNAL_ID?: string;
-    } & { [key: string]: any };
-    oper_startlijst: components["schemas"]["oper_startlijst_in"] &
-      ({
-        /** Is dit record gemarkeerd als verwijderd? */
-        VERWIJDERD?: boolean;
-        /** Tijdstempel van laaste aanpassing in de database */
-        LAATSTE_AANPASSING?: string;
-      } & { [key: string]: any }) & { [key: string]: any };
-    view_startlijst_dataset: components["schemas"]["oper_startlijst"] &
-      ({
-        /** Registratie van het vliegtuig waarop gevlogen is */
-        REGISTRATIE?: string;
-        /** Callsign van het vliegtuig waarop gevlogen is */
-        CALLSIGN?: string;
-        /** Is het een club vliegtuig? */
-        CLUBKIST?: boolean;
-        /** Combinatie van registratie en callsign van het vliegtuig waarop gevlogen is */
-        REG_CALL?: string;
-        /** Hoe lang is er gevlogen. Indien landingstijd niet is ingevuld, op de dag zelf vliegtijd to nu toe, op alle andere dagen null */
-        DUUR?: string;
-        /** De naam van het lid zoals dat in ref_leden staat */
-        VLIEGERNAAM_LID?: string;
-        /** De naam van de inzittende zoals dat in ref_leden staat */
-        INZITTENDENAAM_LID?: string;
-        /** De manier van de start */
-        STARTMETHODE?: string;
-        /** Naam van het vliegveld waarop gestart is */
-        VELD?: string;
-      } & { [key: string]: any }) & { [key: string]: any };
+    };
+    oper_startlijst: components["schemas"]["oper_startlijst_in"] & {
+      /** Is dit record gemarkeerd als verwijderd? */
+      VERWIJDERD?: boolean;
+      /** Tijdstempel van laaste aanpassing in de database */
+      LAATSTE_AANPASSING?: string;
+    };
+    view_startlijst_dataset: components["schemas"]["oper_startlijst"] & {
+      /** Registratie van het vliegtuig waarop gevlogen is */
+      REGISTRATIE?: string;
+      /** Callsign van het vliegtuig waarop gevlogen is */
+      CALLSIGN?: string;
+      /** Is het een club vliegtuig? */
+      CLUBKIST?: boolean;
+      /** Combinatie van registratie en callsign van het vliegtuig waarop gevlogen is */
+      REG_CALL?: string;
+      /** Hoe lang is er gevlogen. Indien landingstijd niet is ingevuld, op de dag zelf vliegtijd to nu toe, op alle andere dagen null */
+      DUUR?: string;
+      /** De naam van het lid zoals dat in ref_leden staat */
+      VLIEGERNAAM_LID?: string;
+      /** De naam van de inzittende zoals dat in ref_leden staat */
+      INZITTENDENAAM_LID?: string;
+      /** De manier van de start */
+      STARTMETHODE?: string;
+      /** Naam van het vliegveld waarop gestart is */
+      VELD?: string;
+    };
     view_startlijst: {
       /** Aantal records dat voldoet aan de criteria in de database */
       totaal?: number;
@@ -467,8 +465,18 @@ export interface components {
       hash?: string;
       /** De dataset met records */
       dataset?: components["schemas"]["view_startlijst_dataset"][];
-    } & { [key: string]: any };
+    };
     logboek: {
+      /** Aantal records dat voldoet aan de criteria in de database */
+      totaal?: number;
+      /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
+      laatste_aanpassing?: string;
+      /** hash van de dataset */
+      hash?: string;
+      /** De dataset met records */
+      dataset?: components["schemas"]["logboek_dataset"][];
+    };
+    logboek_dataset: {
       /** Database ID van de vlucht */
       ID?: number;
       /** Datum van de start */
@@ -493,8 +501,18 @@ export interface components {
       STARTMETHODE?: string;
       /** De opmerkingen die ingevoerd zijn */
       OPMERKINGEN?: string;
-    } & { [key: string]: any };
+    };
     vliegtuig_logboek: {
+      /** Aantal records dat voldoet aan de criteria in de database */
+      totaal?: number;
+      /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
+      laatste_aanpassing?: string;
+      /** hash van de dataset */
+      hash?: string;
+      /** De dataset met records */
+      dataset?: components["schemas"]["vliegtuig_logboek_dataset"][];
+    };
+    vliegtuig_logboek_dataset: {
       /** Datum */
       DATUM?: string;
       /** Aantal vluchten van deze dag */
@@ -507,7 +525,7 @@ export interface components {
       VLIEGTIJD?: string;
       /** Combinatie van registratie en callsign van het vliegtuig waarop gevlogen is */
       REG_CALL?: string;
-    } & { [key: string]: any };
+    };
     vliegtuig_logboek_totalen: {
       /** Aantal records dat voldoet aan de criteria in de database */
       totaal?: number;
@@ -524,8 +542,8 @@ export interface components {
         SLEEPSTARTS?: number;
         /** Starttijd (hhh:mm) */
         VLIEGTIJD?: string;
-      } & { [key: string]: any };
-      dataset?: ({
+      };
+      dataset?: {
         /** Maand */
         MAAND?: string;
         /** Aantal vluchten in deze maand */
@@ -538,8 +556,8 @@ export interface components {
         VLIEGTIJD?: string;
         /** Combinatie van registratie en callsign van het vliegtuig waarop gevlogen is */
         REG_CALL?: string;
-      } & { [key: string]: any })[];
-    } & { [key: string]: any };
+      }[];
+    };
     recency: {
       STARTS_DRIE_MND?: string;
       STARTS_VORIG_JAAR?: string;
@@ -550,7 +568,7 @@ export interface components {
       STATUS_BAROMETER?: string;
       STARTS_BAROMETER?: string;
       UREN_BAROMETER?: string;
-    } & { [key: string]: any };
+    };
     vliegdagen: {
       /** Aantal records dat voldoet aan de criteria in de database */
       totaal?: number;
@@ -558,13 +576,13 @@ export interface components {
       laatste_aanpassing?: string;
       /** hash van de dataset */
       hash?: string;
-      dataset?: ({
+      dataset?: {
         /** Datum van de start */
         DATUM?: string;
         STARTS?: number;
         VLIEGTIJD?: string;
-      } & { [key: string]: any })[];
-    } & { [key: string]: any };
+      }[];
+    };
   };
 }
 
