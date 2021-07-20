@@ -1,1 +1,5 @@
-{{grid_inzittendenaam}}
+<div *ngIf="!naarDashboard">{{grid_inzittendenaam}}</div>
+
+<div *ngIf="naarDashboard">
+    <a href="/dashboard?lidID={{lidID}}">{{grid_inzittendenaam}}</a>
+</div>

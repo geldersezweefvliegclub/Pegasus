@@ -1,4 +1,10 @@
-<p *ngIf="!this.warning && !this.error">{{grid_vliegernaam}}</p>
+<div *ngIf="!this.warning && !this.error">
+    <div *ngIf="!naarDashboard">{{grid_vliegernaam}}</div>
+
+    <div *ngIf="naarDashboard">
+        <a href="/dashboard?lidID={{lidID}}">{{grid_vliegernaam}}</a>
+    </div>
+</div>
 <p *ngIf="this.warning || this.error">
     <i class="fas fa-exclamation-triangle"  [ngClass]="cssWarningLevel()"></i>
 </p>
