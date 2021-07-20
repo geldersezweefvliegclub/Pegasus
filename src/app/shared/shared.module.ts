@@ -28,6 +28,7 @@ import { PvbComponent } from './components/pvb/pvb.component';
 import { RecencyComponent } from './components/recency/recency.component';
 import { StatusComponent } from './components/status/status.component';
 import {TijdInvoerComponent} from "./components/editors/tijd-invoer/tijd-invoer.component";
+import { NaamRenderComponent } from './components/vlieger-logboek/naam-render/naam-render.component';
 
 
 @NgModule({
@@ -63,6 +64,7 @@ import {TijdInvoerComponent} from "./components/editors/tijd-invoer/tijd-invoer.
         RecencyComponent,
         StatusComponent,
         TijdInvoerComponent,
+        NaamRenderComponent,
     ],
     exports: [
         AvatarComponent,

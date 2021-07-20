@@ -1,7 +1,7 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {ColDef} from "ag-grid-community";
 import {nummerSort, tijdSort} from "../../../types/Utils";
-import {HeliosLogboek, HeliosLogboekDataset, HeliosStart, HeliosStartDataset} from "../../../types/Helios";
+import {HeliosLogboekDataset, HeliosStart, HeliosStartDataset} from "../../../types/Helios";
 import {DateTime} from "luxon";
 import {Subscription} from "rxjs";
 import {StartlijstService} from "../../../services/apiservice/startlijst.service";
@@ -9,6 +9,7 @@ import {SharedService} from "../../../services/shared/shared.service";
 import {DatumRenderComponent} from "../datatable/datum-render/datum-render.component";
 import {StarttijdRenderComponent} from "../datatable/starttijd-render/starttijd-render.component";
 import {LandingstijdRenderComponent} from "../datatable/landingstijd-render/landingstijd-render.component";
+import {NaamRenderComponent} from "./naam-render/naam-render.component";
 import {TijdInvoerComponent} from "../editors/tijd-invoer/tijd-invoer.component";
 
 @Component({
@@ -31,8 +32,8 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
         {field: 'DATUM', headerName: 'Datum', sortable: true, cellRenderer: 'datumRender'},
         {field: 'REG_CALL', headerName: 'RegCall', sortable: true},
         {field: 'STARTMETHODE', headerName: 'Start methode', sortable: true},
-        {field: 'VLIEGERNAAM', headerName: 'Vlieger', sortable: true},
-        {field: 'INZITTENDENAAM', headerName: 'Inzittende', sortable: true},
+        {field: 'VLIEGERNAAM', headerName: 'Vlieger', sortable: true, cellRenderer: 'naamRender'},
+        {field: 'INZITTENDENAAM', headerName: 'Inzittende', sortable: true, cellRenderer: 'naamRender'},
         {
             field: 'STARTTIJD',
             headerName: 'Starttijd',
@@ -64,6 +65,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
 
     frameworkComponents = {
         datumRender: DatumRenderComponent,
+        naamRender: NaamRenderComponent,
         startTijdRender: StarttijdRenderComponent,
         landingsTijdRender: LandingstijdRenderComponent,
     };
