@@ -35,6 +35,7 @@ import {EmailRenderComponent} from './leden-grid/email-render/email-render.compo
 import {FilterComponent} from './leden-grid/filter/filter.component';
 import {VliegtuigLogboekComponent} from './vliegtuig-logboek/vliegtuig-logboek.component';
 import {ChartsModule} from 'ng2-charts';
+import { NaamRenderComponent } from './leden-grid/naam-render/naam-render.component';
 
 @NgModule({
     imports: [
@@ -75,7 +76,8 @@ import {ChartsModule} from 'ng2-charts';
         TelefoonRenderComponent,
         EmailRenderComponent,
         FilterComponent,
-        VliegtuigLogboekComponent
+        VliegtuigLogboekComponent,
+        NaamRenderComponent
     ],
     exports: [
         IconCardComponent,

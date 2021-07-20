@@ -17,6 +17,7 @@ import {TelefoonRenderComponent} from './telefoon-render/telefoon-render.compone
 import {EmailRenderComponent} from './email-render/email-render.component';
 import {FilterComponent} from './filter/filter.component';
 import {SharedService} from '../../services/shared/shared.service';
+import {NaamRenderComponent} from "./naam-render/naam-render.component";
 
 
 @Component({
@@ -43,7 +44,7 @@ export class LedenGridComponent {
             resizable: false,
             suppressSizeToFit:true,
             cellClass: "geenDots"},
-        {field: 'NAAM', headerName: 'Naam', sortable: true},
+        {field: 'NAAM', headerName: 'Naam', sortable: true, cellRenderer: 'naamRender'},
 
         {field: 'VOORNAAM', headerName: 'Voornaam', sortable: true, hide: true},
         {field: 'ACHTERNAAM', headerName: 'Achternaam', sortable: true, hide: true},
@@ -111,6 +112,7 @@ export class LedenGridComponent {
 
     frameworkComponents = {
         avatarRender: AvatarRenderComponent,
+        naamRender: NaamRenderComponent,
         adresRender: AdresRenderComponent,
         telefoonRender: TelefoonRenderComponent,
         checkboxRender: CheckboxRenderComponent,
