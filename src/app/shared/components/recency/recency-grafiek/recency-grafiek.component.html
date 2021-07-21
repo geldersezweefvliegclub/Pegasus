@@ -1,0 +1,20 @@
+<app-modal popupClass="popupLarge" titel="Recency verloop {{naam}} over laatste 24 maanden">
+    <div body>
+        <div *ngIf="bezig">
+            Ophalen data: {{counter}}
+        </div>
+        <div class="barchart-wrapper popupLargeWrapper" *ngIf="!bezig">
+            <div class="linechart-wrapper inlineGrafiek">
+                <canvas class="recencyGrafiek" baseChart *ngIf="waardes"
+                        [datasets]="lineChartData"
+                        [labels]="lineChartLabels"
+                        [options]="lineChartOptions"
+                        [plugins]="lineChartPlugins"
+                        [legend]="lineChartLegend"
+                        [chartType]="lineChartType">
+                </canvas>
+            </div>
+        </div>
+    </div>
+</app-modal>
+
