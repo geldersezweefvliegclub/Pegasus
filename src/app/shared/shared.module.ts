@@ -29,6 +29,7 @@ import { RecencyComponent } from './components/recency/recency.component';
 import { StatusComponent } from './components/status/status.component';
 import {TijdInvoerComponent} from "./components/editors/tijd-invoer/tijd-invoer.component";
 import { NaamRenderComponent } from './components/vlieger-logboek/naam-render/naam-render.component';
+import { WachtwoordSterkteValidatorDirective } from './directives/WachtwoordSterkteValidator/wachtwoord-sterkte-validator.directive';
 
 
 @NgModule({
@@ -65,6 +66,7 @@ import { NaamRenderComponent } from './components/vlieger-logboek/naam-render/na
         StatusComponent,
         TijdInvoerComponent,
         NaamRenderComponent,
+        WachtwoordSterkteValidatorDirective,
     ],
     exports: [
         AvatarComponent,
@@ -82,6 +84,7 @@ import { NaamRenderComponent } from './components/vlieger-logboek/naam-render/na
         RecencyComponent,
         StatusComponent,
         TijdInvoerComponent,
+        WachtwoordSterkteValidatorDirective,
     ],
     providers: [],
     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

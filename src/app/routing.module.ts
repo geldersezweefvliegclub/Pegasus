@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {Route, RouterModule} from '@angular/router';
 import {DashboardPageComponent} from './pages/dashboard/dashboard-page.component';
-import {ProfilePageComponent} from './pages/profile/profile-page.component';
+import {ProfielPageComponent} from './pages/profiel/profiel-page.component';
 import {NotFoundComponent} from './pages/not-found/not-found.component';
 import {LoginPageComponent} from './pages/login-page/login-page.component';
 
@@ -29,7 +29,7 @@ export const routes: CustomRoute[] = [
   {path: 'vlogboek', component: VliegtuigLogboekComponent, excluded: true, icon: faPlane, text: 'Vliegtuig logboek'},
   {path: 'vliegtuigen', component: VliegtuigenGridComponent, excluded: false, icon: faPlane, text: 'Vliegtuigen'},
   {path: 'login', component: LoginPageComponent, excluded: true, icon: faKey, text: 'Help'},
-  {path: 'profiles', component: ProfilePageComponent, excluded: false, icon: faUser, text: 'Profile' },
+  {path: 'profiel', component: ProfielPageComponent, excluded: false, icon: faUser, text: 'Profiel' },
   {path: '**', component: NotFoundComponent, excluded: true, icon: faUser, text: 'EXCLUDED'},
 
 ];

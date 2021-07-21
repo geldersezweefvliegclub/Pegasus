@@ -18,7 +18,7 @@ export class RegistratieDirective implements Validator {
       }
 
       const forbidden = !nameRe.test(control.value);
-      return forbidden ? {forbiddenName: {value: control.value}} : null;
+      return forbidden ? {forbiddenPassword: {value: control.value}} : null;
     };
   }
 }

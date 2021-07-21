@@ -8,7 +8,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {SharedModule} from '../shared/shared.module';
 import {IconCardComponent} from '../shared/components/icon-card/icon-card.component';
 import {DashboardPageComponent} from './dashboard/dashboard-page.component';
-import {ProfilePageComponent} from './profile/profile-page.component';
+import {ProfielPageComponent} from './profiel/profiel-page.component';
 import {NotFoundComponent} from './not-found/not-found.component';
 import {LoginPageComponent} from './login-page/login-page.component';
 import {CodeInputModule} from 'angular-code-input';
@@ -17,7 +17,7 @@ import {ZitplaatsRenderComponent} from './vliegtuigen-grid/zitplaats-render/zitp
 import {LedenGridComponent} from './leden-grid/leden-grid.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {StartlijstGridComponent} from './startlijst-grid/startlijst-grid.component';
-import {NgbDatepickerModule, NgbTypeaheadModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbDatepickerModule, NgbPopoverModule, NgbTypeaheadModule} from '@ng-bootstrap/ng-bootstrap';
 import {VliegerRenderComponent} from './startlijst-grid/vlieger-render/vlieger-render.component';
 import {InzittendeRenderComponent} from './startlijst-grid/inzittende-render/inzittende-render.component';
 import {StarttijdRenderComponent} from '../shared/components/datatable/starttijd-render/starttijd-render.component';
@@ -52,12 +52,13 @@ import { NaamRenderComponent } from './leden-grid/naam-render/naam-render.compon
         CustomFormsModule,
         NgSelectModule,
         ChartsModule,
-        LazyLoadImageModule
+        LazyLoadImageModule,
+        NgbPopoverModule
     ],
     declarations: [
         IconCardComponent,
         DashboardPageComponent,
-        ProfilePageComponent,
+        ProfielPageComponent,
         NotFoundComponent,
         LoginPageComponent,
         VliegtuigenGridComponent,
@@ -89,3 +90,4 @@ import { NaamRenderComponent } from './leden-grid/naam-render/naam-render.compon
 })
 export class PagesModule {
 }
+
