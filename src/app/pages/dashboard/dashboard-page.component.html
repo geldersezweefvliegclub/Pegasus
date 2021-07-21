@@ -2,25 +2,23 @@
                subtitel="Een verzameling van nuttige info"
                [icon]="iconCardIcon">
 
-    <div class="d-flex">
-        <div class="col-12 headerLidData">
-            <div class="d-flex" *ngIf="lidData">
-                <div class="lidNaam mr-auto">
-                    <p class="mb-0">{{lidData.NAAM}}</p>
+    <div class="row bg-tertiary rounded px-5 text-white">
+        <div class="col-3 d-flex flex-column justify-content-center" *ngIf="lidData">
+            <h2 class="fw-bold mb-0">{{lidData.NAAM}}</h2>
+        </div>
+        <div class="col-9 d-flex justify-content-end">
+            <div class="row">
+                <div class="col-6 d-flex flex-column justify-content-center">
+                    <p class="mb-0">{{getLidType()}}<br>{{lidData.LIDNR}}</p>
                 </div>
-                <div class="d-flex">
-                    <div class="me-5 lidData">
-                        <p class="mb-0">{{getLidType()}}</p>
-                        <p class="mb-0">{{lidData.LIDNR}}</p>
-                    </div>
-                    <app-avatar [url]="lidData.AVATAR" [naam]="lidData.NAAM" class="me-5">
-                    </app-avatar>
+                <div class="col-6">
+                    <app-avatar [url]="lidData.AVATAR" [naam]="lidData.NAAM"></app-avatar>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-4">
         <div class="col-3">
             <app-icon-card id="statusCard"
                            class="kleineKaart"
@@ -59,7 +57,7 @@
             </app-icon-card>
         </div>
     </div>
-    <div class="row mt-4">
+    <div class="row mt-4 datatable-hoogte">
         <div class="col-12">
             <app-icon-card id="logboekCard"
                            class="kleineKaart"

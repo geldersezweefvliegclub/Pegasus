@@ -1,44 +1,16 @@
 @import "../../../variables";
 
-.headerLidData {
-    background-color: #a7a7a7; //getColor('secondary');
-    border-radius: 5px;
-
-    color: white;
-    font-family: Roboto, sans-serif;
-    font-feature-settings: 'liga';
-    font-weight: 300;
-}
-
-.lidData {
-    margin-top: 2px;
-}
-
-.lidNaam {
-    margin-left: 20px;
-    margin-top: 5px;
-    font-size: 5ex;
-    font-weight: bold;
-    width: 100%;
-}
-
-
-.rowDashboard1 {
-    padding-top: 30px;
-}
-
-.rowDashboard2 {
-    padding-top: 30px;
-    height: 400px;
+.datatable-hoogte {
+  height: 400px;
 }
 
 .expandLogboek {
-    position: absolute;
-    align-self: flex-end;
-    right: 15px;
-    top: 12px;
-    color: #bebebe;
-    font-size: 20px;
+  position: absolute;
+  align-self: flex-end;
+  right: 15px;
+  top: 12px;
+  color: #bebebe;
+  font-size: 20px;
 
-    cursor: zoom-in;
+  cursor: zoom-in;
 }
