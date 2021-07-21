@@ -5,15 +5,19 @@ import {SharedService} from "../../../../services/shared/shared.service";
 import {StartlijstService} from "../../../../services/apiservice/startlijst.service";
 
 import {ChartDataSets, ChartOptions, ChartType} from "chart.js";
-import {Label} from "ng2-charts";
+import * as pluginAnnotations from 'chartjs-plugin-annotation';
+
 import {ModalComponent} from "../../modal/modal.component";
+import {Label} from "ng2-charts";
+import {AnnotationOptions} from "chartjs-plugin-annotation";
 
 @Component({
     selector: 'app-recency-grafiek',
     templateUrl: './recency-grafiek.component.html',
     styleUrls: ['./recency-grafiek.component.scss']
 })
-export class RecencyGrafiekComponent implements OnInit {
+
+export class RecencyGrafiekComponent {
     @Input() VliegerID: number;
     @Input() naam: string;
 
@@ -22,6 +26,73 @@ export class RecencyGrafiekComponent implements OnInit {
     datum: DateTime;                       // de gekozen dag in de kalender
     datumAbonnement: Subscription;
 
+    waardes: number[] = [];
+    bezig: boolean = false;
+    counter: number = 0;
+
+    // De rode zone tekenen in de grafiek
+    RodeBalk: AnnotationOptions =
+    {
+        drawTime: "beforeDatasetsDraw",
+        type: 'box',
+        yScaleID: 'y-axis-0',
+        xMin: 0,
+        xMax: 100,
+        yMin: 0,
+        yMax: 10,
+        backgroundColor: 'rgba(220,53,69,0.75)',
+    };
+
+    // De gele zone tekenen in de grafiek
+    GeleBalk: AnnotationOptions =
+    {
+        drawTime: "beforeDatasetsDraw",
+        type: 'box',
+        yScaleID: 'y-axis-0',
+        xMin: 0,
+        xMax: 100,
+        yMin: 10,
+        yMax: 20,
+        backgroundColor: 'rgba(255,193,7,0.75)',
+    }
+
+    // De groene zone tekenen in de grafiek
+    GroeneBalk: AnnotationOptions =
+    {
+        drawTime: "beforeDatasetsDraw",
+        type: 'box',
+        yScaleID: 'y-axis-0',
+        xMin: 0,
+        xMax: 100,
+        yMin: 20,
+        yMax: 30,
+
+        backgroundColor: 'rgba(40,167,69,0.75)',
+    }
+
+    // Teken een verticale lijn op de 1e jaargrens zodat je de jaren goed kunt onderscheiden
+    JaarGrens1: AnnotationOptions =
+    {
+        type: 'line',
+        mode: 'vertical',
+        scaleID: 'x-axis-0',
+        value: '',                       // wordt later gezet
+        borderColor: '#bfbebe',
+        borderWidth: 1,
+    }
+
+    // Teken een verticale lijn op de 2e jaargrens zodat je de jaren goed kunt onderscheiden
+    JaarGrens2: AnnotationOptions =
+    {
+        type: 'line',
+        mode: 'vertical',
+        scaleID: 'x-axis-0',
+        value: '',                      // wordt later gezet
+        borderColor: '#bfbebe',
+        borderWidth: 1,
+    }
+
+    // alle opties voor het tekenen van de lijn
     lineChartOptions: ChartOptions = {
         responsive: true,
         maintainAspectRatio: false,
@@ -33,6 +104,7 @@ export class RecencyGrafiekComponent implements OnInit {
         },
         scales: {
             xAxes: [{
+                id: 'x-axis-0',
                 gridLines: {
                     drawOnChartArea: false
                 },
@@ -44,6 +116,7 @@ export class RecencyGrafiekComponent implements OnInit {
                 }
             }],
             yAxes: [{
+                id: 'y-axis-0',
                 gridLines: {
                     borderDash: [6, 4],
                     color: '#548bcd',
@@ -57,30 +130,27 @@ export class RecencyGrafiekComponent implements OnInit {
                     beginAtZero: true
                 }
             }]
+        },
+        annotation: {
+            annotations: [
+                this.RodeBalk,
+                this.GeleBalk,
+                this.GroeneBalk,
+                this.JaarGrens1,
+                this.JaarGrens2,
+            ]
         }
-    };
+    }
+
     lineChartLabels: Label[] = []
     lineChartType: ChartType = 'line';
     lineChartLegend = false;
-    lineChartPlugins = [];
-    lineChartData: ChartDataSets[] = [];
 
-    waardes: number[] = [];
-    bezig: boolean = false;
-    counter: number = 0;
+    lineChartPlugins = [pluginAnnotations];
+    lineChartData: ChartDataSets[] = [];
 
     constructor(private readonly startlijstService: StartlijstService,
                 private readonly sharedService: SharedService) {}
-
-    ngOnInit(): void {
-        let empty:any[] = [];
-
-        for (let i=0 ; i < 24 ; i++) {
-            empty.push(null)  ;
-        }
-        this.lineChartLabels = empty;
-        this.waardes = empty;
-    }
 
     openPopup() {
         // de datum zoals die in de kalender gekozen is
@@ -91,47 +161,100 @@ export class RecencyGrafiekComponent implements OnInit {
                 day: 1
             })
             this.opvragen();
+
+            // zet de jaargrenzen
+            if (this.JaarGrens1.type === "line") {
+                this.JaarGrens1.value = 'Jan ' + (this.datum.year-1).toString()
+            }
+
+            if (this.JaarGrens2.type === "line") {
+                this.JaarGrens2.value = 'Jan ' + this.datum.year.toString()
+            }
         })
         this.popup.open();
     }
 
-    async opvragen() : Promise<void> {
+    async opvragen(): Promise<void> {
         let waardes = [];
         let lineChartLabels = [];
 
-        this.bezig = true
-        for (this.counter=23 ; this.counter >= 0 ; this.counter--) {
-            const d = this.datum.plus({ months: -1 * this.counter});
+        this.bezig = true               // Indicator dat we aan het ophalen zijn, progress balk is dan zichtbaar
+        let maxWaarde: number = 30;     // indien de vlieger een waarde heeft < 30, dan is 30 minimum, de groene, gele, rode balk zijn dan even hoog
 
+        for (this.counter = 0; this.counter < 24; this.counter++) {
+            const d = this.datum.plus({months: -1 * (24 - this.counter - 1)});
+
+            // labels voor de x as
             let maand = "";
-            switch (d.month)
-            {
-                case 1: maand = "Jan " + d.year.toString(); break;
-                case 2: maand = "Feb " + d.year.toString(); break;
-                case 3: maand = "Mrt " + d.year.toString(); break;
-                case 4: maand = "Apr " + d.year.toString(); break;
-                case 5: maand = "Mei " + d.year.toString(); break;
-                case 6: maand = "Jun " + d.year.toString(); break;
-                case 7: maand = "Jul " + d.year.toString(); break;
-                case 8: maand = "Aug " + d.year.toString(); break;
-                case 9: maand = "Sep " + d.year.toString(); break;
-                case 10: maand = "Okt " + d.year.toString(); break;
-                case 11: maand = "Nov " + d.year.toString(); break;
-                case 12: maand = "Dec " + d.year.toString(); break;
+            switch (d.month) {
+                case 1:
+                    maand = "Jan";
+                    break;
+                case 2:
+                    maand = "Feb";
+                    break;
+                case 3:
+                    maand = "Mrt";
+                    break;
+                case 4:
+                    maand = "Apr";
+                    break;
+                case 5:
+                    maand = "Mei";
+                    break;
+                case 6:
+                    maand = "Jun";
+                    break;
+                case 7:
+                    maand = "Jul";
+                    break;
+                case 8:
+                    maand = "Aug";
+                    break;
+                case 9:
+                    maand = "Sep";
+                    break;
+                case 10:
+                    maand = "Okt";
+                    break;
+                case 11:
+                    maand = "Nov";
+                    break;
+                case 12:
+                    maand = "Dec";
+                    break;
             }
+
+            // toon voor januarie en de allereerste maand, ook het jaartal
+            if ((this.counter == 0) || (d.month == 1)) {
+                maand += " " + d.year.toString();
+            }
+
             lineChartLabels.push(maand);
 
-            const recency = await this.startlijstService.getRecency(this.VliegerID, d);
-            waardes.push(recency.WAARDE as number);
+            try {
+                const recency = await this.startlijstService.getRecency(this.VliegerID, d);
+                waardes.push(recency.WAARDE as number);
+
+                // de maximale waarde die de grafiek heeft
+                if (recency.WAARDE as number > maxWaarde) {
+                    maxWaarde = recency.WAARDE as number;
+                }
+            } catch (e) {
+                waardes.push(0);
+            }
         }
-        this.bezig = false;
+        this.bezig = false;                         // klaar met ophalen
+        if (this.GroeneBalk.type === "box") {       // aanpassen groene schaal
+            this.GroeneBalk.yMax = Math.ceil(maxWaarde/10) * 10;    // afronden naar boven in tientallen 70 - 80 - 90
+        }
+
         this.waardes = waardes;
         this.lineChartLabels = lineChartLabels;
 
         const lineReeks = {
-            lineTension: 0,
-            backgroundColor: 'rgba(213,172,73,0.4)',
-            borderColor: 'rgba(213,172,73,1)',
+            backgroundColor: 'rgba(255,255,255,0)',                 // geen opvulkleur
+            borderColor: 'rgba(42,42,42,0.59)',
             pointBackgroundColor: 'rgba(148,159,177,1)',
             pointBorderColor: '#fff',
             pointHoverBackgroundColor: '#fff',
@@ -139,9 +262,6 @@ export class RecencyGrafiekComponent implements OnInit {
 
             data: this.waardes
         }
-       this.lineChartData =  [ lineReeks ];
-
-
-        console.log(this.waardes, this.lineChartLabels)
+        this.lineChartData = [lineReeks];
     }
 }

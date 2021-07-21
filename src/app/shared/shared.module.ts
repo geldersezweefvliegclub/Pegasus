@@ -30,6 +30,9 @@ import { StatusComponent } from './components/status/status.component';
 import {TijdInvoerComponent} from "./components/editors/tijd-invoer/tijd-invoer.component";
 import { NaamRenderComponent } from './components/vlieger-logboek/naam-render/naam-render.component';
 import { WachtwoordSterkteValidatorDirective } from './directives/WachtwoordSterkteValidator/wachtwoord-sterkte-validator.directive';
+import { RecencyGrafiekComponent } from './components/recency/recency-grafiek/recency-grafiek.component';
+import {ChartsModule} from "ng2-charts";
+import {NgbProgressbarModule} from "@ng-bootstrap/ng-bootstrap";
 
 
 @NgModule({
@@ -39,7 +42,9 @@ import { WachtwoordSterkteValidatorDirective } from './directives/WachtwoordSter
         FontAwesomeModule,
         FormsModule,
         NgSelectModule,
-        LazyLoadImageModule
+        LazyLoadImageModule,
+        ChartsModule,
+        NgbProgressbarModule
     ],
     declarations: [
         ModalComponent,
@@ -67,6 +72,7 @@ import { WachtwoordSterkteValidatorDirective } from './directives/WachtwoordSter
         TijdInvoerComponent,
         NaamRenderComponent,
         WachtwoordSterkteValidatorDirective,
+        RecencyGrafiekComponent,
     ],
     exports: [
         AvatarComponent,

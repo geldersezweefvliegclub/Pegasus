@@ -213,3 +213,13 @@ body > .popupLarge > div {
 .popupLargeWrapper {
   height: calc(100vh * 0.66);
 }
+
+// recency grafiek, progress bar
+.bg-info {
+  background-color: getColor('secondary') !important;
+}
+
+// hoogte van de grafiek
+canvas.recencyGrafiek.chartjs-render-monitor {
+  height: calc(100vh * 0.66) !important;
+}

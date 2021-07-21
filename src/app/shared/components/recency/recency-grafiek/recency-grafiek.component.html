@@ -1,7 +1,7 @@
 <app-modal popupClass="popupLarge" titel="Recency verloop {{naam}} over laatste 24 maanden">
     <div body>
         <div *ngIf="bezig">
-            Ophalen data: {{counter}}
+            <ngb-progressbar type="info" [value]="counter" showValue="true" max="24" [striped]="true"></ngb-progressbar>
         </div>
         <div class="barchart-wrapper popupLargeWrapper" *ngIf="!bezig">
             <div class="linechart-wrapper inlineGrafiek">

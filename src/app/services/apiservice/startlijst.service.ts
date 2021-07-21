@@ -177,9 +177,16 @@ export class StartlijstService {
         return response.json();
     }
 
-    async getRecency(lidID: number): Promise<HeliosRecency> {
-        const response: Response = await this.APIService.get('Startlijst/GetRecency', {'VLIEGER_ID': lidID.toString()});
+    async getRecency(lidID: number, datum?: DateTime): Promise<HeliosRecency> {
 
+        let getParams: KeyValueString = {};
+        getParams['VLIEGER_ID'] = lidID.toString();
+
+        if (datum) {
+            getParams['DATUM'] = datum.toISODate();
+        }
+
+        const response: Response = await this.APIService.get('Startlijst/GetRecency', getParams);
         return response.json();
     }
 

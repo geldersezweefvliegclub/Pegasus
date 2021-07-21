@@ -566,6 +566,8 @@ export interface components {
       UREN_VORIG_JAAR?: string;
       UREN_DIT_JAAR?: string;
       STATUS_BAROMETER?: string;
+      /** 0-10 = rood, 10-20 = geel, > 20 = groen.  Geeft inzicht waarde in de status */
+      WAARDE?: number;
       STARTS_BAROMETER?: string;
       UREN_BAROMETER?: string;
     };
