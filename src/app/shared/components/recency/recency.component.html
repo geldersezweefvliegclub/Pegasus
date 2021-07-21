@@ -1,5 +1,5 @@
 <div *ngIf="recency">
-    <a (click)="openRecencyPopup()">
+    <a (click)="openRecencyPopup()" class="recencyGrafiek">
         <div class="d-flex flex-column  groen" *ngIf="recency.STATUS_BAROMETER == 'groen'">
             <p class="niveau">Groene zone</p>
             <p class="currency">{{recency.STARTS_BAROMETER}} starts en {{recency.UREN_BAROMETER}} uur</p>

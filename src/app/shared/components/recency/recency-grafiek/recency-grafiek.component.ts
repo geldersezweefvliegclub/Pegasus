@@ -252,7 +252,7 @@ export class RecencyGrafiekComponent {
         this.waardes = waardes;
         this.lineChartLabels = lineChartLabels;
 
-        const lineReeks = {
+        const lineReeks: ChartDataSets = {
             backgroundColor: 'rgba(255,255,255,0)',                 // geen opvulkleur
             borderColor: 'rgba(42,42,42,0.59)',
             pointBackgroundColor: 'rgba(148,159,177,1)',
@@ -260,7 +260,8 @@ export class RecencyGrafiekComponent {
             pointHoverBackgroundColor: '#fff',
             pointHoverBorderColor: 'rgba(148,159,177,0.8)',
 
-            data: this.waardes
+            data: this.waardes,
+
         }
         this.lineChartData = [lineReeks];
     }
