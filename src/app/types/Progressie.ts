@@ -60,7 +60,7 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          /** Database ID van het aanwezig record */
+          /** Database ID van het progressie record */
           ID?: number;
           /** Toon welke records verwijderd zijn. Default = false */
           VERWIJDERD?: boolean;
@@ -76,8 +76,12 @@ export interface paths {
           START?: number;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
-          /** Haal alle types op van een specieke leerfase */
-          LEERFASE_ID?: string;
+          /** Welke instruct heeft welke comptententie afgetekend */
+          INSTRUCTEUR_ID?: string;
+          /** Progressie van een bepaald lid */
+          LID_ID?: string;
+          /** Comptententie ID's in CSV formaat */
+          IN?: string;
         };
       };
       responses: {
@@ -85,6 +89,66 @@ export interface paths {
         200: {
           content: {
             "application/json": components["schemas"]["view_progressie"];
+          };
+        };
+        /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
+        304: never;
+        /** Methode niet toegestaan, input validatie error */
+        405: unknown;
+        /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
+        500: unknown;
+      };
+    };
+  };
+  "/Progressie/ProgressieKaart": {
+    get: {
+      parameters: {
+        query: {
+          /** Laatste aanpassing op basis van records in dataset. Bedoeld om data verbruik te verminderen. Dataset is daarom leeg */
+          LAATSTE_AANPASSING?: boolean;
+          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
+          HASH?: string;
+          /** Welke velden moet opgenomen worden in de dataset */
+          VELDEN?: string;
+          /** Progressiekaart van een bepaald lid */
+          LID_ID?: string;
+        };
+      };
+      responses: {
+        /** OK, data succesvol opgehaald */
+        200: {
+          content: {
+            "application/json": components["schemas"]["progressie_kaart"];
+          };
+        };
+        /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
+        304: never;
+        /** Methode niet toegestaan, input validatie error */
+        405: unknown;
+        /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
+        500: unknown;
+      };
+    };
+  };
+  "/Progressie/ProgressieBoom": {
+    get: {
+      parameters: {
+        query: {
+          /** Laatste aanpassing op basis van records in dataset. Bedoeld om data verbruik te verminderen. Dataset is daarom leeg */
+          LAATSTE_AANPASSING?: boolean;
+          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
+          HASH?: string;
+          /** Welke velden moet opgenomen worden in de dataset */
+          VELDEN?: string;
+          /** Progressie boom van een bepaald lid */
+          LID_ID?: string;
+        };
+      };
+      responses: {
+        /** OK, data succesvol opgehaald */
+        200: {
+          content: {
+            "application/json": components["schemas"]["progressie_boom"][];
           };
         };
         /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
@@ -215,29 +279,27 @@ export interface components {
       INSTRUCTEUR_ID?: number;
       /** Opmerking over de behaalde competentie */
       OPMERKINGEN?: string;
-    } & { [key: string]: any };
-    ref_progressie: components["schemas"]["ref_progressie_in"] &
-      ({
-        /** Tijdstempel wanneer record is toegevoegd */
-        INGEVOERD?: string;
-        /** Verwijzing naar eerder ingevoerde data */
-        LINK_ID?: number;
-        /** Is dit record gemarkeerd als verwijderd? */
-        VERWIJDERD?: boolean;
-        /** Tijdstempel van laaste aanpassing in de database */
-        LAATSTE_AANPASSING?: string;
-      } & { [key: string]: any }) & { [key: string]: any };
-    view_progressie_dataset: components["schemas"]["ref_progressie"] &
-      ({
-        /** Fase van de vliegopleiding */
-        LEERFASE?: string;
-        /** Volledige omschrijving van de compententie */
-        COMPETENTIE?: string;
-        /** De volledige naam van het lid */
-        LID_NAAM?: string;
-        /** De volledige naam van de instrcuteur die de competentie heeft toegevoegd */
-        INSTRUCTEUR_NAAM?: string;
-      } & { [key: string]: any }) & { [key: string]: any };
+    };
+    ref_progressie: components["schemas"]["ref_progressie_in"] & {
+      /** Tijdstempel wanneer record is toegevoegd */
+      INGEVOERD?: string;
+      /** Verwijzing naar eerder ingevoerde data */
+      LINK_ID?: number;
+      /** Is dit record gemarkeerd als verwijderd? */
+      VERWIJDERD?: boolean;
+      /** Tijdstempel van laaste aanpassing in de database */
+      LAATSTE_AANPASSING?: string;
+    };
+    view_progressie_dataset: components["schemas"]["ref_progressie"] & {
+      /** Fase van de vliegopleiding */
+      LEERFASE?: string;
+      /** Volledige omschrijving van de compententie */
+      COMPETENTIE?: string;
+      /** De volledige naam van het lid */
+      LID_NAAM?: string;
+      /** De volledige naam van de instrcuteur die de competentie heeft toegevoegd */
+      INSTRUCTEUR_NAAM?: string;
+    };
     view_progressie: {
       /** Aantal records dat voldoet aan de criteria in de database */
       totaal?: number;
@@ -247,7 +309,7 @@ export interface components {
       hash?: string;
       /** De dataset met records */
       dataset?: components["schemas"]["view_progressie_dataset"][];
-    } & { [key: string]: any };
+    };
     competenties_kaart: {
       /** Aantal records van de comptentie kaart */
       totaal?: number;
@@ -256,12 +318,66 @@ export interface components {
       /** hash van de dataset */
       hash?: string;
       /** De dataset met records */
-      dataset?: (any &
-        ({
-          /** Fase van de vliegopleiding */
-          LEERFASE?: string;
-        } & { [key: string]: any }) & { [key: string]: any })[];
-    } & { [key: string]: any };
+      dataset?: (any & {
+        /** Fase van de vliegopleiding */
+        LEERFASE?: string;
+      })[];
+    };
+    progressie_kaart: {
+      /** Database ID van het record */
+      ID?: number;
+      /** Volgorde van weergave */
+      VOLGORDE?: number;
+      /** In welke leerfase zit deze competentie. Verwijzing naar ref_types */
+      LEERFASE_ID?: number;
+      /** Omschrijving uit de types tabel */
+      LEERFASE?: string;
+      /** Volgnummer */
+      BLOK?: string;
+      /** Verwijzing naar bovenliggend record van boom structuur */
+      BLOK_ID?: number;
+      /** Volledige omschrijving van de compententie */
+      ONDERWERP?: string;
+      /** Verwijzing naar de volledige documentie */
+      DOCUMENTATIE?: string;
+      /** Is dit record gemarkeerd als verwijderd? */
+      VERWIJDERD?: boolean;
+      /** Tijdstempel van laaste aanpassing in de database */
+      LAATSTE_AANPASSING?: string;
+      /** ID van progressie record */
+      PROGRESSIE_ID?: number;
+      /** Tijdstempel wanneer record is toegevoegd */
+      INGEVOERD?: number;
+      /** De volledige naam van de instrcuteur die de competentie heeft toegevoegd */
+      INSTRUCTEUR_NAAM?: string;
+      /** Opmerking over de behaalde competentie */
+      OPMERKINGEN?: string;
+    };
+    progressie_boom: {
+      /** In welke leerfase zit deze competentie. Verwijzing naar ref_types */
+      LEERFASE_ID?: number;
+      /** Comptententie ID */
+      COMPETENTIE_ID?: number;
+      /** Verwijzing naar bovenliggend record van boom structuur */
+      BLOK_ID?: number;
+      /** Volgnummer */
+      BLOK?: string;
+      /** Volledige omschrijving van de compententie */
+      ONDERWERP?: string;
+      /** Verwijzing naar de volledige documentie */
+      DOCUMENTATIE?: string;
+      /** ID van progressie record */
+      PROGRESSIE_ID?: number;
+      /** Is comptententie behaald, 0 = niet behaald, 1 = gedeeltelijk van onderliggende, 2 = gehaald, ook alle onderliggende */
+      IS_BEHAALD?: string;
+      /** Tijdstempel wanneer record is toegevoegd */
+      INGEVOERD?: number;
+      /** De volledige naam van de instrcuteur die de competentie heeft toegevoegd */
+      INSTRUCTEUR_NAAM?: string;
+      /** Opmerking over de behaalde competentie */
+      OPMERKINGEN?: string;
+      children?: components["schemas"]["progressie_boom"][];
+    };
   };
 }
 

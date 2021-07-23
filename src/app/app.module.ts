@@ -3,7 +3,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppComponent} from './main-layout/app/app.component';
-
+import {TreeviewModule } from 'ngx-treeview';
 import {PagesModule} from './pages/pages.module';
 import {SharedModule} from './shared/shared.module';
 import {RoutingModule} from './routing.module';
@@ -39,7 +39,8 @@ export function initializeApp(appConfigService: PegasusConfigService) {
         FontAwesomeModule,
         LazyLoadImageModule,
         NgbModule,
-        HttpClientModule
+        HttpClientModule,
+        TreeviewModule.forRoot(),
     ],
     providers: [
         PegasusConfigService,

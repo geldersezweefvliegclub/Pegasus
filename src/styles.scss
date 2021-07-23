@@ -223,3 +223,32 @@ body > .popupLarge > div {
 canvas.recencyGrafiek.chartjs-render-monitor {
   height: calc(100vh * 0.66) !important;
 }
+
+// regels in treeview
+.row-item {
+  display: flex;
+}
+
+.treeview-header {
+  display: flex;
+
+  div:nth-child(2)
+  {
+    display: flex;
+  }
+  .row-filter {
+    width: 100%;
+  }
+
+  .row-all {
+    justify-content: center;
+    align-items: center;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+  }
+
+  .dropdown-divider {
+    border: 0px;
+  }
+}

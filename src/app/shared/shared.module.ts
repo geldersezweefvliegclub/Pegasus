@@ -33,6 +33,8 @@ import { WachtwoordSterkteValidatorDirective } from './directives/WachtwoordSter
 import { RecencyGrafiekComponent } from './components/recency/recency-grafiek/recency-grafiek.component';
 import {ChartsModule} from "ng2-charts";
 import {NgbProgressbarModule} from "@ng-bootstrap/ng-bootstrap";
+import { ProgressieBoomComponent } from './components/progressie-boom/progressie-boom.component';
+import {TreeviewModule} from "ngx-treeview";
 
 
 @NgModule({
@@ -44,7 +46,8 @@ import {NgbProgressbarModule} from "@ng-bootstrap/ng-bootstrap";
         NgSelectModule,
         LazyLoadImageModule,
         ChartsModule,
-        NgbProgressbarModule
+        NgbProgressbarModule,
+        TreeviewModule
     ],
     declarations: [
         ModalComponent,
@@ -73,6 +76,7 @@ import {NgbProgressbarModule} from "@ng-bootstrap/ng-bootstrap";
         NaamRenderComponent,
         WachtwoordSterkteValidatorDirective,
         RecencyGrafiekComponent,
+        ProgressieBoomComponent,
     ],
     exports: [
         AvatarComponent,
@@ -91,6 +95,7 @@ import {NgbProgressbarModule} from "@ng-bootstrap/ng-bootstrap";
         StatusComponent,
         TijdInvoerComponent,
         WachtwoordSterkteValidatorDirective,
+        ProgressieBoomComponent,
     ],
     providers: [],
     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

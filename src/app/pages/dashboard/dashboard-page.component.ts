@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {
   faBookmark, faCalendarAlt, faChartLine, faChartPie,
-  faClipboardList, faExpandAlt,
+  faClipboardList, faExternalLinkSquareAlt,
   faTachometerAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import {LoginService} from "../../services/apiservice/login.service";
@@ -26,7 +26,7 @@ export class DashboardPageComponent implements OnInit {
   iconRecency: IconDefinition = faTachometerAlt;
   iconPVB: IconDefinition = faAvianex;
   iconStatus: IconDefinition = faBookmark;
-  iconExpand: IconDefinition = faExpandAlt;
+  iconExpand: IconDefinition = faExternalLinkSquareAlt;
 
   lidTypes: HeliosType[] = [];
   lidData: HeliosLid;
