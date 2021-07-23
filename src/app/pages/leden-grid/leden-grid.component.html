@@ -13,7 +13,7 @@
                     [rowData]="leden"
                     [columnDefs]="columns"
                     [frameworkComponents]="frameworkComponents"
-                    (rowDoubleClicked)="openEditor($event)"
+                    (rowDoubleClicked)="bewerkLid($event)"
                     class="h-100 mt-n8"></app-datatable>
         </div>
         <div class="row justify-content-start" id="toolbar">
@@ -27,7 +27,7 @@
                     <div *ngIf="this.magToevoegen">
                         <app-icon-button class="toolbarBtn"
                                          tekst="Toevoegen"
-                                         iconNaam="far PlusSquare" (btnClicked)="addVliegtuig()"
+                                         iconNaam="far PlusSquare" (btnClicked)="addLid()"
                                          btnColor="btn-primary" *ngIf="!this.deleteMode"></app-icon-button>
 
                         <div *ngIf="this.deleteMode">
@@ -70,12 +70,6 @@
             </div>
         </div>
     </div>
-
-
-    <app-leden-editor *ngIf="this.magToevoegen || this.magWijzigen || this.magVerwijderen"
-                      (add)="Toevoegen($event)" (update)="Aanpassen($event)" (delete)="Verwijderen($event)"
-                      (restore)="Herstellen($event)"
-    ></app-leden-editor>
 
     <app-filter (filterChanged)="applyFilter()"> </app-filter>
 </app-icon-card>

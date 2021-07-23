@@ -10,6 +10,11 @@
     </ul>
 </ng-template>
 
+<ng-template #googleAuthPopover>
+    Schakel Google twee-staps verificatie in/uit.<br>
+    Twee-staps verificatie biedt extra beveiliging bij het inloggen.
+</ng-template>
+
 <form #profielForm (ngSubmit)="submit()" *ngIf="this.lid">
     <div class="row">
         <div class="col-8">
@@ -254,6 +259,8 @@
                                        [(ngModel)]="lid.AUTH">
                                 <label class="form-check-label" for="googleAuth">
                                     Google Auth.
+
+                                    <fa-icon class="text-info ms-2" [icon]="infoIcon" [ngbPopover]="googleAuthPopover" placement="right"></fa-icon>
                                 </label>
                             </div>
                         </div>

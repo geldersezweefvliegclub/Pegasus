@@ -107,6 +107,13 @@ input.ng-dirty.ng-invalid{
   line-height: 2rem;
 }
 
+// De datepicker heeft 2 selectboxen voor maand en jaar, maar die zijn gestyled met bootstrap 4.
+// Deze css zorgt ervoor dat de css van bootstrap 5 gebruikt wordt, waardoor het overeenkomt met de rest van de website.
+ngb-datepicker-navigation-select > .custom-select {
+  @extend .form-select;
+  @extend .form-select-sm;
+}
+
 // hoge knop voor omwisselen vlieger - inzittende in de start editor
 #switchVoorAchter button {
   height: 110px;
