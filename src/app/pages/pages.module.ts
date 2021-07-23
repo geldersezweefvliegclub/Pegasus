@@ -35,58 +35,57 @@ import {EmailRenderComponent} from './leden-grid/email-render/email-render.compo
 import {FilterComponent} from './leden-grid/filter/filter.component';
 import {VliegtuigLogboekComponent} from './vliegtuig-logboek/vliegtuig-logboek.component';
 import {ChartsModule} from 'ng2-charts';
-import { NaamRenderComponent } from './leden-grid/naam-render/naam-render.component';
+import {NaamRenderComponent} from './leden-grid/naam-render/naam-render.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule,
-        FormsModule,
-        BrowserModule,
-        BrowserAnimationsModule,
-        SharedModule,
-        CodeInputModule,
-        FontAwesomeModule,
-        NgbDatepickerModule,
-        NgbTypeaheadModule,
-        CustomFormsModule,
-        NgSelectModule,
-        ChartsModule,
-        LazyLoadImageModule,
-        NgbPopoverModule
-    ],
-    declarations: [
-        IconCardComponent,
-        DashboardPageComponent,
-        ProfielPageComponent,
-        NotFoundComponent,
-        LoginPageComponent,
-        VliegtuigenGridComponent,
-        ZitplaatsRenderComponent,
-        LedenGridComponent,
-        StartlijstGridComponent,
-        VliegerRenderComponent,
-        InzittendeRenderComponent,
-        StarttijdRenderComponent,
-        LandingstijdRenderComponent,
-        DaginfoComponent,
-        ComposeMeteoComponent,
-        ComposeBedrijfComponent,
-        AvatarRenderComponent,
-        AdresRenderComponent,
-        TelefoonRenderComponent,
-        EmailRenderComponent,
-        FilterComponent,
-        VliegtuigLogboekComponent,
-        NaamRenderComponent
-    ],
-    exports: [
-        IconCardComponent,
-        DashboardPageComponent,
-        CodeInputModule,
-        ChartsModule
-    ],
-    schemas: [NO_ERRORS_SCHEMA]
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    SharedModule,
+    CodeInputModule,
+    FontAwesomeModule,
+    NgbDatepickerModule,
+    NgbTypeaheadModule,
+    CustomFormsModule,
+    NgSelectModule,
+    ChartsModule,
+    LazyLoadImageModule,
+    NgbPopoverModule
+  ],
+  declarations: [
+    DashboardPageComponent,
+    ProfielPageComponent,
+    NotFoundComponent,
+    LoginPageComponent,
+    VliegtuigenGridComponent,
+    ZitplaatsRenderComponent,
+    LedenGridComponent,
+    StartlijstGridComponent,
+    VliegerRenderComponent,
+    InzittendeRenderComponent,
+    StarttijdRenderComponent,
+    LandingstijdRenderComponent,
+    DaginfoComponent,
+    ComposeMeteoComponent,
+    ComposeBedrijfComponent,
+    AvatarRenderComponent,
+    AdresRenderComponent,
+    TelefoonRenderComponent,
+    EmailRenderComponent,
+    FilterComponent,
+    VliegtuigLogboekComponent,
+    NaamRenderComponent
+  ],
+  exports: [
+    IconCardComponent,
+    DashboardPageComponent,
+    CodeInputModule,
+    ChartsModule
+  ],
+  schemas: [NO_ERRORS_SCHEMA]
 })
 export class PagesModule {
 }

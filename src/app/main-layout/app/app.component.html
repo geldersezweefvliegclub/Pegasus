@@ -1,13 +1,13 @@
 <div class="row mx-0">
     <div class="col-1 col-md-2 ps-0" *ngIf="isIngelogd">
-        <app-navigation></app-navigation>
+        <app-navigation class="sticky-top"></app-navigation>
     </div>
-    <main class="col-12 p-0 corrected-height" [class]="isIngelogd ? 'col-md-10' : 'col-md-12'">
-        <div class="card h-100 overflow-scroll">
+    <main class="col-12 p-0" [class]="isIngelogd ? 'col-md-10' : 'col-md-12'">
+        <div class="card h-100">
             <div class="card-body">
                 <router-outlet></router-outlet>
             </div>
         </div>
-        <app-footer></app-footer>
+<!--        <app-footer></app-footer>-->
     </main>
 </div>

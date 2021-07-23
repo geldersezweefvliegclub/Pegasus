@@ -180,13 +180,13 @@ input.ng-dirty.ng-invalid{
 
 // kleine icon-kaart moet alles kleiner worden
 .kleineKaart > div > div.admin-up > div {
-  margin-top: 0px;
+  margin-top: 0;
 
   > div.data.h-100 {
     margin-top: 5px;
 
     > h4 {
-      margin-bottom: 0px;
+      margin-bottom: 0;
     }
   }
 

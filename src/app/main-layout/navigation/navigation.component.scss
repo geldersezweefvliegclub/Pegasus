@@ -6,10 +6,6 @@
   border-radius: 5px
 }
 
-.calArea {
-
-}
-
 .vliegdag {
   background-color: rgb(213, 172, 73);
   border-radius: .25rem;
@@ -21,10 +17,8 @@
 }
 
 .gekozenDatum {
-  border: 2px;
-  border-style: solid;
   border-radius: .25rem;
-  border-color: #202021;
+  border: 2px solid #202021;
   height: 1.9rem;
   line-height: 1.8rem;
   text-align: center;
@@ -37,6 +31,10 @@
 
 .calendarDag {
   text-align: center;
+}
+
+.navCalendar {
+  border-radius: 0;
 }
 
 

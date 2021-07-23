@@ -1,13 +1,11 @@
 import {Component} from '@angular/core';
-import {faEye, faEyeSlash, faInfo, faInfoCircle} from '@fortawesome/free-solid-svg-icons';
-import {HeliosType, HeliosUserinfo} from '../../types/Helios';
-import {LedenService} from '../../services/apiservice/leden.service';
-import {StorageService} from '../../services/storage/storage.service';
-import {NgbDate, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
+import {NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
 import {NgbDateFRParserFormatter} from '../../shared/ngb-date-fr-parser-formatter';
-import {DateTime} from 'luxon';
-import {TypesService} from '../../services/apiservice/types.service';
 import {CustomError} from '../../types/Utils';
+import {StorageService} from '../../services/storage/storage.service';
+import {HeliosLid, HeliosUserinfo} from '../../types/Helios';
+import {LedenService} from '../../services/apiservice/leden.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -16,48 +14,34 @@ import {CustomError} from '../../types/Utils';
   providers: [{provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter}]
 })
 export class ProfielPageComponent {
-  informatieIcon = faInfo;
-  user: HeliosUserinfo = {};
-  types: HeliosType[];
+  lidID: number;
   error: CustomError | undefined;
-  wachtwoordVerborgen: boolean = true;
-  oogIcon = faEye;
-  controleWachtwoord = '';
-  wachtwoord = '';
   isLoading = false;
-  infoIcon = faInfoCircle;
 
   constructor(
     private readonly ledenService: LedenService,
-    private readonly typeService: TypesService,
-    private readonly storageService: StorageService) {
-    this.user = this.storageService.ophalen('userInfo');
-    this.haalLidmaatschappenOp();
+    private activatedRoute: ActivatedRoute,
+    private storageService: StorageService) {
+
+    // Als lidID is meegegeven in URL, moeten we de lidData ophalen
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (params['lidID']) {
+        this.lidID = params['lidID'];
+      } else {
+        this.lidID = this.storageService.ophalen('userInfo').LidData.ID;
+      }
+    });
   }
 
-  haalLidmaatschappenOp(): void {
-    this.typeService.getTypes(6).then(types => this.types = types).catch(e => this.error = e);
-  }
-
-  submit() {
+  opslaan(lid: HeliosUserinfo): void {
     this.isLoading = true;
 
-    this.ledenService.updateLid(this.user).then(() => {
+    this.ledenService.updateLid(lid).then(() => {
       this.isLoading = false;
       this.error = undefined;
     }).catch(e => {
       this.isLoading = false;
       this.error = e;
     });
-  }
-
-  converteerDatumNaarISO($event: NgbDate): string {
-    const unformatted = DateTime.fromObject($event);
-    return unformatted.isValid ? unformatted.toISODate().toString() : '';
-  }
-
-  verbergWachtwoord() {
-    this.wachtwoordVerborgen = !this.wachtwoordVerborgen;
-    this.oogIcon = this.wachtwoordVerborgen ? faEye : faEyeSlash;
   }
 }

@@ -13,7 +13,7 @@ export class FilterComponent {
     @Output() filterChanged: EventEmitter<void> = new EventEmitter<void>();
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
-    constructor(private readonly sharedService: SharedService) {
+    constructor(readonly sharedService: SharedService) {
     }
 
     // Open filter dialoog met de filter opties
