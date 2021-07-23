@@ -9,10 +9,20 @@
             {{c.Omschrijving}}
         </td>
         <td class="kolom2">
-            <input type="checkbox" id="L{{c.CompetentieID[0]}}" class="form-check-inline" [checked]="CheckGehaald(c.CompetentieID[0])">
+            <input type="checkbox"
+                   id="L{{c.CompetentieID[0]}}"
+                   class="form-check-inline"
+                   (change)="zetProgressie($event, c.CompetentieID[0])"
+                   [checked]="CheckGehaald(c.CompetentieID[0])"
+                   [disabled]="CheckGehaald(c.CompetentieID[0])">       <!-- als checked, dan disable. Verwijderen via progressie boom -->
         </td>
         <td class="kolom3">
-            <input type="checkbox" id="O{{c.CompetentieID[1]}}" class="form-check-inline" [checked]="CheckGehaald(c.CompetentieID[1])">
+            <input type="checkbox"
+                   id="O{{c.CompetentieID[1]}}"
+                   class="form-check-inline"
+                   (change)="zetProgressie($event, c.CompetentieID[1])"
+                   [checked]="CheckGehaald(c.CompetentieID[1])"
+                   [disabled]="CheckGehaald(c.CompetentieID[1])">       <!-- als checked, dan disable. Verwijderen via progressie boom -->
         </td>
     </tr>
 </table>
@@ -23,7 +33,12 @@
             {{o.Omschrijving}}
         </td>
         <td class="kolom2">
-            <input type="checkbox" id="L{{o.CompetentieID}}" class="form-check-inline" [checked]="CheckGehaald(o.CompetentieID)">
+            <input type="checkbox"
+                   id="{{o.CompetentieID}}"
+                   class="form-check-inline"
+                   (change)="zetProgressie($event, o.CompetentieID)"
+                   [checked]="CheckGehaald(o.CompetentieID)"
+                   [disabled]="CheckGehaald(o.CompetentieID)">          <!-- als checked, dan disable. Verwijderen via progressie boom -->
         </td>
     </tr>
 </table>

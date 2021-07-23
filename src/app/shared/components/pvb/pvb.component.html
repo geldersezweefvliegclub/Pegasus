@@ -9,10 +9,20 @@
             {{p.Type}}
         </td>
         <td class="kolom2">
-            <input type="checkbox" id="L{{p.Type}}" class="form-check-inline" [checked]="PVBgehaald(p.Lokaal)">
+            <input type="checkbox"
+                   id="L{{p.Type}}"
+                   class="form-check-inline"
+                   (change)="zetProgressie($event, p.Lokaal)"
+                   [checked]="PVBgehaald(p.Lokaal)"
+                   [disabled]="PVBgehaald(p.Lokaal)">           <!-- als checked, dan disable. Verwijderen via progressie boom -->
         </td>
         <td class="kolom3">
-            <input type="checkbox" id="O{{p.Type}}" class="form-check-inline" [checked]="PVBgehaald(p.Overland)">
+            <input type="checkbox"
+                   id="O{{p.Type}}"
+                   class="form-check-inline"
+                   (change)="zetProgressie($event, p.Overland)"
+                   [checked]="PVBgehaald(p.Overland)"
+                   [disabled]="PVBgehaald(p.Overland)">         <!-- als checked, dan disable. Verwijderen via progressie boom -->
         </td>
     </tr>
 </table>
