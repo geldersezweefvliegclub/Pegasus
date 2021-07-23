@@ -3,11 +3,11 @@ import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {faQuestionCircle} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-    selector: 'app-icon-card',
-    templateUrl: './icon-card.component.html',
-    styleUrls: ['./icon-card.component.scss']
+    selector: 'app-pegasus-card',
+    templateUrl: './pegasus-card.component.html',
+    styleUrls: ['./pegasus-card.component.scss']
 })
-export class IconCardComponent {
+export class PegasusCardComponent {
     @Input() icon: IconDefinition = faQuestionCircle
     @Input() titel: string;
     @Input() subtitel: string;

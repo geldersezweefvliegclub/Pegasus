@@ -18,7 +18,7 @@
 <form #profielForm (ngSubmit)="submit()" *ngIf="this.lid">
     <div class="row">
         <div class="col-8">
-            <app-icon-card titel="Aanpassen profiel" subtitel="Instellen van uw gegevens en voorkeuren" class="h-100"
+            <app-pegasus-card [titel]="titel" [subtitel]="subtitel" class="h-100"
                            [icon]="persoonIcon">
                 <div #persoonGroup="ngModelGroup" ngModelGroup="persoonGroup" appWachtwoordMatchValidator>
                     <div class="row">
@@ -166,10 +166,10 @@
                         </div>
                     </div>
                 </div>
-            </app-icon-card>
+            </app-pegasus-card>
         </div>
         <div class="col-4">
-            <app-icon-card titel="Lidinformatie"
+            <app-pegasus-card titel="Lidinformatie"
                            subtitel="Toegekende functies en andere informatie over het lidmaatschap"
                            [icon]="informatieIcon">
                 <div #informatieGroup="ngModelGroup" ngModelGroup="informatieGroup">
@@ -273,7 +273,7 @@
                         </div>
                     </div>
                 </div>
-            </app-icon-card>
+            </app-pegasus-card>
         </div>
     </div>
     <div class="row mt-2 justify-content-end">

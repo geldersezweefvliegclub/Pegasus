@@ -3,7 +3,7 @@ import {NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
 import {NgbDateFRParserFormatter} from '../../shared/ngb-date-fr-parser-formatter';
 import {CustomError} from '../../types/Utils';
 import {StorageService} from '../../services/storage/storage.service';
-import {HeliosLid, HeliosUserinfo} from '../../types/Helios';
+import {HeliosLid} from '../../types/Helios';
 import {LedenService} from '../../services/apiservice/leden.service';
 import {ActivatedRoute} from '@angular/router';
 
@@ -16,7 +16,6 @@ import {ActivatedRoute} from '@angular/router';
 export class ProfielPageComponent {
   lidID: number;
   error: CustomError | undefined;
-  isLoading = false;
 
   constructor(
     private readonly ledenService: LedenService,
@@ -33,14 +32,26 @@ export class ProfielPageComponent {
     });
   }
 
-  opslaan(lid: HeliosUserinfo): void {
-    this.isLoading = true;
+  opslaan(lid: HeliosLid): void {
+    if (lid.ID && lid.ID > 0) {
+      this.updateLid(lid)
+    } else{
+      this.nieuwLid(lid)
+    }
+  }
 
+  updateLid(lid: HeliosLid): void {
     this.ledenService.updateLid(lid).then(() => {
-      this.isLoading = false;
       this.error = undefined;
     }).catch(e => {
-      this.isLoading = false;
+      this.error = e;
+    });
+  }
+
+  nieuwLid(lid:HeliosLid):void{
+    this.ledenService.nieuwLid(lid).then(() => {
+      this.error = undefined;
+    }).catch(e => {
       this.error = e;
     });
   }

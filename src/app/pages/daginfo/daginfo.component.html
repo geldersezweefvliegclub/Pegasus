@@ -1,6 +1,6 @@
 <app-error [error]="error"></app-error>
 
-<app-icon-card titel="Dag info"
+<app-pegasus-card titel="Dag info"
                subtitel="Informatie over de vliegdag"
                [icon]="iconCardIcon">
     <div class="tekstregels">
@@ -21,7 +21,7 @@
         <div class="mb-2">
             <div class="row mt-n8 rowDagInfo1">
                 <div class="col-3">
-                    <app-icon-card id="veldCard"
+                    <app-pegasus-card id="veldCard"
                                    class="kleineKaart"
                                    titel="Vliegveld"
                                    subtitel="Waar we vliegen"
@@ -38,10 +38,10 @@
                                    [(ngModel)]="dagInfo.VELD_ID">
                         </ng-select>
 
-                    </app-icon-card>
+                    </app-pegasus-card>
                 </div>
                 <div class="col-3">
-                    <app-icon-card id="defaultCard"
+                    <app-pegasus-card id="defaultCard"
                                    class="kleineKaart"
                                    titel="Standaard"
                                    subtitel="Start gegevens"
@@ -69,21 +69,21 @@
                                 <label for="CLUBBEDRIJF" class="form-check-label">Club bedrijf</label>
                             </div>
                         </div>
-                    </app-icon-card>
+                    </app-pegasus-card>
                 </div>
                 <div class="col-6">
-                    <app-icon-card id="dienstenCard"
+                    <app-pegasus-card id="dienstenCard"
                                    class="kleineKaart"
                                    titel="Diensten"
                                    subtitel="Wie zijn aanwezig en wie niet"
                                    [icon]="iconDiensten">
-                    </app-icon-card>
+                    </app-pegasus-card>
                 </div>
             </div>
 
             <div class="row rowDagInfo2">
                 <div class="col-6">
-                    <app-icon-card id="meteoCard"
+                    <app-pegasus-card id="meteoCard"
                                    class="kleineKaart"
                                    titel="Meteo"
                                    subtitel="Weersomstandigheden op de vliegdag"
@@ -97,10 +97,10 @@
                             <app-icon-button class="ms-2" iconNaam="fas PencilAlt" (btnClicked)="invullenMeteo()"
                                              btnColor="btn-primary"></app-icon-button>
                         </div>
-                    </app-icon-card>
+                    </app-pegasus-card>
                 </div>
                 <div class="col-6">
-                    <app-icon-card id="bedrijfCard"
+                    <app-pegasus-card id="bedrijfCard"
                                    class="kleineKaart"
                                    titel="Vliegbedrijf"
                                    subtitel="Operationele data"
@@ -113,13 +113,13 @@
                             <app-icon-button class="ms-2" iconNaam="fas PencilAlt" (btnClicked)="invullenVliegbedrijf()"
                                              btnColor="btn-primary"></app-icon-button>
                         </div>
-                    </app-icon-card>
+                    </app-pegasus-card>
                 </div>
             </div>
 
             <div class="row rowDagInfo3">
                 <div class="col-6">
-                    <app-icon-card id="vliegendCard"
+                    <app-pegasus-card id="vliegendCard"
                                    class="kleineKaart"
                                    titel="Vliegend"
                                    subtitel="Bijzonderheden over de vliegtuigen"
@@ -128,10 +128,10 @@
                         <textarea [(ngModel)]="dagInfo.VLIEGENDMATERIEEL" name="Ingave"
                                   class="w-100 text-invoer form-control"
                                   [rows]="tekstRegels"></textarea>
-                    </app-icon-card>
+                    </app-pegasus-card>
                 </div>
                 <div class="col-6">
-                    <app-icon-card id="rollendCard"
+                    <app-pegasus-card id="rollendCard"
                                    class="kleineKaart"
                                    titel="Rollend"
                                    subtitel="Bijzonderheden over het rollende materieel"
@@ -140,13 +140,13 @@
                         <textarea [(ngModel)]="dagInfo.ROLLENDMATERIEEL" name="Ingave"
                                   class="w-100 text-invoer form-control"
                                   [rows]="tekstRegels"></textarea>
-                    </app-icon-card>
+                    </app-pegasus-card>
                 </div>
             </div>
 
             <div class="row rowDagInfo4">
                 <div class="col-6">
-                    <app-icon-card id="verslagCard"
+                    <app-pegasus-card id="verslagCard"
                                    class="kleineKaart"
                                    titel="Verslag"
                                    subtitel="Toelichting en bijzonderheden"
@@ -155,10 +155,10 @@
                         <textarea [(ngModel)]="dagInfo.VERSLAG" name="Ingave"
                                   class="w-100 text-invoer form-control"
                                   [rows]="tekstRegels"></textarea>
-                    </app-icon-card>
+                    </app-pegasus-card>
                 </div>
                 <div class="col-6">
-                    <app-icon-card id="incidentCard"
+                    <app-pegasus-card id="incidentCard"
                                    class="kleineKaart"
                                    titel="Incidenten"
                                    subtitel="Gevaarlijke situaties waar we van kunnen leren"
@@ -167,7 +167,7 @@
                         <textarea [(ngModel)]="dagInfo.INCIDENTEN" name="Ingave"
                                   class="w-100 text-invoer form-control"
                                   [rows]="tekstRegels"></textarea>
-                    </app-icon-card>
+                    </app-pegasus-card>
                 </div>
             </div>
 
@@ -193,7 +193,7 @@
             </div>
         </div>
     </div>
-</app-icon-card>
+</app-pegasus-card>
 
 
 <app-compose-meteo (opslaan)="dagInfo.METEO = $event"></app-compose-meteo>

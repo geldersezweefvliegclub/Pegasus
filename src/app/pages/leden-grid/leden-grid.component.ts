@@ -158,8 +158,7 @@ export class LedenGridComponent {
 
   // openen van popup om lid data van een nieuw lid te kunnen invoeren
   addLid(): void {
-    //todo
-    console.warn('Lid aanmaken niet geimplementeerd');
+    this.router.navigate(['profiel'], {queryParams: {lidID: -1}});
   }
 
   // schakelen tussen deleteMode JA/NEE. In deleteMode kun je leden verwijderen

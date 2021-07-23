@@ -6,7 +6,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import {SharedModule} from '../shared/shared.module';
-import {IconCardComponent} from '../shared/components/icon-card/icon-card.component';
+import {PegasusCardComponent} from '../shared/components/pegasus-card/pegasus-card.component';
 import {DashboardPageComponent} from './dashboard/dashboard-page.component';
 import {ProfielPageComponent} from './profiel/profiel-page.component';
 import {NotFoundComponent} from './not-found/not-found.component';
@@ -80,7 +80,7 @@ import {NaamRenderComponent} from './leden-grid/naam-render/naam-render.componen
     NaamRenderComponent
   ],
   exports: [
-    IconCardComponent,
+    PegasusCardComponent,
     DashboardPageComponent,
     CodeInputModule,
     ChartsModule

@@ -1,6 +1,6 @@
 <app-error [error]="error"></app-error>
 
-<app-icon-card titel="Startlijst"
+<app-pegasus-card titel="Startlijst"
                subtitel="Een overzicht van de starts"
                [icon]="iconCardIcon"
                [exportEnabled]="this.magExporten"
@@ -79,4 +79,4 @@
                           (add)="Toevoegen($event)" (update)="Aanpassen($event)" (delete)="Verwijderen($event)"
                           (restore)="Herstellen($event)"
     ></app-start-editor>
-</app-icon-card>
+</app-pegasus-card>

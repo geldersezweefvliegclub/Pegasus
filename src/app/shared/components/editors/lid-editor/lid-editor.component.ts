@@ -24,6 +24,8 @@ export class LidEditorComponent implements OnInit {
   wachtwoord = '';
   infoIcon = faInfoCircle;
   persoonIcon = faUser;
+  subtitel = 'Instellen van uw gegevens en voorkeuren';
+  titel = 'Aanpassen profiel';
 
 
   constructor(
@@ -34,7 +36,16 @@ export class LidEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.ledenService.getLid(this.lidID).then((lid: HeliosLid) => this.lid = lid);
+    if (this.lidID > 0) {
+      this.ledenService.getLid(this.lidID).then((lid: HeliosLid) => this.lid = lid);
+    } else {
+      this.titel = 'Lid aanmaken'
+      this.subtitel = 'Toevoegen van een nieuw lid'
+      this.lid = {
+        GEBOORTE_DATUM: '',
+        MEDICAL: ''
+      };
+    }
   }
 
   haalLidmaatschappenOp(): void {
@@ -42,8 +53,6 @@ export class LidEditorComponent implements OnInit {
   }
 
   submit() {
-    console.log('before',this.lid.WACHTWOORD)
-    console.log(this.wachtwoord, this.controleWachtwoord)
     if (this.wachtwoord === '' || (this.controleWachtwoord !== this.wachtwoord)) {
       this.lid.WACHTWOORD = undefined;
     } else {

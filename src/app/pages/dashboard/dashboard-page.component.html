@@ -1,4 +1,4 @@
-<app-icon-card titel="Dashboard"
+<app-pegasus-card titel="Dashboard"
                subtitel="Een verzameling van nuttige info"
                [icon]="iconCardIcon">
 
@@ -20,46 +20,46 @@
 
     <div class="row mt-4">
         <div class="col-3">
-            <app-icon-card id="statusCard"
+            <app-pegasus-card id="statusCard"
                            class="kleineKaart"
                            titel="Status"
                            subtitel="Vliegstatus"
                            [icon]="iconStatus">
                 <app-status [VliegerID]="lidData.ID"></app-status>
-            </app-icon-card>
+            </app-pegasus-card>
         </div>
         <div class="col-3">
-            <app-icon-card id="pvbCard"
+            <app-pegasus-card id="pvbCard"
                            class="kleineKaart"
                            titel="PVB"
                            subtitel="Proef van bekwaamheid"
                            [icon]="iconPVB">
                 <app-pvb [VliegerID]="lidData.ID"></app-pvb>
-            </app-icon-card>
+            </app-pegasus-card>
         </div>
 
         <div class="col-3">
-            <app-icon-card id="recencyCard"
+            <app-pegasus-card id="recencyCard"
                            class="kleineKaart"
                            titel="Recency"
                            subtitel="Currency barameter"
                            [icon]="iconRecency">
                 <app-recency [VliegerID]="lidData.ID" [naam]="lidData.NAAM"></app-recency>
-            </app-icon-card>
+            </app-pegasus-card>
         </div>
 
         <div class="col-3">
-            <app-icon-card id="roosterCard"
+            <app-pegasus-card id="roosterCard"
                            class="kleineKaart"
                            titel="Rooster"
                            subtitel="Ingeroosterde diensten"
                            [icon]="iconRooster">
-            </app-icon-card>
+            </app-pegasus-card>
         </div>
     </div>
     <div class="row mt-4 datatable-hoogte">
         <div class="col-12">
-            <app-icon-card id="logboekCard"
+            <app-pegasus-card id="logboekCard"
                            class="kleineKaart"
                            titel="Logboek"
                            subtitel="Overzicht van de vluchten"
@@ -70,12 +70,12 @@
                     </a>
                 </div>
                 <app-vlieger-logboek [VliegerID]="lidData.ID"></app-vlieger-logboek>
-            </app-icon-card>
+            </app-pegasus-card>
         </div>
     </div>
     <div class="row mt-4">
         <div class="col-12">
-            <app-icon-card id="progressieCard"
+            <app-pegasus-card id="progressieCard"
                            class="kleineKaart"
                            titel="Progressiekaart"
                            subtitel="Behaalde competenties"
@@ -83,10 +83,10 @@
                 <app-progressie-boom [VliegerID]="lidData.ID">
 
                 </app-progressie-boom>
-            </app-icon-card>
+            </app-pegasus-card>
         </div>
     </div>
-</app-icon-card>
+</app-pegasus-card>
 
 <app-modal popupClass="popupLarge" titel="Logboek van {{lidData.NAAM}} voor">
     <div body *ngIf="lidData">

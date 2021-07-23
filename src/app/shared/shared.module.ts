@@ -35,7 +35,7 @@ import {ChartsModule} from 'ng2-charts';
 import {NgbDatepickerModule, NgbPopoverModule, NgbProgressbarModule} from '@ng-bootstrap/ng-bootstrap';
 import {ProgressieBoomComponent} from './components/progressie-boom/progressie-boom.component';
 import {TreeviewModule} from 'ngx-treeview';
-import {IconCardComponent} from './components/icon-card/icon-card.component';
+import {PegasusCardComponent} from './components/pegasus-card/pegasus-card.component';
 import {LidEditorComponent} from './components/editors/lid-editor/lid-editor.component';
 
 
@@ -54,7 +54,7 @@ import {LidEditorComponent} from './components/editors/lid-editor/lid-editor.com
     TreeviewModule
   ],
   declarations: [
-    IconCardComponent,
+    PegasusCardComponent,
     ModalComponent,
     ErrorComponent,
     DatatableComponent,
@@ -86,7 +86,7 @@ import {LidEditorComponent} from './components/editors/lid-editor/lid-editor.com
   ],
   exports: [
     LidEditorComponent,
-    IconCardComponent,
+    PegasusCardComponent,
     AvatarComponent,
     ModalComponent,
     DatatableComponent,
