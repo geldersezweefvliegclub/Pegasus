@@ -42,6 +42,7 @@
     "ng-lazyload-image": "^9.1.0",
     "ng2-charts": "^2.3.0",
     "ng2-validation": "^4.2.0",
+    "ngx-image-cropper": "^4.0.1",
     "ngx-treeview": "^10.0.2",
     "rxjs": "~6.5.2",
     "sunrise-sunset-js": "^2.2.1",

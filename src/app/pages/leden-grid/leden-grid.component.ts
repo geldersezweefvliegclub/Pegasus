@@ -11,7 +11,7 @@ import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {LoginService} from '../../services/apiservice/login.service';
 import * as xlsx from 'xlsx';
 import {LedenService} from '../../services/apiservice/leden.service';
-import {AvatarRenderComponent} from './avatar/avatar-render.component';
+import {AvatarRenderComponent} from './avatar-render/avatar-render.component';
 import {AdresRenderComponent} from './adres-render/adres-render.component';
 import {TelefoonRenderComponent} from './telefoon-render/telefoon-render.component';
 import {EmailRenderComponent} from './email-render/email-render.component';
