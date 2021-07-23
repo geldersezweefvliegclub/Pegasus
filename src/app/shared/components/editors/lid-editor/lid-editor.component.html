@@ -19,7 +19,8 @@
     <div class="row">
         <div class="col-8">
             <app-pegasus-card [titel]="titel" [subtitel]="subtitel" class="h-100"
-                           [icon]="persoonIcon">
+                              [img]="lid.AVATAR">
+                <div avatar>Test</div>
                 <div #persoonGroup="ngModelGroup" ngModelGroup="persoonGroup" appWachtwoordMatchValidator>
                     <div class="row">
                         <div class="col-5">
@@ -137,7 +138,7 @@
                                 Wachtwoord
                             </label>
                             <fa-icon [icon]="infoIcon" [ngbPopover]="wachtwoordPopover" placement="right"
-                                     class="text-info ms-2"></fa-icon>
+                                     class="text-info ms-2 clickable"></fa-icon>
                             <div class="input-group">
                                 <input class="form-control" [type]="wachtwoordVerborgen ? 'password' : 'text'"
                                        id="wachtwoord"
@@ -153,7 +154,7 @@
                                 Herhaal wachtwoord
                             </label>
                             <fa-icon [icon]="infoIcon" [ngbPopover]="wachtwoordPopover" placement="right"
-                                     class="text-info ms-2"></fa-icon>
+                                     class="text-info ms-2 clickable"></fa-icon>
                             <div class="input-group">
                                 <input class="form-control" [type]="wachtwoordVerborgen ? 'password' : 'text'"
                                        id="herhaalwachtwoord"
@@ -170,8 +171,8 @@
         </div>
         <div class="col-4">
             <app-pegasus-card titel="Lidinformatie"
-                           subtitel="Toegekende functies en andere informatie over het lidmaatschap"
-                           [icon]="informatieIcon">
+                              subtitel="Toegekende functies en andere informatie over het lidmaatschap"
+                              [icon]="informatieIcon">
                 <div #informatieGroup="ngModelGroup" ngModelGroup="informatieGroup">
                     <div class="row">
                         <div class="col-4">
@@ -260,7 +261,9 @@
                                 <label class="form-check-label" for="googleAuth">
                                     Google Auth.
 
-                                    <fa-icon class="text-info ms-2" [icon]="infoIcon" [ngbPopover]="googleAuthPopover" placement="right"></fa-icon>
+                                    <fa-icon class="text-info ms-2 clickable" [icon]="infoIcon"
+                                             [ngbPopover]="googleAuthPopover"
+                                             placement="right"></fa-icon>
                                 </label>
                             </div>
                         </div>

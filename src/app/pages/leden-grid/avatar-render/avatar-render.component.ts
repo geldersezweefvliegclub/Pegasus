@@ -1,7 +1,6 @@
-import {Component, ViewChild} from '@angular/core';
-import {AgRendererComponent} from "ag-grid-angular";
-import {ICellRendererParams} from "ag-grid-community";
-import {ModalComponent} from "../../../shared/components/modal/modal.component";
+import {Component} from '@angular/core';
+import {AgRendererComponent} from 'ag-grid-angular';
+import {ICellRendererParams} from 'ag-grid-community';
 
 @Component({
   selector: 'app-avatar-render',
@@ -12,10 +11,6 @@ export class AvatarRenderComponent implements AgRendererComponent {
   url: string;
   naam: string;
 
-  @ViewChild(ModalComponent) private popup: ModalComponent;
-
-  constructor() { }
-
   agInit(params: ICellRendererParams): void {
     this.url = params.value;
     this.naam = params.data.NAAM;
@@ -23,10 +18,5 @@ export class AvatarRenderComponent implements AgRendererComponent {
 
   refresh(params: ICellRendererParams): boolean {
     return false;
-  }
-
-  // Toon grote avatar in in popup window
-  showPopup() {
-    this.popup.open();
   }
 }

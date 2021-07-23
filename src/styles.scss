@@ -43,7 +43,7 @@ footer {
 }
 
 // rode rand om input velden wanneer data ongeldig is
-input.ng-dirty.ng-invalid{
+input.ng-dirty.ng-invalid {
   border: 1px solid red;
 }
 
@@ -93,7 +93,7 @@ input.ng-dirty.ng-invalid{
   color: #9a9a9a;
 }
 
-.ng-select.ng-select-disabled>.ng-select-container {
+.ng-select.ng-select-disabled > .ng-select-container {
   background-color: #e9ecef;
 }
 
@@ -158,25 +158,53 @@ ngb-datepicker-navigation-select > .custom-select {
 
 // Laat knipperen van icon
 @keyframes flickerAnimation {
-  0%   { opacity:1; }
-  50%  { opacity:0; }
-  100% { opacity:1; }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
-@-o-keyframes flickerAnimation{
-  0%   { opacity:1; }
-  50%  { opacity:0; }
-  100% { opacity:1; }
+
+@-o-keyframes flickerAnimation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
-@-moz-keyframes flickerAnimation{
-  0%   { opacity:1; }
-  50%  { opacity:0; }
-  100% { opacity:1; }
+
+@-moz-keyframes flickerAnimation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
-@-webkit-keyframes flickerAnimation{
-  0%   { opacity:1; }
-  50%  { opacity:0; }
-  100% { opacity:1; }
+
+@-webkit-keyframes flickerAnimation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
+
 .animate-flicker {
   -webkit-animation: flickerAnimation 2s infinite;
   -moz-animation: flickerAnimation 2s infinite;
@@ -239,10 +267,10 @@ canvas.recencyGrafiek.chartjs-render-monitor {
 .treeview-header {
   display: flex;
 
-  div:nth-child(2)
-  {
+  div:nth-child(2) {
     display: flex;
   }
+
   .row-filter {
     width: 100%;
   }
@@ -258,4 +286,9 @@ canvas.recencyGrafiek.chartjs-render-monitor {
   .dropdown-divider {
     border: 0px;
   }
+}
+
+// Verander de cursor in een pointer om indicatie van klikbaar te geven. Zelfgemaakt.
+.clickable {
+  cursor: pointer;
 }

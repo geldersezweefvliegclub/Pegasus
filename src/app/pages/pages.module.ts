@@ -27,7 +27,7 @@ import {CustomFormsModule} from 'ng2-validation';
 import {NgSelectModule} from '@ng-select/ng-select';
 import {ComposeMeteoComponent} from './daginfo/compose-meteo/compose-meteo.component';
 import {ComposeBedrijfComponent} from './daginfo/compose-bedrijf/compose-bedrijf.component';
-import {AvatarRenderComponent} from './leden-grid/avatar/avatar-render.component';
+import {AvatarRenderComponent} from './leden-grid/avatar-render/avatar-render.component';
 import {AdresRenderComponent} from './leden-grid/adres-render/adres-render.component';
 import {TelefoonRenderComponent} from './leden-grid/telefoon-render/telefoon-render.component';
 import {LazyLoadImageModule} from 'ng-lazyload-image';

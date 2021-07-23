@@ -1,14 +1,22 @@
-
-.avatar {
-  margin-top: 2px;
+img {
   object-fit: cover;
-  width:65px;
-  height:65px;
-  border-radius:50%;
+}
+
+.cirkel {
+  margin-top: 2px;
+
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+}
+
+.vierkant {
+  border-radius: 5px;
+  width: 2.5em;
+  height: 2.5em;
 }
 
 .volBeeld {
-  object-fit: cover;
-  width:100%;
+  width: 100%;
   border-radius: 20px;
 }

@@ -9,6 +9,7 @@ import {faQuestionCircle} from '@fortawesome/free-solid-svg-icons';
 })
 export class PegasusCardComponent {
     @Input() icon: IconDefinition = faQuestionCircle
+    @Input() img: string
     @Input() titel: string;
     @Input() subtitel: string;
     @Input() exportEnabled: boolean = true;
