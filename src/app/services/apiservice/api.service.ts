@@ -4,12 +4,13 @@ import {environment} from '../../../environments/environment';
 import {SharedService} from '../shared/shared.service';
 import {PegasusConfigService} from "../shared/pegasus-config.service";
 import {Base64} from "js-base64";
+import {Form} from '@angular/forms';
 
 @Injectable({
     providedIn: 'root'
 })
 export class APIService {
-    private URL = 'http://localhost:4200/api/'
+    private readonly URL:string = 'http://localhost:4200/api/'
 
     constructor(private readonly sharedService: SharedService,
                 private readonly configService: PegasusConfigService) {
@@ -37,13 +38,14 @@ export class APIService {
     }
 
     // Aanroepen post request om het aanmaken van nieuw record
-    async post(url: string, body: string): Promise<Response> {
+    // Dit is een string voor JSON, of FormData voor foto's
+    async post(url: string, body: string|FormData): Promise<Response> {
 
         const response = await fetch(`${this.URL}${url}`, {
             method: 'POST',
             body: body,
         });
-
+        //todo response heeft een .ok property. Mogelijk beter te gebruiken? (Zoals get())
         if (response.status != 200) {  // 200 is normaal voor post
             throw this.handleError(response);
         }
@@ -61,7 +63,7 @@ export class APIService {
             method: 'PUT',
             body: body,
         });
-
+        // todo .ok property gebruiken?
         if (response.status != 200) {  // 200 is normaal voor put
             throw this.handleError(response);
         }
@@ -80,7 +82,7 @@ export class APIService {
         const response = await fetch(`${this.URL}${url}`, {
             method: 'DELETE',
         });
-
+        // todo .ok gebruiken?
         if (response.status != 204) { // 204 is normaal voor delete
             throw this.handleError(response);
         }
@@ -97,6 +99,7 @@ export class APIService {
             method: 'PATCH',
         });
 
+        // todo .ok gebruiken?
         if (response.status != 202) { // 204 is normaal voor patch
             throw this.handleError(response);
         }
@@ -121,12 +124,13 @@ export class APIService {
     }
 
 
-    // Vul customer error  met http status code en de beschrijving uit X-Error-Messag
+    // Vul customer error  met http status code en de beschrijving uit X-Error-Message
     private handleError(response: Response): CustomError {
         const error: CustomError = {
             responseCode: response.status,
             beschrijving: response.headers.get('X-Error-Message')
         }
+        //todo mogelijk kan error hier al gethrowed worden ipv error obj returnen
         return error;
     }
 }

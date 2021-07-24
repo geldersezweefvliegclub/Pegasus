@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {fas} from '@fortawesome/free-solid-svg-icons';
 import {far, IconDefinition} from '@fortawesome/free-regular-svg-icons';
+import {FlipProp} from '@fortawesome/fontawesome-svg-core';
 
 @Component({
   selector: 'app-icon-button',
@@ -8,14 +9,16 @@ import {far, IconDefinition} from '@fortawesome/free-regular-svg-icons';
   styleUrls: ['./icon-button.component.scss']
 })
 export class IconButtonComponent implements OnInit {
-  @Input() tekst: string = "";
+  @Input() tekst: string = '';
   @Input() iconNaam: string;
   @Input() btnColor: string = 'btn-secondary';
   @Input() disabled: boolean = false;
+  @Input() flip: FlipProp;
   @Input() type: 'button' | 'submit' = 'button';
   @Output() btnClicked: EventEmitter<void> = new EventEmitter<void>();
 
   faIcon: IconDefinition;
+
 
   ngOnInit(): void {
     let parts: string[] = this.iconNaam.split(' ');
@@ -32,8 +35,8 @@ export class IconButtonComponent implements OnInit {
 
       if (!this.faIcon) {
         console.log('fa' + parts[1]);
-        console.log("fas", fas);
-        console.log("far", far);
+        console.log('fas', fas);
+        console.log('far', far);
         this.faIcon = fas['faExclamation'];
       }
     }

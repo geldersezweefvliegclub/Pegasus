@@ -13,13 +13,17 @@ import {StorageService} from '../storage/storage.service';
 import {KeyValueString} from '../../types/Utils';
 import {DateTime} from 'luxon';
 
+interface parameters {
+    [key: string]: string;
+}
+
 @Injectable({
     providedIn: 'root'
 })
 export class StartlijstService {
     starts: HeliosStarts | null = null;
     vliegdagen: HeliosVliegdagen | null = null;
-    logboek: HeliosLogboek | null = null;         // logboek vlieger
+    logboek: HeliosLogboek | null = null;                       // logboek vlieger
     vliegtuigLogboek: HeliosVliegtuigLogboek| null = null;
     vliegtuigLogboekTotalen: HeliosVliegtuigLogboekTotalen;
 
@@ -27,9 +31,6 @@ export class StartlijstService {
     }
 
     async getVliegdagen(startDatum: DateTime, eindDatum: DateTime): Promise<[]> {
-        interface parameters {
-            [key: string]: string;
-        }
 
         let getParams: parameters = {};
         getParams['BEGIN_DATUM'] = startDatum.toISODate();
@@ -52,10 +53,6 @@ export class StartlijstService {
 
     async getLogboek(id: number, jaar: number, maxRecords?: number): Promise<HeliosLogboekDataset[]> {
         let hash: string = '';
-
-        interface parameters {
-            [key: string]: string;
-        }
         if (this.storageService.ophalen('vlogboek-'+id.toString()) != null) {
             this.logboek = this.storageService.ophalen('vlogboek-'+id.toString());
         }
@@ -88,9 +85,6 @@ export class StartlijstService {
     }
 
     async getVliegtuigLogboek(id: number, startDatum: DateTime, eindDatum: DateTime): Promise<HeliosLogboekDataset[]> {
-        interface parameters {
-            [key: string]: string;
-        }
 
         let getParams: parameters = {};
         getParams['ID'] = id.toString();
@@ -113,10 +107,6 @@ export class StartlijstService {
     }
 
     async getVliegtuigLogboekTotalen(id: number, jaar:number): Promise<HeliosVliegtuigLogboekTotalen> {
-        interface parameters {
-            [key: string]: string;
-        }
-
         let getParams: parameters = {};
         getParams['ID'] = id.toString();
         getParams['JAAR'] = jaar.toString();
@@ -128,6 +118,7 @@ export class StartlijstService {
 
             this.vliegtuigLogboekTotalen = await response.json();
         } catch (e) {
+            //todo nutteloze catch?
             throw(e);
         }
         return this.vliegtuigLogboekTotalen;
@@ -205,8 +196,8 @@ export class StartlijstService {
         try {
             await this.APIService.delete('Startlijst/DeleteObject', {'ID': id.toString()});
         } catch (e) {
+            // todo nutteloze catch?
             throw(e);
-
         }
     }
 
@@ -219,7 +210,6 @@ export class StartlijstService {
     }
 
     async startTijd(id: number, tijd: string) {
-
         const response: Response = await this.APIService.put('Startlijst/SaveObject', JSON.stringify({ID: id,STARTTIJD: (tijd) ? tijd : null }));
 
         return response.json();

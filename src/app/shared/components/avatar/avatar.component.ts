@@ -12,11 +12,8 @@ export class AvatarComponent {
   @Input() vorm: 'cirkel' | 'vierkant' = 'cirkel';
   @ViewChild(ModalComponent) private popup: ModalComponent;
 
-  constructor() {
-  }
 
-  // Toon grote avatar in in popup window
-
+  // Toon grote avatar in popup window
   showPopup() {
     this.popup.open();
   }

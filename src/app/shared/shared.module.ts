@@ -37,6 +37,8 @@ import {ProgressieBoomComponent} from './components/progressie-boom/progressie-b
 import {TreeviewModule} from 'ngx-treeview';
 import {PegasusCardComponent} from './components/pegasus-card/pegasus-card.component';
 import {LidEditorComponent} from './components/editors/lid-editor/lid-editor.component';
+import {ImageCropperModule} from 'ngx-image-cropper';
+import { ImageCropComponent } from './components/image-crop/image-crop.component';
 
 
 @NgModule({
@@ -51,7 +53,8 @@ import {LidEditorComponent} from './components/editors/lid-editor/lid-editor.com
     NgbDatepickerModule,
     NgbPopoverModule,
     NgbProgressbarModule,
-    TreeviewModule
+    TreeviewModule,
+    ImageCropperModule
   ],
   declarations: [
     PegasusCardComponent,
@@ -82,7 +85,8 @@ import {LidEditorComponent} from './components/editors/lid-editor/lid-editor.com
     WachtwoordSterkteValidatorDirective,
     RecencyGrafiekComponent,
     LidEditorComponent,
-    ProgressieBoomComponent
+    ProgressieBoomComponent,
+    ImageCropComponent
   ],
   exports: [
     LidEditorComponent,

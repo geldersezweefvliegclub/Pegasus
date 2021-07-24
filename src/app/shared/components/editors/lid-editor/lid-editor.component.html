@@ -19,8 +19,11 @@
     <div class="row">
         <div class="col-8">
             <app-pegasus-card [titel]="titel" [subtitel]="subtitel" class="h-100"
-                              [img]="lid.AVATAR">
-                <div avatar>Test</div>
+                              [img]="avatar">
+                <div avatar>
+                    <app-image-crop (opslaan)="uploadFoto($event)" (cropped)="setAvatar($event)"></app-image-crop>
+                </div>
+
                 <div #persoonGroup="ngModelGroup" ngModelGroup="persoonGroup" appWachtwoordMatchValidator>
                     <div class="row">
                         <div class="col-5">
