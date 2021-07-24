@@ -43,6 +43,7 @@ export type HeliosDagInfo = DaginfoComponents['schemas']['oper_daginfo'];
 export type HeliosType = typesComponents['schemas']['ref_types_in']
 export type HeliosTypes = typesComponents['schemas']['view_types']
 
-export type HeliosProgressie = progressieComponents['schemas']['view_progressie']
-export type HeliosProgressieDataset = progressieComponents['schemas']['view_progressie_dataset']
+export type HeliosProgressie = progressieComponents['schemas']['ref_progressie_in']
+export type HeliosBehaaldeProgressie = progressieComponents['schemas']['view_progressie']
+export type HeliosBehaaldeProgressieDataset = progressieComponents['schemas']['view_progressie_dataset']
 export type HeliosProgressieBoom = progressieComponents['schemas']['progressie_boom']

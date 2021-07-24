@@ -369,9 +369,9 @@ export interface components {
       /** ID van progressie record */
       PROGRESSIE_ID?: number;
       /** Is comptententie behaald, 0 = niet behaald, 1 = gedeeltelijk van onderliggende, 2 = gehaald, ook alle onderliggende */
-      IS_BEHAALD?: string;
+      IS_BEHAALD?: number;
       /** Tijdstempel wanneer record is toegevoegd */
-      INGEVOERD?: number;
+      INGEVOERD?: string;
       /** De volledige naam van de instrcuteur die de competentie heeft toegevoegd */
       INSTRUCTEUR_NAAM?: string;
       /** Opmerking over de behaalde competentie */

@@ -33,7 +33,10 @@ import {WachtwoordSterkteValidatorDirective} from './directives/WachtwoordSterkt
 import {RecencyGrafiekComponent} from './components/recency/recency-grafiek/recency-grafiek.component';
 import {ChartsModule} from 'ng2-charts';
 import {NgbDatepickerModule, NgbPopoverModule, NgbProgressbarModule} from '@ng-bootstrap/ng-bootstrap';
-import {ProgressieBoomComponent} from './components/progressie-boom/progressie-boom.component';
+import {
+  ProgressieBoomComponent,
+  ProgressieTreeviewItemComponent
+} from './components/progressie-boom/progressie-boom.component';
 import {TreeviewModule} from 'ngx-treeview';
 import {PegasusCardComponent} from './components/pegasus-card/pegasus-card.component';
 import {LidEditorComponent} from './components/editors/lid-editor/lid-editor.component';

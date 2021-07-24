@@ -1,7 +1,13 @@
 import {Injectable} from '@angular/core';
 import {APIService} from "./api.service";
 import {StorageService} from "../storage/storage.service";
-import {HeliosProgressie, HeliosProgressieBoom, HeliosProgressieDataset} from "../../types/Helios";
+import {
+    HeliosLid,
+    HeliosBehaaldeProgressie,
+    HeliosProgressieBoom,
+    HeliosBehaaldeProgressieDataset,
+    HeliosProgressie
+} from "../../types/Helios";
 import {KeyValueString} from "../../types/Utils";
 
 @Injectable({
@@ -13,8 +19,8 @@ export class ProgressieService {
                 private readonly storageService: StorageService) {
     }
 
-    async getProgressie(lidID:number, comptentiesIDs?: string): Promise<HeliosProgressieDataset[]> {
-        let progressie: HeliosProgressie | null = null;
+    async getProgressie(lidID:number, comptentiesIDs?: string): Promise<HeliosBehaaldeProgressieDataset[]> {
+        let progressie: HeliosBehaaldeProgressie | null = null;
         let hash: string = '';
 
         let getParams: KeyValueString = {};
@@ -33,6 +39,20 @@ export class ProgressieService {
         }
         return progressie?.dataset as [];
     }
+
+    async behaaldeCompetentie(progressie: HeliosProgressie):Promise<HeliosProgressie> {
+        const response: Response = await this.apiService.post('Progressie/SaveObject', JSON.stringify(progressie));
+        return response.json();
+    }
+
+    async verwijderCompetentie(id: number) {
+        try {
+            await this.apiService.delete('Progressie/DeleteObject', {'ID': id.toString()});
+        } catch (e) {
+            throw(e);
+        }
+    }
+
 
     async getBoom(lidID:number): Promise<HeliosProgressieBoom[]> {
         let boom: HeliosProgressieBoom | null = null;

@@ -1,7 +1,10 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
-import {HeliosProgressieDataset} from "../../../types/Helios";
+import {HeliosBehaaldeProgressieDataset, HeliosProgressie} from "../../../types/Helios";
+import {HeliosActie} from "../../../types/Utils";
+import {SharedService} from "../../../services/shared/shared.service";
+import {LoginService} from "../../../services/apiservice/login.service";
 
 @Component({
     selector: 'app-status',
@@ -13,10 +16,22 @@ export class StatusComponent implements OnInit, OnChanges {
 
     cheks: any;
     overig: any;
-    gehaaldeProgressie: HeliosProgressieDataset[];
+    gehaaldeProgressie: HeliosBehaaldeProgressieDataset[];
+    suspend: boolean = false;
 
-    constructor(private readonly configService: PegasusConfigService,
+    constructor(private readonly loginService: LoginService,
+                private readonly configService: PegasusConfigService,
+                private readonly sharedService: SharedService,
                 private readonly progressieService: ProgressieService) {
+
+        // Als in de progressie tabel is aangepast, moet we onze dataset ook aanpassen
+        this.sharedService.heliosEventFired.subscribe(ev => {
+            if (ev.tabel == "Progressie") {
+                if (!this.suspend && (ev.actie == HeliosActie.Add || ev.actie == HeliosActie.Delete)) {
+                    this.ophalen();
+                }
+            }
+        });
     }
 
     ngOnInit(): void {
@@ -58,5 +73,25 @@ export class StatusComponent implements OnInit, OnChanges {
         if (changes.hasOwnProperty("VliegerID")) {
             this.ophalen()
         }
+    }
+
+    // Zorg ervoor dat we niet gaan laden
+    uitstellen(): void {
+        this.suspend = true;
+        setTimeout(() => this.suspend = false, 1000);
+    }
+
+    // Progressie kan gezet worden via snelkeuze in deze component, lange weg kan via progressie boom
+    zetProgressie(e:any, id:number) {
+        e.target.disabled = true;       // mogen check niet weghalen, dus disable de checkbox
+
+        const ui = this.loginService.userInfo?.LidData;
+        this.progressieService.behaaldeCompetentie({
+            LID_ID: this.VliegerID,
+            INSTRUCTEUR_ID: ui?.ID,
+            COMPETENTIE_ID: id,
+        });
+
+        this.uitstellen();      // we hebben het vinkje in deze component gezet, we hoeven niet te laden
     }
 }
