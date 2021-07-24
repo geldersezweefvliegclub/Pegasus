@@ -1,60 +1,59 @@
 <app-error [error]="error"></app-error>
 
-<div id="loginForm" class="row justify-content-center pt-4 mx-0">
-    <div id="loginCard" class="col-12 col-md-12 card">
-        <div class="card-body">
-            <h1 class="card-title">Inloggen</h1>
-            <form #form="ngForm" (ngSubmit)="login()">
-                <div class="row">
-                    <div class="col">
-                        <label for="gebruikersnaam" class="form-label">Gebruikersnaam</label>
-                        <input
-                                id="gebruikersnaam"
-                                type="text"
-                                class="form-control mb-2"
-                                [(ngModel)]="gebruikersnaam"
-                                name="gebruikersnaam"
-                                minlength="2" required>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <label for="wachtwoord" class="form-label">Wachtwoord</label>
-                        <input
-                                id="wachtwoord"
-                                type="password"
-                                class="form-control mb-2"
-                                [(ngModel)]="wachtwoord"
-                                name="wachtwoord"
-                                minlength="2" required>
-                    </div>
-                </div>
 
-                <div class="row" *ngIf="showSecret" >
-                    <div class="col">
-                        <label for="cinput" class="form-label">Code</label>
-                        <code-input id="cinput" [codeLength]="6" (codeChanged)="onSecurityCodeChanged($event)">
-                        </code-input>
+<div id="foto" [style.background-image]="'url(' + toonFoto +')'">
+    <div class="row justify-content-center padding-top-xl">
+        <div class="col-6 col-md-3 card">
+            <div class="card-body">
+                <h1 class="card-title">Inloggen</h1>
+                <form #form="ngForm" (ngSubmit)="login()">
+                    <div class="row">
+                        <div class="col">
+                            <label for="gebruikersnaam" class="form-label">Gebruikersnaam</label>
+                            <input
+                                    id="gebruikersnaam"
+                                    type="text"
+                                    class="form-control mb-2"
+                                    [(ngModel)]="gebruikersnaam"
+                                    name="gebruikersnaam"
+                                    minlength="2" required>
+                        </div>
                     </div>
-                </div>
-                <div class="row mt-4">
-                    <div class="col d-flex justify-content-end">
-                        <button class="btn btn-secondary mr-2" type="button" (click)="sendSMS()" [disabled]="form.invalid" *ngIf="showSecret">
-                            <span *ngIf="!isLoading">SMS</span>
-                            <span *ngIf="isLoading"><app-loader></app-loader></span>
-                        </button>
-                        <button class="btn btn-primary" type="submit" [disabled]="form.invalid">
-                            <span *ngIf="!isLoading">Login</span>
-                            <span *ngIf="isLoading"><app-loader></app-loader></span>
-                        </button>
+                    <div class="row">
+                        <div class="col">
+                            <label for="wachtwoord" class="form-label">Wachtwoord</label>
+                            <input
+                                    id="wachtwoord"
+                                    type="password"
+                                    class="form-control mb-2"
+                                    [(ngModel)]="wachtwoord"
+                                    name="wachtwoord"
+                                    minlength="2" required>
+                        </div>
                     </div>
-                </div>
-            </form>
+
+                    <div class="row" *ngIf="showSecret">
+                        <div class="col">
+                            <label for="cinput" class="form-label">Code</label>
+                            <code-input id="cinput" [codeLength]="6" (codeChanged)="onSecurityCodeChanged($event)">
+                            </code-input>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col d-flex justify-content-end">
+                            <button class="btn btn-secondary mr-2" type="button" (click)="sendSMS()"
+                                    [disabled]="form.invalid" *ngIf="showSecret">
+                                <span *ngIf="!isLoading">SMS</span>
+                                <span *ngIf="isLoading"><app-loader></app-loader></span>
+                            </button>
+                            <button class="btn btn-primary" type="submit" [disabled]="form.invalid">
+                                <span *ngIf="!isLoading">Login</span>
+                                <span *ngIf="isLoading"><app-loader></app-loader></span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
-
-
-<div id="foto" [style.background-image]="'url(' + toonFoto +')'">
-</div>
-

@@ -1,24 +1,20 @@
 code-input {
-    --item-height: 3em;
-    --item-background: #c4c2c1
+  --item-height: 3em;
+  --item-background: #c4c2c1
 }
 
-#loginForm {
-    position: absolute;
-    z-index: 9;
-    left: calc(50% - 200px);
-    top: 5em;
-    width: 400px;
-}
-
-#loginCard {
-    background-color: rgb(255 255 255 / 75%);
+.card {
+  z-index: 9;
+  background-color: rgb(255, 255, 255, 0.75);
 }
 
 #foto {
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center center;
+  width: 100%;
+  height: 97vh;
+  background-size: cover;
+  background-position: center center;
 }
 
+.padding-top-xl{
+  padding-top: 5em;
+}
