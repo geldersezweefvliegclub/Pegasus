@@ -43,23 +43,25 @@ import {LidEditorComponent} from './components/editors/lid-editor/lid-editor.com
 import {ImageCropperModule} from 'ngx-image-cropper';
 import { ImageCropComponent } from './components/image-crop/image-crop.component';
 import { VliegerLogboekTotalenComponent } from './components/vlieger-logboek-totalen/vlieger-logboek-totalen.component';
+import {RouterModule} from "@angular/router";
 
 
 @NgModule({
-  imports: [
-    CommonModule,
-    AgGridModule.withComponents([]),
-    FontAwesomeModule,
-    FormsModule,
-    NgSelectModule,
-    LazyLoadImageModule,
-    ChartsModule,
-    NgbDatepickerModule,
-    NgbPopoverModule,
-    NgbProgressbarModule,
-    TreeviewModule,
-    ImageCropperModule
-  ],
+    imports: [
+        CommonModule,
+        AgGridModule.withComponents([]),
+        FontAwesomeModule,
+        FormsModule,
+        NgSelectModule,
+        LazyLoadImageModule,
+        ChartsModule,
+        NgbDatepickerModule,
+        NgbPopoverModule,
+        NgbProgressbarModule,
+        TreeviewModule,
+        ImageCropperModule,
+        RouterModule
+    ],
   declarations: [
     PegasusCardComponent,
     ModalComponent,

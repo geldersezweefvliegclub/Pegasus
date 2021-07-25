@@ -1,5 +1,5 @@
 <div *ngIf="!naarDashboard">{{naam}}</div>
 
 <div *ngIf="naarDashboard">
-    <a href="/dashboard?lidID={{lidID}}">{{naam}}</a>
+    <a [routerLink]="['/dashboard']" [queryParams]="{lidID: lidID}">{{naam}}</a>
 </div>
