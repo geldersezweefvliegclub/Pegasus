@@ -86,7 +86,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
     }
 
     // opvragen van het vlieger logboek
-    opvragen() {
+    opvragen():void {
         if (this.datum) {
             this.startlijstService.getLogboek(this.VliegerID, this.datum.year).then((dataset) => {
                 this.data = dataset;

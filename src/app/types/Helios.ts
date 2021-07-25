@@ -25,6 +25,8 @@ export type HeliosStartDataset = startlijstComponents['schemas']['view_startlijs
 export type HeliosStart = startlijstComponents['schemas']['oper_startlijst_in'];
 export type HeliosLogboek = startlijstComponents['schemas']['logboek'];
 export type HeliosLogboekDataset = startlijstComponents['schemas']['logboek_dataset'];
+export type HeliosLogboekTotalen = startlijstComponents['schemas']['logboek_totalen'];
+
 export type HeliosVliegtuigLogboek = startlijstComponents['schemas']['vliegtuig_logboek'];
 export type HeliosVliegtuigLogboekDataset = startlijstComponents['schemas']['vliegtuig_logboek_dataset'];
 export type HeliosVliegtuigLogboekTotalen = startlijstComponents['schemas']['vliegtuig_logboek_totalen'];

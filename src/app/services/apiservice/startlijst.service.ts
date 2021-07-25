@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {APIService} from '../apiservice/api.service';
 
 import {
-    HeliosLogboek, HeliosLogboekDataset, HeliosRecency,
+    HeliosLogboek, HeliosLogboekDataset, HeliosLogboekTotalen, HeliosRecency,
     HeliosStart,
     HeliosStarts,
     HeliosVliegdagen,
@@ -23,7 +23,8 @@ interface parameters {
 export class StartlijstService {
     starts: HeliosStarts | null = null;
     vliegdagen: HeliosVliegdagen | null = null;
-    logboek: HeliosLogboek | null = null;                       // logboek vlieger
+    logboek: HeliosLogboek | null = null;                   // logboek vlieger
+    logboekTotalen: HeliosLogboekTotalen | null = null;     // totalen logboek voor vlieger
     vliegtuigLogboek: HeliosVliegtuigLogboek| null = null;
     vliegtuigLogboekTotalen: HeliosVliegtuigLogboekTotalen;
 
@@ -82,6 +83,25 @@ export class StartlijstService {
             }
         }
         return this.logboek?.dataset as HeliosLogboekDataset[];
+    }
+
+    async getLogboekTotalen(id: number, jaar:number): Promise<HeliosLogboekTotalen> {
+        interface parameters {
+            [key: string]: string;
+        }
+
+        let getParams: parameters = {};
+        getParams['LID_ID'] = id.toString();
+        getParams['JAAR'] = jaar.toString();
+
+        try {
+            const response: Response = await this.APIService.get('Startlijst/GetLogboekTotalen', getParams);
+
+            this.logboekTotalen = await response.json();
+        } catch (e) {
+            throw(e);
+        }
+        return this.logboekTotalen as HeliosLogboekTotalen;
     }
 
     async getVliegtuigLogboek(id: number, startDatum: DateTime, eindDatum: DateTime): Promise<HeliosLogboekDataset[]> {

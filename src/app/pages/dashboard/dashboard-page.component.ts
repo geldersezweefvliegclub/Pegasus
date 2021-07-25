@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {
   faBookmark, faCalendarAlt, faChartLine, faChartPie,
-  faClipboardList, faExternalLinkSquareAlt,
+  faClipboardList, faExternalLinkSquareAlt, faPlane,
   faTachometerAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import {LoginService} from "../../services/apiservice/login.service";
@@ -12,6 +12,9 @@ import {LedenService} from "../../services/apiservice/leden.service";
 import {TypesService} from "../../services/apiservice/types.service";
 import {faAvianex} from "@fortawesome/free-brands-svg-icons";
 import {ModalComponent} from "../../shared/components/modal/modal.component";
+import {Subscription} from "rxjs";
+import {DateTime} from "luxon";
+import {SharedService} from "../../services/shared/shared.service";
 
 @Component({
   selector: 'app-dashboard',
@@ -27,19 +30,33 @@ export class DashboardPageComponent implements OnInit {
   iconPVB: IconDefinition = faAvianex;
   iconStatus: IconDefinition = faBookmark;
   iconExpand: IconDefinition = faExternalLinkSquareAlt;
+  iconPlane: IconDefinition = faPlane;
 
   lidTypes: HeliosType[] = [];
   lidData: HeliosLid;
+
+  datumAbonnement: Subscription;
+  datum: DateTime;                       // de gekozen dag in de kalender
 
   @ViewChild(ModalComponent) private popup: ModalComponent;
 
   constructor(private readonly ledenService: LedenService,
               private readonly loginService: LoginService,
               private readonly typesService: TypesService,
+              private readonly sharedService: SharedService,
               private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit(): void {
+    // de datum zoals die in de kalender gekozen is
+    this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
+      this.datum = DateTime.fromObject({
+        year: jaarMaand.year,
+        month: jaarMaand.month,
+        day: 1
+      })
+    })
+
     this.typesService.getTypes(6).then(types => this.lidTypes = types); // ophalen lidtypes
 
     // Als lidID is meegegeven in URL, moeten we de lidData ophalen

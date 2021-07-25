@@ -1,6 +1,6 @@
 
 .datatable-hoogte {
-  height: 400px;
+  min-height: 400px;
 }
 
 .expandLogboek {
@@ -10,6 +10,4 @@
   top: 12px;
   color: #bebebe;
   font-size: 20px;
-
-  cursor: pointer;
 }

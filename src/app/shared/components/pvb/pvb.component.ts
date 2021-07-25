@@ -39,6 +39,12 @@ export class PvbComponent implements OnInit, OnChanges {
         this.ophalen();
     }
 
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.hasOwnProperty("VliegerID")) {
+            this.ophalen()
+        }
+    }
+
     ophalen(): void {
         if (!this.PVBs) // er zijn nog geen PVB
             return;
@@ -59,12 +65,6 @@ export class PvbComponent implements OnInit, OnChanges {
             return true;
         }
         return false;
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes.hasOwnProperty("VliegerID")) {
-            this.ophalen()
-        }
     }
 
     // Zorg ervoor dat we niet gaan laden
