@@ -67,8 +67,18 @@ export class ProgressieBoomComponent implements OnInit {
     }
 
     TreeView(boomTak: HeliosProgressieBoom): ProgressieTreeviewItemComponent {
+        let tekst: string = ''
+
+        if (boomTak.BLOK)
+            tekst += boomTak.BLOK.toString();
+
+        tekst += ' ';
+
+        if (boomTak.ONDERWERP)
+            tekst += boomTak.ONDERWERP.toString()
+
         let nieuwetak = new ProgressieTreeviewItemComponent({
-            text: boomTak.ONDERWERP!.toString(),
+            text: (tekst).trim(),
             value: boomTak.COMPETENTIE_ID,
 
             collapsed: true

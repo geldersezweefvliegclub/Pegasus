@@ -6,7 +6,7 @@ import {
     HeliosBehaaldeProgressie,
     HeliosProgressieBoom,
     HeliosBehaaldeProgressieDataset,
-    HeliosProgressie
+    HeliosProgressie, HeliosProgressieKaartDataset, HeliosProgressieKaart
 } from "../../types/Helios";
 import {KeyValueArray} from "../../types/Utils";
 
@@ -60,13 +60,21 @@ export class ProgressieService {
         let getParams: KeyValueArray = {};
         getParams['LID_ID'] = lidID.toString();
 
-        try {
-            const response = await this.apiService.get('Progressie/ProgressieBoom', getParams);
+        const response:Response = await this.apiService.get('Progressie/ProgressieBoom', getParams);
+        boom = await response.json();
 
-            boom = await response.json();
-        } catch (e) {
-            throw(e);
-        }
         return boom as HeliosProgressieBoom[];
+    }
+
+    async getProgressieKaart(lidID:number):Promise<HeliosProgressieKaartDataset[]> {
+        let kaart:HeliosProgressieKaart | null = null;
+
+        let getParams: KeyValueString = {};
+        getParams['LID_ID'] = lidID.toString();
+
+        const response: Response = await this.apiService.get('Progressie/ProgressieKaart', getParams);
+        kaart = await response.json();
+
+        return kaart?.dataset as [];
     }
 }

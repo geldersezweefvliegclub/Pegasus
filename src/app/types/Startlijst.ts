@@ -152,6 +152,38 @@ export interface paths {
       };
     };
   };
+  "/Startlijst/GetLogboekTotalen": {
+    get: {
+      parameters: {
+        query: {
+          /** Laatste aanpassing op basis van records in dataset. Bedoeld om data verbruik te verminderen. Dataset is daarom leeg */
+          LAATSTE_AANPASSING?: boolean;
+          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
+          HASH?: string;
+          /** Alle vluchten van het opgegven jaar */
+          JAAR?: number;
+          /** Logboek voor specifiek lid, ID is database ID van het lid */
+          LID_ID?: number;
+        };
+      };
+      responses: {
+        /** OK, data succesvol opgehaald */
+        200: {
+          content: {
+            "application/json": components["schemas"]["logboek_totalen"];
+          };
+        };
+        /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
+        304: never;
+        /** Niet geautoriseerd, geen rechten om data op te halen */
+        401: unknown;
+        /** Methode niet toegestaan, input validatie error */
+        405: unknown;
+        /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
+        500: unknown;
+      };
+    };
+  };
   "/Startlijst/GetVliegtuigLogboek": {
     get: {
       parameters: {
@@ -501,6 +533,32 @@ export interface components {
       STARTMETHODE?: string;
       /** De opmerkingen die ingevoerd zijn */
       OPMERKINGEN?: string;
+    };
+    logboek_totalen: {
+      /** Aantal records dat voldoet aan de criteria in de database */
+      totaal?: number;
+      /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
+      laatste_aanpassing?: string;
+      /** hash van de dataset */
+      hash?: string;
+      /** Aantal van startmethodes */
+      starts?: components["schemas"]["logboek_totalen_start"][];
+      /** Aantal starts en vliegtijd per vliegtuig */
+      vliegtuigen?: components["schemas"]["logboek_totalen_vliegtuigen"][];
+      /** Totalen van het jaar */
+      jaar?: {
+        STARTS?: number;
+        VLIEGTIJD?: string;
+      };
+    };
+    logboek_totalen_start: {
+      METHODE?: string;
+      AANTAL?: number;
+    };
+    logboek_totalen_vliegtuigen: {
+      REG_CALL?: string;
+      STARTS?: number;
+      VLIEGTIJD?: string;
     };
     vliegtuig_logboek: {
       /** Aantal records dat voldoet aan de criteria in de database */

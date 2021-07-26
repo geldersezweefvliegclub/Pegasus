@@ -1,4 +1,6 @@
-.statusTabel {
+
+
+.vliegtuigenTabel {
   width: 100%;
 }
 
@@ -15,14 +17,27 @@
 }
 
 .kolom3 {
-  text-align: center;
+  text-align: right;
 }
 
-.overigTabel {
-  margin-top: 15px;
+.jaar_totaal {
+  font-weight: bold;
+
+  .kolom2 {
+    border-top: black double;
+  }
+
+  .kolom3 {
+    border-top: black double;
+  }
 }
 
-.col1 {
-  padding-right: 20px;
+.textStartMethode {
+  margin-top: 10px;
+  margin-bottom: 2px;
+}
+
+.startsTabel {
+  width: 60%;
 }
 

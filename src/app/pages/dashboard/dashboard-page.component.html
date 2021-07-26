@@ -1,12 +1,12 @@
 <app-pegasus-card titel="Dashboard"
-               subtitel="Een verzameling van nuttige info"
-               [icon]="iconCardIcon">
+                  subtitel="Een verzameling van nuttige info"
+                  [icon]="iconCardIcon">
 
     <div class="row bg-tertiary rounded px-5 text-white">
-        <div class="col-3 d-flex flex-column justify-content-center" *ngIf="lidData">
+        <div class="col-8 d-flex flex-column justify-content-center" *ngIf="lidData">
             <h2 class="fw-bold mb-0">{{lidData.NAAM}}</h2>
         </div>
-        <div class="col-9 d-flex justify-content-end">
+        <div class="col-4 d-flex justify-content-end">
             <div class="row">
                 <div class="col-6 d-flex flex-column justify-content-center">
                     <p class="mb-0">{{getLidType()}}<br>{{lidData.LIDNR}}</p>
@@ -21,65 +21,76 @@
     <div class="row mt-4">
         <div class="col-3">
             <app-pegasus-card id="statusCard"
-                           class="kleineKaart"
-                           titel="Status"
-                           subtitel="Vliegstatus"
-                           [icon]="iconStatus">
+                              class="kleineKaart"
+                              titel="Status"
+                              subtitel="Vliegstatus"
+                              [icon]="iconStatus">
                 <app-status [VliegerID]="lidData.ID"></app-status>
             </app-pegasus-card>
         </div>
         <div class="col-3">
             <app-pegasus-card id="pvbCard"
-                           class="kleineKaart"
-                           titel="PVB"
-                           subtitel="Proef van bekwaamheid"
-                           [icon]="iconPVB">
+                              class="kleineKaart"
+                              titel="PVB"
+                              subtitel="Proef van bekwaamheid"
+                              [icon]="iconPVB">
                 <app-pvb [VliegerID]="lidData.ID"></app-pvb>
             </app-pegasus-card>
         </div>
 
         <div class="col-3">
             <app-pegasus-card id="recencyCard"
-                           class="kleineKaart"
-                           titel="Recency"
-                           subtitel="Currency barameter"
-                           [icon]="iconRecency">
+                              class="kleineKaart"
+                              titel="Recency"
+                              subtitel="Currency barameter"
+                              [icon]="iconRecency">
                 <app-recency [VliegerID]="lidData.ID" [naam]="lidData.NAAM"></app-recency>
             </app-pegasus-card>
         </div>
 
         <div class="col-3">
             <app-pegasus-card id="roosterCard"
-                           class="kleineKaart"
-                           titel="Rooster"
-                           subtitel="Ingeroosterde diensten"
-                           [icon]="iconRooster">
+                              class="kleineKaart"
+                              titel="Rooster"
+                              subtitel="Ingeroosterde diensten"
+                              [icon]="iconRooster">
             </app-pegasus-card>
         </div>
     </div>
     <div class="row mt-4 datatable-hoogte">
-        <div class="col-12">
+        <div class="col-9">
             <app-pegasus-card id="logboekCard"
-                           class="kleineKaart"
-                           titel="Logboek"
-                           subtitel="Overzicht van de vluchten"
-                           [icon]="iconLogboek">
+                              class="kleineKaart"
+                              titel="Logboek {{datum.year}}"
+                              subtitel="Overzicht van de vluchten"
+                              [icon]="iconLogboek">
                 <div class="expandLogboek">
-                    <a (click)="toonLogboekGroot()">
+                    <a class="clickable" (click)="toonLogboekGroot()">
                         <fa-icon [icon]="iconExpand"></fa-icon>
                     </a>
                 </div>
                 <app-vlieger-logboek [VliegerID]="lidData.ID"></app-vlieger-logboek>
             </app-pegasus-card>
         </div>
+        <div class="col-3">
+            <app-pegasus-card id="logboekCardSummary"
+                              class="kleineKaart"
+                              titel="Totalen {{datum.year}}"
+                              subtitel="Per vliegtuig"
+                              [icon]="iconPlane">
+                <app-vlieger-logboek-totalen [VliegerID]="lidData.ID"></app-vlieger-logboek-totalen>
+            </app-pegasus-card>
+        </div>
     </div>
     <div class="row mt-4">
         <div class="col-12">
             <app-pegasus-card id="progressieCard"
-                           class="kleineKaart"
-                           titel="Progressiekaart"
-                           subtitel="Behaalde competenties"
-                           [icon]="iconProgressie">
+                              class="kleineKaart"
+                              titel="Progressiekaart"
+                              subtitel="Behaalde competenties"
+                              exportEnabled=" true"
+                              (excelExport)="exportProgressieKaart()"
+                              [icon]="iconProgressie">
                 <app-progressie-boom [VliegerID]="lidData.ID">
 
                 </app-progressie-boom>
@@ -91,6 +102,9 @@
 <app-modal popupClass="popupLarge" titel="Logboek van {{lidData.NAAM}} voor">
     <div body *ngIf="lidData">
         <div class="popupLargeWrapper">
+            <div class="excel">
+                <img class="logo" src="/assets/img/excel-logo.png" (click)="this.exportLogboek()"/>
+            </div>
             <app-vlieger-logboek [VliegerID]="lidData.ID"></app-vlieger-logboek>
         </div>
     </div>

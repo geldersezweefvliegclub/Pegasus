@@ -13,7 +13,7 @@ import {SharedService} from '../shared/shared.service';
 })
 export class DaginfoService {
   private dagInfoTotaal: HeliosDagInfoDagen | null = null;
-  private dagen: HeliosDagInfoDagen | null = null;
+  private dagen: HeliosDagInfoDagen = [];
   public dagInfo: HeliosDagInfo = {};
 
   datumAbonnement: Subscription;
@@ -60,6 +60,7 @@ export class DaginfoService {
       if (e.responseCode !== 404) { // er is geen data
         throw(e);
       }
+      return [];
     }
     return this.dagen?.dataset as [];
   }

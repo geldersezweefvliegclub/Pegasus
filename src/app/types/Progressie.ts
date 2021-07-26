@@ -324,6 +324,16 @@ export interface components {
       })[];
     };
     progressie_kaart: {
+      /** Aantal records dat voldoet aan de criteria in de database */
+      totaal?: number;
+      /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
+      laatste_aanpassing?: string;
+      /** hash van de dataset */
+      hash?: string;
+      /** De dataset met records */
+      dataset?: components["schemas"]["progressie_kaart_dataset"][];
+    };
+    progressie_kaart_dataset: {
       /** Database ID van het record */
       ID?: number;
       /** Volgorde van weergave */

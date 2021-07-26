@@ -42,23 +42,26 @@ import {PegasusCardComponent} from './components/pegasus-card/pegasus-card.compo
 import {LidEditorComponent} from './components/editors/lid-editor/lid-editor.component';
 import {ImageCropperModule} from 'ngx-image-cropper';
 import { ImageCropComponent } from './components/image-crop/image-crop.component';
+import { VliegerLogboekTotalenComponent } from './components/vlieger-logboek-totalen/vlieger-logboek-totalen.component';
+import {RouterModule} from "@angular/router";
 
 
 @NgModule({
-  imports: [
-    CommonModule,
-    AgGridModule.withComponents([]),
-    FontAwesomeModule,
-    FormsModule,
-    NgSelectModule,
-    LazyLoadImageModule,
-    ChartsModule,
-    NgbDatepickerModule,
-    NgbPopoverModule,
-    NgbProgressbarModule,
-    TreeviewModule,
-    ImageCropperModule
-  ],
+    imports: [
+        CommonModule,
+        AgGridModule.withComponents([]),
+        FontAwesomeModule,
+        FormsModule,
+        NgSelectModule,
+        LazyLoadImageModule,
+        ChartsModule,
+        NgbDatepickerModule,
+        NgbPopoverModule,
+        NgbProgressbarModule,
+        TreeviewModule,
+        ImageCropperModule,
+        RouterModule
+    ],
   declarations: [
     PegasusCardComponent,
     ModalComponent,
@@ -89,29 +92,31 @@ import { ImageCropComponent } from './components/image-crop/image-crop.component
     RecencyGrafiekComponent,
     LidEditorComponent,
     ProgressieBoomComponent,
-    ImageCropComponent
+    ImageCropComponent,
+    VliegerLogboekTotalenComponent
   ],
-  exports: [
-    LidEditorComponent,
-    PegasusCardComponent,
-    AvatarComponent,
-    ModalComponent,
-    DatatableComponent,
-    ErrorComponent,
-    LoaderComponent,
-    VliegtuigEditorComponent,
-    IconButtonComponent,
-    StartEditorComponent,
-    TelefoonValidatorDirective,
-    WachtwoordMatchValidatorDirective,
-    VliegerLogboekComponent,
-    PvbComponent,
-    RecencyComponent,
-    StatusComponent,
-    TijdInvoerComponent,
-    WachtwoordSterkteValidatorDirective,
-    ProgressieBoomComponent
-  ],
+    exports: [
+        LidEditorComponent,
+        PegasusCardComponent,
+        AvatarComponent,
+        ModalComponent,
+        DatatableComponent,
+        ErrorComponent,
+        LoaderComponent,
+        VliegtuigEditorComponent,
+        IconButtonComponent,
+        StartEditorComponent,
+        TelefoonValidatorDirective,
+        WachtwoordMatchValidatorDirective,
+        VliegerLogboekComponent,
+        PvbComponent,
+        RecencyComponent,
+        StatusComponent,
+        TijdInvoerComponent,
+        WachtwoordSterkteValidatorDirective,
+        ProgressieBoomComponent,
+        VliegerLogboekTotalenComponent
+    ],
   providers: [],
   schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]
 })

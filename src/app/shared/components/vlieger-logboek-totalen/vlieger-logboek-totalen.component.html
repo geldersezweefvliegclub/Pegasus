@@ -1,0 +1,47 @@
+<div class="overflow-auto" *ngIf="data">
+    <div *ngIf="data.starts.length > 0">
+        <table class="vliegtuigenTabel">
+            <tr class="headerRow">
+                <th></th>
+                <th>Starts</th>
+                <th class="kolom3">Vliegtijd</th>
+            </tr>
+            <tr *ngFor="let v of data.vliegtuigen;">
+                <td class="kolom1">
+                    {{v.REG_CALL}}
+                </td>
+                <td class="kolom2">
+                    {{v.STARTS}}
+                </td>
+                <td class="kolom3">
+                    {{v.VLIEGTIJD}}
+                </td>
+            </tr>
+            <tr class="jaar_totaal">
+                <td class="kolom1">
+                    Totaal {{datum.year}}
+                </td>
+                <td class="kolom2">
+                    {{data.jaar.STARTS}}
+                </td>
+                <td class="kolom3">
+                    {{data.jaar.VLIEGTIJD}}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div *ngIf="data.starts.length > 0">
+        <p class="textStartMethode"><b>Start methode</b></p>
+        <table class="startsTabel">
+            <tr *ngFor="let s of data.starts;">
+                <td class="kolom1">
+                    {{s.METHODE}}
+                </td>
+                <td class="kolom2">
+                    {{s.AANTAL}}
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

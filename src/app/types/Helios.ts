@@ -48,6 +48,9 @@ export type HeliosProgressie = progressieComponents['schemas']['ref_progressie_i
 export type HeliosBehaaldeProgressie = progressieComponents['schemas']['view_progressie']
 export type HeliosBehaaldeProgressieDataset = progressieComponents['schemas']['view_progressie_dataset']
 export type HeliosProgressieBoom = progressieComponents['schemas']['progressie_boom']
+export type HeliosProgressieKaart = progressieComponents['schemas']['progressie_kaart']
+export type HeliosProgressieKaartDataset = progressieComponents['schemas']['progressie_kaart_dataset']
+
 
 export type HeliosRooster = roosterComponent['schemas']['view_rooster']
 export type HeliosRoosterDataset = roosterComponent['schemas']['view_rooster_dataset']
