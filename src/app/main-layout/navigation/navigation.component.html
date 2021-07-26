@@ -27,6 +27,7 @@
                     name="datumIngave"
                     class="navCalendar w-100"
                     outsideDays="hidden"
+                    [maxDate]="{year: vandaag.year+1, month:12, day:31}"
                     [(ngModel)]="kalenderIngave"
                     (dateSelect)="NieuweDatum($event)"
                     (navigate)="KalenderAndereMaand($event)"
