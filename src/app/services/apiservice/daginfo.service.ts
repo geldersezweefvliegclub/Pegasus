@@ -13,7 +13,7 @@ import {SharedService} from '../shared/shared.service';
 })
 export class DaginfoService {
   private dagInfoTotaal: HeliosDagInfoDagen | null = null;
-  private dagen: HeliosDagInfoDagen | null = null;
+  private dagen: HeliosDagInfoDagen = [];
   public dagInfo: HeliosDagInfo = {};
 
   datumAbonnement: Subscription;
@@ -52,9 +52,7 @@ export class DaginfoService {
     getParams['VELDEN'] = "ID,DATUM";
 
     try {
-      const response: Response = await this.APIService.get('Daginfo/GetObjects',
-          getParams
-      );
+      const response: Response = await this.APIService.get('Daginfo/GetObjects', getParams);
 
       this.dagen = await response.json();
 
@@ -62,6 +60,7 @@ export class DaginfoService {
       if (e.responseCode !== 404) { // er is geen data
         throw(e);
       }
+      return [];
     }
     return this.dagen?.dataset as [];
 
