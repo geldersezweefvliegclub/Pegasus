@@ -7,7 +7,7 @@ import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {DeleteActionComponent} from '../../shared/components/datatable/delete-action/delete-action.component';
 import {RestoreActionComponent} from '../../shared/components/datatable/restore-action/restore-action.component';
 import {HeliosStart, HeliosStartDataset} from '../../types/Helios';
-import {CustomError, KeyValueString, nummerSort, tijdSort} from '../../types/Utils';
+import {CustomError, KeyValueArray} from '../../types/Utils';
 import * as xlsx from 'xlsx';
 import {LoginService} from '../../services/apiservice/login.service';
 import {faClipboardList} from '@fortawesome/free-solid-svg-icons/faClipboardList';
@@ -21,6 +21,7 @@ import {TijdInvoerComponent} from '../../shared/components/editors/tijd-invoer/t
 import {StartEditorComponent} from '../../shared/components/editors/start-editor/start-editor.component';
 import {Subscription} from 'rxjs';
 import {SharedService} from '../../services/shared/shared.service';
+import {nummerSort, tijdSort} from '../../utils/Utils';
 
 @Component({
     selector: 'app-startlijst-grid',
@@ -220,7 +221,7 @@ export class StartlijstGridComponent implements OnInit {
 
     // Opvragen van de data via de api
     opvragen() {
-        let queryParams: KeyValueString = {};
+        let queryParams: KeyValueArray = {};
 
         if (this.filterOn) {
             queryParams["OPEN_STARTS"] = "true"

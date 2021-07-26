@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {APIService} from './api.service';
 import {HeliosType, HeliosTypes} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
-import {KeyValueString} from '../../types/Utils';
+import {KeyValueArray} from '../../types/Utils';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,7 @@ export class TypesService {
       types = this.storageService.ophalen('types-'+groep);
     }
 
-    let getParams: KeyValueString = {};
+    let getParams: KeyValueArray = {};
 
     getParams['GROEP'] = groep.toString();
 

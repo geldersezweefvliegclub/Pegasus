@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {StorageService} from '../storage/storage.service';
 import {DateTime} from 'luxon';
-import {KeyValueString} from '../../types/Utils';
+import {KeyValueArray} from '../../types/Utils';
 import {APIService} from '../apiservice/api.service';
 import {HeliosAanwezigVliegtuigen, HeliosAanwezigVliegtuigenDataset} from '../../types/Helios';
 
@@ -15,14 +15,14 @@ export class AanwezigVliegtuigService {
   constructor(private readonly APIService: APIService, private readonly storageService: StorageService) {
   }
 
-  async getAanwezig(startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueString = {}): Promise<HeliosAanwezigVliegtuigenDataset[]> {
+  async getAanwezig(startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosAanwezigVliegtuigenDataset[]> {
     let hash: string = '';
 
     if (((this.aanwezig == null)) && (this.storageService.ophalen('aanwezigVliegtuigen') != null)) {
       this.aanwezig = this.storageService.ophalen('aanwezigVliegtuigen');
     }
 
-    let getParams: KeyValueString = params;
+    let getParams: KeyValueArray = params;
 
     if (this.aanwezig != null) { // we hebben eerder de lijst opgehaald
       hash = this.aanwezig.hash as string;

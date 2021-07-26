@@ -36,6 +36,8 @@ import {FilterComponent} from './leden-grid/filter/filter.component';
 import {VliegtuigLogboekComponent} from './vliegtuig-logboek/vliegtuig-logboek.component';
 import {ChartsModule} from 'ng2-charts';
 import {NaamRenderComponent} from './leden-grid/naam-render/naam-render.component';
+import { RoosterPageComponent } from './rooster-page/rooster-page.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
   imports: [
@@ -53,7 +55,8 @@ import {NaamRenderComponent} from './leden-grid/naam-render/naam-render.componen
     NgSelectModule,
     ChartsModule,
     LazyLoadImageModule,
-    NgbPopoverModule
+    NgbPopoverModule,
+    DragDropModule
   ],
   declarations: [
     DashboardPageComponent,
@@ -77,7 +80,8 @@ import {NaamRenderComponent} from './leden-grid/naam-render/naam-render.componen
     EmailRenderComponent,
     FilterComponent,
     VliegtuigLogboekComponent,
-    NaamRenderComponent
+    NaamRenderComponent,
+    RoosterPageComponent
   ],
   exports: [
     PegasusCardComponent,

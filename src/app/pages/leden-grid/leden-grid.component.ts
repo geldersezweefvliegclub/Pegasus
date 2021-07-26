@@ -3,7 +3,7 @@ import {faRecycle, faUsers} from '@fortawesome/free-solid-svg-icons';
 import {VliegtuigEditorComponent} from '../../shared/components/editors/vliegtuig-editor/vliegtuig-editor.component';
 import {HeliosLedenDataset, HeliosLid} from '../../types/Helios';
 import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
-import {CustomError, nummerSort} from '../../types/Utils';
+import {CustomError} from '../../types/Utils';
 import {CheckboxRenderComponent} from '../../shared/components/datatable/checkbox-render/checkbox-render.component';
 import {DeleteActionComponent} from '../../shared/components/datatable/delete-action/delete-action.component';
 import {RestoreActionComponent} from '../../shared/components/datatable/restore-action/restore-action.component';
@@ -19,6 +19,7 @@ import {FilterComponent} from './filter/filter.component';
 import {SharedService} from '../../services/shared/shared.service';
 import {NaamRenderComponent} from './naam-render/naam-render.component';
 import {Router} from '@angular/router';
+import {nummerSort} from '../../utils/Utils';
 
 
 @Component({

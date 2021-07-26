@@ -3,7 +3,7 @@ import {APIService} from './api.service';
 
 import {HeliosLeden, HeliosLedenDataset, HeliosLid} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
-import {KeyValueString} from '../../types/Utils';
+import {KeyValueArray} from '../../types/Utils';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +22,7 @@ export class LedenService {
       this.leden = this.storageService.ophalen('leden');
     }
 
-    let getParams: KeyValueString = {};
+    let getParams: KeyValueArray = {};
 
     if (this.leden != null) { // we hebben eerder de lijst opgehaald
       hash = this.leden.hash as string;

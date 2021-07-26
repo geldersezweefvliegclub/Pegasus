@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {HeliosVliegtuig, HeliosVliegtuigenDataset, HeliosVliegtuigLogboekTotalen} from "../../types/Helios";
 import {ColDef} from "ag-grid-community";
-import {nummerSort, tijdSort} from "../../types/Utils";
 import {faClock, IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {
     faBookmark,
@@ -21,6 +20,7 @@ import {ChartDataSets, ChartOptions, ChartType} from "chart.js";
 import {Label} from "ng2-charts";
 import {ModalComponent} from "../../shared/components/modal/modal.component";
 import {ActivatedRoute} from "@angular/router";
+import {nummerSort, tijdSort} from '../../utils/Utils';
 
 
 @Component({

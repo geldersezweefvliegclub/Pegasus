@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {CustomError, HeliosActie, KeyValueString} from '../../types/Utils';
+import {CustomError, HeliosActie, KeyValueArray} from '../../types/Utils';
 import {environment} from '../../../environments/environment';
 import {SharedService} from '../shared/shared.service';
 import {PegasusConfigService} from "../shared/pegasus-config.service";
@@ -19,7 +19,7 @@ export class APIService {
         if (url) this.URL = url;
     }
 
-    async get(url: string, params?: KeyValueString, headers?: Headers): Promise<Response> {
+    async get(url: string, params?: KeyValueArray, headers?: Headers): Promise<Response> {
         if (params) {
             url = this.prepareEndpoint(url, params);
         }
@@ -74,7 +74,7 @@ export class APIService {
     }
 
     // Aanroepen delete request om record te verwijderen
-    async delete(url: string, params: KeyValueString): Promise<void> {
+    async delete(url: string, params: KeyValueArray): Promise<void> {
         if (params) {
             url = this.prepareEndpoint(url, params);
         }
@@ -90,7 +90,7 @@ export class APIService {
     }
 
     // Aanroepen patch request om verwijderen record ongedaan te maken
-    async patch(url: string, params: KeyValueString): Promise<void> {
+    async patch(url: string, params: KeyValueArray): Promise<void> {
         if (params) {
             url = this.prepareEndpoint(url, params);
         }
@@ -106,7 +106,7 @@ export class APIService {
         this.sharedService.fireHeliosEvent({actie: HeliosActie.Restore, tabel: url.split('/')[0], data: params[0]});
     }
 
-    private prepareEndpoint(url: string, params: KeyValueString): string {
+    private prepareEndpoint(url: string, params: KeyValueArray): string {
         let args: string = "";
 
         // Loop vervolgens door het key:value object heen

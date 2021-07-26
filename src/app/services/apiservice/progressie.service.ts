@@ -8,7 +8,7 @@ import {
     HeliosBehaaldeProgressieDataset,
     HeliosProgressie
 } from "../../types/Helios";
-import {KeyValueString} from "../../types/Utils";
+import {KeyValueArray} from "../../types/Utils";
 
 @Injectable({
     providedIn: 'root'
@@ -23,7 +23,7 @@ export class ProgressieService {
         let progressie: HeliosBehaaldeProgressie | null = null;
         let hash: string = '';
 
-        let getParams: KeyValueString = {};
+        let getParams: KeyValueArray = {};
         getParams['LID_ID'] = lidID.toString();
 
         if (comptentiesIDs) {
@@ -57,7 +57,7 @@ export class ProgressieService {
     async getBoom(lidID:number): Promise<HeliosProgressieBoom[]> {
         let boom: HeliosProgressieBoom | null = null;
 
-        let getParams: KeyValueString = {};
+        let getParams: KeyValueArray = {};
         getParams['LID_ID'] = lidID.toString();
 
         try {

@@ -9,6 +9,7 @@ import {DateTime} from 'luxon';
 import {StartlijstService} from '../../services/apiservice/startlijst.service';
 import {DaginfoService} from '../../services/apiservice/daginfo.service';
 import {HeliosActie, KalenderMaand} from '../../types/Utils';
+import {getBeginEindDatumVanMaand} from '../../utils/Utils';
 
 
 @Component({
@@ -92,17 +93,9 @@ export class NavigationComponent {
         // laat iedereen weten dat we een ander maand-jaar hebben
         this.sharedService.zetKalenderMaand(this.kalenderMaand);
 
-        let maanden = [31, 28, 31, 30, 31, 30, 30, 31, 30, 31, 30, 31];
-        this.startDatum = DateTime.fromObject({
-            year: this.kalenderMaand.year,
-            month: this.kalenderMaand.month,
-            day: 1
-        })
-        this.eindDatum = DateTime.fromObject({
-            year: this.kalenderMaand.year,
-            month: this.kalenderMaand.month,
-            day: maanden[this.kalenderMaand.month - 1]
-        })
+        const beginEindData = getBeginEindDatumVanMaand(this.kalenderMaand.month, this.kalenderMaand.year)
+        this.startDatum = beginEindData.begindatum
+        this.eindDatum = beginEindData.einddatum;
 
         this.startlijstService.getVliegdagen(this.startDatum, this.eindDatum).then((dataset) => {
             this.vliegdagen = JSON.stringify(dataset);

@@ -1,0 +1,126 @@
+<div cdkDropListGroup>
+    <div class="row">
+        <div class="col-9">
+            <app-pegasus-card [icon]="roosterIcon" titel="Rooster" subtitel="Rooster inplannen">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Dag</th>
+                        <th scope="col">Instructeurs</th>
+                        <th scope="col">Lieristen</th>
+                        <th scope="col">Startleider</th>
+                        <th scope="col">DDWV</th>
+                        <th scope="col">Clubbedrijf</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let dagInRooster of rooster;let i = index">
+                        <th scope="row">{{dagInRooster.DATUM | date: 'dd-MM-yyyy'}}</th>
+                        <td>Mark</td>
+                        <td>
+                            Lierist:
+                            <div
+                                    class="drop-container"
+                                    cdkDropList
+                                    #lierist
+                                    [id]="'OCHTEND_LIERIST-'+i"
+                                    (cdkDropListDropped)="onDropInTable($event, dagInRooster, lierist); dagInRooster.OCHTEND_LIERIST = getIDFromDrop($event)"
+                                    [cdkDropListData]="dagInRooster">
+                                <div cdkDrag>
+                                    {{dagInRooster.OCHTEND_LIERIST}}
+                                </div>
+                            </div>
+                        </td>
+                        <td>@mdo</td>
+                        <td><input class="form-check-inline" type="checkbox" [id]="'DDWV' + i" [name]="'DDWV' + i"></td>
+                        <td><input class="form-check-inline" type="checkbox" [id]="'Clubbedrijf' + i"
+                                   [name]="'Clubbedrijf' + i"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </app-pegasus-card>
+        </div>
+        <div class="col-3">
+            <app-pegasus-card titel="Leden" subtitel="Instructeurs, startleiders en lieristen" [icon]="ledenIcon">
+                <div class="row">
+                    <div class="col-6">
+                        <div>
+                            <input class="form-check-inline" type="checkbox" id="startleiders" name="startleiders"
+                                   [(ngModel)]="toonStartleiders"
+                                   (change)="filter()"
+                            >
+                            <label class="form-check-label" for="startleiders">Toon startleiders</label>
+                        </div>
+                        <div>
+                            <input class="form-check-inline" type="checkbox" id="instructeurs" name="instructeurs"
+                                   [(ngModel)]="toonInstructeurs"
+                                   (change)="filter()"
+                            >
+                            <label class="form-check-label" for="instructeurs">Toon instructeurs</label>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div>
+                            <input class="form-check-inline" type="checkbox" id="lieristen" name="lieristen"
+                                   [(ngModel)]="toonLieristen"
+                                   (change)="filter()"
+                            >
+                            <label class="form-check-label" for="lieristen">Toon lieristen</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col">
+                        <label class="form-label" for="naam">Zoeken op naam</label>
+                        <input class="form-control" type="search" id="naam" name="naam"
+                               [(ngModel)]="teZoekenNaam"
+                               (keyup)="getLeden()"
+                               (search)="getLeden()"
+                        >
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="p-3 h-100">
+                        <ng-container *ngIf="gefilterdeLeden && !isLoading;else loading">
+                            <div *ngIf="gefilterdeLeden.length == 0" class="d-flex justify-content-center">
+                                Geen resultaten gevonden
+                            </div>
+                            <div
+                                    class="card my-1"
+                                    cdkDropList
+                                    [cdkDropListData]="gefilterdeLeden"
+                                    (cdkDropListDropped)="onDropInTable($event)"
+                                    *ngFor="let lid of gefilterdeLeden">
+                                <div class="card-body" cdkDrag [cdkDragData]="lid">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <app-avatar class="position-relative" [url]="lid.AVATAR"></app-avatar>
+                                            <span class="position-absolute top-0 start-100 translate-middle padding-small bg-secondary rounded-circle">
+                                            {{55}}
+                                                <span class="visually-hidden">keer ingedeeld</span>
+                                        </span>
+                                        </div>
+                                        <div class="col-9">
+                                            <h6>{{lid.NAAM}}</h6>
+                                            <p>
+                                                <span *ngIf="lid.LIERIST">Lierist </span>
+                                                <span *ngIf="lid.STARTLEIDER">Startleider </span>
+                                                <span *ngIf="lid.INSTRUCTEUR">Instructeur </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-template #loading>
+                            <div class="d-flex justify-content-center">
+                                <app-loader [isLoading]="isLoading"></app-loader>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </app-pegasus-card>
+        </div>
+    </div>
+</div>

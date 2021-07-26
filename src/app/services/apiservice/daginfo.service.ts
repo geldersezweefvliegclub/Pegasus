@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {APIService} from './api.service';
 import {DateTime} from 'luxon';
-import {KeyValueString} from '../../types/Utils';
+import {KeyValueArray} from '../../types/Utils';
 import {HeliosDagInfo, HeliosDagInfoDagen} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
 import {BehaviorSubject, Subscription} from 'rxjs';
@@ -52,9 +52,7 @@ export class DaginfoService {
     getParams['VELDEN'] = "ID,DATUM";
 
     try {
-      const response: Response = await this.APIService.get('Daginfo/GetObjects',
-          getParams
-      );
+      const response: Response = await this.APIService.get('Daginfo/GetObjects', getParams);
 
       this.dagen = await response.json();
 
@@ -64,17 +62,16 @@ export class DaginfoService {
       }
     }
     return this.dagen?.dataset as [];
-
   }
 
-  async getDagInfoDagen(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueString = {}): Promise<[]> {
+  async getDagInfoDagen(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<[]> {
     let hash: string = '';
 
     if (((this.dagInfoTotaal == null)) && (this.storageService.ophalen('daginfo') != null)) {
       this.dagInfoTotaal = this.storageService.ophalen('daginfo');
     }
 
-    let getParams: KeyValueString = params;
+    let getParams: KeyValueArray = params;
 
     if (this.dagInfoTotaal != null) { // we hebben eerder de lijst opgehaald
       hash = this.dagInfoTotaal.hash as string;

@@ -12,11 +12,12 @@ import {ZitplaatsRenderComponent} from './zitplaats-render/zitplaats-render.comp
 import {CheckboxRenderComponent} from '../../shared/components/datatable/checkbox-render/checkbox-render.component';
 
 import {HeliosVliegtuig, HeliosVliegtuigenDataset} from '../../types/Helios';
-import {CustomError, nummerSort} from '../../types/Utils';
+import {CustomError} from '../../types/Utils';
 
 import * as xlsx from 'xlsx';
 import {LoginService} from '../../services/apiservice/login.service';
 import {Router} from "@angular/router";
+import {nummerSort} from '../../utils/Utils';
 
 
 @Component({

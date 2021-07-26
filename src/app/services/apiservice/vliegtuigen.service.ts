@@ -3,7 +3,7 @@ import {APIService} from './api.service';
 
 import {HeliosVliegtuig, HeliosVliegtuigen, HeliosVliegtuigenDataset} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
-import {KeyValueString} from '../../types/Utils';
+import {KeyValueArray} from '../../types/Utils';
 
 @Injectable({
     providedIn: 'root'
@@ -22,7 +22,7 @@ export class VliegtuigenService {
             this.vliegtuigen = this.storageService.ophalen('vliegtuigen');
         }
 
-        let getParams: KeyValueString = {};
+        let getParams: KeyValueArray = {};
 
         if (this.vliegtuigen != null) { // we hebben eerder de lijst opgehaald
             hash = this.vliegtuigen.hash as string;

@@ -10,7 +10,7 @@ import {
     HeliosVliegtuigLogboekTotalen
 } from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
-import {KeyValueString} from '../../types/Utils';
+import {KeyValueArray} from '../../types/Utils';
 import {DateTime} from 'luxon';
 
 interface parameters {
@@ -124,14 +124,14 @@ export class StartlijstService {
         return this.vliegtuigLogboekTotalen;
     }
 
-    async getStarts(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueString = {}): Promise<[]> {
+    async getStarts(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<[]> {
         let hash: string = '';
 
         if (((this.starts == null)) && (this.storageService.ophalen('starts') != null)) {
             this.starts = this.storageService.ophalen('starts');
         }
 
-        let getParams: KeyValueString = params;
+        let getParams: KeyValueArray = params;
 
         if (this.starts != null) { // we hebben eerder de lijst opgehaald
             hash = this.starts.hash as string;
@@ -170,7 +170,7 @@ export class StartlijstService {
 
     async getRecency(lidID: number, datum?: DateTime): Promise<HeliosRecency> {
 
-        let getParams: KeyValueString = {};
+        let getParams: KeyValueArray = {};
         getParams['VLIEGER_ID'] = lidID.toString();
 
         if (datum) {

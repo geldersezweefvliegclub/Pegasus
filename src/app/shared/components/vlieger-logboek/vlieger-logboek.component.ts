@@ -1,6 +1,5 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {ColDef} from "ag-grid-community";
-import {nummerSort, tijdSort} from "../../../types/Utils";
 import {HeliosLogboekDataset, HeliosStart, HeliosStartDataset} from "../../../types/Helios";
 import {DateTime} from "luxon";
 import {Subscription} from "rxjs";
@@ -11,6 +10,7 @@ import {StarttijdRenderComponent} from "../datatable/starttijd-render/starttijd-
 import {LandingstijdRenderComponent} from "../datatable/landingstijd-render/landingstijd-render.component";
 import {NaamRenderComponent} from "./naam-render/naam-render.component";
 import {TijdInvoerComponent} from "../editors/tijd-invoer/tijd-invoer.component";
+import {nummerSort, tijdSort} from '../../../utils/Utils';
 
 @Component({
     selector: 'app-vlieger-logboek',
