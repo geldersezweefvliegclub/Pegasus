@@ -2,42 +2,207 @@
     <div class="row">
         <div class="col-9">
             <app-pegasus-card [icon]="roosterIcon" titel="Rooster" subtitel="Rooster inplannen">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">Dag</th>
-                        <th scope="col">Instructeurs</th>
-                        <th scope="col">Lieristen</th>
-                        <th scope="col">Startleider</th>
-                        <th scope="col">DDWV</th>
-                        <th scope="col">Clubbedrijf</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr *ngFor="let dagInRooster of rooster;let i = index">
-                        <th scope="row">{{dagInRooster.DATUM | date: 'dd-MM-yyyy'}}</th>
-                        <td>Mark</td>
-                        <td>
-                            Lierist:
+                <div class="row border-bottom">
+                    <div class="col-2 fw-bold">Dag</div>
+                    <div class="col fw-bold">DDI</div>
+                    <div class="col fw-bold">Instructeurs</div>
+                    <div class="col fw-bold">Startleider</div>
+                    <div class="col fw-bold">Lieristen</div>
+                </div>
+                <div class="row border-bottom" *ngFor="let dagInRooster of rooster;let i = index">
+                    <div class="col-2">
+                        <p class="fw-bold">
+                            {{dagInRooster.DATUM | date: 'dd-MM-yyyy'}}
+                        </p>
+                        <div class="d-flex justify-content-between fw-normal">
+                            <label [for]="'DDWV' + i" class="form-check-label">DDWV</label>
+                            <input type="checkbox" class="form-check-inline" [id]="'DDWV' + i" [name]="'DDWV' + i"
+                                   [(ngModel)]="dagInRooster.DDWV">
+                        </div>
+                        <div class="d-flex justify-content-between fw-normal">
+                            <label [for]="'Clubbedrijf' + i" class="form-check-label">Club bedrijf</label>
+                            <input type="checkbox" class="form-check-inline" [id]="'Clubbedrijf' + i"
+                                   [name]="'Clubbedrijf' + i"
+                                   [(ngModel)]="dagInRooster.CLUB_BEDRIJF">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row min-h-50">
+                            <div class="col-6">
+                                Ochtend:
+                            </div>
                             <div
-                                    class="drop-container"
+                                    class="col-6 drop-container"
                                     cdkDropList
-                                    #lierist
-                                    [id]="'OCHTEND_LIERIST-'+i"
-                                    (cdkDropListDropped)="onDropInTable($event, dagInRooster, lierist); dagInRooster.OCHTEND_LIERIST = getIDFromDrop($event)"
-                                    [cdkDropListData]="dagInRooster">
+                                    [id]="'OCHTEND_DDI-' + i"
+                                    (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                    [cdkDropListData]="dagInRooster"
+                                    [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this)">
                                 <div cdkDrag>
-                                    {{dagInRooster.OCHTEND_LIERIST}}
+                                    {{dagInRooster.OCHTEND_DDI}}
                                 </div>
                             </div>
-                        </td>
-                        <td>@mdo</td>
-                        <td><input class="form-check-inline" type="checkbox" [id]="'DDWV' + i" [name]="'DDWV' + i"></td>
-                        <td><input class="form-check-inline" type="checkbox" [id]="'Clubbedrijf' + i"
-                                   [name]="'Clubbedrijf' + i"></td>
-                    </tr>
-                    </tbody>
-                </table>
+                        </div>
+                        <hr>
+                        <div class="row min-h-50">
+                            <div class="col-6">
+                                Middag:
+                            </div>
+                            <div
+                                    class="col-6 drop-container"
+                                    cdkDropList
+                                    [id]="'MIDDAG_DDI-' + i"
+                                    (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                    [cdkDropListData]="dagInRooster"
+                                    [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this)">
+                                <div cdkDrag>
+                                    {{dagInRooster.MIDDAG_DDI}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row min-h-50">
+                            <div class="col-6">
+                                Ochtend:
+                            </div>
+                            <div
+                                    class="col-6 drop-container"
+                                    cdkDropList
+                                    [id]="'OCHTEND_INSTRUCTEUR-' + i"
+                                    (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                    [cdkDropListData]="dagInRooster"
+                                    [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this)">
+                                <div cdkDrag>
+                                    {{dagInRooster.OCHTEND_INSTRUCTEUR}}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row min-h-50">
+                            <div class="col-6">
+                                Middag:
+                            </div>
+                            <div
+                                    class="col-6 drop-container"
+                                    cdkDropList
+                                    [id]="'MIDDAG_INSTRUCTEUR-' + i"
+                                    (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                    [cdkDropListData]="dagInRooster"
+                                    [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this)">
+                                <div cdkDrag>
+                                    {{dagInRooster.MIDDAG_INSTRUCTEUR}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row min-h-50">
+                            <div class="col-6">
+                                Ochtend:
+                            </div>
+                            <div
+                                    class="col-6 drop-container"
+                                    cdkDropList
+                                    [id]="'OCHTEND_STARTLEIDER-' + i"
+                                    (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                    [cdkDropListData]="dagInRooster"
+                                    [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this)">
+                                <div cdkDrag>
+                                    {{dagInRooster.OCHTEND_STARTLEIDER}}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row min-h-50">
+                            <div class="col-6">
+                                Middag:
+                            </div>
+                            <div
+                                    class="col-6 drop-container"
+                                    cdkDropList
+                                    [id]="'MIDDAG_STARTLEIDER-' + i"
+                                    (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                    [cdkDropListData]="dagInRooster"
+                                    [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this)">
+                                <div cdkDrag>
+                                    {{dagInRooster.MIDDAG_STARTLEIDER}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="min-h-50">
+                            <div class="row">
+                                <div class="col-6">
+                                    Ochtend:
+                                </div>
+                                <div
+                                        class="col-6 drop-container"
+                                        cdkDropList
+                                        [id]="'OCHTEND_LIERIST-' + i"
+                                        (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                        [cdkDropListData]="dagInRooster"
+                                        [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
+                                    <div cdkDrag>
+                                        {{dagInRooster.OCHTEND_LIERIST}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    Ochtend hulp:
+                                </div>
+                                <div
+                                        class="col-6 drop-container"
+                                        cdkDropList
+                                        [id]="'OCHTEND_HULPLIERIST-' + i"
+                                        (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                        [cdkDropListData]="dagInRooster"
+                                        [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
+                                    <div cdkDrag>
+                                        {{dagInRooster.OCHTEND_HULPLIERIST}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="min-h-50">
+                            <div class="row">
+                                <div class="col-6">
+                                    Middag:
+                                </div>
+                                <div
+                                        class="col-6 drop-container"
+                                        cdkDropList
+                                        [id]="'MIDDAG_LIERIST-' + i"
+                                        (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                        [cdkDropListData]="dagInRooster"
+                                        [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
+                                    <div cdkDrag>
+                                        {{dagInRooster.MIDDAG_LIERIST}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    Middag hulp:
+                                </div>
+                                <div
+                                        class="col-6 drop-container"
+                                        cdkDropList
+                                        [id]="'MIDDAG_HULPLIERIST-' + i"
+                                        (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                        [cdkDropListData]="dagInRooster"
+                                        [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
+                                    <div cdkDrag>
+                                        {{dagInRooster.MIDDAG_HULPLIERIST}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </app-pegasus-card>
         </div>
         <div class="col-3">
@@ -81,46 +246,68 @@
                 </div>
                 <hr>
                 <div class="row">
-                    <div class="p-3 h-100">
-                        <ng-container *ngIf="gefilterdeLeden && !isLoading;else loading">
-                            <div *ngIf="gefilterdeLeden.length == 0" class="d-flex justify-content-center">
-                                Geen resultaten gevonden
+                    <div class="p-3 h-100"
+                         *ngIf="gefilterdeLeden && !isLoading;else loading"
+                         id="LEDENLIJST"
+                         cdkDropList
+                         [cdkDropListData]="gefilterdeLeden"
+                         cdkDropListSortingDisabled
+                         (cdkDropListDropped)="onDropInLedenlijst($event)"
+                    >
+                        <div *ngIf="gefilterdeLeden.length == 0" class="d-flex justify-content-center">
+                            Geen resultaten gevonden
+                        </div>
+                        <div
+                                class="card my-1"
+                                *ngFor="let lid of gefilterdeLeden"
+                                cdkDrag
+                                [cdkDragData]="lid"
+                        >
+                            <div *cdkDragPreview>
+                                <ng-template *ngTemplateOutlet="preview; context: {$implicit: lid}"></ng-template>
                             </div>
-                            <div
-                                    class="card my-1"
-                                    cdkDropList
-                                    [cdkDropListData]="gefilterdeLeden"
-                                    (cdkDropListDropped)="onDropInTable($event)"
-                                    *ngFor="let lid of gefilterdeLeden">
-                                <div class="card-body" cdkDrag [cdkDragData]="lid">
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <app-avatar class="position-relative" [url]="lid.AVATAR"></app-avatar>
-                                            <span class="position-absolute top-0 start-100 translate-middle padding-small bg-secondary rounded-circle">
+                            <div *cdkDragPlaceholder>
+                                {{lid.NAAM}}
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <app-avatar class="position-relative" [url]="lid.AVATAR"></app-avatar>
+                                        <span class="position-absolute top-0 start-100 translate-middle padding-small bg-secondary rounded-circle">
                                             {{55}}
-                                                <span class="visually-hidden">keer ingedeeld</span>
+                                            <span class="visually-hidden">keer ingedeeld</span>
                                         </span>
-                                        </div>
-                                        <div class="col-9">
-                                            <h6>{{lid.NAAM}}</h6>
-                                            <p>
-                                                <span *ngIf="lid.LIERIST">Lierist </span>
-                                                <span *ngIf="lid.STARTLEIDER">Startleider </span>
-                                                <span *ngIf="lid.INSTRUCTEUR">Instructeur </span>
-                                            </p>
-                                        </div>
+                                    </div>
+                                    <div class="col-9">
+                                        <h6>{{lid.NAAM}}</h6>
+                                        <p>
+                                            <span *ngIf="lid.LIERIST">Lierist </span>
+                                            <span *ngIf="lid.STARTLEIDER">Startleider </span>
+                                            <span *ngIf="lid.INSTRUCTEUR">Instructeur </span>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
-                        </ng-container>
-                        <ng-template #loading>
-                            <div class="d-flex justify-content-center">
-                                <app-loader [isLoading]="isLoading"></app-loader>
-                            </div>
-                        </ng-template>
+                        </div>
                     </div>
+                    <ng-template #loading>
+                        <div class="d-flex justify-content-center">
+                            <app-loader [isLoading]="isLoading"></app-loader>
+                        </div>
+                    </ng-template>
                 </div>
             </app-pegasus-card>
         </div>
     </div>
 </div>
+
+<ng-template #preview let-lid>
+    <div class="card card-body">
+        <h6>{{lid.NAAM}}</h6>
+        <p>
+            <span *ngIf="lid.LIERIST">Lierist </span>
+            <span *ngIf="lid.STARTLEIDER">Startleider </span>
+            <span *ngIf="lid.INSTRUCTEUR">Instructeur </span>
+        </p>
+    </div>
+</ng-template>

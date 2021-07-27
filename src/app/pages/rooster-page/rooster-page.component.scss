@@ -4,10 +4,22 @@
   justify-content: center;
   border: 1.5px dashed #9a9a9a;
   height: 2em;
-  margin: 0.5em;
   border-radius: 0.25rem;
+  background: white;
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  margin-top: 0.25em;
+}
+
+// Verberg de preview in de ledenlijst want daar kan je niet naartoe slepen.
+// De preview doet denken dat je leden erin sleept, maar je sleept eigenlijk terug naar een al bestaand lid
+#LEDENLIJST .cdk-drag-placeholder {
+  display: none;
 }
 
 .padding-small {
   padding: 0.25rem 0.40rem;
+}
+
+.min-h-50{
+  min-height: 50%;
 }
