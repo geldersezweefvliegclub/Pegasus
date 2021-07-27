@@ -19,7 +19,7 @@ export class LidEditorComponent implements OnInit {
     @Input() isVerwijderMode: boolean = false;
     @Input() isRestoreMode: boolean = false;
 
-    @Output() opslaan: EventEmitter<HeliosUserinfo> = new EventEmitter<HeliosUserinfo>();
+    @Output() opslaan: EventEmitter<HeliosLid> = new EventEmitter<HeliosLid>();
     lid: HeliosLid = {};
     types: HeliosType[];
 

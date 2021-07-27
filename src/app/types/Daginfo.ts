@@ -221,6 +221,8 @@ export interface components {
       DATUM?: string;
       /** Welke vliegveld vliegen we vandaag. Kan afwijken voor vliegkamp. Verwijzing naar type tabel. */
       VELD_ID?: number;
+      /** De standard startmeody voor deze dag */
+      STARTMETHODE_ID?: number;
       /** Is het een DDWV dag? */
       DDWV?: boolean;
       /** Is er een clubbedrijf */
