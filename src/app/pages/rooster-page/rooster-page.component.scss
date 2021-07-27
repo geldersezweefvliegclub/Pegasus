@@ -1,6 +1,9 @@
 .drop-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   border: 1.5px dashed #9a9a9a;
-  height: 4em;
+  height: 2em;
   margin: 0.5em;
   border-radius: 0.25rem;
 }
