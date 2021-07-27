@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {faRecycle, faUsers} from '@fortawesome/free-solid-svg-icons';
 import {VliegtuigEditorComponent} from '../../shared/components/editors/vliegtuig-editor/vliegtuig-editor.component';
 import {HeliosLedenDataset, HeliosLid} from '../../types/Helios';
@@ -27,7 +27,7 @@ import {nummerSort} from '../../utils/Utils';
   templateUrl: './leden-grid.component.html',
   styleUrls: ['./leden-grid.component.scss']
 })
-export class LedenGridComponent {
+export class LedenGridComponent implements OnInit{
   @ViewChild(FilterComponent) ledenFilter: FilterComponent;
 
   leden: HeliosLedenDataset[] = [];

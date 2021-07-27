@@ -21,11 +21,12 @@
             <app-pegasus-card [titel]="titel" [subtitel]="subtitel" class="h-100"
                               [img]="avatar">
 
-                <fieldset [disabled]="isVerwijderMode || isRestoreMode">
-                    <div avatar>
-                        <app-image-crop (opslaan)="uploadFoto($event)" (cropped)="setAvatar($event)" *ngIf="!this.isVerwijderMode && !this.isRestoreMode"></app-image-crop>
-                    </div>
+                <div avatar>
+                    <app-image-crop (opslaan)="uploadFoto($event)" (cropped)="setAvatar($event)"
+                                    *ngIf="!this.isVerwijderMode && !this.isRestoreMode"></app-image-crop>
+                </div>
 
+                <fieldset [disabled]="isVerwijderMode || isRestoreMode">
                     <div #persoonGroup="ngModelGroup" ngModelGroup="persoonGroup" appWachtwoordMatchValidator>
                         <div class="row">
                             <div class="col-5">
@@ -116,7 +117,7 @@
                                                [(ngModel)]="lid.AUTH">
                                         <label class="form-check-label" for="googleAuth"
                                                [ngClass]="disabledClass('googleAuth')">
-                                            Twee-staps verficatie
+                                            Twee-staps verificatie
 
                                             <fa-icon class="text-info ms-2 clickable" [icon]="infoIcon"
                                                      [ngbPopover]="googleAuthPopover"
@@ -128,7 +129,7 @@
                                                name="CLUBBLAD_POST"
                                                [(ngModel)]="lid.CLUBBLAD_POST">
                                         <label class="form-check-label" for="CLUBBLAD_POST">
-                                            Clubblad post
+                                            Clubblad per post
                                         </label>
                                     </div>
                                 </div>
@@ -347,11 +348,15 @@
                              iconNaam="fas Plus" btnColor="btn-primary"
                              tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
 
-            <app-icon-button *ngIf="!isLoading && isVerwijderMode" iconNaam="fas TrashAlt" btnColor="btn-primary editorDeleteBtn"
+            <app-icon-button *ngIf="!isLoading && isVerwijderMode" iconNaam="fas TrashAlt"
+                             btnColor="btn-primary editorDeleteBtn"
                              tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
 
-            <app-icon-button *ngIf="!isLoading && isRestoreMode" iconNaam="fas Undo" btnColor="btn-primary editorRestoreBtn"
+            <app-icon-button *ngIf="!isLoading && isRestoreMode" iconNaam="fas Undo"
+                             btnColor="btn-primary editorRestoreBtn"
                              tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
+
+            <span *ngIf="isLoading"><app-loader></app-loader></span>
         </div>
     </div>
 </form>
