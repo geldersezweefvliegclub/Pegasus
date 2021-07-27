@@ -2,37 +2,38 @@
     <div class="row">
         <div class="col-9">
             <app-pegasus-card [icon]="roosterIcon" titel="Rooster" subtitel="Rooster inplannen">
-                <div class="row border-bottom">
-                    <div class="col-2 fw-bold">Dag</div>
-                    <div class="col fw-bold">DDI</div>
-                    <div class="col fw-bold">Instructeurs</div>
-                    <div class="col fw-bold">Startleider</div>
-                    <div class="col fw-bold">Lieristen</div>
-                </div>
-                <div class="row border-bottom" *ngFor="let dagInRooster of rooster;let i = index">
-                    <div class="col-2">
-                        <p class="fw-bold">
-                            {{dagInRooster.DATUM | date: 'dd-MM-yyyy'}}
-                        </p>
-                        <div class="d-flex justify-content-between fw-normal">
-                            <label [for]="'DDWV' + i" class="form-check-label">DDWV</label>
-                            <input type="checkbox" class="form-check-inline" [id]="'DDWV' + i" [name]="'DDWV' + i"
-                                   [(ngModel)]="dagInRooster.DDWV">
-                        </div>
-                        <div class="d-flex justify-content-between fw-normal">
-                            <label [for]="'Clubbedrijf' + i" class="form-check-label">Club bedrijf</label>
-                            <input type="checkbox" class="form-check-inline" [id]="'Clubbedrijf' + i"
-                                   [name]="'Clubbedrijf' + i"
-                                   [(ngModel)]="dagInRooster.CLUB_BEDRIJF">
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="row min-h-50">
-                            <div class="col-6">
-                                Ochtend:
+                <table class="table">
+                    <thead>
+                    <th scope="col">Dag</th>
+                    <th scope="col">DDI</th>
+                    <th scope="col">Instructeur</th>
+                    <th scope="col">Startleider</th>
+                    <th scope="col">Lierist</th>
+                    <th scope="col">Hulplierist</th>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let dagInRooster of rooster;let i = index">
+                        <th scope="row">
+                            <p class="fw-bold">
+                                {{dagInRooster.DATUM | date: 'dd-MM-yyyy'}}<br>
+<!--                                Todo vertalen-->
+                                {{dagInRooster.DATUM | date: 'EEEE' }}
+                            </p>
+                            <div class="d-flex justify-content-between fw-normal">
+                                <label [for]="'DDWV' + i" class="form-check-label">DDWV</label>
+                                <input type="checkbox" class="form-check-inline" [id]="'DDWV' + i" [name]="'DDWV' + i"
+                                       [(ngModel)]="dagInRooster.DDWV">
                             </div>
+                            <div class="d-flex justify-content-between fw-normal">
+                                <label [for]="'Clubbedrijf' + i" class="form-check-label">Club bedrijf</label>
+                                <input type="checkbox" class="form-check-inline" [id]="'Clubbedrijf' + i"
+                                       [name]="'Clubbedrijf' + i"
+                                       [(ngModel)]="dagInRooster.CLUB_BEDRIJF">
+                            </div>
+                        </th>
+                        <td>
                             <div
-                                    class="col-6 drop-container"
+                                    class="drop-container"
                                     cdkDropList
                                     [id]="'OCHTEND_DDI-' + i"
                                     (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
@@ -42,14 +43,9 @@
                                     {{dagInRooster.OCHTEND_DDI}}
                                 </div>
                             </div>
-                        </div>
-                        <hr>
-                        <div class="row min-h-50">
-                            <div class="col-6">
-                                Middag:
-                            </div>
+                            <hr>
                             <div
-                                    class="col-6 drop-container"
+                                    class="drop-container"
                                     cdkDropList
                                     [id]="'MIDDAG_DDI-' + i"
                                     (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
@@ -59,15 +55,10 @@
                                     {{dagInRooster.MIDDAG_DDI}}
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="row min-h-50">
-                            <div class="col-6">
-                                Ochtend:
-                            </div>
+                        </td>
+                        <td>
                             <div
-                                    class="col-6 drop-container"
+                                    class="drop-container"
                                     cdkDropList
                                     [id]="'OCHTEND_INSTRUCTEUR-' + i"
                                     (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
@@ -77,14 +68,9 @@
                                     {{dagInRooster.OCHTEND_INSTRUCTEUR}}
                                 </div>
                             </div>
-                        </div>
-                        <hr>
-                        <div class="row min-h-50">
-                            <div class="col-6">
-                                Middag:
-                            </div>
+                            <hr>
                             <div
-                                    class="col-6 drop-container"
+                                    class="drop-container"
                                     cdkDropList
                                     [id]="'MIDDAG_INSTRUCTEUR-' + i"
                                     (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
@@ -94,15 +80,10 @@
                                     {{dagInRooster.MIDDAG_INSTRUCTEUR}}
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="row min-h-50">
-                            <div class="col-6">
-                                Ochtend:
-                            </div>
+                        </td>
+                        <td>
                             <div
-                                    class="col-6 drop-container"
+                                    class="drop-container"
                                     cdkDropList
                                     [id]="'OCHTEND_STARTLEIDER-' + i"
                                     (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
@@ -112,14 +93,9 @@
                                     {{dagInRooster.OCHTEND_STARTLEIDER}}
                                 </div>
                             </div>
-                        </div>
-                        <hr>
-                        <div class="row min-h-50">
-                            <div class="col-6">
-                                Middag:
-                            </div>
+                            <hr>
                             <div
-                                    class="col-6 drop-container"
+                                    class="drop-container"
                                     cdkDropList
                                     [id]="'MIDDAG_STARTLEIDER-' + i"
                                     (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
@@ -129,80 +105,60 @@
                                     {{dagInRooster.MIDDAG_STARTLEIDER}}
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="min-h-50">
-                            <div class="row">
-                                <div class="col-6">
-                                    Ochtend:
-                                </div>
-                                <div
-                                        class="col-6 drop-container"
-                                        cdkDropList
-                                        [id]="'OCHTEND_LIERIST-' + i"
-                                        (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
-                                        [cdkDropListData]="dagInRooster"
-                                        [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
-                                    <div cdkDrag>
-                                        {{dagInRooster.OCHTEND_LIERIST}}
-                                    </div>
+                        </td>
+                        <td>
+                            <div
+                                    class="drop-container"
+                                    cdkDropList
+                                    [id]="'OCHTEND_LIERIST-' + i"
+                                    (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                    [cdkDropListData]="dagInRooster"
+                                    [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
+                                <div cdkDrag>
+                                    {{dagInRooster.OCHTEND_LIERIST}}
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    Ochtend hulp:
-                                </div>
-                                <div
-                                        class="col-6 drop-container"
-                                        cdkDropList
-                                        [id]="'OCHTEND_HULPLIERIST-' + i"
-                                        (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
-                                        [cdkDropListData]="dagInRooster"
-                                        [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
-                                    <div cdkDrag>
-                                        {{dagInRooster.OCHTEND_HULPLIERIST}}
-                                    </div>
+                            <hr>
+                            <div
+                                    class="drop-container"
+                                    cdkDropList
+                                    [id]="'MIDDAG_LIERIST-' + i"
+                                    (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                    [cdkDropListData]="dagInRooster"
+                                    [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
+                                <div cdkDrag>
+                                    {{dagInRooster.MIDDAG_LIERIST}}
                                 </div>
                             </div>
-                        </div>
-                        <hr>
-                        <div class="min-h-50">
-                            <div class="row">
-                                <div class="col-6">
-                                    Middag:
-                                </div>
-                                <div
-                                        class="col-6 drop-container"
-                                        cdkDropList
-                                        [id]="'MIDDAG_LIERIST-' + i"
-                                        (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
-                                        [cdkDropListData]="dagInRooster"
-                                        [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
-                                    <div cdkDrag>
-                                        {{dagInRooster.MIDDAG_LIERIST}}
-                                    </div>
+                        </td>
+                        <td>
+                            <div
+                                    class="drop-container"
+                                    cdkDropList
+                                    [id]="'OCHTEND_HULPLIERIST-' + i"
+                                    (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                    [cdkDropListData]="dagInRooster"
+                                    [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
+                                <div cdkDrag>
+                                    {{dagInRooster.OCHTEND_HULPLIERIST}}
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    Middag hulp:
-                                </div>
-                                <div
-                                        class="col-6 drop-container"
-                                        cdkDropList
-                                        [id]="'MIDDAG_HULPLIERIST-' + i"
-                                        (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
-                                        [cdkDropListData]="dagInRooster"
-                                        [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
-                                    <div cdkDrag>
-                                        {{dagInRooster.MIDDAG_HULPLIERIST}}
-                                    </div>
+                            <hr>
+                            <div
+                                    class="drop-container"
+                                    cdkDropList
+                                    [id]="'MIDDAG_HULPLIERIST-' + i"
+                                    (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                    [cdkDropListData]="dagInRooster"
+                                    [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
+                                <div cdkDrag>
+                                    {{dagInRooster.MIDDAG_HULPLIERIST}}
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </app-pegasus-card>
         </div>
         <div class="col-3">
