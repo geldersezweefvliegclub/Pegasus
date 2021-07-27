@@ -69,7 +69,7 @@ export class ProgressieService {
     async getProgressieKaart(lidID:number):Promise<HeliosProgressieKaartDataset[]> {
         let kaart:HeliosProgressieKaart | null = null;
 
-        let getParams: KeyValueString = {};
+        let getParams: KeyValueArray = {};
         getParams['LID_ID'] = lidID.toString();
 
         const response: Response = await this.apiService.get('Progressie/ProgressieKaart', getParams);
