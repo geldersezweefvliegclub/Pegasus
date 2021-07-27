@@ -217,25 +217,23 @@ export interface components {
       TEKST?: number;
       /** Verwijzing naar een start. Verwijzing naar oper_startlijst */
       START_ID?: number;
-    } & { [key: string]: any };
-    oper_tracks: components["schemas"]["oper_tracks_in"] &
-      ({
-        /** Tijdstempel wanneer record is toegevoegd */
-        INGEVOERD?: string;
-        /** Verwijzing naar eerder ingevoerde data */
-        LINK_ID?: number;
-        /** Is dit record gemarkeerd als verwijderd? */
-        VERWIJDERD?: boolean;
-        /** Tijdstempel van laaste aanpassing in de database */
-        LAATSTE_AANPASSING?: string;
-      } & { [key: string]: any }) & { [key: string]: any };
-    view_tracks_dataset: components["schemas"]["oper_tracks"] &
-      ({
-        /** De naam van het lid waar de tekst over gaat */
-        LID_NAAM?: string;
-        /** De naam van de instructeur die de tekst heeft ingevoerd */
-        INSTRUCTEUR_NAAM?: string;
-      } & { [key: string]: any }) & { [key: string]: any };
+    };
+    oper_tracks: components["schemas"]["oper_tracks_in"] & {
+      /** Tijdstempel wanneer record is toegevoegd */
+      INGEVOERD?: string;
+      /** Verwijzing naar eerder ingevoerde data */
+      LINK_ID?: number;
+      /** Is dit record gemarkeerd als verwijderd? */
+      VERWIJDERD?: boolean;
+      /** Tijdstempel van laaste aanpassing in de database */
+      LAATSTE_AANPASSING?: string;
+    };
+    view_tracks_dataset: components["schemas"]["oper_tracks"] & {
+      /** De naam van het lid waar de tekst over gaat */
+      LID_NAAM?: string;
+      /** De naam van de instructeur die de tekst heeft ingevoerd */
+      INSTRUCTEUR_NAAM?: string;
+    };
     view_tracks: {
       /** Aantal records dat voldoet aan de criteria in de database */
       totaal?: number;
@@ -245,7 +243,7 @@ export interface components {
       hash?: string;
       /** De dataset met records */
       dataset?: components["schemas"]["view_tracks_dataset"][];
-    } & { [key: string]: any };
+    };
   };
 }
 

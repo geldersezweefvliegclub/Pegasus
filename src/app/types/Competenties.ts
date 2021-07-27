@@ -219,19 +219,17 @@ export interface components {
       ONDERWERP?: string;
       /** Verwijzing naar de volledige documentie */
       DOCUMENTATIE?: string;
-    } & { [key: string]: any };
-    ref_competenties: components["schemas"]["ref_competenties_in"] &
-      ({
-        /** Is dit record gemarkeerd als verwijderd? */
-        VERWIJDERD?: boolean;
-        /** Tijdstempel van laaste aanpassing in de database */
-        LAATSTE_AANPASSING?: string;
-      } & { [key: string]: any }) & { [key: string]: any };
-    view_competenties_dataset: components["schemas"]["ref_competenties"] &
-      ({
-        /** Fase van de vliegopleiding */
-        LEERFASE?: string;
-      } & { [key: string]: any }) & { [key: string]: any };
+    };
+    ref_competenties: components["schemas"]["ref_competenties_in"] & {
+      /** Is dit record gemarkeerd als verwijderd? */
+      VERWIJDERD?: boolean;
+      /** Tijdstempel van laaste aanpassing in de database */
+      LAATSTE_AANPASSING?: string;
+    };
+    view_competenties_dataset: components["schemas"]["ref_competenties"] & {
+      /** Fase van de vliegopleiding */
+      LEERFASE?: string;
+    };
     view_competenties: {
       /** Aantal records dat voldoet aan de criteria in de database */
       totaal?: number;
@@ -241,7 +239,7 @@ export interface components {
       hash?: string;
       /** De dataset met records */
       dataset?: components["schemas"]["view_competenties_dataset"][];
-    } & { [key: string]: any };
+    };
   };
 }
 

@@ -129,11 +129,10 @@ export interface paths {
       /** Lid data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["oper_aanwezig_vliegtuigen_in"] &
-            ({
-              /** Tijdstip van de aanmelding. Indien afwezig, huidige tijd. ISO8601 */
-              TIJDSTIP?: string;
-            } & { [key: string]: any }) & { [key: string]: any };
+          "application/json": components["schemas"]["oper_aanwezig_vliegtuigen_in"] & {
+            /** Tijdstip van de aanmelding. Indien afwezig, huidige tijd. ISO8601 */
+            TIJDSTIP?: string;
+          };
         };
       };
     };
@@ -161,11 +160,10 @@ export interface paths {
       /** Lid data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["oper_aanwezig_vliegtuigen_in"] &
-            ({
-              /** Tijdstip van de afmelding. Indien afwezig, huidige tijd. ISO8601 */
-              TIJDSTIP?: string;
-            } & { [key: string]: any }) & { [key: string]: any };
+          "application/json": components["schemas"]["oper_aanwezig_vliegtuigen_in"] & {
+            /** Tijdstip van de afmelding. Indien afwezig, huidige tijd. ISO8601 */
+            TIJDSTIP?: string;
+          };
         };
       };
     };
@@ -303,39 +301,37 @@ export interface components {
       HOOGTE?: number;
       /** Snelheid van het vliegtuig in km/h */
       SNELHEID?: number;
-    } & { [key: string]: any };
-    oper_aanwezig_vliegtuigen: components["schemas"]["oper_aanwezig_vliegtuigen_in"] &
-      ({
-        /** Is dit record gemarkeerd als verwijderd? */
-        VERWIJDERD?: boolean;
-        /** Tijdstempel van laaste aanpassing in de database */
-        LAATSTE_AANPASSING?: string;
-      } & { [key: string]: any }) & { [key: string]: any };
-    view_aanwezig_vliegtuigen_dataset: components["schemas"]["oper_aanwezig_vliegtuigen"] &
-      ({
-        /** Het registratie nummer van het vliegtuig */
-        REGISTRATIE?: string;
-        /** Optioneel het callsign van het vliegtuig */
-        CALLSIGN?: string;
-        /** De flarmcode zoals deze wordt uitgezonden. Zo kunnen we ontvangen flarm data herleiden naar een vliegtuig uit de database */
-        FLARMCODE?: string;
-        /** Het aantal zitplaatsen. Is 1 of 2. */
-        ZITPLAATSEN?: number;
-        /** Kan het vliegtuig op eigen kracht starten. */
-        ZELFSTART?: boolean;
-        /** Is het een club vliegtuig? */
-        CLUBKIST?: boolean;
-        /** Is het een TMG? */
-        TMG?: boolean;
-        /** Is het een sleepvliegtuig? */
-        SLEEPKIST?: boolean;
-        /** Link naar vliegtuig type tabel. Alleen nodig voor clubvliegtuigen */
-        TYPE_ID?: number;
-        /** Volgorde van vliegtuiglijst, bedoeld voor club vliegtuigen */
-        VOLGORDE?: number;
-        /** Vliegtuig registratie en callsign van het vliegtuig */
-        REG_CALL?: string;
-      } & { [key: string]: any }) & { [key: string]: any };
+    };
+    oper_aanwezig_vliegtuigen: components["schemas"]["oper_aanwezig_vliegtuigen_in"] & {
+      /** Is dit record gemarkeerd als verwijderd? */
+      VERWIJDERD?: boolean;
+      /** Tijdstempel van laaste aanpassing in de database */
+      LAATSTE_AANPASSING?: string;
+    };
+    view_aanwezig_vliegtuigen_dataset: components["schemas"]["oper_aanwezig_vliegtuigen"] & {
+      /** Het registratie nummer van het vliegtuig */
+      REGISTRATIE?: string;
+      /** Optioneel het callsign van het vliegtuig */
+      CALLSIGN?: string;
+      /** De flarmcode zoals deze wordt uitgezonden. Zo kunnen we ontvangen flarm data herleiden naar een vliegtuig uit de database */
+      FLARMCODE?: string;
+      /** Het aantal zitplaatsen. Is 1 of 2. */
+      ZITPLAATSEN?: number;
+      /** Kan het vliegtuig op eigen kracht starten. */
+      ZELFSTART?: boolean;
+      /** Is het een club vliegtuig? */
+      CLUBKIST?: boolean;
+      /** Is het een TMG? */
+      TMG?: boolean;
+      /** Is het een sleepvliegtuig? */
+      SLEEPKIST?: boolean;
+      /** Link naar vliegtuig type tabel. Alleen nodig voor clubvliegtuigen */
+      TYPE_ID?: number;
+      /** Volgorde van vliegtuiglijst, bedoeld voor club vliegtuigen */
+      VOLGORDE?: number;
+      /** Vliegtuig registratie en callsign van het vliegtuig */
+      REG_CALL?: string;
+    };
     view_aanwezig_vliegtuigen: {
       /** Aantal records dat voldoet aan de criteria in de database */
       totaal?: number;
@@ -345,7 +341,7 @@ export interface components {
       hash?: string;
       /** De dataset met records */
       dataset?: components["schemas"]["view_aanwezig_vliegtuigen_dataset"][];
-    } & { [key: string]: any };
+    };
   };
 }
 

@@ -239,33 +239,31 @@ export interface components {
       ROLLENDMATERIEEL?: string;
       /** Opmerkingen over de vloot */
       VLIEGENDMATERIEEL?: string;
-    } & { [key: string]: any };
-    oper_daginfo: components["schemas"]["oper_daginfo_in"] &
-      ({
-        /** Is dit record gemarkeerd als verwijderd? */
-        VERWIJDERD?: boolean;
-        /** Tijdstempel van laaste aanpassing in de database, laat leeg bij updates */
-        LAATSTE_AANPASSING?: string;
-      } & { [key: string]: any }) & { [key: string]: any };
-    view_daginfo_dataset: components["schemas"]["oper_daginfo"] &
-      ({
-        /** Verkorte naam van het vliegveld */
-        VELD_CODE?: string;
-        /** Naam van het vliegveld */
-        VELD_OMS?: string;
-        /** Verkorte beschrijving start strip */
-        BAAN_CODE?: string;
-        /** beschrijving start strip */
-        BAAN_OMS?: string;
-        /** Verkorte naam van de club die leiding heeft over vliegbedrijf */
-        BEDRIJF_CODE?: string;
-        /** Club die leiding heeft over vliegbedrijf */
-        BEDRIJF_OMS?: string;
-        /** De verkorte beschrijving van de meest gebruikte startmethode */
-        STARTMETHODE_CODE?: string;
-        /** Beschrijving van de meest gebruikte startmethode */
-        STARTMETHODE_OMS?: string;
-      } & { [key: string]: any }) & { [key: string]: any };
+    };
+    oper_daginfo: components["schemas"]["oper_daginfo_in"] & {
+      /** Is dit record gemarkeerd als verwijderd? */
+      VERWIJDERD?: boolean;
+      /** Tijdstempel van laaste aanpassing in de database, laat leeg bij updates */
+      LAATSTE_AANPASSING?: string;
+    };
+    view_daginfo_dataset: components["schemas"]["oper_daginfo"] & {
+      /** Verkorte naam van het vliegveld */
+      VELD_CODE?: string;
+      /** Naam van het vliegveld */
+      VELD_OMS?: string;
+      /** Verkorte beschrijving start strip */
+      BAAN_CODE?: string;
+      /** beschrijving start strip */
+      BAAN_OMS?: string;
+      /** Verkorte naam van de club die leiding heeft over vliegbedrijf */
+      BEDRIJF_CODE?: string;
+      /** Club die leiding heeft over vliegbedrijf */
+      BEDRIJF_OMS?: string;
+      /** De verkorte beschrijving van de meest gebruikte startmethode */
+      STARTMETHODE_CODE?: string;
+      /** Beschrijving van de meest gebruikte startmethode */
+      STARTMETHODE_OMS?: string;
+    };
     view_daginfo: {
       /** Aantal records dat voldoet aan de criteria in de database */
       totaal?: number;
@@ -275,7 +273,7 @@ export interface components {
       hash?: string;
       /** De dataset met records */
       dataset?: components["schemas"]["view_daginfo_dataset"][];
-    } & { [key: string]: any };
+    };
   };
 }
 

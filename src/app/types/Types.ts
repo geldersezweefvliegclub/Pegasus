@@ -219,14 +219,13 @@ export interface components {
       SORTEER_VOLGORDE?: number;
       /** Is dit record (met ID) hard gecodeerd in de source code. Zo ja, dan niet aanpassen. */
       READ_ONLY?: boolean;
-    } & { [key: string]: any };
-    ref_types: components["schemas"]["ref_types_in"] &
-      ({
-        /** Is dit record gemarkeerd als verwijderd? */
-        VERWIJDERD?: boolean;
-        /** Tijdstempel van laaste aanpassing in de database */
-        LAATSTE_AANPASSING?: string;
-      } & { [key: string]: any }) & { [key: string]: any };
+    };
+    ref_types: components["schemas"]["ref_types_in"] & {
+      /** Is dit record gemarkeerd als verwijderd? */
+      VERWIJDERD?: boolean;
+      /** Tijdstempel van laaste aanpassing in de database */
+      LAATSTE_AANPASSING?: string;
+    };
     view_types: {
       /** Aantal records dat voldoet aan de criteria in de database */
       totaal?: number;
@@ -236,7 +235,7 @@ export interface components {
       hash?: string;
       /** De dataset met records */
       dataset?: components["schemas"]["ref_types"][];
-    } & { [key: string]: any };
+    };
   };
 }
 

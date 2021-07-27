@@ -1,7 +1,7 @@
 <app-error [error]="error"></app-error>
 
 <app-pegasus-card titel="Startlijst"
-               subtitel="Een overzicht van de starts"
+               subtitel="Een overzicht van de starts {{datum.day}}-{{datum.month}}-{{datum.year}}"
                [icon]="iconCardIcon"
                [exportEnabled]="this.magExporten"
                (excelExport)="exportDataset()">

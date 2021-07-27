@@ -243,21 +243,19 @@ export interface components {
       TYPE_ID?: number;
       /** Volgorde van vliegtuiglijst, bedoeld voor club vliegtuigen */
       VOLGORDE?: number;
-    } & { [key: string]: any };
-    ref_vliegtuigen: components["schemas"]["ref_vliegtuigen_in"] &
-      ({
-        /** Is dit record gemarkeerd als verwijderd? */
-        VERWIJDERD?: boolean;
-        /** Tijdstempel van laaste aanpassing in de database */
-        LAATSTE_AANPASSING?: string;
-      } & { [key: string]: any }) & { [key: string]: any };
-    view_vliegtuigen_dataset: components["schemas"]["ref_vliegtuigen"] &
-      ({
-        /** Beschrijving van het vliegtuig type */
-        VLIEGTUIGTYPE?: string;
-        /** Vliegtuig registratie en callsign */
-        REG_CALL?: string;
-      } & { [key: string]: any }) & { [key: string]: any };
+    };
+    ref_vliegtuigen: components["schemas"]["ref_vliegtuigen_in"] & {
+      /** Is dit record gemarkeerd als verwijderd? */
+      VERWIJDERD?: boolean;
+      /** Tijdstempel van laaste aanpassing in de database */
+      LAATSTE_AANPASSING?: string;
+    };
+    view_vliegtuigen_dataset: components["schemas"]["ref_vliegtuigen"] & {
+      /** Beschrijving van het vliegtuig type */
+      VLIEGTUIGTYPE?: string;
+      /** Vliegtuig registratie en callsign */
+      REG_CALL?: string;
+    };
     view_vliegtuigen: {
       /** Aantal records dat voldoet aan de criteria in de database */
       totaal?: number;
@@ -267,7 +265,7 @@ export interface components {
       hash?: string;
       /** De dataset met records */
       dataset?: components["schemas"]["view_vliegtuigen_dataset"][];
-    } & { [key: string]: any };
+    };
   };
 }
 
