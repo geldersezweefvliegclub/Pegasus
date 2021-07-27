@@ -271,7 +271,7 @@ export interface components {
       MIDDAG_LIERIST?: string;
       /** De naam van de hulplierist voor het middag bedrijf */
       MIDDAG_HULPLIERIST?: string;
-    };
+    } & { [key: string]: any };
     view_rooster: {
       /** Aantal records dat voldoet aan de criteria in de database */
       totaal?: number;
