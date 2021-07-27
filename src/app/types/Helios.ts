@@ -36,7 +36,7 @@ export type HeliosVliegdagen = startlijstComponents['schemas']['vliegdagen'];
 
 export type HeliosLeden = ledenComponents['schemas']['view_leden'];
 export type HeliosLedenDataset = ledenComponents['schemas']['view_leden_dataset'];
-export type HeliosLid = ledenComponents['schemas']['ref_leden_in'];
+export type HeliosLid = ledenComponents['schemas']['ref_leden'];
 
 export type HeliosDagInfoDagen = DaginfoComponents['schemas']['view_daginfo'];
 export type HeliosDagInfosDataset = DaginfoComponents['schemas']['view_daginfo_dataset'];

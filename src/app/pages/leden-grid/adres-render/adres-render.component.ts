@@ -14,8 +14,8 @@ export class AdresRenderComponent implements AgRendererComponent {
   constructor() { }
 
   agInit(params: ICellRendererParams): void {
-    this.regel1 = params.data.ADRES;
-    this.regel2 = params.data.POSTCODE;
+    this.regel1 = (params.data.ADRES) ? params.data.ADRES : '';
+    this.regel2 = (params.data.POSTCODE) ? (params.data.POSTCODE) : '';
 
     // Als postcode aanwezig is dan spatie tussen postcode en woonplaats
     if (this.regel2) {

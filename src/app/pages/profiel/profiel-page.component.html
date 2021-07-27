@@ -1,2 +1,6 @@
 <app-error [error]="error"></app-error>
-<app-lid-editor [lidID]="lidID" (opslaan)="opslaan($event)"></app-lid-editor>
+<app-lid-editor [lidID]="lidID"
+                [isRestoreMode]="isRestoreMode"
+                [isVerwijderMode]="isVerwijderMode"
+                (opslaan)="opslaan($event)">
+</app-lid-editor>

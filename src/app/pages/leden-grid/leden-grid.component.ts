@@ -91,8 +91,7 @@ export class LedenGridComponent {
     cellRenderer: 'deleteAction', headerName: '', sortable: false,
     cellRendererParams: {
       onDeleteClicked: (ID: number) => {
-        //todo
-        console.error('Niet geimplementeerd');
+        this.router.navigate(['profiel'], {queryParams: {lidID: ID, delete: true}});
       }
     },
   }];
@@ -108,8 +107,7 @@ export class LedenGridComponent {
     cellRenderer: 'restoreAction', headerName: '', sortable: false,
     cellRendererParams: {
       onRestoreClicked: (ID: number) => {
-        //todo
-        console.error('Niet geimplementeerd');
+        this.router.navigate(['profiel'], {queryParams: {lidID: ID, restore: true}});
       }
     },
   }];
@@ -198,38 +196,6 @@ export class LedenGridComponent {
         this.applyFilter();
       });
     }, 400);
-  }
-
-  // Minder mooi, lid is geen lid meer. Markeer lid als verwijderd
-  Verwijderen(id: number) {
-    //todo
-    console.error('Niet geimplementeerd');
-    /*
-    this.ledenService.deleteLid(id).then(() => {
-      this.deleteMode = false;
-      this.trashMode = false;
-      this.kolomDefinitie();      // verwijderen van de kolom met delete icons
-
-      this.opvragen();
-      this.editor.closePopup();
-    });
-     */
-  }
-
-  // Gelukkig, een oud lid is opnieuw lid geworden. Haal de verwijderd markering weg.
-  Herstellen(id: number) {
-    /*this.ledenService.restoreLid(id).then(() => {
-      this.deleteMode = false;
-      this.trashMode = false;
-      this.kolomDefinitie();  // verwijderen van de kolom met herstel icons
-
-      this.opvragen();
-      this.editor.closePopup();
-    });
-
-     */
-    //todo
-    console.error('Niet geimplementeerd');
   }
 
   // Open van het filter dialoog

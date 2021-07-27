@@ -28,6 +28,9 @@ export class NavigationComponent {
     vandaag = this.calendar.getToday();
     kalenderIngave: NgbDateStruct = {year: this.vandaag.year, month: this.vandaag.month, day: this.vandaag.day};  // de gekozen dag
 
+    kalenderEersteDatum: NgbDateStruct;
+    kalenderLaatsteDatum: NgbDateStruct;
+
     vliegdagen: string = "";    // vliegdagen van deze maand in json formaat
     daginfo: string = "";       // daginfos van deze maand in json formaat
 
@@ -38,6 +41,19 @@ export class NavigationComponent {
                 private readonly router: Router,
                 private readonly calendar: NgbCalendar)
     {
+        const ui = this.loginService.userInfo?.Userinfo;
+
+        // Starttoren mag geen datum kiezen, alleen vandaag
+        if (ui?.isStarttoren) {
+            this.kalenderEersteDatum = {year: this.vandaag.year, month: this.vandaag.month, day: this.vandaag.day}
+            this.kalenderLaatsteDatum = {year: this.vandaag.year, month: this.vandaag.month, day: this.vandaag.day}
+        }
+        else
+        {
+            this.kalenderEersteDatum = {year: 2015, month: 1, day: 1 }
+            this.kalenderLaatsteDatum = {year: this.vandaag.year+1, month: 12, day: 31}
+        }
+
         // Als daginfo of startlijst is aangepast, moet we kalender achtergrond ook updaten
         this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Daginfo") {

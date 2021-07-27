@@ -107,14 +107,12 @@ export class DashboardPageComponent implements OnInit {
             this.progressieService.getProgressieKaart(this.lidData.ID).then((dataset) => {
 
                 // velden die voor de gebruiker nutteloos zijn, halen we weg
-                /*
                 for (let i=0; i< dataset.length ; i++) {
                     dataset[i].ID = undefined;
                     dataset[i].LEERFASE_ID = undefined;
                     dataset[i].BLOK_ID = undefined;
                     dataset[i].PROGRESSIE_ID = undefined;
                 }
-                 */
                 let ws = xlsx.utils.json_to_sheet(dataset);
                 const wb: xlsx.WorkBook = xlsx.utils.book_new();
                 xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');

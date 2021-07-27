@@ -273,6 +273,8 @@ export interface components {
       NOODNUMMER?: string;
       /** email adres van het lid */
       EMAIL?: string;
+      /** url naar avatar */
+      AVATAR?: string;
       /** Het lidnummer zoals dat in de leden administratie bekend is */
       LIDNR?: string;
       /** Het soort lid (jeugdlid, lid, donateur). Verwijzing naar type tabel */
@@ -285,6 +287,8 @@ export interface components {
       STARTLEIDER?: boolean;
       /** Heeft dit lid een instructie bevoegdheid? */
       INSTRUCTEUR?: boolean;
+      /** Heeft dit lid een instructie bevoegdheid? */
+      CIMT?: boolean;
       /** Werkt dit lid mee in het DDWV bedrijf */
       DDWV_CREW?: boolean;
       /** Is dit lid de beheerder van het DDWV bedrijf, heeft toegang tot DDWV gerelateede data */
@@ -317,25 +321,21 @@ export interface components {
       BEPERKINGEN?: string;
       /** Extra text om opmerkingen toe te voegen */
       OPMERKINGEN?: string;
-    } & { [key: string]: any };
-    ref_leden: components["schemas"]["ref_leden_in"] &
-      ({
-        /** Readonly, URL om image op te halen. Zetten via UploadAvatar functie */
-        AVATAR?: string;
-        /** Readonly, **** voor gewone gebruikers, URL om QRcode op te halen voor beheerders */
-        SECRET?: string;
-        /** Is dit record gemarkeerd als verwijderd? */
-        VERWIJDERD?: boolean;
-        /** Tijdstempel van laaste aanpassing in de database */
-        LAATSTE_AANPASSING?: string;
-      } & { [key: string]: any }) & { [key: string]: any };
-    view_leden_dataset: components["schemas"]["ref_leden"] &
-      ({
-        /** Lidtype in text */
-        LIDTYPE?: string;
-        /** Naam van de zusterclub */
-        ZUSTERCLUB?: string;
-      } & { [key: string]: any }) & { [key: string]: any };
+    };
+    ref_leden: components["schemas"]["ref_leden_in"] & {
+      /** Readonly, **** voor gewone gebruikers, URL om QRcode op te halen voor beheerders */
+      SECRET?: string;
+      /** Is dit record gemarkeerd als verwijderd? */
+      VERWIJDERD?: boolean;
+      /** Tijdstempel van laaste aanpassing in de database */
+      LAATSTE_AANPASSING?: string;
+    };
+    view_leden_dataset: components["schemas"]["ref_leden"] & {
+      /** Lidtype in text */
+      LIDTYPE?: string;
+      /** Naam van de zusterclub */
+      ZUSTERCLUB?: string;
+    };
     view_leden: {
       /** Aantal records dat voldoet aan de criteria in de database */
       totaal?: number;
@@ -345,7 +345,7 @@ export interface components {
       hash?: string;
       /** De dataset met records */
       dataset?: components["schemas"]["view_leden_dataset"][];
-    } & { [key: string]: any };
+    };
   };
 }
 

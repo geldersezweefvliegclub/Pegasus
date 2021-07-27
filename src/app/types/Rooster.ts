@@ -80,6 +80,10 @@ export interface paths {
           VELDEN?: string;
           /** Zoek op datum */
           DATUM?: string;
+          /** Begin datum (inclusief deze dag) */
+          BEGIN_DATUM?: string;
+          /** Eind datum (inclusief deze dag) */
+          EIND_DATUM?: string;
         };
       };
       responses: {
@@ -239,37 +243,35 @@ export interface components {
       DDWV?: boolean;
       /** Is er een clubbedrijf */
       CLUB_BEDRIJF?: boolean;
-    } & { [key: string]: any };
-    oper_rooster: components["schemas"]["oper_rooster_in"] &
-      ({
-        /** Is dit record gemarkeerd als verwijderd? */
-        VERWIJDERD?: boolean;
-        /** Tijdstempel van laaste aanpassing in de database */
-        LAATSTE_AANPASSING?: string;
-      } & { [key: string]: any }) & { [key: string]: any };
-    view_rooster_dataset: components["schemas"]["oper_rooster"] &
-      ({
-        /** De naam van de DDI voor het ochtend bedrijf */
-        OCHTEND_DDI?: string;
-        /** De naam van de instructeur voor het ochtend bedrijf */
-        OCHTEND_INSTRUCTEUR?: string;
-        /** De naam van de startleider voor het ochtend bedrijf */
-        OCHTEND_STARTLEIDER?: string;
-        /** De naam van de lierist voor het ochtend bedrijf */
-        OCHTEND_LIERIST?: string;
-        /** De naam van de hulplierist voor het ochtend bedrijf */
-        OCHTEND_HULPLIERIST?: string;
-        /** De naam van de DDI voor het middag bedrijf */
-        MIDDAG_DDI?: string;
-        /** De naam van de instructeur voor het middag bedrijf */
-        MIDDAG_INSTRUCTEUR?: string;
-        /** De naam van de startleider voor het middag bedrijf */
-        MIDDAG_STARTLEIDER?: string;
-        /** De naam van de lierist voor het middag bedrijf */
-        MIDDAG_LIERIST?: string;
-        /** De naam van de hulplierist voor het middag bedrijf */
-        MIDDAG_HULPLIERIST?: string;
-      } & { [key: string]: any }) & { [key: string]: any };
+    };
+    oper_rooster: components["schemas"]["oper_rooster_in"] & {
+      /** Is dit record gemarkeerd als verwijderd? */
+      VERWIJDERD?: boolean;
+      /** Tijdstempel van laaste aanpassing in de database */
+      LAATSTE_AANPASSING?: string;
+    };
+    view_rooster_dataset: components["schemas"]["oper_rooster"] & {
+      /** De naam van de DDI voor het ochtend bedrijf */
+      OCHTEND_DDI?: string;
+      /** De naam van de instructeur voor het ochtend bedrijf */
+      OCHTEND_INSTRUCTEUR?: string;
+      /** De naam van de startleider voor het ochtend bedrijf */
+      OCHTEND_STARTLEIDER?: string;
+      /** De naam van de lierist voor het ochtend bedrijf */
+      OCHTEND_LIERIST?: string;
+      /** De naam van de hulplierist voor het ochtend bedrijf */
+      OCHTEND_HULPLIERIST?: string;
+      /** De naam van de DDI voor het middag bedrijf */
+      MIDDAG_DDI?: string;
+      /** De naam van de instructeur voor het middag bedrijf */
+      MIDDAG_INSTRUCTEUR?: string;
+      /** De naam van de startleider voor het middag bedrijf */
+      MIDDAG_STARTLEIDER?: string;
+      /** De naam van de lierist voor het middag bedrijf */
+      MIDDAG_LIERIST?: string;
+      /** De naam van de hulplierist voor het middag bedrijf */
+      MIDDAG_HULPLIERIST?: string;
+    };
     view_rooster: {
       /** Aantal records dat voldoet aan de criteria in de database */
       totaal?: number;
@@ -279,7 +281,7 @@ export interface components {
       hash?: string;
       /** De dataset met records */
       dataset?: components["schemas"]["view_rooster_dataset"][];
-    } & { [key: string]: any };
+    };
   };
 }
 

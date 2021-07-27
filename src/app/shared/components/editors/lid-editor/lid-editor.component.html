@@ -11,165 +11,182 @@
 </ng-template>
 
 <ng-template #googleAuthPopover>
-    Schakel Google twee-staps verificatie in/uit.<br>
+    Schakel Google / SMS twee-staps verificatie in/uit.<br>
     Twee-staps verificatie biedt extra beveiliging bij het inloggen.
 </ng-template>
 
-<form #profielForm (ngSubmit)="submit()" *ngIf="this.lid">
+<form #profielForm *ngIf="this.lid">
     <div class="row">
         <div class="col-8">
             <app-pegasus-card [titel]="titel" [subtitel]="subtitel" class="h-100"
                               [img]="avatar">
-                <div avatar>
-                    <app-image-crop (opslaan)="uploadFoto($event)" (cropped)="setAvatar($event)"></app-image-crop>
-                </div>
 
-                <div #persoonGroup="ngModelGroup" ngModelGroup="persoonGroup" appWachtwoordMatchValidator>
-                    <div class="row">
-                        <div class="col-5">
-                            <label for="voornaam" class="form-label">Voornaam</label>
-                            <input type="text" name="voornaam" class="form-control" id="voornaam"
-                                   [(ngModel)]="lid.VOORNAAM">
-                        </div>
-                        <div class="col-2">
-                            <label for="tussenvoegsel" class="form-label">Tussenvoegsel</label>
-                            <input type="text" name="tussenvoegsel" class="form-control" id="tussenvoegsel"
-                                   [(ngModel)]="lid.TUSSENVOEGSEL">
-                        </div>
-                        <div class="col-5">
-                            <label for="achternaam" class="form-label">Achternaam</label>
-                            <input type="text" name="achternaam" class="form-control" id="achternaam"
-                                   [(ngModel)]="lid.ACHTERNAAM">
-                        </div>
+                <fieldset [disabled]="isVerwijderMode || isRestoreMode">
+                    <div avatar>
+                        <app-image-crop (opslaan)="uploadFoto($event)" (cropped)="setAvatar($event)" *ngIf="!this.isVerwijderMode && !this.isRestoreMode"></app-image-crop>
                     </div>
-                    <div class="row mt-2">
-                        <div class="col-5">
-                            <label for="adres" class="form-label">Adres</label>
-                            <input type="text" name="adres" class="form-control" id="adres"
-                                   [(ngModel)]="lid.ADRES">
+
+                    <div #persoonGroup="ngModelGroup" ngModelGroup="persoonGroup" appWachtwoordMatchValidator>
+                        <div class="row">
+                            <div class="col-5">
+                                <label for="voornaam" class="form-label">Voornaam</label>
+                                <input type="text" name="voornaam" class="form-control" id="voornaam"
+                                       [(ngModel)]="lid.VOORNAAM">
+                            </div>
+                            <div class="col-2">
+                                <label for="tussenvoegsel" class="form-label">Tussenvoegsel</label>
+                                <input type="text" name="tussenvoegsel" class="form-control" id="tussenvoegsel"
+                                       [(ngModel)]="lid.TUSSENVOEGSEL">
+                            </div>
+                            <div class="col-5">
+                                <label for="achternaam" class="form-label">Achternaam</label>
+                                <input type="text" name="achternaam" class="form-control" id="achternaam"
+                                       [(ngModel)]="lid.ACHTERNAAM">
+                            </div>
                         </div>
-                        <div class="col-2">
-                            <label for="postcode" class="form-label">Postcode</label>
-                            <input type="text" name="postcode" class="form-control" id="postcode"
-                                   [(ngModel)]="lid.POSTCODE">
+                        <div class="row mt-2">
+                            <div class="col-5">
+                                <label for="adres" class="form-label">Adres</label>
+                                <input type="text" name="adres" class="form-control" id="adres"
+                                       [(ngModel)]="lid.ADRES">
+                            </div>
+                            <div class="col-2">
+                                <label for="postcode" class="form-label">Postcode</label>
+                                <input type="text" name="postcode" class="form-control" id="postcode"
+                                       [(ngModel)]="lid.POSTCODE">
+                            </div>
+                            <div class="col-5">
+                                <label for="woonplaats" class="form-label">Woonplaats</label>
+                                <input type="text" name="woonplaats" class="form-control" id="woonplaats"
+                                       [(ngModel)]="lid.WOONPLAATS">
+                            </div>
                         </div>
-                        <div class="col-5">
-                            <label for="woonplaats" class="form-label">Woonplaats</label>
-                            <input type="text" name="woonplaats" class="form-control" id="woonplaats"
-                                   [(ngModel)]="lid.WOONPLAATS">
+                        <div class="row mt-2">
+                            <div class="col-4">
+                                <label for="telefoon" class="form-label">Telefoon</label>
+                                <input type="tel" name="telefoon" class="form-control" id="telefoon"
+                                       appTelefoonValidator
+                                       [(ngModel)]="lid.TELEFOON">
+                            </div>
+                            <div class="col-4">
+                                <label for="mobiel" class="form-label">Mobiel</label>
+                                <input type="tel" name="mobiel" class="form-control" id="mobiel"
+                                       appTelefoonValidator
+                                       [(ngModel)]="lid.MOBIEL">
+                            </div>
+                            <div class="col-4">
+                                <label for="noodnummer" class="form-label">Noodnummer</label>
+                                <input type="tel" name="noodnummer" class="form-control" id="noodnummer"
+                                       appTelefoonValidator
+                                       [(ngModel)]="lid.NOODNUMMER">
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-4">
-                            <label for="telefoon" class="form-label">Telefoon</label>
-                            <input type="tel" name="telefoon" class="form-control" id="telefoon"
-                                   appTelefoonValidator
-                                   [(ngModel)]="lid.TELEFOON">
-                        </div>
-                        <div class="col-4">
-                            <label for="mobiel" class="form-label">Mobiel</label>
-                            <input type="tel" name="mobiel" class="form-control" id="mobiel"
-                                   appTelefoonValidator
-                                   [(ngModel)]="lid.MOBIEL">
-                        </div>
-                        <div class="col-4">
-                            <label for="noodnummer" class="form-label">Noodnummer</label>
-                            <input type="tel" name="noodnummer" class="form-control" id="noodnummer"
-                                   appTelefoonValidator
-                                   [(ngModel)]="lid.NOODNUMMER">
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-4">
-                            <label class="form-label" for="geboortedatum">Geboortedatum</label>
-                            <div class="input-group">
-                                <input name="geboortedatum" class="form-control" placeholder="dd-mm-yyyy"
-                                       ngbDatepicker #d="ngbDatepicker"
-                                       id="geboortedatum"
-                                       [value]="lid.GEBOORTE_DATUM"
-                                       (dateSelect)="lid.GEBOORTE_DATUM = converteerDatumNaarISO($event)"
-                                >
-                                <div class="input-group-append">
-                                    <app-icon-button iconNaam="far Calendar" (btnClicked)="d.toggle()"
-                                                     btnColor="btn-primary"></app-icon-button>
+                        <div class="row mt-2">
+                            <div class="col-4">
+                                <label class="form-label" for="geboortedatum">Geboortedatum</label>
+                                <div class="input-group">
+                                    <input name="geboortedatum" class="form-control" placeholder="dd-mm-yyyy"
+                                           ngbDatepicker #d="ngbDatepicker"
+                                           id="geboortedatum"
+                                           [value]="lid.GEBOORTE_DATUM"
+                                           (dateSelect)="lid.GEBOORTE_DATUM = converteerDatumNaarISO($event)"
+                                    >
+                                    <div class="input-group-append">
+                                        <app-icon-button iconNaam="far Calendar" (btnClicked)="d.toggle()"
+                                                         btnColor="btn-primary"></app-icon-button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" name="email" [(ngModel)]="lid.EMAIL" class="form-control"
+                                       id="email" email required>
+                            </div>
+                            <div class="col-4 d-flex align-items-center mt-4">
+                                <div class="row w-100">
+                                    <div class="col-12">
+                                        <input type="checkbox" name="privacy" class="form-check-inline" id="privacy"
+                                               [(ngModel)]="lid.PRIVACY">
+                                        <label for="privacy" class="form-check-label">Privacy</label>
+                                    </div>
+                                    <div class="col-12">
+                                        <input class="form-check-inline" type="checkbox" id="googleAuth"
+                                               name="googleAuth"
+                                               [disabled]="isDisabled('googleAuth')"
+                                               [(ngModel)]="lid.AUTH">
+                                        <label class="form-check-label" for="googleAuth"
+                                               [ngClass]="disabledClass('googleAuth')">
+                                            Twee-staps verficatie
+
+                                            <fa-icon class="text-info ms-2 clickable" [icon]="infoIcon"
+                                                     [ngbPopover]="googleAuthPopover"
+                                                     placement="right"></fa-icon>
+                                        </label>
+                                    </div>
+                                    <div class="col-12">
+                                        <input class="form-check-inline" type="checkbox" id="CLUBBLAD_POST"
+                                               name="CLUBBLAD_POST"
+                                               [(ngModel)]="lid.CLUBBLAD_POST">
+                                        <label class="form-check-label" for="CLUBBLAD_POST">
+                                            Clubblad post
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-4">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" name="email" [(ngModel)]="lid.EMAIL" class="form-control"
-                                   id="email" email required>
-                        </div>
-                        <div class="col-4 d-flex align-items-center mt-4">
-                            <div class="row w-100">
-                                <div class="col-6">
-                                    <input type="checkbox" name="privacy" class="form-check-inline" id="privacy"
-                                           [(ngModel)]="lid.PRIVACY">
-                                    <label for="privacy" class="form-check-label">Privacy</label>
+                        <div class="row mt-2">
+                            <div class="col-4">
+                                <label class="form-label" for="MEDICAL">Geldigheid medical</label>
+                                <div class="input-group">
+                                    <input name="MEDICAL" class="form-control" placeholder="dd-mm-yyyy"
+                                           ngbDatepicker #medical="ngbDatepicker"
+                                           id="MEDICAL"
+                                           [value]="lid.MEDICAL"
+                                           (dateSelect)="lid.MEDICAL = this.converteerDatumNaarISO($event)"
+                                    >
+                                    <div class="input-group-append">
+                                        <app-icon-button iconNaam="far Calendar" (btnClicked)="medical.toggle()"
+                                                         btnColor="btn-primary"></app-icon-button>
+                                    </div>
                                 </div>
-                                <div class="col-6">
-                                    <input class="form-check-inline" type="checkbox" id="CLUBBLAD_POST"
-                                           name="CLUBBLAD_POST"
-                                           [(ngModel)]="lid.CLUBBLAD_POST">
-                                    <label class="form-check-label" for="CLUBBLAD_POST">
-                                        Clubblad post
-                                    </label>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-6">
+                                <label class="form-label" for="wachtwoord">
+                                    Wachtwoord
+                                </label>
+                                <fa-icon [icon]="infoIcon" [ngbPopover]="wachtwoordPopover" placement="right"
+                                         class="text-info ms-2 clickable"></fa-icon>
+                                <div class="input-group">
+                                    <input class="form-control" [type]="wachtwoordVerborgen ? 'password' : 'text'"
+                                           id="wachtwoord"
+                                           name="wachtwoord"
+                                           appWachtwoordSterkteValidator
+                                           [(ngModel)]="wachtwoord">
+                                    <span class="input-group-text" (click)="verbergWachtwoord()"><fa-icon
+                                            [icon]="oogIcon"></fa-icon></span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label" for="herhaalwachtwoord">
+                                    Herhaal wachtwoord
+                                </label>
+                                <fa-icon [icon]="infoIcon" [ngbPopover]="wachtwoordPopover" placement="right"
+                                         class="text-info ms-2 clickable"></fa-icon>
+                                <div class="input-group">
+                                    <input class="form-control" [type]="wachtwoordVerborgen ? 'password' : 'text'"
+                                           id="herhaalwachtwoord"
+                                           name="herhaalwachtwoord"
+                                           appWachtwoordSterkteValidator
+                                           [(ngModel)]="controleWachtwoord">
+                                    <span class="input-group-text" (click)="verbergWachtwoord()"><fa-icon
+                                            [icon]="oogIcon"></fa-icon></span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-2">
-                        <div class="col-4">
-                            <label class="form-label" for="MEDICAL">Geldigheid medical</label>
-                            <div class="input-group">
-                                <input name="MEDICAL" class="form-control" placeholder="dd-mm-yyyy"
-                                       ngbDatepicker #medical="ngbDatepicker"
-                                       id="MEDICAL"
-                                       [value]="lid.MEDICAL"
-                                       (dateSelect)="lid.MEDICAL = this.converteerDatumNaarISO($event)"
-                                >
-                                <div class="input-group-append">
-                                    <app-icon-button iconNaam="far Calendar" (btnClicked)="medical.toggle()"
-                                                     btnColor="btn-primary"></app-icon-button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-6">
-                            <label class="form-label" for="wachtwoord">
-                                Wachtwoord
-                            </label>
-                            <fa-icon [icon]="infoIcon" [ngbPopover]="wachtwoordPopover" placement="right"
-                                     class="text-info ms-2 clickable"></fa-icon>
-                            <div class="input-group">
-                                <input class="form-control" [type]="wachtwoordVerborgen ? 'password' : 'text'"
-                                       id="wachtwoord"
-                                       name="wachtwoord"
-                                       appWachtwoordSterkteValidator
-                                       [(ngModel)]="wachtwoord">
-                                <span class="input-group-text" (click)="verbergWachtwoord()"><fa-icon
-                                        [icon]="oogIcon"></fa-icon></span>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label" for="herhaalwachtwoord">
-                                Herhaal wachtwoord
-                            </label>
-                            <fa-icon [icon]="infoIcon" [ngbPopover]="wachtwoordPopover" placement="right"
-                                     class="text-info ms-2 clickable"></fa-icon>
-                            <div class="input-group">
-                                <input class="form-control" [type]="wachtwoordVerborgen ? 'password' : 'text'"
-                                       id="herhaalwachtwoord"
-                                       name="herhaalwachtwoord"
-                                       appWachtwoordSterkteValidator
-                                       [(ngModel)]="controleWachtwoord">
-                                <span class="input-group-text" (click)="verbergWachtwoord()"><fa-icon
-                                        [icon]="oogIcon"></fa-icon></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </fieldset>
             </app-pegasus-card>
         </div>
         <div class="col-4">
@@ -179,18 +196,24 @@
                 <div #informatieGroup="ngModelGroup" ngModelGroup="informatieGroup">
                     <div class="row">
                         <div class="col-4">
-                            <label for="gebruiker" class="form-label">Gebruiker</label>
+                            <label for="gebruiker" class="form-label"
+                                   [ngClass]="disabledClass('gebruiker')">Gebruiker</label>
                             <input type="text" name="gebruiker" class="form-control" id="gebruiker"
+                                   [disabled]="isDisabled('gebruiker')"
                                    [(ngModel)]="lid.INLOGNAAM">
                         </div>
                         <div class="col-4">
-                            <label for="gebruiker" class="form-label">Lidnummer</label>
+                            <label for="gebruiker" class="form-label"
+                                   [ngClass]="disabledClass('lidnummer')">Lidnummer</label>
                             <input type="text" name="lidnummer" class="form-control" id="lidnummer"
+                                   [disabled]="isDisabled('lidnummer')"
                                    [(ngModel)]="lid.LIDNR">
                         </div>
                         <div class="col-4">
-                            <label for="lidmaatschap" class="form-label">Lidmaatschap</label>
+                            <label for="lidmaatschap" class="form-label"
+                                   [ngClass]="disabledClass('lidmaatschap')">Lidmaatschap</label>
                             <select class="form-select" id="lidmaatschap" name="lidmaatschap"
+                                    [disabled]="isDisabled('lidmaatschap')"
                                     [(ngModel)]="lid.LIDTYPE_ID">
                                 <option
                                         *ngFor="let type of types"
@@ -201,80 +224,111 @@
                     </div>
                     <div class="row mt-2">
                         <div class="col-4 mt-4">
-                            <div>
-                                <input class="form-check-inline" type="checkbox" id="isLierist" name="isLierist"
+                            <div class="text-nowrap">
+                                <input class="form-check-inline" type="checkbox" id="LIERIST" name="LIERIST"
+                                       [disabled]="isDisabled('LIERIST')"
                                        [(ngModel)]="lid.LIERIST">
-                                <label class="form-check-label" for="isLierist">
+                                <label class="form-check-label" for="LIERIST" [ngClass]="disabledClass('LIERIST')">
                                     Lierist
                                 </label>
                             </div>
-                            <div>
-                                <input class="form-check-inline" type="checkbox" id="isStartleider" name="isStartleider"
-                                       [(ngModel)]="lid.INSTRUCTEUR">
-                                <label class="form-check-label" for="isStartleider">
+                            <div class="text-nowrap">
+                                <input class="form-check-inline" type="checkbox" id="STARTLEIDER" name="STARTLEIDER"
+                                       [disabled]="isDisabled('STARTLEIDER')"
+                                       [(ngModel)]="lid.STARTLEIDER">
+                                <label class="form-check-label" for="STARTLEIDER"
+                                       [ngClass]="disabledClass('STARTLEIDER')">
+                                    Startleider
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-4 mt-4">
+                            <div class="text-nowrap">
+                                <input class="form-check-inline" type="checkbox" id="CIMT" name="CIMT"
+                                       [disabled]="isDisabled('CIMT')"
+                                       [(ngModel)]="lid.CIMT" (ngModelChange)="isgoogleAuthNodig()">
+                                <label class="form-check-label" for="CIMT" [ngClass]="disabledClass('CIMT')">
+                                    CIMT
+                                </label>
+                            </div>
+                            <div class="text-nowrap">
+                                <input class="form-check-inline" type="checkbox" id="INSTRUCTEUR" name="isInstructeur"
+                                       [disabled]="isDisabled('INSTRUCTEUR')"
+                                       [(ngModel)]="lid.INSTRUCTEUR" (ngModelChange)="isgoogleAuthNodig()">
+                                <label class="form-check-label" for="INSTRUCTEUR"
+                                       [ngClass]="disabledClass('INSTRUCTEUR')">
                                     Instructeur
                                 </label>
                             </div>
                         </div>
                         <div class="col-4 mt-4">
-                            <div>
-                                <input class="form-check-inline" type="checkbox" id="CIMT" name="CIMT"
-                                       [(ngModel)]="lid.CIMT">
-                                <label class="form-check-label" for="CIMT">
-                                    CIMT
-                                </label>
-                            </div>
-                            <div>
-                                <input class="form-check-inline" type="checkbox" id="DDWV_CREW" name="DDWV_CREW"
-                                       [(ngModel)]="lid.DDWV_CREW">
-                                <label class="form-check-label" for="DDWV_CREW">
-                                    DDWV-Crew
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-4 mt-4">
-                            <div>
+                            <div class="text-nowrap">
                                 <input class="form-check-inline" type="checkbox" id="STARTTOREN" name="STARTTOREN"
-                                       [(ngModel)]="lid.STARTTOREN">
-                                <label class="form-check-label" for="STARTTOREN">
+                                       [disabled]="isDisabled('STARTTOREN')"
+                                       [(ngModel)]="lid.STARTTOREN" (ngModelChange)="isgoogleAuthNodig()">
+                                <label class="form-check-label" for="STARTTOREN"
+                                       [ngClass]="disabledClass('STARTTOREN')">
                                     Starttoren
                                 </label>
                             </div>
-                            <div>
+                            <div class="text-nowrap">
                                 <input class="form-check-inline" type="checkbox" id="ROOSTER" name="ROOSTER"
-                                       [(ngModel)]="lid.ROOSTER">
-                                <label class="form-check-label" for="ROOSTER">
+                                       [disabled]="isDisabled('ROOSTER')"
+                                       [(ngModel)]="lid.ROOSTER" (ngModelChange)="isgoogleAuthNodig()">
+                                <label class="form-check-label" for="ROOSTER" [ngClass]="disabledClass('ROOSTER')">
                                     Rooster
                                 </label>
                             </div>
+                            <div class="text-nowrap">
+                                <input class="form-check-inline" type="checkbox" id="BEHEERDER" name="BEHEERDER"
+                                       [disabled]="isDisabled('BEHEERDER')"
+                                       [(ngModel)]="lid.BEHEERDER" (ngModelChange)="isgoogleAuthNodig()">
+                                <label class="form-check-label" for="BEHEERDER" [ngClass]="disabledClass('BEHEERDER')">
+                                    Beheerder
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="text-nowrap">
+                            <input class="form-check-inline" type="checkbox" id="DDWV_CREW" name="DDWV_CREW"
+                                   [disabled]="isDisabled('DDWV_CREW')"
+                                   [(ngModel)]="lid.DDWV_CREW" (ngModelChange)="isgoogleAuthNodig()">
+                            <label class="form-check-label" for="DDWV_CREW" [ngClass]="disabledClass('DDWV_CREW')">
+                                DDWV-Crew
+                            </label>
+                        </div>
+                        <div class="text-nowrap">
+                            <input class="form-check-inline" type="checkbox" id="DDWV_BEHEERDER" name="DDWV_BEHEERDER"
+                                   [disabled]="isDisabled('DDWV_BEHEERDER')"
+                                   [(ngModel)]="lid.DDWV_BEHEERDER" (ngModelChange)="isgoogleAuthNodig()">
+                            <label class="form-check-label" for="DDWV_BEHEERDER"
+                                   [ngClass]="disabledClass('DDWV_BEHEERDER')">
+                                DDWV Beheerder
+                            </label>
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-6 mt-4">
                             <div>
                                 <input class="form-check-inline" type="checkbox" id="betaald" name="betaald"
+                                       [disabled]="isDisabled('betaald')"
                                        [(ngModel)]="lid.HEEFT_BETAALD">
-                                <label class="form-check-label" for="betaald">
+                                <label class="form-check-label" for="betaald" [ngClass]="disabledClass('betaald')">
                                     Heeft betaald
-                                </label>
-                            </div>
-                            <div>
-                                <input class="form-check-inline" type="checkbox" id="googleAuth" name="googleAuth"
-                                       [(ngModel)]="lid.AUTH">
-                                <label class="form-check-label" for="googleAuth">
-                                    Google Auth.
-
-                                    <fa-icon class="text-info ms-2 clickable" [icon]="infoIcon"
-                                             [ngbPopover]="googleAuthPopover"
-                                             placement="right"></fa-icon>
                                 </label>
                             </div>
                         </div>
                     </div>
+                    <div class="row mt-3" *ngIf="toonSecret()">
+                        <img class="QRcode" [src]="lid.SECRET">
+                    </div>
                     <div class="row mt-3">
                         <div class="col-12">
-                            <label class="form-label" for="limitaties">Limitaties</label>
+                            <label class="form-label" for="limitaties"
+                                   [ngClass]="disabledClass('limitaties')">Limitaties</label>
                             <textarea class="form-control" id="limitaties" name="limitaties"
+                                      [disabled]="isDisabled('limitaties')"
                                       [(ngModel)]="lid.BEPERKINGEN"></textarea>
                         </div>
                     </div>
@@ -284,8 +338,20 @@
     </div>
     <div class="row mt-2 justify-content-end">
         <div class="col-3 d-flex justify-content-end">
-            <app-icon-button type="submit" iconNaam="fas Save" tekst="Opslaan"
-                             [disabled]="informatieGroup.invalid || persoonGroup.invalid"></app-icon-button>
+            <app-icon-button *ngIf="!isLoading && lid.ID !== undefined && !isRestoreMode && !isVerwijderMode"
+                             [disabled]="informatieGroup.invalid || persoonGroup.invalid"
+                             iconNaam="fas Edit" btnColor="btn-primary"
+                             tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
+
+            <app-icon-button *ngIf="!isLoading && lid.ID === undefined && !isRestoreMode && !isVerwijderMode"
+                             iconNaam="fas Plus" btnColor="btn-primary"
+                             tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
+
+            <app-icon-button *ngIf="!isLoading && isVerwijderMode" iconNaam="fas TrashAlt" btnColor="btn-primary editorDeleteBtn"
+                             tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
+
+            <app-icon-button *ngIf="!isLoading && isRestoreMode" iconNaam="fas Undo" btnColor="btn-primary editorRestoreBtn"
+                             tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
         </div>
     </div>
 </form>
