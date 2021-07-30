@@ -16,7 +16,7 @@
                         <th scope="row">
                             <p class="fw-bold">
                                 {{dagInRooster.DATUM | date: 'dd-MM-yyyy'}}<br>
-<!--                                Todo vertalen-->
+                                <!--                                Todo vertalen-->
                                 {{dagInRooster.DATUM | date: 'EEEE' }}
                             </p>
                             <div class="d-flex justify-content-between fw-normal">
@@ -32,127 +32,178 @@
                             </div>
                         </th>
                         <td>
-                            <div
-                                    class="drop-container"
-                                    cdkDropList
-                                    [id]="'OCHTEND_DDI-' + i"
-                                    (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
-                                    [cdkDropListData]="dagInRooster"
-                                    [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this)">
-                                <div cdkDrag>
-                                    {{dagInRooster.OCHTEND_DDI}}
+                            <div class="d-flex">
+                                <div
+                                        class="drop-container"
+                                        cdkDropList
+                                        [id]="'OCHTEND_DDI-' + i"
+                                        (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                        [cdkDropListData]="dagInRooster"
+                                        [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this)">
+                                    <div cdkDrag>
+                                        {{dagInRooster.OCHTEND_DDI}}
+                                    </div>
+                                </div>
+                                <div (click)="setTaakWaardes(dagInRooster, 'OCHTEND_DDI', undefined, undefined)">
+                                    <ng-template *ngTemplateOutlet="reset"></ng-template>
                                 </div>
                             </div>
                             <hr>
-                            <div
-                                    class="drop-container"
-                                    cdkDropList
-                                    [id]="'MIDDAG_DDI-' + i"
-                                    (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
-                                    [cdkDropListData]="dagInRooster"
-                                    [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this)">
-                                <div cdkDrag>
-                                    {{dagInRooster.MIDDAG_DDI}}
+                            <div class="d-flex">
+                                <div
+                                        class="drop-container"
+                                        cdkDropList
+                                        [id]="'MIDDAG_DDI-' + i"
+                                        (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                        [cdkDropListData]="dagInRooster"
+                                        [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this)">
+                                    <div cdkDrag>
+                                        {{dagInRooster.MIDDAG_DDI}}
+                                    </div>
+                                </div>
+                                <div (click)="setTaakWaardes(dagInRooster, 'MIDDAG_DDI', undefined, undefined)">
+                                    <ng-template *ngTemplateOutlet="reset"></ng-template>
                                 </div>
                             </div>
                         </td>
                         <td>
-                            <div
-                                    class="drop-container"
-                                    cdkDropList
-                                    [id]="'OCHTEND_INSTRUCTEUR-' + i"
-                                    (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
-                                    [cdkDropListData]="dagInRooster"
-                                    [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this)">
-                                <div cdkDrag>
-                                    {{dagInRooster.OCHTEND_INSTRUCTEUR}}
+                            <div class="d-flex">
+                                <div
+                                        class="drop-container"
+                                        cdkDropList
+                                        [id]="'OCHTEND_INSTRUCTEUR-' + i"
+                                        (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                        [cdkDropListData]="dagInRooster"
+                                        [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this)">
+                                    <div cdkDrag>
+                                        {{dagInRooster.OCHTEND_INSTRUCTEUR}}
+                                    </div>
+                                </div>
+                                <div (click)="setTaakWaardes(dagInRooster, 'OCHTEND_INSTRUCTEUR', undefined, undefined)">
+                                    <ng-template *ngTemplateOutlet="reset"></ng-template>
                                 </div>
                             </div>
                             <hr>
-                            <div
-                                    class="drop-container"
-                                    cdkDropList
-                                    [id]="'MIDDAG_INSTRUCTEUR-' + i"
-                                    (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
-                                    [cdkDropListData]="dagInRooster"
-                                    [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this)">
-                                <div cdkDrag>
-                                    {{dagInRooster.MIDDAG_INSTRUCTEUR}}
+                            <div class="d-flex">
+                                <div
+                                        class="drop-container"
+                                        cdkDropList
+                                        [id]="'MIDDAG_INSTRUCTEUR-' + i"
+                                        (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                        [cdkDropListData]="dagInRooster"
+                                        [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this)">
+                                    <div cdkDrag>
+                                        {{dagInRooster.MIDDAG_INSTRUCTEUR}}
+                                    </div>
+                                </div>
+                                <div (click)="setTaakWaardes(dagInRooster, 'MIDDAG_INSTRUCTEUR', undefined, undefined)">
+                                    <ng-template *ngTemplateOutlet="reset"></ng-template>
                                 </div>
                             </div>
                         </td>
                         <td>
-                            <div
-                                    class="drop-container"
-                                    cdkDropList
-                                    [id]="'OCHTEND_STARTLEIDER-' + i"
-                                    (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
-                                    [cdkDropListData]="dagInRooster"
-                                    [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this)">
-                                <div cdkDrag>
-                                    {{dagInRooster.OCHTEND_STARTLEIDER}}
+                            <div class="d-flex">
+                                <div
+                                        class="drop-container"
+                                        cdkDropList
+                                        [id]="'OCHTEND_STARTLEIDER-' + i"
+                                        (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                        [cdkDropListData]="dagInRooster"
+                                        [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this)">
+                                    <div cdkDrag>
+                                        {{dagInRooster.OCHTEND_STARTLEIDER}}
+                                    </div>
+                                </div>
+                                <div (click)="setTaakWaardes(dagInRooster, 'OCHTEND_STARTLEIDER', undefined, undefined)">
+                                    <ng-template *ngTemplateOutlet="reset"></ng-template>
                                 </div>
                             </div>
                             <hr>
-                            <div
-                                    class="drop-container"
-                                    cdkDropList
-                                    [id]="'MIDDAG_STARTLEIDER-' + i"
-                                    (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
-                                    [cdkDropListData]="dagInRooster"
-                                    [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this)">
-                                <div cdkDrag>
-                                    {{dagInRooster.MIDDAG_STARTLEIDER}}
+                            <div class="d-flex">
+                                <div
+                                        class="drop-container"
+                                        cdkDropList
+                                        [id]="'MIDDAG_STARTLEIDER-' + i"
+                                        (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                        [cdkDropListData]="dagInRooster"
+                                        [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this)">
+                                    <div cdkDrag>
+                                        {{dagInRooster.MIDDAG_STARTLEIDER}}
+                                    </div>
+                                </div>
+                                <div (click)="setTaakWaardes(dagInRooster, 'MIDDAG_STARTLEIDER', undefined, undefined)">
+                                    <ng-template *ngTemplateOutlet="reset"></ng-template>
                                 </div>
                             </div>
                         </td>
                         <td>
-                            <div
-                                    class="drop-container"
-                                    cdkDropList
-                                    [id]="'OCHTEND_LIERIST-' + i"
-                                    (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
-                                    [cdkDropListData]="dagInRooster"
-                                    [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
-                                <div cdkDrag>
-                                    {{dagInRooster.OCHTEND_LIERIST}}
+                            <div class="d-flex">
+                                <div
+                                        class="drop-container"
+                                        cdkDropList
+                                        [id]="'OCHTEND_LIERIST-' + i"
+                                        (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                        [cdkDropListData]="dagInRooster"
+                                        [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
+                                    <div cdkDrag>
+                                        {{dagInRooster.OCHTEND_LIERIST}}
+                                    </div>
+                                </div>
+                                <div (click)="setTaakWaardes(dagInRooster, 'OCHTEND_LIERIST', undefined, undefined)">
+                                    <ng-template *ngTemplateOutlet="reset"></ng-template>
                                 </div>
                             </div>
                             <hr>
-                            <div
-                                    class="drop-container"
-                                    cdkDropList
-                                    [id]="'MIDDAG_LIERIST-' + i"
-                                    (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
-                                    [cdkDropListData]="dagInRooster"
-                                    [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
-                                <div cdkDrag>
-                                    {{dagInRooster.MIDDAG_LIERIST}}
+                            <div class="d-flex">
+                                <div
+                                        class="drop-container"
+                                        cdkDropList
+                                        [id]="'MIDDAG_LIERIST-' + i"
+                                        (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                        [cdkDropListData]="dagInRooster"
+                                        [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
+                                    <div cdkDrag>
+                                        {{dagInRooster.MIDDAG_LIERIST}}
+                                    </div>
+                                </div>
+                                <div (click)="setTaakWaardes(dagInRooster, 'MIDDAG_LIERIST', undefined, undefined)">
+                                    <ng-template *ngTemplateOutlet="reset"></ng-template>
                                 </div>
                             </div>
+
                         </td>
                         <td>
-                            <div
-                                    class="drop-container"
-                                    cdkDropList
-                                    [id]="'OCHTEND_HULPLIERIST-' + i"
-                                    (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
-                                    [cdkDropListData]="dagInRooster"
-                                    [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
-                                <div cdkDrag>
-                                    {{dagInRooster.OCHTEND_HULPLIERIST}}
+                            <div class="d-flex">
+                                <div
+                                        class="drop-container"
+                                        cdkDropList
+                                        [id]="'OCHTEND_HULPLIERIST-' + i"
+                                        (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                        [cdkDropListData]="dagInRooster"
+                                        [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
+                                    <div cdkDrag>
+                                        {{dagInRooster.OCHTEND_HULPLIERIST}}
+                                    </div>
+                                </div>
+                                <div (click)="setTaakWaardes(dagInRooster, 'OCHTEND_HULPLIERIST', undefined, undefined)">
+                                    <ng-template *ngTemplateOutlet="reset"></ng-template>
                                 </div>
                             </div>
                             <hr>
-                            <div
-                                    class="drop-container"
-                                    cdkDropList
-                                    [id]="'MIDDAG_HULPLIERIST-' + i"
-                                    (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
-                                    [cdkDropListData]="dagInRooster"
-                                    [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
-                                <div cdkDrag>
-                                    {{dagInRooster.MIDDAG_HULPLIERIST}}
+                            <div class="d-flex">
+                                <div
+                                        class="drop-container"
+                                        cdkDropList
+                                        [id]="'MIDDAG_HULPLIERIST-' + i"
+                                        (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                        [cdkDropListData]="dagInRooster"
+                                        [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
+                                    <div cdkDrag>
+                                        {{dagInRooster.MIDDAG_HULPLIERIST}}
+                                    </div>
+                                </div>
+                                <div (click)="setTaakWaardes(dagInRooster, 'MIDDAG_HULPLIERIST', undefined, undefined)">
+                                    <ng-template *ngTemplateOutlet="reset"></ng-template>
                                 </div>
                             </div>
                         </td>
@@ -230,7 +281,7 @@
                                     <div class="col-3">
                                         <app-avatar class="position-relative" [url]="lid.AVATAR"></app-avatar>
                                         <span class="position-absolute top-0 start-100 translate-middle padding-small bg-secondary rounded-circle">
-                                            {{55}}
+                                            {{lid.KEER_INGEDEELD}}
                                             <span class="visually-hidden">keer ingedeeld</span>
                                         </span>
                                     </div>
@@ -257,6 +308,11 @@
     </div>
 </div>
 
+<ng-template #reset>
+    <div class="d-flex flex-column justify-content-center h-100 text-black-50 clickable px-1">
+        <fa-icon [icon]="resetIcon"></fa-icon>
+    </div>
+</ng-template>
 <ng-template #preview let-lid>
     <div class="card card-body">
         <h6>{{lid.NAAM}}</h6>
