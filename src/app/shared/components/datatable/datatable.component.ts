@@ -15,14 +15,15 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     @Input() sizeToFit: boolean = true;
     @Input() autoHeight: boolean = false;
     @Input() rowHeight: number =40;
+    @Input() pagination: boolean = true;
     @Output() rowDoubleClicked: EventEmitter<RowDoubleClickedEvent> = new EventEmitter<RowDoubleClickedEvent>();
 
     options: GridOptions = {
-        pagination: true,
         rowHeight: 40,
         headerHeight:20,
         paginationAutoPageSize: true,
         rowSelection: 'single',
+        pagination: true,
         onRowDoubleClicked: this.onRowDoubleClicked.bind(this),
     };
 
@@ -41,6 +42,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     ngOnInit()
     {
       this.defaultColDef.autoHeight = this.autoHeight;
+      this.options.pagination = this.pagination;
     }
 
     ngOnDestroy() {

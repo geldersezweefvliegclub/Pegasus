@@ -7,7 +7,8 @@ import {components as aanwezigLedenComponents} from './aanwezigLeden';
 import {components as DaginfoComponents} from './daginfo';
 import {components as typesComponents} from './Types';
 import {components as progressieComponents} from './Progressie';
-import {components as roosterComponent} from './Rooster';
+import {components as roosterComponents} from './Rooster';
+import {components as tracksComponents} from './Tracks';
 
 export type HeliosUserinfo = loginComponents['schemas']['Userinfo'];
 
@@ -52,5 +53,9 @@ export type HeliosProgressieBoom = progressieComponents['schemas']['progressie_b
 export type HeliosProgressieKaart = progressieComponents['schemas']['progressie_kaart']
 export type HeliosProgressieKaartDataset = progressieComponents['schemas']['progressie_kaart_dataset']
 
-export type HeliosRooster = roosterComponent['schemas']['view_rooster']
-export type HeliosRoosterDataset = roosterComponent['schemas']['view_rooster_dataset']
+export type HeliosRooster = roosterComponents['schemas']['view_rooster']
+export type HeliosRoosterDataset = roosterComponents['schemas']['view_rooster_dataset']
+
+export type HeliosTrack = tracksComponents['schemas']['oper_tracks'];
+export type HeliosTracks = tracksComponents['schemas']['view_tracks'];
+export type HeliosTracksDataset = tracksComponents['schemas']['view_tracks_dataset'];

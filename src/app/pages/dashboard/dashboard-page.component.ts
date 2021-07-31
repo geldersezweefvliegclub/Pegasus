@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {
-    faBookmark, faCalendarAlt, faChartLine, faChartPie,
+    faBookmark, faBookReader, faCalendarAlt, faChartLine, faChartPie,
     faClipboardList, faExternalLinkSquareAlt, faPlane,
     faTachometerAlt,
 } from "@fortawesome/free-solid-svg-icons";
@@ -34,12 +34,15 @@ export class DashboardPageComponent implements OnInit {
     iconStatus: IconDefinition = faBookmark;
     iconExpand: IconDefinition = faExternalLinkSquareAlt;
     iconPlane: IconDefinition = faPlane;
+    iconTracks: IconDefinition = faBookReader;
 
     lidTypes: HeliosType[] = [];
     lidData: HeliosLid;
 
     datumAbonnement: Subscription;
     datum: DateTime;                       // de gekozen dag in de kalender
+
+    toonTracks: boolean = false;           // mogen de tracks vertoon worden
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
@@ -73,6 +76,9 @@ export class DashboardPageComponent implements OnInit {
                 this.lidData = this.loginService.userInfo?.LidData as HeliosLid;
             }
         });
+
+        const ui = this.loginService.userInfo?.Userinfo;
+        this.toonTracks = (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) ? true : false;
     }
 
     // Met welk lidmaatschap hebben te maken, geef de omschrijving

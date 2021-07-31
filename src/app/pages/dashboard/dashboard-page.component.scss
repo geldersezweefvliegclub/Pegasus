@@ -3,6 +3,10 @@
   min-height: 400px;
 }
 
+.tracks-hoogte {
+  height: calc(100vh - 30px);
+}
+
 .expandLogboek {
   position: absolute;
   align-self: flex-end;

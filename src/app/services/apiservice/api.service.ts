@@ -24,7 +24,6 @@ export class APIService {
             url = this.prepareEndpoint(url, params);
         }
 
-
         const response = await fetch(`${this.URL}${url}`, {
             method: 'GET',
             headers: headers,
@@ -32,7 +31,7 @@ export class APIService {
         });
 
         if (!response.ok) {
-            throw this.handleError(response);
+            this.handleError(response);
         }
         return response;
     }
@@ -47,7 +46,7 @@ export class APIService {
         });
         //todo response heeft een .ok property. Mogelijk beter te gebruiken? (Zoals get())
         if (response.status != 200) {  // 200 is normaal voor post
-            throw this.handleError(response);
+            this.handleError(response);
         }
         response.clone().json().then((d) => {
             this.sharedService.fireHeliosEvent({actie: HeliosActie.Add, tabel: url.split('/')[0], data: d});
@@ -65,7 +64,7 @@ export class APIService {
         });
         // todo .ok property gebruiken?
         if (response.status != 200) {  // 200 is normaal voor put
-            throw this.handleError(response);
+            this.handleError(response);
         }
         response.clone().json().then((d) => {
             this.sharedService.fireHeliosEvent({actie: HeliosActie.Update, tabel: url.split('/')[0], data: d});
@@ -84,7 +83,7 @@ export class APIService {
         });
         // todo .ok gebruiken?
         if (response.status != 204) { // 204 is normaal voor delete
-            throw this.handleError(response);
+            this.handleError(response);
         }
         this.sharedService.fireHeliosEvent({actie: HeliosActie.Delete, tabel: url.split('/')[0], data: params[0]});
     }
@@ -101,7 +100,7 @@ export class APIService {
 
         // todo .ok gebruiken?
         if (response.status != 202) { // 204 is normaal voor patch
-            throw this.handleError(response);
+            this.handleError(response);
         }
         this.sharedService.fireHeliosEvent({actie: HeliosActie.Restore, tabel: url.split('/')[0], data: params[0]});
     }
@@ -126,11 +125,16 @@ export class APIService {
 
     // Vul customer error  met http status code en de beschrijving uit X-Error-Message
     private handleError(response: Response): CustomError {
+        let beschrijving = response.headers.get('X-Error-Message')      // Helios implementaie fout melding
+        if (!beschrijving) {
+            beschrijving = response.statusText;                         // HTTP error berichten
+        }
+
+        response.statusText
         const error: CustomError = {
             responseCode: response.status,
-            beschrijving: response.headers.get('X-Error-Message')
+            beschrijving: beschrijving
         }
-        //todo mogelijk kan error hier al gethrowed worden ipv error obj returnen
-        return error;
+        throw error;
     }
 }

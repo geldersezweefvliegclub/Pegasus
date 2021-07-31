@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {faRecycle, faUsers} from '@fortawesome/free-solid-svg-icons';
 import {VliegtuigEditorComponent} from '../../shared/components/editors/vliegtuig-editor/vliegtuig-editor.component';
-import {HeliosLedenDataset, HeliosLid} from '../../types/Helios';
+import {HeliosLedenDataset, HeliosLid, HeliosTrack} from '../../types/Helios';
 import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
 import {CustomError} from '../../types/Utils';
 import {CheckboxRenderComponent} from '../../shared/components/datatable/checkbox-render/checkbox-render.component';
@@ -20,6 +20,9 @@ import {SharedService} from '../../services/shared/shared.service';
 import {NaamRenderComponent} from './naam-render/naam-render.component';
 import {Router} from '@angular/router';
 import {nummerSort} from '../../utils/Utils';
+import {TrackEditorComponent} from "../../shared/components/editors/track-editor/track-editor.component";
+import {TracksService} from "../../services/apiservice/tracks.service";
+import {TrackRenderComponent} from "./track-render/track-render.component";
 
 
 @Component({
@@ -29,6 +32,7 @@ import {nummerSort} from '../../utils/Utils';
 })
 export class LedenGridComponent implements OnInit{
   @ViewChild(FilterComponent) ledenFilter: FilterComponent;
+  @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
 
   leden: HeliosLedenDataset[] = [];
   dataset: HeliosLedenDataset[] = [];
@@ -112,6 +116,23 @@ export class LedenGridComponent implements OnInit{
     },
   }];
 
+  // kolom om vlieger track aan te maken
+  aanmakenTrackColumn: ColDef = {
+    pinned: 'left',
+    maxWidth: 100,
+    initialWidth: 100,
+    resizable: false,
+    suppressSizeToFit:true,
+    hide: false,
+    cellClass: "geenDots",
+    cellRenderer: 'trackRender', headerName: 'Tracks', sortable: false,
+    cellRendererParams: {
+      onTrackClicked: (LID_ID: number, NAAM: string) => {
+        this.openTrackEditor(LID_ID, NAAM);
+      }
+    },
+  };
+
   frameworkComponents = {
     avatarRender: AvatarRenderComponent,
     naamRender: NaamRenderComponent,
@@ -120,7 +141,8 @@ export class LedenGridComponent implements OnInit{
     checkboxRender: CheckboxRenderComponent,
     emailRender: EmailRenderComponent,
     deleteAction: DeleteActionComponent,
-    restoreAction: RestoreActionComponent
+    restoreAction: RestoreActionComponent,
+    trackRender: TrackRenderComponent,
   };
   iconCardIcon: IconDefinition = faUsers;
   prullenbakIcon: IconDefinition = faRecycle;
@@ -138,6 +160,7 @@ export class LedenGridComponent implements OnInit{
 
   constructor(private readonly ledenService: LedenService,
               private readonly loginService: LoginService,
+              private readonly trackService: TracksService,
               private readonly sharedService: SharedService,
               private readonly router: Router
   ) {
@@ -174,8 +197,14 @@ export class LedenGridComponent implements OnInit{
 
   // Welke kolommen moet worden getoond in het grid
   kolomDefinitie() {
+    const ui = this.loginService.userInfo?.Userinfo;
+
     if (!this.deleteMode) {
       this.columns = this.dataColumns;
+      // toevoegen van add track kolom
+      if (ui?.isInstructeur || ui?.isCIMT || ui?.isBeheerder) {
+        this.dataColumns.push(this.aanmakenTrackColumn);
+      }
     } else {
       if (this.trashMode) {
         this.columns = this.restoreColumn.concat(this.dataColumns);
@@ -243,6 +272,17 @@ export class LedenGridComponent implements OnInit{
 
       this.leden.push(this.dataset[i]);
     }
+  }
+
+  // open de track editor om nieuwe track toe te voegen. Edit opent als popup
+  private openTrackEditor(LID_ID: number, NAAM: string) {
+    this.trackEditor.openPopup(null, LID_ID, undefined, NAAM);
+  }
+
+  // Toevoegen van een vlieger track aan de database
+  ToevoegenTrack(track: HeliosTrack): void {
+    this.trackService.nieuwTrack(track);
+    this.trackEditor.closePopup();
   }
 
   // Export naar excel

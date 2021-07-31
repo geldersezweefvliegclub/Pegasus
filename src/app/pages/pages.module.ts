@@ -38,6 +38,7 @@ import {ChartsModule} from 'ng2-charts';
 import {NaamRenderComponent} from './leden-grid/naam-render/naam-render.component';
 import { RoosterPageComponent } from './rooster-page/rooster-page.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import { TrackRenderComponent } from './leden-grid/track-render/track-render.component';
 
 @NgModule({
   imports: [
@@ -81,7 +82,8 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     FilterComponent,
     VliegtuigLogboekComponent,
     NaamRenderComponent,
-    RoosterPageComponent
+    RoosterPageComponent,
+    TrackRenderComponent,
   ],
   exports: [
     PegasusCardComponent,

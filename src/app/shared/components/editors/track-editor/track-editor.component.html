@@ -1,0 +1,24 @@
+<app-modal [titel]="formTitel+lid.NAAM">
+    <div body>
+        <fieldset [disabled]="isVerwijderMode || isRestoreMode">
+            <div class="row">
+                <div class="col-12">
+                    <textarea [(ngModel)]="track.TEKST" name="TEKST"
+                              class="w-100 text-invoer form-control"
+                              rows=8></textarea>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div footer>
+        <app-icon-button *ngIf="!isLoading && track.ID !== undefined && !isRestoreMode && !isVerwijderMode" iconNaam="fas Edit" btnColor="btn-primary"
+                         tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button *ngIf="!isLoading && track.ID === undefined && !isRestoreMode && !isVerwijderMode" iconNaam="fas Plus" btnColor="btn-primary"
+                         tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button *ngIf="!isLoading && isVerwijderMode" iconNaam="fas TrashAlt" btnColor="btn-primary editorDeleteBtn"
+                         tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button *ngIf="!isLoading && isRestoreMode" iconNaam="fas Undo" btnColor="btn-primary editorRestoreBtn"
+                         tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
+        <span *ngIf="isLoading"><app-loader></app-loader></span>
+    </div>
+</app-modal>

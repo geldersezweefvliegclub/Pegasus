@@ -76,9 +76,9 @@ export interface paths {
           START?: number;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
-          /** Haal alle tracks op van een specifiek lid */
+          /** Haal alle tracks-page op van een specifiek lid */
           LID_ID?: string;
-          /** Haal alle tracks op die door deze instrcuteur zijn toegevoegd */
+          /** Haal alle tracks-page op die door deze instrcuteur zijn toegevoegd */
           INSTRUCTEUR_ID?: string;
         };
       };
@@ -214,7 +214,7 @@ export interface components {
       /** Door wie is de tekst ingevoerd */
       INSTRUCTEUR_ID?: number;
       /** De tekst */
-      TEKST?: number;
+      TEKST?: string;
       /** Verwijzing naar een start. Verwijzing naar oper_startlijst */
       START_ID?: number;
     };

@@ -44,6 +44,10 @@ import {ImageCropperModule} from 'ngx-image-cropper';
 import { ImageCropComponent } from './components/image-crop/image-crop.component';
 import { VliegerLogboekTotalenComponent } from './components/vlieger-logboek-totalen/vlieger-logboek-totalen.component';
 import {RouterModule} from "@angular/router";
+import { TrackEditorComponent } from './components/editors/track-editor/track-editor.component';
+import { TrackRenderComponent } from './components/vlieger-logboek/track-render/track-render.component';
+import { TracksComponent } from './components/tracks/tracks.component';
+import { TekstRenderComponent } from './components/tracks/tekst-render/tekst-render.component';
 
 
 @NgModule({
@@ -93,7 +97,11 @@ import {RouterModule} from "@angular/router";
     LidEditorComponent,
     ProgressieBoomComponent,
     ImageCropComponent,
-    VliegerLogboekTotalenComponent
+    VliegerLogboekTotalenComponent,
+    TrackEditorComponent,
+    TrackRenderComponent,
+    TracksComponent,
+    TekstRenderComponent
   ],
     exports: [
         LidEditorComponent,
@@ -115,7 +123,9 @@ import {RouterModule} from "@angular/router";
         TijdInvoerComponent,
         WachtwoordSterkteValidatorDirective,
         ProgressieBoomComponent,
-        VliegerLogboekTotalenComponent
+        VliegerLogboekTotalenComponent,
+        TracksComponent,
+        TrackEditorComponent
     ],
   providers: [],
   schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

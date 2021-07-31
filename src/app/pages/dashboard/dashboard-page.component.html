@@ -9,10 +9,10 @@
         <div class="col-4 d-flex justify-content-end">
             <div class="row">
                 <div class="col-6 d-flex flex-column justify-content-center">
-                    <p class="mb-0">{{getLidType()}}<br>{{lidData.LIDNR}}</p>
+                    <p class="mb-0" *ngIf="lidData">{{getLidType()}}<br>{{lidData.LIDNR}}</p>
                 </div>
                 <div class="col-6">
-                    <app-avatar [url]="lidData.AVATAR" [naam]="lidData.NAAM"></app-avatar>
+                    <app-avatar [url]="lidData.AVATAR" [naam]="lidData.NAAM" *ngIf="lidData"></app-avatar>
                 </div>
             </div>
         </div>
@@ -25,7 +25,7 @@
                               titel="Status"
                               subtitel="Vliegstatus"
                               [icon]="iconStatus">
-                <app-status [VliegerID]="lidData.ID"></app-status>
+                <app-status [VliegerID]="lidData.ID" *ngIf="lidData"></app-status>
             </app-pegasus-card>
         </div>
         <div class="col-3">
@@ -34,7 +34,7 @@
                               titel="PVB"
                               subtitel="Proef van bekwaamheid"
                               [icon]="iconPVB">
-                <app-pvb [VliegerID]="lidData.ID"></app-pvb>
+                <app-pvb [VliegerID]="lidData.ID" *ngIf="lidData"></app-pvb>
             </app-pegasus-card>
         </div>
 
@@ -42,9 +42,9 @@
             <app-pegasus-card id="recencyCard"
                               class="kleineKaart"
                               titel="Recency"
-                              subtitel="Currency barameter"
+                              subtitel="Trainingsbarometer"
                               [icon]="iconRecency">
-                <app-recency [VliegerID]="lidData.ID" [naam]="lidData.NAAM"></app-recency>
+                <app-recency [VliegerID]="lidData.ID" [naam]="lidData.NAAM" *ngIf="lidData"></app-recency>
             </app-pegasus-card>
         </div>
 
@@ -69,7 +69,7 @@
                         <fa-icon [icon]="iconExpand"></fa-icon>
                     </a>
                 </div>
-                <app-vlieger-logboek [VliegerID]="lidData.ID"></app-vlieger-logboek>
+                <app-vlieger-logboek [VliegerID]="lidData.ID" *ngIf="lidData"></app-vlieger-logboek>
             </app-pegasus-card>
         </div>
         <div class="col-3">
@@ -78,7 +78,7 @@
                               titel="Totalen {{datum.year}}"
                               subtitel="Per vliegtuig"
                               [icon]="iconPlane">
-                <app-vlieger-logboek-totalen [VliegerID]="lidData.ID"></app-vlieger-logboek-totalen>
+                <app-vlieger-logboek-totalen [VliegerID]="lidData.ID" *ngIf="lidData"></app-vlieger-logboek-totalen>
             </app-pegasus-card>
         </div>
     </div>
@@ -91,16 +91,29 @@
                               exportEnabled=" true"
                               (excelExport)="exportProgressieKaart()"
                               [icon]="iconProgressie">
-                <app-progressie-boom [VliegerID]="lidData.ID">
+                <app-progressie-boom [VliegerID]="lidData.ID" *ngIf="lidData">
 
                 </app-progressie-boom>
             </app-pegasus-card>
         </div>
     </div>
+
+    <div class="row mt-4 tracks-hoogte" *ngIf="toonTracks">
+        <div class="col-12">
+            <app-pegasus-card id="tracksCard"
+                              class="kleineKaart"
+                              titel="Tracks"
+                              subtitel="Ingevoerde observaties"
+                              [icon]="iconTracks">
+                <app-tracks [VliegerID]="lidData.ID" [VliegerNaam]="lidData.NAAM" *ngIf="lidData"></app-tracks>
+            </app-pegasus-card>
+        </div>
+    </div>
 </app-pegasus-card>
 
-<app-modal popupClass="popupLarge" titel="Logboek van {{lidData.NAAM}} voor">
-    <div body *ngIf="lidData">
+
+<app-modal popupClass="popupLarge" titel="Logboek van {{lidData.NAAM}} voor" *ngIf="lidData">
+    <div body>
         <div class="popupLargeWrapper">
             <div class="excel">
                 <img class="logo" src="/assets/img/excel-logo.png" (click)="this.exportLogboek()"/>
