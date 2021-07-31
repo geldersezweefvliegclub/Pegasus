@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {CdkDrag, CdkDragDrop} from '@angular/cdk/drag-drop';
+import {CdkDrag, CdkDragDrop, CdkDropList} from '@angular/cdk/drag-drop';
 import {LedenService} from '../../services/apiservice/leden.service';
 import {HeliosLedenDataset, HeliosLid, HeliosRoosterDataset} from '../../types/Helios';
-import {faCalendarDay, faUsers} from '@fortawesome/free-solid-svg-icons';
+import {faCalendarDay, faTimesCircle, faUsers} from '@fortawesome/free-solid-svg-icons';
 import {SharedService} from '../../services/shared/shared.service';
 import {Subscription} from 'rxjs';
 import {RoosterService} from '../../services/apiservice/rooster.service';
@@ -40,6 +40,11 @@ import {DateTime} from 'luxon';
             "MIDDAG_STARTLEIDER": undefined
         }
 */
+
+type HeliosLedenDatasetExtended = HeliosLedenDataset & {
+  KEER_INGEDEELD?: number
+}
+
 @Component({
   selector: 'app-rooster-page',
   templateUrl: './rooster-page.component.html',
@@ -48,12 +53,13 @@ import {DateTime} from 'luxon';
 export class RoosterPageComponent implements OnInit {
   readonly roosterIcon = faCalendarDay;
   readonly ledenIcon = faUsers;
+  readonly resetIcon = faTimesCircle;
   toonStartleiders = true;
   toonInstructeurs = true;
   toonLieristen = true;
   teZoekenNaam: string | undefined;
   alleLeden: HeliosLedenDataset[];
-  gefilterdeLeden: HeliosLedenDataset[];
+  gefilterdeLeden: HeliosLedenDatasetExtended[];
   huidigJaar: number;
   huidigMaand: number;
   private datumAbonnement: Subscription;
@@ -86,7 +92,7 @@ export class RoosterPageComponent implements OnInit {
       // De actie komt niet uit de ledenlijst, dus iemand is al ergens anders ingevuld. Die moeten we eerst leegmaken, en dan kunnen we de nieuwe vullen.
       if (oudContrainerId !== 'LEDENLIJST') {
         // We hakken de id op en halen de verschillende onderdelen eruit (taak en index van het rooster)
-        const taakOnderdelen = this.getTaakEnIndexVanID(oudContrainerId)
+        const taakOnderdelen = this.getTaakEnIndexVanID(oudContrainerId);
 
         // We hebben van een dag naar een andere dag versleept dus data zit op een andere locatie.
         // Uit die data halen we de naam en id op die toen was gezet en zetten die op de nieuwe dag
@@ -101,23 +107,29 @@ export class RoosterPageComponent implements OnInit {
         const data = event.item.data;
         naam = data.NAAM;
         id = data.ID;
+        // Verhoog ook het aantal keer ingedeeld van deze persoon, sorteer daarna de ledenlijst.
+        data.KEER_INGEDEELD = data.KEER_INGEDEELD ? data.KEER_INGEDEELD + 1 : 1;
       }
     }
     const taak = this.getTaakEnIndexVanID(nieuwContainerId).taak;
     this.setTaakWaardes(dagInRooster, taak, id, naam);
   }
 
+  /**
+   * Wordt aangestuurd door de checkboxen. Clientside filteren voor rollen.
+   * Voor filteren op namen wordt de backend aangeroepen.
+   */
   filter(): void {
     this.isLoading = true;
     this.gefilterdeLeden = this.alleLeden.filter(ongefilterdLid => {
       let magTonen = false;
-      if (this.toonLieristen) {
+      if (this.toonLieristen && !magTonen) {
         magTonen = ongefilterdLid.LIERIST == true;
       }
-      if (this.toonStartleiders) {
+      if (this.toonStartleiders && !magTonen) {
         magTonen = ongefilterdLid.STARTLEIDER == true;
       }
-      if (this.toonInstructeurs) {
+      if (this.toonInstructeurs && !magTonen) {
         magTonen = ongefilterdLid.INSTRUCTEUR == true;
       }
       return magTonen;
@@ -2067,6 +2079,10 @@ export class RoosterPageComponent implements OnInit {
     }).catch(e => this.catchError(e));*/
   }
 
+  /**
+   * Haal alle informatie op
+   * @private
+   */
   private opvragen() {
     this.getLeden();
     this.getRooster();
@@ -2080,12 +2096,22 @@ export class RoosterPageComponent implements OnInit {
     });
   }
 
+  /**
+   * Vang een API error af
+   * @param {CustomError} e
+   * @private
+   */
   private catchError(e: CustomError) {
     console.error(e);
     this.isLoading = false;
   }
 
-  private vulMissendeDagenAan() {
+  /**
+   * Het opgehaalde rooster kan dagen in de maand missen. Deze functie vult alle data aan zodat elke dag in de maand getoond wordt.
+   * @private
+   * @return {void}
+   */
+  private vulMissendeDagenAan(): void {
     const dagenInDeMaand = DateTime.fromObject({year: this.huidigJaar, month: this.huidigMaand}).daysInMonth;
     for (let i = 0; i < dagenInDeMaand; i++) {
       const datumInRooster = DateTime.fromISO((this.rooster[i]?.DATUM || ''));
@@ -2104,14 +2130,29 @@ export class RoosterPageComponent implements OnInit {
     }
   }
 
+  /**
+   * Wordt in de template gebruikt om te controleren of iemand in een vakje gesleept mag worden. Gaat over lierist.
+   * @param {CdkDrag<HeliosLid | HeliosRoosterDataset>} item
+   * @return {boolean}
+   */
   lieristEvaluatie(item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
     return this.controleerRol(item, 'LIERIST');
   }
 
+  /**
+   * Wordt in de template gebruikt om te controleren of iemand in een vakje gesleept mag worden. Gaat over instructeurs.
+   * @param {CdkDrag<HeliosLid | HeliosRoosterDataset>} item
+   * @return {boolean}
+   */
   instructeurEvaluatie(item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
     return this.controleerRol(item, 'INSTRUCTEUR');
   }
 
+  /**
+   * Wordt in de template gebruikt om te controleren of iemand in een vakje gesleept mag worden. Gaat over startleiders.
+   * @param {CdkDrag<HeliosLid | HeliosRoosterDataset>} item
+   * @return {boolean}
+   */
   startleiderEvaluatie(item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
     return this.controleerRol(item, 'STARTLEIDER');
   }
@@ -2129,13 +2170,13 @@ export class RoosterPageComponent implements OnInit {
       const data = item.dropContainer.data;
       const taak = this.getTaakEnIndexVanID(item.dropContainer.id).taak;
       const id = data[taak + '_ID'];
-      const lid = this.gefilterdeLeden.find(lid => lid.ID === id);
+      // We moeten in alle leden zoeken, omdat de filter criteria veranderd kan zijn, waardoor een lid niet gevonden wordt.
+      const lid = this.alleLeden.find(lid => lid.ID === id);
       return lid ? (lid[rol] || false) : false;
     }
   }
 
   onDropInLedenlijst(event: CdkDragDrop<HeliosLedenDataset[], any>): void {
-    // todo implement
     // De nieuwe container is hetzelfde als de vorige, doe dan niks.
     if (event.container === event.previousContainer) {
       return;
@@ -2143,23 +2184,36 @@ export class RoosterPageComponent implements OnInit {
       const data = event.item.dropContainer.data;
       const roosterDag = this.rooster.find(dag => dag.DATUM === data.DATUM);
       const taak = this.getTaakEnIndexVanID(event.item.dropContainer.id).taak;
+
       if (roosterDag) {
         this.setTaakWaardes(roosterDag, taak, undefined, undefined);
       }
     }
   }
 
+  /**
+   * Deel iemand in op een taak op een bepaalde dag
+   * @param {HeliosRoosterDataset} roosterdag
+   * @param {string} taak
+   * @param {string | undefined} id
+   * @param {string | undefined} naam
+   * @return {void}
+   */
   setTaakWaardes(roosterdag: HeliosRoosterDataset, taak: string, id: string | undefined, naam: string | undefined): void {
     roosterdag[taak] = naam;
     roosterdag[taak + '_ID'] = id;
   }
 
+  /**
+   * Hak een id op om de informatie in de ID te gebruiken
+   * Een id is bijvoorbeeld:
+   * OCHTEND_LIERIST-0
+   * 0 is de index in de rooster array, 0 is dus de 1e dag van de maand.
+   * OCHTEND_LIERIST is de taak
+   * @param {string} id
+   * @return {{taak: string, index: number}}
+   */
   getTaakEnIndexVanID(id: string): { taak: string, index: number } {
-    // Hak een id op.
-    // Een id is bijvoorbeeld:
-    // OCHTEND_LIERIST-0
-    // 0 is de index in de rooster array, 0 is dus de 1e dag van de maand.
-    // OCHTEND_LIERIST is de taak
     const taakEnIndex = id.split('-');
     return {
       taak: taakEnIndex[0],

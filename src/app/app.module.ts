@@ -1,6 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
+import {APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, LOCALE_ID, NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppComponent} from './main-layout/app/app.component';
 import {TreeviewModule } from 'ngx-treeview';
@@ -14,6 +14,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {LazyLoadImageModule} from "ng-lazyload-image";
 import {PegasusConfigService} from "./services/shared/pegasus-config.service";
 import { HttpClientModule } from '@angular/common/http';
+
 
 export function initializeApp(appConfigService: PegasusConfigService) {
     return (): Promise<any> => {
