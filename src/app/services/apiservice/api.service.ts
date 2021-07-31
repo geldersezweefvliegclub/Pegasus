@@ -1,10 +1,7 @@
 import {Injectable} from '@angular/core';
 import {CustomError, HeliosActie, KeyValueArray} from '../../types/Utils';
-import {environment} from '../../../environments/environment';
 import {SharedService} from '../shared/shared.service';
 import {PegasusConfigService} from "../shared/pegasus-config.service";
-import {Base64} from "js-base64";
-import {Form} from '@angular/forms';
 
 @Injectable({
     providedIn: 'root'

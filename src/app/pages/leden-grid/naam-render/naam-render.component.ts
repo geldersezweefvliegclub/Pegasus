@@ -1,8 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import {LoginService} from "../../../services/apiservice/login.service";
 import {AgRendererComponent} from "ag-grid-angular";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faEnvelope} from "@fortawesome/free-solid-svg-icons";
 import {ICellRendererParams} from "ag-grid-community";
 
 @Component({

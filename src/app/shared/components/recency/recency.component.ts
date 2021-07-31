@@ -1,7 +1,6 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {StartlijstService} from "../../../services/apiservice/startlijst.service";
 import {HeliosRecency} from "../../../types/Helios";
-import {ModalComponent} from "../modal/modal.component";
 import {RecencyGrafiekComponent} from "./recency-grafiek/recency-grafiek.component";
 
 @Component({

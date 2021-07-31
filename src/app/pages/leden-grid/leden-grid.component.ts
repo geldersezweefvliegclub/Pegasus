@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {faRecycle, faUsers} from '@fortawesome/free-solid-svg-icons';
-import {VliegtuigEditorComponent} from '../../shared/components/editors/vliegtuig-editor/vliegtuig-editor.component';
-import {HeliosLedenDataset, HeliosLid, HeliosTrack} from '../../types/Helios';
+import {HeliosLedenDataset, HeliosTrack} from '../../types/Helios';
 import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
 import {CustomError} from '../../types/Utils';
 import {CheckboxRenderComponent} from '../../shared/components/datatable/checkbox-render/checkbox-render.component';

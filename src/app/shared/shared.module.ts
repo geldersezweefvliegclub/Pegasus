@@ -34,8 +34,7 @@ import {RecencyGrafiekComponent} from './components/recency/recency-grafiek/rece
 import {ChartsModule} from 'ng2-charts';
 import {NgbDatepickerModule, NgbPopoverModule, NgbProgressbarModule} from '@ng-bootstrap/ng-bootstrap';
 import {
-  ProgressieBoomComponent,
-  ProgressieTreeviewItemComponent
+  ProgressieBoomComponent
 } from './components/progressie-boom/progressie-boom.component';
 import {TreeviewModule} from 'ngx-treeview';
 import {PegasusCardComponent} from './components/pegasus-card/pegasus-card.component';

@@ -1,11 +1,9 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {TreeviewItem, TreeviewConfig} from 'ngx-treeview';
-import {StartlijstService} from "../../../services/apiservice/startlijst.service";
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
-import {HeliosBehaaldeProgressie, HeliosProgressie, HeliosProgressieBoom} from "../../../types/Helios";
+import {HeliosProgressie, HeliosProgressieBoom} from "../../../types/Helios";
 import {LoginService} from "../../../services/apiservice/login.service";
 import {ModalComponent} from "../modal/modal.component";
-import {dateISO} from "ng2-validation/dist/date-ios";
 import {HeliosActie} from "../../../types/Utils";
 import {SharedService} from "../../../services/shared/shared.service";
 

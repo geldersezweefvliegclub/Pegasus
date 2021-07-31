@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {StorageService} from '../storage/storage.service';
 import {DateTime} from 'luxon';
 import {KeyValueArray} from '../../types/Utils';
-import {APIService} from '../apiservice/api.service';
+import {APIService} from './api.service';
 import {HeliosAanwezigVliegtuigen, HeliosAanwezigVliegtuigenDataset} from '../../types/Helios';
 
 

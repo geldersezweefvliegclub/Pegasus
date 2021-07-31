@@ -3,7 +3,7 @@ import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
 import {DateTime} from 'luxon';
 import {faEye, faEyeSlash, faInfo, faInfoCircle, faUser} from '@fortawesome/free-solid-svg-icons';
 import {TypesService} from '../../../../services/apiservice/types.service';
-import {HeliosLid, HeliosType, HeliosUserinfo} from '../../../../types/Helios';
+import {HeliosLid, HeliosType} from '../../../../types/Helios';
 import {LedenService} from '../../../../services/apiservice/leden.service';
 import {ImageService} from '../../../../services/apiservice/image.service';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";

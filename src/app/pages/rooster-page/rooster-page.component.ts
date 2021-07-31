@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {CdkDrag, CdkDragDrop, CdkDropList} from '@angular/cdk/drag-drop';
+import {CdkDrag, CdkDragDrop} from '@angular/cdk/drag-drop';
 import {LedenService} from '../../services/apiservice/leden.service';
 import {HeliosLedenDataset, HeliosLid, HeliosRoosterDataset} from '../../types/Helios';
 import {faCalendarDay, faTimesCircle, faUsers} from '@fortawesome/free-solid-svg-icons';

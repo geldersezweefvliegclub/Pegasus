@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {APIService} from '../apiservice/api.service';
+import {APIService} from './api.service';
 
 import {
     HeliosLogboek, HeliosLogboekDataset, HeliosLogboekTotalen, HeliosRecency,

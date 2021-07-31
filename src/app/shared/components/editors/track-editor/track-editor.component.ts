@@ -1,9 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {HeliosLid, HeliosTrack, HeliosVliegtuig} from "../../../../types/Helios";
+import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
+import {HeliosLid, HeliosTrack} from "../../../../types/Helios";
 import {ModalComponent} from "../../modal/modal.component";
 import {TracksService} from "../../../../services/apiservice/tracks.service";
 import {LedenService} from "../../../../services/apiservice/leden.service";
-import {DateTime} from "luxon";
 import {LoginService} from "../../../../services/apiservice/login.service";
 
 @Component({

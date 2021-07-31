@@ -1,11 +1,9 @@
 import {Component, Input, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {ColDef} from "ag-grid-community";
-import {nummerSort, tijdSort} from "../../../utils/Utils";
+import {nummerSort} from "../../../utils/Utils";
 import {HeliosTrack, HeliosTracksDataset} from "../../../types/Helios";
 import {TracksService} from "../../../services/apiservice/tracks.service";
-import {RestoreActionComponent} from "../datatable/restore-action/restore-action.component";
 import {TekstRenderComponent} from "./tekst-render/tekst-render.component";
-import {HeliosActie} from "../../../types/Utils";
 import {SharedService} from "../../../services/shared/shared.service";
 import {TrackEditorComponent} from "../editors/track-editor/track-editor.component";
 

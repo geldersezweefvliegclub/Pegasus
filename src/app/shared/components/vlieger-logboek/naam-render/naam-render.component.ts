@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {AgRendererComponent} from "ag-grid-angular";
 import {LoginService} from "../../../../services/apiservice/login.service";
 import {ICellRendererParams} from "ag-grid-community";

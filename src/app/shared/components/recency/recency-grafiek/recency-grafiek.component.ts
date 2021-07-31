@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, ViewChild} from '@angular/core';
 import {Subscription} from "rxjs";
 import {DateTime} from "luxon";
 import {SharedService} from "../../../../services/shared/shared.service";

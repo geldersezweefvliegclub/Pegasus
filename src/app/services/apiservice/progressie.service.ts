@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {APIService} from "./api.service";
 import {StorageService} from "../storage/storage.service";
 import {
-    HeliosLid,
     HeliosBehaaldeProgressie,
     HeliosProgressieBoom,
     HeliosBehaaldeProgressieDataset,

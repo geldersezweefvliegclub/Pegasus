@@ -7,7 +7,6 @@ import {LoginPageComponent} from './pages/login-page/login-page.component';
 
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {
-  faBookReader,
   faCalendarAlt,
   faCalendarDay,
   faChartPie,

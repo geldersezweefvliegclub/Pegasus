@@ -2,8 +2,7 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core'
 import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
 import {HeliosBehaaldeProgressieDataset} from "../../../types/Helios";
-import {Subject} from "rxjs";
-import {HeliosActie, HeliosEvent} from "../../../types/Utils";
+import {HeliosActie} from "../../../types/Utils";
 import {SharedService} from "../../../services/shared/shared.service";
 import {LoginService} from "../../../services/apiservice/login.service";
 
