@@ -1,0 +1,26 @@
+<div class="box trackruimte">
+    <div class="row h-100 overflow-hidden">
+
+        <app-datatable
+                id="vliegertracksgrid"
+                [rowData]="data"
+                [pagination]=false
+                [columnDefs]="dataColumns"
+                [frameworkComponents]="frameworkComponents"
+                class="h-100">
+        </app-datatable>
+    </div>
+    <div class="row justify-content-start" id="toolbar">
+        <div class="col-12">
+            <div class="d-flex">
+                <app-icon-button class="toolbarBtn"
+                                 tekst="Toevoegen"
+                                 iconNaam="far PlusSquare" (btnClicked)="openTrackEditor()"
+                                 btnColor="btn-primary"></app-icon-button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-track-editor (add)="ToevoegenTrack($event)"></app-track-editor>

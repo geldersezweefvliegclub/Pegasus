@@ -1,0 +1,10 @@
+@import "../../../../../variables";
+
+.trackBtn {
+  color: getColor('secondary');
+}
+
+.btn-noborder {
+  outline: none !important;
+  box-shadow: none;
+}
