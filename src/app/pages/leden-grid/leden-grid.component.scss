@@ -1,8 +1,11 @@
 .box {
   display: flex;
   flex-flow: column;
-  overflow-y: hidden;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: stretch;
 }
+
 .row {
   --bs-gutter-x: 0;
 }
@@ -16,9 +19,16 @@
 
 #zoekLabel {
   margin-right: 2em;
-
-
 }
+
 #zoekInput {
   width: 30%;
+}
+
+#data {
+  flex-grow: 100;
+}
+
+#toolbar {
+  flex-grow: 1;
 }

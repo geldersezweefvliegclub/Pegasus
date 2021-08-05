@@ -1,5 +1,12 @@
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
-import {ColDef, GridApi, GridOptions, RowDoubleClickedEvent} from 'ag-grid-community';
+import {
+    ColDef,
+    GridApi,
+    GridOptions,
+    RowClickedEvent,
+    RowDoubleClickedEvent,
+    RowSelectedEvent
+} from 'ag-grid-community';
 import {StorageService} from '../../../services/storage/storage.service';
 
 @Component({
@@ -17,6 +24,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     @Input() rowHeight: number =40;
     @Input() pagination: boolean = true;
     @Output() rowDoubleClicked: EventEmitter<RowDoubleClickedEvent> = new EventEmitter<RowDoubleClickedEvent>();
+    @Output() rowSelected: EventEmitter<RowSelectedEvent> = new EventEmitter<RowSelectedEvent>();
 
     options: GridOptions = {
         rowHeight: 40,
@@ -25,6 +33,8 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         rowSelection: 'single',
         pagination: true,
         onRowDoubleClicked: this.onRowDoubleClicked.bind(this),
+        onRowClicked: this.onRowSelected.bind(this)
+
     };
 
     defaultColDef: ColDef = {
@@ -77,6 +87,10 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
 
     onRowDoubleClicked(event: RowDoubleClickedEvent) {
         this.rowDoubleClicked.emit(event);
+    }
+
+    onRowSelected(event: RowSelectedEvent) {
+        this.rowSelected.emit(event);
     }
 
     RestoreColumnState() {

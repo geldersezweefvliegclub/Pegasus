@@ -46,8 +46,6 @@ import {RouterModule} from "@angular/router";
 import { TrackEditorComponent } from './components/editors/track-editor/track-editor.component';
 import { TrackRenderComponent } from './components/vlieger-logboek/track-render/track-render.component';
 import { TracksComponent } from './components/tracks/tracks.component';
-import { TekstRenderComponent } from './components/tracks/tekst-render/tekst-render.component';
-
 
 @NgModule({
     imports: [
@@ -99,8 +97,7 @@ import { TekstRenderComponent } from './components/tracks/tekst-render/tekst-ren
     VliegerLogboekTotalenComponent,
     TrackEditorComponent,
     TrackRenderComponent,
-    TracksComponent,
-    TekstRenderComponent
+    TracksComponent
   ],
     exports: [
         LidEditorComponent,

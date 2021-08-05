@@ -7,6 +7,7 @@ import {LoginPageComponent} from './pages/login-page/login-page.component';
 
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {
+  faBookReader,
   faCalendarAlt,
   faCalendarDay,
   faChartPie,
@@ -22,6 +23,8 @@ import {DaginfoComponent} from './pages/daginfo/daginfo.component';
 import {LedenGridComponent} from './pages/leden-grid/leden-grid.component';
 import {VliegtuigLogboekComponent} from './pages/vliegtuig-logboek/vliegtuig-logboek.component';
 import {RoosterPageComponent} from './pages/rooster-page/rooster-page.component';
+import {TracksGridComponent} from "./pages/tracks-grid/tracks-grid.component";
+import {TestPageComponent} from "./pages/test-page/test-page.component";
 
 export interface CustomRoute extends Route {
   excluded: boolean;
@@ -32,7 +35,7 @@ export interface CustomRoute extends Route {
 export const routes: CustomRoute[] = [
   {path: '', pathMatch: 'full', redirectTo: 'dashboard', excluded: true, icon: faUser, text: 'EXCLUDED'},
   {path: 'dashboard', component: DashboardPageComponent, excluded: false, icon: faChartPie, text: 'Dashboard'},
-    // {path: 'tracks', component: TracksPageComponent, excluded: false, icon: faBookReader, text: 'Tracks'},
+  {path: 'tracks', component: TracksGridComponent, excluded: false, icon: faBookReader, text: 'Tracks'},
   {path: 'daginfo', component: DaginfoComponent, excluded: false, icon: faCalendarAlt, text: 'Dag info'},
   {path: 'startlijst', component: StartlijstGridComponent, excluded: false, icon: faClipboardList, text: 'Startlijst'},
   {path: 'leden', component: LedenGridComponent, excluded: false, icon: faUsers, text: 'Ledenlijst'},
@@ -41,6 +44,7 @@ export const routes: CustomRoute[] = [
   {path: 'login', component: LoginPageComponent, excluded: true, icon: faKey, text: 'Help'},
   {path: 'profiel', component: ProfielPageComponent, excluded: false, icon: faUser, text: 'Profiel'},
   {path: 'rooster', component: RoosterPageComponent, excluded: false, icon: faCalendarDay, text: 'Rooster'},
+  {path: 'test', component: TestPageComponent, excluded: false, icon: faChartPie, text: 'test'},
   {path: '**', component: NotFoundComponent, excluded: true, icon: faUser, text: 'EXCLUDED'},
 
 ];

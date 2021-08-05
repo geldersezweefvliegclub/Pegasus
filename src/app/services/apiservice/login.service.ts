@@ -64,7 +64,6 @@ export class LoginService {
 
             clearTimeout(this.keepAliveTimer);
             this.keepAliveTimer = window.setInterval(() => this.getUserInfo(), 1000 * 60 * 30); // 30 min
-
         }
     }
 

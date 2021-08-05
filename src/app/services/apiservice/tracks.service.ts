@@ -13,51 +13,17 @@ export class TracksService {
     constructor(private readonly apiService: APIService,
                 private readonly storageService: StorageService) {}
 
-    async getLaatsteTracks(verwijderd: boolean = false, zoekString?: string): Promise<HeliosTracksDataset[]> {
-        let hash: string = '';
 
-        if (((this.tracks == null)) && (this.storageService.ophalen('leden') != null)) {
-            this.tracks = this.storageService.ophalen('laatste-tracks-page');
-        }
-
+    async getTracks(lidID?:number, max?: number): Promise<HeliosTracksDataset[]> {
         let getParams: KeyValueArray = {};
 
-        if (this.tracks != null) { // we hebben eerder de lijst opgehaald
-            hash = this.tracks.hash as string;
-            getParams['HASH'] = hash;
+        if (lidID) {
+            getParams['LID_ID'] = lidID.toString();
         }
-        getParams['MAX'] = '50';
-        getParams['SORT'] = 'INGEVOERD DESC';
-
-        if (verwijderd) {
-            getParams['VERWIJDERD'] = "true";
+        if ((max) && (max > 0)) {
+            getParams['MAX'] = max.toString();
         }
 
-        try {
-            const response: Response = await this.apiService.get('Tracks/GetObjects', getParams);
-
-            this.tracks = await response.json();
-            this.storageService.opslaan('leden', this.tracks);
-        } catch (e) {
-            if (e.responseCode !== 304) { // server bevat dezelfde data als cache
-                throw(e);
-            }
-        }
-
-        // we laten een lid maar 1 keer voorkomen in het resulaat van de functie.
-        let retValue: HeliosTracksDataset[] = [];
-        this.tracks?.dataset?.forEach(item => {
-            if (retValue.findIndex(trk => trk.LID_ID == item.LID_ID) < 0) {
-                retValue.push(item);    // dit lid toevoegen, is niet eerder opgenomen
-            }
-        });
-        return retValue;
-    }
-
-    async getVliegerTracks(lidID:number): Promise<HeliosTracksDataset[]> {
-        let getParams: KeyValueArray = {};
-
-        getParams['LID_ID'] = lidID.toString();
         getParams['SORT'] = 'INGEVOERD DESC';
 
         try {

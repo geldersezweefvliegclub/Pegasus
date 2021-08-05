@@ -9,6 +9,7 @@ import {faQuestionCircle} from '@fortawesome/free-solid-svg-icons';
 })
 export class PegasusCardComponent implements OnInit{
     @Input() icon: IconDefinition = faQuestionCircle
+    @Input() minimum: boolean = false;
     @Input() img: string
     @Input() titel: string;
     @Input() subtitel: string;
@@ -23,5 +24,9 @@ export class PegasusCardComponent implements OnInit{
 
     export() {
         this.excelExport.emit();
+    }
+
+    hoogte() {
+        return (this.minimum) ? "" : "h-100";
     }
 }

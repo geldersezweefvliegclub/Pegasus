@@ -6,7 +6,7 @@
                [exportEnabled]="this.magExporten"
                (excelExport)="exportDataset()">
     <div class="box h-100">
-        <div class="row h-100 overflow-hidden">
+        <div id="data">
             <app-datatable
                     id="ledengrid"
                     rowHeight=70
@@ -45,7 +45,7 @@
             <div class="col-8">
                 <div class="row justify-content-between" id="zoekbar">
                     <div class="col-8">
-                        <div class="d-flex justify-content-begin align-items-end">
+                        <div class="d-flex justify-content-begin align-items-end text-nowrap">
                             <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>
                             <input id="zoekInput"
                                    type="search"
