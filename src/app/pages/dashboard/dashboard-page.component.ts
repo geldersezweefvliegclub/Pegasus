@@ -39,8 +39,8 @@ export class DashboardPageComponent implements OnInit {
     lidTypes: HeliosType[] = [];
     lidData: HeliosLid;
 
-    datumAbonnement: Subscription;
-    datum: DateTime;                       // de gekozen dag in de kalender
+    datumAbonnement: Subscription;         // volg de keuze van de kalender
+    datum: DateTime;                       // de gekozen dag
 
     toonTracks: boolean = false;           // mogen de tracks vertoon worden
 

@@ -13,8 +13,8 @@ import {SharedService} from "../../../services/shared/shared.service";
 export class VliegerLogboekTotalenComponent implements OnInit, OnChanges {
   @Input() VliegerID: number;
 
-  datumAbonnement: Subscription;
-  datum: DateTime;                       // de gekozen dag in de kalender
+  datumAbonnement: Subscription;         // volg de keuze van de kalender
+  datum: DateTime;                       // de gekozen dag
   data: HeliosLogboekTotalen;
 
   constructor(private readonly startlijstService: StartlijstService,

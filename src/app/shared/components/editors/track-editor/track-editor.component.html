@@ -1,5 +1,15 @@
-<app-modal [titel]="formTitel+lid.NAAM">
+<app-modal [titel]="formTitel">
     <div body>
+        <app-lid-invoer id="LID" *ngIf="toonLidSelectie"
+                        placeholder="Selecteer lid"
+                        label="Lid"
+                        [LID_ID]="track.LID_ID"
+                        [disabled]="isVerwijderMode || isRestoreMode"
+                        excludeLidTypes="600,607,609,610,612,613,625"
+                        [leden]="leden"
+                        (LidChanged)="lidGeselecteerd($event)"
+        ></app-lid-invoer>
+
         <fieldset [disabled]="isVerwijderMode || isRestoreMode">
             <div class="row">
                 <div class="col-12">

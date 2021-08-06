@@ -5,47 +5,61 @@
                 <table class="w-100">
                     <tr *ngFor="let trk of data" class="trkRow" (click)="trackSelected(trk)"
                         (dblclick)="openEditor(trk)">
+                        <td *ngIf="deleteMode && !trashMode">
+                            <button class="btn btn-noborder" (click)="openVerwijderPopup(trk)"
+                                    *ngIf="magTrackVerwijderen(trk)">
+                                <fa-icon [icon]="deleteIcon" class="deleteBtn"></fa-icon>
+                            </button>
+                        </td>
+                        <td *ngIf="deleteMode && trashMode">
+                            <button class="btn btn-noborder" (click)="openRestorePopup(trk)"
+                                    *ngIf="magTrackHerstellen(trk)">
+                                <fa-icon [icon]="restoreIcon" class="restoreBtn"></fa-icon>
+                            </button>
+                        </td>
                         <td *ngIf="toonLid" class="naamCell">
                             <div class="d-flex">
-                                <app-avatar [url]="trk.lid.AVATAR"></app-avatar>
+                                <app-avatar [url]="trk.lid.AVATAR" *ngIf="trk.lid"></app-avatar>
                                 <div class="naam text-nowrap"><a [routerLink]="['/dashboard']"
-                                                                 [queryParams]='{lidID: trk.lid.ID}'>{{trk.lid.NAAM}}</a>
+                                                                 [queryParams]='{lidID: trk.LID_ID}'>{{trk.LID_NAAM}}</a>
                                 </div>
                             </div>
                         </td>
                         <td>
-                            <div class="">
-                                <div class="trackHeader">
-                                    Op {{datumString(trk.INGEVOERD)}} om {{tijdString(trk.INGEVOERD)}}
-                                    schreef {{trk.INSTRUCTEUR_NAAM}}
-                                </div>
+                            <div class="trackHeader">
+                                Op {{datumString(trk.INGEVOERD)}} om {{tijdString(trk.INGEVOERD)}}
+                                schreef {{trk.INSTRUCTEUR_NAAM}}
                             </div>
+
                             <div class="tekstbox">
                                 {{trk.TEKST}}
                             </div>
-
                         </td>
                     </tr>
                 </table>
             </div>
             <div class="row justify-content-start" id="toolbar" style="height: 40px;">
-                <div class="col-2" *ngIf="this.magToevoegen">
-                    <app-icon-button class="toolbarBtn"
-                                     tekst="Toevoegen"
-                                     iconNaam="far PlusSquare" (btnClicked)="addVliegtuig()"
-                                     btnColor="btn-primary" *ngIf="!this.deleteMode"></app-icon-button>
+                <div class="col-3" *ngIf="this.magToevoegen">
+                    <div class="d-flex justify-content-start">
+                        <app-icon-button class="toolbarBtn"
+                                         tekst="Toevoegen"
+                                         iconNaam="far PlusSquare" (btnClicked)="openTrackEditor()"
+                                         btnColor="btn-primary" *ngIf="!this.deleteMode"></app-icon-button>
+                    </div>
 
                     <div *ngIf="this.deleteMode">
-                        <input type="checkbox" class="btn-check" id="trashBtn" name="prullenbakMode"
-                               [(ngModel)]="trashMode"
-                               (ngModelChange)="trashModeJaNee()">
-                        <label class="btn btn-outline-primary recycleBtn" for="trashBtn">
-                            <fa-icon [icon]="prullenbakIcon"></fa-icon>
-                            Prullenbak
-                        </label>
+                        <div class="d-flex justify-content-start">
+                            <input type="checkbox" class="btn-check" id="trashBtn" name="prullenbakMode"
+                                   [(ngModel)]="trashMode"
+                                   (ngModelChange)="trashModeJaNee()">
+                            <label class="btn btn-outline-primary recycleBtn toolbarBtn" for="trashBtn">
+                                <fa-icon [icon]="prullenbakIcon"></fa-icon>
+                                Prullenbak
+                            </label>
+                        </div>
                     </div>
                 </div>
-                <div class="col-10">
+                <div class="col-9">
                     <div class="row justify-content-between" id="zoekbar">
                         <div class="col-8">
                             <!-- todo misschien iets voor de toekomst

@@ -44,8 +44,8 @@ export class VliegtuigLogboekComponent implements OnInit {
 
     vliegtuigID = 200;
 
-    datumAbonnement: Subscription;
-    datum: DateTime;                       // de gekozen dag in de kalender
+    datumAbonnement: Subscription;         // volg de keuze van de kalender
+    datum: DateTime;                       // de gekozen dag
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},

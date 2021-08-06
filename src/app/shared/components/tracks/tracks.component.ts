@@ -1,12 +1,17 @@
 import {Component, Input, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {ColDef, RowDoubleClickedEvent, RowSelectedEvent} from "ag-grid-community";
-import {nummerSort} from "../../../utils/Utils";
 import {HeliosLedenDataset, HeliosTrack, HeliosTracksDataset, HeliosVliegtuig} from "../../../types/Helios";
 import {TracksService} from "../../../services/apiservice/tracks.service";
 import {SharedService} from "../../../services/shared/shared.service";
 import {TrackEditorComponent} from "../editors/track-editor/track-editor.component";
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faBookmark, faBookReader, faPlane, faRecycle, faTachometerAlt} from "@fortawesome/free-solid-svg-icons";
+import {
+    faBookmark,
+    faBookReader,
+    faMinusCircle,
+    faPlane,
+    faRecycle,
+    faTachometerAlt, faUndo
+} from "@fortawesome/free-solid-svg-icons";
 import {CustomError} from "../../../types/Utils";
 import {LedenService} from "../../../services/apiservice/leden.service";
 import {LoginService} from "../../../services/apiservice/login.service";
@@ -36,12 +41,14 @@ export class TracksComponent implements OnInit {
     iconPVB: IconDefinition = faAvianex;
     iconStatus: IconDefinition = faBookmark;
     iconPlane: IconDefinition = faPlane;
+    deleteIcon: IconDefinition = faMinusCircle;
+    restoreIcon: IconDefinition = faUndo;
 
     data: TracksLedenDataset[] = [];
     leden: HeliosLedenDataset[] = [];
 
-    datumAbonnement: Subscription;
-    datum: DateTime;                       // de gekozen dag in de kalender
+    datumAbonnement: Subscription;         // volg de keuze van de kalender
+    datum: DateTime;                       // de gekozen dag
 
     zoekString: string;
     zoekTimer: number;                  // kleine vertraging om data ophalen te beperken
@@ -49,13 +56,13 @@ export class TracksComponent implements OnInit {
     trashMode: boolean = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
 
     error: CustomError | undefined;
+
     magToevoegen: boolean = true;
     magVerwijderen: boolean = false;
     magWijzigen: boolean = false;
-    magExporten: boolean = false;
 
     geselecteerdLid: number;
-    Naam:string;
+    Naam: string;
 
     constructor(private readonly trackService: TracksService,
                 private readonly ledenService: LedenService,
@@ -73,19 +80,17 @@ export class TracksComponent implements OnInit {
             })
         })
 
-        if (!this.toonLid) {
+        this.ledenService.getLeden(false).then((dataset) => {
+            this.leden = dataset;
             this.opvragen();
-        } else {
-            this.ledenService.getLeden(this.trashMode, this.zoekString).then((dataset) => {
-                this.leden = dataset;
-                this.opvragen();
-            });
-        }
+        });
 
         // Als in de progressie tabel is aangepast, moet we onze dataset ook aanpassen
         this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Tracks") {
-                if (ev.data.LID_ID == this.VliegerID) {
+                if (!this.VliegerID) {
+                    this.opvragen();
+                } else if (ev.data.LID_ID == this.VliegerID) {
                     this.opvragen();
                 }
             }
@@ -97,7 +102,7 @@ export class TracksComponent implements OnInit {
         this.magWijzigen = (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) ? true : false;
     }
 
-    // open de track editor om nieuwe track toe te voegen. Edit opent als popup
+    // open de track editor om nieuwe track toe te voegen. Editor opent als popup
     private openTrackEditor() {
         this.trackEditor.openPopup(null, this.VliegerID, undefined, this.VliegerNaam);
     }
@@ -108,15 +113,19 @@ export class TracksComponent implements OnInit {
         this.trackEditor.closePopup();
     }
 
-    // openen van popup om de data van een nieuw vliegtuig te kunnen invoeren
-    addVliegtuig(): void {
-        this.trackEditor.openPopup(null);
+    // openen van popup om gegevens van een bestaande track aan te passen
+    openEditor(trk: TracksLedenDataset) {
+        this.trackEditor.openPopup(trk.ID as number, trk.LID_ID, undefined, trk.LID_NAAM as string);
     }
 
-    // openen van popup om gegevens van een bestaand vliegtuig aan te passen
-    openEditor(l: TracksLedenDataset) {
-        console.log(l);
-        this.trackEditor.openPopup(l.ID as number);
+    // openen van popup om track te verwijderen
+    openVerwijderPopup(trk: TracksLedenDataset) {
+        this.trackEditor.openVerwijderPopup(trk.ID as number, trk.LID_NAAM as string);
+    }
+
+    // openen van popup om track te hestellen
+    openRestorePopup(trk: TracksLedenDataset) {
+        this.trackEditor.openRestorePopup(trk.ID as number, trk.LID_NAAM as string);
     }
 
     // schakelen tussen deleteMode JA/NEE. In deleteMode kun je vliegtuigen verwijderen
@@ -136,13 +145,11 @@ export class TracksComponent implements OnInit {
         const maxTrackItems = (this.VliegerID) ? -1 : 200; // alle tracks voor een vlieger, anders 200 items
 
         this.zoekTimer = window.setTimeout(() => {
-            this.trackService.getTracks(this.VliegerID, maxTrackItems).then((dataset) => {
+            this.trackService.getTracks(this.trashMode, this.VliegerID, maxTrackItems).then((dataset) => {
                 this.data = dataset as TracksLedenDataset[];
 
-                if (this.toonLid) {
-                    for (let i=0 ; i < this.data.length ; i++) {
-                        this.data[i].lid =  this.leden.find(l => l.ID == this.data[i].LID_ID) as HeliosLedenDataset;
-                    }
+                for (let i = 0; i < this.data.length; i++) {
+                    this.data[i].lid = this.leden.find(l => l.ID == this.data[i].LID_ID) as HeliosLedenDataset;
                 }
             });
         }, 400);
@@ -158,7 +165,7 @@ export class TracksComponent implements OnInit {
         })
     }
 
-    // bestaand vl;iegtuig is aangepast. Opslaan van de data
+    // bestaande track is aangepast. Opslaan van de data
     Aanpassen(track: HeliosTrack) {
         this.trackService.updateTrack(track).then(() => {
             this.opvragen();
@@ -168,7 +175,7 @@ export class TracksComponent implements OnInit {
         })
     }
 
-    // markeer een vliegtuig als verwijderd
+    // markeer een track als verwijderd
     Verwijderen(id: number) {
         this.trackService.deleteTrack(id).then(() => {
             this.deleteMode = false;
@@ -179,7 +186,7 @@ export class TracksComponent implements OnInit {
         });
     }
 
-    // de vliegtuig is weer terug, haal de markering 'verwijderd' weg
+    // de track herstellen, haal de markering 'verwijderd' weg
     Herstellen(id: number) {
         this.trackService.restoreTrack(id).then(() => {
             this.deleteMode = false;
@@ -198,7 +205,7 @@ export class TracksComponent implements OnInit {
     }
 
     BreedteGrid() {
-        return (this.toonLid)  ? "col-9" : "col-12";        // 9 breed met naam, 12 alleen grid
+        return (this.toonLid) ? "col-9" : "col-12";        // 9 breed met naam, 12 alleen grid
     }
 
     trackSelected(l: TracksLedenDataset) {
@@ -214,5 +221,23 @@ export class TracksComponent implements OnInit {
     datumString(dt: string): string {
         const datumtijd = DateTime.fromSQL(dt);
         return datumtijd.day + "-" + datumtijd.month + "-" + datumtijd.year;
+    }
+
+    magTrackVerwijderen(trk: TracksLedenDataset) {
+        const ui = this.loginService.userInfo;
+
+        if (ui?.Userinfo?.isCIMT || ui?.Userinfo?.isBeheerder || ui?.LidData?.ID == trk.INSTRUCTEUR_ID)
+            return true;
+
+        return false;
+    }
+
+    magTrackHerstellen(trk: TracksLedenDataset) {
+        const ui = this.loginService.userInfo;
+
+        if (ui?.Userinfo?.isCIMT || ui?.Userinfo?.isBeheerder || ui?.LidData?.ID == trk.INSTRUCTEUR_ID)
+            return true;
+
+        return false;
     }
 }

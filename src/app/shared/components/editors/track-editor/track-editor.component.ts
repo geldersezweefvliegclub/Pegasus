@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
-import {HeliosLid, HeliosTrack} from "../../../../types/Helios";
+import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {HeliosAanwezigLedenDataset, HeliosLedenDataset, HeliosLid, HeliosTrack} from "../../../../types/Helios";
 import {ModalComponent} from "../../modal/modal.component";
 import {TracksService} from "../../../../services/apiservice/tracks.service";
 import {LedenService} from "../../../../services/apiservice/leden.service";
@@ -10,7 +10,7 @@ import {LoginService} from "../../../../services/apiservice/login.service";
     templateUrl: './track-editor.component.html',
     styleUrls: ['./track-editor.component.scss']
 })
-export class TrackEditorComponent {
+export class TrackEditorComponent implements OnInit{
     @Output() add: EventEmitter<HeliosTrack> = new EventEmitter<HeliosTrack>();
     @Output() update: EventEmitter<HeliosTrack> = new EventEmitter<HeliosTrack>();
     @Output() delete: EventEmitter<number> = new EventEmitter<number>();
@@ -18,13 +18,14 @@ export class TrackEditorComponent {
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
-    lid: HeliosLid = {};
+    leden: HeliosLedenDataset[] = [];
     track: HeliosTrack = {}
 
     isLoading: boolean = false;
 
     isVerwijderMode: boolean = false;
     isRestoreMode: boolean = false;
+    toonLidSelectie: boolean = false;
     formTitel: string;
 
     constructor(private readonly trackService: TracksService,
@@ -32,23 +33,29 @@ export class TrackEditorComponent {
                 private readonly loginService: LoginService) {
     }
 
+    ngOnInit() {
+        this.ledenService.getLeden().then((dataset) => {
+            this.leden = dataset;
+        });
+    }
+
     openPopup(id: number | null, LID_ID?: number, START_ID?: number, NAAM?: string, TEKST?:string) {
-        this.lid = {NAAM: "..."};
+
+        this.toonLidSelectie = (id || LID_ID) ? false : true;
 
         if (id) {
             this.haalTrackOp(id);
-            this.formTitel = 'Track bewerken van '
+            this.formTitel = 'Track bewerken van ' + NAAM;
         } else {
-            let ui = this.loginService.userInfo?.LidData;
+            const ui = this.loginService.userInfo?.LidData;
 
-            this.formTitel = 'Track toevoegen voor '
+            this.formTitel = (this.toonLidSelectie) ? 'Track toevoegen' : 'Track toevoegen voor ' + NAAM
             this.track = {
                 LID_ID: LID_ID,
                 START_ID: START_ID,
                 TEKST: TEKST,
                 INSTRUCTEUR_ID: ui?.ID
             };
-            this.lid = { NAAM: NAAM}
         }
         this.isVerwijderMode = false;
         this.isRestoreMode = false;
@@ -65,7 +72,6 @@ export class TrackEditorComponent {
         try {
             this.trackService.getTrack(id).then((trk) => {
                 this.track = trk;
-                this.haalLidOp(trk.LID_ID!);
                 this.isLoading = false;
             });
         } catch (e) {
@@ -73,25 +79,19 @@ export class TrackEditorComponent {
         }
     }
 
-    haalLidOp(id: number): void {
-        this.ledenService.getLid(id).then((lid: HeliosLid) => {
-            this.lid = lid;
-        });
-    }
-
-    openVerwijderPopup(id: number) {
-        this.lid = {NAAM: "..."};
+    openVerwijderPopup(id: number, NAAM: string) {
         this.haalTrackOp(id);
-        this.formTitel = 'Track verwijderen van ';
+        this.formTitel = 'Track verwijderen van ' + NAAM;
+        this.toonLidSelectie = false;
         this.isVerwijderMode = true;
         this.isRestoreMode = false;
         this.popup.open();
     }
 
-    openRestorePopup(id: number) {
-        this.lid = {NAAM: "..."};
+    openRestorePopup(id: number, NAAM: string) {
         this.haalTrackOp(id);
-        this.formTitel = 'Track herstellen voor ';
+        this.formTitel = 'Track herstellen voor ' + NAAM;
+        this.toonLidSelectie = false;
         this.isRestoreMode = true;
         this.isVerwijderMode = false;
         this.popup.open();
@@ -113,5 +113,9 @@ export class TrackEditorComponent {
                 this.add.emit(this.track);
             }
         }
+    }
+
+    lidGeselecteerd(id: number | undefined) {
+        this.track.LID_ID = id;
     }
 }

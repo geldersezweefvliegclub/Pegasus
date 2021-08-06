@@ -81,3 +81,16 @@ h4 {
   white-space: pre-wrap;
   line-height: 1.2em;
 }
+
+.deleteBtn {
+  color: #dc3545;
+}
+
+.restoreBtn {
+  color: #ffc107;
+}
+
+.btn-noborder {
+  outline: none !important;
+  box-shadow: none;
+}

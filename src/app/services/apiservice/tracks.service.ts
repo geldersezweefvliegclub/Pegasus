@@ -14,7 +14,7 @@ export class TracksService {
                 private readonly storageService: StorageService) {}
 
 
-    async getTracks(lidID?:number, max?: number): Promise<HeliosTracksDataset[]> {
+    async getTracks(verwijderd: boolean = false, lidID?:number, max?: number): Promise<HeliosTracksDataset[]> {
         let getParams: KeyValueArray = {};
 
         if (lidID) {
@@ -22,6 +22,9 @@ export class TracksService {
         }
         if ((max) && (max > 0)) {
             getParams['MAX'] = max.toString();
+        }
+        if (verwijderd) {
+            getParams['VERWIJDERD'] = "true";
         }
 
         getParams['SORT'] = 'INGEVOERD DESC';
@@ -49,8 +52,10 @@ export class TracksService {
         return response.json();
     }
 
-    async updateTrack(lid: HeliosTrack) {
-        const response: Response = await this.apiService.put('Tracks/SaveObject', JSON.stringify(lid));
+    async updateTrack(trk: HeliosTrack) {
+        trk.LINK_ID = undefined;
+        trk.INGEVOERD = undefined;
+        const response: Response = await this.apiService.put('Tracks/SaveObject', JSON.stringify(trk));
 
         return response.json();
     }

@@ -23,8 +23,8 @@ export class RecencyGrafiekComponent {
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
-    datum: DateTime;                       // de gekozen dag in de kalender
-    datumAbonnement: Subscription;
+    datumAbonnement: Subscription;         // volg de keuze van de kalender
+    datum: DateTime;                       // de gekozen dag
 
     waardes: number[] = [];
     bezig: boolean = false;

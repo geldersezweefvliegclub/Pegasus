@@ -1,6 +1,17 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+    AfterContentInit,
+    AfterViewInit,
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
+    SimpleChanges
+} from '@angular/core';
 import {Observable, of, Subject} from 'rxjs';
 import {HeliosAanwezigLedenDataset, HeliosVliegtuigenDataset} from '../../../../../types/Helios';
+import {forEach} from "ag-grid-community/dist/lib/utils/array";
 
 @Component({
     selector: 'app-lid-invoer',
@@ -25,7 +36,10 @@ export class LidInvoerComponent implements OnInit, OnChanges {
     aanwezigFiltered: HeliosAanwezigLedenDataset[] = [];
     ledenSelectie$: Observable<HeliosAanwezigLedenDataset[]>;
 
-    constructor() {}
+    InputChangeEventFired: boolean = false;
+
+    constructor() {
+    }
 
     ngOnInit(): void {
         this.lidInput$.subscribe((newTerm) => {
@@ -50,6 +64,8 @@ export class LidInvoerComponent implements OnInit, OnChanges {
             return lid.NAAM!.toLowerCase().includes(searchTerm.toLowerCase());
         });
 
+        console.log(nweLijst);
+
         if ((nweLijst.length > 0) && ((nweLijst.length >= 5) || (searchTerm.length <= 2))) {
             return nweLijst
         }
@@ -60,23 +76,43 @@ export class LidInvoerComponent implements OnInit, OnChanges {
         });
     }
 
-    // De Input datasets zijn gewijzigd, zorg dat combobox goede data krijgt via ledenSelectie$
     ngOnChanges(changes: SimpleChanges) {
+        // leden komen in ander formaat, dus even goed zetten
+        this.ledenFiltered = [];
+        this.leden.forEach(item => {
+            if (this.excludeLidTypes) {
+                if (this.excludeLidTypes.includes(item.LIDTYPE_ID!.toString())) {
+                    return;    // we moeten dit lid niet opnemen omdat lidtype niet voldoet
+                }
+            }
+            this.ledenFiltered.push(
+                {
+                    LID_ID: item.ID,
+                    NAAM: item.NAAM,
+                    LIDTYPE_ID: item.LIDTYPE_ID,
+                    VOORKEUR_VLIEGTUIG_TYPE: "",
+                    OVERLAND_VLIEGTUIG_ID: -1
+                });
+        });
+
         if (!this.excludeLidTypes) {
             this.aanwezigFiltered = this.aanwezig;
-            this.ledenFiltered = this.leden;
-        }
-        else {
+        } else {
+
             this.aanwezigFiltered = this.aanwezig.filter((lid: HeliosAanwezigLedenDataset) => {
                 if (lid.LID_ID == this.LID_ID) return true;  // reeds invoerde lid moet ook in de lijst
                 return (!this.excludeLidTypes.includes(lid.LIDTYPE_ID!.toString()))
             });
-
-            this.ledenFiltered = this.leden.filter((lid: HeliosAanwezigLedenDataset) => {
-                return (!this.excludeLidTypes.includes(lid.LIDTYPE_ID!.toString()))
-            });
         }
 
+        // Als we zojuist input hebben gedaan, dan staat InputChangeEventFired op true. We hoeven dan onderstaande code niet uit te voeren
+        // Dat doen we alleen als Input() variable aangepast is
+        if (this.InputChangeEventFired) {
+            return;
+        }
+
+        // default lijst bevat leden die graag op dit vliegtuig willen vliegen
+        // wordt aangeven via vliegtuig type of vliegtuig id
         const defaultLijst = this.aanwezigFiltered.filter((lid: HeliosAanwezigLedenDataset) => {
             if (lid.LID_ID == this.LID_ID) return true;     // reeds invoerde lid moet ook in de lijst
             if ((this.vliegtuig?.TYPE_ID) && (lid.VOORKEUR_VLIEGTUIG_TYPE) &&
@@ -85,10 +121,9 @@ export class LidInvoerComponent implements OnInit, OnChanges {
             return (lid.OVERLAND_VLIEGTUIG_ID == this.vliegtuig?.ID)
         });
 
-        const inDefault = defaultLijst.findIndex(lid => lid.LID_ID == this.LID_ID) >= 0;
-        const inAanwezig = this.aanwezigFiltered.findIndex(lid => lid.LID_ID == this.LID_ID) >= 0;
-        const inLeden = this.ledenFiltered.findIndex(lid => lid.LID_ID == this.LID_ID) >= 0;
-
+        const inDefault = defaultLijst.findIndex(lid => lid.LID_ID == this.LID_ID) >= 0;                // bevat defaultLijst de vlieger, boolean true/false
+        const inAanwezig = this.aanwezigFiltered.findIndex(lid => lid.LID_ID == this.LID_ID) >= 0;      // bevat aanwezigLijst de vlieger, boolean true/false
+        const inLeden = this.ledenFiltered.findIndex(lid => lid.LID_ID == this.LID_ID) >= 0;            // bevat ledenLijst de vlieger, boolean true/false
         // niet alle leden staan in aanwezig (denk aan zusterclubs), voor edit moeten we goede lijst kiezen
         if (inDefault) {
             this.ledenSelectie$ = of(defaultLijst);           // leden die graag op dit vliegtuig vliegen
@@ -105,8 +140,13 @@ export class LidInvoerComponent implements OnInit, OnChanges {
         }
     }
 
-    inputChange (id: number | undefined) {
+    inputChange(id: number | undefined) {
         clearTimeout(this.EventEmitterDelay);
-        this.EventEmitterDelay = window.setTimeout(() => this.LidChanged.emit(id), 1000);
+        this.EventEmitterDelay = window.setTimeout(() => {
+
+            this.InputChangeEventFired = true;  // laat weten dat we event gaan afvuren
+            setTimeout(() => this.InputChangeEventFired = false, 100); // en reset na 100 ms
+            this.LidChanged.emit(id);
+        }, 1000);
     }
 }

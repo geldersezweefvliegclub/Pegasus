@@ -29,8 +29,8 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
     @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
 
     data: HeliosLogboekDataset[] = [];
-    datumAbonnement: Subscription;
-    datum: DateTime;                       // de gekozen dag in de kalender
+    datumAbonnement: Subscription;         // volg de keuze van de kalender
+    datum: DateTime;                       // de gekozen dag
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},

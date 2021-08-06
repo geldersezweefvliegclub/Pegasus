@@ -53,11 +53,11 @@ export class StartEditorComponent implements OnInit {
     // 625 = DDWV'er
     exclLidtypeAlsInzittende: string = "607,609,610,612,613,625"
     exclLidtypeAlsVlieger: string = "613"
-    leden: HeliosAanwezigLedenDataset[] = [];
+    leden: HeliosLedenDataset[] = [];
     aanwezigLeden: HeliosAanwezigLedenDataset[] = [];
 
-    datumAbonnement: Subscription;
-    datum: DateTime;                       // de gekozen dag inn de kalender
+    datumAbonnement: Subscription;         // volg de keuze van de kalender
+    datum: DateTime;                       // de gekozen dag
 
     isLoading: boolean = false;
 
@@ -89,6 +89,10 @@ export class StartEditorComponent implements OnInit {
 
         // nu alle leden ophalen en in goede formaat zetten
         this.ledenService.getLeden().then((dataset) => {
+            this.leden = dataset;
+        });
+        /*
+        this.ledenService.getLeden().then((dataset) => {
             for (let i = 0; i < dataset.length; i++) {
                 this.leden.push(
                     {
@@ -100,6 +104,8 @@ export class StartEditorComponent implements OnInit {
                     });
             }
         });
+
+         */
 
         // de datum zoals die in de kalender gekozen is, we halen dan de dag afhankelijke gegevens op
         this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
@@ -243,7 +249,7 @@ export class StartEditorComponent implements OnInit {
     // De vlieger is nu ingevoerd
     vliegerGeselecteerd(id: number | undefined) {
         this.start.VLIEGER_ID = id;
-        const gekozenVlieger = this.leden.find(lid => lid.LID_ID == id) as HeliosLedenDataset;
+        const gekozenVlieger = this.leden.find(lid => lid.ID == id) as HeliosLedenDataset;
 
         if (!gekozenVlieger) {
             this.toonVliegerNaam = false;
