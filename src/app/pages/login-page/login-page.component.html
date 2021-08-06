@@ -3,7 +3,7 @@
 
 <div id="foto" [style.background-image]="'url(' + toonFoto +')'">
     <div class="row justify-content-center padding-top-xl">
-        <div class="col-6 col-md-3 card">
+        <div class="col-6 col-md-3 card loginWindow">
             <div class="card-body">
                 <h1 class="card-title">Inloggen</h1>
                 <form #form="ngForm" (ngSubmit)="login()">
@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     <div class="row mt-4">
-                        <div class="col d-flex justify-content-end">
+                        <div class="col d-flex" [ngClass]="{'justify-content-end': !showSecret, 'justify-content-between': showSecret }">
                             <button class="btn btn-secondary mr-2" type="button" (click)="sendSMS()"
                                     [disabled]="form.invalid" *ngIf="showSecret">
                                 <span *ngIf="!isLoading">SMS</span>
