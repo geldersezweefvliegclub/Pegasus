@@ -26,10 +26,13 @@
 
 #data {
   flex-grow: 100;
+  flex-direction: column;
+  overflow-y: scroll;
 }
 
-#toolbar {
+#toolbar{
   flex-grow: 1;
+  flex-direction: column;
 }
 
 .kolomRechts {
