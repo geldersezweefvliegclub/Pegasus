@@ -71,35 +71,38 @@ export class TracksComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        // de datum zoals die in de kalender gekozen is
-        this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
-            this.datum = DateTime.fromObject({
-                year: jaarMaand.year,
-                month: jaarMaand.month,
-                day: 1
-            })
-        })
-
-        this.ledenService.getLeden(false).then((dataset) => {
-            this.leden = dataset;
-            this.opvragen();
-        });
-
-        // Als in de progressie tabel is aangepast, moet we onze dataset ook aanpassen
-        this.sharedService.heliosEventFired.subscribe(ev => {
-            if (ev.tabel == "Tracks") {
-                if (!this.VliegerID) {
-                    this.opvragen();
-                } else if (ev.data.LID_ID == this.VliegerID) {
-                    this.opvragen();
-                }
-            }
-        });
-
         const ui = this.loginService.userInfo?.Userinfo;
         this.magToevoegen = (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) ? true : false;
         this.magVerwijderen = (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) ? true : false;
         this.magWijzigen = (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) ? true : false;
+
+        // Alleen als we onderstaande rollen hebben kunnen we Tracks gebruiken
+        if (ui?.isCIMT || ui?.isInstructeur || ui?.isBeheerder) {
+            // de datum zoals die in de kalender gekozen is
+            this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
+                this.datum = DateTime.fromObject({
+                    year: jaarMaand.year,
+                    month: jaarMaand.month,
+                    day: 1
+                })
+            })
+
+            this.ledenService.getLeden(false).then((dataset) => {
+                this.leden = dataset;
+                this.opvragen();
+            });
+
+            // Als in de progressie tabel is aangepast, moet we onze dataset ook aanpassen
+            this.sharedService.heliosEventFired.subscribe(ev => {
+                if (ev.tabel == "Tracks") {
+                    if (!this.VliegerID) {
+                        this.opvragen();
+                    } else if (ev.data.LID_ID == this.VliegerID) {
+                        this.opvragen();
+                    }
+                }
+            });
+        }
     }
 
     // open de track editor om nieuwe track toe te voegen. Editor opent als popup

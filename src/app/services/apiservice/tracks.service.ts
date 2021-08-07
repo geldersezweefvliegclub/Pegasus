@@ -1,8 +1,10 @@
 import {Injectable} from '@angular/core';
 import {APIService} from "./api.service";
 import {HeliosTrack, HeliosTracks, HeliosTracksDataset} from "../../types/Helios";
-import {KeyValueArray} from "../../types/Utils";
+import {CustomError, KeyValueArray} from "../../types/Utils";
 import {StorageService} from "../storage/storage.service";
+import {LoginService} from "./login.service";
+import {error} from "protractor";
 
 @Injectable({
     providedIn: 'root'
@@ -11,10 +13,20 @@ export class TracksService {
     tracks: HeliosTracks | null = null;
 
     constructor(private readonly apiService: APIService,
+                private readonly loginService: LoginService,
                 private readonly storageService: StorageService) {}
 
 
     async getTracks(verwijderd: boolean = false, lidID?:number, max?: number): Promise<HeliosTracksDataset[]> {
+
+
+        // Alleen als we onderstaande rollen nie hebben, gaan we ook geen data proberen op te halen
+        const ui = this.loginService.userInfo?.Userinfo;
+        if (!ui?.isCIMT && !ui?.isInstructeur && !ui?.isBeheerder) {
+            const error: CustomError = {beschrijving: "Niet gemachtigd om tracks te laden"};
+            throw error;
+        }
+
         let getParams: KeyValueArray = {};
 
         if (lidID) {
@@ -42,6 +54,14 @@ export class TracksService {
     }
 
     async getTrack(id: number): Promise<HeliosTrack> {
+
+        // Alleen als we onderstaande rollen nie hebben, gaan we ook geen data proberen op te halen
+        const ui = this.loginService.userInfo?.Userinfo;
+        if (!ui?.isCIMT && !ui?.isInstructeur && !ui?.isBeheerder) {
+            const error: CustomError = {beschrijving: "Niet gemachtigd om tracks te laden"};
+            throw error;
+        }
+
         const response: Response = await this.apiService.get('Tracks/GetObject', {'ID': id.toString()});
 
         return response.json();
