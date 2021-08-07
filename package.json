@@ -2,7 +2,7 @@
   "name": "pegasus",
   "version": "0.0.1",
   "scripts": {
-    "start": "ng serve --proxy-config proxy.conf.json",
+    "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -30,7 +30,6 @@
     "@ng-select/ng-select": "^7.0.0",
     "ag-grid-angular": "^24.1.0",
     "ag-grid-community": "^24.1.0",
-    "ag-grid-enterprise": "^24.1.0",
     "angular-code-input": "^1.4.0",
     "animate.css": "^4.1.1",
     "bootstrap": "^5.0.1",
