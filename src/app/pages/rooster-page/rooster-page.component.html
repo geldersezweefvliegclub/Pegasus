@@ -8,6 +8,7 @@
                     <div class="roosterTabel">
                         <table class="table">
                             <thead>
+                            <th></th>
                             <th scope="col" class="DagBreedte">Dag</th>
                             <th scope="col" *ngIf="toonInstructeurs" [style]="KolomBreedte()">DDI</th>
                             <th scope="col" *ngIf="toonInstructeurs" [style]="KolomBreedte()">Instructeur</th>
@@ -19,14 +20,16 @@
                             </thead>
                             <tbody>
                             <tr *ngFor="let dagInRooster of filteredRooster;let i = index">
-                                <td class="d-flex dagInfo">
-                                    <div class="row m-0">
-                                        <div class="col-3 p-0">
-                                            <div class="dayOfTheWeek h-100">
-                                                {{DagVanDeWeek(dagInRooster.DATUM)}}
-                                            </div>
+                                <td class="WeekdagKolom" [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
+                                    <div class="rotation-wrapper">
+                                        <div class="dayOfTheWeek">
+                                            {{DagVanDeWeek(dagInRooster.DATUM)}}
                                         </div>
-                                        <div class="col-9 p-0">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex dagInfo row m-0">
+                                        <div class="p-0">
                                             <div class="text-nowrap fw-bold">
                                                 {{dagInRooster.DATUM | date: 'dd-MM-yyyy'}}
                                             </div>
@@ -41,7 +44,8 @@
                                                        [id]="'Clubbedrijf' + i"
                                                        [name]="'Clubbedrijf' + i"
                                                        [(ngModel)]="dagInRooster.CLUB_BEDRIJF">
-                                                <label [for]="'Clubbedrijf' + i" class="labelClub form-check-label text-nowrap">Club
+                                                <label [for]="'Clubbedrijf' + i"
+                                                       class="labelClub form-check-label text-nowrap">Club
                                                     bedrijf</label>
                                             </div>
                                         </div>
@@ -221,7 +225,7 @@
                                 <td>
                                     <textarea [(ngModel)]="OPMERKINGEN" name="MEOPMERKINGENTEO"
                                               class="w-100 text-invoer form-control"
-                                              [rows]="3" style="resize: none"></textarea>
+                                              [rows]="2" style="resize: none"></textarea>
                                 </td>
                             </tr>
                             </tbody>

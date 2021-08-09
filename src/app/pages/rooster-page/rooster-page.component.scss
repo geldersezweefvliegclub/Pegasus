@@ -8,26 +8,66 @@
 
 td {
   padding-left: 0px;
-  padding-right: 0px;
-}
-
-.labelClub {
-  margin-right: 5px;
+  padding-right: 5px;
 }
 
 .DagBreedte {
-  width: 200px;
+  width: 300px;
 }
 
 .dagInfo {
-  padding-left: 0;
+  padding-left: 10px;
+}
+
+input[type='checkbox'] {
+  margin-right: 0.4rem;
+}
+
+.WeekdagKolom {
+  padding: 0px;
+  vertical-align: middle;
+}
+
+.Maandag {
+  background-color: #E0E2DB;
+}
+
+.Dinsdag {
+  background-color: #D2D4C8;
+}
+
+.Woensdag {
+  background-color: #B8BDB5;
+}
+
+.Donderdag {
+  background-color: #D2D4C8;
+}
+
+.Vrijdag {
+  background-color: #E0E2DB;
+}
+
+.Zaterdag {
+  background-color: #e6ca87;
+}
+
+.Zondag {
+  background-color: #d5ac4a;
+}
+
+.rotation-wrapper {
+  display: flex;
 }
 
 .dayOfTheWeek {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transform: rotate(-90deg);
+  min-width: 20px;
+  line-height: 20px;
+  writing-mode: tb-rl;
+  writing-mode: vertical-rl;
+  white-space: nowrap;
+  text-align: center;
+  transform: rotate(180deg);
 }
 
 .drop-container {
@@ -37,7 +77,6 @@ td {
   border: 1.5px dashed #9a9a9a;
   height: 2em;
   width: 100%;
-  border-radius: 0.25rem;
   padding-left: 0.25em;
   background: white;
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
