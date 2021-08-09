@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {faBookReader} from "@fortawesome/free-solid-svg-icons";
+import {faAddressCard} from "@fortawesome/free-solid-svg-icons";
 import {AgRendererComponent} from "ag-grid-angular";
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {ICellRendererParams} from "ag-grid-community";
@@ -12,7 +12,7 @@ import {LoginService} from "../../../../services/apiservice/login.service";
 })
 export class TrackRenderComponent implements AgRendererComponent {
     private params: any;
-    trackIcon: IconDefinition = faBookReader;
+    trackIcon: IconDefinition = faAddressCard;
 
     LID_ID: number;
     NAAM: string;

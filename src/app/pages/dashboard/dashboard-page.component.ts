@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {
-    faBookmark, faBookReader, faCalendarAlt, faChartLine, faChartPie,
+    faBookmark, faAddressCard, faCalendarAlt, faChartLine, faChartPie,
     faClipboardList, faExternalLinkSquareAlt, faPlane,
     faTachometerAlt,
 } from "@fortawesome/free-solid-svg-icons";
@@ -34,7 +34,7 @@ export class DashboardPageComponent implements OnInit {
     iconStatus: IconDefinition = faBookmark;
     iconExpand: IconDefinition = faExternalLinkSquareAlt;
     iconPlane: IconDefinition = faPlane;
-    iconTracks: IconDefinition = faBookReader;
+    iconTracks: IconDefinition = faAddressCard;
 
     lidTypes: HeliosType[] = [];
     lidData: HeliosLid;

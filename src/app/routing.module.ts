@@ -7,7 +7,7 @@ import {LoginPageComponent} from './pages/login-page/login-page.component';
 
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {
-  faBookReader,
+  faAddressCard,
   faCalendarAlt,
   faCalendarDay,
   faChartPie,
@@ -35,7 +35,7 @@ export interface CustomRoute extends Route {
 export const routes: CustomRoute[] = [
   {path: '', pathMatch: 'full', redirectTo: 'dashboard', excluded: true, icon: faUser, text: 'EXCLUDED'},
   {path: 'dashboard', component: DashboardPageComponent, excluded: false, icon: faChartPie, text: 'Dashboard'},
-  {path: 'tracks', component: TracksGridComponent, excluded: false, icon: faBookReader, text: 'Tracks'},
+  {path: 'tracks', component: TracksGridComponent, excluded: false, icon: faAddressCard, text: 'Tracks'},
   {path: 'daginfo', component: DaginfoComponent, excluded: false, icon: faCalendarAlt, text: 'Dag info'},
   {path: 'startlijst', component: StartlijstGridComponent, excluded: false, icon: faClipboardList, text: 'Startlijst'},
   {path: 'leden', component: LedenGridComponent, excluded: false, icon: faUsers, text: 'Ledenlijst'},

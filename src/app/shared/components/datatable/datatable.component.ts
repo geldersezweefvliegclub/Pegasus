@@ -40,7 +40,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     defaultColDef: ColDef = {
         editable: false,              // Gaan niet editen in grid
         autoHeight: this.autoHeight,
-        filter: 'agTextColumnFilter', // use 'text' filter by default
+        filter: 'agTextColumnFilter', // use 'text' leden-filter by default
     };
 
     private api: GridApi;

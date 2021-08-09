@@ -2,7 +2,7 @@
   "name": "pegasus",
   "version": "0.0.1",
   "scripts": {
-    "start": "ng serve",
+    "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",

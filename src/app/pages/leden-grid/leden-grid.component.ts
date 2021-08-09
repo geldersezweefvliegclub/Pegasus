@@ -14,7 +14,7 @@ import {AvatarRenderComponent} from './avatar-render/avatar-render.component';
 import {AdresRenderComponent} from './adres-render/adres-render.component';
 import {TelefoonRenderComponent} from './telefoon-render/telefoon-render.component';
 import {EmailRenderComponent} from './email-render/email-render.component';
-import {FilterComponent} from './filter/filter.component';
+import {LedenFilterComponent} from '../../shared/components/leden-filter/leden-filter.component';
 import {SharedService} from '../../services/shared/shared.service';
 import {NaamRenderComponent} from './naam-render/naam-render.component';
 import {Router} from '@angular/router';
@@ -30,7 +30,7 @@ import {TrackRenderComponent} from "./track-render/track-render.component";
   styleUrls: ['./leden-grid.component.scss']
 })
 export class LedenGridComponent implements OnInit{
-  @ViewChild(FilterComponent) ledenFilter: FilterComponent;
+  @ViewChild(LedenFilterComponent) ledenFilter: LedenFilterComponent;
   @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
 
   leden: HeliosLedenDataset[] = [];
@@ -226,15 +226,15 @@ export class LedenGridComponent implements OnInit{
     }, 400);
   }
 
-  // Open van het filter dialoog
+  // Open van het leden-filter dialoog
   filterPopup() {
     this.ledenFilter.openPopup();
   }
 
-  // Er is een aanpassing gemaakt in het filter dialoog. We filteren de volledige dataset tot wat nodig is
+  // Er is een aanpassing gemaakt in het leden-filter dialoog. We filteren de volledige dataset tot wat nodig is
   // We hoeven dus niet terug naar de server om data opnieuw op te halen (minder data verkeer)
   applyFilter() {
-    // filter de dataset naar de lijst
+    // leden-filter de dataset naar de lijst
     this.leden = [];
     for (let i = 0; i < this.dataset.length; i++) {
 

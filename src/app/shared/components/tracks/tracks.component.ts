@@ -6,7 +6,7 @@ import {TrackEditorComponent} from "../editors/track-editor/track-editor.compone
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {
     faBookmark,
-    faBookReader,
+    faAddressCard,
     faMinusCircle,
     faPlane,
     faRecycle,
@@ -35,7 +35,7 @@ export class TracksComponent implements OnInit {
 
     @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
 
-    iconCardIcon: IconDefinition = faBookReader;
+    iconCardIcon: IconDefinition = faAddressCard;
     prullenbakIcon: IconDefinition = faRecycle;
     iconRecency: IconDefinition = faTachometerAlt;
     iconPVB: IconDefinition = faAvianex;

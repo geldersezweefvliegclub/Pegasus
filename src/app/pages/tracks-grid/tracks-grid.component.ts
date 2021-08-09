@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faBookReader} from "@fortawesome/free-solid-svg-icons";
+import {faAddressCard} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
   selector: 'app-tracks-grid',
@@ -9,7 +9,7 @@ import {faBookReader} from "@fortawesome/free-solid-svg-icons";
 })
 export class TracksGridComponent {
 
-  iconCardIcon: IconDefinition = faBookReader;
+  iconCardIcon: IconDefinition = faAddressCard;
 
   constructor() { }
 }

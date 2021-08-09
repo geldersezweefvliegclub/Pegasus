@@ -32,7 +32,7 @@ import {AdresRenderComponent} from './leden-grid/adres-render/adres-render.compo
 import {TelefoonRenderComponent} from './leden-grid/telefoon-render/telefoon-render.component';
 import {LazyLoadImageModule} from 'ng-lazyload-image';
 import {EmailRenderComponent} from './leden-grid/email-render/email-render.component';
-import {FilterComponent} from './leden-grid/filter/filter.component';
+import {LedenFilterComponent} from '../shared/components/leden-filter/leden-filter.component';
 import {VliegtuigLogboekComponent} from './vliegtuig-logboek/vliegtuig-logboek.component';
 import {ChartsModule} from 'ng2-charts';
 import {NaamRenderComponent} from './leden-grid/naam-render/naam-render.component';
@@ -81,7 +81,7 @@ import { TestPageComponent } from './test-page/test-page.component';
     AdresRenderComponent,
     TelefoonRenderComponent,
     EmailRenderComponent,
-    FilterComponent,
+    LedenFilterComponent,
     VliegtuigLogboekComponent,
     NaamRenderComponent,
     RoosterPageComponent,

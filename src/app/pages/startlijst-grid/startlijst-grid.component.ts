@@ -290,7 +290,7 @@ export class StartlijstGridComponent implements OnInit {
         xlsx.writeFile(wb, 'startlijst ' + datum.toISODate() + '.xlsx');
     }
 
-    // Als filter aan staat, dan tonen we alleen de openstaande vluchten
+    // Als leden-filter aan staat, dan tonen we alleen de openstaande vluchten
     filter() {
         this.filterOn = !this.filterOn;
         this.opvragen();
