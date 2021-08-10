@@ -55,6 +55,7 @@ export type HeliosProgressieKaartDataset = progressieComponents['schemas']['prog
 
 export type HeliosRooster = roosterComponents['schemas']['view_rooster']
 export type HeliosRoosterDataset = roosterComponents['schemas']['view_rooster_dataset']
+export type HeliosRoosterDag = roosterComponents['schemas']['oper_rooster']
 
 export type HeliosTrack = tracksComponents['schemas']['oper_tracks'];
 export type HeliosTracks = tracksComponents['schemas']['view_tracks'];

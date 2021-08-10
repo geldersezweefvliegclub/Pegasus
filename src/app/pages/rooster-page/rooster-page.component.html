@@ -8,7 +8,7 @@
                     <div class="roosterTabel">
                         <table class="table">
                             <thead>
-                            <th></th>
+                            <th scope="col"> </th>
                             <th scope="col" class="DagBreedte">Dag</th>
                             <th scope="col" *ngIf="toonInstructeurs" [style]="KolomBreedte()">DDI</th>
                             <th scope="col" *ngIf="toonInstructeurs" [style]="KolomBreedte()">Instructeur</th>
@@ -58,7 +58,7 @@
                                                 class="drop-container"
                                                 cdkDropList
                                                 [id]="'OCHTEND_DDI-' + i"
-                                                (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster);"
                                                 [cdkDropListData]="dagInRooster"
                                                 [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this)">
                                             <div cdkDrag>
@@ -74,7 +74,7 @@
                                                 class="drop-container"
                                                 cdkDropList
                                                 [id]="'MIDDAG_DDI-' + i"
-                                                (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster);"
                                                 [cdkDropListData]="dagInRooster"
                                                 [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this)">
                                             <div cdkDrag>
@@ -92,7 +92,7 @@
                                                 class="drop-container"
                                                 cdkDropList
                                                 [id]="'OCHTEND_INSTRUCTEUR-' + i"
-                                                (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster);"
                                                 [cdkDropListData]="dagInRooster"
                                                 [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this)">
                                             <div cdkDrag>
@@ -108,7 +108,7 @@
                                                 class="drop-container"
                                                 cdkDropList
                                                 [id]="'MIDDAG_INSTRUCTEUR-' + i"
-                                                (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster);"
                                                 [cdkDropListData]="dagInRooster"
                                                 [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this)">
                                             <div cdkDrag>
@@ -126,7 +126,7 @@
                                                 class="drop-container"
                                                 cdkDropList
                                                 [id]="'OCHTEND_STARTLEIDER-' + i"
-                                                (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster);"
                                                 [cdkDropListData]="dagInRooster"
                                                 [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this)">
                                             <div cdkDrag>
@@ -142,7 +142,7 @@
                                                 class="drop-container"
                                                 cdkDropList
                                                 [id]="'MIDDAG_STARTLEIDER-' + i"
-                                                (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster);"
                                                 [cdkDropListData]="dagInRooster"
                                                 [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this)">
                                             <div cdkDrag>
@@ -160,7 +160,7 @@
                                                 class="drop-container"
                                                 cdkDropList
                                                 [id]="'OCHTEND_LIERIST-' + i"
-                                                (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster);"
                                                 [cdkDropListData]="dagInRooster"
                                                 [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
                                             <div cdkDrag>
@@ -176,7 +176,7 @@
                                                 class="drop-container"
                                                 cdkDropList
                                                 [id]="'MIDDAG_LIERIST-' + i"
-                                                (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster);"
                                                 [cdkDropListData]="dagInRooster"
                                                 [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
                                             <div cdkDrag>
@@ -194,7 +194,7 @@
                                                 class="drop-container"
                                                 cdkDropList
                                                 [id]="'OCHTEND_HULPLIERIST-' + i"
-                                                (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster);"
                                                 [cdkDropListData]="dagInRooster"
                                                 [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
                                             <div cdkDrag>
@@ -210,7 +210,7 @@
                                                 class="drop-container"
                                                 cdkDropList
                                                 [id]="'MIDDAG_HULPLIERIST-' + i"
-                                                (cdkDropListDropped)="onDropInTable($event, dagInRooster);"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster);"
                                                 [cdkDropListData]="dagInRooster"
                                                 [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
                                             <div cdkDrag>
@@ -309,6 +309,7 @@
                                          btnColor="btn-primary"></app-icon-button>
 
                         <app-icon-button class="toolbarBtn" iconNaam="fas CalendarWeek"
+                                         tekst="Club / DDWV"
                                          (btnClicked)="ToggleWeekendDDWV()"
                                          btnColor="btn-primary"></app-icon-button>
 

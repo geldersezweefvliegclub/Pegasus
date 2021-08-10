@@ -1,13 +1,13 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {CdkDrag, CdkDragDrop} from '@angular/cdk/drag-drop';
 import {LedenService} from '../../services/apiservice/leden.service';
-import {HeliosLedenDataset, HeliosLid, HeliosRoosterDataset} from '../../types/Helios';
+import {HeliosLedenDataset, HeliosLid, HeliosRooster, HeliosRoosterDag, HeliosRoosterDataset} from '../../types/Helios';
 import {faCalendarDay, faTimesCircle, faUsers} from '@fortawesome/free-solid-svg-icons';
 import {SharedService} from '../../services/shared/shared.service';
 import {Subscription} from 'rxjs';
 import {RoosterService} from '../../services/apiservice/rooster.service';
 import {getBeginEindDatumVanMaand} from '../../utils/Utils';
-import {CustomError} from '../../types/Utils';
+import {CustomError, KeyValueArray} from '../../types/Utils';
 import {DateTime} from 'luxon';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {faFilter} from "@fortawesome/free-solid-svg-icons/faFilter";
@@ -41,9 +41,8 @@ export class RoosterPageComponent implements OnInit {
     heleRooster: HeliosRoosterDataset[];
     filteredRooster: HeliosRoosterDataset[];
 
-    huidigJaar: number;
-    huidigMaand: number;
-    private datumAbonnement: Subscription;
+    datumAbonnement: Subscription;         // volg de keuze van de kalender
+    datum: DateTime;                       // de gekozen dag
 
 
     isLoading: boolean = false;
@@ -56,53 +55,16 @@ export class RoosterPageComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        // de datum zoals die in de kalender gekozen is
         this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
-            this.huidigMaand = jaarMaand.month;
-            this.huidigJaar = jaarMaand.year;
-            this.opvragen();
-        });
-    }
-
-    onDropInTable(event: CdkDragDrop<HeliosLedenDataset, any>, dagInRooster: HeliosRoosterDataset): void {
-        // Haal de nieuwe en oude ID's op. Een id is bijvoorbeeld:
-        // OCHTEND_LIERIST-0
-        // 0 is de index in het rooster, dus de eerste dag van de maand.
-        // OCHTEND_LIERIST is de taak die te vervullen is.
-        const nieuwContainerId = event.container.id;
-        const oudContrainerId = event.previousContainer.id;
-
-        let naam;
-        let id;
-        // Als de nieuwe container hetzelfde is al de oude, doe dan niks.
-        if (nieuwContainerId === oudContrainerId) {
-            return;
-        }
-        // Als de actie van een container naar een andere container is geweest, controleren we eerst of de oude container de ledenlijst was of niet
-        else if (nieuwContainerId !== oudContrainerId) {
-            // De actie komt niet uit de ledenlijst, dus iemand is al ergens anders ingevuld. Die moeten we eerst leegmaken, en dan kunnen we de nieuwe vullen.
-            if (oudContrainerId !== 'LEDENLIJST') {
-                // We hakken de id op en halen de verschillende onderdelen eruit (taak en index van het rooster)
-                const taakOnderdelen = this.getTaakEnIndexVanID(oudContrainerId);
-
-                // We hebben van een dag naar een andere dag versleept dus data zit op een andere locatie.
-                // Uit die data halen we de naam en id op die toen was gezet en zetten die op de nieuwe dag
-                const data = event.item.dropContainer.data;
-                naam = data[taakOnderdelen.taak];
-                id = data[taakOnderdelen.taak + '_ID'];
-
-                // En omdat we data verplaatsen, resetten vervolgens de dag waar we vandaan kwamen
-                this.setTaakWaardes(this.heleRooster[taakOnderdelen.index], taakOnderdelen.taak, undefined, undefined);
-            } else {
-                // De oude container is wel de ledenlijst geweest, dus de data zit op deze locatie.
-                const data = event.item.data;
-                naam = data.NAAM;
-                id = data.ID;
-                // Verhoog ook het aantal keer ingedeeld van deze persoon, sorteer daarna de ledenlijst.
-                data.KEER_INGEDEELD = data.KEER_INGEDEELD ? data.KEER_INGEDEELD + 1 : 1;
-            }
-        }
-        const taak = this.getTaakEnIndexVanID(nieuwContainerId).taak;
-        this.setTaakWaardes(dagInRooster, taak, id, naam);
+            this.datum = DateTime.fromObject({
+                year: jaarMaand.year,
+                month: jaarMaand.month,
+                day: 1
+            })
+            this.opvragenRooster();
+        })
+        this.opvragen();
     }
 
     /**
@@ -110,16 +72,22 @@ export class RoosterPageComponent implements OnInit {
      * @private
      */
     private opvragen() {
+        this.opvragenLeden();
+        this.opvragenRooster();
+    }
+
+    private opvragenLeden() {
         this.isLoading = true;
         this.ledenService.getLeden(false).then(leden => {
             this.alleLeden = leden;
             this.applyLedenFilter();
             this.isLoading = false;
         }).catch(e => this.catchError(e));
+    }
 
-        const beginEindDatum = getBeginEindDatumVanMaand(this.huidigMaand, this.huidigJaar);
+    private opvragenRooster() {
+        const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
         this.roosterService.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then(rooster => {
-            console.log(rooster);
             this.heleRooster = rooster;
             this.vulMissendeDagenAan();
             this.applyRoosterFilter();
@@ -143,21 +111,26 @@ export class RoosterPageComponent implements OnInit {
      * @return {void}
      */
     private vulMissendeDagenAan(): void {
-        const dagenInDeMaand = DateTime.fromObject({year: this.huidigJaar, month: this.huidigMaand}).daysInMonth;
-        for (let i = 0; i < dagenInDeMaand; i++) {
-            const datumInRooster = DateTime.fromISO((this.heleRooster[i]?.DATUM || ''));
-            const nieuwDagInRooster: HeliosRoosterDataset = {
-                DATUM: DateTime.fromObject({month: this.huidigMaand, year: this.huidigJaar, day: i + 1}).toISODate()
-            };
+        const dagenInDeMaand = this.datum.daysInMonth;
 
-            if (datumInRooster.isValid) {
-                const dag = datumInRooster.day;
-                if (dag > i + 1) {
-                    this.heleRooster.splice(i, 0, nieuwDagInRooster);
+        let dagenToevoegd = false;
+        for (let i = 0; i < dagenInDeMaand; i++) {
+            const d:DateTime = DateTime.fromObject({month: this.datum.month, year: this.datum.year, day: i + 1});
+            const inRooster = this.heleRooster.findIndex(roosterDag => roosterDag.DATUM == d.toISODate()) >= 0;
+
+            if (!inRooster) {       // datum staat nog niet in de database, gaan we aanmaken
+                dagenToevoegd = true;
+                const roosterRecord: HeliosRoosterDag = {
+                    DATUM: d.toISODate(),
+                    DDWV: (d.weekday <= 5) ? true : false,
+                    CLUB_BEDRIJF : (d.weekday > 5) ? true : false
                 }
-            } else {
-                this.heleRooster.splice(i, 0, nieuwDagInRooster);
+
+                this.roosterService.nieuwRoosterdag(roosterRecord);
             }
+        }
+        if (dagenToevoegd) {
+            this.opvragenRooster();
         }
     }
 
@@ -176,6 +149,7 @@ export class RoosterPageComponent implements OnInit {
      * @return {boolean}
      */
     instructeurEvaluatie(item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
+        console.log(item);
         return this.controleerRol(item, 'INSTRUCTEUR');
     }
 
@@ -213,7 +187,7 @@ export class RoosterPageComponent implements OnInit {
             return;
         } else {
             const data = event.item.dropContainer.data;
-            const roosterDag = this.heleRooster.find(dag => dag.DATUM === data.DATUM);
+            const roosterDag = this.filteredRooster.find(dag => dag.DATUM === data.DATUM);
             const taak = this.getTaakEnIndexVanID(event.item.dropContainer.id).taak;
 
             if (roosterDag) {
@@ -222,17 +196,71 @@ export class RoosterPageComponent implements OnInit {
         }
     }
 
+    onDropInRooster(event: CdkDragDrop<HeliosLedenDataset, any>, dagInRooster: HeliosRoosterDataset): void {
+        // Haal de nieuwe en oude ID's op. Een id is bijvoorbeeld:
+        // OCHTEND_LIERIST-0
+        // 0 is de index in het rooster, dus de eerste dag van de maand.
+        // OCHTEND_LIERIST is de taak die te vervullen is.
+        const nieuwContainerId = event.container.id;
+        const oudContrainerId = event.previousContainer.id;
+
+        let naam;
+        let id;
+        // Als de nieuwe container hetzelfde is al de oude, doe dan niks.
+        if (nieuwContainerId === oudContrainerId) {
+            return;
+        }
+        // Als de actie van een container naar een andere container is geweest, controleren we eerst of de oude container de ledenlijst was of niet
+        else if (nieuwContainerId !== oudContrainerId) {
+            // De actie komt niet uit de ledenlijst, dus iemand is al ergens anders ingevuld. Die moeten we eerst leegmaken, en dan kunnen we de nieuwe vullen.
+            if (oudContrainerId !== 'LEDENLIJST') {
+                // We hakken de id op en halen de verschillende onderdelen eruit (taak en index van het rooster)
+                const taakOnderdelen = this.getTaakEnIndexVanID(oudContrainerId);
+
+                // We hebben van een dag naar een andere dag versleept dus data zit op een andere locatie.
+                // Uit die data halen we de naam en id op die toen was gezet en zetten die op de nieuwe dag
+                const data = event.item.dropContainer.data;
+                naam = data[taakOnderdelen.taak];
+                id = data[taakOnderdelen.taak + '_ID'];
+
+                // En omdat we data verplaatsen, resetten vervolgens de dag waar we vandaan kwamen
+                this.setTaakWaardes(this.filteredRooster[taakOnderdelen.index], taakOnderdelen.taak, undefined, undefined);
+            } else {
+                // De oude container is wel de ledenlijst geweest, dus de data zit op deze locatie.
+                const data = event.item.data;
+                naam = data.NAAM;
+                id = data.ID;
+                // Verhoog ook het aantal keer ingedeeld van deze persoon, sorteer daarna de ledenlijst.
+                data.KEER_INGEDEELD = data.KEER_INGEDEELD ? data.KEER_INGEDEELD + 1 : 1;
+            }
+        }
+        const taak = this.getTaakEnIndexVanID(nieuwContainerId).taak;
+        this.setTaakWaardes(dagInRooster, taak, id, naam);
+    }
+
+
     /**
      * Deel iemand in op een taak op een bepaalde dag
      * @param {HeliosRoosterDataset} roosterdag
-     * @param {string} taak
-     * @param {string | undefined} id
-     * @param {string | undefined} naam
+     * @param {string} taak                 = OCHTEND_LIERIST of OCHTEND_INSTRUCTTEUR of MIDDAG_DDI etc
+     * @param {string | undefined} lid_id   = LID_ID
+     * @param {string | undefined} naam     = Naam van het lid
      * @return {void}
      */
-    setTaakWaardes(roosterdag: HeliosRoosterDataset, taak: string, id: string | undefined, naam: string | undefined): void {
+    setTaakWaardes(roosterdag: HeliosRoosterDataset, taak: string, lid_id: string | undefined, naam: string | undefined): void {
+
+        const updateDag: HeliosRoosterDag = {
+            ID: roosterdag.ID,
+            [taak + "_ID"]: (lid_id) ? lid_id : null,
+        }
+
+        this.roosterService.updateRoosterdag(updateDag);
+
+
         roosterdag[taak] = naam;
-        roosterdag[taak + '_ID'] = id;
+        roosterdag[taak + '_ID'] = lid_id;
+
+        // todo opslaan van data in record
     }
 
     /**
@@ -337,16 +365,14 @@ export class RoosterPageComponent implements OnInit {
 
     // Laat hele rooster zien, of alleen weekend / DDWV
     applyRoosterFilter() {
-        // leden-filter de dataset naar de lijst
         this.filteredRooster = [];
 
-        // toonClubDDWV, 0 = laat alle dagen zien
+        // toonClubDDWV, 0 = laat alle dagen zien, dus club dagen en DDWV dagen
         if (this.toonClubDDWV == 0) {
             this.filteredRooster = this.heleRooster;
             return;
         }
 
-        console.log("------------" + this.toonClubDDWV)
         for (let i = 0; i < this.heleRooster.length; i++) {
             const dt: DateTime = DateTime.fromSQL(this.heleRooster[i].DATUM as string);
 
