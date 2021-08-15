@@ -54,7 +54,7 @@ export class StartlijstService {
 
     async getLogboek(id: number, jaar: number, maxRecords?: number): Promise<HeliosLogboekDataset[]> {
         let hash: string = '';
-        if (this.storageService.ophalen('vlogboek-'+id.toString()) != null) {
+        if (((this.logboek == null)) && (this.storageService.ophalen('vlogboek-'+id.toString())  != null)) {
             this.logboek = this.storageService.ophalen('vlogboek-'+id.toString());
         }
 

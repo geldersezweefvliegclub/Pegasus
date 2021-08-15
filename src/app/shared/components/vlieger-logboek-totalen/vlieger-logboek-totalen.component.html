@@ -31,6 +31,8 @@
         </table>
     </div>
 
+    <p *ngIf="data.jaar.INSTRUCTIE_STARTS > 0"><b>Instructie starts</b>: {{data.jaar.INSTRUCTIE_STARTS}}</p>
+
     <div *ngIf="data.starts.length > 0">
         <p class="textStartMethode"><b>Start methode</b></p>
         <table class="startsTabel">

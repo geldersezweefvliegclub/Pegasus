@@ -548,6 +548,7 @@ export interface components {
       /** Totalen van het jaar */
       jaar?: {
         STARTS?: number;
+        INSTRUCTIE_STARTS?: number;
         VLIEGTIJD?: string;
       };
     };

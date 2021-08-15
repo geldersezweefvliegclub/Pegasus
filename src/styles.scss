@@ -294,6 +294,8 @@ canvas.recencyGrafiek.chartjs-render-monitor {
   cursor: pointer;
 }
 
-div {
- // overflow: scroll;
+.rode_regel_niet_inzetbaar {
+  background-color: #ffcac8eb !important;
+  color: red !important;
 }
+
