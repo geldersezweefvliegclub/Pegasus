@@ -243,6 +243,10 @@ export interface components {
       TYPE_ID?: number;
       /** Volgorde van vliegtuiglijst, bedoeld voor club vliegtuigen */
       VOLGORDE?: number;
+      /** Mag het vliegtuig vliegen? */
+      INZETBAAR?: boolean;
+      /** De opmerkingen die ingevoerd zijn */
+      OPMERKINGEN?: string;
     };
     ref_vliegtuigen: components["schemas"]["ref_vliegtuigen_in"] & {
       /** Is dit record gemarkeerd als verwijderd? */

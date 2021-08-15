@@ -41,7 +41,8 @@ export class VliegtuigenGridComponent implements OnInit {
         {field: 'FLARMCODE', headerName: 'Flarm', sortable: true},
         {field: 'ZELFSTART', headerName: 'Zelfstart', sortable: true, cellRenderer: 'checkboxRender'},
         {field: 'SLEEPKIST', headerName: 'Sleepkist', sortable: true, cellRenderer: 'checkboxRender'},
-        {field: 'TMG', headerName: 'TMG', sortable: true, cellRenderer: 'checkboxRender'}
+        {field: 'TMG', headerName: 'TMG', sortable: true, cellRenderer: 'checkboxRender'},
+        {field: 'OPMERKINGEN', headerName: 'Opmerkingen', sortable: true},
     ];
 
     // kolom om record te verwijderen
@@ -92,6 +93,10 @@ export class VliegtuigenGridComponent implements OnInit {
             }
         },
     }];
+
+    rowClassRules = {
+        'rode_regel_niet_inzetbaar': function(params: any) { return params.data.INZETBAAR === false; },
+    }
 
     columns: ColDef[];
 

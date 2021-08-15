@@ -29,6 +29,8 @@ export class VliegtuigEditorComponent  implements  OnInit {
         SLEEPKIST: undefined,
         TYPE_ID: undefined,
         VOLGORDE: undefined,
+        INZETBAAR: undefined,
+        OPMERKINGEN: undefined
     };
     vliegtuigTypes: HeliosType[];
 

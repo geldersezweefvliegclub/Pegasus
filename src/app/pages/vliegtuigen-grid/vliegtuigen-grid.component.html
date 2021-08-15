@@ -11,6 +11,7 @@
                     id="vliegtuiggrid"
                     [rowData]="data"
                     [columnDefs]="columns"
+                    [rowClassRules]="rowClassRules"
                     [frameworkComponents]="frameworkComponents"
                     (rowDoubleClicked)="openEditor($event)"
                     class="h-100 mt-n8"></app-datatable>

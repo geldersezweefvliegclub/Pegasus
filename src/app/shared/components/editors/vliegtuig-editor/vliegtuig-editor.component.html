@@ -76,6 +76,22 @@
                         </select>
                     </div>
                 </div>
+                <div class="row my-3 align-items-end" *ngIf="vliegtuig.CLUBKIST">
+                    <div class="col-3 col-md-3">
+                        <input name="INZETBAAR" type="checkbox" class="form-check-input" id="INZETBAAR"
+                               [(ngModel)]="vliegtuig.INZETBAAR">
+                        <label class="form-check-label ms-2" for="CLUBKIST">
+                            Inzetbaar
+                        </label>
+                    </div>
+                </div>
+                <div class="row my-3 align-items-end">
+                    <div class="col-12 col-md-12">
+                        <label for="OPMERKINGEN" class="form-label">Opmerkingen</label>
+                        <input type="text" class="form-control" id="OPMERKINGEN"
+                               [(ngModel)]="vliegtuig.OPMERKINGEN">
+                    </div>
+                </div>
             </fieldset>
     </div>
     <div footer>

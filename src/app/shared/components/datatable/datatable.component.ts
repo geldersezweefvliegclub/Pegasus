@@ -21,14 +21,15 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     @Input() id: string;
     @Input() sizeToFit: boolean = true;
     @Input() autoHeight: boolean = false;
-    @Input() rowHeight: number =40;
+    @Input() rowHeight: number = 40;
     @Input() pagination: boolean = true;
+    @Input() rowClassRules: any = null;
     @Output() rowDoubleClicked: EventEmitter<RowDoubleClickedEvent> = new EventEmitter<RowDoubleClickedEvent>();
     @Output() rowSelected: EventEmitter<RowSelectedEvent> = new EventEmitter<RowSelectedEvent>();
 
     options: GridOptions = {
         rowHeight: 40,
-        headerHeight:20,
+        headerHeight: 20,
         paginationAutoPageSize: true,
         rowSelection: 'single',
         pagination: true,
@@ -49,10 +50,13 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     constructor(private readonly storageService: StorageService) {
     }
 
-    ngOnInit()
-    {
-      this.defaultColDef.autoHeight = this.autoHeight;
-      this.options.pagination = this.pagination;
+    ngOnInit() {
+        this.defaultColDef.autoHeight = this.autoHeight;
+        this.options.pagination = this.pagination;
+
+        if (this.rowClassRules) {
+            this.options.rowClassRules = this.rowClassRules;
+        }
     }
 
     ngOnDestroy() {
@@ -94,7 +98,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     RestoreColumnState() {
-         if (this.id) {
+        if (this.id) {
             let indeling = this.storageService.ophalen(this.id);
 
             if (indeling != null) {
