@@ -19,6 +19,7 @@ import {LedenFilterComponent} from "../../shared/components/leden-filter/leden-f
 import {LoginService} from "../../services/apiservice/login.service";
 import {DienstenService} from "../../services/apiservice/diensten.service";
 import {NgbDateNativeUTCAdapter} from "@ng-bootstrap/ng-bootstrap";
+import * as xlsx from "xlsx";
 
 type HeliosLedenDatasetExtended = HeliosLedenDataset & {
     INGEDEELD_MAAND?: number
@@ -75,6 +76,7 @@ export class RoosterPageComponent implements OnInit {
     datumAbonnement: Subscription;         // volg de keuze van de kalender
     datum: DateTime;                       // de gekozen dag
 
+    magExporteren: boolean = true;
     magWijzigen: boolean = false;
     opslaanTimer: number;                  // kleine vertraging om data opslaan te beperken
     isLoading: boolean = true;
@@ -105,7 +107,7 @@ export class RoosterPageComponent implements OnInit {
         })
         const ui = this.loginService.userInfo;
         this.magWijzigen = (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isBeheerderDDWV || ui?.Userinfo?.isRooster) ? true : false;
-
+        this.magExporteren = !ui?.Userinfo?.isDDWV;
         this.isLierist = ui?.LidData?.LIERIST as boolean
         this.isStartleider = ui?.LidData?.STARTLEIDER as boolean;
         this.isInstructeur = ui?.LidData?.INSTRUCTEUR as boolean;
@@ -191,7 +193,6 @@ export class RoosterPageComponent implements OnInit {
                     }
                 });
                 this.isLoading = false;
-                console.log(this.heleRooster)
             });
 
         }).catch(e => this.catchError(e));
@@ -242,7 +243,7 @@ export class RoosterPageComponent implements OnInit {
      * @return {boolean}
      */
     lieristEvaluatie(datum: string, dienst: number, item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
-        if (!this.dientBeschikbaar(datum, dienst)) return false;
+        if (!this.dienstBeschikbaar(datum, dienst)) return false;
         return this.controleerGeschiktheid(item, datum, 'LIERIST');
     }
 
@@ -252,7 +253,7 @@ export class RoosterPageComponent implements OnInit {
      * @return {boolean}
      */
     instructeurEvaluatie(datum: string, dienst: number, item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
-        if (!this.dientBeschikbaar(datum, dienst)) return false;
+        if (!this.dienstBeschikbaar(datum, dienst)) return false;
         return this.controleerGeschiktheid(item, datum, 'INSTRUCTEUR');
     }
 
@@ -262,12 +263,12 @@ export class RoosterPageComponent implements OnInit {
      * @return {boolean}
      */
     startleiderEvaluatie(datum: string, dienst: number, item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
-        if (!this.dientBeschikbaar(datum, dienst)) return false;
+        if (!this.dienstBeschikbaar(datum, dienst)) return false;
         return this.controleerGeschiktheid(item, datum, 'STARTLEIDER');
     }
 
     // voorkom dat ingevulde dienst overschreven wordt
-    dientBeschikbaar(datum: string, dienst: number): boolean {
+    dienstBeschikbaar(datum: string, dienst: number): boolean {
         const roosterIndex = this.heleRooster.findIndex((dag => dag.DATUM == datum));
 
         if (roosterIndex < 0) {
@@ -290,7 +291,7 @@ export class RoosterPageComponent implements OnInit {
             console.error("Datum " + datum + " onbekend");  // dat mag nooit voorkomen
             return false;
         }
-        const ddwv = this.heleRooster[roosterIndex].DDWV
+        const ddwv = this.heleRooster[roosterIndex].DDWV && !this.heleRooster[roosterIndex].CLUB_BEDRIJF;  // alleen DDWV
 
         if (item.dropContainer.id === 'LEDENLIJST') {
             const data = item.data as HeliosLid;
@@ -307,8 +308,10 @@ export class RoosterPageComponent implements OnInit {
             const oudeDienst = this.decodeerID(item.dropContainer.id);
             const lid = this.alleLeden.find(lid => lid.ID === data.Diensten[oudeDienst.typeDienst].LID_ID);
 
-            if (!lid)
+            if (!lid) {
+                console.error("Lid " + data.Diensten[oudeDienst.typeDienst].LID_ID + " onbekend");  // dat mag nooit voorkomen
                 return false;
+            }
 
             switch (rol)
             {
@@ -393,9 +396,6 @@ export class RoosterPageComponent implements OnInit {
             OPMERKINGEN: ingevoerd.OPMERKINGEN
         }
 
-        console.log(rooster)
-
-
         // Wacht even de gebruiker kan nog aan het typen zijn
         this.opslaanTimer = window.setTimeout(() => {
             this.roosterService.updateRoosterdag(rooster);
@@ -403,7 +403,6 @@ export class RoosterPageComponent implements OnInit {
     }
 
     toekennenDienst(roosterdag: HeliosRoosterDagExtended, typeDienstID: number, lid_id: string | undefined, naam: string | undefined): void {
-
         const roosterIndex = this.heleRooster.findIndex((dag => dag.DATUM == roosterdag.DATUM));
 
         if (roosterIndex < 0) {
@@ -696,5 +695,28 @@ export class RoosterPageComponent implements OnInit {
             return true; // tot 4 uur mag je aanpassen
         }
         return false;
+    }
+
+    // Export naar excel
+    exportRooster() {
+        let exportData:any = [];
+
+        this.filteredRooster.forEach(dag => {
+            let record: any = {
+                DATUM: dag.DATUM,
+                DDWV: dag.DDWV ? "X" : "-",
+                CLUB_BEDRIJF: dag.CLUB_BEDRIJF ? "X" : "-",
+                OPMERKINGEN: dag.OPMERKINGEN
+            }
+            dag.Diensten.forEach(dienst => {
+                record[dienst.TYPE_DIENST!] = dienst.NAAM;
+            });
+            exportData.push(record)
+        });
+
+        let ws = xlsx.utils.json_to_sheet(exportData);
+        const wb: xlsx.WorkBook = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
+        xlsx.writeFile(wb, 'rooster ' + new Date().toJSON().slice(0, 10) + '.xlsx');
     }
 }

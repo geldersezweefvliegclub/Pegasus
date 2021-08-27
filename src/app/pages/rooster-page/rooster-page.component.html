@@ -1,6 +1,8 @@
 <app-pegasus-card titel="Rooster"
                   subtitel="Rooster inplannen"
-                  [icon]="roosterIcon">
+                  [icon]="roosterIcon"
+                  [exportEnabled]="this.magExporteren"
+                  (excelExport)="exportRooster()">
     <div cdkDropListGroup class="h-100">
         <div class="box h-100">
             <div id="data">
