@@ -155,7 +155,7 @@ export class LedenGridComponent implements OnInit{
   magToevoegen: boolean = false;
   magVerwijderen: boolean = false;
   magWijzigen: boolean = false;
-  magExporten: boolean = false;
+  magExporteren: boolean = false;
 
   constructor(private readonly ledenService: LedenService,
               private readonly loginService: LoginService,
@@ -174,7 +174,7 @@ export class LedenGridComponent implements OnInit{
     this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
     this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
     this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
-    this.magExporten = (!ui?.isDDWV) ? true : false;
+    this.magExporteren = (!ui?.isDDWV) ? true : false;
   }
 
   // openen van popup om lid data van een nieuw lid te kunnen invoeren
