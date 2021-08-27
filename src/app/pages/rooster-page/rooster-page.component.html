@@ -6,9 +6,9 @@
             <div id="data">
                 <div class="dataContent">
                     <div class="roosterTabel">
-                        <table class="table">
+                        <table *ngIf="!isLoading" class="table">
                             <thead>
-                            <th scope="col"> </th>
+                            <th scope="col"></th>
                             <th scope="col" class="DagBreedte">Dag</th>
                             <th scope="col" *ngIf="toonInstructeurs" [style]="KolomBreedte()">DDI</th>
                             <th scope="col" *ngIf="toonInstructeurs" [style]="KolomBreedte()">Instructeur</th>
@@ -19,6 +19,7 @@
                             <th scope="col" id="headerOpmerkingen">Opmerkingen</th>
                             </thead>
                             <tbody>
+
                             <tr *ngFor="let dagInRooster of filteredRooster;let i = index">
                                 <td class="WeekdagKolom" [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
                                     <div class="rotation-wrapper">
@@ -36,16 +37,20 @@
                                             <div>
                                                 <input type="checkbox" class="form-check-inline" [id]="'DDWV' + i"
                                                        [name]="'DDWV' + i"
-                                                       [(ngModel)]="dagInRooster.DDWV">
+                                                       [(ngModel)]="dagInRooster.DDWV"
+                                                       (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
+                                                       [disabled]="!magWijzigen">
                                                 <label [for]="'DDWV' + i" class="form-check-label">DDWV</label>
                                             </div>
-                                            <div>
+                                            <div class="text-nowrap">
                                                 <input type="checkbox" class="form-check-inline"
                                                        [id]="'Clubbedrijf' + i"
                                                        [name]="'Clubbedrijf' + i"
-                                                       [(ngModel)]="dagInRooster.CLUB_BEDRIJF">
+                                                       [(ngModel)]="dagInRooster.CLUB_BEDRIJF"
+                                                       (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
+                                                       [disabled]="!magWijzigen">
                                                 <label [for]="'Clubbedrijf' + i"
-                                                       class="labelClub form-check-label text-nowrap">Club
+                                                       class="labelClub form-check-label">Club
                                                     bedrijf</label>
                                             </div>
                                         </div>
@@ -53,69 +58,89 @@
                                 </td>
 
                                 <td *ngIf="toonInstructeurs">
-                                    <div class="d-flex">
+                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF">
                                         <div
                                                 class="drop-container"
                                                 cdkDropList
-                                                [id]="'OCHTEND_DDI-' + i"
-                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster);"
+                                                [id]="dagInRooster.DATUM + ',' + OCHTEND_DDI_TYPE_ID"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster, OCHTEND_DDI_TYPE_ID);"
                                                 [cdkDropListData]="dagInRooster"
-                                                [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this)">
+                                                [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this, dagInRooster.DATUM, OCHTEND_DDI_TYPE_ID)">
                                             <div cdkDrag>
-                                                {{dagInRooster.OCHTEND_DDI}}
+                                                {{ (dagInRooster.Diensten[OCHTEND_DDI_TYPE_ID]) ? dagInRooster.Diensten[OCHTEND_DDI_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div (click)="setTaakWaardes(dagInRooster, 'OCHTEND_DDI', undefined, undefined)">
+                                        <div *ngIf="isInstructeur && zelfIndelen && !dagInRooster.Diensten[OCHTEND_DDI_TYPE_ID]"
+                                             (click)="toekennenDienst(dagInRooster, OCHTEND_DDI_TYPE_ID, mijnID, mijnNaam)">
+                                            <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                        </div>
+                                        <div *ngIf="magVerwijderen(dagInRooster.Diensten[OCHTEND_DDI_TYPE_ID])"
+                                             (click)="verwijderDienst(dagInRooster, OCHTEND_DDI_TYPE_ID)">
                                             <ng-template *ngTemplateOutlet="reset"></ng-template>
                                         </div>
                                     </div>
-                                    <div class="d-flex">
+                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF">
                                         <div
                                                 class="drop-container"
                                                 cdkDropList
-                                                [id]="'MIDDAG_DDI-' + i"
-                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster);"
+                                                [id]="dagInRooster.DATUM + ',' + MIDDAG_DDI_TYPE_ID"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster, MIDDAG_DDI_TYPE_ID);"
                                                 [cdkDropListData]="dagInRooster"
-                                                [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this)">
+                                                [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this, dagInRooster.DATUM, MIDDAG_DDI_TYPE_ID)">
                                             <div cdkDrag>
-                                                {{dagInRooster.MIDDAG_DDI}}
+                                                {{ (dagInRooster.Diensten[MIDDAG_DDI_TYPE_ID]) ? dagInRooster.Diensten[MIDDAG_DDI_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div (click)="setTaakWaardes(dagInRooster, 'MIDDAG_DDI', undefined, undefined)">
+                                        <div *ngIf="isInstructeur && zelfIndelen && !dagInRooster.Diensten[MIDDAG_DDI_TYPE_ID]"
+                                             (click)="toekennenDienst(dagInRooster, MIDDAG_DDI_TYPE_ID, mijnID, mijnNaam)">
+                                            <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                        </div>
+                                        <div *ngIf="magVerwijderen(dagInRooster.Diensten[MIDDAG_DDI_TYPE_ID])"
+                                             (click)="verwijderDienst(dagInRooster, MIDDAG_DDI_TYPE_ID)">
                                             <ng-template *ngTemplateOutlet="reset"></ng-template>
                                         </div>
                                     </div>
                                 </td>
                                 <td *ngIf="toonInstructeurs">
-                                    <div class="d-flex">
+                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF">
                                         <div
                                                 class="drop-container"
                                                 cdkDropList
-                                                [id]="'OCHTEND_INSTRUCTEUR-' + i"
-                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster);"
+                                                [id]="dagInRooster.DATUM + ',' + OCHTEND_INSTRUCTEUR_TYPE_ID"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster, OCHTEND_INSTRUCTEUR_TYPE_ID);"
                                                 [cdkDropListData]="dagInRooster"
-                                                [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this)">
+                                                [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this, dagInRooster.DATUM, OCHTEND_INSTRUCTEUR_TYPE_ID)">
                                             <div cdkDrag>
-                                                {{dagInRooster.OCHTEND_INSTRUCTEUR}}
+                                                {{ (dagInRooster.Diensten[OCHTEND_INSTRUCTEUR_TYPE_ID]) ? dagInRooster.Diensten[OCHTEND_INSTRUCTEUR_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div (click)="setTaakWaardes(dagInRooster, 'OCHTEND_INSTRUCTEUR', undefined, undefined)">
+                                        <div *ngIf="isInstructeur && zelfIndelen && !dagInRooster.Diensten[OCHTEND_INSTRUCTEUR_TYPE_ID]"
+                                             (click)="toekennenDienst(dagInRooster, OCHTEND_INSTRUCTEUR_TYPE_ID, mijnID, mijnNaam)">
+                                            <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                        </div>
+                                        <div *ngIf="magVerwijderen(dagInRooster.Diensten[OCHTEND_INSTRUCTEUR_TYPE_ID])"
+                                             (click)="verwijderDienst(dagInRooster, OCHTEND_INSTRUCTEUR_TYPE_ID)">
                                             <ng-template *ngTemplateOutlet="reset"></ng-template>
                                         </div>
                                     </div>
-                                    <div class="d-flex">
+                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF">
                                         <div
                                                 class="drop-container"
                                                 cdkDropList
-                                                [id]="'MIDDAG_INSTRUCTEUR-' + i"
-                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster);"
+                                                [id]="dagInRooster.DATUM + ',' + MIDDAG_INSTRUCTEUR_TYPE_ID"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster, MIDDAG_INSTRUCTEUR_TYPE_ID);"
                                                 [cdkDropListData]="dagInRooster"
-                                                [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this)">
+                                                [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this, dagInRooster.DATUM, MIDDAG_INSTRUCTEUR_TYPE_ID)">
                                             <div cdkDrag>
-                                                {{dagInRooster.MIDDAG_INSTRUCTEUR}}
+                                                {{ (dagInRooster.Diensten[MIDDAG_INSTRUCTEUR_TYPE_ID]) ? dagInRooster.Diensten[MIDDAG_INSTRUCTEUR_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div (click)="setTaakWaardes(dagInRooster, 'MIDDAG_INSTRUCTEUR', undefined, undefined)">
+                                        <div *ngIf="isInstructeur && zelfIndelen && !dagInRooster.Diensten[MIDDAG_INSTRUCTEUR_TYPE_ID]"
+                                             (click)="toekennenDienst(dagInRooster, MIDDAG_INSTRUCTEUR_TYPE_ID, mijnID, mijnNaam)">
+                                            <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                        </div>
+                                        <div *ngIf="magVerwijderen(dagInRooster.Diensten[MIDDAG_INSTRUCTEUR_TYPE_ID])"
+                                             (click)="verwijderDienst(dagInRooster, MIDDAG_INSTRUCTEUR_TYPE_ID)">
                                             <ng-template *ngTemplateOutlet="reset"></ng-template>
                                         </div>
                                     </div>
@@ -125,31 +150,41 @@
                                         <div
                                                 class="drop-container"
                                                 cdkDropList
-                                                [id]="'OCHTEND_STARTLEIDER-' + i"
-                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster);"
+                                                [id]="dagInRooster.DATUM + ',' + OCHTEND_STARTLEIDER_TYPE_ID"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster, OCHTEND_STARTLEIDER_TYPE_ID);"
                                                 [cdkDropListData]="dagInRooster"
-                                                [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this)">
+                                                [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this, dagInRooster.DATUM, OCHTEND_STARTLEIDER_TYPE_ID)">
                                             <div cdkDrag>
-                                                {{dagInRooster.OCHTEND_STARTLEIDER}}
+                                                {{ (dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID]) ? dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div (click)="setTaakWaardes(dagInRooster, 'OCHTEND_STARTLEIDER', undefined, undefined)">
+                                        <div *ngIf="isStartleider && (zelfIndelen || dagInRooster.DDWV)  && !dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID]"
+                                             (click)="toekennenDienst(dagInRooster, OCHTEND_STARTLEIDER_TYPE_ID, mijnID, mijnNaam)">
+                                            <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                        </div>
+                                        <div *ngIf="magVerwijderen(dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID])"
+                                             (click)="verwijderDienst(dagInRooster, OCHTEND_STARTLEIDER_TYPE_ID)">
                                             <ng-template *ngTemplateOutlet="reset"></ng-template>
                                         </div>
                                     </div>
-                                    <div class="d-flex">
+                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF">
                                         <div
                                                 class="drop-container"
                                                 cdkDropList
-                                                [id]="'MIDDAG_STARTLEIDER-' + i"
-                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster);"
+                                                [id]="dagInRooster.DATUM + ',' + MIDDAG_STARTLEIDER_TYPE_ID"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster, MIDDAG_STARTLEIDER_TYPE_ID);"
                                                 [cdkDropListData]="dagInRooster"
-                                                [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this)">
+                                                [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this, dagInRooster.DATUM, MIDDAG_STARTLEIDER_TYPE_ID)">
                                             <div cdkDrag>
-                                                {{dagInRooster.MIDDAG_STARTLEIDER}}
+                                                {{ (dagInRooster.Diensten[MIDDAG_STARTLEIDER_TYPE_ID]) ? dagInRooster.Diensten[MIDDAG_STARTLEIDER_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div (click)="setTaakWaardes(dagInRooster, 'MIDDAG_STARTLEIDER', undefined, undefined)">
+                                        <div *ngIf="isStartleider && zelfIndelen && !dagInRooster.Diensten[MIDDAG_STARTLEIDER_TYPE_ID]"
+                                             (click)="toekennenDienst(dagInRooster, MIDDAG_STARTLEIDER_TYPE_ID, mijnID, mijnNaam)">
+                                            <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                        </div>
+                                        <div *ngIf="magVerwijderen(dagInRooster.Diensten[MIDDAG_STARTLEIDER_TYPE_ID])"
+                                             (click)="verwijderDienst(dagInRooster, MIDDAG_STARTLEIDER_TYPE_ID)">
                                             <ng-template *ngTemplateOutlet="reset"></ng-template>
                                         </div>
                                     </div>
@@ -159,80 +194,105 @@
                                         <div
                                                 class="drop-container"
                                                 cdkDropList
-                                                [id]="'OCHTEND_LIERIST-' + i"
-                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster);"
+                                                [id]="dagInRooster.DATUM + ',' + OCHTEND_LIERIST_TYPE_ID"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster, OCHTEND_LIERIST_TYPE_ID);"
                                                 [cdkDropListData]="dagInRooster"
-                                                [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
+                                                [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this, dagInRooster.DATUM, OCHTEND_LIERIST_TYPE_ID)">
                                             <div cdkDrag>
-                                                {{dagInRooster.OCHTEND_LIERIST}}
+                                                {{ (dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID]) ? dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div (click)="setTaakWaardes(dagInRooster, 'OCHTEND_LIERIST', undefined, undefined)">
+                                        <div *ngIf="isLierist && (zelfIndelen || dagInRooster.DDWV)  && !dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID]"
+                                             (click)="toekennenDienst(dagInRooster, OCHTEND_LIERIST_TYPE_ID, mijnID, mijnNaam)">
+                                            <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                        </div>
+                                        <div *ngIf="magVerwijderen(dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID])"
+                                             (click)="verwijderDienst(dagInRooster, OCHTEND_LIERIST_TYPE_ID)">
                                             <ng-template *ngTemplateOutlet="reset"></ng-template>
                                         </div>
                                     </div>
-                                    <div class="d-flex">
+                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF">
                                         <div
                                                 class="drop-container"
                                                 cdkDropList
-                                                [id]="'MIDDAG_LIERIST-' + i"
-                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster);"
+                                                [id]="dagInRooster.DATUM + ',' + MIDDAG_LIERIST_TYPE_ID"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster, MIDDAG_LIERIST_TYPE_ID);"
                                                 [cdkDropListData]="dagInRooster"
-                                                [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
+                                                [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this, dagInRooster.DATUM, MIDDAG_LIERIST_TYPE_ID)">
                                             <div cdkDrag>
-                                                {{dagInRooster.MIDDAG_LIERIST}}
+                                                {{ (dagInRooster.Diensten[MIDDAG_LIERIST_TYPE_ID]) ? dagInRooster.Diensten[MIDDAG_LIERIST_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div (click)="setTaakWaardes(dagInRooster, 'MIDDAG_LIERIST', undefined, undefined)">
+                                        <div *ngIf="isLierist && zelfIndelen && !dagInRooster.Diensten[MIDDAG_LIERIST_TYPE_ID]"
+                                             (click)="toekennenDienst(dagInRooster, MIDDAG_LIERIST_TYPE_ID, mijnID, mijnNaam)">
+                                            <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                        </div>
+                                        <div *ngIf="magVerwijderen(dagInRooster.Diensten[MIDDAG_LIERIST_TYPE_ID])"
+                                             (click)="verwijderDienst(dagInRooster, MIDDAG_LIERIST_TYPE_ID)">
                                             <ng-template *ngTemplateOutlet="reset"></ng-template>
                                         </div>
                                     </div>
                                 </td>
                                 <td *ngIf="toonLieristen">
-                                    <div class="d-flex">
+                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF">
                                         <div
                                                 class="drop-container"
                                                 cdkDropList
-                                                [id]="'OCHTEND_HULPLIERIST-' + i"
-                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster);"
+                                                [id]="dagInRooster.DATUM + ',' + OCHTEND_HULPLIERIST_TYPE_ID"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster, OCHTEND_HULPLIERIST_TYPE_ID);"
                                                 [cdkDropListData]="dagInRooster"
-                                                [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
+                                                [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this, dagInRooster.DATUM, OCHTEND_HULPLIERIST_TYPE_ID)">
                                             <div cdkDrag>
-                                                {{dagInRooster.OCHTEND_HULPLIERIST}}
+                                                {{ (dagInRooster.Diensten[OCHTEND_HULPLIERIST_TYPE_ID]) ? dagInRooster.Diensten[OCHTEND_HULPLIERIST_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div (click)="setTaakWaardes(dagInRooster, 'OCHTEND_HULPLIERIST', undefined, undefined)">
+                                        <div *ngIf="isLierist && zelfIndelen && !dagInRooster.Diensten[OCHTEND_HULPLIERIST_TYPE_ID]"
+                                             (click)="toekennenDienst(dagInRooster, OCHTEND_HULPLIERIST_TYPE_ID, mijnID, mijnNaam)">
+                                            <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                        </div>
+                                        <div *ngIf="magVerwijderen(dagInRooster.Diensten[OCHTEND_HULPLIERIST_TYPE_ID])"
+                                             (click)="verwijderDienst(dagInRooster, OCHTEND_HULPLIERIST_TYPE_ID)">
                                             <ng-template *ngTemplateOutlet="reset"></ng-template>
                                         </div>
                                     </div>
-                                    <div class="d-flex">
+                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF">
                                         <div
                                                 class="drop-container"
                                                 cdkDropList
-                                                [id]="'MIDDAG_HULPLIERIST-' + i"
-                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster);"
+                                                [id]="dagInRooster.DATUM + ',' + MIDDAG_HULPLIERIST_TYPE_ID"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster, MIDDAG_HULPLIERIST_TYPE_ID);"
                                                 [cdkDropListData]="dagInRooster"
-                                                [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this)">
+                                                [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this, dagInRooster.DATUM, MIDDAG_HULPLIERIST_TYPE_ID)">
                                             <div cdkDrag>
-                                                {{dagInRooster.MIDDAG_HULPLIERIST}}
+                                                {{ (dagInRooster.Diensten[MIDDAG_HULPLIERIST_TYPE_ID]) ? dagInRooster.Diensten[MIDDAG_HULPLIERIST_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div (click)="setTaakWaardes(dagInRooster, 'MIDDAG_HULPLIERIST', undefined, undefined)">
+                                        <div *ngIf="isLierist && zelfIndelen && !dagInRooster.Diensten[MIDDAG_HULPLIERIST_TYPE_ID]"
+                                             (click)="toekennenDienst(dagInRooster, MIDDAG_HULPLIERIST_TYPE_ID, mijnID, mijnNaam)">
+                                            <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                        </div>
+                                        <div *ngIf="magVerwijderen(dagInRooster.Diensten[MIDDAG_HULPLIERIST_TYPE_ID])"
+                                             (click)="verwijderDienst(dagInRooster, MIDDAG_HULPLIERIST_TYPE_ID)">
                                             <ng-template *ngTemplateOutlet="reset"></ng-template>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <textarea [(ngModel)]="OPMERKINGEN" name="MEOPMERKINGENTEO"
-                                              class="w-100 text-invoer form-control"
-                                              [rows]="2" style="resize: none"></textarea>
+                                    <textarea
+                                            [id]="'OPMERKINGEN' + i"
+                                            [name]="'OPMERKINGEN' + i"
+                                            [(ngModel)]="dagInRooster.OPMERKINGEN"
+                                            (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
+                                            [disabled]="!magWijzigen"
+                                            class="w-100 text-invoer form-control opmerkingen"
+                                            [rows]="2" style="resize: none"></textarea>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
 
                     </div>
-                    <div class="kolomRechts">
+                    <div class="kolomRechts" *ngIf="magWijzigen">
                         <h4>Leden</h4>
                         <div *ngIf="filteredLeden && !isLoading;else loading"
                              id="LEDENLIJST"
@@ -256,7 +316,16 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="d-flex">
-                                        <app-avatar [url]="lid.AVATAR"></app-avatar>
+                                        <div class="maandTotaal" >
+                                            {{ lid.INGEDEELD_MAAND }}
+                                        </div>
+                                        <div class="jaarTotaal">
+                                            {{ lid.INGEDEELD_JAAR | number:'2.0' }}
+                                        </div>
+
+                                        <div class="avatar">
+                                            <app-avatar [url]="lid.AVATAR"></app-avatar>
+                                        </div>
                                         <div class="naam">
                                             {{lid.NAAM}}
                                             <p>
@@ -343,6 +412,12 @@
     </div>
 </ng-template>
 `
+<ng-template #assign>
+    <div class="d-flex flex-column justify-content-center h-100 text-black-50 clickable px-1">
+        <fa-icon [icon]="assignIcon"></fa-icon>
+    </div>
+</ng-template>
+
 <ng-template #preview let-lid>
     <div class="card card-body">
         <h6>{{lid.NAAM}}</h6>
@@ -351,5 +426,6 @@
             <span *ngIf="lid.STARTLEIDER">Startleider </span>
             <span *ngIf="lid.INSTRUCTEUR">Instructeur </span>
         </p>
+
     </div>
 </ng-template>

@@ -56,7 +56,7 @@ export class VliegtuigenService {
         return response.json();
     }
 
-    async nieuwVliegtuig(vliegtuig: HeliosVliegtuig) {
+    async addVliegtuig(vliegtuig: HeliosVliegtuig) {
         const response: Response = await this.APIService.post('Vliegtuigen/SaveObject', JSON.stringify(vliegtuig));
         return response.json();
     }

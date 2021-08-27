@@ -234,7 +234,7 @@ export class StartlijstGridComponent implements OnInit {
 
     // nieuwe start is ingevoerd, nu opslaan
     Toevoegen(start: HeliosStart) {
-        this.startlijstService.nieuweStart(start).then(() => {
+        this.startlijstService.addStart(start).then(() => {
             this.opvragen();
             this.editor.closePopup();
         }).catch(e => {

@@ -56,7 +56,7 @@ export class LedenService {
         return response.json();
     }
 
-    async nieuwLid(lid: HeliosLid) {
+    async addLid(lid: HeliosLid) {
         const response: Response = await this.apiService.post('Leden/SaveObject', JSON.stringify(lid));
         return response.json();
     }

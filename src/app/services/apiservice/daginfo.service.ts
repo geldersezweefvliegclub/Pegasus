@@ -126,7 +126,7 @@ export class DaginfoService {
     }
 
     // opslaan van een nieuw daginfo record
-    async nieuweDagInfo(daginfo: HeliosDagInfo) {
+    async addDagInfo(daginfo: HeliosDagInfo) {
         const response: Response = await this.APIService.post('Daginfo/SaveObject', JSON.stringify(daginfo));
 
         // opslaan als class variable en fire event

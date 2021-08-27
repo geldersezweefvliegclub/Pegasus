@@ -112,7 +112,7 @@ export class TracksComponent implements OnInit {
 
     // Toevoegen van een vlieger track aan de database
     ToevoegenTrack(track: HeliosTrack): void {
-        this.trackService.nieuwTrack(track);
+        this.trackService.addTrack(track);
         this.trackEditor.closePopup();
     }
 
@@ -160,7 +160,7 @@ export class TracksComponent implements OnInit {
 
     // opslaan van de data van een nieuw vliegtuig
     Toevoegen(track: HeliosTrack) {
-        this.trackService.nieuwTrack(track).then(() => {
+        this.trackService.addTrack(track).then(() => {
             this.opvragen();
             this.trackEditor.closePopup();
         }).catch(e => {

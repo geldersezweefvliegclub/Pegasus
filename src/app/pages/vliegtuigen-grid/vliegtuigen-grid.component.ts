@@ -190,7 +190,7 @@ export class VliegtuigenGridComponent implements OnInit {
 
     // opslaan van de data van een nieuw vliegtuig
     Toevoegen(vliegtuig: HeliosVliegtuig) {
-        this.vliegtuigenService.nieuwVliegtuig(vliegtuig).then(() => {
+        this.vliegtuigenService.addVliegtuig(vliegtuig).then(() => {
             this.opvragen();
             this.editor.closePopup();
         }).catch(e => {

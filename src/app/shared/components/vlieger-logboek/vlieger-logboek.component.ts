@@ -144,7 +144,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
 
     // Toevoegen van een vlieger track aan de database
     ToevoegenTrack(track: HeliosTrack): void {
-        this.trackService.nieuwTrack(track);
+        this.trackService.addTrack(track);
         this.trackEditor.closePopup();
     }
 

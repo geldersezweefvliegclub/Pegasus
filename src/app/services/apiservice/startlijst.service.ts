@@ -201,7 +201,7 @@ export class StartlijstService {
         return response.json();
     }
 
-    async nieuweStart(vliegtuig: HeliosStart) {
+    async addStart(vliegtuig: HeliosStart) {
         const response: Response = await this.APIService.post('Startlijst/SaveObject', JSON.stringify(vliegtuig));
         return response.json();
     }

@@ -1,21 +1,32 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {CdkDrag, CdkDragDrop} from '@angular/cdk/drag-drop';
 import {LedenService} from '../../services/apiservice/leden.service';
-import {HeliosLedenDataset, HeliosLid, HeliosRooster, HeliosRoosterDag, HeliosRoosterDataset} from '../../types/Helios';
-import {faCalendarDay, faTimesCircle, faUsers} from '@fortawesome/free-solid-svg-icons';
+import {
+    HeliosDienst, HeliosDienstenDataset,
+    HeliosLedenDataset,
+    HeliosLid,
+    HeliosRoosterDag,
+    HeliosRoosterDataset
+} from '../../types/Helios';
+import {faCalendarCheck, faCalendarDay, faTimesCircle, faUsers} from '@fortawesome/free-solid-svg-icons';
 import {SharedService} from '../../services/shared/shared.service';
 import {Subscription} from 'rxjs';
 import {RoosterService} from '../../services/apiservice/rooster.service';
 import {getBeginEindDatumVanMaand} from '../../utils/Utils';
 import {CustomError, KeyValueArray} from '../../types/Utils';
-import {DateTime} from 'luxon';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faFilter} from "@fortawesome/free-solid-svg-icons/faFilter";
+import {DateTime, Duration} from 'luxon';
 import {LedenFilterComponent} from "../../shared/components/leden-filter/leden-filter.component";
-
+import {LoginService} from "../../services/apiservice/login.service";
+import {DienstenService} from "../../services/apiservice/diensten.service";
+import {NgbDateNativeUTCAdapter} from "@ng-bootstrap/ng-bootstrap";
 
 type HeliosLedenDatasetExtended = HeliosLedenDataset & {
-    KEER_INGEDEELD?: number
+    INGEDEELD_MAAND?: number
+    INGEDEELD_JAAR?: number
+}
+
+type HeliosRoosterDagExtended = HeliosRoosterDag & {
+    Diensten: HeliosDienstenDataset[];
 }
 
 @Component({
@@ -28,30 +39,55 @@ export class RoosterPageComponent implements OnInit {
 
     readonly roosterIcon = faCalendarDay;
     readonly resetIcon = faTimesCircle;
+    readonly assignIcon = faCalendarCheck;
+
+    readonly OCHTEND_DDI_TYPE_ID = 1800;
+    readonly OCHTEND_INSTRUCTEUR_TYPE_ID = 1801;
+    readonly OCHTEND_LIERIST_TYPE_ID = 1802;
+    readonly OCHTEND_HULPLIERIST_TYPE_ID = 1803;
+    readonly OCHTEND_STARTLEIDER_TYPE_ID = 1804;
+    readonly MIDDAG_DDI_TYPE_ID = 1805;
+    readonly MIDDAG_INSTRUCTEUR_TYPE_ID = 1806;
+    readonly MIDDAG_LIERIST_TYPE_ID = 1807;
+    readonly MIDDAG_HULPLIERIST_TYPE_ID = 1808;
+    readonly MIDDAG_STARTLEIDER_TYPE_ID = 1809;
+
+    readonly MaxDienstenPerMaand = 2;
 
     toonStartleiders = true;
     toonInstructeurs = true;
     toonLieristen = true;
-    toonDDWV = true;
+    toonDDWV = false;
+
+    isStartleider = false;
+    isInstructeur = false;
+    isLierist = false;
+    isDDWV = false;
+    zelfIndelen = true;
 
     toonClubDDWV = 1;            // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
 
-    alleLeden: HeliosLedenDataset[];
+    alleLeden: HeliosLedenDatasetExtended[];
     filteredLeden: HeliosLedenDatasetExtended[];
-    heleRooster: HeliosRoosterDataset[];
-    filteredRooster: HeliosRoosterDataset[];
+    heleRooster: HeliosRoosterDagExtended[];
+    filteredRooster: HeliosRoosterDagExtended[];
 
     datumAbonnement: Subscription;         // volg de keuze van de kalender
     datum: DateTime;                       // de gekozen dag
 
-
-    isLoading: boolean = false;
+    magWijzigen: boolean = false;
+    opslaanTimer: number;                  // kleine vertraging om data opslaan te beperken
+    isLoading: boolean = true;
     zoekString: string;
 
-    constructor(
-        private readonly ledenService: LedenService,
-        private readonly sharedService: SharedService,
-        private readonly roosterService: RoosterService) {
+    mijnID: string;
+    mijnNaam: string;
+
+    constructor(private readonly loginService: LoginService,
+                private readonly ledenService: LedenService,
+                private readonly sharedService: SharedService,
+                private readonly dienstenService: DienstenService,
+                private readonly roosterService: RoosterService) {
     }
 
     ngOnInit(): void {
@@ -62,9 +98,23 @@ export class RoosterPageComponent implements OnInit {
                 month: jaarMaand.month,
                 day: 1
             })
+            if (this.alleLeden) {       // eerst moeten de leden geladen zijn
+                this.opvragenTotalen();
+            }
             this.opvragenRooster();
         })
-        this.opvragen();
+        const ui = this.loginService.userInfo;
+        this.magWijzigen = (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isBeheerderDDWV || ui?.Userinfo?.isRooster) ? true : false;
+
+        this.isLierist = ui?.LidData?.LIERIST as boolean
+        this.isStartleider = ui?.LidData?.STARTLEIDER as boolean;
+        this.isInstructeur = ui?.LidData?.INSTRUCTEUR as boolean;
+        this.isDDWV = ui?.LidData?.DDWV_CREW as boolean;
+
+        this.mijnID = (ui?.LidData?.ID) ? ui?.LidData?.ID.toString() : "-1";    // -1 mag nooit voorkomen, maar je weet het nooit
+        this.mijnNaam = ui?.LidData?.NAAM as string;
+
+        this.opvragenLeden();
     }
 
     /**
@@ -77,21 +127,73 @@ export class RoosterPageComponent implements OnInit {
     }
 
     private opvragenLeden() {
-        this.isLoading = true;
         this.ledenService.getLeden(false).then(leden => {
             this.alleLeden = leden;
+            for (let i=0 ; i < this.alleLeden.length; i++) {
+                this.alleLeden[i].INGEDEELD_MAAND = 0;
+                this.alleLeden[i].INGEDEELD_JAAR = 0;
+            }
             this.applyLedenFilter();
-            this.isLoading = false;
+            this.opvragenTotalen();
+
         }).catch(e => this.catchError(e));
     }
 
+    private opvragenTotalen() {
+        this.dienstenService.getTotalen(this.datum.year).then(totalen => {
+           this.alleLeden.forEach(lid => {
+               const maandIndex = totalen.findIndex((maand => maand.LID_ID == lid.ID && maand.MAAND == this.datum.month));
+
+               if (maandIndex < 0) {
+                   lid.INGEDEELD_MAAND = 0;
+               }
+               else {
+                   lid.INGEDEELD_MAAND = totalen[maandIndex].AANTAL;
+
+                   // je mag jezelf maar beperkt indelen, geldt niet voor roostermakers en beheerders
+                   if ((lid.ID!.toString() == this.mijnID) && (!this.magWijzigen)) {
+                       this.zelfIndelen = (lid.INGEDEELD_MAAND! >= this.MaxDienstenPerMaand) ? false : true;
+                   }
+               }
+
+               const jaarIndex = totalen.findIndex((maand => maand.LID_ID == lid.ID && maand.MAAND == null));    // maand = null = gehele jaar
+               if (jaarIndex < 0) {
+                   lid.INGEDEELD_JAAR = 0;
+               }
+               else {
+                   lid.INGEDEELD_JAAR = totalen[jaarIndex].AANTAL;
+               }
+           });
+        });
+    }
+
     private opvragenRooster() {
+        this.isLoading = true
+
         const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
         this.roosterService.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then(rooster => {
-            this.heleRooster = rooster;
+            this.heleRooster = JSON.parse(JSON.stringify(rooster));
             this.vulMissendeDagenAan();
             this.applyRoosterFilter();
-            this.isLoading = false;
+
+            // lege placeholder voor diensten toevoegen
+            this.heleRooster.forEach(dag => dag.Diensten = []);
+
+            this.dienstenService.getDiensten(beginEindDatum.begindatum, beginEindDatum.einddatum).then(diensten => {
+                diensten.forEach(dienst => {
+                    const roosterIndex = this.heleRooster.findIndex((dag => dag.DATUM == dienst.DATUM));
+
+                    if (roosterIndex < 0) {
+                        console.error("Datum " + dienst.DATUM + " onbekend");  // dat mag nooit voorkomen
+                    }
+                    else {
+                        this.heleRooster[roosterIndex].Diensten[dienst.TYPE_DIENST_ID!] = dienst;
+                    }
+                });
+                this.isLoading = false;
+                console.log(this.heleRooster)
+            });
+
         }).catch(e => this.catchError(e));
     }
 
@@ -115,7 +217,7 @@ export class RoosterPageComponent implements OnInit {
 
         let dagenToevoegd = false;
         for (let i = 0; i < dagenInDeMaand; i++) {
-            const d:DateTime = DateTime.fromObject({month: this.datum.month, year: this.datum.year, day: i + 1});
+            const d: DateTime = DateTime.fromObject({month: this.datum.month, year: this.datum.year, day: i + 1});
             const inRooster = this.heleRooster.findIndex(roosterDag => roosterDag.DATUM == d.toISODate()) >= 0;
 
             if (!inRooster) {       // datum staat nog niet in de database, gaan we aanmaken
@@ -123,10 +225,10 @@ export class RoosterPageComponent implements OnInit {
                 const roosterRecord: HeliosRoosterDag = {
                     DATUM: d.toISODate(),
                     DDWV: (d.weekday <= 5) ? true : false,
-                    CLUB_BEDRIJF : (d.weekday > 5) ? true : false
+                    CLUB_BEDRIJF: (d.weekday > 5) ? true : false
                 }
 
-                this.roosterService.nieuwRoosterdag(roosterRecord);
+                this.roosterService.addRoosterdag(roosterRecord);
             }
         }
         if (dagenToevoegd) {
@@ -139,8 +241,9 @@ export class RoosterPageComponent implements OnInit {
      * @param {CdkDrag<HeliosLid | HeliosRoosterDataset>} item
      * @return {boolean}
      */
-    lieristEvaluatie(item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
-        return this.controleerRol(item, 'LIERIST');
+    lieristEvaluatie(datum: string, dienst: number, item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
+        if (!this.dientBeschikbaar(datum, dienst)) return false;
+        return this.controleerGeschiktheid(item, datum, 'LIERIST');
     }
 
     /**
@@ -148,9 +251,9 @@ export class RoosterPageComponent implements OnInit {
      * @param {CdkDrag<HeliosLid | HeliosRoosterDataset>} item
      * @return {boolean}
      */
-    instructeurEvaluatie(item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
-        console.log(item);
-        return this.controleerRol(item, 'INSTRUCTEUR');
+    instructeurEvaluatie(datum: string, dienst: number, item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
+        if (!this.dientBeschikbaar(datum, dienst)) return false;
+        return this.controleerGeschiktheid(item, datum, 'INSTRUCTEUR');
     }
 
     /**
@@ -158,26 +261,63 @@ export class RoosterPageComponent implements OnInit {
      * @param {CdkDrag<HeliosLid | HeliosRoosterDataset>} item
      * @return {boolean}
      */
-    startleiderEvaluatie(item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
-        return this.controleerRol(item, 'STARTLEIDER');
+    startleiderEvaluatie(datum: string, dienst: number, item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
+        if (!this.dientBeschikbaar(datum, dienst)) return false;
+        return this.controleerGeschiktheid(item, datum, 'STARTLEIDER');
+    }
+
+    // voorkom dat ingevulde dienst overschreven wordt
+    dientBeschikbaar(datum: string, dienst: number): boolean {
+        const roosterIndex = this.heleRooster.findIndex((dag => dag.DATUM == datum));
+
+        if (roosterIndex < 0) {
+            console.error("Datum " + datum + " onbekend");  // dat mag nooit voorkomen
+            return false;
+        }
+        return (!this.heleRooster[roosterIndex].Diensten[dienst]);      // return false als dienst al toegekend is, leeg is return true
     }
 
     /**
      * Deze functie evalueert of de content een bepaalde rol is. Als dat zo is, returned hij true, anders false.
      * Als de meegegeven rol bijv. LIERIST is, kan een instructeur bijv. geen lieristdienst draaien.
      */
-    controleerRol(item: CdkDrag<HeliosLid | HeliosRoosterDataset>, rol: 'LIERIST' | 'INSTRUCTEUR' | 'STARTLEIDER'): boolean {
+    controleerGeschiktheid(item: CdkDrag<HeliosLid | HeliosRoosterDataset>, datum: string, rol: 'LIERIST' | 'INSTRUCTEUR' | 'STARTLEIDER'): boolean {
         // Content komt uit de ledenlijst of niet
+
+        const roosterIndex = this.heleRooster.findIndex((dag => dag.DATUM == datum));
+
+        if (roosterIndex < 0) {
+            console.error("Datum " + datum + " onbekend");  // dat mag nooit voorkomen
+            return false;
+        }
+        const ddwv = this.heleRooster[roosterIndex].DDWV
+
         if (item.dropContainer.id === 'LEDENLIJST') {
-            const data = item.data;
-            return data[rol];
+            const data = item.data as HeliosLid;
+
+            switch (rol)
+            {
+                case 'LIERIST': return (ddwv) ? data.DDWV_CREW! : data.LIERIST!;
+                case 'INSTRUCTEUR': return data.INSTRUCTEUR!;
+                case 'STARTLEIDER': return (ddwv) ? data.DDWV_CREW! : data.STARTLEIDER!;
+            }
+            return false;
         } else {
             const data = item.dropContainer.data;
-            const taak = this.getTaakEnIndexVanID(item.dropContainer.id).taak;
-            const id = data[taak + '_ID'];
-            // We moeten in alle leden zoeken, omdat de leden-filter criteria veranderd kan zijn, waardoor een lid niet gevonden wordt.
-            const lid = this.alleLeden.find(lid => lid.ID === id);
-            return lid ? (lid[rol] || false) : false;
+            const oudeDienst = this.decodeerID(item.dropContainer.id);
+            const lid = this.alleLeden.find(lid => lid.ID === data.Diensten[oudeDienst.typeDienst].LID_ID);
+
+            if (!lid)
+                return false;
+
+            switch (rol)
+            {
+                case 'LIERIST': return (ddwv) ? data.DDWV_CREW! : lid.LIERIST!;
+                case 'INSTRUCTEUR': return lid.INSTRUCTEUR!;
+                case 'STARTLEIDER': return (ddwv) ? data.DDWV_CREW! : lid.STARTLEIDER!;
+            }
+
+            return false;
         }
     }
 
@@ -188,95 +328,184 @@ export class RoosterPageComponent implements OnInit {
         } else {
             const data = event.item.dropContainer.data;
             const roosterDag = this.filteredRooster.find(dag => dag.DATUM === data.DATUM);
-            const taak = this.getTaakEnIndexVanID(event.item.dropContainer.id).taak;
 
             if (roosterDag) {
-                this.setTaakWaardes(roosterDag, taak, undefined, undefined);
+                this.toekennenDienst(roosterDag, this.decodeerID(event.item.dropContainer.id).typeDienst, undefined, undefined);
             }
         }
     }
 
-    onDropInRooster(event: CdkDragDrop<HeliosLedenDataset, any>, dagInRooster: HeliosRoosterDataset): void {
+    onDropInRooster(event: CdkDragDrop<HeliosLedenDataset, any>, roosterdag: HeliosRoosterDagExtended, typeDienstID: number): void {
         // Haal de nieuwe en oude ID's op. Een id is bijvoorbeeld:
-        // OCHTEND_LIERIST-0
+        // 1800,0
         // 0 is de index in het rooster, dus de eerste dag van de maand.
-        // OCHTEND_LIERIST is de taak die te vervullen is.
+        // OCHTEND_LIERIST is de dienst die te vervullen is.
         const nieuwContainerId = event.container.id;
         const oudContrainerId = event.previousContainer.id;
 
         let naam;
         let id;
+
         // Als de nieuwe container hetzelfde is al de oude, doe dan niks.
         if (nieuwContainerId === oudContrainerId) {
             return;
         }
+
         // Als de actie van een container naar een andere container is geweest, controleren we eerst of de oude container de ledenlijst was of niet
-        else if (nieuwContainerId !== oudContrainerId) {
-            // De actie komt niet uit de ledenlijst, dus iemand is al ergens anders ingevuld. Die moeten we eerst leegmaken, en dan kunnen we de nieuwe vullen.
-            if (oudContrainerId !== 'LEDENLIJST') {
-                // We hakken de id op en halen de verschillende onderdelen eruit (taak en index van het rooster)
-                const taakOnderdelen = this.getTaakEnIndexVanID(oudContrainerId);
+        // De actie komt niet uit de ledenlijst, dus iemand is al ergens anders ingevuld.
+        // Die moeten we eerst leegmaken, en dan kunnen we de nieuwe vullen.
+        if (oudContrainerId == 'LEDENLIJST') {
+            // De oude container is de ledenlijst geweest, dus dienst toevoegen
+            const data = event.item.data;
+            this.toekennenDienst(roosterdag, typeDienstID, data.ID, data.NAAM);
+        }
+        else
+        {
+            // We hebben van een dag naar een andere dag versleept dus data zit op een andere locatie.
+            // dienst aanpassen
+            const oudeDienst = this.decodeerID(oudContrainerId)
+            const roosterIndex = this.heleRooster.findIndex((dag => dag.DATUM == oudeDienst.datum));
 
-                // We hebben van een dag naar een andere dag versleept dus data zit op een andere locatie.
-                // Uit die data halen we de naam en id op die toen was gezet en zetten die op de nieuwe dag
-                const data = event.item.dropContainer.data;
-                naam = data[taakOnderdelen.taak];
-                id = data[taakOnderdelen.taak + '_ID'];
+            if (roosterIndex < 0) {
+                console.error("Datum " + oudeDienst.datum + " onbekend");  // dat mag nooit voorkomen
+                return;
+            }
 
-                // En omdat we data verplaatsen, resetten vervolgens de dag waar we vandaan kwamen
-                this.setTaakWaardes(this.filteredRooster[taakOnderdelen.index], taakOnderdelen.taak, undefined, undefined);
+            // En omdat we data verplaatsen, resetten vervolgens de dag waar we vandaan kwamen
+            this.aanpassenDienst(this.heleRooster[roosterIndex], oudeDienst.typeDienst, roosterdag, typeDienstID);
+        }
+    }
+
+    opslaanRooster(datum: string) {
+        clearTimeout(this.opslaanTimer);
+        const roosterIndex = this.heleRooster.findIndex((dag => dag.DATUM == datum));
+
+        if (roosterIndex < 0) {
+            console.error("Datum " + datum + " onbekend");  // dat mag nooit voorkomen
+            return ;
+        }
+
+        const ingevoerd = this.heleRooster[roosterIndex]
+        const rooster: HeliosRoosterDag = {
+            ID: ingevoerd.ID,
+            DDWV: ingevoerd.DDWV,
+            CLUB_BEDRIJF: ingevoerd.CLUB_BEDRIJF,
+            OPMERKINGEN: ingevoerd.OPMERKINGEN
+        }
+
+        console.log(rooster)
+
+
+        // Wacht even de gebruiker kan nog aan het typen zijn
+        this.opslaanTimer = window.setTimeout(() => {
+            this.roosterService.updateRoosterdag(rooster);
+        }, 1000);
+    }
+
+    toekennenDienst(roosterdag: HeliosRoosterDagExtended, typeDienstID: number, lid_id: string | undefined, naam: string | undefined): void {
+
+        const roosterIndex = this.heleRooster.findIndex((dag => dag.DATUM == roosterdag.DATUM));
+
+        if (roosterIndex < 0) {
+            console.error("Datum " + roosterdag.DATUM + " onbekend");  // dat mag nooit voorkomen
+            return;
+        }
+
+        if (!roosterdag.Diensten[typeDienstID] ) {  // nog niet eerder toegekend
+            const nieuweDienst: HeliosDienst = {
+                DATUM: roosterdag.DATUM,
+                TYPE_DIENST_ID: typeDienstID,
+                LID_ID: +lid_id!
+            }
+
+            this.dienstenService.addDienst(nieuweDienst).then(record => {
+                this.heleRooster[roosterIndex].Diensten[typeDienstID] = record;
+                this.heleRooster[roosterIndex].Diensten[typeDienstID].NAAM = naam;
+            });
+
+            // totalen aanpassen, maar alleen als we een clubdag hebben
+            if (this.heleRooster[roosterIndex].CLUB_BEDRIJF) {
+                const ledenIndex = this.alleLeden.findIndex((lid => lid.ID == lid_id));
+                if (ledenIndex < 0) {
+                    console.error("Lid " + lid_id + " onbekend");  // dat mag nooit voorkomen
+                } else {
+                    this.alleLeden[ledenIndex].INGEDEELD_MAAND! += 1;
+                    this.alleLeden[ledenIndex].INGEDEELD_JAAR! += 1;
+
+                    // je mag jezelf maar beperkt indelen, geldt niet voor roostermakers en beheerders
+                    if ((this.alleLeden[ledenIndex].ID!.toString() == this.mijnID) && (!this.magWijzigen)) {
+                        this.zelfIndelen = (this.alleLeden[ledenIndex].INGEDEELD_MAAND! >= this.MaxDienstenPerMaand) ? false : true;
+                    }
+                }
+            }
+        } else {    // aanpassen bestaande dienst aanpassen
+            this.heleRooster[roosterIndex].Diensten[typeDienstID]
+
+            const gewijzigdeDienst: HeliosDienst = {
+                ID: roosterdag.Diensten[typeDienstID].ID,
+                DATUM: roosterdag.DATUM,
+                TYPE_DIENST_ID: typeDienstID,
+                LID_ID: +lid_id!
+            }
+            this.dienstenService.updateDienst(gewijzigdeDienst).then(record => {
+                this.heleRooster[roosterIndex].Diensten[typeDienstID] = record;
+                this.heleRooster[roosterIndex].Diensten[typeDienstID].NAAM = naam;
+            });
+        }
+    }
+
+    aanpassenDienst(oudeRoosterdag: HeliosRoosterDagExtended, oudeTypeDienstID: number, nieuweRoosterdag: HeliosRoosterDagExtended, nieuweTypeDienstID: number) {
+
+        const gewijzigdeDienst: HeliosDienst = {
+            ID: oudeRoosterdag.Diensten[oudeTypeDienstID].ID,
+            LID_ID: oudeRoosterdag.Diensten[oudeTypeDienstID].LID_ID,
+            DATUM: nieuweRoosterdag.DATUM,
+            TYPE_DIENST_ID: nieuweTypeDienstID
+        }
+
+        this.dienstenService.updateDienst(gewijzigdeDienst).then(record => {
+            nieuweRoosterdag.Diensten[nieuweTypeDienstID] = record;
+            nieuweRoosterdag.Diensten[nieuweTypeDienstID].NAAM = oudeRoosterdag.Diensten[oudeTypeDienstID].NAAM;
+
+            delete oudeRoosterdag.Diensten[oudeTypeDienstID];
+        });
+    }
+
+    verwijderDienst(roosterdag: HeliosRoosterDagExtended, typeDienstID: number) {
+        const roosterIndex = this.heleRooster.findIndex((dag => dag.DATUM == roosterdag.DATUM));
+
+        if (roosterIndex < 0) {
+            console.error("Datum " + roosterdag.DATUM + " onbekend");  // dat mag nooit voorkomen
+            return false;
+        }
+
+        this.dienstenService.deleteDienst(roosterdag.Diensten[typeDienstID].ID!).then(() => delete this.heleRooster[roosterIndex].Diensten[typeDienstID]);
+
+        // totalen aanpassen als het een clubdag is
+        if (roosterdag.CLUB_BEDRIJF) {
+            const ledenIndex = this.alleLeden.findIndex((lid => lid.ID == roosterdag.Diensten[typeDienstID].LID_ID));
+            if (ledenIndex < 0) {
+                console.error("Lid " + roosterdag.Diensten[typeDienstID].LID_ID + " onbekend");  // dat mag nooit voorkomen
             } else {
-                // De oude container is wel de ledenlijst geweest, dus de data zit op deze locatie.
-                const data = event.item.data;
-                naam = data.NAAM;
-                id = data.ID;
-                // Verhoog ook het aantal keer ingedeeld van deze persoon, sorteer daarna de ledenlijst.
-                data.KEER_INGEDEELD = data.KEER_INGEDEELD ? data.KEER_INGEDEELD + 1 : 1;
+                this.alleLeden[ledenIndex].INGEDEELD_MAAND! -= 1;
+                this.alleLeden[ledenIndex].INGEDEELD_JAAR! -= 1;
+
+                // je mag jezelf maar beperkt indelen, geldt niet voor roostermakers en beheerders
+                if ((this.alleLeden[ledenIndex].ID!.toString() == this.mijnID) && (!this.magWijzigen)) {
+                    this.zelfIndelen = (this.alleLeden[ledenIndex].INGEDEELD_MAAND! >= this.MaxDienstenPerMaand) ? false : true;
+                }
             }
         }
-        const taak = this.getTaakEnIndexVanID(nieuwContainerId).taak;
-        this.setTaakWaardes(dagInRooster, taak, id, naam);
     }
 
 
-    /**
-     * Deel iemand in op een taak op een bepaalde dag
-     * @param {HeliosRoosterDataset} roosterdag
-     * @param {string} taak                 = OCHTEND_LIERIST of OCHTEND_INSTRUCTTEUR of MIDDAG_DDI etc
-     * @param {string | undefined} lid_id   = LID_ID
-     * @param {string | undefined} naam     = Naam van het lid
-     * @return {void}
-     */
-    setTaakWaardes(roosterdag: HeliosRoosterDataset, taak: string, lid_id: string | undefined, naam: string | undefined): void {
-
-        const updateDag: HeliosRoosterDag = {
-            ID: roosterdag.ID,
-            [taak + "_ID"]: (lid_id) ? lid_id : null,
-        }
-
-        this.roosterService.updateRoosterdag(updateDag);
-
-
-        roosterdag[taak] = naam;
-        roosterdag[taak + '_ID'] = lid_id;
-
-        // todo opslaan van data in record
-    }
-
-    /**
-     * Hak een id op om de informatie in de ID te gebruiken
-     * Een id is bijvoorbeeld:
-     * OCHTEND_LIERIST-0
-     * 0 is de index in de rooster array, 0 is dus de 1e dag van de maand.
-     * OCHTEND_LIERIST is de taak
-     * @param {string} id
-     * @return {{taak: string, index: number}}
-     */
-    getTaakEnIndexVanID(id: string): { taak: string, index: number } {
-        const taakEnIndex = id.split('-');
+    // Het html id is een combinatie van datum en de dienst gescheiden door een comma.
+    // Bijvoorbeeld 2021-12-01,1800
+    decodeerID(id: string): { datum: string, typeDienst: number } {
+        const splittedString = id.split(',');
         return {
-            taak: taakEnIndex[0],
-            index: parseInt(taakEnIndex[1])
+            datum: splittedString[0],
+            typeDienst: parseInt(splittedString[1])
         };
     }
 
@@ -422,16 +651,50 @@ export class RoosterPageComponent implements OnInit {
     DagVanDeWeek(dag: string): string {
         const dt: DateTime = DateTime.fromSQL(dag as string);
 
-        switch (dt.weekday)
-        {
-            case 1: return "Maandag";
-            case 2: return "Dinsdag";
-            case 3: return "Woensdag";
-            case 4: return "Donderdag";
-            case 5: return "Vrijdag";
-            case 6: return "Zaterdag";
-            case 7: return "Zondag";
+        switch (dt.weekday) {
+            case 1:
+                return "Maandag";
+            case 2:
+                return "Dinsdag";
+            case 3:
+                return "Woensdag";
+            case 4:
+                return "Donderdag";
+            case 5:
+                return "Vrijdag";
+            case 6:
+                return "Zaterdag";
+            case 7:
+                return "Zondag";
         }
         return "??";
+    }
+
+    magVerwijderen(dienstData: HeliosDienstenDataset): boolean {
+        if (!dienstData) {
+            return false;       // er is niets te verwijderen
+        }
+
+        if (this.magWijzigen) {
+            return true;    // roostermakers en beheerders mogen altijd aanpassingen maken
+        }
+
+        const ui = this.loginService.userInfo?.LidData;
+        if (dienstData.LID_ID != ui?.ID) {
+            return false;   // mogen natuurlijk geen aanpassing maken op diensten van iemand anders
+        }
+
+        const nu: DateTime = DateTime.now();
+        const la: DateTime = DateTime.fromSQL(dienstData.LAATSTE_AANPASSING as string);
+        const datum: DateTime = DateTime.fromSQL(dienstData.DATUM as string);
+
+        if (nu.diff(datum, "months").months > 2) {
+            return true;    // tot 2 maanden mag je vrij aanpassen
+        }
+
+        if (nu.diff(la, "hours").hours < 4) {
+            return true; // tot 4 uur mag je aanpassen
+        }
+        return false;
     }
 }

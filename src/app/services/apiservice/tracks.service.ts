@@ -38,7 +38,6 @@ export class TracksService {
         if (verwijderd) {
             getParams['VERWIJDERD'] = "true";
         }
-
         getParams['SORT'] = 'INGEVOERD DESC';
 
         try {
@@ -67,8 +66,8 @@ export class TracksService {
         return response.json();
     }
 
-    async nieuwTrack(lid: HeliosTrack) {
-        const response: Response = await this.apiService.post('Tracks/SaveObject', JSON.stringify(lid));
+    async addTrack(trk: HeliosTrack) {
+        const response: Response = await this.apiService.post('Tracks/SaveObject', JSON.stringify(trk));
         return response.json();
     }
 

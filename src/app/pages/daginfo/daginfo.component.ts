@@ -101,7 +101,7 @@ export class DaginfoComponent implements OnInit{
     // opslaan van de ingevoerde dag rapport
     opslaanDagInfo() {
         if (this.dagInfo.ID == undefined) {
-            this.daginfoService.nieuweDagInfo(this.dagInfo).then((di) => this.dagInfo = di);
+            this.daginfoService.addDagInfo(this.dagInfo).then((di) => this.dagInfo = di);
         } else {
             this.daginfoService.updateDagInfo(this.dagInfo).then((di) => this.dagInfo = di);
         }

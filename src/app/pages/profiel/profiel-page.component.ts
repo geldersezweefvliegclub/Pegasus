@@ -95,7 +95,7 @@ export class ProfielPageComponent {
 
     // nieuw lid toevoegen aan het leden bestand
     nieuwLid(lid: HeliosLid): void {
-        this.ledenService.nieuwLid(lid).then(() => {
+        this.ledenService.addLid(lid).then(() => {
             this.error = undefined;
         }).catch(e => {
             this.error = e;

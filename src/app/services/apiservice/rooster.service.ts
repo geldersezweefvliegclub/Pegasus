@@ -30,7 +30,7 @@ export class RoosterService {
         }
     }
 
-    async nieuwRoosterdag(roosterDag: HeliosRoosterDag) {
+    async addRoosterdag(roosterDag: HeliosRoosterDag) {
         const response: Response = await this.APIService.post('Rooster/SaveObject', JSON.stringify(roosterDag));
         return response.json();
     }

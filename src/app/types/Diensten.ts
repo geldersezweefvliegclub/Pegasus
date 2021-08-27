@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  "/Rooster/CreateTable": {
+  "/Diensten/CreateTable": {
     post: {
       parameters: {
         query: {
@@ -20,7 +20,7 @@ export interface paths {
       };
     };
   };
-  "/Rooster/CreateViews": {
+  "/Diensten/CreateViews": {
     post: {
       responses: {
         /** Aangemaakt, View toegevoegd */
@@ -30,21 +30,19 @@ export interface paths {
       };
     };
   };
-  "/Rooster/GetObject": {
+  "/Diensten/GetObject": {
     get: {
       parameters: {
         query: {
-          /** Database ID van het rooster record */
-          ID?: number;
-          /** Datum van het rooster */
-          DATUM?: string;
+          /** Database ID van het dienst record */
+          ID: number;
         };
       };
       responses: {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_rooster"];
+            "application/json": components["schemas"]["oper_diensten"];
           };
         };
         /** Data niet gevonden */
@@ -58,11 +56,11 @@ export interface paths {
       };
     };
   };
-  "/Rooster/GetObjects": {
+  "/Diensten/GetObjects": {
     get: {
       parameters: {
         query: {
-          /** Database ID van het aanwezig record */
+          /** Database ID van het diensten record */
           ID?: number;
           /** Toon welke records verwijderd zijn. Default = false */
           VERWIJDERD?: boolean;
@@ -70,7 +68,7 @@ export interface paths {
           LAATSTE_AANPASSING?: boolean;
           /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
           HASH?: string;
-          /** Sortering van de velden in ORDER BY formaat. Default = DATUM DESC */
+          /** Sortering van de velden in ORDER BY formaat. Default = DATUM */
           SORT?: string;
           /** Maximum aantal records in de dataset. Gebruikt in LIMIT query */
           MAX?: number;
@@ -78,19 +76,27 @@ export interface paths {
           START?: number;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
+          /** Diensten van een bepaald lid */
+          LID_ID?: string;
           /** Zoek op datum */
           DATUM?: string;
           /** Begin datum (inclusief deze dag) */
           BEGIN_DATUM?: string;
           /** Eind datum (inclusief deze dag) */
           EIND_DATUM?: string;
+          /** Zoek op een of meerder type diensten. Types als CSV formaat */
+          TYPES?: string;
+          /** Haal alle diensten op waar lid aanwezig was */
+          AANWEZIG?: boolean;
+          /** Haal alle diensten op waar lid NIET aanwezig was */
+          AFWEZIG?: boolean;
         };
       };
       responses: {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["view_rooster"];
+            "application/json": components["schemas"]["view_diensten"];
           };
         };
         /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
@@ -102,20 +108,42 @@ export interface paths {
       };
     };
   };
-  "/Rooster/DeleteObject": {
+  "/Diensten/TotaalDiensten": {
+    get: {
+      parameters: {
+        query: {
+          /** Voor welk jaar wordt de data opgevraagd */
+          JAAR: number;
+        };
+      };
+      responses: {
+        /** OK, data succesvol opgehaald */
+        200: {
+          content: {
+            "application/json": components["schemas"]["diensten_totaal"];
+          };
+        };
+        /** Methode niet toegestaan, input validatie error */
+        405: unknown;
+        /** Niet aanvaardbaar, input ontbreekt */
+        406: unknown;
+        /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
+        500: unknown;
+      };
+    };
+  };
+  "/Diensten/DeleteObject": {
     delete: {
       parameters: {
         query: {
-          /** Database ID van het rooster record. Meerdere ID's in CSV formaat */
-          ID?: string;
-          /** Datum van het rooster */
-          DATUM?: string;
+          /** Database ID van het diensten record. Meerdere ID's in CSV formaat */
+          ID: string;
           /** Controleer of record bestaat voordat het verwijderd wordt. Default = true */
           VERIFICATIE?: boolean;
         };
       };
       responses: {
-        /** Rooster verwijderd */
+        /** Dienst verwijderd */
         204: never;
         /** Niet geautoriseerd, geen schrijfrechten */
         401: unknown;
@@ -130,7 +158,7 @@ export interface paths {
       };
     };
   };
-  "/Rooster/RestoreObject": {
+  "/Diensten/RestoreObject": {
     patch: {
       parameters: {
         query: {
@@ -154,13 +182,13 @@ export interface paths {
       };
     };
   };
-  "/Rooster/SaveObject": {
+  "/Diensten/SaveObject": {
     put: {
       responses: {
         /** OK, data succesvol aangepast */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_rooster"];
+            "application/json": components["schemas"]["oper_diensten"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -171,15 +199,15 @@ export interface paths {
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
         406: unknown;
-        /** Conflict, datum bestaat al */
+        /** Conflict, dienst is al ingevuld */
         409: unknown;
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** Rooster data */
+      /** Dienst data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["oper_rooster_in"];
+          "application/json": components["schemas"]["oper_diensten_in"];
         };
       };
     };
@@ -188,7 +216,7 @@ export interface paths {
         /** OK, data succesvol toegevoegd */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_rooster"];
+            "application/json": components["schemas"]["oper_diensten"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -197,15 +225,15 @@ export interface paths {
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
         406: unknown;
-        /** Conflict, datum bestaat al */
+        /** Conflict, dienst is al ingevuld */
         409: unknown;
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** Rooster data */
+      /** Dienst data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["oper_rooster_in"];
+          "application/json": components["schemas"]["oper_diensten_in"];
         };
       };
     };
@@ -214,26 +242,35 @@ export interface paths {
 
 export interface components {
   schemas: {
-    oper_rooster_in: {
-      /** Database ID van het rooster record */
+    oper_diensten_in: {
+      /** Database ID van het dienten record */
       ID?: number;
-      /** Datum van de vliegdag */
+      /** Datum van de rooster */
       DATUM?: string;
-      /** Is het een DDWV dag? */
-      DDWV?: boolean;
-      /** Is er een clubbedrijf */
-      CLUB_BEDRIJF?: boolean;
-      /** De opmerkingen die voor deze dag van toepassing zijn */
-      OPMERKINGEN?: string;
+      /** Voor wie is deze dienst. Verwijzing naar leden tabel */
+      LID_ID?: number;
+      /** Link naar type tabel. Geeft aan wat voor type dienst */
+      TYPE_DIENST_ID?: number;
     };
-    oper_rooster: components["schemas"]["oper_rooster_in"] & {
+    oper_diensten: components["schemas"]["oper_diensten_in"] & {
+      /** Verwijzing naar rooster tabel */
+      ROOSTER_ID?: number;
+      /** Diegene die de dienst heeft ingevoerd. Verwijzing naar leden tabel */
+      INGEVOERD_DOOR_ID?: number;
       /** Is dit record gemarkeerd als verwijderd? */
       VERWIJDERD?: boolean;
       /** Tijdstempel van laaste aanpassing in de database */
       LAATSTE_AANPASSING?: string;
     };
-    view_rooster_dataset: components["schemas"]["oper_rooster"];
-    view_rooster: {
+    view_diensten_dataset: components["schemas"]["oper_diensten"] & {
+      /** Naam van het lid */
+      NAAM?: string;
+      /** Naam van diegene die de dienst heeft ingevoerd */
+      INGEVOERD_DOOR?: string;
+      /** Beschrijving van de dienst */
+      TYPE_DIENST?: string;
+    };
+    view_diensten: {
       /** Aantal records dat voldoet aan de criteria in de database */
       totaal?: number;
       /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
@@ -241,7 +278,19 @@ export interface components {
       /** hash van de dataset */
       hash?: string;
       /** De dataset met records */
-      dataset?: components["schemas"]["view_rooster_dataset"][];
+      dataset?: components["schemas"]["view_diensten_dataset"][];
+    };
+    diensten_totaal: {
+      /** Verwijzing naar leden tabel */
+      LID_ID?: number;
+      /** Naam van het lid */
+      NAAM?: string;
+      /** Jaar */
+      JAAR?: number;
+      /** Maand 1..12, null voor jaar totaal */
+      MAAND?: number;
+      /** Aantal diensten */
+      AANTAL?: number;
     };
   };
 }
