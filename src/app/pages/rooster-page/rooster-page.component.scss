@@ -151,7 +151,7 @@ thead {
 }
 
 .card-body {
-  padding: 0px 0px 0px 10px;
+  padding: 0 0 0 10px;
 }
 
 .avatar {
@@ -204,4 +204,13 @@ h4 {
 
 #zoekInput {
   width: 30%;
+}
+
+.expandLogboek {
+  position: absolute;
+  align-self: flex-end;
+  right: 15px;
+  top: 75px;
+  color: #bebebe;
+  font-size: 20px;
 }

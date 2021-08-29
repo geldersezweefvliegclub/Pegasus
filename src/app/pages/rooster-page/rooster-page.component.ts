@@ -6,9 +6,15 @@ import {
     HeliosLedenDataset,
     HeliosLid,
     HeliosRoosterDag,
-    HeliosRoosterDataset
+    HeliosRoosterDataset, HeliosType
 } from '../../types/Helios';
-import {faCalendarCheck, faCalendarDay, faTimesCircle, faUsers} from '@fortawesome/free-solid-svg-icons';
+import {
+    faCalendarCheck,
+    faCalendarDay,
+    faExternalLinkSquareAlt, faSortAmountDownAlt,
+    faTimesCircle,
+    faUsers
+} from '@fortawesome/free-solid-svg-icons';
 import {SharedService} from '../../services/shared/shared.service';
 import {Subscription} from 'rxjs';
 import {RoosterService} from '../../services/apiservice/rooster.service';
@@ -18,8 +24,10 @@ import {DateTime, Duration} from 'luxon';
 import {LedenFilterComponent} from "../../shared/components/leden-filter/leden-filter.component";
 import {LoginService} from "../../services/apiservice/login.service";
 import {DienstenService} from "../../services/apiservice/diensten.service";
-import {NgbDateNativeUTCAdapter} from "@ng-bootstrap/ng-bootstrap";
 import * as xlsx from "xlsx";
+import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import {TypesService} from "../../services/apiservice/types.service";
+import {JaarTotalenComponent} from "./jaar-totalen/jaar-totalen.component";
 
 type HeliosLedenDatasetExtended = HeliosLedenDataset & {
     INGEDEELD_MAAND?: number
@@ -30,6 +38,7 @@ type HeliosRoosterDagExtended = HeliosRoosterDag & {
     Diensten: HeliosDienstenDataset[];
 }
 
+
 @Component({
     selector: 'app-rooster-page',
     templateUrl: './rooster-page.component.html',
@@ -37,10 +46,12 @@ type HeliosRoosterDagExtended = HeliosRoosterDag & {
 })
 export class RoosterPageComponent implements OnInit {
     @ViewChild(LedenFilterComponent) ledenFilter: LedenFilterComponent;
+    @ViewChild(JaarTotalenComponent) private jaarTotalen: JaarTotalenComponent;
 
-    readonly roosterIcon = faCalendarDay;
-    readonly resetIcon = faTimesCircle;
-    readonly assignIcon = faCalendarCheck;
+    readonly roosterIcon: IconDefinition = faCalendarDay;
+    readonly resetIcon: IconDefinition = faTimesCircle;
+    readonly assignIcon: IconDefinition = faCalendarCheck;
+    readonly iconSort: IconDefinition = faSortAmountDownAlt;
 
     readonly OCHTEND_DDI_TYPE_ID = 1800;
     readonly OCHTEND_INSTRUCTEUR_TYPE_ID = 1801;
@@ -60,6 +71,7 @@ export class RoosterPageComponent implements OnInit {
     toonLieristen = true;
     toonDDWV = false;
 
+    dienstTypes: HeliosType[] = [];
     isStartleider = false;
     isInstructeur = false;
     isLierist = false;
@@ -87,6 +99,7 @@ export class RoosterPageComponent implements OnInit {
 
     constructor(private readonly loginService: LoginService,
                 private readonly ledenService: LedenService,
+                private readonly typesService: TypesService,
                 private readonly sharedService: SharedService,
                 private readonly dienstenService: DienstenService,
                 private readonly roosterService: RoosterService) {
@@ -117,6 +130,7 @@ export class RoosterPageComponent implements OnInit {
         this.mijnNaam = ui?.LidData?.NAAM as string;
 
         this.opvragenLeden();
+        this.typesService.getTypes(18).then(types => this.dienstTypes = types); // ophalen lidtypes
     }
 
     /**
@@ -131,7 +145,7 @@ export class RoosterPageComponent implements OnInit {
     private opvragenLeden() {
         this.ledenService.getLeden(false).then(leden => {
             this.alleLeden = leden;
-            for (let i=0 ; i < this.alleLeden.length; i++) {
+            for (let i = 0; i < this.alleLeden.length; i++) {
                 this.alleLeden[i].INGEDEELD_MAAND = 0;
                 this.alleLeden[i].INGEDEELD_JAAR = 0;
             }
@@ -143,29 +157,28 @@ export class RoosterPageComponent implements OnInit {
 
     private opvragenTotalen() {
         this.dienstenService.getTotalen(this.datum.year).then(totalen => {
-           this.alleLeden.forEach(lid => {
-               const maandIndex = totalen.findIndex((maand => maand.LID_ID == lid.ID && maand.MAAND == this.datum.month));
 
-               if (maandIndex < 0) {
-                   lid.INGEDEELD_MAAND = 0;
-               }
-               else {
-                   lid.INGEDEELD_MAAND = totalen[maandIndex].AANTAL;
+            this.alleLeden.forEach(lid => {
+                const maandIndex = totalen.findIndex((maand => maand.LID_ID == lid.ID && maand.MAAND == this.datum.month));
 
-                   // je mag jezelf maar beperkt indelen, geldt niet voor roostermakers en beheerders
-                   if ((lid.ID!.toString() == this.mijnID) && (!this.magWijzigen)) {
-                       this.zelfIndelen = (lid.INGEDEELD_MAAND! >= this.MaxDienstenPerMaand) ? false : true;
-                   }
-               }
+                if (maandIndex < 0) {
+                    lid.INGEDEELD_MAAND = 0;
+                } else {
+                    lid.INGEDEELD_MAAND = totalen[maandIndex].AANTAL;
 
-               const jaarIndex = totalen.findIndex((maand => maand.LID_ID == lid.ID && maand.MAAND == null));    // maand = null = gehele jaar
-               if (jaarIndex < 0) {
-                   lid.INGEDEELD_JAAR = 0;
-               }
-               else {
-                   lid.INGEDEELD_JAAR = totalen[jaarIndex].AANTAL;
-               }
-           });
+                    // je mag jezelf maar beperkt indelen, geldt niet voor roostermakers en beheerders
+                    if ((lid.ID!.toString() == this.mijnID) && (!this.magWijzigen)) {
+                        this.zelfIndelen = (lid.INGEDEELD_MAAND! >= this.MaxDienstenPerMaand) ? false : true;
+                    }
+                }
+
+                const jaarIndex = totalen.findIndex((maand => maand.LID_ID == lid.ID && maand.MAAND == null));    // maand = null = gehele jaar
+                if (jaarIndex < 0) {
+                    lid.INGEDEELD_JAAR = 0;
+                } else {
+                    lid.INGEDEELD_JAAR = totalen[jaarIndex].AANTAL;
+                }
+            });
         });
     }
 
@@ -187,8 +200,7 @@ export class RoosterPageComponent implements OnInit {
 
                     if (roosterIndex < 0) {
                         console.error("Datum " + dienst.DATUM + " onbekend");  // dat mag nooit voorkomen
-                    }
-                    else {
+                    } else {
                         this.heleRooster[roosterIndex].Diensten[dienst.TYPE_DIENST_ID!] = dienst;
                     }
                 });
@@ -225,8 +237,8 @@ export class RoosterPageComponent implements OnInit {
                 dagenToevoegd = true;
                 const roosterRecord: HeliosRoosterDag = {
                     DATUM: d.toISODate(),
-                    DDWV: (d.weekday <= 5) ? true : false,
-                    CLUB_BEDRIJF: (d.weekday > 5) ? true : false
+                    DDWV: (d.weekday <= 5 && d.month >= 4 && d.month <= 9),         // DDWV van april t/m sept
+                    CLUB_BEDRIJF: (d.weekday > 5 && d.month >= 3 && d.month <= 10)  // Clubdagen van maart t/m oktober
                 }
 
                 this.roosterService.addRoosterdag(roosterRecord);
@@ -296,11 +308,13 @@ export class RoosterPageComponent implements OnInit {
         if (item.dropContainer.id === 'LEDENLIJST') {
             const data = item.data as HeliosLid;
 
-            switch (rol)
-            {
-                case 'LIERIST': return (ddwv) ? data.DDWV_CREW! : data.LIERIST!;
-                case 'INSTRUCTEUR': return data.INSTRUCTEUR!;
-                case 'STARTLEIDER': return (ddwv) ? data.DDWV_CREW! : data.STARTLEIDER!;
+            switch (rol) {
+                case 'LIERIST':
+                    return (ddwv) ? data.DDWV_CREW! : data.LIERIST!;
+                case 'INSTRUCTEUR':
+                    return data.INSTRUCTEUR!;
+                case 'STARTLEIDER':
+                    return (ddwv) ? data.DDWV_CREW! : data.STARTLEIDER!;
             }
             return false;
         } else {
@@ -313,11 +327,13 @@ export class RoosterPageComponent implements OnInit {
                 return false;
             }
 
-            switch (rol)
-            {
-                case 'LIERIST': return (ddwv) ? data.DDWV_CREW! : lid.LIERIST!;
-                case 'INSTRUCTEUR': return lid.INSTRUCTEUR!;
-                case 'STARTLEIDER': return (ddwv) ? data.DDWV_CREW! : lid.STARTLEIDER!;
+            switch (rol) {
+                case 'LIERIST':
+                    return (ddwv) ? data.DDWV_CREW! : lid.LIERIST!;
+                case 'INSTRUCTEUR':
+                    return lid.INSTRUCTEUR!;
+                case 'STARTLEIDER':
+                    return (ddwv) ? data.DDWV_CREW! : lid.STARTLEIDER!;
             }
 
             return false;
@@ -361,9 +377,7 @@ export class RoosterPageComponent implements OnInit {
             // De oude container is de ledenlijst geweest, dus dienst toevoegen
             const data = event.item.data;
             this.toekennenDienst(roosterdag, typeDienstID, data.ID, data.NAAM);
-        }
-        else
-        {
+        } else {
             // We hebben van een dag naar een andere dag versleept dus data zit op een andere locatie.
             // dienst aanpassen
             const oudeDienst = this.decodeerID(oudContrainerId)
@@ -385,7 +399,7 @@ export class RoosterPageComponent implements OnInit {
 
         if (roosterIndex < 0) {
             console.error("Datum " + datum + " onbekend");  // dat mag nooit voorkomen
-            return ;
+            return;
         }
 
         const ingevoerd = this.heleRooster[roosterIndex]
@@ -410,7 +424,7 @@ export class RoosterPageComponent implements OnInit {
             return;
         }
 
-        if (!roosterdag.Diensten[typeDienstID] ) {  // nog niet eerder toegekend
+        if (!roosterdag.Diensten[typeDienstID]) {  // nog niet eerder toegekend
             const nieuweDienst: HeliosDienst = {
                 DATUM: roosterdag.DATUM,
                 TYPE_DIENST_ID: typeDienstID,
@@ -602,19 +616,17 @@ export class RoosterPageComponent implements OnInit {
         }
 
         for (let i = 0; i < this.heleRooster.length; i++) {
-            const dt: DateTime = DateTime.fromSQL(this.heleRooster[i].DATUM as string);
-
             switch (this.toonClubDDWV) {
                 case 1: // toonClubDDWV, 1 = toon clubdagen
                 {
-                    if (this.heleRooster[i].CLUB_BEDRIJF || dt.weekday > 5) {
+                    if (this.heleRooster[i].CLUB_BEDRIJF) {
                         this.filteredRooster.push(this.heleRooster[i]);
                         continue;
                     }
                     break;
                 }
                 case 2: // toonClubDDWV, 2 = toon DDWV
-                    if (this.heleRooster[i].DDWV || dt.weekday <= 5) {
+                    if (this.heleRooster[i].DDWV) {
                         this.filteredRooster.push(this.heleRooster[i]);
                         continue;
                     }
@@ -697,17 +709,39 @@ export class RoosterPageComponent implements OnInit {
         return false;
     }
 
+    // laat zien hoe vaak een lid is ingedeeld voor het gekozen jaar
+    toonJaarRooster(): void {
+        this.jaarTotalen.openPopup();
+    }
+
+    // sorteer zodanig dat lid met minste diensten bovenaan staat
+    sorteer() {
+        this.filteredLeden.sort((a, b) => {
+            if (a.INGEDEELD_JAAR == b.INGEDEELD_JAAR) {
+                if (a.INGEDEELD_MAAND == b.INGEDEELD_MAAND) {
+                    return a.NAAM!.localeCompare(b.NAAM!);
+                }
+                return (a.INGEDEELD_MAAND! > b.INGEDEELD_MAAND!) ? 1 : -1;
+            }
+            return (a.INGEDEELD_JAAR! > b.INGEDEELD_JAAR!) ? 1 : -1;
+        })
+    }
+
     // Export naar excel
     exportRooster() {
-        let exportData:any = [];
+        let exportData: any = [];
+        let legeDiensten: any = {};
+
+        this.dienstTypes.forEach(dienst => legeDiensten[dienst.OMSCHRIJVING!] = "");
 
         this.filteredRooster.forEach(dag => {
-            let record: any = {
+            let record: any = Object.assign({
                 DATUM: dag.DATUM,
                 DDWV: dag.DDWV ? "X" : "-",
                 CLUB_BEDRIJF: dag.CLUB_BEDRIJF ? "X" : "-",
                 OPMERKINGEN: dag.OPMERKINGEN
-            }
+            }, legeDiensten);
+
             dag.Diensten.forEach(dienst => {
                 record[dienst.TYPE_DIENST!] = dienst.NAAM;
             });
@@ -717,6 +751,8 @@ export class RoosterPageComponent implements OnInit {
         let ws = xlsx.utils.json_to_sheet(exportData);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
-        xlsx.writeFile(wb, 'rooster ' + new Date().toJSON().slice(0, 10) + '.xlsx');
+        xlsx.writeFile(wb, 'rooster ' + this.datum.year + '-' + this.datum.month + ' ' + new Date().toJSON().slice(0, 10) + '.xlsx');
     }
+
+
 }

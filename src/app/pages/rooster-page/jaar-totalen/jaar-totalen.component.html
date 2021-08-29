@@ -1,0 +1,18 @@
+<app-modal popupClass="popupLarge" titel="Jaar totalen {{datum.year}}">
+    <div body>
+        <div class="popupLargeWrapper">
+            <div class="excel">
+                <img class="logo" src="/assets/img/excel-logo.png" (click)="this.exportJaarRooster()"/>
+            </div>
+            <div class="h-100">
+                <app-datatable
+                        id="jaarTotalenGrid"
+                        [rowData]="jaarTotalen"
+                        [columnDefs]="dataColumns"
+                        [frameworkComponents]="frameworkComponents"
+                        class="h-100">
+                </app-datatable>
+            </div>
+        </div>
+    </div>
+</app-modal>

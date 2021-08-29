@@ -295,7 +295,12 @@
 
                     </div>
                     <div class="kolomRechts" *ngIf="magWijzigen">
-                        <h4>Leden</h4>
+                        <a class="class" (click)="toonJaarRooster()"><h4>Leden</h4></a>
+                        <div class="expandLogboek">
+                            <a class="clickable" (click)="sorteer()">
+                                <fa-icon [icon]="iconSort"></fa-icon>
+                            </a>
+                        </div>
                         <div *ngIf="filteredLeden && !isLoading;else loading"
                              id="LEDENLIJST"
                              cdkDropList
@@ -337,27 +342,6 @@
                                             </p>
                                         </div>
                                     </div>
-
-                                    <!--
-                                    <div class="row">
-                                        <div class="col-3">
-                                            <app-avatar class="position-relative"
-                                                        [url]="lid.AVATAR"></app-avatar>
-                                            <span class="position-absolute top-0 start-100 translate-middle padding-small bg-secondary rounded-circle">
-                                            {{lid.KEER_INGEDEELD}}
-                                                <span class="visually-hidden">keer ingedeeld</span>
-                                        </span>
-                                        </div>
-                                        <div class="col-9">
-                                            <h6>{{lid.NAAM}}</h6>
-                                            <p>
-                                                <span *ngIf="lid.LIERIST">Lierist </span>
-                                                <span *ngIf="lid.STARTLEIDER">Startleider </span>
-                                                <span *ngIf="lid.INSTRUCTEUR">Instructeur </span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    -->
                                 </div>
                             </div>
                         </div>
@@ -406,6 +390,7 @@
         </div>
     </div>
     <app-leden-filter [LedenDDWV]="false" (filterChanged)="applyLedenFilter()"></app-leden-filter>
+    <app-jaar-totalen [leden]="this.filteredLeden"></app-jaar-totalen>
 </app-pegasus-card>
 
 <ng-template #reset>
@@ -431,3 +416,4 @@
 
     </div>
 </ng-template>
+
