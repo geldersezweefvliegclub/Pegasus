@@ -44,7 +44,8 @@ export class DashboardPageComponent implements OnInit {
 
     toonTracks: boolean = false;           // mogen de tracks vertoon worden
 
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    @ViewChild('logboekPopup') private popupLogboek: ModalComponent;
+    @ViewChild('dienstenPopup') private popupDiensten: ModalComponent;
 
     constructor(private readonly ledenService: LedenService,
                 private readonly loginService: LoginService,
@@ -90,9 +91,13 @@ export class DashboardPageComponent implements OnInit {
         return "";
     }
 
-    // laat meer vluchten zien van logboek in een popup window
+    // laat meer vluchten zien van logboek in een popupLogboek window
     toonLogboekGroot(): void {
-        this.popup.open();
+        this.popupLogboek.open();
+    }
+
+    toonDienstenGroot() {
+        this.popupDiensten.open();
     }
 
     // export het vlieger logboek naar excel

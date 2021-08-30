@@ -1,0 +1,94 @@
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {DienstenService} from "../../../services/apiservice/diensten.service";
+import {Subscription} from "rxjs";
+import {DateTime} from "luxon";
+import {SharedService} from "../../../services/shared/shared.service";
+import {HeliosDienstenDataset} from "../../../types/Helios";
+
+@Component({
+    selector: 'app-diensten',
+    templateUrl: './diensten.component.html',
+    styleUrls: ['./diensten.component.scss']
+})
+export class DienstenComponent implements OnInit, OnChanges {
+    @Input() VliegerID: number;
+    @Input() UitgebreideWeergave: boolean = false;
+
+    datumAbonnement: Subscription;         // volg de keuze van de kalender
+    datum: DateTime;                       // de gekozen dag
+
+    diensten: HeliosDienstenDataset[];
+
+    constructor(private readonly dienstenService: DienstenService,
+                private readonly sharedService: SharedService) {
+    }
+
+    ngOnInit(): void {
+        // de datum zoals die in de kalender gekozen is
+        // de datum zoals die in de kalender gekozen is
+        this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
+            this.datum = DateTime.fromObject({
+                year: datum.year,
+                month: datum.month,
+                day: datum.day
+            })
+            this.ophalen();
+        })
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        this.ophalen()
+    }
+
+    ophalen(): void {
+
+        let startMaand: number = this.datum.month; // laat alles vanaf gekozen maand zien
+        let startDag: number = this.datum.day; // laat alles vanaf gekozen maand zien
+
+        if ((this.UitgebreideWeergave) || (DateTime.now().year != this.datum.year)) {   // maar niet altijd
+            startMaand = 1;
+            startDag = 1;
+        }
+
+        const startDatum: DateTime = DateTime.fromObject({
+            year: this.datum.year,
+            month: startMaand,
+            day: startDag
+        })
+
+        const eindDatum: DateTime = DateTime.fromObject({
+            year: this.datum.year,
+            month: 12,
+            day: 31
+        })
+        this.dienstenService.getDiensten(startDatum, eindDatum, undefined, this.VliegerID).then((d) => {
+            if ((this.UitgebreideWeergave) || d.length < 5) {
+                this.diensten = d;
+            }
+            else {
+                this.diensten = d.slice(0, 7);
+            }
+        });
+    }
+
+    toonDatum(datum: string): string {
+        const d:DateTime = DateTime.fromSQL(datum)
+        let retValue: string = d.day + " ";
+
+        switch (d.month) {
+            case 1: retValue += "Jan"; break;
+            case 2: retValue += "Feb"; break;
+            case 3: retValue += "Mrt"; break;
+            case 4: retValue += "Apr"; break;
+            case 5: retValue += "Mei"; break;
+            case 6: retValue += "Juni"; break;
+            case 7: retValue += "Juli"; break;
+            case 8: retValue += "Aug"; break;
+            case 9: retValue += "Sept"; break;
+            case 10: retValue += "Okt"; break;
+            case 11: retValue += "Nov"; break;
+            case 12: retValue += "Dec"; break;
+        }
+        return retValue;
+    }
+}

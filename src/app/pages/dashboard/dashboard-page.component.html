@@ -49,11 +49,17 @@
         </div>
 
         <div class="col-3">
-            <app-pegasus-card id="roosterCard"
+            <app-pegasus-card id="dientenCard"
                               class="kleineKaart"
-                              titel="Rooster"
+                              titel="Diensten"
                               subtitel="Ingeroosterde diensten"
                               [icon]="iconRooster">
+                <div class="expand">
+                    <a class="clickable" (click)="toonDienstenGroot()">
+                        <fa-icon [icon]="iconExpand"></fa-icon>
+                    </a>
+                </div>
+                <app-diensten [VliegerID]="lidData.ID" *ngIf="lidData"></app-diensten>
             </app-pegasus-card>
         </div>
     </div>
@@ -64,7 +70,7 @@
                               titel="Logboek {{datum.year}}"
                               subtitel="Overzicht van de vluchten"
                               [icon]="iconLogboek">
-                <div class="expandLogboek">
+                <div class="expand">
                     <a class="clickable" (click)="toonLogboekGroot()">
                         <fa-icon [icon]="iconExpand"></fa-icon>
                     </a>
@@ -112,7 +118,7 @@
 </app-pegasus-card>
 
 
-<app-modal popupClass="popupLarge" titel="Logboek van {{lidData.NAAM}} voor" *ngIf="lidData">
+<app-modal #logboekPopup popupClass="popupLarge" titel="Logboek van {{lidData.NAAM}} voor" *ngIf="lidData">
     <div body>
         <div class="popupLargeWrapper">
             <div class="excel">
@@ -123,4 +129,10 @@
     </div>
 </app-modal>
 
-
+<app-modal #dienstenPopup titel="Diensten van {{lidData.NAAM}}" *ngIf="lidData">
+    <div body>
+        <div>
+            <app-diensten [VliegerID]="lidData.ID" UitgebreideWeergave="true" *ngIf="lidData"></app-diensten>
+        </div>
+    </div>
+</app-modal>

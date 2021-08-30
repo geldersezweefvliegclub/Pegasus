@@ -114,6 +114,8 @@ export interface paths {
         query: {
           /** Voor welk jaar wordt de data opgevraagd */
           JAAR: number;
+          /** Voor welk lid wordt de data opgevraagd */
+          LID_ID: number;
         };
       };
       responses: {
@@ -251,6 +253,10 @@ export interface components {
       LID_ID?: number;
       /** Link naar type tabel. Geeft aan wat voor type dienst */
       TYPE_DIENST_ID?: number;
+      /** Is lid aanwezig geweest */
+      AANWEZIG?: boolean;
+      /** Lid is niet komen opdagen */
+      AFWEZIG?: boolean;
     };
     oper_diensten: components["schemas"]["oper_diensten_in"] & {
       /** Verwijzing naar rooster tabel */

@@ -1,0 +1,25 @@
+<table class="w-100">
+    <tr class="headerRow">
+    <th scope="col" class="datum">Datum</th>
+    <th scope="col">Dienst</th>
+    <th scope="col" *ngIf="UitgebreideWeergave">Afwezig</th>
+    <th scope="col" *ngIf="UitgebreideWeergave">Aanwezig</th>
+    </tr>
+
+    <tr *ngFor="let dienst of diensten;let i = index">
+        <td class="datum">{{toonDatum(dienst.DATUM)}}</td>
+        <td>{{dienst.TYPE_DIENST}}</td>
+        <td class="midden" *ngIf="UitgebreideWeergave">
+            <input type="checkbox"
+                   class="form-check-inline"
+                   checked="{{dienst.AFWEZIG}}"
+                   disabled=true>
+        </td>
+        <td class="midden" *ngIf="UitgebreideWeergave">
+            <input type="checkbox"
+                   class="form-check-inline"
+                   checked="{{dienst.AANWEZIG}}"
+                   disabled=true>
+        </td>
+    </tr>
+</table>

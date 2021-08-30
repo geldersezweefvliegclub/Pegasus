@@ -47,6 +47,7 @@ import { TrackEditorComponent } from './components/editors/track-editor/track-ed
 import { TrackRenderComponent } from './components/vlieger-logboek/track-render/track-render.component';
 import { TracksComponent } from './components/tracks/tracks.component';
 import { OnderdrukNulComponent } from './components/datatable/onderdruk-nul/onderdruk-nul.component';
+import { DienstenComponent } from './components/diensten/diensten.component';
 
 @NgModule({
     imports: [
@@ -99,7 +100,8 @@ import { OnderdrukNulComponent } from './components/datatable/onderdruk-nul/onde
     TrackEditorComponent,
     TrackRenderComponent,
     TracksComponent,
-    OnderdrukNulComponent
+    OnderdrukNulComponent,
+    DienstenComponent
   ],
     exports: [
         LidEditorComponent,
@@ -123,7 +125,8 @@ import { OnderdrukNulComponent } from './components/datatable/onderdruk-nul/onde
         ProgressieBoomComponent,
         VliegerLogboekTotalenComponent,
         TracksComponent,
-        TrackEditorComponent
+        TrackEditorComponent,
+        DienstenComponent
     ],
   providers: [],
   schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]
