@@ -11,16 +11,15 @@ import {
 import {
     faCalendarCheck,
     faCalendarDay,
-    faExternalLinkSquareAlt, faSortAmountDownAlt,
-    faTimesCircle,
-    faUsers
+    faSortAmountDownAlt,
+    faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
 import {SharedService} from '../../services/shared/shared.service';
 import {Subscription} from 'rxjs';
 import {RoosterService} from '../../services/apiservice/rooster.service';
 import {getBeginEindDatumVanMaand} from '../../utils/Utils';
-import {CustomError, KeyValueArray} from '../../types/Utils';
-import {DateTime, Duration} from 'luxon';
+import {CustomError} from '../../types/Utils';
+import {DateTime} from 'luxon';
 import {LedenFilterComponent} from "../../shared/components/leden-filter/leden-filter.component";
 import {LoginService} from "../../services/apiservice/login.service";
 import {DienstenService} from "../../services/apiservice/diensten.service";

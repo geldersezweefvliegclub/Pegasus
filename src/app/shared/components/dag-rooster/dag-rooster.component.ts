@@ -1,17 +1,17 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {DienstenService} from "../../../services/apiservice/diensten.service";
 import {RoosterService} from "../../../services/apiservice/rooster.service";
-import {HeliosDienst, HeliosDienstenDataset, HeliosRoosterDag, HeliosRoosterDataset} from "../../../types/Helios";
+import {HeliosDienst, HeliosDienstenDataset, HeliosRoosterDataset} from "../../../types/Helios";
 import {DateTime} from "luxon";
 import {ModalComponent} from "../modal/modal.component";
-import {coerceStringArray} from "@angular/cdk/coercion";
+
 
 @Component({
     selector: 'app-dag-rooster',
     templateUrl: './dag-rooster.component.html',
     styleUrls: ['./dag-rooster.component.scss']
 })
-export class DagRoosterComponent implements OnInit {
+export class DagRoosterComponent {
     @Output() opslaan: EventEmitter<string> = new EventEmitter<string>();
 
     @Input() Datum: DateTime;
@@ -23,9 +23,6 @@ export class DagRoosterComponent implements OnInit {
 
     constructor(private readonly roosterService: RoosterService,
                 private readonly dienstenService: DienstenService) {
-    }
-
-    ngOnInit(): void {
     }
 
     // Open leden-filter dialoog met de leden-filter opties

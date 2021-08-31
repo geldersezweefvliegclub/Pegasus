@@ -1,5 +1,5 @@
 import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
-import {HeliosAanwezigLedenDataset, HeliosLedenDataset, HeliosLid, HeliosTrack} from "../../../../types/Helios";
+import {HeliosLedenDataset, HeliosTrack} from "../../../../types/Helios";
 import {ModalComponent} from "../../modal/modal.component";
 import {TracksService} from "../../../../services/apiservice/tracks.service";
 import {LedenService} from "../../../../services/apiservice/leden.service";

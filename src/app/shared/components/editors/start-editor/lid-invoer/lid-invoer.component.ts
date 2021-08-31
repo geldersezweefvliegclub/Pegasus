@@ -1,6 +1,4 @@
 import {
-    AfterContentInit,
-    AfterViewInit,
     Component,
     EventEmitter,
     Input,
@@ -11,7 +9,6 @@ import {
 } from '@angular/core';
 import {Observable, of, Subject} from 'rxjs';
 import {HeliosAanwezigLedenDataset, HeliosVliegtuigenDataset} from '../../../../../types/Helios';
-import {forEach} from "ag-grid-community/dist/lib/utils/array";
 
 @Component({
     selector: 'app-lid-invoer',

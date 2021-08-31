@@ -152,7 +152,6 @@ export class LidEditorComponent implements OnInit {
             case 'ROOSTER':
             case 'BEHEERDER':
             case 'DDWV_BEHEERDER':
-            case 'STARTLEIDER':
             case 'betaald': {
                 if (ui?.isBeheerder)
                     return false;

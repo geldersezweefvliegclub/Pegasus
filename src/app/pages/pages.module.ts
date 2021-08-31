@@ -40,7 +40,6 @@ import { RoosterPageComponent } from './rooster-page/rooster-page.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { TrackRenderComponent } from './leden-grid/track-render/track-render.component';
 import { TracksGridComponent } from './tracks-grid/tracks-grid.component';
-import { TestPageComponent } from './test-page/test-page.component';
 import { JaarTotalenComponent } from './rooster-page/jaar-totalen/jaar-totalen.component';
 
 @NgModule({
@@ -88,7 +87,6 @@ import { JaarTotalenComponent } from './rooster-page/jaar-totalen/jaar-totalen.c
     RoosterPageComponent,
     TrackRenderComponent,
     TracksGridComponent,
-    TestPageComponent,
     JaarTotalenComponent,
   ],
   exports: [

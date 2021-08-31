@@ -1,5 +1,5 @@
 import {Component, Input, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {HeliosLedenDataset, HeliosTrack, HeliosTracksDataset, HeliosVliegtuig} from "../../../types/Helios";
+import {HeliosLedenDataset, HeliosTrack, HeliosTracksDataset} from "../../../types/Helios";
 import {TracksService} from "../../../services/apiservice/tracks.service";
 import {SharedService} from "../../../services/shared/shared.service";
 import {TrackEditorComponent} from "../editors/track-editor/track-editor.component";

@@ -1,10 +1,9 @@
 import {Injectable} from '@angular/core';
 import {APIService} from "./api.service";
 import {HeliosTrack, HeliosTracks, HeliosTracksDataset} from "../../types/Helios";
-import {CustomError, KeyValueArray} from "../../types/Utils";
+import {KeyValueArray} from "../../types/Utils";
 import {StorageService} from "../storage/storage.service";
 import {LoginService} from "./login.service";
-import {error} from "protractor";
 
 @Injectable({
     providedIn: 'root'
@@ -23,8 +22,7 @@ export class TracksService {
         // Alleen als we onderstaande rollen nie hebben, gaan we ook geen data proberen op te halen
         const ui = this.loginService.userInfo?.Userinfo;
         if (!ui?.isCIMT && !ui?.isInstructeur && !ui?.isBeheerder) {
-            const error: CustomError = {beschrijving: "Niet gemachtigd om tracks te laden"};
-            throw error;
+            throw {beschrijving: "Niet gemachtigd om tracks te laden"};
         }
 
         let getParams: KeyValueArray = {};
@@ -57,8 +55,7 @@ export class TracksService {
         // Alleen als we onderstaande rollen nie hebben, gaan we ook geen data proberen op te halen
         const ui = this.loginService.userInfo?.Userinfo;
         if (!ui?.isCIMT && !ui?.isInstructeur && !ui?.isBeheerder) {
-            const error: CustomError = {beschrijving: "Niet gemachtigd om tracks te laden"};
-            throw error;
+            throw {beschrijving: "Niet gemachtigd om tracks te laden"};
         }
 
         const response: Response = await this.apiService.get('Tracks/GetObject', {'ID': id.toString()});

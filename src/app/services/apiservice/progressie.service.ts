@@ -54,7 +54,7 @@ export class ProgressieService {
 
 
     async getBoom(lidID:number): Promise<HeliosProgressieBoom[]> {
-        let boom: HeliosProgressieBoom | null = null;
+        let boom: HeliosProgressieBoom | null;
 
         let getParams: KeyValueArray = {};
         getParams['LID_ID'] = lidID.toString();
@@ -66,7 +66,7 @@ export class ProgressieService {
     }
 
     async getProgressieKaart(lidID:number):Promise<HeliosProgressieKaartDataset[]> {
-        let kaart:HeliosProgressieKaart | null = null;
+        let kaart:HeliosProgressieKaart | null;
 
         let getParams: KeyValueArray = {};
         getParams['LID_ID'] = lidID.toString();

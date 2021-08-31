@@ -3,7 +3,6 @@ import {
     ColDef,
     GridApi,
     GridOptions,
-    RowClickedEvent,
     RowDoubleClickedEvent,
     RowSelectedEvent
 } from 'ag-grid-community';

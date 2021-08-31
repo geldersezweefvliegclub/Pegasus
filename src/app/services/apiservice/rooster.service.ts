@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {DateTime} from 'luxon';
 import {APIService} from './api.service';
 import {KeyValueArray} from '../../types/Utils';
-import {HeliosRooster, HeliosRoosterDag, HeliosRoosterDataset, HeliosVliegtuig} from '../../types/Helios';
+import {HeliosRooster, HeliosRoosterDag, HeliosRoosterDataset} from '../../types/Helios';
 
 @Injectable({
     providedIn: 'root'

@@ -128,10 +128,10 @@ export class APIService {
         }
 
         response.statusText
-        const error: CustomError = {
+        throw {
             responseCode: response.status,
             beschrijving: beschrijving
         }
-        throw error;
+
     }
 }

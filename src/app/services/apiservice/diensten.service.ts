@@ -3,14 +3,11 @@ import {
     HeliosDienst,
     HeliosDiensten,
     HeliosDienstenDataset, HeliosDienstenTotaal,
-    HeliosTrack,
-    HeliosTracks,
     HeliosTracksDataset
 } from "../../types/Helios";
 import {APIService} from "./api.service";
-import {LoginService} from "./login.service";
 import {StorageService} from "../storage/storage.service";
-import {CustomError, KeyValueArray} from "../../types/Utils";
+import {KeyValueArray} from "../../types/Utils";
 import {DateTime} from "luxon";
 
 @Injectable({

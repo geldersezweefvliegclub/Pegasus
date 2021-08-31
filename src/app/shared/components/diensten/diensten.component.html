@@ -12,13 +12,13 @@
         <td class="midden" *ngIf="UitgebreideWeergave">
             <input type="checkbox"
                    class="form-check-inline"
-                   checked="{{dienst.AFWEZIG}}"
+                   [checked]="dienst.AFWEZIG"
                    disabled=true>
         </td>
         <td class="midden" *ngIf="UitgebreideWeergave">
             <input type="checkbox"
                    class="form-check-inline"
-                   checked="{{dienst.AANWEZIG}}"
+                   [checked]="dienst.AANWEZIG"
                    disabled=true>
         </td>
     </tr>
