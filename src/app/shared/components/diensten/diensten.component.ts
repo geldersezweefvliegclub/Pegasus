@@ -1,9 +1,10 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {DienstenService} from "../../../services/apiservice/diensten.service";
 import {Subscription} from "rxjs";
 import {DateTime} from "luxon";
 import {SharedService} from "../../../services/shared/shared.service";
 import {HeliosDienstenDataset} from "../../../types/Helios";
+import {DagRoosterComponent} from "../dag-rooster/dag-rooster.component";
 
 @Component({
     selector: 'app-diensten',
@@ -14,10 +15,13 @@ export class DienstenComponent implements OnInit, OnChanges {
     @Input() VliegerID: number;
     @Input() UitgebreideWeergave: boolean = false;
 
+    @ViewChild(DagRoosterComponent) popup: DagRoosterComponent;
+
     datumAbonnement: Subscription;         // volg de keuze van de kalender
     datum: DateTime;                       // de gekozen dag
 
     diensten: HeliosDienstenDataset[];
+    roosterDatum: DateTime;
 
     constructor(private readonly dienstenService: DienstenService,
                 private readonly sharedService: SharedService) {
@@ -41,34 +45,34 @@ export class DienstenComponent implements OnInit, OnChanges {
     }
 
     ophalen(): void {
+        if (this.datum) {
+            let startMaand: number = this.datum.month; // laat alles vanaf gekozen maand zien
+            let startDag: number = this.datum.day; // laat alles vanaf gekozen maand zien
 
-        let startMaand: number = this.datum.month; // laat alles vanaf gekozen maand zien
-        let startDag: number = this.datum.day; // laat alles vanaf gekozen maand zien
+            if ((this.UitgebreideWeergave) || (DateTime.now().year != this.datum.year)) {   // maar niet altijd
+                startMaand = 1;
+                startDag = 1;
+            }
 
-        if ((this.UitgebreideWeergave) || (DateTime.now().year != this.datum.year)) {   // maar niet altijd
-            startMaand = 1;
-            startDag = 1;
+            const startDatum: DateTime = DateTime.fromObject({
+                year: this.datum.year,
+                month: startMaand,
+                day: startDag
+            })
+
+            const eindDatum: DateTime = DateTime.fromObject({
+                year: this.datum.year,
+                month: 12,
+                day: 31
+            })
+            this.dienstenService.getDiensten(startDatum, eindDatum, undefined, this.VliegerID).then((d) => {
+                if ((this.UitgebreideWeergave) || d.length < 5) {
+                    this.diensten = d;
+                } else {
+                    this.diensten = d.slice(0, 7);
+                }
+            });
         }
-
-        const startDatum: DateTime = DateTime.fromObject({
-            year: this.datum.year,
-            month: startMaand,
-            day: startDag
-        })
-
-        const eindDatum: DateTime = DateTime.fromObject({
-            year: this.datum.year,
-            month: 12,
-            day: 31
-        })
-        this.dienstenService.getDiensten(startDatum, eindDatum, undefined, this.VliegerID).then((d) => {
-            if ((this.UitgebreideWeergave) || d.length < 5) {
-                this.diensten = d;
-            }
-            else {
-                this.diensten = d.slice(0, 7);
-            }
-        });
     }
 
     toonDatum(datum: string): string {
@@ -90,5 +94,10 @@ export class DienstenComponent implements OnInit, OnChanges {
             case 12: retValue += "Dec"; break;
         }
         return retValue;
+    }
+
+    toonDagRooster(DATUM: string) {
+        this.roosterDatum = DateTime.fromSQL(DATUM);
+        setTimeout(() => this.popup.openPopup(), 100); // kleine delay datum moet syncen
     }
 }

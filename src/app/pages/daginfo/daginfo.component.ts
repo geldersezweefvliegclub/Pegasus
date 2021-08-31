@@ -23,6 +23,7 @@ import {faPaperPlane} from '@fortawesome/free-solid-svg-icons/faPaperPlane';
 import {ComposeMeteoComponent} from './compose-meteo/compose-meteo.component';
 import {ComposeBedrijfComponent} from './compose-bedrijf/compose-bedrijf.component';
 import {StorageService} from '../../services/storage/storage.service';
+import {DagRoosterComponent} from "../../shared/components/dag-rooster/dag-rooster.component";
 
 
 @Component({
@@ -33,6 +34,7 @@ import {StorageService} from '../../services/storage/storage.service';
 export class DaginfoComponent implements OnInit{
     @ViewChild(ComposeMeteoComponent) meteoWizard: ComposeMeteoComponent;
     @ViewChild(ComposeBedrijfComponent) bedrijfWizard: ComposeBedrijfComponent;
+    @ViewChild(DagRoosterComponent) dienstenWizard: DagRoosterComponent;
 
     iconCardIcon: IconDefinition = faInfo;
     iconBedrijf: IconDefinition = faArtstation;
@@ -125,6 +127,11 @@ export class DaginfoComponent implements OnInit{
     // Wizard om tekst te genereren voor vliegbedrijf. Tekst kan daarna aangepast worden
     invullenVliegbedrijf() {
         this.bedrijfWizard.openPopup();
+    }
+
+    // Wizard om tekst te genereren voor aanwezige leden. Tekst kan daarna aangepast worden
+    invullenDiensten() {
+        this.dienstenWizard.openPopup();
     }
 
     // als we meer tekst op scherm kunnen tonen, dan is dat de volgende keer ook zo, dus opslaan

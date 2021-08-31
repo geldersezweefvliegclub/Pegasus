@@ -7,7 +7,7 @@
     </tr>
 
     <tr *ngFor="let dienst of diensten;let i = index">
-        <td class="datum">{{toonDatum(dienst.DATUM)}}</td>
+        <td class="datum clickable"><a (click)="toonDagRooster(dienst.DATUM)" class="clickable">{{toonDatum(dienst.DATUM)}}</a></td>
         <td>{{dienst.TYPE_DIENST}}</td>
         <td class="midden" *ngIf="UitgebreideWeergave">
             <input type="checkbox"
@@ -23,3 +23,5 @@
         </td>
     </tr>
 </table>
+
+<app-dag-rooster [Datum]="roosterDatum"></app-dag-rooster>

@@ -48,6 +48,7 @@ import { TrackRenderComponent } from './components/vlieger-logboek/track-render/
 import { TracksComponent } from './components/tracks/tracks.component';
 import { OnderdrukNulComponent } from './components/datatable/onderdruk-nul/onderdruk-nul.component';
 import { DienstenComponent } from './components/diensten/diensten.component';
+import { DagRoosterComponent } from './components/dag-rooster/dag-rooster.component';
 
 @NgModule({
     imports: [
@@ -101,7 +102,8 @@ import { DienstenComponent } from './components/diensten/diensten.component';
     TrackRenderComponent,
     TracksComponent,
     OnderdrukNulComponent,
-    DienstenComponent
+    DienstenComponent,
+    DagRoosterComponent
   ],
     exports: [
         LidEditorComponent,
@@ -126,7 +128,8 @@ import { DienstenComponent } from './components/diensten/diensten.component';
         VliegerLogboekTotalenComponent,
         TracksComponent,
         TrackEditorComponent,
-        DienstenComponent
+        DienstenComponent,
+        DagRoosterComponent
     ],
   providers: [],
   schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

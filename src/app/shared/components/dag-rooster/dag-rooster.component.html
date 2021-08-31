@@ -1,0 +1,68 @@
+<app-modal titel="Dag rooster  {{ toonDatum() }}">
+    <div body>
+
+        <div *ngIf="rooster">
+            <div class="d-flex">
+                <input type="checkbox" class="form-check-inline" id='DDWV'
+                       name='DDWV'
+                       [(ngModel)]="rooster.DDWV"
+                       disabled="true">
+                <label for='DDWV' class="form-check-label">DDWV</label>
+            </div>
+            <div class="text-nowrap">
+                <input type="checkbox" class="form-check-inline"
+                       id='Clubbedrijf'
+                       name='Clubbedrijf'
+                       [(ngModel)]="rooster.CLUB_BEDRIJF"
+                       disabled="true">
+                <label for='Clubbedrijf'
+                       class="labelClub form-check-label">Club bedrijf</label>
+            </div>
+        </div>
+
+        <table class="w-100 mt-2" *ngIf="diensten">
+            <tr class="headerRow">
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col" *ngIf="magWijzigen">Afwezig</th>
+                <th scope="col" *ngIf="magWijzigen">Aanwezig</th>
+            </tr>
+
+            <tr *ngFor="let dienst of diensten;let i = index">
+                <td>{{dienst.NAAM}}</td>
+                <td>{{dienst.TYPE_DIENST}}</td>
+
+                <td class="midden"  *ngIf="magWijzigen">
+                    <input type="checkbox"
+                           class="form-check-inline"
+                           [(ngModel)]="diensten[i].AFWEZIG"
+                           (change)="afwezig($event, i)"
+                           [disabled]="!magWijzigen">
+                </td>
+                <td class="midden"  *ngIf="magWijzigen">
+                    <input type="checkbox"
+                           class="form-check-inline"
+                           (change)="aanwezig($event, i)"
+                           [(ngModel)]="diensten[i].AANWEZIG"
+                           [disabled]="!magWijzigen">
+                </td>
+            </tr>
+        </table>
+
+        <div class="mt-2" *ngIf="rooster">
+            <label for='OPMERKINGEN'
+                   class="form-check-label">Opmerkingen</label>
+            <textarea
+                    id='OPMERKINGEN'
+                    name='OPMERKINGEN'
+                    [(ngModel)]="rooster.OPMERKINGEN"
+                    [disabled]="true"
+                    class="w-100 text-invoer form-control opmerkingen"
+                    [rows]="2" style="resize: none"></textarea>
+        </div>
+    </div>
+    <div footer *ngIf="magWijzigen">
+        <app-icon-button iconNaam="fas Edit" btnColor="btn-primary"
+                         tekst="Opslaan" (btnClicked)="opslaanData()"></app-icon-button>
+    </div>
+</app-modal>
