@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {routes} from '../../routing.module';
+import {CustomRoute, routes} from '../../routing.module';
 import {LoginService} from '../../services/apiservice/login.service';
 import {Router} from '@angular/router';
 import {faSignOutAlt} from '@fortawesome/free-solid-svg-icons';
@@ -10,6 +10,9 @@ import {StartlijstService} from '../../services/apiservice/startlijst.service';
 import {DaginfoService} from '../../services/apiservice/daginfo.service';
 import {HeliosActie, KalenderMaand} from '../../types/Utils';
 import {getBeginEindDatumVanMaand} from '../../utils/Utils';
+import {VliegtuigenService} from "../../services/apiservice/vliegtuigen.service";
+import {forEach} from "ag-grid-community/dist/lib/utils/array";
+import {HeliosType} from "../../types/Helios";
 
 
 @Component({
@@ -37,6 +40,7 @@ export class NavigationComponent {
     constructor(private readonly loginService: LoginService,
                 private readonly startlijstService: StartlijstService,
                 private readonly daginfoService: DaginfoService,
+                private readonly vliegtuigenService: VliegtuigenService,
                 private readonly sharedService: SharedService,
                 private readonly router: Router,
                 private readonly calendar: NgbCalendar)
@@ -88,7 +92,26 @@ export class NavigationComponent {
                     });
                 }
             }
+            if (ev.tabel == "Vliegtuigen") {
+                this.vliegtuigenBatch();
+            }
         });
+
+        this.vliegtuigenBatch();
+    }
+
+    // bepaald de batch voor vliegtuigen menu
+    vliegtuigenBatch() {
+        this.vliegtuigenService.getVliegtuigen(false, undefined, {CLUBKIST: "true" }).then((kisten) => {
+            let nietInzetbaar = 0;
+
+            kisten.forEach(kist => {
+                if (!kist.INZETBAAR) nietInzetbaar++;
+            });
+
+            const v = this.routes.find(route => route.path == "vliegtuigen") as CustomRoute;
+            v.batch = nietInzetbaar;
+        })
     }
 
     // het is voorbij en we gaan terug naar de login pagina

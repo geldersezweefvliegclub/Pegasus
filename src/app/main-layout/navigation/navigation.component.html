@@ -11,15 +11,20 @@
                     >
                         <fa-icon [icon]="route.icon" class="me-3"></fa-icon>
                         {{route.text}}
+                        <span class="badge bg-danger ms-2" *ngIf="route.batch" >{{route.batch}}</span>
                     </a>
                 </ng-template>
+
                 <a
                         class="list-group-item list-group-item-action waves-effect"
                         (click)="Uitloggen()">
                     <fa-icon [icon]="logUit" class="me-3"></fa-icon>
                     Uitloggen
                 </a>
+
             </div>
+
+
 
             <div class="w-100">
                 <ngb-datepicker

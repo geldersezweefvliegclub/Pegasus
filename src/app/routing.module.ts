@@ -29,6 +29,7 @@ export interface CustomRoute extends Route {
   excluded: boolean;
   icon: IconDefinition;
   text: string;
+  batch?: number;
 }
 
 export const routes: CustomRoute[] = [
@@ -44,7 +45,6 @@ export const routes: CustomRoute[] = [
   {path: 'profiel', component: ProfielPageComponent, excluded: false, icon: faUser, text: 'Profiel'},
   {path: 'rooster', component: RoosterPageComponent, excluded: false, icon: faCalendarDay, text: 'Rooster'},
   {path: '**', component: NotFoundComponent, excluded: true, icon: faUser, text: 'EXCLUDED'},
-
 ];
 
 

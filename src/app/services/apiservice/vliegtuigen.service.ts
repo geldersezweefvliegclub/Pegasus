@@ -15,14 +15,14 @@ export class VliegtuigenService {
 
     }
 
-    async getVliegtuigen(verwijderd: boolean = false, zoekString?: string): Promise<HeliosVliegtuigenDataset[]> {
+    async getVliegtuigen(verwijderd: boolean = false, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosVliegtuigenDataset[]> {
         let hash: string = '';
 
         if (((this.vliegtuigen == null)) && (this.storageService.ophalen('vliegtuigen') != null)) {
             this.vliegtuigen = this.storageService.ophalen('vliegtuigen');
         }
 
-        let getParams: KeyValueArray = {};
+        let getParams: KeyValueArray = params;
 
         if (this.vliegtuigen != null) { // we hebben eerder de lijst opgehaald
             hash = this.vliegtuigen.hash as string;
