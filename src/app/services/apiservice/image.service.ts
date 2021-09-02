@@ -20,8 +20,7 @@ export class ImageService {
     // Maak een data object aan alsof we een HTML formulier ingevuld hebben.
     const formEmulated = new FormData();
     formEmulated.append('ID', ID.toString());
-    console.log(base64ToFile(base64string), base64string);
-    formEmulated.append('FILE', base64ToFile(base64string));
+    formEmulated.append('FILE', base64string);
 
     const response = await this.apiService.post('Leden/UploadAvatar', formEmulated);
 

@@ -35,10 +35,11 @@ export class APIService {
 
     // Aanroepen post request om het aanmaken van nieuw record
     // Dit is een string voor JSON, of FormData voor foto's
-    async post(url: string, body: string|FormData): Promise<Response> {
+    async post(url: string, body: string|FormData, headers?: Headers): Promise<Response> {
 
         const response = await fetch(`${this.URL}${url}`, {
             method: 'POST',
+            headers: headers,
             body: body,
         });
         //todo response heeft een .ok property. Mogelijk beter te gebruiken? (Zoals get())
@@ -53,10 +54,11 @@ export class APIService {
     }
 
     // Aanroepen put request om record te wijzigen
-    async put(url: string, body: string): Promise<Response> {
+    async put(url: string, body: string, headers?: Headers): Promise<Response> {
 
         const response = await fetch(`${this.URL}${url}`, {
             method: 'PUT',
+            headers: headers,
             body: body,
         });
         // todo .ok property gebruiken?

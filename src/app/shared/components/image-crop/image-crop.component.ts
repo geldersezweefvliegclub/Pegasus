@@ -9,9 +9,7 @@ import {faSearchMinus, faSearchPlus, faTimesCircle, faUndoAlt} from '@fortawesom
 })
 export class ImageCropComponent {
   @Output() cropped: EventEmitter<string | null | undefined> = new EventEmitter<string | null | undefined>();
-  // @Output() opslaan: EventEmitter<string | null | undefined> = new EventEmitter<string | null | undefined>();
-  // todo type
-  @Output() opslaan: EventEmitter<any> = new EventEmitter<any>();
+  @Output() opslaan: EventEmitter<string> = new EventEmitter<string>();
   imageChangedEvent: any = '';
   croppedImage: any = '';
   canvasRotation = 0;
@@ -106,9 +104,8 @@ export class ImageCropComponent {
     };
   }
 
+  // laat parent weten dat we kunnen opslaan
   submit() {
-    // todo opslaan foto
-    // console.log('Submit ', $event)
-    // this.opslaan.emit($event);
+    this.opslaan.emit(this.croppedImage);
   }
 }

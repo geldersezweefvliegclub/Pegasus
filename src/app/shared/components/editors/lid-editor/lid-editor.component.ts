@@ -110,9 +110,10 @@ export class LidEditorComponent implements OnInit {
         this.changeDetector.detectChanges();
     }
 
-    uploadFoto($event: string) {
-        this.setAvatar($event);
-        this.imageService.uploadFoto(this.lid.ID as number, $event).then();
+    uploadFoto(image: string) {
+        this.setAvatar(image);
+        this.imageService.uploadFoto(this.lid.ID as number, image).then(
+        );
     }
 
     isgoogleAuthNodig(): boolean {
