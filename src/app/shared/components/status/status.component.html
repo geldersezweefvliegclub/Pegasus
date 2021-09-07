@@ -14,7 +14,7 @@
                    class="form-check-inline"
                    (change)="zetProgressie($event, c.CompetentieID[0])"
                    [checked]="CheckGehaald(c.CompetentieID[0])"
-                   [disabled]="CheckGehaald(c.CompetentieID[0])">       <!-- als checked, dan disable. Verwijderen via progressie boom -->
+                   [disabled]="CheckDisabled(c.CompetentieID[0])">       <!-- als checked, dan disable. Verwijderen via progressie boom -->
         </td>
         <td class="kolom3">
             <input type="checkbox"
@@ -22,7 +22,7 @@
                    class="form-check-inline"
                    (change)="zetProgressie($event, c.CompetentieID[1])"
                    [checked]="CheckGehaald(c.CompetentieID[1])"
-                   [disabled]="CheckGehaald(c.CompetentieID[1])">       <!-- als checked, dan disable. Verwijderen via progressie boom -->
+                   [disabled]="CheckDisabled(c.CompetentieID[1])">       <!-- als checked, dan disable. Verwijderen via progressie boom -->
         </td>
     </tr>
 </table>
@@ -38,7 +38,7 @@
                    class="form-check-inline"
                    (change)="zetProgressie($event, o.CompetentieID)"
                    [checked]="CheckGehaald(o.CompetentieID)"
-                   [disabled]="CheckGehaald(o.CompetentieID)">          <!-- als checked, dan disable. Verwijderen via progressie boom -->
+                   [disabled]="CheckDisabled(o.CompetentieID)">          <!-- als checked, dan disable. Verwijderen via progressie boom -->
         </td>
     </tr>
 </table>

@@ -66,6 +66,20 @@ export class PvbComponent implements OnInit, OnChanges {
         return false;
     }
 
+    CheckDisabled(comptentieID: number): boolean {
+        const ui = this.loginService.userInfo?.Userinfo;
+        if (!ui?.isBeheerder && !ui?.isInstructeur && !ui?.isCIMT) {
+            return true;    // alleen beheerder, instructeuers en CIMT mogen competentie zetten
+        }
+
+        if (!this.gehaaldeProgressie) return false;
+
+        if (this.gehaaldeProgressie.findIndex((p) => p.COMPETENTIE_ID == comptentieID) >= 0) {
+            return true;
+        }
+        return false;
+    }
+
     // Zorg ervoor dat we niet gaan laden
     uitstellen(): void {
         this.suspend = true;
