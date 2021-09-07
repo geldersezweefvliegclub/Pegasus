@@ -3,7 +3,7 @@ import {APIService} from './api.service';
 
 import {
     HeliosLogboek, HeliosLogboekDataset, HeliosLogboekTotalen, HeliosRecency,
-    HeliosStart,
+    HeliosStart, HeliosStartDataset,
     HeliosStarts,
     HeliosVliegdagen,
     HeliosVliegtuigLogboek,
@@ -144,7 +144,7 @@ export class StartlijstService {
         return this.vliegtuigLogboekTotalen;
     }
 
-    async getStarts(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<[]> {
+    async getStarts(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise< HeliosStartDataset[]> {
         let hash: string = '';
 
         if (((this.starts == null)) && (this.storageService.ophalen('starts') != null)) {

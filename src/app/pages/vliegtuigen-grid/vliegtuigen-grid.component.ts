@@ -11,14 +11,19 @@ import {LogboekRenderComponent} from "../../shared/components/datatable/logboek-
 import {ZitplaatsRenderComponent} from './zitplaats-render/zitplaats-render.component';
 import {CheckboxRenderComponent} from '../../shared/components/datatable/checkbox-render/checkbox-render.component';
 
-import {HeliosVliegtuig, HeliosVliegtuigenDataset} from '../../types/Helios';
+import {HeliosType, HeliosVliegtuig, HeliosVliegtuigenDataset} from '../../types/Helios';
 import {CustomError} from '../../types/Utils';
 
 import * as xlsx from 'xlsx';
 import {LoginService} from '../../services/apiservice/login.service';
 import {Router} from "@angular/router";
 import {nummerSort} from '../../utils/Utils';
+import {StartlijstService} from "../../services/apiservice/startlijst.service";
+import {DateTime} from "luxon";
 
+type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
+    toonLogboek?: boolean;
+}
 
 @Component({
     selector: 'app-vliegtuigen-grid',
@@ -28,7 +33,7 @@ import {nummerSort} from '../../utils/Utils';
 export class VliegtuigenGridComponent implements OnInit {
     @ViewChild(VliegtuigEditorComponent) editor: VliegtuigEditorComponent;
 
-    data:HeliosVliegtuigenDataset[] = [];
+    data:HeliosVliegtuigenDatasetExtended[] = [];
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
@@ -122,6 +127,7 @@ export class VliegtuigenGridComponent implements OnInit {
     magExporten: boolean = false;
 
     constructor(private readonly vliegtuigenService: VliegtuigenService,
+                private readonly startlijstService: StartlijstService,
                 private readonly loginService: LoginService,
                 private readonly router: Router) {
     }
@@ -130,9 +136,7 @@ export class VliegtuigenGridComponent implements OnInit {
         // plaats de juiste kolommen in het grid
         this.kolomDefinitie();
 
-        this.vliegtuigenService.getVliegtuigen().then((dataset) => {
-            this.data = dataset;
-        });
+        this.opvragen();
 
         const ui = this.loginService.userInfo?.Userinfo;
         this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
@@ -143,12 +147,16 @@ export class VliegtuigenGridComponent implements OnInit {
 
     // openen van popup om de data van een nieuw vliegtuig te kunnen invoeren
     addVliegtuig(): void {
-        this.editor.openPopup(null);
+        if (this.magToevoegen) {
+            this.editor.openPopup(null);
+        }
     }
 
     // openen van popup om gegevens van een bestaand vliegtuig aan te passen
     openEditor(event?: RowDoubleClickedEvent) {
-        this.editor.openPopup(event?.data.ID);
+        if (this.magWijzigen) {
+            this.editor.openPopup(event?.data.ID);
+        }
     }
 
     // schakelen tussen deleteMode JA/NEE. In deleteMode kun je vliegtuigen verwijderen
@@ -184,6 +192,21 @@ export class VliegtuigenGridComponent implements OnInit {
         this.zoekTimer = window.setTimeout(() => {
             this.vliegtuigenService.getVliegtuigen(this.trashMode, this.zoekString).then((dataset) => {
                 this.data = dataset;
+
+                const ui = this.loginService.userInfo?.Userinfo;
+                if (!ui?.isDDWV) {  // DDWV mogen geen clubkist logboek zien
+                    this.data.forEach((v) => v.toonLogboek = v.CLUBKIST);   // alle clubkisten mogen getoond worden voor leden
+                }
+
+                // vlieger mag logboek bekijken als hij laaste 6 maanden op de kist gevlogen heeft
+                const nu:DateTime = DateTime.now();
+
+                this.startlijstService.getStarts(false, nu.minus({months: 6 }), nu).then((starts) => {
+                    starts.forEach((s) => {
+                        const v = this.data.find(v => v.ID == s.VLIEGTUIG_ID);
+                        if (v) v.toonLogboek = true;
+                    });
+                })
             });
         }, 400);
     }
