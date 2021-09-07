@@ -26,6 +26,7 @@ export class ProgressieBoomComponent implements OnInit {
     boom: ProgressieTreeviewItemComponent[];
     values: number[];
     suspend: boolean = false;
+    isDisabled: boolean = true;
 
     config = TreeviewConfig.create({
         hasAllCheckBox: false,
@@ -49,6 +50,9 @@ export class ProgressieBoomComponent implements OnInit {
                 }
             }
         });
+
+        const ui = this.loginService.userInfo?.Userinfo;
+        this.isDisabled = !(ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT);
     }
 
     ngOnInit(): void {

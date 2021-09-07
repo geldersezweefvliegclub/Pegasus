@@ -17,7 +17,7 @@
         <div class="form-check">
             <input type="checkbox" class="form-check-input" [(ngModel)]="item.checked"
                    (ngModelChange)="onProgressieChange(item)"
-                   [disabled]="item.children" [indeterminate]="item.indeterminate"/>
+                   [disabled]="item.children || isDisabled" [indeterminate]="item.indeterminate"/>
             <label class="form-check-label" (click)="onProgressieChange(item)">
                 {{item.text}}
             </label>
@@ -32,7 +32,9 @@
 
 <ngx-treeview [config]="config"
               [items]="boom"
-              [itemTemplate]="itemTemplate">
+              [itemTemplate]="itemTemplate"
+
+>
 </ngx-treeview>
 
 
