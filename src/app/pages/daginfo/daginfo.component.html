@@ -11,9 +11,11 @@
                min="1" max="15"
         >
     </div>
-    <div class="d-flex flex-column justify-content-between box h-100" *ngIf="geenToegang">
-        <img src="assets/img/geen_toegang.png" class='geen_toegang'/>
+
+    <div class="midden" *ngIf="geenToegang">
+        <object data="/assets/img/geen_toegang.svg" type="image/svg+xml" class="svgImage"></object>
     </div>
+
 
     <div class="d-flex flex-column justify-content-between box h-100" *ngIf="!geenToegang">
         <div class="mb-2">

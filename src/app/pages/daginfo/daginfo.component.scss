@@ -29,10 +29,14 @@ textarea {
   top: 12px;
 }
 
-.geen_toegang {
+.midden {
+  display: flex;           /* establish flex container */
+  flex-direction: column;  /* make main axis vertical */
+  justify-content: center; /* center items vertically, in this case */
+  align-items: center;     /* center items horizontally, in this case */
+  height: calc(100vh - 200px);
+}
 
-  filter: grayscale(50%);
-  height: 200px;
-  width: auto;
-  background-size: contain;
+.svgImage {
+  width: 50%
 }
