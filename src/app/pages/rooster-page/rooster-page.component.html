@@ -8,7 +8,7 @@
             <div id="data">
                 <div class="dataContent">
                     <div class="roosterTabel">
-                        <table *ngIf="!isLoading" class="table">
+                        <table class="table">
                             <thead>
                             <th scope="col"></th>
                             <th scope="col" class="DagBreedte">Dag</th>
@@ -301,14 +301,14 @@
                                 <fa-icon [icon]="iconSort"></fa-icon>
                             </a>
                         </div>
-                        <div *ngIf="filteredLeden && !isLoading;else loading"
+                        <div
                              id="LEDENLIJST"
                              cdkDropList
                              cdkDropListSortingDisabled
                              [cdkDropListData]="filteredLeden"
                              (cdkDropListDropped)="onDropInLedenlijst($event)">
 
-                            <div *ngIf="filteredLeden.length == 0" class="d-flex justify-content-center">
+                            <div *ngIf="filteredLeden && filteredLeden.length == 0" class="d-flex justify-content-center">
                                 Geen resultaten gevonden
                             </div>
                             <div class="card my-1"

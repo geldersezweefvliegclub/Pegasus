@@ -22,13 +22,17 @@
                     <div class="row">
                         <div class="col">
                             <label for="wachtwoord" class="form-label">Wachtwoord</label>
-                            <input
-                                    id="wachtwoord"
-                                    type="password"
-                                    class="form-control mb-2"
-                                    [(ngModel)]="wachtwoord"
-                                    name="wachtwoord"
-                                    minlength="2" required>
+                            <div class="input-group">
+                                <input
+                                        id="wachtwoord"
+                                        [type]="wachtwoordVerborgen ? 'password' : 'text'"
+                                        class="form-control mb-2"
+                                        [(ngModel)]="wachtwoord"
+                                        name="wachtwoord"
+                                        minlength="2" required>
+                                <span class="input-group-text passwordIcon" (click)="verbergWachtwoord()"><fa-icon
+                                        [icon]="oogIcon"></fa-icon></span>
+                            </div>
                         </div>
                     </div>
 
@@ -40,7 +44,8 @@
                         </div>
                     </div>
                     <div class="row mt-4">
-                        <div class="col d-flex" [ngClass]="{'justify-content-end': !showSecret, 'justify-content-between': showSecret }">
+                        <div class="col d-flex"
+                             [ngClass]="{'justify-content-end': !showSecret, 'justify-content-between': showSecret }">
                             <button class="btn btn-secondary mr-2" type="button" (click)="sendSMS()"
                                     [disabled]="form.invalid" *ngIf="showSecret">
                                 <span *ngIf="!isLoading">SMS</span>

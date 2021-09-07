@@ -3,15 +3,22 @@ import {LoginService} from '../../services/apiservice/login.service';
 import {CustomError} from '../../types/Utils';
 import {Router} from '@angular/router';
 
+import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import {faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
+
 @Component({
-  selector: 'app-login-page',
-  templateUrl: './login-page.component.html',
-  styleUrls: ['./login-page.component.scss']
+    selector: 'app-login-page',
+    templateUrl: './login-page.component.html',
+    styleUrls: ['./login-page.component.scss']
 })
 
 export class LoginPageComponent implements OnInit {
+    oogIcon: IconDefinition = faEye;
+
     gebruikersnaam: string = '';
     wachtwoord: string = '';
+    wachtwoordVerborgen: boolean = true;
+
     secret: string = '';
     isLoading = false;
     showSecret: boolean = false;
@@ -36,52 +43,58 @@ export class LoginPageComponent implements OnInit {
         "/assets/img/19507.jpg",
         "/assets/img/50832.jpg"
     ];
-  toonFoto: string = this.urlFoto();
+    toonFoto: string = this.urlFoto();
 
-  constructor(private readonly loginService: LoginService, private readonly router:Router) {
-  }
+    constructor(private readonly loginService: LoginService, private readonly router: Router) {
+    }
 
-  ngOnInit() {
-    setInterval(() => { this.toonFoto = this.urlFoto()}, 15000)
-  }
+    ngOnInit() {
+        setInterval(() => {
+            this.toonFoto = this.urlFoto()
+        }, 15000)
+    }
 
-  // geef de url terug van een willekeurige foto
-  urlFoto(): string {
-      const index = Math.floor(Math.random() * this.fotoAlbum.length)
-      return this.fotoAlbum[index];
-  }
+    // geef de url terug van een willekeurige foto
+    urlFoto(): string {
+        const index = Math.floor(Math.random() * this.fotoAlbum.length)
+        return this.fotoAlbum[index];
+    }
 
-  // De Google authenticator is aangepast. Variable opslaan in this.secret
-  onSecurityCodeChanged(code: string) {
-      this.secret = code;
-  }
+    // De Google authenticator is aangepast. Variable opslaan in this.secret
+    onSecurityCodeChanged(code: string) {
+        this.secret = code;
+    }
 
-  // Nu gaan we inloggen
-  login(): void {
-    this.isLoading = true;
-    this.loginService.login(this.gebruikersnaam, this.wachtwoord, this.secret).then(() => {
-        this.isLoading = false;
-        this.router.navigate(['/']);
-    }).catch(e => {
-      this.isLoading = false;
+    // Nu gaan we inloggen
+    login(): void {
+        this.isLoading = true;
+        this.loginService.login(this.gebruikersnaam, this.wachtwoord, this.secret).then(() => {
+            this.isLoading = false;
+            this.router.navigate(['/']);
+        }).catch(e => {
+            this.isLoading = false;
 
-      if (e.responseCode == 406) {
-        this.showSecret = true;
-      }
-      else {
-        this.error = e;
-      }
-    })
-  }
+            if (e.responseCode == 406) {
+                this.showSecret = true;
+            } else {
+                this.error = e;
+            }
+        })
+    }
 
-  // Als je geen Google authenticator hebt, kan de code per SMS verstuurd worden door het backend
-  sendSMS(): void {
-    this.isLoading = true;
-    this.loginService.sendSMS(this.gebruikersnaam, this.wachtwoord).then(() => {
-      this.isLoading = false;
-    }).catch(e => {
-      this.error = e;
-      this.isLoading = false;
-    })
-  }
+    verbergWachtwoord() {
+        this.wachtwoordVerborgen = !this.wachtwoordVerborgen;
+        this.oogIcon = this.wachtwoordVerborgen ? faEye : faEyeSlash;
+    }
+
+    // Als je geen Google authenticator hebt, kan de code per SMS verstuurd worden door het backend
+    sendSMS(): void {
+        this.isLoading = true;
+        this.loginService.sendSMS(this.gebruikersnaam, this.wachtwoord).then(() => {
+            this.isLoading = false;
+        }).catch(e => {
+            this.error = e;
+            this.isLoading = false;
+        })
+    }
 }

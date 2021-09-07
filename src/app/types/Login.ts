@@ -37,6 +37,8 @@ export interface paths {
         200: unknown;
         /** Mislukt */
         401: unknown;
+        /** Niet aanvaardbaar, input ontbreekt */
+        406: unknown;
       };
     };
   };
@@ -45,6 +47,24 @@ export interface paths {
       responses: {
         /** OK, tot de volgende keer */
         200: unknown;
+      };
+    };
+  };
+  "//Login/SendSMS": {
+    get: {
+      responses: {
+        /** OK, SMS is verstuurd */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ref_leden"];
+          };
+        };
+        /** Data niet gevonden */
+        404: unknown;
+        /** Niet aanvaardbaar, input ontbreekt */
+        406: unknown;
+        /** Data verwerkingsfout */
+        500: unknown;
       };
     };
   };
@@ -59,8 +79,16 @@ export interface components {
       NAAM?: string;
       /** De voornaam van het lid */
       VOORNAAM?: string;
-      /** De achternaam van het lid zonder voorvoegsels */
+      /** De tussenvoegsel van het lid */
+      TUSSENVOEGSEL?: string;
+      /** De achternaam van het lid zonder tussenvoegsels */
       ACHTERNAAM?: string;
+      /** Het (post) adres waar het lid woont */
+      ADRES?: string;
+      /** De postcode die bij het adres hoort */
+      POSTCODE?: string;
+      /** De plaatsnaam */
+      WOONPLAATS?: string;
       /** Telefoon nummer van het lid */
       TELEFOON?: string;
       /** Mobiel telefoon nummer van het lid */
@@ -69,29 +97,55 @@ export interface components {
       NOODNUMMER?: string;
       /** email adres van het lid */
       EMAIL?: string;
+      /** url naar avatar */
+      AVATAR?: string;
       /** Het lidnummer zoals dat in de leden administratie bekend is */
       LIDNR?: string;
       /** Het soort lid (jeugdlid, lid, donateur). Verwijzing naar type tabel */
       LIDTYPE_ID?: number;
-      /** Mag dit lid lieren? Waarde 0..1 */
+      /** Zusterclub lidmaatschap van lid. Nodig voor DDWV. */
+      ZUSTERCLUB_ID?: number;
+      /** Mag dit lid lieren? */
       LIERIST?: boolean;
-      /** Kan dit lid het startbedrijf leiden?  Waarde 0..1 */
+      /** Kan dit lid het startbedrijf leiden? */
       STARTLEIDER?: boolean;
-      /** Heeft dit lid een instructie bevoegdheid?  Waarde 0..1 */
+      /** Heeft dit lid een instructie bevoegdheid? */
       INSTRUCTEUR?: boolean;
+      /** Heeft dit lid een instructie bevoegdheid? */
+      CIMT?: boolean;
+      /** Werkt dit lid mee in het DDWV bedrijf */
+      DDWV_CREW?: boolean;
+      /** Is dit lid de beheerder van het DDWV bedrijf, heeft toegang tot DDWV gerelateede data */
+      DDWV_BEHEERDER?: boolean;
+      /** Is dit lid de beheerder van deze omgeving, heeft toegang tot alles */
+      BEHEERDER?: boolean;
+      /** Dit account wordt gebruikt om starts in de start toren in te voeren */
+      STARTTOREN?: boolean;
+      /** Is dit lid  belast met het maken van roosters */
+      ROOSTER?: boolean;
+      /** Moet clubblad per post verstuurd worden */
+      CLUBBLAD_POST?: boolean;
+      /** Verloopdatum van het medical */
+      MEDICAL?: string;
+      /** Geboorte datum van het lid */
+      GEBOORTE_DATUM?: string;
       /** De inlognaam van het lid */
       INLOGNAAM?: string;
-      /** Het geheime password */
+      /** Het geheime password, bij ophalen van data altijd "****". Wachtwoord wordt als hash opgeslagen in de database */
       WACHTWOORD?: string;
-      /** Heef het lid de factuur van dit jaar betaald?  Waarde 0..1 */
+      /** Wachtwoord in Helios hash formaat. Data wordt direct in database opgeslagen zonder encryptie, dat is namelijk al gebeurd. Alleen van toepassing voor SaveObject, komt dus niet terug in GetObject of GetObjects */
+      WACHTWOORD_HASH?: string;
+      /** 2Factor authenticatie voor deze gebruiker */
+      AUTH?: boolean;
+      /** Heef het lid de factuur van dit jaar betaald? */
       HEEFT_BETAALD?: boolean;
-      /** Staat privacy mode (AVG / GDPR) uit/aan Waarde 0..1 */
+      /** Staat privacy mode (AVG / GDPR) uit/aan */
       PRIVACY?: boolean;
-      /** Is dit record gemarkeerd als verwijderd?  Waarde 0..1 */
-      VERWIJDERD?: boolean;
-      /** Tijdstempel van laaste aanpassing in de database */
-      LAATSTE_AANPASSING?: string;
-    } & { [key: string]: any };
+      /** Wat zijn de beperkingen (vliegen / diensten) voor dit lid */
+      BEPERKINGEN?: string;
+      /** Extra text om opmerkingen toe te voegen */
+      OPMERKINGEN?: string;
+    };
     Userinfo: {
       /** Aantal records dat voldoet aan de criteria in de database */
       LidData?: components["schemas"]["ref_leden"];
@@ -115,14 +169,16 @@ export interface components {
         isCIMT?: boolean;
         /** Is de ingelogde gebruiker de starttoren? */
         isStarttoren?: boolean;
+        /** Maakt de ingelogde gebruiker onderdeel uit van de DDWV crew ? */
+        isDDWVCrew?: boolean;
         /** Is de ingelogde gebruiker aangemeld voor vandaag */
         isAangemeld?: boolean;
         /** Is de ingelogde gebruiker een lid van de club */
         isClubVlieger?: boolean;
         /** Is de ingelogde gebruiker een DDWV vlieger (dus geen club lid) */
         isDDWV?: boolean;
-      } & { [key: string]: any };
-    } & { [key: string]: any };
+      };
+    };
   };
 }
 

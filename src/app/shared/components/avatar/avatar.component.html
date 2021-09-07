@@ -1,7 +1,7 @@
 <img defaultImage="/assets/img/avatar.png" [lazyLoad]="url" [class]="vorm" class="clickable" (click)="showPopup()" />
 <app-modal [titel]="naam">
     <div body>
-        <img class="volBeeld" [src]="url">
+        <img class="volBeeld" [src]="url" *ngIf="url">
         <ng-content></ng-content>
     </div>
 </app-modal>

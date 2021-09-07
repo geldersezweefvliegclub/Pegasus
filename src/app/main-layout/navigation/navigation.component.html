@@ -9,9 +9,11 @@
                             *ngIf="!route.excluded"
                             [routerLink]="route.path"
                     >
-                        <fa-icon [icon]="route.icon" class="me-3"></fa-icon>
-                        {{route.text}}
-                        <span class="badge bg-danger ms-2" *ngIf="route.batch" >{{route.batch}}</span>
+                        <div class="text-nowrap">
+                            <fa-icon [icon]="route.icon" class="me-3"></fa-icon>
+                            {{route.text}}
+                            <span class="badge bg-danger ms-2" *ngIf="route.batch">{{route.batch}}</span>
+                        </div>
                     </a>
                 </ng-template>
 
@@ -24,9 +26,7 @@
 
             </div>
 
-
-
-            <div class="w-100">
+            <div class="w-100 overflow-auto">
                 <ngb-datepicker
                     #d
                     name="datumIngave"

@@ -1,22 +1,23 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
+
 import {LoginService} from '../../services/apiservice/login.service';
 import {DaginfoService} from '../../services/apiservice/daginfo.service';
 import {SharedService} from '../../services/shared/shared.service';
 import {DateTime} from 'luxon';
 import {Observable, of, Subscription} from 'rxjs';
 import {CustomError} from '../../types/Utils';
-import {HeliosDagInfo, HeliosType} from '../../types/Helios';
+import {HeliosDagInfo, HeliosRoosterDataset, HeliosType} from '../../types/Helios';
 import {TypesService} from '../../services/apiservice/types.service';
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {
-  faCloudSunRain,
-  faFileImport,
-  faFlagCheckered,
-  faFrown,
-  faInfo,
-  faPlane,
-  faTruck,
-  faUsers
+    faCloudSunRain,
+    faFileImport,
+    faFlagCheckered,
+    faFrown,
+    faInfo,
+    faPlane,
+    faTruck,
+    faUsers
 } from '@fortawesome/free-solid-svg-icons';
 import {faArtstation} from '@fortawesome/free-brands-svg-icons';
 import {faPaperPlane} from '@fortawesome/free-solid-svg-icons/faPaperPlane';
@@ -24,14 +25,15 @@ import {ComposeMeteoComponent} from './compose-meteo/compose-meteo.component';
 import {ComposeBedrijfComponent} from './compose-bedrijf/compose-bedrijf.component';
 import {StorageService} from '../../services/storage/storage.service';
 import {DagRoosterComponent} from "../../shared/components/dag-rooster/dag-rooster.component";
-
+import {RoosterService} from "../../services/apiservice/rooster.service";
+import {DienstenService} from "../../services/apiservice/diensten.service";
 
 @Component({
     selector: 'app-daginfo',
     templateUrl: './daginfo.component.html',
     styleUrls: ['./daginfo.component.scss']
 })
-export class DaginfoComponent implements OnInit{
+export class DaginfoComponent implements OnInit {
     @ViewChild(ComposeMeteoComponent) meteoWizard: ComposeMeteoComponent;
     @ViewChild(ComposeBedrijfComponent) bedrijfWizard: ComposeBedrijfComponent;
     @ViewChild(DagRoosterComponent) dienstenWizard: DagRoosterComponent;
@@ -60,6 +62,8 @@ export class DaginfoComponent implements OnInit{
     magVerwijderen: boolean = false;
     magWijzigen: boolean = false;
     magExporten: boolean = false;
+    toonUitgebreid: boolean = false;
+    geenToegang: boolean = false;
 
     error: CustomError | undefined;
     tekstRegels: number = 4;
@@ -68,15 +72,17 @@ export class DaginfoComponent implements OnInit{
                 private readonly sharedService: SharedService,
                 private readonly storageService: StorageService,
                 private readonly typesService: TypesService,
-                private readonly loginService: LoginService)  {
-
+                private readonly roosterService: RoosterService,
+                private readonly dienstenService: DienstenService,
+                private readonly loginService: LoginService) {
     }
 
     ngOnInit(): void {
-        let ui = this.loginService.userInfo?.Userinfo;
+        const ui = this.loginService.userInfo?.Userinfo;
         this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
         this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
         this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
+        this.toonUitgebreid = !ui?.isStarttoren;
 
         this.typesService.getTypes(5).then(types => this.startMethodeTypes$ = of(types));   // startmethodes
         this.typesService.getTypes(9).then(types => this.veldTypes$ = of(types));           // vliegvelden
@@ -91,13 +97,50 @@ export class DaginfoComponent implements OnInit{
         })
 
         // aboneer op wijziging van kalender dataum
-        this.dagInfoAbonnement = this.daginfoService.dagInfoChange.subscribe(di => { this.dagInfo = di})
+        this.dagInfoAbonnement = this.daginfoService.dagInfoChange.subscribe(di => {
+            this.dagInfo = di;
+            this.heeftToegang();
+        });
 
         // aantal regels dat we tonen in de tekst invoer. Kan ingesteld worden te verkoming van scrollbars
         const dagInfoTekstRegels = this.storageService.ophalen('dagInfoTekstRegels');
         if (dagInfoTekstRegels) {
             this.tekstRegels = +dagInfoTekstRegels;    // conversie van string naar number
         }
+    }
+
+    // mag de gebruiker de dag info zien?
+    async heeftToegang() {
+        const ui = this.loginService.userInfo?.Userinfo;
+        let geenToegang = true;
+
+        if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT || ui?.isStarttoren) {
+            geenToegang = false;
+        } else {
+            let rooster: HeliosRoosterDataset = {DDWV: false};     // we hebben alleen de DDWV variable nodig
+            try {
+                const r = await this.roosterService.getRooster(this.datum, this.datum);
+
+                if (r.length > 0) {                 // er is een rooster voor de dag
+                    if (r[0].DDWV == true) {        // het is een DWWV dag, misschien toch alles tonen
+                        if (ui?.isBeheerderDDWV) {  // Beheerder DDWV mag op DDWV dag alles inzien
+                            geenToegang = false;
+                        } else {
+                            const d = await this.dienstenService.getDiensten(this.datum, this.datum);
+
+                            d.forEach(dienst => {
+                                if (dienst.LID_ID == this.loginService.userInfo?.LidData?.ID) { // de ingelode gebruiker had dienst, toon alles
+                                    geenToegang = false;
+                                }
+                            })
+
+                        }
+                    }
+                }
+            } catch (e) {
+            }
+        }
+        this.geenToegang = geenToegang;
     }
 
     // opslaan van de ingevoerde dag rapport

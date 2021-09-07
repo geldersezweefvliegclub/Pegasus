@@ -17,4 +17,8 @@ export class AvatarComponent {
   showPopup() {
     this.popup.open();
   }
+
+  closePopup() {
+    this.popup.close();
+  }
 }

@@ -1,18 +1,22 @@
 import {Component} from '@angular/core';
 import {CustomRoute, routes} from '../../routing.module';
-import {LoginService} from '../../services/apiservice/login.service';
+
 import {Router} from '@angular/router';
 import {faSignOutAlt} from '@fortawesome/free-solid-svg-icons';
 import {NgbCalendar, NgbDate, NgbDatepickerNavigateEvent, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {SharedService} from '../../services/shared/shared.service';
 import {DateTime} from 'luxon';
-import {StartlijstService} from '../../services/apiservice/startlijst.service';
-import {DaginfoService} from '../../services/apiservice/daginfo.service';
+
 import {HeliosActie, KalenderMaand} from '../../types/Utils';
 import {getBeginEindDatumVanMaand} from '../../utils/Utils';
+
+import {LoginService} from '../../services/apiservice/login.service';
+import {HeliosRoosterDataset} from "../../types/Helios";
+import {RoosterService} from "../../services/apiservice/rooster.service";
+import {DienstenService} from "../../services/apiservice/diensten.service";
 import {VliegtuigenService} from "../../services/apiservice/vliegtuigen.service";
-import {forEach} from "ag-grid-community/dist/lib/utils/array";
-import {HeliosType} from "../../types/Helios";
+import {StartlijstService} from '../../services/apiservice/startlijst.service';
+import {DaginfoService} from '../../services/apiservice/daginfo.service';
 
 
 @Component({
@@ -34,29 +38,33 @@ export class NavigationComponent {
     kalenderEersteDatum: NgbDateStruct;
     kalenderLaatsteDatum: NgbDateStruct;
 
-    vliegdagen: string = "";    // vliegdagen van deze maand in json formaat
-    daginfo: string = "";       // daginfos van deze maand in json formaat
+    vliegdagen: string = "";        // vliegdagen van deze maand in json formaat
+    diensten: string = "";          // daginfos van deze maand in json formaat
+    daginfo: string = "";           // daginfos van deze maand in json formaat
+
+    dienstenTimer: number;          // kleine vertraging om data ophalen te beperken
 
     constructor(private readonly loginService: LoginService,
                 private readonly startlijstService: StartlijstService,
                 private readonly daginfoService: DaginfoService,
+                private readonly roosterService: RoosterService,
+                private readonly dienstenService: DienstenService,
                 private readonly vliegtuigenService: VliegtuigenService,
                 private readonly sharedService: SharedService,
                 private readonly router: Router,
-                private readonly calendar: NgbCalendar)
-    {
+                private readonly calendar: NgbCalendar) {
         const ui = this.loginService.userInfo?.Userinfo;
 
         // Starttoren mag geen datum kiezen, alleen vandaag
         if (ui?.isStarttoren) {
             this.kalenderEersteDatum = {year: this.vandaag.year, month: this.vandaag.month, day: this.vandaag.day}
             this.kalenderLaatsteDatum = {year: this.vandaag.year, month: this.vandaag.month, day: this.vandaag.day}
+        } else {
+            this.kalenderEersteDatum = {year: 2015, month: 1, day: 1}
+            this.kalenderLaatsteDatum = {year: this.vandaag.year + 1, month: 12, day: 31}
         }
-        else
-        {
-            this.kalenderEersteDatum = {year: 2015, month: 1, day: 1 }
-            this.kalenderLaatsteDatum = {year: this.vandaag.year+1, month: 12, day: 31}
-        }
+
+        this.toonMenuItems();
 
         // Als daginfo of startlijst is aangepast, moet we kalender achtergrond ook updaten
         this.sharedService.heliosEventFired.subscribe(ev => {
@@ -67,8 +75,7 @@ export class NavigationComponent {
                     this.daginfoService.getDagen(this.startDatum, this.eindDatum).then((dataset) => {
                         this.daginfo = JSON.stringify(dataset);
                     });
-                }
-                else if (!this.daginfo.includes(ev.data.DATUM)) {
+                } else if (!this.daginfo.includes(ev.data.DATUM)) {
 
                     // nieuwe daginfo ophalen als we deze dag nog niet hebben (include faalt)
                     this.daginfoService.getDagen(this.startDatum, this.eindDatum).then((dataset) => {
@@ -95,14 +102,27 @@ export class NavigationComponent {
             if (ev.tabel == "Vliegtuigen") {
                 this.vliegtuigenBatch();
             }
+            if (ev.tabel == "Diensten") {
+                clearTimeout(this.dienstenTimer);
+
+                // Wacht even de gebruiker kan nog aan het typen zijn
+                this.dienstenTimer = window.setTimeout(() => {
+                    const ui = this.loginService.userInfo?.LidData;
+                    this.dienstenService.getDiensten (this.startDatum, this.eindDatum, undefined, ui?.ID ).then((dataset) => {
+                        this.diensten = JSON.stringify(dataset);
+    console.log(this.diensten);
+                    });
+
+                }, 400);
+            }
         });
 
         this.vliegtuigenBatch();
     }
 
-    // bepaald de batch voor vliegtuigen menu
+    // bepaald de batch voor vliegtuigen menu, wordt getoond als clubkist niet inzetbaar is
     vliegtuigenBatch() {
-        this.vliegtuigenService.getVliegtuigen(false, undefined, {CLUBKIST: "true" }).then((kisten) => {
+        this.vliegtuigenService.getVliegtuigen(false, undefined, {CLUBKIST: "true"}).then((kisten) => {
             let nietInzetbaar = 0;
 
             kisten.forEach(kist => {
@@ -114,6 +134,24 @@ export class NavigationComponent {
         })
     }
 
+    // welke menu items mogen getoond worden
+    toonMenuItems() {
+        const ui = this.loginService.userInfo?.Userinfo;
+
+        const tracks = this.routes.find(route => route.path == "tracks") as CustomRoute;
+        if (!ui?.isCIMT && !ui?.isInstructeur && !ui?.isBeheerder) {
+            tracks.excluded = true
+        }
+
+        const daginfo = this.routes.find(route => route.path == "daginfo") as CustomRoute;
+        daginfo.excluded = true;    // default, daginfo is niet van toepassing voor de meeste leden
+
+        // laten we dag info zien
+        if (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isInstructeur || ui?.isCIMT || ui?.isStarttoren || ui?.isDDWVCrew) {
+            daginfo.excluded = false;
+        }
+    }
+
     // het is voorbij en we gaan terug naar de login pagina
     Uitloggen(): void {
         this.loginService.uitloggen();
@@ -123,6 +161,7 @@ export class NavigationComponent {
     // laat iedereen weten dat er een nieuwe datum is gekozen
     NieuweDatum(datum: NgbDate) {
         this.sharedService.zetKalenderDatum(this.kalenderIngave)
+        this.toonMenuItems();   // daginfo menu tonen op basis van de gekozen dag
     }
 
     // de kalender popup toont andere maand, ophalen vliegdagen
@@ -143,11 +182,16 @@ export class NavigationComponent {
         this.daginfoService.getDagen(this.startDatum, this.eindDatum).then((dataset) => {
             this.daginfo = JSON.stringify(dataset);
         });
+
+        const ui = this.loginService.userInfo?.LidData;
+        this.dienstenService.getDiensten (this.startDatum, this.eindDatum, undefined, ui?.ID ).then((dataset) => {
+            this.diensten = JSON.stringify(dataset);
+        });
     }
 
     // highlight de dag als er starts zijn geweest
     cssCustomDay(date: NgbDate): string {
-        let datum: DateTime = DateTime.fromObject({year: date.year, month: date.month, day: date.day})
+        const datum: DateTime = DateTime.fromObject({year: date.year, month: date.month, day: date.day})
 
         let classes = "";
         if (this.vliegdagen.includes(datum.toISODate())) {
@@ -156,6 +200,10 @@ export class NavigationComponent {
 
         if (this.daginfo.includes(datum.toISODate())) {
             classes += " daginfo";
+        }
+
+        if (this.diensten.includes('"DATUM":"' + datum.toISODate())) {
+            classes += " diensten";
         }
 
         const d = DateTime.fromObject({

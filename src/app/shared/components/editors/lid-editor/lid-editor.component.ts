@@ -43,9 +43,7 @@ export class LidEditorComponent implements OnInit {
         private readonly ledenService: LedenService,
         private readonly imageService: ImageService,
         private readonly loginService: LoginService,
-        private readonly changeDetector: ChangeDetectorRef
-    ) {
-    }
+        private readonly changeDetector: ChangeDetectorRef) {}
 
     ngOnInit(): void {
         this.typeService.getTypes(6).then(types => this.types = types);
@@ -127,7 +125,7 @@ export class LidEditorComponent implements OnInit {
 
     // Logica om te bepalen of je veld wel/niet mag invullen
     isDisabled(veld: string) {
-        let ui = this.loginService.userInfo?.Userinfo;
+        const ui = this.loginService.userInfo?.Userinfo;
 
         if (this.isRestoreMode || this.isVerwijderMode) {
             return true;
@@ -140,13 +138,17 @@ export class LidEditorComponent implements OnInit {
             case 'gebruiker':
             case 'lidnummer':
             case 'lidmaatschap': {
-                if (ui?.isBeheerder || ui?.isBeheerderDDWV)
+                if (ui?.isBeheerder || ui?.isBeheerderDDWV) {
                     return false;
+                }
+                break;
             }
             case 'LIERIST':
             case 'STARTLEIDER': {
-                if (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isRooster)
+                if (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isRooster) {
                     return false;
+                }
+                break;
             }
             case 'CIMT':
             case 'STARTTOREN':
@@ -154,21 +156,29 @@ export class LidEditorComponent implements OnInit {
             case 'BEHEERDER':
             case 'DDWV_BEHEERDER':
             case 'betaald': {
-                if (ui?.isBeheerder)
+                if (ui?.isBeheerder) {
                     return false;
+                }
+                break;
             }
             case 'INSTRUCTEUR': {
-                if (ui?.isBeheerder || ui?.isCIMT)
+                if (ui?.isBeheerder || ui?.isCIMT) {
                     return false;
+                }
+                break;
             }
             case 'DDWV_CREW': {
-                if (ui?.isBeheerder || ui?.isBeheerderDDWV)
+                if (ui?.isBeheerder || ui?.isBeheerderDDWV) {
                     return false;
+                }
+                break;
             }
 
             case 'limitaties': {
-                if (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT || ui?.isRooster)
+                if (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT || ui?.isRooster) {
                     return false;
+                }
+                break;
             }
 
             default:
@@ -187,7 +197,7 @@ export class LidEditorComponent implements OnInit {
 
     // Toon de QR code voor Google Authenticator
     toonSecret() {
-        let ui = this.loginService.userInfo?.Userinfo;
+        const ui = this.loginService.userInfo?.Userinfo;
 
         if (this.isRestoreMode || this.isVerwijderMode) {
             return false;

@@ -10,14 +10,12 @@
                (ngModelChange)="storeTextRegels()"
                min="1" max="15"
         >
-        <!--<div class="">
-            <label for="TEKSTREGELS" class="form-label ms-4">Tekst regels</label>
-            <input name="TekstRegels" type="number" class="ms-2 mb-1 form-control" id="TEKSTREGELS"
-                   [(ngModel)]="tekstRegels" (ngModelChange)="storeTextRegels()"
-                   min="1" max="15">
-        </div>-->
     </div>
-    <div class="d-flex flex-column justify-content-between box h-100">
+    <div class="d-flex flex-column justify-content-between box h-100" *ngIf="geenToegang">
+        <img src="assets/img/geen_toegang.png" class='geen_toegang'/>
+    </div>
+
+    <div class="d-flex flex-column justify-content-between box h-100" *ngIf="!geenToegang">
         <div class="mb-2">
             <div class="row mt-n8 rowDagInfo1">
                 <div class="col-3">
@@ -89,7 +87,7 @@
                 </div>
             </div>
 
-            <div class="row rowDagInfo2">
+            <div class="row rowDagInfo2" *ngIf="toonUitgebreid">
                 <div class="col-6">
                     <app-pegasus-card id="meteoCard"
                                       class="kleineKaart"
@@ -125,7 +123,7 @@
                 </div>
             </div>
 
-            <div class="row rowDagInfo3">
+            <div class="row rowDagInfo3" *ngIf="toonUitgebreid">
                 <div class="col-6">
                     <app-pegasus-card id="vliegendCard"
                                       class="kleineKaart"
@@ -152,7 +150,7 @@
                 </div>
             </div>
 
-            <div class="row rowDagInfo4">
+            <div class="row rowDagInfo4" *ngIf="toonUitgebreid">
                 <div class="col-6">
                     <app-pegasus-card id="verslagCard"
                                       class="kleineKaart"
@@ -181,7 +179,7 @@
 
         </div>
         <div class="row" id="toolbar">
-            <div class="col-6" *ngIf="this.magToevoegen">
+            <div class="col-6" *ngIf="magToevoegen || toonUitgebreid">
                 <div class="d-flex">
                     <app-icon-button class="toolbarBtn"
                                      tekst="Opslaan"
@@ -195,7 +193,7 @@
                 <div class="d-flex justify-content-end">
                     <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
                                      btnColor="btn-secondary"
-                                     *ngIf="this.magVerwijderen && this.dagInfo.ID != undefined"
+                                     *ngIf="magVerwijderen && dagInfo.ID != undefined"
                                      (btnClicked)="bevestigVerwijderen()"></app-icon-button>
                 </div>
             </div>

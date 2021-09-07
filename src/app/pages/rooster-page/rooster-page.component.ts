@@ -90,7 +90,7 @@ export class RoosterPageComponent implements OnInit {
     magExporteren: boolean = true;
     magWijzigen: boolean = false;
     opslaanTimer: number;                  // kleine vertraging om data opslaan te beperken
-    isLoading: boolean = true;
+    isLoading: boolean = false;
     zoekString: string;
 
     mijnID: string;
@@ -182,7 +182,7 @@ export class RoosterPageComponent implements OnInit {
     }
 
     private opvragenRooster() {
-        this.isLoading = true
+        this.isLoading = true;
 
         const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
         this.roosterService.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then(rooster => {
@@ -215,7 +215,6 @@ export class RoosterPageComponent implements OnInit {
      * @private
      */
     private catchError(e: CustomError) {
-        console.error(e);
         this.isLoading = false;
     }
 
@@ -564,7 +563,7 @@ export class RoosterPageComponent implements OnInit {
         }
 
         // leden-filter de dataset naar de lijst
-        this.filteredLeden = [];
+        let tmpLeden: HeliosLedenDatasetExtended[] = [];
         for (let i = 0; i < this.alleLeden.length; i++) {
 
             // 601 = Erelid
@@ -599,39 +598,40 @@ export class RoosterPageComponent implements OnInit {
                     if (!naamStr!.includes(this.zoekString.toLowerCase()))
                         continue;
                 }
-                this.filteredLeden.push(this.alleLeden[i]);
+                tmpLeden.push(this.alleLeden[i]);
             }
         }
+        this.filteredLeden = tmpLeden;
     }
 
     // Laat hele rooster zien, of alleen weekend / DDWV
     applyRoosterFilter() {
-        this.filteredRooster = [];
-
         // toonClubDDWV, 0 = laat alle dagen zien, dus club dagen en DDWV dagen
         if (this.toonClubDDWV == 0) {
             this.filteredRooster = this.heleRooster;
             return;
         }
 
+        let tmpRooster: HeliosRoosterDagExtended[] = [];
         for (let i = 0; i < this.heleRooster.length; i++) {
             switch (this.toonClubDDWV) {
                 case 1: // toonClubDDWV, 1 = toon clubdagen
                 {
                     if (this.heleRooster[i].CLUB_BEDRIJF) {
-                        this.filteredRooster.push(this.heleRooster[i]);
+                        tmpRooster.push(this.heleRooster[i]);
                         continue;
                     }
                     break;
                 }
                 case 2: // toonClubDDWV, 2 = toon DDWV
                     if (this.heleRooster[i].DDWV) {
-                        this.filteredRooster.push(this.heleRooster[i]);
+                        tmpRooster.push(this.heleRooster[i]);
                         continue;
                     }
                     break;
             }
         }
+        this.filteredRooster = tmpRooster
     }
 
     KolomBreedte() {
