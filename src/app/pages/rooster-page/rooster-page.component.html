@@ -160,7 +160,7 @@
                                                 {{ (dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID]) ? dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div *ngIf="isStartleider && (zelfIndelen || dagInRooster.DDWV)  && !dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID]"
+                                        <div *ngIf="((isStartleider && zelfIndelen) || (isDDWV && dagInRooster.DDWV))  && !dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID]"
                                              (click)="toekennenDienst(dagInRooster, OCHTEND_STARTLEIDER_TYPE_ID, mijnID, mijnNaam)">
                                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                                         </div>
@@ -204,7 +204,7 @@
                                                 {{ (dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID]) ? dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div *ngIf="isLierist && (zelfIndelen || dagInRooster.DDWV)  && !dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID]"
+                                        <div *ngIf="((isLierist && zelfIndelen) || (isDDWV && dagInRooster.DDWV)) && !dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID]"
                                              (click)="toekennenDienst(dagInRooster, OCHTEND_LIERIST_TYPE_ID, mijnID, mijnNaam)">
                                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                                         </div>
@@ -358,7 +358,8 @@
                 <div class="d-flex row">
                     <div class="col-3">
 
-                        <app-icon-button class="toolbarBtn"
+                        <app-icon-button *ngIf="magWijzigen"
+                                         class="toolbarBtn"
                                          tekst="Filter"
                                          iconNaam="fas Filter" (btnClicked)="filterPopup()"
                                          btnColor="btn-primary"></app-icon-button>
@@ -370,7 +371,7 @@
 
                     </div>
                     <div class="col-9">
-                        <div class="d-flex align-items-end text-nowrap" id="zoekbar">
+                        <div class="d-flex align-items-end text-nowrap" id="zoekbar" *ngIf="magWijzigen">
 
                             <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>
                             <input id="zoekInput"

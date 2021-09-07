@@ -75,7 +75,7 @@ export class RoosterPageComponent implements OnInit {
     isInstructeur = false;
     isLierist = false;
     isDDWV = false;
-    zelfIndelen = true;
+    zelfIndelen = true;          // ingelogd lid mag zichzelf maar 2x per maand indelen
 
     toonClubDDWV = 1;            // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
 
@@ -124,6 +124,7 @@ export class RoosterPageComponent implements OnInit {
         this.isStartleider = ui?.LidData?.STARTLEIDER as boolean;
         this.isInstructeur = ui?.LidData?.INSTRUCTEUR as boolean;
         this.isDDWV = ui?.LidData?.DDWV_CREW as boolean;
+
 
         this.mijnID = (ui?.LidData?.ID) ? ui?.LidData?.ID.toString() : "-1";    // -1 mag nooit voorkomen, maar je weet het nooit
         this.mijnNaam = ui?.LidData?.NAAM as string;
