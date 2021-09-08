@@ -52,7 +52,7 @@ export class StartlijstService {
         return this.vliegdagen?.dataset as [];
     }
 
-    async getLogboek(id: number, jaar: number, maxRecords?: number): Promise<HeliosLogboekDataset[]> {
+    async getLogboek(id: number, startDatum: DateTime, eindDatum: DateTime, maxRecords?: number): Promise<HeliosLogboekDataset[]> {
         let hash: string = '';
         if (((this.logboek == null)) && (this.storageService.ophalen('vlogboek-'+id.toString())  != null)) {
             this.logboek = this.storageService.ophalen('vlogboek-'+id.toString());
@@ -62,11 +62,12 @@ export class StartlijstService {
 
         if (this.logboek != null) {             // we hebben eerder de lijst opgehaald
             hash = (this.logboek) ? this.logboek.hash as string : '';
-            getParams['HASH'] = hash;
+      //      getParams['HASH'] = hash;
         }
 
         getParams['LID_ID'] = id.toString();
-        getParams['JAAR'] = jaar.toString();
+        getParams['BEGIN_DATUM'] = startDatum.toISODate();
+        getParams['EIND_DATUM'] = eindDatum.toISODate();
 
         if (maxRecords) {
             getParams['MAX'] = maxRecords.toString();

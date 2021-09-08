@@ -103,7 +103,10 @@ export class DashboardPageComponent implements OnInit {
     // export het vlieger logboek naar excel
     exportLogboek() {
         if (this.lidData.ID) {
-            this.startlijstService.getLogboek(this.lidData.ID, this.datum.year).then((dataset) => {
+            const startDatum: DateTime = DateTime.fromObject( {year: this.datum.year, month: 1, day: 1});
+            const eindDatum: DateTime = DateTime.fromObject( {year: this.datum.year, month: 12, day: 31});
+
+            this.startlijstService.getLogboek(this.lidData.ID, startDatum, eindDatum).then((dataset) => {
                 let ws = xlsx.utils.json_to_sheet(dataset);
                 const wb: xlsx.WorkBook = xlsx.utils.book_new();
                 xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');

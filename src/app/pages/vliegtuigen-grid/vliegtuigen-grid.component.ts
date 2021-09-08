@@ -11,7 +11,13 @@ import {LogboekRenderComponent} from "../../shared/components/datatable/logboek-
 import {ZitplaatsRenderComponent} from './zitplaats-render/zitplaats-render.component';
 import {CheckboxRenderComponent} from '../../shared/components/datatable/checkbox-render/checkbox-render.component';
 
-import {HeliosType, HeliosVliegtuig, HeliosVliegtuigenDataset} from '../../types/Helios';
+import {
+    HeliosLogboekDataset,
+    HeliosStartDataset,
+    HeliosType,
+    HeliosVliegtuig,
+    HeliosVliegtuigenDataset
+} from '../../types/Helios';
 import {CustomError} from '../../types/Utils';
 
 import * as xlsx from 'xlsx';
@@ -34,6 +40,7 @@ export class VliegtuigenGridComponent implements OnInit {
     @ViewChild(VliegtuigEditorComponent) editor: VliegtuigEditorComponent;
 
     data:HeliosVliegtuigenDatasetExtended[] = [];
+    logboek: HeliosLogboekDataset[] = [];
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
@@ -194,21 +201,50 @@ export class VliegtuigenGridComponent implements OnInit {
                 this.data = dataset;
 
                 const ui = this.loginService.userInfo?.Userinfo;
-                if (!ui?.isDDWV) {  // DDWV mogen geen clubkist logboek zien
+
+
+                if (!ui?.isDDWV) {  // DDWV'ers mogen geen clubkist logboek zien
                     this.data.forEach((v) => v.toonLogboek = v.CLUBKIST);   // alle clubkisten mogen getoond worden voor leden
                 }
 
-                // vlieger mag logboek bekijken als hij laaste 6 maanden op de kist gevlogen heeft
-                const nu:DateTime = DateTime.now();
+                if (ui?.isBeheerder) {  // beheerders mogen alles zien
+                    this.data.forEach((v) => v.toonLogboek = true);
+                }
+                else {
+                    this.laatste6Mnd();
+                }
 
-                this.startlijstService.getStarts(false, nu.minus({months: 6 }), nu).then((starts) => {
-                    starts.forEach((s) => {
-                        const v = this.data.find(v => v.ID == s.VLIEGTUIG_ID);
-                        if (v) v.toonLogboek = true;
-                    });
-                })
             });
         }, 400);
+    }
+
+    // vlieger mag logboek bekijken als hij laaste 6 maanden op de kist gevlogen heeft
+    async laatste6Mnd() {
+        const nu:DateTime = DateTime.now();
+
+        if (this.logboek.length == 0) { // als we nog starts hebben, dan halen we ze op
+            const ui = this.loginService.userInfo?.LidData;
+            this.logboek = await this.startlijstService.getLogboek(ui?.ID!, nu.minus({months: 16}), nu)
+        }
+
+        // we moeten de snelste manier gebruiken. Foreach gaat over korste array
+        if (this.data.length > this.logboek.length)
+        {
+
+            // for each over de starts
+            this.logboek.forEach((s) => {
+                const vliegtuig = this.data.find(v => v.ID == s.VLIEGTUIG_ID);
+                if (vliegtuig) { vliegtuig.toonLogboek = true; console.log(vliegtuig) }
+            });
+        }
+        else
+        {
+            // for each over de vliegtuigen
+            this.data.forEach((vliegtuig) => {
+                const start = this.data.find(s => s.ID == vliegtuig.ID);
+                if (start) { vliegtuig.toonLogboek = true; console.log(vliegtuig) }
+            });
+        }
     }
 
     // opslaan van de data van een nieuw vliegtuig

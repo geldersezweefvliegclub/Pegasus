@@ -515,6 +515,8 @@ export interface components {
       DATUM?: string;
       /** Combinatie van registratie en callsign van het vliegtuig waarop gevlogen is */
       REG_CALL?: string;
+      /** Het vliegtuig ID. Verwijzing naar vliegtuigen tabel */
+      VLIEGTUIG_ID?: number;
       /** Starttijd (hh:mm:ss) */
       STARTTIJD?: string;
       /** Starttijd (hh:mm:ss) */
