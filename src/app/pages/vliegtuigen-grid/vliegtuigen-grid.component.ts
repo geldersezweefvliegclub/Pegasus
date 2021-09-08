@@ -224,7 +224,7 @@ export class VliegtuigenGridComponent implements OnInit {
 
         if (this.logboek.length == 0) { // als we nog starts hebben, dan halen we ze op
             const ui = this.loginService.userInfo?.LidData;
-            this.logboek = await this.startlijstService.getLogboek(ui?.ID!, nu.minus({months: 16}), nu)
+            this.logboek = await this.startlijstService.getLogboek(ui?.ID!, nu.minus({months: 6}), nu)
         }
 
         // we moeten de snelste manier gebruiken. Foreach gaat over korste array
