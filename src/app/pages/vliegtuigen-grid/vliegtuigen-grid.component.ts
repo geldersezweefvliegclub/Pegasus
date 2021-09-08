@@ -241,7 +241,7 @@ export class VliegtuigenGridComponent implements OnInit {
         {
             // for each over de vliegtuigen
             this.data.forEach((vliegtuig) => {
-                const start = this.data.find(s => s.ID == vliegtuig.ID);
+                const start = this.logboek.find(s => s.VLIEGTUIG_ID == vliegtuig.ID);
                 if (start) { vliegtuig.toonLogboek = true; console.log(vliegtuig) }
             });
         }
