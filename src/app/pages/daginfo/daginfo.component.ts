@@ -5,7 +5,7 @@ import {DaginfoService} from '../../services/apiservice/daginfo.service';
 import {SharedService} from '../../services/shared/shared.service';
 import {DateTime} from 'luxon';
 import {Observable, of, Subscription} from 'rxjs';
-import {CustomError} from '../../types/Utils';
+import {ErrorMessage, SuccessMessage} from '../../types/Utils';
 import {HeliosDagInfo, HeliosRoosterDataset, HeliosType} from '../../types/Helios';
 import {TypesService} from '../../services/apiservice/types.service';
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
@@ -65,7 +65,8 @@ export class DaginfoComponent implements OnInit {
     toonUitgebreid: boolean = false;
     geenToegang: boolean = false;
 
-    error: CustomError | undefined;
+    success: SuccessMessage | undefined;
+    error: ErrorMessage | undefined;
     tekstRegels: number = 4;
 
     constructor(private readonly daginfoService: DaginfoService,
@@ -145,10 +146,26 @@ export class DaginfoComponent implements OnInit {
 
     // opslaan van de ingevoerde dag rapport
     opslaanDagInfo() {
-        if (this.dagInfo.ID == undefined) {
-            this.daginfoService.addDagInfo(this.dagInfo).then((di) => this.dagInfo = di);
-        } else {
-            this.daginfoService.updateDagInfo(this.dagInfo).then((di) => this.dagInfo = di);
+        const datum = this.dagInfo.DATUM!.split('-');
+        const d = datum[2] + '-' + datum[1] + '-' + datum[0];
+
+        try {
+            if (this.dagInfo.ID == undefined) {
+                this.daginfoService.addDagInfo(this.dagInfo).then((di) => {
+                    this.dagInfo = di;
+                    this.error = undefined;
+                    this.success = {titel: "Dag info", beschrijving: d + " is toegevoegd"}
+                });
+            } else {
+                this.daginfoService.updateDagInfo(this.dagInfo).then((di) => {
+                    this.dagInfo = di;
+                    this.error = undefined
+                    this.success = {titel: "Dag info", beschrijving: d + " is aangepast"}
+                });
+            }
+        }
+        catch (e) {
+            this.error = e;
         }
     }
 
@@ -156,8 +173,19 @@ export class DaginfoComponent implements OnInit {
     bevestigVerwijderen() {
         if (this.dagInfo.ID != undefined) {
             if (confirm("Weet u zeker dat de daginfo verwijderd mag worden?")) {
-                this.daginfoService.deleteDagInfo(this.dagInfo.ID).then();
-                this.dagInfo = {};
+                try {
+                    this.daginfoService.deleteDagInfo(this.dagInfo.ID).then(() => {
+                        const datum = this.dagInfo.DATUM!.split('-');
+                        const d = datum[2] + '-' + datum[1] + '-' + datum[0];
+                        this.success = {titel: "Dag info", beschrijving: d + " is verwijderd"}
+                        this.error = undefined;
+
+                        this.dagInfo = {};
+                    });
+                }
+                catch (e) {
+                    this.error = e;
+                }
             }
         }
     }

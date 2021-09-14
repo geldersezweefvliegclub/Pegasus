@@ -26,7 +26,7 @@ export class VliegtuigenService {
 
         if (this.vliegtuigen != null) { // we hebben eerder de lijst opgehaald
             hash = this.vliegtuigen.hash as string;
-            getParams['HASH'] = hash;
+//            getParams['HASH'] = hash;
         }
 
         if (zoekString) {

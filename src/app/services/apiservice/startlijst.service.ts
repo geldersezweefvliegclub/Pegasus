@@ -156,7 +156,7 @@ export class StartlijstService {
 
         if (this.starts != null) { // we hebben eerder de lijst opgehaald
             hash = this.starts.hash as string;
-            getParams['HASH'] = hash;
+//            getParams['HASH'] = hash;
         }
 
         getParams['BEGIN_DATUM'] = startDatum.toISODate();
@@ -202,13 +202,13 @@ export class StartlijstService {
         return response.json();
     }
 
-    async addStart(vliegtuig: HeliosStart) {
-        const response: Response = await this.APIService.post('Startlijst/SaveObject', JSON.stringify(vliegtuig));
+    async addStart(start: HeliosStart) {
+        const response: Response = await this.APIService.post('Startlijst/SaveObject', JSON.stringify(start));
         return response.json();
     }
 
-    async updateStart(vliegtuig: HeliosStart) {
-        const response: Response = await this.APIService.put('Startlijst/SaveObject', JSON.stringify(vliegtuig));
+    async updateStart(start: HeliosStart) {
+        const response: Response = await this.APIService.put('Startlijst/SaveObject', JSON.stringify(start));
 
         return response.json();
     }

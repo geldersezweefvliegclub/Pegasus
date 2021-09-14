@@ -49,6 +49,7 @@ import { TracksComponent } from './components/tracks/tracks.component';
 import { OnderdrukNulComponent } from './components/datatable/onderdruk-nul/onderdruk-nul.component';
 import { DienstenComponent } from './components/diensten/diensten.component';
 import { DagRoosterComponent } from './components/dag-rooster/dag-rooster.component';
+import { SuccessComponent } from './components/success/success.component';
 
 @NgModule({
     imports: [
@@ -103,7 +104,8 @@ import { DagRoosterComponent } from './components/dag-rooster/dag-rooster.compon
     TracksComponent,
     OnderdrukNulComponent,
     DienstenComponent,
-    DagRoosterComponent
+    DagRoosterComponent,
+    SuccessComponent
   ],
     exports: [
         LidEditorComponent,
@@ -112,6 +114,7 @@ import { DagRoosterComponent } from './components/dag-rooster/dag-rooster.compon
         ModalComponent,
         DatatableComponent,
         ErrorComponent,
+        SuccessComponent,
         LoaderComponent,
         VliegtuigEditorComponent,
         IconButtonComponent,

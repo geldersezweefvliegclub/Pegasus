@@ -26,7 +26,7 @@ export class LedenService {
 
         if (this.leden != null) { // we hebben eerder de lijst opgehaald
             hash = this.leden.hash as string;
-            getParams['HASH'] = hash;
+//            getParams['HASH'] = hash;
         }
 
         if (zoekString) {

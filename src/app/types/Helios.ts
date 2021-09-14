@@ -10,6 +10,7 @@ import {components as progressieComponents} from './Progressie';
 import {components as roosterComponents} from './Rooster';
 import {components as tracksComponents} from './Tracks';
 import {components as dienstenComponents} from './Diensten';
+import {components as competentiesComponents} from './Competenties';
 
 export type HeliosUserinfo = loginComponents['schemas']['Userinfo'];
 
@@ -46,6 +47,9 @@ export type HeliosDagInfo = DaginfoComponents['schemas']['oper_daginfo'];
 
 export type HeliosType = typesComponents['schemas']['ref_types_in']
 export type HeliosTypes = typesComponents['schemas']['view_types']
+
+export type HeliosCompetenties = competentiesComponents['schemas']['view_competenties']
+export type HeliosCompetentiesDataset = competentiesComponents['schemas']['view_competenties_dataset'];
 
 export type HeliosProgressie = progressieComponents['schemas']['ref_progressie_in']
 export type HeliosBehaaldeProgressie = progressieComponents['schemas']['view_progressie']

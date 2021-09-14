@@ -26,7 +26,7 @@ export class AanwezigVliegtuigService {
 
     if (this.aanwezig != null) { // we hebben eerder de lijst opgehaald
       hash = this.aanwezig.hash as string;
-      getParams['HASH'] = hash;
+//      getParams['HASH'] = hash;
     }
 
     getParams['BEGIN_DATUM'] = startDatum.toISODate();

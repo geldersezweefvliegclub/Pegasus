@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {LoginService} from '../../services/apiservice/login.service';
-import {CustomError} from '../../types/Utils';
+import {ErrorMessage} from '../../types/Utils';
 import {Router} from '@angular/router';
 
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
@@ -22,7 +22,7 @@ export class LoginPageComponent implements OnInit {
     secret: string = '';
     isLoading = false;
     showSecret: boolean = false;
-    error: CustomError | undefined;
+    error: ErrorMessage;
 
     fotoAlbum = [
         "/assets/img/15143.jpg",

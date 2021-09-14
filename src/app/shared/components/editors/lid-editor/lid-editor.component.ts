@@ -8,6 +8,7 @@ import {LedenService} from '../../../../services/apiservice/leden.service';
 import {ImageService} from '../../../../services/apiservice/image.service';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {LoginService} from "../../../../services/apiservice/login.service";
+import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
 
 @Component({
     selector: 'app-lid-editor',
@@ -20,6 +21,8 @@ export class LidEditorComponent implements OnInit {
     @Input() isRestoreMode: boolean = false;
 
     @Output() opslaan: EventEmitter<HeliosLid> = new EventEmitter<HeliosLid>();
+    @Output() opslaanAvatar: EventEmitter<string> = new EventEmitter<string>();
+
     lid: HeliosLid = {};
     types: HeliosType[];
 
@@ -41,7 +44,6 @@ export class LidEditorComponent implements OnInit {
     constructor(
         private readonly typeService: TypesService,
         private readonly ledenService: LedenService,
-        private readonly imageService: ImageService,
         private readonly loginService: LoginService,
         private readonly changeDetector: ChangeDetectorRef) {}
 
@@ -108,10 +110,10 @@ export class LidEditorComponent implements OnInit {
         this.changeDetector.detectChanges();
     }
 
+    // nu opslaan van de avatar
     uploadFoto(image: string) {
         this.setAvatar(image);
-        this.imageService.uploadFoto(this.lid.ID as number, image).then(
-        );
+        this.opslaanAvatar.emit(image);
     }
 
     isgoogleAuthNodig(): boolean {

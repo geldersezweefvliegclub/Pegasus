@@ -1,10 +1,11 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
-import {HeliosBehaaldeProgressieDataset} from "../../../types/Helios";
-import {HeliosActie} from "../../../types/Utils";
+import {HeliosBehaaldeProgressieDataset, HeliosCompetentiesDataset} from "../../../types/Helios";
+import {ErrorMessage, HeliosActie, SuccessMessage} from "../../../types/Utils";
 import {SharedService} from "../../../services/shared/shared.service";
 import {LoginService} from "../../../services/apiservice/login.service";
+import {CompetentieService} from "../../../services/apiservice/competentie.service";
 
 @Component({
     selector: 'app-status',
@@ -17,11 +18,16 @@ export class StatusComponent implements OnInit, OnChanges {
     cheks: any;
     overig: any;
     gehaaldeProgressie: HeliosBehaaldeProgressieDataset[];
+    competenties: HeliosCompetentiesDataset[];
     suspend: boolean = false;
+
+    success: SuccessMessage | undefined;
+    error: ErrorMessage | undefined;
 
     constructor(private readonly loginService: LoginService,
                 private readonly configService: PegasusConfigService,
                 private readonly sharedService: SharedService,
+                private readonly competentieService: CompetentieService,
                 private readonly progressieService: ProgressieService) {
 
         // Als in de progressie tabel is aangepast, moet we onze dataset ook aanpassen
@@ -37,6 +43,7 @@ export class StatusComponent implements OnInit, OnChanges {
     ngOnInit(): void {
         this.cheks = this.configService.getChecks();
         this.overig = this.configService.getOverig();
+        this.competentieService.getCompetenties().then((competenties) => this.competenties = competenties)
         this.ophalen();
     }
 
@@ -97,15 +104,29 @@ export class StatusComponent implements OnInit, OnChanges {
 
     // Progressie kan gezet worden via snelkeuze in deze component, lange weg kan via progressie boom
     zetProgressie(e:any, id:number) {
-        e.target.disabled = true;       // mogen check niet weghalen, dus disable de checkbox
+        try {
+            const ui = this.loginService.userInfo?.LidData;
+            this.progressieService.behaaldeCompetentie({
+                    LID_ID: this.VliegerID,
+                    INSTRUCTEUR_ID: ui?.ID,
+                    COMPETENTIE_ID: id,
+                }).then((p) => {
+                    e.target.disabled = true;       // mogen check niet weghalen, dus disable de checkbox
+                    const c = this.competenties.find((c) => c.ID == p.COMPETENTIE_ID);
 
-        const ui = this.loginService.userInfo?.LidData;
-        this.progressieService.behaaldeCompetentie({
-            LID_ID: this.VliegerID,
-            INSTRUCTEUR_ID: ui?.ID,
-            COMPETENTIE_ID: id,
-        });
+                    this.success =
+                    {
+                        titel: "Progressie",
+                        beschrijving: "Competentie '" + c!.ONDERWERP  +"' behaald"
+                    }
+                });
 
-        this.uitstellen();      // we hebben het vinkje in deze component gezet, we hoeven niet te laden
+
+            this.uitstellen();      // we hebben het vinkje in deze component gezet, we hoeven niet te laden
+        }
+        catch (e) {
+            this.error = e;
+        }
+
     }
 }

@@ -12,7 +12,7 @@ import {
     faRecycle,
     faTachometerAlt, faUndo
 } from "@fortawesome/free-solid-svg-icons";
-import {CustomError} from "../../../types/Utils";
+import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
 import {LedenService} from "../../../services/apiservice/leden.service";
 import {LoginService} from "../../../services/apiservice/login.service";
 import {faAvianex} from "@fortawesome/free-brands-svg-icons";
@@ -55,7 +55,8 @@ export class TracksComponent implements OnInit {
     deleteMode: boolean = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
     trashMode: boolean = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
 
-    error: CustomError | undefined;
+    success: SuccessMessage | undefined;
+    error: ErrorMessage | undefined;
 
     magToevoegen: boolean = true;
     magVerwijderen: boolean = false;

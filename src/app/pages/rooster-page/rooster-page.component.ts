@@ -18,7 +18,7 @@ import {SharedService} from '../../services/shared/shared.service';
 import {Subscription} from 'rxjs';
 import {RoosterService} from '../../services/apiservice/rooster.service';
 import {getBeginEindDatumVanMaand} from '../../utils/Utils';
-import {CustomError} from '../../types/Utils';
+import {ErrorMessage} from '../../types/Utils';
 import {DateTime} from 'luxon';
 import {LedenFilterComponent} from "../../shared/components/leden-filter/leden-filter.component";
 import {LoginService} from "../../services/apiservice/login.service";
@@ -212,10 +212,10 @@ export class RoosterPageComponent implements OnInit {
 
     /**
      * Vang een API error af
-     * @param {CustomError} e
+     * @param {ErrorMessage} e
      * @private
      */
-    private catchError(e: CustomError) {
+    private catchError(e: ErrorMessage) {
         this.isLoading = false;
     }
 

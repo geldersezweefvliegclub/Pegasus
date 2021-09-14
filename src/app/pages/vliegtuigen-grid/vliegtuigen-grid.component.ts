@@ -18,7 +18,7 @@ import {
     HeliosVliegtuig,
     HeliosVliegtuigenDataset
 } from '../../types/Helios';
-import {CustomError} from '../../types/Utils';
+import {ErrorMessage, SuccessMessage} from '../../types/Utils';
 
 import * as xlsx from 'xlsx';
 import {LoginService} from '../../services/apiservice/login.service';
@@ -127,11 +127,13 @@ export class VliegtuigenGridComponent implements OnInit {
     deleteMode: boolean = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
     trashMode: boolean = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
 
-    error: CustomError | undefined;
     magToevoegen: boolean = false;
     magVerwijderen: boolean = false;
     magWijzigen: boolean = false;
     magExporten: boolean = false;
+
+    success: SuccessMessage | undefined;
+    error: ErrorMessage | undefined;
 
     constructor(private readonly vliegtuigenService: VliegtuigenService,
                 private readonly startlijstService: StartlijstService,
@@ -250,6 +252,12 @@ export class VliegtuigenGridComponent implements OnInit {
     // opslaan van de data van een nieuw vliegtuig
     Toevoegen(vliegtuig: HeliosVliegtuig) {
         this.vliegtuigenService.addVliegtuig(vliegtuig).then(() => {
+            const regCall = (vliegtuig.CALLSIGN) ? `${vliegtuig.REGISTRATIE} (${vliegtuig.CALLSIGN})` : vliegtuig.REGISTRATIE;
+            this.success = {
+                titel: "Vliegtuigen",
+                beschrijving: regCall + " is toegevoegd"
+            }
+
             this.opvragen();
             this.editor.closePopup();
         }).catch(e => {
@@ -257,9 +265,15 @@ export class VliegtuigenGridComponent implements OnInit {
         })
     }
 
-    // bestaand vl;iegtuig is aangepast. Opslaan van de data
+    // bestaand vliegtuig is aangepast. Opslaan van de data
     Aanpassen(vliegtuig: HeliosVliegtuig) {
         this.vliegtuigenService.updateVliegtuig(vliegtuig).then(() => {
+            const regCall = (vliegtuig.CALLSIGN) ? `${vliegtuig.REGISTRATIE} (${vliegtuig.CALLSIGN})` : vliegtuig.REGISTRATIE;
+            this.success = {
+                titel: "Vliegtuigen",
+                beschrijving: regCall + " is aangepast"
+            }
+
             this.opvragen();
             this.editor.closePopup();
         }).catch(e => {
@@ -268,24 +282,36 @@ export class VliegtuigenGridComponent implements OnInit {
     }
 
     // markeer een vliegtuig als verwijderd
-    Verwijderen(id: number) {
-        this.vliegtuigenService.deleteVliegtuig(id).then(() => {
+    Verwijderen(vliegtuig: HeliosVliegtuig) {
+        this.vliegtuigenService.deleteVliegtuig(vliegtuig.ID!).then(() => {
             this.deleteMode = false;
             this.trashMode = false;
             this.kolomDefinitie();      // verwijderen van de kolom met delete icons
 
+            const regCall = (vliegtuig.CALLSIGN) ? `${vliegtuig.REGISTRATIE} (${vliegtuig.CALLSIGN})` : vliegtuig.REGISTRATIE;
+            this.success = {
+                titel: "Vliegtuigen",
+                beschrijving: regCall + " is verwijderd"
+            }
             this.opvragen();
             this.editor.closePopup();
-        });
+        }).catch(e => {
+            this.error = e;
+        })
     }
 
     // de vliegtuig is weer terug, haal de markering 'verwijderd' weg
-    Herstellen(id: number) {
-        this.vliegtuigenService.restoreVliegtuig(id).then(() => {
+    Herstellen(vliegtuig: HeliosVliegtuig) {
+        this.vliegtuigenService.restoreVliegtuig(vliegtuig.ID!).then(() => {
             this.deleteMode = false;
             this.trashMode = false;
             this.kolomDefinitie();  // verwijderen van de kolom met herstel icons
 
+            const regCall = (vliegtuig.CALLSIGN) ? `${vliegtuig.REGISTRATIE} (${vliegtuig.CALLSIGN})` : vliegtuig.REGISTRATIE;
+            this.success = {
+                titel: "Vliegtuigen",
+                beschrijving: regCall + " is weer beschikbaar"
+            }
             this.opvragen();
             this.editor.closePopup();
         });

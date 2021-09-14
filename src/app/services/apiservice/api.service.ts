@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {CustomError, HeliosActie, KeyValueArray} from '../../types/Utils';
+import {ErrorMessage, HeliosActie, KeyValueArray} from '../../types/Utils';
 import {SharedService} from '../shared/shared.service';
 import {PegasusConfigService} from "../shared/pegasus-config.service";
 
@@ -123,7 +123,7 @@ export class APIService {
 
 
     // Vul customer error  met http status code en de beschrijving uit X-Error-Message
-    private handleError(response: Response): CustomError {
+    private handleError(response: Response): ErrorMessage {
         let beschrijving = response.headers.get('X-Error-Message')      // Helios implementaie fout melding
         if (!beschrijving) {
             beschrijving = response.statusText;                         // HTTP error berichten

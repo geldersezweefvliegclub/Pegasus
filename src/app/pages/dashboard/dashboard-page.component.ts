@@ -18,6 +18,7 @@ import {SharedService} from "../../services/shared/shared.service";
 import * as xlsx from "xlsx";
 import {StartlijstService} from "../../services/apiservice/startlijst.service";
 import {ProgressieService} from "../../services/apiservice/progressie.service";
+import {ErrorMessage, SuccessMessage} from "../../types/Utils";
 
 @Component({
     selector: 'app-dashboard',
@@ -43,6 +44,9 @@ export class DashboardPageComponent implements OnInit {
     datum: DateTime;                       // de gekozen dag
 
     toonTracks: boolean = false;           // mogen de tracks vertoon worden
+
+    success: SuccessMessage | undefined;
+    error: ErrorMessage | undefined;
 
     @ViewChild('logboekPopup') private popupLogboek: ModalComponent;
     @ViewChild('dienstenPopup') private popupDiensten: ModalComponent;

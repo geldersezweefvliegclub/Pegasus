@@ -3,6 +3,7 @@ import {ModalComponent} from '../../modal/modal.component';
 import {HeliosType, HeliosVliegtuig} from '../../../../types/Helios';
 import {VliegtuigenService} from '../../../../services/apiservice/vliegtuigen.service';
 import {TypesService} from '../../../../services/apiservice/types.service';
+import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
 
 @Component({
     selector: 'app-vliegtuig-editor',
@@ -12,8 +13,8 @@ import {TypesService} from '../../../../services/apiservice/types.service';
 export class VliegtuigEditorComponent  implements  OnInit {
     @Output() add: EventEmitter<HeliosVliegtuig> = new EventEmitter<HeliosVliegtuig>();
     @Output() update: EventEmitter<HeliosVliegtuig> = new EventEmitter<HeliosVliegtuig>();
-    @Output() delete: EventEmitter<number> = new EventEmitter<number>();
-    @Output() restore: EventEmitter<number> = new EventEmitter<number>();
+    @Output() delete: EventEmitter<HeliosVliegtuig> = new EventEmitter<HeliosVliegtuig>();
+    @Output() restore: EventEmitter<HeliosVliegtuig> = new EventEmitter<HeliosVliegtuig>();
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
@@ -97,11 +98,11 @@ export class VliegtuigEditorComponent  implements  OnInit {
 
     uitvoeren() {
         if (this.isRestoreMode) {
-            this.restore.emit(this.vliegtuig.ID);
+            this.restore.emit(this.vliegtuig);
         }
 
         if (this.isVerwijderMode) {
-            this.delete.emit(this.vliegtuig.ID);
+            this.delete.emit(this.vliegtuig);
         }
 
         if (!this.isVerwijderMode && !this.isRestoreMode) {

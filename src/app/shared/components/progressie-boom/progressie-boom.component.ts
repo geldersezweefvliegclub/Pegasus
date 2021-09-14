@@ -1,11 +1,12 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {TreeviewItem, TreeviewConfig} from 'ngx-treeview';
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
-import {HeliosProgressie, HeliosProgressieBoom} from "../../../types/Helios";
+import {HeliosCompetentiesDataset, HeliosProgressie, HeliosProgressieBoom} from "../../../types/Helios";
 import {LoginService} from "../../../services/apiservice/login.service";
 import {ModalComponent} from "../modal/modal.component";
-import {HeliosActie} from "../../../types/Utils";
+import {ErrorMessage, HeliosActie, SuccessMessage} from "../../../types/Utils";
 import {SharedService} from "../../../services/shared/shared.service";
+import {CompetentieService} from "../../../services/apiservice/competentie.service";
 
 export class ProgressieTreeviewItemComponent extends TreeviewItem {
     ProgresssieID: number | undefined;
@@ -24,6 +25,7 @@ export class ProgressieBoomComponent implements OnInit {
     @ViewChild(ModalComponent) private bevestigPopup: ModalComponent;
 
     boom: ProgressieTreeviewItemComponent[];
+    competenties: HeliosCompetentiesDataset[];
     values: number[];
     suspend: boolean = false;
     isDisabled: boolean = true;
@@ -37,9 +39,12 @@ export class ProgressieBoomComponent implements OnInit {
     });
 
     verwijderCompetentie: ProgressieTreeviewItemComponent;
+    success: SuccessMessage | undefined;
+    error: ErrorMessage | undefined;
 
     constructor(private readonly loginService: LoginService,
                 private readonly sharedService: SharedService,
+                private readonly competentieService: CompetentieService,
                 private readonly progressieService: ProgressieService) {
 
         // Als in de progressie tabel is aangepast, moet we onze dataset ook aanpassen
@@ -56,6 +61,7 @@ export class ProgressieBoomComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.competentieService.getCompetenties().then((competenties) => this.competenties = competenties)
         this.ophalen();
     }
 
@@ -112,28 +118,43 @@ export class ProgressieBoomComponent implements OnInit {
     }
 
     onProgressieChange(item: ProgressieTreeviewItemComponent) {
-        const ui = this.loginService.userInfo?.LidData;
+        try {
+            const ui = this.loginService.userInfo?.LidData;
 
-        if (item.ProgresssieID) {
-            this.verwijderCompetentie = item
+            if (item.ProgresssieID) {
+                this.verwijderCompetentie = item
 
-            this.bevestigPopup.open();
-        } else {
-            this.uitstellen();
-            this.progressieService.behaaldeCompetentie({
-                LID_ID: this.VliegerID,
-                INSTRUCTEUR_ID: ui?.ID,
-                COMPETENTIE_ID: item.value,
-            }).then((h: HeliosProgressie) => item.ProgresssieID = h.ID);
+                this.bevestigPopup.open();
+            } else {
+                this.uitstellen();
+                this.progressieService.behaaldeCompetentie({
+                    LID_ID: this.VliegerID,
+                    INSTRUCTEUR_ID: ui?.ID,
+                    COMPETENTIE_ID: item.value,
+                }).then((h: HeliosProgressie) => {
+                    item.ProgresssieID = h.ID
 
-            const now = new Date()
+                    const c = this.competenties.find((c) => c.ID == h.COMPETENTIE_ID);
 
-            item.checked = true;
-            item.Behaald = now.getDate() + "-" + now.getMonth() + '-' + now.getFullYear();
-            item.Instructeur = ui?.NAAM!;
-            item.ProgresssieID = -1;
+                    this.success =
+                    {
+                        titel: "Progressie",
+                        beschrijving: "Competentie '" + c!.ONDERWERP  +"' behaald"
+                    }
+                });
+
+                const now = new Date()
+
+                item.checked = true;
+                item.Behaald = now.getDate() + "-" + now.getMonth() + '-' + now.getFullYear();
+                item.Instructeur = ui?.NAAM!;
+                item.ProgresssieID = -1;
+            }
+        } catch (e) {
+            this.error = e;
         }
     }
+
 
     verwijderenProgressie(item: ProgressieTreeviewItemComponent): void {
         this.bevestigPopup.close();

@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {faRecycle, faUsers} from '@fortawesome/free-solid-svg-icons';
 import {HeliosLedenDataset, HeliosTrack} from '../../types/Helios';
 import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
-import {CustomError} from '../../types/Utils';
+import {ErrorMessage} from '../../types/Utils';
 import {CheckboxRenderComponent} from '../../shared/components/datatable/checkbox-render/checkbox-render.component';
 import {DeleteActionComponent} from '../../shared/components/datatable/delete-action/delete-action.component';
 import {RestoreActionComponent} from '../../shared/components/datatable/restore-action/restore-action.component';
@@ -151,7 +151,7 @@ export class LedenGridComponent implements OnInit {
     deleteMode: boolean = false;        // zitten we in delete mode om leden te kunnen verwijderen
     trashMode: boolean = false;         // zitten in restore mode om leden te kunnen terughalen
 
-    error: CustomError | undefined;
+    error: ErrorMessage | undefined;
     magToevoegen: boolean = false;
     magVerwijderen: boolean = false;
     magWijzigen: boolean = false;

@@ -1,0 +1,9 @@
+<div
+        id=successOverlay
+        [ngClass]="showSuccess == true ? 'show' : ''"
+        class="alert alert-success alert-dismissable"
+        *ngIf="success" role="alert">
+
+    <div class="fw-bold" *ngIf="success.titel">{{success.titel}}</div>
+    <div *ngIf="success.beschrijving">{{success.beschrijving}}</div>
+</div>

@@ -97,8 +97,8 @@
                               exportEnabled=" true"
                               (excelExport)="exportProgressieKaart()"
                               [icon]="iconProgressie">
-                <app-progressie-boom [VliegerID]="lidData.ID" *ngIf="lidData">
-
+                <app-progressie-boom
+                        [VliegerID]="lidData.ID" *ngIf="lidData">
                 </app-progressie-boom>
             </app-pegasus-card>
         </div>

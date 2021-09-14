@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
-import {CustomError} from '../../../types/Utils';
+import {ErrorMessage} from '../../../types/Utils';
 
 @Component({
   selector: 'app-error',
@@ -7,7 +7,7 @@ import {CustomError} from '../../../types/Utils';
   styleUrls: ['./error.component.scss']
 })
 export class ErrorComponent implements OnChanges{
-  @Input() error: CustomError | undefined = undefined;
+  @Input() error: ErrorMessage | undefined = undefined;
   @ViewChild('errorOverlay') errorOverlay: ElementRef;
 
   showError: boolean = false;

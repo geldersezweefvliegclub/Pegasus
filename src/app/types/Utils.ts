@@ -3,8 +3,13 @@ export interface KeyValueArray {
   [key: string]: string
 };
 
-export type CustomError = {
+export type ErrorMessage = {
     responseCode?: number | null,
+    beschrijving: string | null
+};
+
+export type SuccessMessage = {
+    titel: string| null,
     beschrijving: string | null
 };
 
@@ -13,6 +18,7 @@ export type KalenderMaand = {
     month: number
 };
 
+// type event naar het Helios backend
 export enum HeliosActie {
     Add,
     Update,

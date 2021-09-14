@@ -8,7 +8,7 @@ import {NgbTypeaheadConfig} from '@ng-bootstrap/ng-bootstrap';
 import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import {getSunrise, getSunset} from 'sunrise-sunset-js';
 import {DateTime} from 'luxon';
-import {CustomError} from '../../../../types/Utils';
+import {ErrorMessage} from '../../../../types/Utils';
 import {PegasusConfigService} from "../../../../services/shared/pegasus-config.service";
 
 enum TypeTijdInvoer {
@@ -30,7 +30,7 @@ export class TijdInvoerComponent {
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @ViewChild('tijdInvoerElement') tijdInvoerElement: ElementRef;
 
-    error: CustomError | undefined;
+    error: ErrorMessage | undefined;
     start: HeliosStart;
 
     isLoading: boolean = false;

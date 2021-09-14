@@ -1,4 +1,5 @@
 <app-error [error]="error"></app-error>
+<app-success [success]="success"></app-success>
 
 <app-pegasus-card titel="Startlijst"
                subtitel="Een overzicht van de starts {{datum.day}}-{{datum.month}}-{{datum.year}}"
@@ -26,7 +27,7 @@
                         Filter
                     </label>
 
-                    <div *ngIf="this.magToevoegen">
+                    <div>
                         <app-icon-button class="toolbarBtn"
                                          tekst="Toevoegen"
                                          iconNaam="far PlusSquare" (btnClicked)="addStart()"
@@ -75,8 +76,9 @@
 
     <app-tijd-invoer (OpslaanStarttijd)="opslaanStartTijd($event)" (OpslaanLandingstijd)="opslaanLandingsTijd($event)"></app-tijd-invoer>
 
-    <app-start-editor *ngIf="this.magToevoegen || this.magWijzigen || this.magVerwijderen"
-                          (add)="Toevoegen($event)" (update)="Aanpassen($event)" (delete)="Verwijderen($event)"
-                          (restore)="Herstellen($event)"
+    <app-start-editor  (add)="Toevoegen($event)"
+                       (update)="Aanpassen($event)"
+                       (delete)="Verwijderen($event)"
+                       (restore)="Herstellen($event)"
     ></app-start-editor>
 </app-pegasus-card>

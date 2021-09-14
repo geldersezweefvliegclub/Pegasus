@@ -28,8 +28,8 @@ import {DaginfoService} from '../../../../services/apiservice/daginfo.service';
 export class StartEditorComponent implements OnInit {
     @Output() add: EventEmitter<HeliosStart> = new EventEmitter<HeliosStart>();
     @Output() update: EventEmitter<HeliosStart> = new EventEmitter<HeliosStart>();
-    @Output() delete: EventEmitter<number> = new EventEmitter<number>();
-    @Output() restore: EventEmitter<number> = new EventEmitter<number>();
+    @Output() delete: EventEmitter<HeliosStart> = new EventEmitter<HeliosStart>();
+    @Output() restore: EventEmitter<HeliosStart> = new EventEmitter<HeliosStart>();
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
@@ -290,11 +290,11 @@ export class StartEditorComponent implements OnInit {
 
     uitvoeren() {
         if (this.isRestoreMode) {
-            this.restore.emit(this.start.ID);
+            this.restore.emit(this.start);
         }
 
         if (this.isVerwijderMode) {
-            this.delete.emit(this.start.ID);
+            this.delete.emit(this.start);
         }
 
         if (!this.isVerwijderMode && !this.isRestoreMode) {

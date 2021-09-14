@@ -77,7 +77,7 @@ export class DaginfoService {
 
         if (this.dagInfoTotaal != null) {           // we hebben eerder de lijst opgehaald
             hash = this.dagInfoTotaal.hash as string;
-            getParams['HASH'] = hash;
+//            getParams['HASH'] = hash;
         }
 
         getParams['BEGIN_DATUM'] = startDatum.toISODate();
