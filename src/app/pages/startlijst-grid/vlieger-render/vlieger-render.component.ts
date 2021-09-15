@@ -2,6 +2,9 @@ import {Component} from '@angular/core';
 import {ICellRendererParams} from 'ag-grid-community';
 import {AgRendererComponent} from 'ag-grid-angular';
 import {LoginService} from "../../../services/apiservice/login.service";
+import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons";
+
 
 @Component({
     selector: 'app-vlieger-render',
@@ -9,7 +12,7 @@ import {LoginService} from "../../../services/apiservice/login.service";
     styleUrls: ['./vlieger-render.component.scss']
 })
 export class VliegerRenderComponent implements AgRendererComponent {
-    warningIcon = "ExclamationTriangle"
+    warningIcon:IconDefinition = faExclamationTriangle;
     lidID: string;
     grid_vliegernaam: string;
     naarDashboard: boolean = false;
