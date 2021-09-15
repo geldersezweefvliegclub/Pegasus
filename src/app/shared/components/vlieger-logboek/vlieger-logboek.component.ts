@@ -15,6 +15,7 @@ import {TrackRenderComponent} from "./track-render/track-render.component";
 import {LoginService} from "../../../services/apiservice/login.service";
 import {TrackEditorComponent} from "../editors/track-editor/track-editor.component";
 import {TracksService} from "../../../services/apiservice/tracks.service";
+import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
 
 @Component({
     selector: 'app-vlieger-logboek',
@@ -31,6 +32,9 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
     data: HeliosLogboekDataset[] = [];
     datumAbonnement: Subscription;         // volg de keuze van de kalender
     datum: DateTime;                       // de gekozen dag
+
+    success: SuccessMessage | undefined;
+    error: ErrorMessage | undefined;
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
@@ -124,20 +128,40 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
 
             this.startlijstService.getLogboek(this.VliegerID, startDatum, eindDatum).then((dataset) => {
                 this.data = dataset;
+            }).catch(e => {
+                this.error = e;
             });
         }
     }
 
     // De starttijd is ingevoerd/aangepast. Opslaan van de starttijd
     opslaanStartTijd(start: HeliosStart) {
-        this.startlijstService.startTijd(start.ID as number, start.STARTTIJD as string).then((s) => { this.opvragen(); });
-        this.tijdInvoerEditor.closePopup();
+        this.startlijstService.startTijd(start.ID as number, start.STARTTIJD as string).then((s) => {
+            this.success = {
+                titel: "Startlijst",
+                beschrijving: `Starttijd ${s.STARTTIJD} opgeslagen`
+            }
+            this.opvragen();
+            this.tijdInvoerEditor.closePopup();
+        }).catch(e => {
+            this.error = e;
+        });
     }
 
     // De landingstijd is ingevoerd/aangepast. Opslaan van de landingstijd
     opslaanLandingsTijd(start: HeliosStart) {
-        this.startlijstService.landingsTijd(start.ID as number, start.LANDINGSTIJD as string).then((s) => { this.opvragen(); });
-        this.tijdInvoerEditor.closePopup();
+        this.startlijstService.landingsTijd(start.ID as number, start.LANDINGSTIJD as string).then((s) =>
+        {
+            this.success = {
+                titel: "Startlijst",
+                beschrijving: `Landingstijd ${s.LANDINGSTIJD} opgeslagen`
+            }
+            this.opvragen();
+            this.tijdInvoerEditor.closePopup();
+        }).catch(e => {
+            this.error = e;
+        });
+
     }
 
     // open de track editor om nieuwe track toe te voegen. Edit opent als popup

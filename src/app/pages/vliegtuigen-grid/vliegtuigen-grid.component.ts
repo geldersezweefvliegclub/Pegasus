@@ -204,7 +204,6 @@ export class VliegtuigenGridComponent implements OnInit {
 
                 const ui = this.loginService.userInfo?.Userinfo;
 
-
                 if (!ui?.isDDWV) {  // DDWV'ers mogen geen clubkist logboek zien
                     this.data.forEach((v) => v.toonLogboek = v.CLUBKIST);   // alle clubkisten mogen getoond worden voor leden
                 }
@@ -216,6 +215,8 @@ export class VliegtuigenGridComponent implements OnInit {
                     this.laatste6Mnd();
                 }
 
+            }).catch(e => {
+                this.error = e;
             });
         }, 400);
     }
@@ -226,13 +227,15 @@ export class VliegtuigenGridComponent implements OnInit {
 
         if (this.logboek.length == 0) { // als we nog starts hebben, dan halen we ze op
             const ui = this.loginService.userInfo?.LidData;
-            this.logboek = await this.startlijstService.getLogboek(ui?.ID!, nu.minus({months: 6}), nu)
+            try {
+                this.logboek = await this.startlijstService.getLogboek(ui?.ID!, nu.minus({months: 6}), nu)
+            }
+            catch(e) { this.error = e}
         }
 
         // we moeten de snelste manier gebruiken. Foreach gaat over korste array
         if (this.data.length > this.logboek.length)
         {
-
             // for each over de starts
             this.logboek.forEach((s) => {
                 const vliegtuig = this.data.find(v => v.ID == s.VLIEGTUIG_ID);

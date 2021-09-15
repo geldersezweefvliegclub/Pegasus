@@ -230,6 +230,8 @@ export class StartlijstGridComponent implements OnInit {
 
         this.startlijstService.getStarts(this.trashMode, this.datum, this.datum, this.zoekString, queryParams).then((dataset) => {
             this.data = dataset;
+        }).catch(e => {
+            this.error = e;
         });
     }
 
@@ -277,6 +279,8 @@ export class StartlijstGridComponent implements OnInit {
 
             this.opvragen();
             this.editor.closePopup();
+        }).catch(e => {
+            this.error = e;
         });
     }
 
@@ -294,6 +298,8 @@ export class StartlijstGridComponent implements OnInit {
 
             this.opvragen();
             this.editor.closePopup();
+        }).catch(e => {
+            this.error = e;
         });
     }
 
@@ -325,8 +331,10 @@ export class StartlijstGridComponent implements OnInit {
                 beschrijving: `Vlucht #${s.DAGNUMMER} is om ${s.STARTTIJD} gestart`
             }
             this.opvragen();
+            this.tijdInvoerEditor.closePopup();
+        }).catch(e => {
+            this.error = e;
         });
-        this.tijdInvoerEditor.closePopup();
     }
 
     // De landingstijd is ingevoerd/aangepast. Opslaan van de landingstijd
@@ -338,7 +346,9 @@ export class StartlijstGridComponent implements OnInit {
                 beschrijving: `Vlucht #${s.DAGNUMMER} is om ${s.LANDINGSTIJD} geland`
             }
             this.opvragen();
+            this.tijdInvoerEditor.closePopup();
+        }).catch(e => {
+            this.error = e;
         });
-        this.tijdInvoerEditor.closePopup();
     }
 }

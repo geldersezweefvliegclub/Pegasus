@@ -105,9 +105,7 @@
                                   subtitel="Vliegstatus"
                                   minimum="true"
                                   [icon]="iconStatus">
-                    <app-status [VliegerID]="geselecteerdLid"
-                                (errorMsg)="error=$event"
-                                (successMsg)="success=$event"></app-status>
+                    <app-status [VliegerID]="geselecteerdLid"></app-status>
                 </app-pegasus-card>
             </div>
             <div class="container">
@@ -117,9 +115,7 @@
                                   subtitel="Proef van bekwaamheid"
                                   minimum="true"
                                   [icon]="iconPVB">
-                    <app-pvb [VliegerID]="geselecteerdLid"
-                             (errorMsg)="error=$event"
-                             (successMsg)="success=$event"></app-pvb>
+                    <app-pvb [VliegerID]="geselecteerdLid"></app-pvb>
                 </app-pegasus-card>
             </div>
             <div class="container">

@@ -21,6 +21,7 @@ import {Label} from "ng2-charts";
 import {ModalComponent} from "../../shared/components/modal/modal.component";
 import {ActivatedRoute} from "@angular/router";
 import {nummerSort, tijdSort} from '../../utils/Utils';
+import {ErrorMessage} from "../../types/Utils";
 
 
 @Component({
@@ -61,6 +62,7 @@ export class VliegtuigLogboekComponent implements OnInit {
     };
 
     columns: ColDef[] = this.dataColumns;
+    error: ErrorMessage | undefined;
     magExporten: boolean = false;
 
     /*-BarChart-----------*/
@@ -192,6 +194,8 @@ export class VliegtuigLogboekComponent implements OnInit {
 
         this.startlijstService.getVliegtuigLogboek(this.vliegtuigID, startDatum, eindDatum).then((dataset) => {
             this.data = dataset;
+        }).catch(e => {
+            this.error = e;
         });
 
         this.startlijstService.getVliegtuigLogboekTotalen(this.vliegtuigID, this.datum.year).then((t) => {
@@ -251,6 +255,8 @@ export class VliegtuigLogboekComponent implements OnInit {
                 this.lineChartData.push(lineReeks);
 
             }
+        }).catch(e => {
+            this.error = e;
         });
 
         // ophalen van vliegtuig data om REG_CALL in titel te zetten
@@ -261,7 +267,8 @@ export class VliegtuigLogboekComponent implements OnInit {
             if (vliegtuig.CALLSIGN) {
                 this.REG_CALL += ' (' + vliegtuig.CALLSIGN + ')';
             }
-
+        }).catch(e => {
+            this.error = e;
         });
     }
 

@@ -13,8 +13,8 @@ import {LoginService} from "../../../../services/apiservice/login.service";
 export class TrackEditorComponent implements OnInit{
     @Output() add: EventEmitter<HeliosTrack> = new EventEmitter<HeliosTrack>();
     @Output() update: EventEmitter<HeliosTrack> = new EventEmitter<HeliosTrack>();
-    @Output() delete: EventEmitter<number> = new EventEmitter<number>();
-    @Output() restore: EventEmitter<number> = new EventEmitter<number>();
+    @Output() delete: EventEmitter<HeliosTrack> = new EventEmitter<HeliosTrack>();
+    @Output() restore: EventEmitter<HeliosTrack> = new EventEmitter<HeliosTrack>();
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
@@ -99,11 +99,11 @@ export class TrackEditorComponent implements OnInit{
 
     uitvoeren() {
         if (this.isRestoreMode) {
-            this.restore.emit(this.track.ID);
+            this.restore.emit(this.track);
         }
 
         if (this.isVerwijderMode) {
-            this.delete.emit(this.track.ID);
+            this.delete.emit(this.track);
         }
 
         if (!this.isVerwijderMode && !this.isRestoreMode) {

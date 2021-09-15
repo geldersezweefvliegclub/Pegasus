@@ -91,6 +91,8 @@ export class TracksComponent implements OnInit {
             this.ledenService.getLeden(false).then((dataset) => {
                 this.leden = dataset;
                 this.opvragen();
+            }).catch(e => {
+                this.error = e;
             });
 
             // Als in de progressie tabel is aangepast, moet we onze dataset ook aanpassen
@@ -155,6 +157,8 @@ export class TracksComponent implements OnInit {
                 for (let i = 0; i < this.data.length; i++) {
                     this.data[i].lid = this.leden.find(l => l.ID == this.data[i].LID_ID) as HeliosLedenDataset;
                 }
+            }).catch(e => {
+                this.error = e;
             });
         }, 400);
     }
@@ -162,6 +166,11 @@ export class TracksComponent implements OnInit {
     // opslaan van de data van een nieuw vliegtuig
     Toevoegen(track: HeliosTrack) {
         this.trackService.addTrack(track).then(() => {
+            this.success = {
+                titel: "Track",
+                beschrijving: "Bericht is toegevoegd"
+            }
+
             this.opvragen();
             this.trackEditor.closePopup();
         }).catch(e => {
@@ -172,6 +181,11 @@ export class TracksComponent implements OnInit {
     // bestaande track is aangepast. Opslaan van de data
     Aanpassen(track: HeliosTrack) {
         this.trackService.updateTrack(track).then(() => {
+            this.success = {
+                titel: "Track",
+                beschrijving: "Bericht is gewijzigd"
+            }
+
             this.opvragen();
             this.trackEditor.closePopup();
         }).catch(e => {
@@ -180,10 +194,15 @@ export class TracksComponent implements OnInit {
     }
 
     // markeer een track als verwijderd
-    Verwijderen(id: number) {
-        this.trackService.deleteTrack(id).then(() => {
+    Verwijderen(track: HeliosTrack) {
+        this.trackService.deleteTrack(track.ID!).then(() => {
             this.deleteMode = false;
             this.trashMode = false;
+
+            this.success = {
+                titel: "Track",
+                beschrijving: "Bericht is verwijderd"
+            }
 
             this.opvragen();
             this.trackEditor.closePopup();
@@ -191,10 +210,15 @@ export class TracksComponent implements OnInit {
     }
 
     // de track herstellen, haal de markering 'verwijderd' weg
-    Herstellen(id: number) {
-        this.trackService.restoreTrack(id).then(() => {
+    Herstellen(track: HeliosTrack) {
+        this.trackService.restoreTrack(track.ID!).then(() => {
             this.deleteMode = false;
             this.trashMode = false;
+
+            this.success = {
+                titel: "Track",
+                beschrijving: "Bericht is weer beschikbaar"
+            }
 
             this.opvragen();
             this.trackEditor.closePopup();

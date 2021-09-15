@@ -179,7 +179,7 @@ export class LedenGridComponent implements OnInit {
 
     // openen van popup om lid data van een nieuw lid te kunnen invoeren
     addLid(): void {
-        this.router.navigate(['profiel'], {queryParams: {lidID: -1}});
+        this.router.navigate(['profiel'], {queryParams: {lidID: -1}}).then();
     }
 
     // schakelen tussen deleteMode JA/NEE. In deleteMode kun je leden verwijderen
@@ -222,6 +222,8 @@ export class LedenGridComponent implements OnInit {
             this.ledenService.getLeden(this.trashMode, this.zoekString).then((dataset) => {
                 this.dataset = dataset;
                 this.applyFilter();
+            }).catch(e => {
+                this.error = e;
             });
         }, 400);
     }
@@ -280,7 +282,9 @@ export class LedenGridComponent implements OnInit {
 
     // Toevoegen van een vlieger track aan de database
     ToevoegenTrack(track: HeliosTrack): void {
-        this.trackService.addTrack(track);
+        this.trackService.addTrack(track).then((t) => {
+
+        });
         this.trackEditor.closePopup();
     }
 
