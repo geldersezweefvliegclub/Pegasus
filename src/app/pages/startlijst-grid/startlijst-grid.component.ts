@@ -238,7 +238,7 @@ export class StartlijstGridComponent implements OnInit {
         this.startlijstService.addStart(start).then((s) => {
             this.success = {
                 titel: "Startlijst",
-                beschrijving: `Start #${s.DAGNUMMER} is toegevoegd`
+                beschrijving: `Vlucht #${s.DAGNUMMER} is toegevoegd`
             }
 
             this.opvragen();
@@ -253,7 +253,7 @@ export class StartlijstGridComponent implements OnInit {
         this.startlijstService.updateStart(start).then(() => {
             this.success = {
                 titel: "Startlijst",
-                beschrijving: `Start #${start.DAGNUMMER} is aangepast`
+                beschrijving: `Vlucht #${start.DAGNUMMER} is aangepast`
             }
 
             this.opvragen();
@@ -272,7 +272,7 @@ export class StartlijstGridComponent implements OnInit {
 
             this.success = {
                 titel: "Startlijst",
-                beschrijving: `Start #${start.DAGNUMMER} is verwijderd`
+                beschrijving: `Vlucht #${start.DAGNUMMER} is verwijderd`
             }
 
             this.opvragen();
@@ -289,7 +289,7 @@ export class StartlijstGridComponent implements OnInit {
 
             this.success = {
                 titel: "Startlijst",
-                beschrijving: `Start #${start.DAGNUMMER} is hersteld`
+                beschrijving: `Vlucht #${start.DAGNUMMER} is hersteld`
             }
 
             this.opvragen();
@@ -319,13 +319,26 @@ export class StartlijstGridComponent implements OnInit {
 
     // De starttijd is ingevoerd/aangepast. Opslaan van de starttijd
     opslaanStartTijd(start: HeliosStart) {
-        this.startlijstService.startTijd(start.ID as number, start.STARTTIJD as string).then((s) => { this.opvragen(); });
+        this.startlijstService.startTijd(start.ID as number, start.STARTTIJD as string).then((s) => {
+            this.success = {
+                titel: "Startlijst",
+                beschrijving: `Vlucht #${s.DAGNUMMER} is om ${s.STARTTIJD} gestart`
+            }
+            this.opvragen();
+        });
         this.tijdInvoerEditor.closePopup();
     }
 
     // De landingstijd is ingevoerd/aangepast. Opslaan van de landingstijd
     opslaanLandingsTijd(start: HeliosStart) {
-        this.startlijstService.landingsTijd(start.ID as number, start.LANDINGSTIJD as string).then((s) => { this.opvragen(); });
+        this.startlijstService.landingsTijd(start.ID as number, start.LANDINGSTIJD as string).then((s) =>
+        {
+            this.success = {
+                titel: "Startlijst",
+                beschrijving: `Vlucht #${s.DAGNUMMER} is om ${s.LANDINGSTIJD} geland`
+            }
+            this.opvragen();
+        });
         this.tijdInvoerEditor.closePopup();
     }
 }
