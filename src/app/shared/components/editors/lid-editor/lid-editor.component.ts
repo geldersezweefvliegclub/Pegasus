@@ -8,6 +8,10 @@ import {HeliosLid, HeliosType} from '../../../../types/Helios';
 import {LedenService} from '../../../../services/apiservice/leden.service';
 import {LoginService} from "../../../../services/apiservice/login.service";
 import {NgbDateFRParserFormatter} from "../../../ngb-date-fr-parser-formatter";
+import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
+import {ImageService} from "../../../../services/apiservice/image.service";
+import {Router} from "@angular/router";
+import {StorageService} from "../../../../services/storage/storage.service";
 
 @Component({
     selector: 'app-lid-editor',
@@ -24,7 +28,6 @@ export class LidEditorComponent implements OnInit {
     @Output() opslaanAvatar: EventEmitter<string> = new EventEmitter<string>();
 
     lid: HeliosLid = {};
-
     types: HeliosType[];
 
     wachtwoordVerborgen: boolean = true;
@@ -45,10 +48,16 @@ export class LidEditorComponent implements OnInit {
     MedicalDatum: NgbDate | null;
     GeboorteDatum: NgbDate | null;
 
+    success: SuccessMessage | undefined;
+    error: ErrorMessage | undefined;
+
     constructor(
         private readonly typeService: TypesService,
         private readonly ledenService: LedenService,
         private readonly loginService: LoginService,
+        private readonly imageService: ImageService,
+        private readonly storageService: StorageService,
+        private readonly router: Router,
         private readonly changeDetector: ChangeDetectorRef) {}
 
     ngOnInit(): void {
@@ -114,7 +123,73 @@ export class LidEditorComponent implements OnInit {
         }
 
         // nu opslaan van de data
-        this.opslaan.emit(this.lid);
+        if (this.isRestoreMode) {
+            this.restore()
+        }
+        else if (this.isVerwijderMode) {
+            this.delete()
+        }
+        else if (this.lid.ID && this.lid.ID > 0) {
+            this.updateLid()
+        } else {
+            this.nieuwLid()
+        }
+    }
+
+    // markeer lid als verwijderd
+    delete(): void {
+        let msg: SuccessMessage;
+
+        this.ledenService.deleteLid(this.lidID).then(() => {
+            this.error = undefined;
+            this.success = {titel: "Profiel", beschrijving: this.lid.NAAM + " is verwijderd"}
+
+            setTimeout(() => this.router.navigate(['/leden']), 3000);
+        }).catch(e => {
+            this.success = undefined;
+            this.error = e;
+        });
+    }
+
+    // haal een lid terug door verwijderd vlag te resetten
+    restore(): void {
+        this.ledenService.restoreLid(this.lid.ID!).then(() => {
+            this.error = undefined;
+            this.success = {titel: "Profiel", beschrijving: this.lid.NAAM + " is weer beschikbaar"}
+
+            setTimeout(() => this.router.navigate(['/leden']), 3000);
+        }).catch(e => {
+            this.success = undefined;
+            this.error = e;
+        });
+    }
+
+    // update bestaand lid
+    updateLid(): void {
+        this.ledenService.updateLid(this.lid).then(() => {
+            this.error = undefined;
+
+            if (this.lidID == this.storageService.ophalen('userInfo').LidData.ID) {
+                this.success = {titel: "Profiel", beschrijving: "Uw profiel is aangepast"}
+            }
+            else {
+                this.success = {titel: "Profiel", beschrijving: "Profiel " + this.lid.NAAM + " is aangepast"}
+            }
+        }).catch(e => {
+            this.success = undefined;
+            this.error = e;
+        });
+    }
+
+    // nieuw lid toevoegen aan het leden bestand
+    nieuwLid(): void {
+        this.ledenService.addLid(this.lid).then((l) => {
+            this.error = undefined;
+            this.success = {titel: "Profiel", beschrijving: l.NAAM + " is toegevoegd"}
+        }).catch(e => {
+            this.success = undefined;
+            this.error = e;
+        });
     }
 
     converteerDatumNaarISO($event: NgbDate): string {
@@ -143,7 +218,16 @@ export class LidEditorComponent implements OnInit {
     // nu opslaan van de avatar
     uploadFoto(image: string) {
         this.setAvatar(image);
-        this.opslaanAvatar.emit(image);
+        try {
+            this.imageService.uploadFoto(this.lidID, image).then(() =>
+                this.success = { titel: "upload avatar", beschrijving: "Foto is succesvol opgeslagen"}
+            );
+        }
+        catch (e)
+        {
+            this.success = undefined;
+            this.error = e;
+        }
     }
 
     isgoogleAuthNodig(): boolean {
@@ -241,3 +325,5 @@ export class LidEditorComponent implements OnInit {
         return false;
     }
 }
+
+

@@ -7,7 +7,7 @@ import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {DeleteActionComponent} from '../../shared/components/datatable/delete-action/delete-action.component';
 import {RestoreActionComponent} from '../../shared/components/datatable/restore-action/restore-action.component';
 import {HeliosStart, HeliosStartDataset} from '../../types/Helios';
-import {ErrorMessage, KeyValueArray, SuccessMessage} from '../../types/Utils';
+import {ErrorMessage, HeliosActie, KeyValueArray, SuccessMessage} from '../../types/Utils';
 import * as xlsx from 'xlsx';
 import {LoginService} from '../../services/apiservice/login.service';
 import {faClipboardList} from '@fortawesome/free-solid-svg-icons/faClipboardList';
@@ -176,7 +176,14 @@ export class StartlijstGridComponent implements OnInit {
                 day: datum.day
             })
             this.opvragen();
-        })
+        });
+
+        // Als startlijst is aangepast, moeten we grid opnieuw laden
+        this.sharedService.heliosEventFired.subscribe(ev => {
+            if (ev.tabel == "Startlijst") {
+                this.opvragen();
+            }
+        });
 
         let ui = this.loginService.userInfo?.Userinfo;
         this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur) ? true : false;
@@ -235,74 +242,6 @@ export class StartlijstGridComponent implements OnInit {
         });
     }
 
-    // nieuwe start is ingevoerd, nu opslaan
-    Toevoegen(start: HeliosStart) {
-        this.startlijstService.addStart(start).then((s) => {
-            this.success = {
-                titel: "Startlijst",
-                beschrijving: `Vlucht #${s.DAGNUMMER} is toegevoegd`
-            }
-
-            this.opvragen();
-            this.editor.closePopup();
-        }).catch(e => {
-            this.error = e;
-        })
-    }
-
-    // bestaande start is aangepast, nu opslaan
-    Aanpassen(start: HeliosStart) {
-        this.startlijstService.updateStart(start).then(() => {
-            this.success = {
-                titel: "Startlijst",
-                beschrijving: `Vlucht #${start.DAGNUMMER} is aangepast`
-            }
-
-            this.opvragen();
-            this.editor.closePopup();
-        }).catch(e => {
-            this.error = e;
-        })
-    }
-
-    // markeer een start als verwijderd
-    Verwijderen(start: HeliosStart) {
-        this.startlijstService.deleteStart(start.ID!).then(() => {
-            this.deleteMode = false;
-            this.trashMode = false;
-            this.kolomDefinitie();      // verwijderen van de kolom met delete icons
-
-            this.success = {
-                titel: "Startlijst",
-                beschrijving: `Vlucht #${start.DAGNUMMER} is verwijderd`
-            }
-
-            this.opvragen();
-            this.editor.closePopup();
-        }).catch(e => {
-            this.error = e;
-        });
-    }
-
-    // de start moet hersteld worden, haal de markering 'verwijderd' weg
-    Herstellen(start: HeliosStart) {
-        this.startlijstService.restoreStart(start.ID!).then(() => {
-            this.deleteMode = false;
-            this.trashMode = false;
-            this.kolomDefinitie();      // verwijderen van de kolom met herstel icons
-
-            this.success = {
-                titel: "Startlijst",
-                beschrijving: `Vlucht #${start.DAGNUMMER} is hersteld`
-            }
-
-            this.opvragen();
-            this.editor.closePopup();
-        }).catch(e => {
-            this.error = e;
-        });
-    }
-
     // Export naar excel
     exportDataset() {
         let datum: DateTime = DateTime.fromObject({
@@ -321,34 +260,5 @@ export class StartlijstGridComponent implements OnInit {
     filter() {
         this.filterOn = !this.filterOn;
         this.opvragen();
-    }
-
-    // De starttijd is ingevoerd/aangepast. Opslaan van de starttijd
-    opslaanStartTijd(start: HeliosStart) {
-        this.startlijstService.startTijd(start.ID as number, start.STARTTIJD as string).then((s) => {
-            this.success = {
-                titel: "Startlijst",
-                beschrijving: `Vlucht #${s.DAGNUMMER} is om ${s.STARTTIJD} gestart`
-            }
-            this.opvragen();
-            this.tijdInvoerEditor.closePopup();
-        }).catch(e => {
-            this.error = e;
-        });
-    }
-
-    // De landingstijd is ingevoerd/aangepast. Opslaan van de landingstijd
-    opslaanLandingsTijd(start: HeliosStart) {
-        this.startlijstService.landingsTijd(start.ID as number, start.LANDINGSTIJD as string).then((s) =>
-        {
-            this.success = {
-                titel: "Startlijst",
-                beschrijving: `Vlucht #${s.DAGNUMMER} is om ${s.LANDINGSTIJD} geland`
-            }
-            this.opvragen();
-            this.tijdInvoerEditor.closePopup();
-        }).catch(e => {
-            this.error = e;
-        });
     }
 }

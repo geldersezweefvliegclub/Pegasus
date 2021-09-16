@@ -26,6 +26,7 @@ import {Router} from "@angular/router";
 import {nummerSort} from '../../utils/Utils';
 import {StartlijstService} from "../../services/apiservice/startlijst.service";
 import {DateTime} from "luxon";
+import {SharedService} from "../../services/shared/shared.service";
 
 type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
     toonLogboek?: boolean;
@@ -138,7 +139,15 @@ export class VliegtuigenGridComponent implements OnInit {
     constructor(private readonly vliegtuigenService: VliegtuigenService,
                 private readonly startlijstService: StartlijstService,
                 private readonly loginService: LoginService,
-                private readonly router: Router) {
+                private readonly router: Router,
+                private readonly sharedService: SharedService) {
+
+        // Als vliegtuig is aangepast, moeten we grid opnieuw laden
+        this.sharedService.heliosEventFired.subscribe(ev => {
+            if (ev.tabel == "Startlijst") {
+                this.opvragen();
+            }
+        });
     }
 
     ngOnInit(): void {
@@ -250,74 +259,6 @@ export class VliegtuigenGridComponent implements OnInit {
                 if (start) { vliegtuig.toonLogboek = true; console.log(vliegtuig) }
             });
         }
-    }
-
-    // opslaan van de data van een nieuw vliegtuig
-    Toevoegen(vliegtuig: HeliosVliegtuig) {
-        this.vliegtuigenService.addVliegtuig(vliegtuig).then(() => {
-            const regCall = (vliegtuig.CALLSIGN) ? `${vliegtuig.REGISTRATIE} (${vliegtuig.CALLSIGN})` : vliegtuig.REGISTRATIE;
-            this.success = {
-                titel: "Vliegtuigen",
-                beschrijving: regCall + " is toegevoegd"
-            }
-
-            this.opvragen();
-            this.editor.closePopup();
-        }).catch(e => {
-            this.error = e;
-        })
-    }
-
-    // bestaand vliegtuig is aangepast. Opslaan van de data
-    Aanpassen(vliegtuig: HeliosVliegtuig) {
-        this.vliegtuigenService.updateVliegtuig(vliegtuig).then(() => {
-            const regCall = (vliegtuig.CALLSIGN) ? `${vliegtuig.REGISTRATIE} (${vliegtuig.CALLSIGN})` : vliegtuig.REGISTRATIE;
-            this.success = {
-                titel: "Vliegtuigen",
-                beschrijving: regCall + " is aangepast"
-            }
-
-            this.opvragen();
-            this.editor.closePopup();
-        }).catch(e => {
-            this.error = e;
-        })
-    }
-
-    // markeer een vliegtuig als verwijderd
-    Verwijderen(vliegtuig: HeliosVliegtuig) {
-        this.vliegtuigenService.deleteVliegtuig(vliegtuig.ID!).then(() => {
-            this.deleteMode = false;
-            this.trashMode = false;
-            this.kolomDefinitie();      // verwijderen van de kolom met delete icons
-
-            const regCall = (vliegtuig.CALLSIGN) ? `${vliegtuig.REGISTRATIE} (${vliegtuig.CALLSIGN})` : vliegtuig.REGISTRATIE;
-            this.success = {
-                titel: "Vliegtuigen",
-                beschrijving: regCall + " is verwijderd"
-            }
-            this.opvragen();
-            this.editor.closePopup();
-        }).catch(e => {
-            this.error = e;
-        })
-    }
-
-    // de vliegtuig is weer terug, haal de markering 'verwijderd' weg
-    Herstellen(vliegtuig: HeliosVliegtuig) {
-        this.vliegtuigenService.restoreVliegtuig(vliegtuig.ID!).then(() => {
-            this.deleteMode = false;
-            this.trashMode = false;
-            this.kolomDefinitie();  // verwijderen van de kolom met herstel icons
-
-            const regCall = (vliegtuig.CALLSIGN) ? `${vliegtuig.REGISTRATIE} (${vliegtuig.CALLSIGN})` : vliegtuig.REGISTRATIE;
-            this.success = {
-                titel: "Vliegtuigen",
-                beschrijving: regCall + " is weer beschikbaar"
-            }
-            this.opvragen();
-            this.editor.closePopup();
-        });
     }
 
     // Export naar excel

@@ -16,6 +16,7 @@ import {LoginService} from "../../../services/apiservice/login.service";
 import {TrackEditorComponent} from "../editors/track-editor/track-editor.component";
 import {TracksService} from "../../../services/apiservice/tracks.service";
 import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
+import {StartEditorComponent} from "../editors/start-editor/start-editor.component";
 
 @Component({
     selector: 'app-vlieger-logboek',
@@ -25,9 +26,11 @@ import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
 
 export class VliegerLogboekComponent implements OnInit, OnChanges {
     @Input() VliegerID: number;
+    @Input() VerwijderMode: number;
 
     @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
     @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
+    @ViewChild(StartEditorComponent) startEditor: StartEditorComponent;
 
     data: HeliosLogboekDataset[] = [];
     datumAbonnement: Subscription;         // volg de keuze van de kalender
@@ -89,6 +92,22 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
         },
     };
 
+    // kolom om record te verwijderen
+    deleteColumn: ColDef[] = [{
+        pinned: 'left',
+        maxWidth: 100,
+        initialWidth: 100,
+        resizable: false,
+        suppressSizeToFit:true,
+        hide: false,
+        cellRenderer: 'deleteAction', headerName: '', sortable: false,
+        cellRendererParams: {
+            onDeleteClicked: (ID: number) => {
+                this.startEditor.openVerwijderPopup(ID);
+            }
+        },
+    }];
+
     frameworkComponents = {
         datumRender: DatumRenderComponent,
         naamRender: NaamRenderComponent,
@@ -111,7 +130,14 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
                 day: 1
             })
             this.opvragen();
-        })
+        });
+
+        // Als daginfo of startlijst is aangepast, moet we kalender achtergrond ook updaten
+        this.sharedService.heliosEventFired.subscribe(ev => {
+            if (ev.tabel == "Startlijst") {
+                this.opvragen();
+            }
+        });
 
         // toevoegen van add track kolom
         let ui = this.loginService.userInfo?.Userinfo;
@@ -132,36 +158,6 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
                 this.error = e;
             });
         }
-    }
-
-    // De starttijd is ingevoerd/aangepast. Opslaan van de starttijd
-    opslaanStartTijd(start: HeliosStart) {
-        this.startlijstService.startTijd(start.ID as number, start.STARTTIJD as string).then((s) => {
-            this.success = {
-                titel: "Startlijst",
-                beschrijving: `Starttijd ${s.STARTTIJD} opgeslagen`
-            }
-            this.opvragen();
-            this.tijdInvoerEditor.closePopup();
-        }).catch(e => {
-            this.error = e;
-        });
-    }
-
-    // De landingstijd is ingevoerd/aangepast. Opslaan van de landingstijd
-    opslaanLandingsTijd(start: HeliosStart) {
-        this.startlijstService.landingsTijd(start.ID as number, start.LANDINGSTIJD as string).then((s) =>
-        {
-            this.success = {
-                titel: "Startlijst",
-                beschrijving: `Landingstijd ${s.LANDINGSTIJD} opgeslagen`
-            }
-            this.opvragen();
-            this.tijdInvoerEditor.closePopup();
-        }).catch(e => {
-            this.error = e;
-        });
-
     }
 
     // open de track editor om nieuwe track toe te voegen. Edit opent als popup

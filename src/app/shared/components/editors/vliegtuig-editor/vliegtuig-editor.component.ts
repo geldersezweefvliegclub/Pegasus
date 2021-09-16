@@ -41,6 +41,9 @@ export class VliegtuigEditorComponent  implements  OnInit {
     isRestoreMode: boolean = false;
     formTitel: string = "";
 
+    success: SuccessMessage | undefined;
+    error: ErrorMessage | undefined;
+
     constructor(
         private readonly vliegtuigenService: VliegtuigenService,
         private readonly typesService: TypesService
@@ -98,19 +101,73 @@ export class VliegtuigEditorComponent  implements  OnInit {
 
     uitvoeren() {
         if (this.isRestoreMode) {
-            this.restore.emit(this.vliegtuig);
+            this.Herstellen(this.vliegtuig);
         }
 
         if (this.isVerwijderMode) {
-            this.delete.emit(this.vliegtuig);
+            this.Verwijderen(this.vliegtuig);
         }
 
         if (!this.isVerwijderMode && !this.isRestoreMode) {
             if (this.vliegtuig.ID) {
-                this.update.emit(this.vliegtuig);
+                this.Aanpassen(this.vliegtuig);
             } else {
-                this.add.emit(this.vliegtuig);
+                this.Toevoegen(this.vliegtuig);
             }
         }
+    }
+
+    // opslaan van de data van een nieuw vliegtuig
+    Toevoegen(vliegtuig: HeliosVliegtuig) {
+        this.vliegtuigenService.addVliegtuig(vliegtuig).then(() => {
+            const regCall = (vliegtuig.CALLSIGN) ? `${vliegtuig.REGISTRATIE} (${vliegtuig.CALLSIGN})` : vliegtuig.REGISTRATIE;
+            this.success = {
+                titel: "Vliegtuigen",
+                beschrijving: regCall + " is toegevoegd"
+            }
+            this.closePopup();
+        }).catch(e => {
+            this.error = e;
+        })
+    }
+
+    // bestaand vliegtuig is aangepast. Opslaan van de data
+    Aanpassen(vliegtuig: HeliosVliegtuig) {
+        this.vliegtuigenService.updateVliegtuig(vliegtuig).then(() => {
+            const regCall = (vliegtuig.CALLSIGN) ? `${vliegtuig.REGISTRATIE} (${vliegtuig.CALLSIGN})` : vliegtuig.REGISTRATIE;
+            this.success = {
+                titel: "Vliegtuigen",
+                beschrijving: regCall + " is aangepast"
+            }
+            this.closePopup();
+        }).catch(e => {
+            this.error = e;
+        })
+    }
+
+    // markeer een vliegtuig als verwijderd
+    Verwijderen(vliegtuig: HeliosVliegtuig) {
+        this.vliegtuigenService.deleteVliegtuig(vliegtuig.ID!).then(() => {
+            const regCall = (vliegtuig.CALLSIGN) ? `${vliegtuig.REGISTRATIE} (${vliegtuig.CALLSIGN})` : vliegtuig.REGISTRATIE;
+            this.success = {
+                titel: "Vliegtuigen",
+                beschrijving: regCall + " is verwijderd"
+            }
+            this.closePopup();
+        }).catch(e => {
+            this.error = e;
+        })
+    }
+
+    // de vliegtuig is weer terug, haal de markering 'verwijderd' weg
+    Herstellen(vliegtuig: HeliosVliegtuig) {
+        this.vliegtuigenService.restoreVliegtuig(vliegtuig.ID!).then(() => {
+            const regCall = (vliegtuig.CALLSIGN) ? `${vliegtuig.REGISTRATIE} (${vliegtuig.CALLSIGN})` : vliegtuig.REGISTRATIE;
+            this.success = {
+                titel: "Vliegtuigen",
+                beschrijving: regCall + " is weer beschikbaar"
+            }
+            this.closePopup();
+        });
     }
 }

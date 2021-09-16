@@ -124,7 +124,16 @@
             <div class="excel">
                 <img class="logo" src="/assets/img/excel-logo.png" (click)="this.exportLogboek()"/>
             </div>
-            <app-vlieger-logboek [VliegerID]="lidData.ID"></app-vlieger-logboek>
+            <app-vlieger-logboek [VliegerID]="lidData.ID" [VerwijderMode]="verwijderMode"></app-vlieger-logboek>
+            <div class="toolbar">
+                <app-icon-button class="toolbarBtn"
+                                 tekst="Toevoegen"
+                                 iconNaam="far PlusSquare" (btnClicked)="addStart()"
+                                 btnColor="btn-primary"></app-icon-button>
+                <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
+                                 btnColor="btn-secondary"
+                                 (btnClicked)="verwijderMode = !verwijderMode"></app-icon-button>
+            </div>
         </div>
     </div>
 </app-modal>

@@ -27,3 +27,13 @@
     height: 35px;
   }
 }
+
+.toolbar {
+  position: absolute;
+  z-index: 5;
+  margin-top: -30px;    // over grid footer heen leggen
+}
+
+.toolbarBtn {
+  margin-right: 20px;
+}

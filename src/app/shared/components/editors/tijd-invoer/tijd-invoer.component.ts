@@ -8,7 +8,7 @@ import {NgbTypeaheadConfig} from '@ng-bootstrap/ng-bootstrap';
 import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import {getSunrise, getSunset} from 'sunrise-sunset-js';
 import {DateTime} from 'luxon';
-import {ErrorMessage} from '../../../../types/Utils';
+import {ErrorMessage, SuccessMessage} from '../../../../types/Utils';
 import {PegasusConfigService} from "../../../../services/shared/pegasus-config.service";
 
 enum TypeTijdInvoer {
@@ -30,6 +30,7 @@ export class TijdInvoerComponent {
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @ViewChild('tijdInvoerElement') tijdInvoerElement: ElementRef;
 
+    success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
     start: HeliosStart;
 
@@ -144,13 +145,43 @@ export class TijdInvoerComponent {
 
         if (this.Invoer == TypeTijdInvoer.Starttijd) {
             this.start.STARTTIJD = tijd;
-            this.OpslaanStarttijd.emit(this.start);
+            this.opslaanStartTijd(this.start);
         }
         else {
             this.start.LANDINGSTIJD = tijd;
-            this.OpslaanLandingstijd.emit(this.start);
+            this.opslaanLandingsTijd(this.start);
         }
     }
+
+    // De starttijd is ingevoerd/aangepast. Opslaan van de starttijd
+    opslaanStartTijd(start: HeliosStart) {
+        this.startlijstService.startTijd(start.ID as number, start.STARTTIJD as string).then((s) => {
+            const b = (s.STARTTIJD) ? `Starttijd ${s.STARTTIJD} opgeslagen` : 'Starttijd verwijderd'
+            this.success = {
+                titel: "Startlijst",
+                beschrijving: b
+            }
+            this.closePopup();
+        }).catch(e => {
+            this.error = e;
+        });
+    }
+
+    // De landingstijd is ingevoerd/aangepast. Opslaan van de landingstijd
+    opslaanLandingsTijd(start: HeliosStart) {
+        this.startlijstService.landingsTijd(start.ID as number, start.LANDINGSTIJD as string).then((s) =>
+        {
+            const b = (s.LANDINGSTIJD) ? `Landingstijd ${s.LANDINGSTIJD} opgeslagen` : 'Landingstijd verwijderd'
+            this.success = {
+                titel: "Startlijst",
+                beschrijving: b
+            }
+            this.closePopup();
+        }).catch(e => {
+            this.error = e;
+        });
+    }
+
 
     // De eerste tjd
     vanTijd(): Date {
@@ -257,7 +288,6 @@ export class TijdInvoerComponent {
             this.opslaan();
 
         }
-
         event.preventDefault();
     }
 

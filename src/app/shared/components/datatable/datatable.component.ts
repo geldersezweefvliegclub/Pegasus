@@ -45,6 +45,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
 
     private api: GridApi;
     private columnStateTimer: number | null = null;
+    private storeState: boolean = false;                 // opslaan van breedte
 
     constructor(private readonly storageService: StorageService) {
     }
@@ -111,6 +112,8 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     StoreColumnState() {
+        this.api.sizeColumnsToFit();
+
         if (this.id) {
             let indeling = this.options.columnApi?.getColumnState();
             this.storageService.opslaan(this.id, indeling, -1)

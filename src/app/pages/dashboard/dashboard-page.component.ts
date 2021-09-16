@@ -51,6 +51,8 @@ export class DashboardPageComponent implements OnInit {
     @ViewChild('logboekPopup') private popupLogboek: ModalComponent;
     @ViewChild('dienstenPopup') private popupDiensten: ModalComponent;
 
+    verwijderMode: boolean = false;
+
     constructor(private readonly ledenService: LedenService,
                 private readonly loginService: LoginService,
                 private readonly typesService: TypesService,

@@ -19,6 +19,7 @@ import {LedenService} from '../../../../services/apiservice/leden.service';
 import {AanwezigLedenService} from '../../../../services/apiservice/aanwezig-leden.service';
 import {SharedService} from '../../../../services/shared/shared.service';
 import {DaginfoService} from '../../../../services/apiservice/daginfo.service';
+import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
 
 @Component({
     selector: 'app-start-editor',
@@ -26,11 +27,6 @@ import {DaginfoService} from '../../../../services/apiservice/daginfo.service';
     styleUrls: ['./start-editor.component.scss']
 })
 export class StartEditorComponent implements OnInit {
-    @Output() add: EventEmitter<HeliosStart> = new EventEmitter<HeliosStart>();
-    @Output() update: EventEmitter<HeliosStart> = new EventEmitter<HeliosStart>();
-    @Output() delete: EventEmitter<HeliosStart> = new EventEmitter<HeliosStart>();
-    @Output() restore: EventEmitter<HeliosStart> = new EventEmitter<HeliosStart>();
-
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
     start: HeliosStart = {};
@@ -65,6 +61,9 @@ export class StartEditorComponent implements OnInit {
     isRestoreMode: boolean = false;
     formTitel: string = "";
 
+    success: SuccessMessage | undefined;
+    error: ErrorMessage | undefined;
+
     constructor(
         private readonly startlijstService: StartlijstService,
         private readonly vliegtuigenService: VliegtuigenService,
@@ -73,39 +72,12 @@ export class StartEditorComponent implements OnInit {
         private readonly aanwezigLedenService: AanwezigLedenService,
         private readonly typesService: TypesService,
         private readonly daginfoService: DaginfoService,
-        private readonly sharedService: SharedService)
-    {}
+        private readonly sharedService: SharedService) {
+    }
 
     ngOnInit(): void {
         this.typesService.getTypes(5).then(types => this.startMethodeTypes = types);
         this.typesService.getTypes(9).then(types => this.veldenTypes$ = of(types));
-    }
-
-    openPopup(id: number | null) {
-        // Alle vliegtuigen ophalen
-        this.vliegtuigenService.getVliegtuigen().then((dataset) => {
-            this.vliegtuigen = dataset;
-        });
-
-        // nu alle leden ophalen en in goede formaat zetten
-        this.ledenService.getLeden().then((dataset) => {
-            this.leden = dataset;
-        });
-        /*
-        this.ledenService.getLeden().then((dataset) => {
-            for (let i = 0; i < dataset.length; i++) {
-                this.leden.push(
-                    {
-                        LID_ID: dataset[i].ID,
-                        NAAM: dataset[i].NAAM,
-                        LIDTYPE_ID: dataset[i].LIDTYPE_ID,
-                        VOORKEUR_VLIEGTUIG_TYPE: "",
-                        OVERLAND_VLIEGTUIG_ID: -1
-                    });
-            }
-        });
-
-         */
 
         // de datum zoals die in de kalender gekozen is, we halen dan de dag afhankelijke gegevens op
         this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
@@ -143,7 +115,33 @@ export class StartEditorComponent implements OnInit {
                 }
             });
         })
+    }
 
+    openPopup(id: number | null) {
+        // Alle vliegtuigen ophalen
+        this.vliegtuigenService.getVliegtuigen().then((dataset) => {
+            this.vliegtuigen = dataset;
+        });
+
+        // nu alle leden ophalen en in goede formaat zetten
+        this.ledenService.getLeden().then((dataset) => {
+            this.leden = dataset;
+        });
+        /*
+        this.ledenService.getLeden().then((dataset) => {
+            for (let i = 0; i < dataset.length; i++) {
+                this.leden.push(
+                    {
+                        LID_ID: dataset[i].ID,
+                        NAAM: dataset[i].NAAM,
+                        LIDTYPE_ID: dataset[i].LIDTYPE_ID,
+                        VOORKEUR_VLIEGTUIG_TYPE: "",
+                        OVERLAND_VLIEGTUIG_ID: -1
+                    });
+            }
+        });
+
+         */
 
         if (id) {
             this.formTitel = 'Start bewerken';
@@ -290,20 +288,73 @@ export class StartEditorComponent implements OnInit {
 
     uitvoeren() {
         if (this.isRestoreMode) {
-            this.restore.emit(this.start);
+            this.Herstellen(this.start);
         }
 
         if (this.isVerwijderMode) {
-            this.delete.emit(this.start);
+            this.Verwijderen(this.start);
         }
 
         if (!this.isVerwijderMode && !this.isRestoreMode) {
             if (this.start.ID) {
-                this.update.emit(this.start);
+                this.Aanpassen(this.start);
             } else {
-                this.add.emit(this.start);
+                this.Toevoegen(this.start);
             }
         }
+    }
+
+    // nieuwe start is ingevoerd, nu opslaan
+    Toevoegen(start: HeliosStart) {
+        this.startlijstService.addStart(start).then((s) => {
+            this.success = {
+                titel: "Startlijst",
+                beschrijving: `Vlucht #${s.DAGNUMMER} is toegevoegd`
+            }
+            this.closePopup();
+        }).catch(e => {
+            this.error = e;
+        })
+    }
+
+    // bestaande start is aangepast, nu opslaan
+    Aanpassen(start: HeliosStart) {
+        this.startlijstService.updateStart(start).then(() => {
+            this.success = {
+                titel: "Startlijst",
+                beschrijving: `Vlucht #${start.DAGNUMMER} is aangepast`
+            }
+
+            this.closePopup();
+        }).catch(e => {
+            this.error = e;
+        })
+    }
+
+    // markeer een start als verwijderd
+    Verwijderen(start: HeliosStart) {
+        this.startlijstService.deleteStart(start.ID!).then(() => {
+            this.success = {
+                titel: "Startlijst",
+                beschrijving: `Vlucht #${start.DAGNUMMER} is verwijderd`
+            }
+            this.closePopup();
+        }).catch(e => {
+            this.error = e;
+        });
+    }
+
+    // de start moet hersteld worden, haal de markering 'verwijderd' weg
+    Herstellen(start: HeliosStart) {
+        this.startlijstService.restoreStart(start.ID!).then(() => {
+            this.success = {
+                titel: "Startlijst",
+                beschrijving: `Vlucht #${start.DAGNUMMER} is hersteld`
+            }
+            this.closePopup();
+        }).catch(e => {
+            this.error = e;
+        });
     }
 
     omwisselen() {
