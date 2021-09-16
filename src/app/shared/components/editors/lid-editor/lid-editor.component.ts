@@ -69,6 +69,8 @@ export class LidEditorComponent implements OnInit {
             try {
                 this.ledenService.getLid(this.lidID).then((lid: HeliosLid) => {
                     this.lid = lid;
+
+                    // gebruik twee locale variable voor datum ingave
                     this.MedicalDatum = this.converteerDatumNaarNgbDate(lid.MEDICAL);
                     this.GeboorteDatum = this.converteerDatumNaarNgbDate(lid.GEBOORTE_DATUM);
                     this.avatar = lid.AVATAR;
@@ -96,6 +98,7 @@ export class LidEditorComponent implements OnInit {
             this.lid.WACHTWOORD = this.wachtwoord;
         }
 
+        // en nu de twee locale variablen terug in het object zetten
         if (this.GeboorteDatum != null) {
             this.lid.GEBOORTE_DATUM = this.converteerDatumNaarISO(this.GeboorteDatum);
         }
