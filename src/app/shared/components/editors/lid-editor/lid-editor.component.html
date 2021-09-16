@@ -89,8 +89,8 @@
                                     <input name="geboortedatum" class="form-control" placeholder="dd-mm-yyyy"
                                            ngbDatepicker #d="ngbDatepicker"
                                            id="geboortedatum"
-                                           [value]="lid.GEBOORTE_DATUM"
-                                           (dateSelect)="lid.GEBOORTE_DATUM = converteerDatumNaarISO($event)"
+                                           [ngModel]="GeboorteDatum"
+                                           (dateSelect) = "GeboorteDatum = $event"
                                     >
                                     <div class="input-group-append">
                                         <app-icon-button iconNaam="far Calendar" (btnClicked)="d.toggle()"
@@ -142,8 +142,8 @@
                                     <input name="MEDICAL" class="form-control" placeholder="dd-mm-yyyy"
                                            ngbDatepicker #medical="ngbDatepicker"
                                            id="MEDICAL"
-                                           [value]="lid.MEDICAL"
-                                           (dateSelect)="lid.MEDICAL = this.converteerDatumNaarISO($event)"
+                                           [ngModel]="MedicalDatum"
+                                           (dateSelect) = "MedicalDatum = $event"
                                     >
                                     <div class="input-group-append">
                                         <app-icon-button iconNaam="far Calendar" (btnClicked)="medical.toggle()"

@@ -1,19 +1,19 @@
 import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
+import {NgbDate, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
 import {DateTime} from 'luxon';
+import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {faEye, faEyeSlash, faInfo, faInfoCircle, faUser} from '@fortawesome/free-solid-svg-icons';
 import {TypesService} from '../../../../services/apiservice/types.service';
 import {HeliosLid, HeliosType} from '../../../../types/Helios';
 import {LedenService} from '../../../../services/apiservice/leden.service';
-import {ImageService} from '../../../../services/apiservice/image.service';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {LoginService} from "../../../../services/apiservice/login.service";
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
+import {NgbDateFRParserFormatter} from "../../../ngb-date-fr-parser-formatter";
 
 @Component({
     selector: 'app-lid-editor',
     templateUrl: './lid-editor.component.html',
-    styleUrls: ['./lid-editor.component.scss']
+    styleUrls: ['./lid-editor.component.scss'],
+    providers: [{provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter}]
 })
 export class LidEditorComponent implements OnInit {
     @Input() lidID: number;
@@ -24,6 +24,7 @@ export class LidEditorComponent implements OnInit {
     @Output() opslaanAvatar: EventEmitter<string> = new EventEmitter<string>();
 
     lid: HeliosLid = {};
+
     types: HeliosType[];
 
     wachtwoordVerborgen: boolean = true;
@@ -40,6 +41,9 @@ export class LidEditorComponent implements OnInit {
     avatar: string | null | undefined;
 
     isLoading: boolean = false;
+
+    MedicalDatum: NgbDate | null;
+    GeboorteDatum: NgbDate | null;
 
     constructor(
         private readonly typeService: TypesService,
@@ -65,6 +69,8 @@ export class LidEditorComponent implements OnInit {
             try {
                 this.ledenService.getLid(this.lidID).then((lid: HeliosLid) => {
                     this.lid = lid;
+                    this.MedicalDatum = this.converteerDatumNaarNgbDate(lid.MEDICAL);
+                    this.GeboorteDatum = this.converteerDatumNaarNgbDate(lid.GEBOORTE_DATUM);
                     this.avatar = lid.AVATAR;
                     this.isLoading = false;
                 });
@@ -75,10 +81,9 @@ export class LidEditorComponent implements OnInit {
         } else {
             this.titel = 'Lid aanmaken';
             this.subtitel = 'Toevoegen van een nieuw lid';
-            this.lid = {
-                GEBOORTE_DATUM: '',
-                MEDICAL: ''
-            };
+
+            this.MedicalDatum = null;
+            this.GeboorteDatum = null;
         }
     }
 
@@ -91,6 +96,20 @@ export class LidEditorComponent implements OnInit {
             this.lid.WACHTWOORD = this.wachtwoord;
         }
 
+        if (this.GeboorteDatum != null) {
+            this.lid.GEBOORTE_DATUM = this.converteerDatumNaarISO(this.GeboorteDatum);
+        }
+        else {
+            this.lid.GEBOORTE_DATUM = undefined;
+        }
+
+        if (this.MedicalDatum != null) {
+            this.lid.MEDICAL = this.converteerDatumNaarISO(this.MedicalDatum);
+        }
+        else {
+            this.lid.MEDICAL = undefined;
+        }
+
         // nu opslaan van de data
         this.opslaan.emit(this.lid);
     }
@@ -98,6 +117,14 @@ export class LidEditorComponent implements OnInit {
     converteerDatumNaarISO($event: NgbDate): string {
         const unformatted = DateTime.fromObject($event);
         return unformatted.isValid ? unformatted.toISODate().toString() : '';
+    }
+
+    converteerDatumNaarNgbDate(datum: string | undefined): NgbDate|null {
+        if (datum) {
+            return NgbDate.from(DateTime.fromSQL(datum));
+        }
+        else
+            return null;
     }
 
     verbergWachtwoord() {
