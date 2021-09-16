@@ -86,7 +86,14 @@ export class TracksComponent implements OnInit {
                     month: jaarMaand.month,
                     day: 1
                 })
-            })
+            });
+
+            // Als tracks zijn aangepast, moeten we grid opnieuw laden
+            this.sharedService.heliosEventFired.subscribe(ev => {
+                if (ev.tabel == "Startlijst") {
+                    this.opvragen();
+                }
+            });
 
             this.ledenService.getLeden(false).then((dataset) => {
                 this.leden = dataset;
@@ -162,69 +169,6 @@ export class TracksComponent implements OnInit {
             });
         }, 400);
     }
-
-    // opslaan van de data van een nieuw vliegtuig
-    Toevoegen(track: HeliosTrack) {
-        this.trackService.addTrack(track).then(() => {
-            this.success = {
-                titel: "Track",
-                beschrijving: "Bericht is toegevoegd"
-            }
-
-            this.opvragen();
-            this.trackEditor.closePopup();
-        }).catch(e => {
-            this.error = e;
-        })
-    }
-
-    // bestaande track is aangepast. Opslaan van de data
-    Aanpassen(track: HeliosTrack) {
-        this.trackService.updateTrack(track).then(() => {
-            this.success = {
-                titel: "Track",
-                beschrijving: "Bericht is gewijzigd"
-            }
-
-            this.opvragen();
-            this.trackEditor.closePopup();
-        }).catch(e => {
-            this.error = e;
-        })
-    }
-
-    // markeer een track als verwijderd
-    Verwijderen(track: HeliosTrack) {
-        this.trackService.deleteTrack(track.ID!).then(() => {
-            this.deleteMode = false;
-            this.trashMode = false;
-
-            this.success = {
-                titel: "Track",
-                beschrijving: "Bericht is verwijderd"
-            }
-
-            this.opvragen();
-            this.trackEditor.closePopup();
-        });
-    }
-
-    // de track herstellen, haal de markering 'verwijderd' weg
-    Herstellen(track: HeliosTrack) {
-        this.trackService.restoreTrack(track.ID!).then(() => {
-            this.deleteMode = false;
-            this.trashMode = false;
-
-            this.success = {
-                titel: "Track",
-                beschrijving: "Bericht is weer beschikbaar"
-            }
-
-            this.opvragen();
-            this.trackEditor.closePopup();
-        });
-    }
-
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.hasOwnProperty("VliegerID")) {

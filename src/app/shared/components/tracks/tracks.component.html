@@ -144,7 +144,4 @@
 </div>
 
 
-<app-track-editor *ngIf="this.magToevoegen || this.magWijzigen || this.magVerwijderen"
-                  (add)="Toevoegen($event)" (update)="Aanpassen($event)" (delete)="Verwijderen($event)"
-                  (restore)="Herstellen($event)">
-</app-track-editor>
+<app-track-editor *ngIf="this.magToevoegen || this.magWijzigen || this.magVerwijderen"></app-track-editor>

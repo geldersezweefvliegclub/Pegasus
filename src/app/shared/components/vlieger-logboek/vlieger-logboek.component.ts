@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {ColDef} from "ag-grid-community";
+import {ColDef, RowDoubleClickedEvent} from "ag-grid-community";
 import {HeliosLogboekDataset, HeliosStart, HeliosStartDataset, HeliosTrack} from "../../../types/Helios";
 import {DateTime} from "luxon";
 import {Subscription} from "rxjs";
@@ -17,6 +17,7 @@ import {TrackEditorComponent} from "../editors/track-editor/track-editor.compone
 import {TracksService} from "../../../services/apiservice/tracks.service";
 import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
 import {StartEditorComponent} from "../editors/start-editor/start-editor.component";
+import {DeleteActionComponent} from "../datatable/delete-action/delete-action.component";
 
 @Component({
     selector: 'app-vlieger-logboek',
@@ -26,7 +27,7 @@ import {StartEditorComponent} from "../editors/start-editor/start-editor.compone
 
 export class VliegerLogboekComponent implements OnInit, OnChanges {
     @Input() VliegerID: number;
-    @Input() VerwijderMode: number;
+    @Input() deleteMode: boolean;
 
     @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
     @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
@@ -74,23 +75,24 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
         {field: 'DUUR', headerName: 'Duur', sortable: true, comparator: tijdSort},
         {field: 'OPMERKINGEN', headerName: 'Opmerkingen', sortable: true}
     ];
+    columns: ColDef[] = this.dataColumns;
 
     // kolom om vlieger track aan te maken
-    aanmakenTrackColumn: ColDef = {
+    aanmakenTrackColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 100,
         initialWidth: 100,
         resizable: false,
-        suppressSizeToFit:true,
+        suppressSizeToFit: true,
         hide: false,
         cellClass: "geenDots",
         cellRenderer: 'trackRender', headerName: 'Tracks', sortable: false,
         cellRendererParams: {
-            onTrackClicked: (LID_ID: number, START_ID: number, NAAM: string, TEKST:string) => {
+            onTrackClicked: (LID_ID: number, START_ID: number, NAAM: string, TEKST: string) => {
                 this.openTrackEditor(LID_ID, START_ID, NAAM, TEKST);
             }
         },
-    };
+    }];
 
     // kolom om record te verwijderen
     deleteColumn: ColDef[] = [{
@@ -98,7 +100,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
         maxWidth: 100,
         initialWidth: 100,
         resizable: false,
-        suppressSizeToFit:true,
+        suppressSizeToFit: true,
         hide: false,
         cellRenderer: 'deleteAction', headerName: '', sortable: false,
         cellRendererParams: {
@@ -114,12 +116,14 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
         trackRender: TrackRenderComponent,
         startTijdRender: StarttijdRenderComponent,
         landingsTijdRender: LandingstijdRenderComponent,
+        deleteAction: DeleteActionComponent,
     };
 
     constructor(private readonly startlijstService: StartlijstService,
                 private readonly trackService: TracksService,
                 private readonly sharedService: SharedService,
-                private readonly loginService: LoginService) {}
+                private readonly loginService: LoginService) {
+    }
 
     ngOnInit(): void {
         // de datum zoals die in de kalender gekozen is
@@ -139,18 +143,14 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
             }
         });
 
-        // toevoegen van add track kolom
-        let ui = this.loginService.userInfo?.Userinfo;
-        if (ui?.isInstructeur || ui?.isCIMT || ui?.isBeheerder) {
-            this.dataColumns.push(this.aanmakenTrackColumn);
-        }
+        this.kolomDefinitie();
     }
 
     // opvragen van het vlieger logboek
-    opvragen():void {
+    opvragen(): void {
         if (this.datum) {
-            const startDatum: DateTime = DateTime.fromObject( {year: this.datum.year, month: 1, day: 1});
-            const eindDatum: DateTime = DateTime.fromObject( {year: this.datum.year, month: 12, day: 31});
+            const startDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 1, day: 1});
+            const eindDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 12, day: 31});
 
             this.startlijstService.getLogboek(this.VliegerID, startDatum, eindDatum).then((dataset) => {
                 this.data = dataset;
@@ -160,8 +160,13 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
         }
     }
 
+    // openen van popup om bestaande start te kunnen aanpassen
+    openStartEditor(event?: RowDoubleClickedEvent) {
+        this.startEditor.openPopup(event?.data.ID);
+    }
+
     // open de track editor om nieuwe track toe te voegen. Edit opent als popup
-    private openTrackEditor(LID_ID: number, START_ID: number, NAAM: string, TEKST:string) {
+    private openTrackEditor(LID_ID: number, START_ID: number, NAAM: string, TEKST: string) {
         this.trackEditor.openPopup(null, LID_ID, START_ID, NAAM, TEKST);
     }
 
@@ -171,9 +176,28 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
         this.trackEditor.closePopup();
     }
 
+    // Welke kolommen moet worden getoond in het grid
+    kolomDefinitie() {
+        const ui = this.loginService.userInfo?.Userinfo;
+
+        this.columns = this.dataColumns;
+        if (!this.deleteMode) {
+            // toevoegen van add track kolom
+            if (ui?.isInstructeur || ui?.isCIMT || ui?.isBeheerder) {
+                this.columns = this.aanmakenTrackColumn.concat(this.dataColumns);
+            }
+        } else {
+            this.columns = this.deleteColumn.concat(this.dataColumns);
+        }
+    }
+
     ngOnChanges(changes: SimpleChanges) {
         if (changes.hasOwnProperty("VliegerID")) {
             this.opvragen()
+        }
+
+        if (changes.hasOwnProperty("deleteMode")) {
+            this.kolomDefinitie();
         }
     }
 }

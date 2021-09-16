@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {
   HeliosAanwezigLedenDataset,
   HeliosLedenDataset,
@@ -79,6 +79,16 @@ export class StartEditorComponent implements OnInit {
         this.typesService.getTypes(5).then(types => this.startMethodeTypes = types);
         this.typesService.getTypes(9).then(types => this.veldenTypes$ = of(types));
 
+        // Alle vliegtuigen ophalen
+        this.vliegtuigenService.getVliegtuigen().then((dataset) => {
+            this.vliegtuigen = dataset;
+        });
+
+        // nu alle leden ophalen en in goede formaat zetten
+        this.ledenService.getLeden().then((dataset) => {
+            this.leden = dataset;
+        });
+
         // de datum zoals die in de kalender gekozen is, we halen dan de dag afhankelijke gegevens op
         this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
             this.datum = DateTime.fromObject({
@@ -118,36 +128,11 @@ export class StartEditorComponent implements OnInit {
     }
 
     openPopup(id: number | null) {
-        // Alle vliegtuigen ophalen
-        this.vliegtuigenService.getVliegtuigen().then((dataset) => {
-            this.vliegtuigen = dataset;
-        });
-
-        // nu alle leden ophalen en in goede formaat zetten
-        this.ledenService.getLeden().then((dataset) => {
-            this.leden = dataset;
-        });
-        /*
-        this.ledenService.getLeden().then((dataset) => {
-            for (let i = 0; i < dataset.length; i++) {
-                this.leden.push(
-                    {
-                        LID_ID: dataset[i].ID,
-                        NAAM: dataset[i].NAAM,
-                        LIDTYPE_ID: dataset[i].LIDTYPE_ID,
-                        VOORKEUR_VLIEGTUIG_TYPE: "",
-                        OVERLAND_VLIEGTUIG_ID: -1
-                    });
-            }
-        });
-
-         */
-
         if (id) {
             this.formTitel = 'Start bewerken';
             this.haalStartOp(id);
         } else {
-            this.formTitel = 'Start aanmaken';
+            this.formTitel = `Start aanmaken ${this.datum.day}-${this.datum.month}-${this.datum.year}`;
             this.start = {
                 ID: undefined,
                 DATUM: this.datum.toISODate(),
@@ -212,7 +197,6 @@ export class StartEditorComponent implements OnInit {
         this.gekozenVliegtuig = this.vliegtuigen.find(vliegtuig => vliegtuig.ID == id) as HeliosVliegtuigenDataset;
 
         this.startMethodeTypesFiltered = [];
-
         if (this.gekozenVliegtuig) {
             // 501 = Slepen
             // 550 = Lierstart

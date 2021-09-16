@@ -49,7 +49,7 @@ export class TrackRenderComponent implements AgRendererComponent {
         const datum = this.params.data.DATUM.split('-')[2] + "-" + this.params.data.DATUM.split('-')[1] + "-" + this.params.data.DATUM.split('-')[0];
 
         let tekst = "Betreft: Een #STARTMETHODE# met de #REG_CALL# op #DATUM# om #STARTTIJD# met een duur van #DUUR# (hh:mm) \n\n";
-        tekst = tekst.replace(/#STARTMETHODE#/, this.params.data.STARTMETHODE);
+        tekst = tekst.replace(/#STARTMETHODE#/, (this.params.data.STARTMETHODE) ? this.params.data.STARTMETHODE : "start");
         tekst = tekst.replace(/#REG_CALL#/, this.params.data.REG_CALL);
         tekst = tekst.replace(/#DATUM#/, datum);
         tekst = tekst.replace(/#STARTTIJD#/, this.params.data.STARTTIJD);

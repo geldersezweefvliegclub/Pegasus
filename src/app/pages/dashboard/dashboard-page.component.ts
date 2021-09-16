@@ -19,6 +19,7 @@ import * as xlsx from "xlsx";
 import {StartlijstService} from "../../services/apiservice/startlijst.service";
 import {ProgressieService} from "../../services/apiservice/progressie.service";
 import {ErrorMessage, SuccessMessage} from "../../types/Utils";
+import {StartEditorComponent} from "../../shared/components/editors/start-editor/start-editor.component";
 
 @Component({
     selector: 'app-dashboard',
@@ -50,6 +51,7 @@ export class DashboardPageComponent implements OnInit {
 
     @ViewChild('logboekPopup') private popupLogboek: ModalComponent;
     @ViewChild('dienstenPopup') private popupDiensten: ModalComponent;
+    @ViewChild(StartEditorComponent) private startEditor: StartEditorComponent;
 
     verwijderMode: boolean = false;
 
@@ -104,6 +106,12 @@ export class DashboardPageComponent implements OnInit {
 
     toonDienstenGroot() {
         this.popupDiensten.open();
+    }
+
+
+    // Toevoegen van een start
+    addStart() {
+        this.startEditor.openPopup(null);
     }
 
     // export het vlieger logboek naar excel

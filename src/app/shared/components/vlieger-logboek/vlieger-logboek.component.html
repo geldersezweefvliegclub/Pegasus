@@ -5,14 +5,13 @@
     <app-datatable
             id="vliegerlogboekgrid"
             [rowData]="data"
-            [columnDefs]="dataColumns"
+            [columnDefs]="columns"
             [frameworkComponents]="frameworkComponents"
+            (rowDoubleClicked)="openStartEditor($event)"
             class="h-100">
     </app-datatable>
 
-    <app-tijd-invoer (OpslaanStarttijd)="opslaanStartTijd($event)"
-                     (OpslaanLandingstijd)="opslaanLandingsTijd($event)"></app-tijd-invoer>
-
-    <app-track-editor (add)="ToevoegenTrack($event)">
-    </app-track-editor>
+    <app-tijd-invoer></app-tijd-invoer>
+    <app-start-editor></app-start-editor>
+    <app-track-editor></app-track-editor>
 </div>

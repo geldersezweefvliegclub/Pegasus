@@ -66,7 +66,7 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         // bij update van VLIEGTUIG_ID doen we niets
         if (changes.hasOwnProperty("VLIEGTUIG_ID")) {
-            return;
+             return;
         }
 
         // Indien we sleepkist moeten invoeren, halen we de andere kisten weg uit het array
@@ -80,7 +80,7 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
             });
         }
 
-        if (this.aanwezig.length > 0) {
+        if (this.aanwezig.length > 0)  {
             this.vliegtuigenSelectie$ = of(this.aanwezig);
         } else {
             this.vliegtuigenSelectie$ = of(this.vliegtuigen);

@@ -124,7 +124,7 @@
             <div class="excel">
                 <img class="logo" src="/assets/img/excel-logo.png" (click)="this.exportLogboek()"/>
             </div>
-            <app-vlieger-logboek [VliegerID]="lidData.ID" [VerwijderMode]="verwijderMode"></app-vlieger-logboek>
+            <app-vlieger-logboek [VliegerID]="lidData.ID" [deleteMode]="verwijderMode"></app-vlieger-logboek>
             <div class="toolbar">
                 <app-icon-button class="toolbarBtn"
                                  tekst="Toevoegen"
@@ -137,6 +137,8 @@
         </div>
     </div>
 </app-modal>
+
+<app-start-editor></app-start-editor>
 
 <app-modal #dienstenPopup titel="Diensten van {{lidData.NAAM}}" *ngIf="lidData">
     <div body>

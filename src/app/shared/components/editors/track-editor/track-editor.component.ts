@@ -4,6 +4,7 @@ import {ModalComponent} from "../../modal/modal.component";
 import {TracksService} from "../../../../services/apiservice/tracks.service";
 import {LedenService} from "../../../../services/apiservice/leden.service";
 import {LoginService} from "../../../../services/apiservice/login.service";
+import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
 
 @Component({
     selector: 'app-track-editor',
@@ -11,11 +12,6 @@ import {LoginService} from "../../../../services/apiservice/login.service";
     styleUrls: ['./track-editor.component.scss']
 })
 export class TrackEditorComponent implements OnInit{
-    @Output() add: EventEmitter<HeliosTrack> = new EventEmitter<HeliosTrack>();
-    @Output() update: EventEmitter<HeliosTrack> = new EventEmitter<HeliosTrack>();
-    @Output() delete: EventEmitter<HeliosTrack> = new EventEmitter<HeliosTrack>();
-    @Output() restore: EventEmitter<HeliosTrack> = new EventEmitter<HeliosTrack>();
-
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
     leden: HeliosLedenDataset[] = [];
@@ -27,6 +23,10 @@ export class TrackEditorComponent implements OnInit{
     isRestoreMode: boolean = false;
     toonLidSelectie: boolean = false;
     formTitel: string;
+
+    success: SuccessMessage | undefined;
+    error: ErrorMessage | undefined;
+
 
     constructor(private readonly trackService: TracksService,
                 private readonly ledenService: LedenService,
@@ -40,7 +40,6 @@ export class TrackEditorComponent implements OnInit{
     }
 
     openPopup(id: number | null, LID_ID?: number, START_ID?: number, NAAM?: string, TEKST?:string) {
-
         this.toonLidSelectie = (id || LID_ID) ? false : true;
 
         if (id) {
@@ -99,20 +98,67 @@ export class TrackEditorComponent implements OnInit{
 
     uitvoeren() {
         if (this.isRestoreMode) {
-            this.restore.emit(this.track);
+            this.Herstellen(this.track);
         }
 
         if (this.isVerwijderMode) {
-            this.delete.emit(this.track);
+            this.Verwijderen(this.track);
         }
 
         if (!this.isVerwijderMode && !this.isRestoreMode) {
             if (this.track.ID) {
-                this.update.emit(this.track);
+                this.Aanpassen(this.track);
             } else {
-                this.add.emit(this.track);
+                this.Toevoegen(this.track);
             }
         }
+    }
+    // opslaan van de data van een nieuw vliegtuig
+    Toevoegen(track: HeliosTrack) {
+        this.trackService.addTrack(track).then(() => {
+            this.success = {
+                titel: "Track",
+                beschrijving: "Bericht is toegevoegd"
+            }
+            this.closePopup();
+        }).catch(e => {
+            this.error = e;
+        })
+    }
+
+    // bestaande track is aangepast. Opslaan van de data
+    Aanpassen(track: HeliosTrack) {
+        this.trackService.updateTrack(track).then(() => {
+            this.success = {
+                titel: "Track",
+                beschrijving: "Bericht is gewijzigd"
+            }
+            this.closePopup();
+        }).catch(e => {
+            this.error = e;
+        })
+    }
+
+    // markeer een track als verwijderd
+    Verwijderen(track: HeliosTrack) {
+        this.trackService.deleteTrack(track.ID!).then(() => {
+            this.success = {
+                titel: "Track",
+                beschrijving: "Bericht is verwijderd"
+            }
+            this.closePopup();
+        });
+    }
+
+    // de track herstellen, haal de markering 'verwijderd' weg
+    Herstellen(track: HeliosTrack) {
+        this.trackService.restoreTrack(track.ID!).then(() => {
+            this.success = {
+                titel: "Track",
+                beschrijving: "Bericht is weer beschikbaar"
+            }
+            this.closePopup();
+        });
     }
 
     lidGeselecteerd(id: number | undefined) {
