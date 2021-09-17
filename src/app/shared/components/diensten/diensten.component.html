@@ -1,4 +1,4 @@
-<table class="w-100" *ngIf="diensten.length > 0">
+<table class="w-100" *ngIf="diensten && diensten.length > 0">
     <tr class="headerRow">
     <th scope="col" class="datum">Datum</th>
     <th scope="col">Dienst</th>
@@ -24,7 +24,7 @@
     </tr>
 </table>
 
-<div *ngIf="diensten.length == 0">
+<div *ngIf="!diensten || diensten.length == 0">
     Er zijn momenteel geen diensten ingeroosterd
 </div>
 
