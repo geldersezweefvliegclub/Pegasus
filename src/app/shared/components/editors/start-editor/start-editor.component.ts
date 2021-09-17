@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {
   HeliosAanwezigLedenDataset,
   HeliosLedenDataset,
@@ -27,6 +27,7 @@ import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
     styleUrls: ['./start-editor.component.scss']
 })
 export class StartEditorComponent implements OnInit {
+    @Input() VliegerID: number;                                 // wordt gezet bij aanroep vanuit logboek
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
     start: HeliosStart = {};
@@ -138,7 +139,7 @@ export class StartEditorComponent implements OnInit {
                 DATUM: this.datum.toISODate(),
                 DAGNUMMER: undefined,
                 VLIEGTUIG_ID: undefined,
-                VLIEGER_ID: undefined,
+                VLIEGER_ID: (this.VliegerID) ? this.VliegerID : undefined,      // Vlieger ID is bekend als we vanuit logboek start toevoegen
                 INZITTENDE_ID: undefined,
                 VLIEGERNAAM: undefined,
                 INZITTENDENAAM: undefined,

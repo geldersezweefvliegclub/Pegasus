@@ -138,7 +138,7 @@
     </div>
 </app-modal>
 
-<app-start-editor></app-start-editor>
+<app-start-editor [VliegerID]="lidData.ID"></app-start-editor>
 
 <app-modal #dienstenPopup titel="Diensten van {{lidData.NAAM}}" *ngIf="lidData">
     <div body>
