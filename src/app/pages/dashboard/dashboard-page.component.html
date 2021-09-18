@@ -75,7 +75,10 @@
                         <fa-icon [icon]="iconExpand"></fa-icon>
                     </a>
                 </div>
-                <app-vlieger-logboek [VliegerID]="lidData.ID" *ngIf="lidData"></app-vlieger-logboek>
+                <app-vlieger-logboek *ngIf="lidData"
+                     id="vliegerlogboekgrid-klein"
+                    [VliegerID]="lidData.ID">
+                </app-vlieger-logboek>
             </app-pegasus-card>
         </div>
         <div class="col-3">
@@ -84,7 +87,8 @@
                               titel="Totalen {{datum.year}}"
                               subtitel="Per vliegtuig"
                               [icon]="iconPlane">
-                <app-vlieger-logboek-totalen [VliegerID]="lidData.ID" *ngIf="lidData"></app-vlieger-logboek-totalen>
+                <app-vlieger-logboek-totalen *ngIf="lidData"
+                        [VliegerID]="lidData.ID"></app-vlieger-logboek-totalen>
             </app-pegasus-card>
         </div>
     </div>
@@ -117,14 +121,17 @@
     </div>
 </app-pegasus-card>
 
-
-<app-modal #logboekPopup popupClass="popupLarge" titel="Logboek van {{lidData.NAAM}} voor" *ngIf="lidData">
+<app-modal #logboekPopup popupClass="popupLarge" titel="Logboek van {{lidData.NAAM}}" *ngIf="lidData">
     <div body>
         <div class="popupLargeWrapper">
             <div class="excel">
                 <img class="logo" src="/assets/img/excel-logo.png" (click)="this.exportLogboek()"/>
             </div>
-            <app-vlieger-logboek [VliegerID]="lidData.ID" [deleteMode]="verwijderMode"></app-vlieger-logboek>
+            <app-vlieger-logboek
+                    id="vliegerlogboekgrid-groot"
+                    Kolommen="OPMERKINGEN,VELD,STARTMETHODE"
+                    [VliegerID]="lidData.ID"
+                    [deleteMode]="verwijderMode"></app-vlieger-logboek>
             <div class="toolbar">
                 <app-icon-button class="toolbarBtn"
                                  tekst="Toevoegen"
@@ -137,6 +144,7 @@
         </div>
     </div>
 </app-modal>
+
 
 <app-start-editor [VliegerID]="lidData.ID"></app-start-editor>
 

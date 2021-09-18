@@ -533,6 +533,8 @@ export interface components {
       INZITTENDE_ID?: number;
       /** De manier van de start */
       STARTMETHODE?: string;
+      /** Vliegveld waar gestart is */
+      VELD?: string;
       /** De opmerkingen die ingevoerd zijn */
       OPMERKINGEN?: string;
     };

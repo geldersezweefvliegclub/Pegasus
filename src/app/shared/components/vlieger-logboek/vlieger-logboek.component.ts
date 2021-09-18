@@ -26,8 +26,10 @@ import {DeleteActionComponent} from "../datatable/delete-action/delete-action.co
 })
 
 export class VliegerLogboekComponent implements OnInit, OnChanges {
+    @Input() id: string;
     @Input() VliegerID: number;
     @Input() deleteMode: boolean;
+    @Input() Kolommen: string = "";
 
     @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
     @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
@@ -43,8 +45,9 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
         {field: 'DATUM', headerName: 'Datum', sortable: true, cellRenderer: 'datumRender'},
-        {field: 'REG_CALL', headerName: 'RegCall', sortable: true},
-        {field: 'STARTMETHODE', headerName: 'Start methode', sortable: true},
+        {field: 'REG_CALL', headerName: 'Vliegtuig', sortable: true},
+        {field: 'VELD', headerName: 'Veld', hide: true},
+        {field: 'STARTMETHODE', headerName: 'Start methode', hide: true, sortable: true},
         {field: 'VLIEGERNAAM', headerName: 'Vlieger', sortable: true, cellRenderer: 'naamRender'},
         {field: 'INZITTENDENAAM', headerName: 'Inzittende', sortable: true, cellRenderer: 'naamRender'},
         {
@@ -73,7 +76,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
             },
         },
         {field: 'DUUR', headerName: 'Duur', sortable: true, comparator: tijdSort},
-        {field: 'OPMERKINGEN', headerName: 'Opmerkingen', sortable: true}
+        {field: 'OPMERKINGEN', headerName: 'Opmerkingen', hide: true}
     ];
     columns: ColDef[] = this.dataColumns;
 
@@ -180,6 +183,15 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
     kolomDefinitie() {
         const ui = this.loginService.userInfo?.Userinfo;
 
+        const Sidx = this.dataColumns.findIndex((c) => c.field == "STARTMETHODE");
+        this.dataColumns[Sidx].hide = !this.Kolommen.includes("STARTMETHODE");
+
+        const Vidx = this.dataColumns.findIndex((c) => c.field == "VELD");
+        this.dataColumns[Vidx].hide = !this.Kolommen.includes("VELD");
+
+        const Oidx = this.dataColumns.findIndex((c) => c.field == "OPMERKINGEN");
+        this.dataColumns[Oidx].hide = !this.Kolommen.includes("OPMERKINGEN");;
+
         this.columns = this.dataColumns;
         if (!this.deleteMode) {
             // toevoegen van add track kolom
@@ -195,9 +207,6 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
         if (changes.hasOwnProperty("VliegerID")) {
             this.opvragen()
         }
-
-        if (changes.hasOwnProperty("deleteMode")) {
-            this.kolomDefinitie();
-        }
+        this.kolomDefinitie();
     }
 }

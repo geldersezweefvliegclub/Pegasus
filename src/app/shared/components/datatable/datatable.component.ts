@@ -34,7 +34,6 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         pagination: true,
         onRowDoubleClicked: this.onRowDoubleClicked.bind(this),
         onRowClicked: this.onRowSelected.bind(this)
-
     };
 
     defaultColDef: ColDef = {
@@ -42,10 +41,8 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         autoHeight: this.autoHeight,
         filter: 'agTextColumnFilter', // use 'text' leden-filter by default
     };
-
     private api: GridApi;
     private columnStateTimer: number | null = null;
-    private storeState: boolean = false;                 // opslaan van breedte
 
     constructor(private readonly storageService: StorageService) {
     }
@@ -69,7 +66,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         this.api = ready.api;
         this.api.setColumnDefs(this.columnDefs);
 
-        this.RestoreColumnState();
+        this.api.sizeColumnsToFit()
 
         // automatisch column aanpassen bij wijzigen window size
         if (this.sizeToFit) {
@@ -77,14 +74,18 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
                 this.api.sizeColumnsToFit();
             }
         }
-        this.columnStateTimer = window.setInterval(() => this.StoreColumnState(), 10000)
+        this.columnStateTimer = window.setInterval(() => {
+            this.api.sizeColumnsToFit()
+        }, 5000)
+    }
+
+    sizeColumnsToFit() {
+        this.api.sizeColumnsToFit();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         if (this.api) {
             this.api.setColumnDefs(this.columnDefs);
-            this.RestoreColumnState();
-
             this.api.setRowData(this.rowData);
         }
     }
@@ -95,28 +96,5 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
 
     onRowSelected(event: RowSelectedEvent) {
         this.rowSelected.emit(event);
-    }
-
-    RestoreColumnState() {
-        if (this.id) {
-            let indeling = this.storageService.ophalen(this.id);
-
-            if (indeling != null) {
-                this.options.columnApi?.applyColumnState({state: indeling, applyOrder: true});
-            }
-        }
-
-        if (this.sizeToFit) {
-            this.api.sizeColumnsToFit();
-        }
-    }
-
-    StoreColumnState() {
-        this.api.sizeColumnsToFit();
-
-        if (this.id) {
-            let indeling = this.options.columnApi?.getColumnState();
-            this.storageService.opslaan(this.id, indeling, -1)
-        }
     }
 }
