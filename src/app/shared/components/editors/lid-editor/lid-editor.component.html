@@ -25,11 +25,11 @@
                               [img]="avatar">
 
                 <div avatar>
-                    <app-image-crop (opslaan)="uploadFoto($event)" (cropped)="setAvatar($event)"
+                   <app-image-crop (opslaan)="uploadFoto($event)" (cropped)="setAvatar($event)"
                                     *ngIf="!this.isVerwijderMode && !this.isRestoreMode"></app-image-crop>
                 </div>
 
-                <fieldset [disabled]="isVerwijderMode || isRestoreMode">
+                <fieldset [disabled]="isVerwijderMode || isRestoreMode || isDisabled('BASIS')">
                     <div #persoonGroup="ngModelGroup" ngModelGroup="persoonGroup" appWachtwoordMatchValidator>
                         <div class="row">
                             <div class="col-5">
@@ -155,7 +155,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-2">
+                        <div class="row mt-2" *ngIf="isVisible('wachtwoorden')">
                             <div class="col-6">
                                 <label class="form-label" for="wachtwoord">
                                     Wachtwoord
@@ -313,7 +313,7 @@
                             </label>
                         </div>
                     </div>
-                    <div class="row mt-2">
+                    <div class="row mt-2" *ngIf="isVisible('betaald')">
                         <div class="col-6 mt-4">
                             <div>
                                 <input class="form-check-inline" type="checkbox" id="betaald" name="betaald"
@@ -328,7 +328,7 @@
                     <div class="row mt-3" *ngIf="toonSecret()">
                         <img class="QRcode" [src]="lid.SECRET">
                     </div>
-                    <div class="row mt-3">
+                    <div class="row mt-3" *ngIf="isVisible('limitaties')">
                         <div class="col-12">
                             <label class="form-label" for="limitaties"
                                    [ngClass]="disabledClass('limitaties')">Limitaties</label>

@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {NgbDate, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
 import {DateTime} from 'luxon';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
@@ -12,6 +12,11 @@ import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
 import {ImageService} from "../../../../services/apiservice/image.service";
 import {Router} from "@angular/router";
 import {StorageService} from "../../../../services/storage/storage.service";
+import {LedenFilterComponent} from "../../leden-filter/leden-filter.component";
+import {ImageCropComponent} from "../../image-crop/image-crop.component";
+import {AvatarComponent} from "../../avatar/avatar.component";
+import {ModalComponent} from "../../modal/modal.component";
+import {PegasusCardComponent} from "../../pegasus-card/pegasus-card.component";
 
 @Component({
     selector: 'app-lid-editor',
@@ -23,9 +28,6 @@ export class LidEditorComponent implements OnInit {
     @Input() lidID: number;
     @Input() isVerwijderMode: boolean = false;
     @Input() isRestoreMode: boolean = false;
-
-    @Output() opslaan: EventEmitter<HeliosLid> = new EventEmitter<HeliosLid>();
-    @Output() opslaanAvatar: EventEmitter<string> = new EventEmitter<string>();
 
     lid: HeliosLid = {};
     types: HeliosType[];
@@ -209,19 +211,19 @@ export class LidEditorComponent implements OnInit {
         this.wachtwoordVerborgen = !this.wachtwoordVerborgen;
         this.oogIcon = this.wachtwoordVerborgen ? faEye : faEyeSlash;
     }
-
     setAvatar($event: string) {
         this.avatar = $event;
         this.changeDetector.detectChanges();
     }
 
+
     // nu opslaan van de avatar
     uploadFoto(image: string) {
         this.setAvatar(image);
         try {
-            this.imageService.uploadFoto(this.lidID, image).then(() =>
-                this.success = { titel: "upload avatar", beschrijving: "Foto is succesvol opgeslagen"}
-            );
+            this.imageService.uploadFoto(this.lidID, image).then(() => {
+                this.success = {titel: "upload avatar", beschrijving: "Foto is succesvol opgeslagen"};
+            });
         }
         catch (e)
         {
@@ -248,6 +250,11 @@ export class LidEditorComponent implements OnInit {
         }
 
         switch (veld) {
+            case 'BASIS' : {
+                if (ui?.isBeheerder || ui?.isBeheerderDDWV || this.ikBenHetZelf())
+                    return false;
+                break;
+            }
             case 'googleAuth': {
                 return this.isgoogleAuthNodig();
             }
@@ -291,7 +298,7 @@ export class LidEditorComponent implements OnInit {
             }
 
             case 'limitaties': {
-                if (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT || ui?.isRooster) {
+                if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT || ui?.isRooster) {
                     return false;
                 }
                 break;
@@ -301,6 +308,39 @@ export class LidEditorComponent implements OnInit {
                 console.log("Veld " + veld + " niet in switch");
         }
         return true;
+    }
+
+    // Logica om te bepalen of je veld wel/niet mag zien
+    isVisible(veld: string) {
+        const ui = this.loginService.userInfo?.Userinfo;
+
+        switch (veld) {
+            case 'wachtwoorden': {
+                if (ui?.isBeheerder || ui?.isBeheerderDDWV || this.ikBenHetZelf()) {
+                    return true;
+                }
+                break;
+            }
+
+            case 'betaald': {
+                if (ui?.isBeheerder || ui?.isBeheerderDDWV || this.ikBenHetZelf()) {
+                    return true;
+                }
+                break;
+            }
+            case 'limitaties': {
+                if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT || ui?.isRooster || this.ikBenHetZelf()) {
+                    return true;
+                }
+                break;
+            }
+        }
+        return false;
+    }
+
+    ikBenHetZelf(): boolean
+    {
+        return this.loginService.userInfo?.LidData?.ID == this.lidID
     }
 
     // Als veld disabled is, dan extra class toevoegen voor label
