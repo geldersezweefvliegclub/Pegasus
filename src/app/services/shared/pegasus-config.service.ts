@@ -55,10 +55,21 @@ export class PegasusConfigService {
     public getAirport(): any {
         return this.pegasusConfig.airport;
     }
+
+    public getZelfIndelen(): any {
+        return this.pegasusConfig.zelfDienstIndelen;
+    }
 }
 
 export interface IPegasusConfig {
     url: string,
+
+    zelfDienstIndelen: [
+        {
+            TypeDienst: number,
+            ZelfIndelen: boolean
+        }
+    ]
 
     pvb: [{
         Type: string,           // Vliegtuig type

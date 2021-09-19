@@ -72,7 +72,7 @@
                                                 {{ (dagInRooster.Diensten[OCHTEND_DDI_TYPE_ID]) ? dagInRooster.Diensten[OCHTEND_DDI_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div *ngIf="isInstructeur && zelfIndelen && !dagInRooster.Diensten[OCHTEND_DDI_TYPE_ID]"
+                                        <div *ngIf="isInstructeur && zelfIndelen(OCHTEND_DDI_TYPE_ID) && !dagInRooster.Diensten[OCHTEND_DDI_TYPE_ID]"
                                              (click)="toekennenDienst(dagInRooster, OCHTEND_DDI_TYPE_ID, mijnID, mijnNaam)">
                                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                                         </div>
@@ -93,7 +93,7 @@
                                                 {{ (dagInRooster.Diensten[MIDDAG_DDI_TYPE_ID]) ? dagInRooster.Diensten[MIDDAG_DDI_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div *ngIf="isInstructeur && zelfIndelen && !dagInRooster.Diensten[MIDDAG_DDI_TYPE_ID]"
+                                        <div *ngIf="isInstructeur && zelfIndelen(MIDDAG_DDI_TYPE_ID) && !dagInRooster.Diensten[MIDDAG_DDI_TYPE_ID]"
                                              (click)="toekennenDienst(dagInRooster, MIDDAG_DDI_TYPE_ID, mijnID, mijnNaam)">
                                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                                         </div>
@@ -116,7 +116,7 @@
                                                 {{ (dagInRooster.Diensten[OCHTEND_INSTRUCTEUR_TYPE_ID]) ? dagInRooster.Diensten[OCHTEND_INSTRUCTEUR_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div *ngIf="isInstructeur && zelfIndelen && !dagInRooster.Diensten[OCHTEND_INSTRUCTEUR_TYPE_ID]"
+                                        <div *ngIf="isInstructeur && zelfIndelen(OCHTEND_INSTRUCTEUR_TYPE_ID) && !dagInRooster.Diensten[OCHTEND_INSTRUCTEUR_TYPE_ID]"
                                              (click)="toekennenDienst(dagInRooster, OCHTEND_INSTRUCTEUR_TYPE_ID, mijnID, mijnNaam)">
                                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                                         </div>
@@ -137,7 +137,7 @@
                                                 {{ (dagInRooster.Diensten[MIDDAG_INSTRUCTEUR_TYPE_ID]) ? dagInRooster.Diensten[MIDDAG_INSTRUCTEUR_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div *ngIf="isInstructeur && zelfIndelen && !dagInRooster.Diensten[MIDDAG_INSTRUCTEUR_TYPE_ID]"
+                                        <div *ngIf="isInstructeur && zelfIndelen(MIDDAG_INSTRUCTEUR_TYPE_ID) && !dagInRooster.Diensten[MIDDAG_INSTRUCTEUR_TYPE_ID]"
                                              (click)="toekennenDienst(dagInRooster, MIDDAG_INSTRUCTEUR_TYPE_ID, mijnID, mijnNaam)">
                                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                                         </div>
@@ -160,7 +160,7 @@
                                                 {{ (dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID]) ? dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div *ngIf="((isStartleider && zelfIndelen) || (isDDWV && dagInRooster.DDWV))  && !dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID]"
+                                        <div *ngIf="((isStartleider && zelfIndelen(OCHTEND_STARTLEIDER_TYPE_ID)) || (isDDWV && dagInRooster.DDWV))  && !dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID]"
                                              (click)="toekennenDienst(dagInRooster, OCHTEND_STARTLEIDER_TYPE_ID, mijnID, mijnNaam)">
                                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                                         </div>
@@ -181,7 +181,7 @@
                                                 {{ (dagInRooster.Diensten[MIDDAG_STARTLEIDER_TYPE_ID]) ? dagInRooster.Diensten[MIDDAG_STARTLEIDER_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div *ngIf="isStartleider && zelfIndelen && !dagInRooster.Diensten[MIDDAG_STARTLEIDER_TYPE_ID]"
+                                        <div *ngIf="isStartleider && zelfIndelen(MIDDAG_STARTLEIDER_TYPE_ID) && !dagInRooster.Diensten[MIDDAG_STARTLEIDER_TYPE_ID]"
                                              (click)="toekennenDienst(dagInRooster, MIDDAG_STARTLEIDER_TYPE_ID, mijnID, mijnNaam)">
                                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                                         </div>
@@ -204,7 +204,7 @@
                                                 {{ (dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID]) ? dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div *ngIf="((isLierist && zelfIndelen) || (isDDWV && dagInRooster.DDWV)) && !dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID]"
+                                        <div *ngIf="((isLierist && zelfIndelen(OCHTEND_LIERIST_TYPE_ID)) || (isDDWV && dagInRooster.DDWV)) && !dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID]"
                                              (click)="toekennenDienst(dagInRooster, OCHTEND_LIERIST_TYPE_ID, mijnID, mijnNaam)">
                                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                                         </div>
@@ -225,7 +225,7 @@
                                                 {{ (dagInRooster.Diensten[MIDDAG_LIERIST_TYPE_ID]) ? dagInRooster.Diensten[MIDDAG_LIERIST_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div *ngIf="isLierist && zelfIndelen && !dagInRooster.Diensten[MIDDAG_LIERIST_TYPE_ID]"
+                                        <div *ngIf="isLierist && zelfIndelen(MIDDAG_LIERIST_TYPE_ID) && !dagInRooster.Diensten[MIDDAG_LIERIST_TYPE_ID]"
                                              (click)="toekennenDienst(dagInRooster, MIDDAG_LIERIST_TYPE_ID, mijnID, mijnNaam)">
                                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                                         </div>
@@ -248,7 +248,7 @@
                                                 {{ (dagInRooster.Diensten[OCHTEND_HULPLIERIST_TYPE_ID]) ? dagInRooster.Diensten[OCHTEND_HULPLIERIST_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div *ngIf="isLierist && zelfIndelen && !dagInRooster.Diensten[OCHTEND_HULPLIERIST_TYPE_ID]"
+                                        <div *ngIf="isLierist && zelfIndelen(OCHTEND_HULPLIERIST_TYPE_ID) && !dagInRooster.Diensten[OCHTEND_HULPLIERIST_TYPE_ID]"
                                              (click)="toekennenDienst(dagInRooster, OCHTEND_HULPLIERIST_TYPE_ID, mijnID, mijnNaam)">
                                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                                         </div>
@@ -269,7 +269,7 @@
                                                 {{ (dagInRooster.Diensten[MIDDAG_HULPLIERIST_TYPE_ID]) ? dagInRooster.Diensten[MIDDAG_HULPLIERIST_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div *ngIf="isLierist && zelfIndelen && !dagInRooster.Diensten[MIDDAG_HULPLIERIST_TYPE_ID]"
+                                        <div *ngIf="isLierist && zelfIndelen(MIDDAG_HULPLIERIST_TYPE_ID) && !dagInRooster.Diensten[MIDDAG_HULPLIERIST_TYPE_ID]"
                                              (click)="toekennenDienst(dagInRooster, MIDDAG_HULPLIERIST_TYPE_ID, mijnID, mijnNaam)">
                                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                                         </div>

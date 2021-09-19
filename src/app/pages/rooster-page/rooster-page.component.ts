@@ -27,6 +27,7 @@ import * as xlsx from "xlsx";
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {TypesService} from "../../services/apiservice/types.service";
 import {JaarTotalenComponent} from "./jaar-totalen/jaar-totalen.component";
+import {PegasusConfigService} from "../../services/shared/pegasus-config.service";
 
 type HeliosLedenDatasetExtended = HeliosLedenDataset & {
     INGEDEELD_MAAND?: number
@@ -76,7 +77,6 @@ export class RoosterPageComponent implements OnInit {
     isInstructeur = false;
     isLierist = false;
     isDDWV = false;
-    zelfIndelen = true;          // ingelogd lid mag zichzelf maar 2x per maand indelen
 
     toonClubDDWV = 1;            // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
 
@@ -101,6 +101,7 @@ export class RoosterPageComponent implements OnInit {
                 private readonly ledenService: LedenService,
                 private readonly typesService: TypesService,
                 private readonly sharedService: SharedService,
+                private readonly configService: PegasusConfigService,
                 private readonly dienstenService: DienstenService,
                 private readonly roosterService: RoosterService) {
     }
@@ -126,6 +127,7 @@ export class RoosterPageComponent implements OnInit {
         this.isInstructeur = ui?.LidData?.INSTRUCTEUR as boolean;
         this.isDDWV = ui?.LidData?.DDWV_CREW as boolean;
 
+        this.toonTotalen = (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isCIMT || ui?.Userinfo?.isRooster) ? true : false;
 
         this.mijnID = (ui?.LidData?.ID) ? ui?.LidData?.ID.toString() : "-1";    // -1 mag nooit voorkomen, maar je weet het nooit
         this.mijnNaam = ui?.LidData?.NAAM as string;
@@ -166,11 +168,6 @@ export class RoosterPageComponent implements OnInit {
                     lid.INGEDEELD_MAAND = 0;
                 } else {
                     lid.INGEDEELD_MAAND = totalen[maandIndex].AANTAL;
-
-                    // je mag jezelf maar beperkt indelen, geldt niet voor roostermakers en beheerders
-                    if ((lid.ID!.toString() == this.mijnID) && (!this.magWijzigen)) {
-                        this.zelfIndelen = (lid.INGEDEELD_MAAND! >= this.MaxDienstenPerMaand) ? false : true;
-                    }
                 }
 
                 const jaarIndex = totalen.findIndex((maand => maand.LID_ID == lid.ID && maand.MAAND == null));    // maand = null = gehele jaar
@@ -444,11 +441,6 @@ export class RoosterPageComponent implements OnInit {
                 } else {
                     this.alleLeden[ledenIndex].INGEDEELD_MAAND! += 1;
                     this.alleLeden[ledenIndex].INGEDEELD_JAAR! += 1;
-
-                    // je mag jezelf maar beperkt indelen, geldt niet voor roostermakers en beheerders
-                    if ((this.alleLeden[ledenIndex].ID!.toString() == this.mijnID) && (!this.magWijzigen)) {
-                        this.zelfIndelen = (this.alleLeden[ledenIndex].INGEDEELD_MAAND! >= this.MaxDienstenPerMaand) ? false : true;
-                    }
                 }
             }
         } else {    // aanpassen bestaande dienst aanpassen
@@ -502,11 +494,6 @@ export class RoosterPageComponent implements OnInit {
             } else {
                 this.alleLeden[ledenIndex].INGEDEELD_MAAND! -= 1;
                 this.alleLeden[ledenIndex].INGEDEELD_JAAR! -= 1;
-
-                // je mag jezelf maar beperkt indelen, geldt niet voor roostermakers en beheerders
-                if ((this.alleLeden[ledenIndex].ID!.toString() == this.mijnID) && (!this.magWijzigen)) {
-                    this.zelfIndelen = (this.alleLeden[ledenIndex].INGEDEELD_MAAND! >= this.MaxDienstenPerMaand) ? false : true;
-                }
             }
         }
     }
@@ -682,6 +669,33 @@ export class RoosterPageComponent implements OnInit {
         return "??";
     }
 
+    private zelfIndelen(dienstType: number): boolean {
+        if (!this.alleLeden)        // Als leden nog niet geladen zijn, kunnen we onzelf ook niet indelen
+            return false;
+
+        const lid = this.alleLeden.find((l) => (l.ID?.toString() == this.mijnID));
+
+        if (!lid) {
+            return false;    // Dit mag nooit voorkomen
+        }
+
+        // je mag jezelf maar beperkt indelen, geldt niet voor roostermakers en beheerders
+        if (!this.magWijzigen && (lid.INGEDEELD_MAAND! >= this.MaxDienstenPerMaand)) {
+            return false;
+        }
+
+        if (this.configService.getZelfIndelen()) {
+            const indeelbareDienst = this.configService.getZelfIndelen().find((d: any) => (d.TypeDienst == dienstType));
+
+            // Dienst is bekend in config, return of je jezelf mag Indelen
+            if (indeelbareDienst) {
+                return indeelbareDienst.ZelfIndelen;
+            }
+        }
+
+        return true;
+    }
+
     magVerwijderen(dienstData: HeliosDienstenDataset): boolean {
         if (!dienstData) {
             return false;       // er is niets te verwijderen
@@ -694,6 +708,15 @@ export class RoosterPageComponent implements OnInit {
         const ui = this.loginService.userInfo?.LidData;
         if (dienstData.LID_ID != ui?.ID) {
             return false;   // mogen natuurlijk geen aanpassing maken op diensten van iemand anders
+        }
+
+        if (this.configService.getZelfIndelen()) {
+            const indeelbareDienst = this.configService.getZelfIndelen().find((d: any) => (d.TypeDienst == dienstData.TYPE_DIENST_ID));
+            // Dienst is bekend in config, return of je jezelf mag Indelen
+            if (indeelbareDienst) {
+                if (!indeelbareDienst.ZelfIndelen)
+                    return false;
+            }
         }
 
         const nu: DateTime = DateTime.now();

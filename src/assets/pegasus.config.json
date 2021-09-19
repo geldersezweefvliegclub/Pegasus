@@ -1,5 +1,43 @@
 {
   "url": "http://localhost:4200/api/",
+  "zelfDienstIndelen": [
+    {
+      "TypeDienst": 1800,
+      "ZelfIndelen": true
+    },
+    {
+      "TypeDienst": 1801,
+      "ZelfIndelen": true
+    },
+    {
+      "TypeDienst": 1802,
+      "ZelfIndelen": true
+    },
+    {
+      "TypeDienst": 1804,
+      "ZelfIndelen": true
+    },
+    {
+      "TypeDienst": 1805,
+      "ZelfIndelen": true
+    },
+    {
+      "TypeDienst": 1806,
+      "ZelfIndelen": true
+    },
+    {
+      "TypeDienst": 1807,
+      "ZelfIndelen": true
+    },
+    {
+      "TypeDienst": 1808,
+      "ZelfIndelen": false
+    },
+    {
+      "TypeDienst": 1809,
+      "ZelfIndelen": false
+    }
+  ],
 
   "pvb": [
     {
@@ -38,22 +76,32 @@
       "Overland": 267
     }
   ],
-
-  "checks":
-  {
-    "Jaren": [2021, 2020 ],
+  "checks": {
+    "Jaren": [
+      2021,
+      2020
+    ],
     "Check": [
       {
         "Omschrijving": "Jaar check",
-        "CompetentieID": [ 305, 302 ]
+        "CompetentieID": [
+          305,
+          302
+        ]
       },
       {
         "Omschrijving": "Vragenlijst XLT",
-        "CompetentieID": [ 306, 303 ]
+        "CompetentieID": [
+          306,
+          303
+        ]
       },
       {
         "Omschrijving": "Vragenlijst Arcus",
-        "CompetentieID": [ 307, -1 ]
+        "CompetentieID": [
+          307,
+          -1
+        ]
       }
     ]
   },
@@ -79,8 +127,7 @@
       "CompetentieID": 287
     }
   ],
-  "airport":
-  {
+  "airport": {
     "Latitude": 52.0507,
     "Longitude": 5.9292
   }
