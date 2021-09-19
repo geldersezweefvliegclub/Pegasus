@@ -69,6 +69,7 @@ export class RoosterPageComponent implements OnInit {
     toonInstructeurs = true;
     toonLieristen = true;
     toonDDWV = false;
+    toonTotalen = false
 
     dienstTypes: HeliosType[] = [];
     isStartleider = false;
@@ -755,4 +756,13 @@ export class RoosterPageComponent implements OnInit {
     }
 
 
+    mijnDienstClass(dienst: HeliosDienstenDataset): string {
+        if (dienst) {
+            const ui = this.loginService.userInfo?.LidData;
+            if (dienst.LID_ID == ui?.ID) {
+                return "mijnDienst"
+            }
+        }
+        return ""
+    }
 }

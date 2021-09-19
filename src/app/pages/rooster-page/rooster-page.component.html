@@ -68,7 +68,7 @@
                                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, OCHTEND_DDI_TYPE_ID);"
                                                 [cdkDropListData]="dagInRooster"
                                                 [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this, dagInRooster.DATUM, OCHTEND_DDI_TYPE_ID)">
-                                            <div cdkDrag>
+                                            <div cdkDrag [ngClass]="mijnDienstClass(dagInRooster.Diensten[OCHTEND_DDI_TYPE_ID])">
                                                 {{ (dagInRooster.Diensten[OCHTEND_DDI_TYPE_ID]) ? dagInRooster.Diensten[OCHTEND_DDI_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
@@ -89,7 +89,7 @@
                                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, MIDDAG_DDI_TYPE_ID);"
                                                 [cdkDropListData]="dagInRooster"
                                                 [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this, dagInRooster.DATUM, MIDDAG_DDI_TYPE_ID)">
-                                            <div cdkDrag>
+                                            <div cdkDrag [ngClass]="mijnDienstClass(dagInRooster.Diensten[MIDDAG_DDI_TYPE_ID])">
                                                 {{ (dagInRooster.Diensten[MIDDAG_DDI_TYPE_ID]) ? dagInRooster.Diensten[MIDDAG_DDI_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
@@ -112,7 +112,7 @@
                                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, OCHTEND_INSTRUCTEUR_TYPE_ID);"
                                                 [cdkDropListData]="dagInRooster"
                                                 [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this, dagInRooster.DATUM, OCHTEND_INSTRUCTEUR_TYPE_ID)">
-                                            <div cdkDrag>
+                                            <div cdkDrag [ngClass]="mijnDienstClass(dagInRooster.Diensten[OCHTEND_INSTRUCTEUR_TYPE_ID])">
                                                 {{ (dagInRooster.Diensten[OCHTEND_INSTRUCTEUR_TYPE_ID]) ? dagInRooster.Diensten[OCHTEND_INSTRUCTEUR_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
@@ -133,7 +133,7 @@
                                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, MIDDAG_INSTRUCTEUR_TYPE_ID);"
                                                 [cdkDropListData]="dagInRooster"
                                                 [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this, dagInRooster.DATUM, MIDDAG_INSTRUCTEUR_TYPE_ID)">
-                                            <div cdkDrag>
+                                            <div cdkDrag [ngClass]="mijnDienstClass(dagInRooster.Diensten[MIDDAG_INSTRUCTEUR_TYPE_ID])">
                                                 {{ (dagInRooster.Diensten[MIDDAG_INSTRUCTEUR_TYPE_ID]) ? dagInRooster.Diensten[MIDDAG_INSTRUCTEUR_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
@@ -156,7 +156,7 @@
                                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, OCHTEND_STARTLEIDER_TYPE_ID);"
                                                 [cdkDropListData]="dagInRooster"
                                                 [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this, dagInRooster.DATUM, OCHTEND_STARTLEIDER_TYPE_ID)">
-                                            <div cdkDrag>
+                                            <div cdkDrag [ngClass]="mijnDienstClass(dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID])">
                                                 {{ (dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID]) ? dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
@@ -177,7 +177,7 @@
                                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, MIDDAG_STARTLEIDER_TYPE_ID);"
                                                 [cdkDropListData]="dagInRooster"
                                                 [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this, dagInRooster.DATUM, MIDDAG_STARTLEIDER_TYPE_ID)">
-                                            <div cdkDrag>
+                                            <div cdkDrag [ngClass]="mijnDienstClass(dagInRooster.Diensten[MIDDAG_STARTLEIDER_TYPE_ID])">
                                                 {{ (dagInRooster.Diensten[MIDDAG_STARTLEIDER_TYPE_ID]) ? dagInRooster.Diensten[MIDDAG_STARTLEIDER_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
@@ -200,7 +200,7 @@
                                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, OCHTEND_LIERIST_TYPE_ID);"
                                                 [cdkDropListData]="dagInRooster"
                                                 [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this, dagInRooster.DATUM, OCHTEND_LIERIST_TYPE_ID)">
-                                            <div cdkDrag>
+                                            <div cdkDrag [ngClass]="mijnDienstClass(dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID])">
                                                 {{ (dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID]) ? dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
@@ -221,7 +221,7 @@
                                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, MIDDAG_LIERIST_TYPE_ID);"
                                                 [cdkDropListData]="dagInRooster"
                                                 [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this, dagInRooster.DATUM, MIDDAG_LIERIST_TYPE_ID)">
-                                            <div cdkDrag>
+                                            <div cdkDrag [ngClass]="mijnDienstClass(dagInRooster.Diensten[MIDDAG_LIERIST_TYPE_ID])">
                                                 {{ (dagInRooster.Diensten[MIDDAG_LIERIST_TYPE_ID]) ? dagInRooster.Diensten[MIDDAG_LIERIST_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
@@ -244,7 +244,7 @@
                                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, OCHTEND_HULPLIERIST_TYPE_ID);"
                                                 [cdkDropListData]="dagInRooster"
                                                 [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this, dagInRooster.DATUM, OCHTEND_HULPLIERIST_TYPE_ID)">
-                                            <div cdkDrag>
+                                            <div cdkDrag [ngClass]="mijnDienstClass(dagInRooster.Diensten[OCHTEND_HULPLIERIST_TYPE_ID])">
                                                 {{ (dagInRooster.Diensten[OCHTEND_HULPLIERIST_TYPE_ID]) ? dagInRooster.Diensten[OCHTEND_HULPLIERIST_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
@@ -265,7 +265,7 @@
                                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, MIDDAG_HULPLIERIST_TYPE_ID);"
                                                 [cdkDropListData]="dagInRooster"
                                                 [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this, dagInRooster.DATUM, MIDDAG_HULPLIERIST_TYPE_ID)">
-                                            <div cdkDrag>
+                                            <div cdkDrag [ngClass]="mijnDienstClass(dagInRooster.Diensten[MIDDAG_HULPLIERIST_TYPE_ID])">
                                                 {{ (dagInRooster.Diensten[MIDDAG_HULPLIERIST_TYPE_ID]) ? dagInRooster.Diensten[MIDDAG_HULPLIERIST_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
@@ -323,10 +323,10 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="d-flex">
-                                        <div class="maandTotaal" >
+                                        <div class="maandTotaal" *ngIf="toonTotalen">
                                             {{ lid.INGEDEELD_MAAND }}
                                         </div>
-                                        <div class="jaarTotaal">
+                                        <div class="jaarTotaal" *ngIf="toonTotalen">
                                             {{ lid.INGEDEELD_JAAR | number:'2.0' }}
                                         </div>
 
