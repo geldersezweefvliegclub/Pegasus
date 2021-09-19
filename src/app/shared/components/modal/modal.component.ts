@@ -17,17 +17,18 @@ export class ModalComponent {
     cross: IconDefinition = faTimes;
     private modalRef: any;
 
-    constructor(private modalService: NgbModal) { }
+    constructor(private modalService: NgbModal) {
+    }
 
-    async open() {
-        this.modalService.open(this.content,
-        {   ariaLabelledBy: 'modal-basic-title',
-                    windowClass: this.popupClass
-                }).result.then((result) => { this.modalRef = result}, (reason) => {
-        });
+    open() {
+        // this.content.nativeEle   // TODO
+        this.modalRef = this.modalService.open(this.content, {
+            ariaLabelledBy: 'modal-basic-title',
+            windowClass: this.popupClass
+        })
     }
 
     close() {
-        this.modalService.dismissAll() // close(this.modalRef);
+        this.modalRef.close();
     }
 }
