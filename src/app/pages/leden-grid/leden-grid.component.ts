@@ -299,7 +299,7 @@ export class LedenGridComponent implements OnInit {
     // Wordt aangeroepen bij een dubbel klik op een rij.
     bewerkLid($event: RowDoubleClickedEvent) {
         const ui = this.loginService.userInfo?.Userinfo;
-        if (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isInstructeur || ui?.isCIMT) {
+        if (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isInstructeur || ui?.isCIMT || ui!.isRooster) {
             this.router.navigate(['profiel'], {queryParams: {lidID: $event.data.ID}});
         }
     }
