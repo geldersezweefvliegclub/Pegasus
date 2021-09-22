@@ -672,9 +672,16 @@ export class RoosterPageComponent implements OnInit {
         return "??";
     }
 
-    private zelfIndelen(dienstType: number): boolean {
+    private zelfIndelen(dienstType: number, datum: string): boolean {
         if (!this.alleLeden)        // Als leden nog niet geladen zijn, kunnen we onzelf ook niet indelen
             return false;
+
+        const nu: DateTime = DateTime.now();
+        const d: DateTime = DateTime.fromSQL(datum);
+
+        if (d < nu) {
+            return false;   // datum is in het verleden
+        }
 
         const lid = this.alleLeden.find((l) => (l.ID?.toString() == this.mijnID));
 
@@ -703,6 +710,13 @@ export class RoosterPageComponent implements OnInit {
         if (!dienstData) {
             return false;       // er is niets te verwijderen
         }
+        const datum: DateTime = DateTime.fromSQL(dienstData.DATUM as string);
+        const nu: DateTime = DateTime.now();
+        const la: DateTime = DateTime.fromSQL(dienstData.LAATSTE_AANPASSING as string);
+
+        if (datum < nu) {
+            return false;   // datum is in het verleden
+        }
 
         if (this.magWijzigen) {
             return true;    // roostermakers en beheerders mogen altijd aanpassingen maken
@@ -721,10 +735,6 @@ export class RoosterPageComponent implements OnInit {
                     return false;
             }
         }
-
-        const nu: DateTime = DateTime.now();
-        const la: DateTime = DateTime.fromSQL(dienstData.LAATSTE_AANPASSING as string);
-        const datum: DateTime = DateTime.fromSQL(dienstData.DATUM as string);
 
         if (nu.diff(datum, "months").months < -2) {
             return true;    // tot 2 maanden mag je vrij aanpassen
