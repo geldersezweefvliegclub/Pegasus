@@ -6,6 +6,7 @@ import {HeliosDagInfo, HeliosDagInfoDagen, HeliosDagInfosDataset} from '../../ty
 import {StorageService} from '../storage/storage.service';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {SharedService} from '../shared/shared.service';
+import {LoginService} from "./login.service";
 
 @Injectable({
     providedIn: 'root'
@@ -22,6 +23,7 @@ export class DaginfoService {
     public readonly dagInfoChange = this.dagInfoStore.asObservable();      // nieuwe dagInfo beschikbaar
 
     constructor(private readonly APIService: APIService,
+                private readonly loginService: LoginService,
                 private readonly sharedService: SharedService,
                 private readonly storageService: StorageService) {
 
@@ -42,11 +44,11 @@ export class DaginfoService {
 
     // haal op, op welke dag er daginfo ingevoerd is
     async getDagen(startDatum: DateTime, eindDatum: DateTime): Promise<HeliosDagInfosDataset[]> {
-        interface parameters {
-            [key: string]: string;
+        if (!this.magDagInfoOphalen()) {
+            return [];
         }
 
-        let getParams: parameters = {};
+        let getParams: KeyValueArray = {};
         getParams['BEGIN_DATUM'] = startDatum.toISODate();
         getParams['EIND_DATUM'] = eindDatum.toISODate();
         getParams['VELDEN'] = "ID,DATUM";
@@ -68,6 +70,10 @@ export class DaginfoService {
 
     async getDagInfoDagen(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<[]> {
         let hash: string = '';
+
+        if (!this.magDagInfoOphalen()) {
+            return [];
+        }
 
         if (((this.dagInfoTotaal == null)) && (this.storageService.ophalen('daginfo') != null)) {
             this.dagInfoTotaal = this.storageService.ophalen('daginfo');
@@ -106,6 +112,10 @@ export class DaginfoService {
 
     // haal de daginfo op van een enkele dag
     async getDagInfo(id: number | undefined, datum: DateTime | undefined): Promise<HeliosDagInfo> {
+        if (!this.magDagInfoOphalen()) {
+            return {DATUM: this.datum.toISODate()};
+        }
+
         try {
             // we halen de data op met een ID
             if (id) {
@@ -157,5 +167,14 @@ export class DaginfoService {
     // haal een verwijderd record terug
     async restoreDagInfo(id: number) {
         await this.APIService.patch('Daginfo/RestoreObject', {'ID': id.toString()});
+    }
+
+    // als we weten dat gebruiker geen toegang heeft, hoeven we ook niets op te vragen
+    magDagInfoOphalen(): boolean {
+        const ui = this.loginService.userInfo?.Userinfo;
+        if (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isInstructeur || ui?.isCIMT || ui?.isStarttoren || ui?.isDDWVCrew) {
+            return true;
+        }
+        return false;
     }
 }

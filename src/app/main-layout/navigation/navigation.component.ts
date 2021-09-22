@@ -110,7 +110,6 @@ export class NavigationComponent {
                     const ui = this.loginService.userInfo?.LidData;
                     this.dienstenService.getDiensten (this.startDatum, this.eindDatum, undefined, ui?.ID ).then((dataset) => {
                         this.diensten = JSON.stringify(dataset);
-    console.log(this.diensten);
                     });
 
                 }, 400);
@@ -161,7 +160,6 @@ export class NavigationComponent {
     // laat iedereen weten dat er een nieuwe datum is gekozen
     NieuweDatum(datum: NgbDate) {
         this.sharedService.zetKalenderDatum(this.kalenderIngave)
-        this.toonMenuItems();   // daginfo menu tonen op basis van de gekozen dag
     }
 
     // de kalender popup toont andere maand, ophalen vliegdagen
