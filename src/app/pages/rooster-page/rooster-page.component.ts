@@ -107,18 +107,6 @@ export class RoosterPageComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        // de datum zoals die in de kalender gekozen is
-        this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
-            this.datum = DateTime.fromObject({
-                year: jaarMaand.year,
-                month: jaarMaand.month,
-                day: 1
-            })
-            if (this.alleLeden) {       // eerst moeten de leden geladen zijn
-                this.opvragenTotalen();
-            }
-            this.opvragenRooster();
-        })
         const ui = this.loginService.userInfo;
         this.magWijzigen = (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isBeheerderDDWV || ui?.Userinfo?.isRooster) ? true : false;
         this.magExporteren = !ui?.Userinfo?.isDDWV;
@@ -131,6 +119,19 @@ export class RoosterPageComponent implements OnInit {
 
         this.mijnID = (ui?.LidData?.ID) ? ui?.LidData?.ID.toString() : "-1";    // -1 mag nooit voorkomen, maar je weet het nooit
         this.mijnNaam = ui?.LidData?.NAAM as string;
+
+        // de datum zoals die in de kalender gekozen is
+        this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
+            this.datum = DateTime.fromObject({
+                year: jaarMaand.year,
+                month: jaarMaand.month,
+                day: 1
+            })
+            if (this.alleLeden) {       // eerst moeten de leden geladen zijn
+                setTimeout(() => this.opvragenTotalen(), 200);  // kleine vertraging, opvragen Rooster heeft prioriteit
+            }
+            this.opvragenRooster();
+        })
 
         this.opvragenLeden();
         this.typesService.getTypes(18).then(types => this.dienstTypes = types); // ophalen lidtypes
@@ -159,25 +160,27 @@ export class RoosterPageComponent implements OnInit {
     }
 
     private opvragenTotalen() {
-        this.dienstenService.getTotalen(this.datum.year).then(totalen => {
+        if (this.toonTotalen) {
+            this.dienstenService.getTotalen(this.datum.year).then(totalen => {
 
-            this.alleLeden.forEach(lid => {
-                const maandIndex = totalen.findIndex((maand => maand.LID_ID == lid.ID && maand.MAAND == this.datum.month));
+                this.alleLeden.forEach(lid => {
+                    const maandIndex = totalen.findIndex((maand => maand.LID_ID == lid.ID && maand.MAAND == this.datum.month));
 
-                if (maandIndex < 0) {
-                    lid.INGEDEELD_MAAND = 0;
-                } else {
-                    lid.INGEDEELD_MAAND = totalen[maandIndex].AANTAL;
-                }
+                    if (maandIndex < 0) {
+                        lid.INGEDEELD_MAAND = 0;
+                    } else {
+                        lid.INGEDEELD_MAAND = totalen[maandIndex].AANTAL;
+                    }
 
-                const jaarIndex = totalen.findIndex((maand => maand.LID_ID == lid.ID && maand.MAAND == null));    // maand = null = gehele jaar
-                if (jaarIndex < 0) {
-                    lid.INGEDEELD_JAAR = 0;
-                } else {
-                    lid.INGEDEELD_JAAR = totalen[jaarIndex].AANTAL;
-                }
+                    const jaarIndex = totalen.findIndex((maand => maand.LID_ID == lid.ID && maand.MAAND == null));    // maand = null = gehele jaar
+                    if (jaarIndex < 0) {
+                        lid.INGEDEELD_JAAR = 0;
+                    } else {
+                        lid.INGEDEELD_JAAR = totalen[jaarIndex].AANTAL;
+                    }
+                });
             });
-        });
+        }
     }
 
     private opvragenRooster() {
@@ -723,7 +726,7 @@ export class RoosterPageComponent implements OnInit {
         const la: DateTime = DateTime.fromSQL(dienstData.LAATSTE_AANPASSING as string);
         const datum: DateTime = DateTime.fromSQL(dienstData.DATUM as string);
 
-        if (nu.diff(datum, "months").months > 2) {
+        if (nu.diff(datum, "months").months < -2) {
             return true;    // tot 2 maanden mag je vrij aanpassen
         }
 
