@@ -278,7 +278,7 @@ export class LidEditorComponent implements OnInit {
             case 'ROOSTER':
             case 'BEHEERDER':
             case 'DDWV_BEHEERDER':
-            case 'betaald': {
+            case 'BETAALD': {
                 if (ui?.isBeheerder) {
                     return false;
                 }
@@ -297,7 +297,7 @@ export class LidEditorComponent implements OnInit {
                 break;
             }
 
-            case 'limitaties': {
+            case 'OPMERKINGEN': {
                 if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT || ui?.isRooster) {
                     return false;
                 }
@@ -322,13 +322,13 @@ export class LidEditorComponent implements OnInit {
                 break;
             }
 
-            case 'betaald': {
+            case 'BETAALD': {
                 if (ui?.isBeheerder || ui?.isBeheerderDDWV || this.ikBenHetZelf()) {
                     return true;
                 }
                 break;
             }
-            case 'limitaties': {
+            case 'OPMERKINGEN': {
                 if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT || ui?.isRooster || this.ikBenHetZelf()) {
                     return true;
                 }

@@ -313,13 +313,13 @@
                             </label>
                         </div>
                     </div>
-                    <div class="row mt-2" *ngIf="isVisible('betaald')">
+                    <div class="row mt-2" *ngIf="isVisible('BETAALD')">
                         <div class="col-6 mt-4">
                             <div>
                                 <input class="form-check-inline" type="checkbox" id="betaald" name="betaald"
-                                       [disabled]="isDisabled('betaald')"
+                                       [disabled]="isDisabled('BETAALD')"
                                        [(ngModel)]="lid.HEEFT_BETAALD">
-                                <label class="form-check-label" for="betaald" [ngClass]="disabledClass('betaald')">
+                                <label class="form-check-label" for="betaald" [ngClass]="disabledClass('BETAALD')">
                                     Heeft betaald
                                 </label>
                             </div>
@@ -328,13 +328,13 @@
                     <div class="row mt-3" *ngIf="toonSecret()">
                         <img class="QRcode" [src]="lid.SECRET">
                     </div>
-                    <div class="row mt-3" *ngIf="isVisible('limitaties')">
+                    <div class="row mt-3" *ngIf="isVisible('OPMERKINGEN')">
                         <div class="col-12">
-                            <label class="form-label" for="limitaties"
-                                   [ngClass]="disabledClass('limitaties')">Limitaties</label>
-                            <textarea class="form-control" id="limitaties" name="limitaties"
-                                      [disabled]="isDisabled('limitaties')"
-                                      [(ngModel)]="lid.BEPERKINGEN"></textarea>
+                            <label class="form-label" for="opmerkingen"
+                                   [ngClass]="disabledClass('OPMERKINGEN')">Opmerkingen</label>
+                            <textarea class="form-control" id="opmerkingen" name="opmerkingen"
+                                      [disabled]="isDisabled('OPMERKINGEN')"
+                                      [(ngModel)]="lid.OPMERKINGEN"></textarea>
                         </div>
                     </div>
                 </div>

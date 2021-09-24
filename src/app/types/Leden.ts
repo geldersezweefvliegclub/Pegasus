@@ -317,8 +317,6 @@ export interface components {
       HEEFT_BETAALD?: boolean;
       /** Staat privacy mode (AVG / GDPR) uit/aan */
       PRIVACY?: boolean;
-      /** Wat zijn de beperkingen (vliegen / diensten) voor dit lid */
-      BEPERKINGEN?: string;
       /** Extra text om opmerkingen toe te voegen */
       OPMERKINGEN?: string;
     };
