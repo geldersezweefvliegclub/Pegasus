@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {APIService} from "./api.service";
-import {HeliosTrack, HeliosTracks, HeliosTracksDataset} from "../../types/Helios";
+import {HeliosAanwezigLedenDataset, HeliosTrack, HeliosTracks, HeliosTracksDataset} from "../../types/Helios";
 import {KeyValueArray} from "../../types/Utils";
 import {StorageService} from "../storage/storage.service";
 import {LoginService} from "./login.service";
@@ -9,7 +9,9 @@ import {LoginService} from "./login.service";
     providedIn: 'root'
 })
 export class TracksService {
-    tracks: HeliosTracks | null = null;
+    private tracks: HeliosTracks = { dataset: []};
+    private vorigVerzoek: string = '';                            // parameters van vorige call
+
 
     constructor(private readonly apiService: APIService,
                 private readonly loginService: LoginService,
@@ -17,7 +19,6 @@ export class TracksService {
 
 
     async getTracks(verwijderd: boolean = false, lidID?:number, max?: number): Promise<HeliosTracksDataset[]> {
-
 
         // Alleen als we onderstaande rollen nie hebben, gaan we ook geen data proberen op te halen
         const ui = this.loginService.userInfo?.Userinfo;
@@ -37,6 +38,16 @@ export class TracksService {
             getParams['VERWIJDERD'] = "true";
         }
         getParams['SORT'] = 'INGEVOERD DESC';
+
+        // we hebben nu dezelfde call als de vorige call, geven opgeslagen resultaat terug en roepen de api niet aan.
+        if (JSON.stringify(getParams) == this.vorigVerzoek) {
+            return this.tracks?.dataset as HeliosAanwezigLedenDataset[];
+        }
+        else
+        {
+            this.vorigVerzoek = JSON.stringify(getParams);
+            setTimeout(() => this.vorigVerzoek = '', 5000);     // over 5 seconden mogen we weer API aanroepen
+        }
 
         try {
             const response: Response = await this.apiService.get('Tracks/GetObjects', getParams);

@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {
+    HeliosAanwezigLedenDataset,
     HeliosDienst,
     HeliosDiensten,
     HeliosDienstenDataset, HeliosDienstenTotaal,
@@ -16,7 +17,11 @@ import {DateTime} from "luxon";
 
 
 export class DienstenService {
-    diensten: HeliosDiensten | null = null;
+    private diensten: HeliosDiensten = { dataset: []};
+    private vorigVerzoekDiensten: string = '';       // parameters van vorige call
+
+    private totalen: HeliosDienstenTotaal[] = [];
+    private vorigVerzoekTotalen: string = '';        // parameters van vorige call
 
     constructor(private readonly apiService: APIService,
                 private readonly storageService: StorageService) {
@@ -34,9 +39,18 @@ export class DienstenService {
             getParams['TYPES'] = dienstType.toString();
         }
 
+        // we hebben nu dezelfde call als de vorige call, geven opgeslagen resultaat terug en roepen de api niet aan.
+        if (JSON.stringify(getParams) == this.vorigVerzoekDiensten) {
+            return this.diensten?.dataset as HeliosAanwezigLedenDataset[];
+        }
+        else
+        {
+            this.vorigVerzoekDiensten = JSON.stringify(getParams);
+            setTimeout(() => this.vorigVerzoekDiensten = '', 5000);     // over 5 seconden mogen we weer API aanroepen
+        }
+
         try {
             const response: Response = await this.apiService.get('Diensten/GetObjects', getParams);
-
             this.diensten = await response.json();
         } catch (e) {
             if (e.responseCode !== 304) { // server bevat dezelfde data als cache
@@ -55,10 +69,22 @@ export class DienstenService {
             getParams['LID_ID'] = lidID.toString();
         }
 
+        // we hebben nu dezelfde call als de vorige call, geven opgeslagen resultaat terug en roepen de api niet aan.
+        if (JSON.stringify(getParams) == this.vorigVerzoekTotalen) {
+            return this.totalen;
+        }
+        else
+        {
+            this.vorigVerzoekTotalen = JSON.stringify(getParams);
+            setTimeout(() => this.vorigVerzoekTotalen = '', 5000);     // over 5 seconden mogen we weer API aanroepen
+        }
+
         try {
             const response: Response = await this.apiService.get('Diensten/TotaalDiensten', getParams);
 
-            return await response.json();
+            this.totalen = await response.json();
+            return this.totalen;
+
         } catch (e) {
             if (e.responseCode !== 304) { // server bevat dezelfde data als cache
                 throw(e);

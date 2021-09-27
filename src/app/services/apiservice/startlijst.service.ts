@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {APIService} from './api.service';
 
 import {
+    HeliosAanwezigLedenDataset,
     HeliosLogboek, HeliosLogboekDataset, HeliosLogboekTotalen, HeliosRecency,
     HeliosStart, HeliosStartDataset,
     HeliosStarts,
@@ -21,12 +22,23 @@ interface parameters {
     providedIn: 'root'
 })
 export class StartlijstService {
-    starts: HeliosStarts | null = null;
-    vliegdagen: HeliosVliegdagen | null = null;
-    logboek: HeliosLogboek | null = null;                   // logboek vlieger
-    logboekTotalen: HeliosLogboekTotalen | null = null;     // totalen logboek voor vlieger
-    vliegtuigLogboek: HeliosVliegtuigLogboek| null = null;
-    vliegtuigLogboekTotalen: HeliosVliegtuigLogboekTotalen;
+    private starts: HeliosStarts = { dataset: []};
+    private vorigVerzoekStarts: string = '';                            // parameters van vorige call
+
+    private vliegdagen: HeliosVliegdagen = { dataset: []};
+    private vorigVerzoekVliegdagen: string = '';                        // parameters van vorige call
+
+    private logboek: HeliosLogboek = { dataset: []};                    // logboek vlieger
+    private vorigVerzoekLogboek: string = '';                           // parameters van vorige call
+
+    private logboekTotalen: HeliosLogboekTotalen | null = null;         // totalen logboek voor vlieger
+    private vorigVerzoekLogboekTotalen: string = '';                    // parameters van vorige call
+
+    private vliegtuigLogboek: HeliosVliegtuigLogboek = { dataset: []};
+    private vorigVerzoekVliegtuigLogboek: string = '';                  // parameters van vorige call
+
+    private vliegtuigLogboekTotalen: HeliosVliegtuigLogboekTotalen;
+    private vorigVerzoekVliegtuigLogboekTotalen: string = '';           // parameters van vorige call
 
     constructor(private readonly APIService: APIService, private readonly storageService: StorageService) {
     }
@@ -36,6 +48,16 @@ export class StartlijstService {
         let getParams: parameters = {};
         getParams['BEGIN_DATUM'] = startDatum.toISODate();
         getParams['EIND_DATUM'] = eindDatum.toISODate();
+
+        // we hebben nu dezelfde call als de vorige call, geven opgeslagen resultaat terug en roepen de api niet aan.
+        if (JSON.stringify(getParams) == this.vorigVerzoekVliegdagen) {
+            return this.vliegdagen?.dataset as [];
+        }
+        else
+        {
+            this.vorigVerzoekVliegdagen = JSON.stringify(getParams);
+            setTimeout(() => this.vorigVerzoekVliegdagen = '', 5000);     // over 5 seconden mogen we weer API aanroepen
+        }
 
         try {
             const response: Response = await this.APIService.get('Startlijst/GetVliegDagen',
@@ -73,6 +95,16 @@ export class StartlijstService {
             getParams['MAX'] = maxRecords.toString();
         }
 
+        // we hebben nu dezelfde call als de vorige call, geven opgeslagen resultaat terug en roepen de api niet aan.
+        if (JSON.stringify(getParams) == this.vorigVerzoekLogboek) {
+            return this.logboek?.dataset as [];
+        }
+        else
+        {
+            this.vorigVerzoekLogboek = JSON.stringify(getParams);
+            setTimeout(() => this.vorigVerzoekLogboek = '', 5000);     // over 5 seconden mogen we weer API aanroepen
+        }
+
         try {
             const response: Response = await this.APIService.get('Startlijst/GetLogboek', getParams);
 
@@ -95,6 +127,16 @@ export class StartlijstService {
         getParams['LID_ID'] = id.toString();
         getParams['JAAR'] = jaar.toString();
 
+        // we hebben nu dezelfde call als de vorige call, geven opgeslagen resultaat terug en roepen de api niet aan.
+        if (JSON.stringify(getParams) == this.vorigVerzoekLogboekTotalen) {
+            return this.logboekTotalen as HeliosLogboekTotalen
+        }
+        else
+        {
+            this.vorigVerzoekLogboekTotalen = JSON.stringify(getParams);
+            setTimeout(() => this.vorigVerzoekLogboekTotalen = '', 5000);     // over 5 seconden mogen we weer API aanroepen
+        }
+
         try {
             const response: Response = await this.APIService.get('Startlijst/GetLogboekTotalen', getParams);
 
@@ -111,6 +153,16 @@ export class StartlijstService {
         getParams['ID'] = id.toString();
         getParams['BEGIN_DATUM'] = startDatum.toISODate();
         getParams['EIND_DATUM'] = eindDatum.toISODate();
+
+        // we hebben nu dezelfde call als de vorige call, geven opgeslagen resultaat terug en roepen de api niet aan.
+        if (JSON.stringify(getParams) == this.vorigVerzoekVliegtuigLogboek) {
+            return this.vliegtuigLogboek?.dataset as [];
+        }
+        else
+        {
+            this.vorigVerzoekVliegtuigLogboek = JSON.stringify(getParams);
+            setTimeout(() => this.vorigVerzoekVliegtuigLogboek = '', 5000);     // over 5 seconden mogen we weer API aanroepen
+        }
 
         try {
             const response: Response = await this.APIService.get('Startlijst/GetVliegtuigLogboek',
@@ -131,6 +183,16 @@ export class StartlijstService {
         let getParams: parameters = {};
         getParams['ID'] = id.toString();
         getParams['JAAR'] = jaar.toString();
+
+        // we hebben nu dezelfde call als de vorige call, geven opgeslagen resultaat terug en roepen de api niet aan.
+        if (JSON.stringify(getParams) == this.vorigVerzoekVliegtuigLogboekTotalen) {
+            return this.vliegtuigLogboekTotalen as HeliosVliegtuigLogboekTotalen;
+        }
+        else
+        {
+            this.vorigVerzoekVliegtuigLogboekTotalen = JSON.stringify(getParams);
+            setTimeout(() => this.vorigVerzoekVliegtuigLogboekTotalen = '', 5000);     // over 5 seconden mogen we weer API aanroepen
+        }
 
         try {
             const response: Response = await this.APIService.get('Startlijst/GetVliegtuigLogboekTotalen',
@@ -168,6 +230,16 @@ export class StartlijstService {
 
         if (verwijderd) {
             getParams['VERWIJDERD'] = "true";
+        }
+
+        // we hebben nu dezelfde call als de vorige call, geven opgeslagen resultaat terug en roepen de api niet aan.
+        if (JSON.stringify(getParams) == this.vorigVerzoekStarts) {
+            return this.starts?.dataset as HeliosStartDataset[];
+        }
+        else
+        {
+            this.vorigVerzoekStarts = JSON.stringify(getParams);
+            setTimeout(() => this.vorigVerzoekStarts = '', 5000);     // over 5 seconden mogen we weer API aanroepen
         }
 
         try {

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {APIService} from './api.service';
 
-import {HeliosVliegtuig, HeliosVliegtuigen, HeliosVliegtuigenDataset} from '../../types/Helios';
+import {HeliosType, HeliosVliegtuig, HeliosVliegtuigen, HeliosVliegtuigenDataset} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
 import {KeyValueArray} from '../../types/Utils';
 
@@ -9,7 +9,8 @@ import {KeyValueArray} from '../../types/Utils';
     providedIn: 'root'
 })
 export class VliegtuigenService {
-    vliegtuigen: HeliosVliegtuigen | null = null;
+    private vliegtuigen: HeliosVliegtuigen = {dataset: []};
+    private vorigVerzoek: string = '';                            // parameters van vorige call
 
     constructor(private readonly APIService: APIService, private readonly storageService: StorageService) {
 
@@ -35,6 +36,14 @@ export class VliegtuigenService {
 
         if (verwijderd) {
             getParams['VERWIJDERD'] = "true";
+        }
+
+        // we hebben nu dezelfde call als de vorige call, geven opgeslagen resultaat terug en roepen de api niet aan.
+        if (JSON.stringify(getParams) == this.vorigVerzoek) {
+            return this.vliegtuigen?.dataset as HeliosVliegtuigenDataset[];
+        } else {
+            this.vorigVerzoek = JSON.stringify(getParams);
+            setTimeout(() => this.vorigVerzoek = '', 5000);     // over 5 seconden mogen we weer API aanroepen
         }
 
         try {

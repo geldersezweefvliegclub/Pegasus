@@ -31,11 +31,11 @@
     },
     {
       "TypeDienst": 1808,
-      "ZelfIndelen": false
+      "ZelfIndelen": true
     },
     {
       "TypeDienst": 1809,
-      "ZelfIndelen": false
+      "ZelfIndelen": true
     }
   ],
 

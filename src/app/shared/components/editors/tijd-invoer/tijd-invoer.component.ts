@@ -73,7 +73,13 @@ export class TijdInvoerComponent {
             }
         });
 
-        this.formTitel = 'Vlucht: #' + record.DAGNUMMER + ', ' + record.REG_CALL;
+        // bij aanroepan van starttijd uit logboek hebben we geen dagnummer
+        if (record.DAGNUMMER) {
+            this.formTitel = 'Vlucht: #' + record.DAGNUMMER + ', ' + record.REG_CALL;
+        }
+        else {
+            this.formTitel = 'Vlucht: ' + record.DATUM + ', ' + record.REG_CALL;
+        }
         this.label = 'Start';
 
         if (record.STARTTIJD) {
@@ -100,7 +106,13 @@ export class TijdInvoerComponent {
             }
         });
 
-        this.formTitel = 'Vlucht: #' + record.DAGNUMMER + ', ' + record.REG_CALL;
+        // bij aanroepan van landingstijd uit logboek hebben we geen dagnummer
+        if (record.DAGNUMMER) {
+            this.formTitel = 'Vlucht: #' + record.DAGNUMMER + ', ' + record.REG_CALL;
+        }
+        else {
+            this.formTitel = 'Vlucht: ' + record.DATUM + ', ' + record.REG_CALL;
+        }
         this.label = 'Landing';
 
         if (record.LANDINGSTIJD) {
