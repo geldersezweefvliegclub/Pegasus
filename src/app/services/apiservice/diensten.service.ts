@@ -18,10 +18,7 @@ import {DateTime} from "luxon";
 
 export class DienstenService {
     private diensten: HeliosDiensten = { dataset: []};
-    private vorigVerzoekDiensten: string = '';       // parameters van vorige call
-
     private totalen: HeliosDienstenTotaal[] = [];
-    private vorigVerzoekTotalen: string = '';        // parameters van vorige call
 
     constructor(private readonly apiService: APIService,
                 private readonly storageService: StorageService) {
@@ -37,16 +34,6 @@ export class DienstenService {
         }
         if (dienstType) {
             getParams['TYPES'] = dienstType.toString();
-        }
-
-        // we hebben nu dezelfde call als de vorige call, geven opgeslagen resultaat terug en roepen de api niet aan.
-        if (JSON.stringify(getParams) == this.vorigVerzoekDiensten) {
-            return this.diensten?.dataset as HeliosAanwezigLedenDataset[];
-        }
-        else
-        {
-            this.vorigVerzoekDiensten = JSON.stringify(getParams);
-            setTimeout(() => this.vorigVerzoekDiensten = '', 5000);     // over 5 seconden mogen we weer API aanroepen
         }
 
         try {
@@ -67,16 +54,6 @@ export class DienstenService {
 
         if (lidID) {
             getParams['LID_ID'] = lidID.toString();
-        }
-
-        // we hebben nu dezelfde call als de vorige call, geven opgeslagen resultaat terug en roepen de api niet aan.
-        if (JSON.stringify(getParams) == this.vorigVerzoekTotalen) {
-            return this.totalen;
-        }
-        else
-        {
-            this.vorigVerzoekTotalen = JSON.stringify(getParams);
-            setTimeout(() => this.vorigVerzoekTotalen = '', 5000);     // over 5 seconden mogen we weer API aanroepen
         }
 
         try {

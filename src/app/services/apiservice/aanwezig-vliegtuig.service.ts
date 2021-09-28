@@ -11,7 +11,6 @@ import {HeliosAanwezigVliegtuigen, HeliosAanwezigVliegtuigenDataset} from '../..
 })
 export class AanwezigVliegtuigService {
     private aanwezig: HeliosAanwezigVliegtuigen = { dataset: []};
-    private vorigVerzoek: string = '';       // parameters van vorige call
 
     constructor(private readonly APIService: APIService, private readonly storageService: StorageService) {
     }
@@ -32,16 +31,6 @@ export class AanwezigVliegtuigService {
 
         getParams['BEGIN_DATUM'] = startDatum.toISODate();
         getParams['EIND_DATUM'] = eindDatum.toISODate();
-
-        // we hebben nu dezelfde call als de vorige call, geven opgeslagen resultaat terug en roepen de api niet aan.
-        if (JSON.stringify(getParams) == this.vorigVerzoek) {
-            return this.aanwezig?.dataset as HeliosAanwezigVliegtuigenDataset[];
-        }
-        else
-        {
-            this.vorigVerzoek = JSON.stringify(getParams);
-            setTimeout(() => this.vorigVerzoek = '', 5000);     // over 5 seconden mogen we weer API aanroepen
-        }
 
         if (zoekString) {
             getParams['SELECTIE'] = zoekString;

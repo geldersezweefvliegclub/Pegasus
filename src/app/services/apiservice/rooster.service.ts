@@ -15,7 +15,6 @@ import {
 })
 export class RoosterService {
     private rooster: HeliosRooster = { dataset: []};
-    private vorigVerzoek: string = '';       // parameters van vorige call
 
     constructor(private readonly APIService: APIService) {
     }
@@ -24,16 +23,6 @@ export class RoosterService {
         let getParams: KeyValueArray = {};
         getParams['BEGIN_DATUM'] = startDatum.toISODate();
         getParams['EIND_DATUM'] = eindDatum.toISODate();
-
-        // we hebben nu dezelfde call als de vorige call, geven opgeslagen resultaat terug en roepen de api niet aan.
-        if (JSON.stringify(getParams) == this.vorigVerzoek) {
-            return this.rooster!.dataset as HeliosProgressieKaartDataset[];
-        }
-        else
-        {
-            this.vorigVerzoek = JSON.stringify(getParams);
-            setTimeout(() => this.vorigVerzoek = '', 5000);     // over 5 seconden mogen we weer API aanroepen
-        }
 
         try {
             const response: Response = await this.APIService.get('Rooster/GetObjects', getParams);

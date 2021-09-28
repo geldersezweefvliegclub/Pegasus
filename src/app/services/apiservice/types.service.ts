@@ -9,7 +9,6 @@ import {KeyValueArray} from '../../types/Utils';
 })
 export class TypesService {
     private types: HeliosTypes = { dataset: []};
-    private vorigVerzoek: string = '';                            // parameters van vorige call
 
     constructor(private readonly apiService: APIService,
                 private readonly storageService: StorageService) {
@@ -29,16 +28,6 @@ export class TypesService {
         if (this.types != null) { // we hebben eerder de lijst opgehaald
             hash = hash as string;
 //      getParams['HASH'] = hash;
-        }
-
-        // we hebben nu dezelfde call als de vorige call, geven opgeslagen resultaat terug en roepen de api niet aan.
-        if (JSON.stringify(getParams) == this.vorigVerzoek) {
-            return this.types?.dataset as HeliosType[];
-        }
-        else
-        {
-            this.vorigVerzoek = JSON.stringify(getParams);
-            setTimeout(() => this.vorigVerzoek = '', 5000);     // over 5 seconden mogen we weer API aanroepen
         }
 
         try {

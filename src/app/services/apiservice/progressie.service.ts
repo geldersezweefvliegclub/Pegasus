@@ -14,13 +14,8 @@ import {KeyValueArray} from "../../types/Utils";
 })
 export class ProgressieService {
     private progressie: HeliosBehaaldeProgressie = { dataset: []};
-    private vorigVerzoekProgressie: string = '';        // parameters van vorige call
-
     private boom: HeliosProgressieBoom[] = [];
-    private vorigVerzoekBoom: string = '';              // parameters van vorige call
-
     private kaart:HeliosProgressieKaart = { dataset: []};
-    private vorigVerzoekKaart: string = '';              // parameters van vorige call
 
     constructor(private readonly apiService: APIService,
                 private readonly storageService: StorageService) {
@@ -35,16 +30,6 @@ export class ProgressieService {
 
         if (comptentiesIDs) {
             getParams['IN'] = comptentiesIDs;
-        }
-
-        // we hebben nu dezelfde call als de vorige call, geven opgeslagen resultaat terug en roepen de api niet aan.
-        if (JSON.stringify(getParams) == this.vorigVerzoekProgressie) {
-            return this.progressie?.dataset as HeliosAanwezigLedenDataset[];
-        }
-        else
-        {
-            this.vorigVerzoekProgressie = JSON.stringify(getParams);
-            setTimeout(() => this.vorigVerzoekProgressie = '', 5000);     // over 5 seconden mogen we weer API aanroepen
         }
 
         try {
@@ -74,16 +59,6 @@ export class ProgressieService {
         let getParams: KeyValueArray = {};
         getParams['LID_ID'] = lidID.toString();
 
-        // we hebben nu dezelfde call als de vorige call, geven opgeslagen resultaat terug en roepen de api niet aan.
-        if (JSON.stringify(getParams) == this.vorigVerzoekBoom) {
-            return this.boom as HeliosProgressieBoom[];
-        }
-        else
-        {
-            this.vorigVerzoekBoom = JSON.stringify(getParams);
-            setTimeout(() => this.vorigVerzoekBoom = '', 5000);     // over 5 seconden mogen we weer API aanroepen
-        }
-
         const response:Response = await this.apiService.get('Progressie/ProgressieBoom', getParams);
         this.boom = await response.json();
 
@@ -93,16 +68,6 @@ export class ProgressieService {
     async getProgressieKaart(lidID:number):Promise<HeliosProgressieKaartDataset[]> {
         let getParams: KeyValueArray = {};
         getParams['LID_ID'] = lidID.toString();
-
-        // we hebben nu dezelfde call als de vorige call, geven opgeslagen resultaat terug en roepen de api niet aan.
-        if (JSON.stringify(getParams) == this.vorigVerzoekKaart) {
-            return this.kaart.dataset as HeliosProgressieKaartDataset[];
-        }
-        else
-        {
-            this.vorigVerzoekKaart = JSON.stringify(getParams);
-            setTimeout(() => this.vorigVerzoekKaart = '', 5000);     // over 5 seconden mogen we weer API aanroepen
-        }
 
         const response: Response = await this.apiService.get('Progressie/ProgressieKaart', getParams);
         this.kaart = await response.json();

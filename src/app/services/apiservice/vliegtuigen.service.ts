@@ -10,10 +10,8 @@ import {KeyValueArray} from '../../types/Utils';
 })
 export class VliegtuigenService {
     private vliegtuigen: HeliosVliegtuigen = {dataset: []};
-    private vorigVerzoek: string = '';                            // parameters van vorige call
 
     constructor(private readonly APIService: APIService, private readonly storageService: StorageService) {
-
     }
 
     async getVliegtuigen(verwijderd: boolean = false, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosVliegtuigenDataset[]> {
@@ -36,14 +34,6 @@ export class VliegtuigenService {
 
         if (verwijderd) {
             getParams['VERWIJDERD'] = "true";
-        }
-
-        // we hebben nu dezelfde call als de vorige call, geven opgeslagen resultaat terug en roepen de api niet aan.
-        if (JSON.stringify(getParams) == this.vorigVerzoek) {
-            return this.vliegtuigen?.dataset as HeliosVliegtuigenDataset[];
-        } else {
-            this.vorigVerzoek = JSON.stringify(getParams);
-            setTimeout(() => this.vorigVerzoek = '', 5000);     // over 5 seconden mogen we weer API aanroepen
         }
 
         try {

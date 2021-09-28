@@ -13,13 +13,8 @@ import {LoginService} from "./login.service";
 })
 export class DaginfoService {
     private dagInfoTotaal: HeliosDagInfoDagen = { dataset: []};
-    private vorigVerzoekTotaal: string = '';         // parameters van vorige call
-
     private dagen: HeliosDagInfoDagen = { dataset: []};
-    private vorigVerzoekDagen: string = '';         // parameters van vorige call
-
     public dagInfo: HeliosDagInfo = {};             // hier kunnen de componenten de daginfo ophalen (bijv start invoer)
-    private vorigDagInfo: string = '';              // parameters van vorige call
 
     private datumAbonnement: Subscription;         // volg de keuze van de kalender
     private datum: DateTime;                       // de gekozen dag
@@ -56,16 +51,6 @@ export class DaginfoService {
         getParams['BEGIN_DATUM'] = startDatum.toISODate();
         getParams['EIND_DATUM'] = eindDatum.toISODate();
         getParams['VELDEN'] = "ID,DATUM";
-
-        // we hebben nu dezelfde call als de vorige call, geven opgeslagen resultaat terug en roepen de api niet aan.
-        if (JSON.stringify(getParams) == this.vorigVerzoekDagen) {
-            return this.dagen?.dataset as HeliosDagInfosDataset[];
-        }
-        else
-        {
-            this.vorigVerzoekDagen = JSON.stringify(getParams);
-            setTimeout(() => this.vorigVerzoekDagen = '', 5000);     // over 5 seconden mogen we weer API aanroepen
-        }
 
         try {
             const response: Response = await this.APIService.get('Daginfo/GetObjects', getParams);
@@ -111,16 +96,6 @@ export class DaginfoService {
             getParams['VERWIJDERD'] = "true";
         }
 
-        // we hebben nu dezelfde call als de vorige call, geven opgeslagen resultaat terug en roepen de api niet aan.
-        if (JSON.stringify(getParams) == this.vorigVerzoekTotaal) {
-            return this.dagInfoTotaal?.dataset as [];
-        }
-        else
-        {
-            this.vorigVerzoekTotaal = JSON.stringify(getParams);
-            setTimeout(() => this.vorigVerzoekTotaal = '', 5000);     // over 5 seconden mogen we weer API aanroepen
-        }
-
         try {
             const response: Response = await this.APIService.get('Daginfo/GetObjects', getParams);
 
@@ -138,16 +113,6 @@ export class DaginfoService {
     async getDagInfo(id: number | undefined, datum: DateTime | undefined): Promise<HeliosDagInfo> {
         if (!this.magDagInfoOphalen()) {
             return {DATUM: this.datum.toISODate()};
-        }
-
-        // we hebben nu dezelfde call als de vorige call, geven opgeslagen resultaat terug en roepen de api niet aan.
-        if (JSON.stringify({ID: id, DATUM: datum}) == this.vorigDagInfo) {
-            return this.dagInfo;
-        }
-        else
-        {
-            this.vorigDagInfo = JSON.stringify({ID: id, DATUM: datum});
-            setTimeout(() => this.vorigDagInfo = '', 5000);     // over 5 seconden mogen we weer API aanroepen
         }
 
         try {
