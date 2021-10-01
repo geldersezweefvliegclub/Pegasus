@@ -29,7 +29,6 @@ export class StartlijstService {
     private vliegtuigLogboek: HeliosVliegtuigLogboek = { dataset: []};
     private vliegtuigLogboekTotalen: HeliosVliegtuigLogboekTotalen;
 
-
     constructor(private readonly APIService: APIService, private readonly storageService: StorageService) {
     }
 

@@ -2,11 +2,18 @@ import {Injectable} from '@angular/core';
 import {APIService} from './api.service';
 import {DateTime} from 'luxon';
 import {KeyValueArray} from '../../types/Utils';
-import {HeliosCompetentiesDataset, HeliosDagInfo, HeliosDagInfoDagen, HeliosDagInfosDataset} from '../../types/Helios';
+import {
+    HeliosCompetentiesDataset,
+    HeliosDagInfo,
+    HeliosDagInfoDagen,
+    HeliosDagInfosDataset,
+    HeliosRoosterDataset
+} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {SharedService} from '../shared/shared.service';
 import {LoginService} from "./login.service";
+import {RoosterService} from "./rooster.service";
 
 @Injectable({
     providedIn: 'root'
@@ -25,7 +32,8 @@ export class DaginfoService {
     constructor(private readonly APIService: APIService,
                 private readonly loginService: LoginService,
                 private readonly sharedService: SharedService,
-                private readonly storageService: StorageService) {
+                private readonly storageService: StorageService,
+                private readonly roosterService: RoosterService) {
 
         // de datum zoals die in de kalender gekozen is
         this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
@@ -127,8 +135,24 @@ export class DaginfoService {
                 const response: Response = await this.APIService.get('Daginfo/GetObject', {'DATUM': datum.toISODate()});
                 this.dagInfo = await response.json();
             }
+            return this.dagInfo;
         } catch (e) {
-            return {DATUM: this.datum.toISODate()};
+            const rooster: HeliosRoosterDataset[] = await this.roosterService.getRooster(this.datum, this.datum);
+            this.dagInfo = {
+                DATUM: this.datum.toISODate(),
+                DDWV: rooster[0].DDWV,
+                CLUB_BEDRIJF: rooster[0].CLUB_BEDRIJF,
+                VELD_ID: 901,
+                STARTMETHODE_ID: 0,
+                VLIEGBEDRIJF: "",
+                METEO: "",
+                INCIDENTEN: "",
+                ROLLENDMATERIEEL: "",
+                VLIEGENDMATERIEEL: "",
+                VERSLAG: "",
+                DIENSTEN: ""
+            };
+            return this.dagInfo;
         }
         console.error("Onjuiste aanroep getDagInfo()");
         return {DATUM: this.datum.toISODate()};  // dit mag nooit

@@ -7,7 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {LoginService} from "../../services/apiservice/login.service";
 import {HeliosLid, HeliosType} from "../../types/Helios";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {LedenService} from "../../services/apiservice/leden.service";
 import {TypesService} from "../../services/apiservice/types.service";
 import {faAvianex} from "@fortawesome/free-brands-svg-icons";
@@ -61,6 +61,7 @@ export class DashboardPageComponent implements OnInit {
                 private readonly sharedService: SharedService,
                 private readonly startlijstService: StartlijstService,
                 private readonly progressieService: ProgressieService,
+                private readonly router: Router,
                 private activatedRoute: ActivatedRoute) {
     }
 
@@ -87,6 +88,10 @@ export class DashboardPageComponent implements OnInit {
         });
 
         const ui = this.loginService.userInfo?.Userinfo;
+
+        if (ui?.isStarttoren) {
+            this.router.navigate(['startlijst']);
+        }
         this.toonTracks = (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) ? true : false;
     }
 

@@ -108,7 +108,7 @@ export class NavigationComponent {
                 // Wacht even de gebruiker kan nog aan het typen zijn
                 this.dienstenTimer = window.setTimeout(() => {
                     const ui = this.loginService.userInfo?.LidData;
-                    this.dienstenService.getDiensten (this.startDatum, this.eindDatum, undefined, ui?.ID ).then((dataset) => {
+                    this.dienstenService.getDiensten(this.startDatum, this.eindDatum, undefined, ui?.ID).then((dataset) => {
                         this.diensten = JSON.stringify(dataset);
                     });
 
@@ -149,6 +149,18 @@ export class NavigationComponent {
         if (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isInstructeur || ui?.isCIMT || ui?.isStarttoren || ui?.isDDWVCrew) {
             daginfo.excluded = false;
         }
+
+        // starttoren heeft geen dashboard
+        const dashboard = this.routes.find(route => route.path == "dashboard") as CustomRoute;
+        if (ui?.isStarttoren) {
+            dashboard.excluded = true
+        }
+
+        // starttoren heeft geen profiel
+        const profiel = this.routes.find(route => route.path == "profiel") as CustomRoute;
+        if (ui?.isStarttoren) {
+            profiel.excluded = true
+        }
     }
 
     // het is voorbij en we gaan terug naar de login pagina
@@ -182,7 +194,7 @@ export class NavigationComponent {
         });
 
         const ui = this.loginService.userInfo?.LidData;
-        this.dienstenService.getDiensten (this.startDatum, this.eindDatum, undefined, ui?.ID ).then((dataset) => {
+        this.dienstenService.getDiensten(this.startDatum, this.eindDatum, undefined, ui?.ID).then((dataset) => {
             this.diensten = JSON.stringify(dataset);
         });
     }

@@ -29,10 +29,10 @@ export class DienstenService {
         getParams['BEGIN_DATUM'] = startDatum.toISODate();
         getParams['EIND_DATUM'] = eindDatum.toISODate();
 
-        if (lidID) {
+        if (lidID != undefined) {
             getParams['LID_ID'] = lidID.toString();
         }
-        if (dienstType) {
+        if (dienstType != undefined) {
             getParams['TYPES'] = dienstType.toString();
         }
 
