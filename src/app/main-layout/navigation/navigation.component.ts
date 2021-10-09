@@ -156,10 +156,22 @@ export class NavigationComponent {
             dashboard.excluded = true
         }
 
-        // starttoren heeft geen profiel
+        // alleen echter gebruiker hebben profiel, starttoren, zusterclubs, etc dus niet
         const profiel = this.routes.find(route => route.path == "profiel") as CustomRoute;
-        if (ui?.isStarttoren) {
+        if (!ui?.isDDWV && !ui?.isClubVlieger) {
             profiel.excluded = true
+        }
+
+        // alleen echter gebruiker hebben toegang tot ledenlijst, starttoren, zusterclubs, etc dus niet
+        const leden = this.routes.find(route => route.path == "leden") as CustomRoute;
+        if (!ui?.isDDWV && !ui?.isClubVlieger) {
+            leden.excluded = true
+        }
+
+        // alleen echter gebruiker hebben toegang tot rooster, starttoren, zusterclubs, etc dus niet
+        const rooster = this.routes.find(route => route.path == "rooster") as CustomRoute;
+        if (!ui?.isDDWV && !ui?.isClubVlieger) {
+            rooster.excluded = true
         }
     }
 
