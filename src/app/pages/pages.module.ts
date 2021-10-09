@@ -41,6 +41,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import { TrackRenderComponent } from './leden-grid/track-render/track-render.component';
 import { TracksGridComponent } from './tracks-grid/tracks-grid.component';
 import { JaarTotalenComponent } from './rooster-page/jaar-totalen/jaar-totalen.component';
+import { ExportStartlijstComponent } from './startlijst-grid/export-startlijst/export-startlijst.component';
 
 @NgModule({
   imports: [
@@ -88,6 +89,7 @@ import { JaarTotalenComponent } from './rooster-page/jaar-totalen/jaar-totalen.c
     TrackRenderComponent,
     TracksGridComponent,
     JaarTotalenComponent,
+    ExportStartlijstComponent,
   ],
   exports: [
     PegasusCardComponent,

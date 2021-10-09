@@ -1,0 +1,25 @@
+<app-modal titel="Selecteer type export">
+    <div body>
+        <div class="d-flex flex-column">
+            <div>
+                <input type="radio" name="options" (click)="exportKeuze = 'dag'"
+                       [checked]="exportKeuze === 'dag'"><span
+                    class="ms-3">Exporteer dag</span>
+            </div>
+            <div>
+                <input type="radio" name="options" (click)="exportKeuze = 'maand'"
+                       [checked]="exportKeuze === 'maand'"><span
+                    class="ms-3">Exporteer maand</span>
+            </div>
+            <div>
+                <input type="radio" name="options" (click)="exportKeuze = 'jaar'"
+                       [checked]="exportKeuze === 'jaar'"><span
+                    class="ms-3">Exporteer jaar</span>
+            </div>
+        </div>
+    </div>
+    <div footer>
+        <app-icon-button iconNaam="fas Edit" btnColor="btn-primary"
+                         tekst="Exporteren" (btnClicked)="Exporteer()"></app-icon-button>
+    </div>
+</app-modal>
