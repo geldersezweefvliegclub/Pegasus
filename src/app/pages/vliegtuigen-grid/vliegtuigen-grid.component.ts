@@ -42,6 +42,7 @@ export class VliegtuigenGridComponent implements OnInit {
 
     data:HeliosVliegtuigenDatasetExtended[] = [];
     logboek: HeliosLogboekDataset[] = [];
+    isLoading: boolean = false;
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
@@ -208,7 +209,9 @@ export class VliegtuigenGridComponent implements OnInit {
         clearTimeout(this.zoekTimer);
 
         this.zoekTimer = window.setTimeout(() => {
+            this.isLoading = true;
             this.vliegtuigenService.getVliegtuigen(this.trashMode, this.zoekString).then((dataset) => {
+                this.isLoading = false;
                 this.data = dataset;
 
                 const ui = this.loginService.userInfo?.Userinfo;
@@ -225,6 +228,7 @@ export class VliegtuigenGridComponent implements OnInit {
                 }
 
             }).catch(e => {
+                this.isLoading = false;
                 this.error = e;
             });
         }, 400);

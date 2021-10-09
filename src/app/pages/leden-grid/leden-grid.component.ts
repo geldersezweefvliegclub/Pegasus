@@ -35,6 +35,7 @@ export class LedenGridComponent implements OnInit {
 
     leden: HeliosLedenDataset[] = [];
     dataset: HeliosLedenDataset[] = [];
+    isLoading: boolean = false;
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
@@ -219,10 +220,13 @@ export class LedenGridComponent implements OnInit {
 
         // Wacht even de gebruiker kan nog aan het typen zijn
         this.zoekTimer = window.setTimeout(() => {
+            this.isLoading = true;
             this.ledenService.getLeden(this.trashMode, this.zoekString).then((dataset) => {
                 this.dataset = dataset;
+                this.isLoading = false;
                 this.applyFilter();
             }).catch(e => {
+                this.isLoading = false;
                 this.error = e;
             });
         }, 400);

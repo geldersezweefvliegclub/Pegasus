@@ -6,45 +6,55 @@ import {StartlijstService} from "../../../services/apiservice/startlijst.service
 import {SharedService} from "../../../services/shared/shared.service";
 
 @Component({
-  selector: 'app-vlieger-logboek-totalen',
-  templateUrl: './vlieger-logboek-totalen.component.html',
-  styleUrls: ['./vlieger-logboek-totalen.component.scss']
+    selector: 'app-vlieger-logboek-totalen',
+    templateUrl: './vlieger-logboek-totalen.component.html',
+    styleUrls: ['./vlieger-logboek-totalen.component.scss']
 })
 export class VliegerLogboekTotalenComponent implements OnInit, OnChanges {
-  @Input() VliegerID: number;
+    @Input() VliegerID: number;
 
-  datumAbonnement: Subscription;         // volg de keuze van de kalender
-  datum: DateTime;                       // de gekozen dag
-  data: HeliosLogboekTotalen;
+    datumAbonnement: Subscription;         // volg de keuze van de kalender
+    datum: DateTime;                       // de gekozen dag
+    data: HeliosLogboekTotalen;
 
-  constructor(private readonly startlijstService: StartlijstService,
-              private readonly sharedService: SharedService) {}
-
-  ngOnInit(): void {
-    // de datum zoals die in de kalender gekozen is
-    this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
-      this.datum = DateTime.fromObject({
-        year: jaarMaand.year,
-        month: jaarMaand.month,
-        day: 1
-      })
-      this.opvragen();
-    })
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.hasOwnProperty("VliegerID")) {
-      this.opvragen()
+    constructor(private readonly startlijstService: StartlijstService,
+                private readonly sharedService: SharedService) {
     }
-  }
 
-  // opvragen van de totalen uit het vlieger logboek
-  opvragen():void {
-    if (this.datum) {
-      this.startlijstService.getLogboekTotalen(this.VliegerID, this.datum.year).then((dataset) => {
-        this.data = dataset;
-      });
+    ngOnInit(): void {
+        // de datum zoals die in de kalender gekozen is
+        this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
+            this.datum = DateTime.fromObject({
+                year: jaarMaand.year,
+                month: jaarMaand.month,
+                day: 1
+            })
+
+            this.data = {
+                "totaal": 0,
+                "laatste_aanpassing": "0000-00-00 00:00:00",
+                "hash": "0",
+                "starts": [],
+                "vliegtuigen": [],
+                "jaar": {"STARTS": 0, "INSTRUCTIE_STARTS": 0, "VLIEGTIJD": "0:00"}
+            }
+            this.opvragen();
+        })
     }
-  }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.hasOwnProperty("VliegerID")) {
+            this.opvragen()
+        }
+    }
+
+    // opvragen van de totalen uit het vlieger logboek
+    opvragen(): void {
+        if (this.datum) {
+            this.startlijstService.getLogboekTotalen(this.VliegerID, this.datum.year).then((dataset) => {
+                this.data = dataset;
+            });
+        }
+    }
 
 }

@@ -6,8 +6,8 @@ import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {DeleteActionComponent} from '../../shared/components/datatable/delete-action/delete-action.component';
 import {RestoreActionComponent} from '../../shared/components/datatable/restore-action/restore-action.component';
-import {HeliosStart, HeliosStartDataset} from '../../types/Helios';
-import {ErrorMessage, HeliosActie, KeyValueArray, SuccessMessage} from '../../types/Utils';
+import {HeliosStartDataset} from '../../types/Helios';
+import {ErrorMessage, KeyValueArray, SuccessMessage} from '../../types/Utils';
 import * as xlsx from 'xlsx';
 import {LoginService} from '../../services/apiservice/login.service';
 import {faClipboardList} from '@fortawesome/free-solid-svg-icons/faClipboardList';
@@ -22,6 +22,7 @@ import {StartEditorComponent} from '../../shared/components/editors/start-editor
 import {Subscription} from 'rxjs';
 import {SharedService} from '../../services/shared/shared.service';
 import {nummerSort, tijdSort} from '../../utils/Utils';
+import {ExportStartlijstComponent} from "./export-startlijst/export-startlijst.component";
 
 @Component({
     selector: 'app-startlijst-grid',
@@ -31,8 +32,10 @@ import {nummerSort, tijdSort} from '../../utils/Utils';
 export class StartlijstGridComponent implements OnInit {
     @ViewChild(StartEditorComponent) editor: StartEditorComponent;
     @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
+    @ViewChild(ExportStartlijstComponent) exportStartlijstKeuze: ExportStartlijstComponent;
 
     data: HeliosStartDataset[] = [];
+    isLoading: boolean = false
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
@@ -175,6 +178,7 @@ export class StartlijstGridComponent implements OnInit {
                 month: datum.month,
                 day: datum.day
             })
+            this.data = [];
             this.opvragen();
         });
 
@@ -185,27 +189,33 @@ export class StartlijstGridComponent implements OnInit {
             }
         });
 
-        let ui = this.loginService.userInfo?.Userinfo;
-        this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur) ? true : false;
-        this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur) ? true : false;
-        this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur) ? true : false;
+        const ui = this.loginService.userInfo?.Userinfo;
+        this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isDDWV || ui?.isClubVlieger) ? true : false;
+        this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isClubVlieger) ? true : false;
+        this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isDDWV || ui?.isClubVlieger) ? true : false;
         this.magExporten = (!ui?.isDDWV) ? true : false;
     }
 
     // openen van popup om nieuwe start te kunnen invoeren
     addStart(): void {
-        this.editor.openPopup(null);
+        if (this.magToevoegen) {
+            this.editor.openPopup(null);
+        }
     }
 
     // openen van popup om bestaande start te kunnen aanpassen
     openEditor(event?: RowDoubleClickedEvent) {
-        this.editor.openPopup(event?.data.ID);
+        if (this.magWijzigen) {
+            this.editor.openPopup(event?.data.ID);
+        }
     }
 
     // schakelen tussen deleteMode JA/NEE. In deleteMode kun je starts verwijderen
     deleteModeJaNee() {
-        this.deleteMode = !this.deleteMode;
-        this.kolomDefinitie();
+        if (this.magVerwijderen) {
+            this.deleteMode = !this.deleteMode;
+            this.kolomDefinitie();
+        }
     }
 
     // schakelen tussen trashMode JA/NEE. In trashMode worden te verwijderde starts getoond
@@ -235,25 +245,61 @@ export class StartlijstGridComponent implements OnInit {
             queryParams["OPEN_STARTS"] = "true"
         }
 
+        this.isLoading = true;
         this.startlijstService.getStarts(this.trashMode, this.datum, this.datum, this.zoekString, queryParams).then((dataset) => {
             this.data = dataset;
+            this.isLoading = false;
         }).catch(e => {
             this.error = e;
+            this.isLoading = false;
         });
     }
 
+    // keuze voor startlijst export
+    expoteerStartlijst() {
+        console.log(this.exportStartlijstKeuze)
+        this.exportStartlijstKeuze.openPopup();
+    }
+
     // Export naar excel
-    exportDataset() {
+    // ExportDMJ = "dag", "maand" of "jaar"
+    exportDataset(exportDMJ: string) {
         let datum: DateTime = DateTime.fromObject({
             year: this.datum.year,
             month: this.datum.month,
             day: this.datum.day
         })
 
+        let tobeExported: HeliosStartDataset[] = []
+        let bestandsnaam : string = datum.toISODate()
+        switch (exportDMJ) {
+            case "dag":
+            {
+                bestandsnaam = datum.toISODate()
+                tobeExported = this.data; // default is dag
+                break;
+            }
+            case "maand":
+            {
+                bestandsnaam = datum.month.toString()
+                //TODO data =
+                break;
+            }
+            case "jaar":
+            {
+                //TODO data =
+
+                bestandsnaam = datum.month.toString()
+                break;
+            }
+        }
+
+
+
         const ws = xlsx.utils.json_to_sheet(this.data);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
-        xlsx.writeFile(wb, 'startlijst ' + datum.toISODate() + '.xlsx');
+        xlsx.writeFile(wb, 'startlijst ' + bestandsnaam + '.xlsx');
     }
 
     // Als leden-filter aan staat, dan tonen we alleen de openstaande vluchten

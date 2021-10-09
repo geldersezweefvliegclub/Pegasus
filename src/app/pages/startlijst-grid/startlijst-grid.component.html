@@ -5,13 +5,14 @@
                subtitel="Een overzicht van de starts {{datum.day}}-{{datum.month}}-{{datum.year}}"
                [icon]="iconCardIcon"
                [exportEnabled]="this.magExporten"
-               (excelExport)="exportDataset()">
+               (excelExport)="expoteerStartlijst()">
     <div class="box h-100">
         <div id="data">
             <app-datatable
                     id="startlijstgrid"
                     [rowData]="data"
                     [columnDefs]="columns"
+                    [loading]="isLoading"
                     [frameworkComponents]="frameworkComponents"
                     (rowDoubleClicked)="openEditor($event)"
                     class="h-100 mt-n8"></app-datatable>
@@ -31,7 +32,7 @@
                         <app-icon-button class="toolbarBtn"
                                          tekst="Toevoegen"
                                          iconNaam="far PlusSquare" (btnClicked)="addStart()"
-                                         btnColor="btn-primary" *ngIf="!this.deleteMode"></app-icon-button>
+                                         btnColor="btn-primary" *ngIf="!deleteMode && magToevoegen"></app-icon-button>
 
                         <div *ngIf="this.deleteMode">
                             <input type="checkbox" class="btn-check" id="trashBtn" name="prullenbakMode"
@@ -65,7 +66,7 @@
                     <div class="col-4">
                         <div class="d-flex justify-content-end">
                             <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
-                                             btnColor="btn-secondary" *ngIf="this.magVerwijderen"
+                                             btnColor="btn-secondary" *ngIf="magVerwijderen"
                                              (btnClicked)="deleteModeJaNee()"></app-icon-button>
                         </div>
                     </div>
@@ -76,4 +77,5 @@
 
     <app-tijd-invoer></app-tijd-invoer>
     <app-start-editor></app-start-editor>
+    <app-export-startlijst (exportDataset)="exportDataset($event)"></app-export-startlijst>
 </app-pegasus-card>

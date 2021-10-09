@@ -18,6 +18,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     @Input() rowData = [];
     @Input() frameworkComponents: any;
     @Input() id: string;
+    @Input() loading: boolean = false;
     @Input() sizeToFit: boolean = true;
     @Input() autoHeight: boolean = false;
     @Input() rowHeight: number = 40;
@@ -44,7 +45,13 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     private api: GridApi;
     private columnStateTimer: number | null = null;
 
+    private noRowsTemplate;
+    private loadingTemplate;
+
+
     constructor(private readonly storageService: StorageService) {
+        this.loadingTemplate = '<span><img src="assets/img/zandloper.gif" width=100px> Data wordt geladen .....</span>';
+        this.noRowsTemplate = '<span>Geen informatie beschikbaar</span>';
     }
 
     ngOnInit() {
@@ -88,6 +95,16 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
             this.api.setColumnDefs(this.columnDefs);
             this.api.setRowData(this.rowData);
         }
+
+        if (changes.hasOwnProperty("loading")) {
+            if (changes["loading"].currentValue) {
+                this.api.showLoadingOverlay()
+            }
+            else {
+            //  is niet nodig, gaat vanzelf
+            }
+        }
+
     }
 
     onRowDoubleClicked(event: RowDoubleClickedEvent) {

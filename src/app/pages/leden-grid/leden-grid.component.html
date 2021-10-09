@@ -12,6 +12,7 @@
                     rowHeight=70
                     [rowData]="leden"
                     [columnDefs]="columns"
+                    [loading]="isLoading"
                     [frameworkComponents]="frameworkComponents"
                     (rowDoubleClicked)="bewerkLid($event)"
                     class="h-100 mt-n8"></app-datatable>
@@ -72,5 +73,5 @@
     </div>
 
     <app-leden-filter (filterChanged)="applyFilter()"> </app-leden-filter>
-    <app-track-editor (add)="ToevoegenTrack($event)"></app-track-editor>
+    <app-track-editor></app-track-editor>
 </app-pegasus-card>

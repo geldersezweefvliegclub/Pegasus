@@ -12,6 +12,7 @@
                     id="vliegtuiggrid"
                     [rowData]="data"
                     [columnDefs]="columns"
+                    [loading]="isLoading"
                     [rowClassRules]="rowClassRules"
                     [frameworkComponents]="frameworkComponents"
                     (rowDoubleClicked)="openEditor($event)"
@@ -64,8 +65,5 @@
     </div>
 
 
-    <app-vliegtuig-editor *ngIf="this.magToevoegen || this.magWijzigen || this.magVerwijderen"
-            (add)="Toevoegen($event)" (update)="Aanpassen($event)" (delete)="Verwijderen($event)"
-            (restore)="Herstellen($event)"
-    ></app-vliegtuig-editor>
+    <app-vliegtuig-editor *ngIf="this.magToevoegen || this.magWijzigen || this.magVerwijderen"></app-vliegtuig-editor>
 </app-pegasus-card>

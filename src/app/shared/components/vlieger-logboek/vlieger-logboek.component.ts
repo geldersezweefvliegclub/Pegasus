@@ -41,6 +41,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
+    isLoading: boolean = false;
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
@@ -136,6 +137,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
                 month: jaarMaand.month,
                 day: 1
             })
+            this.data = [];
             this.opvragen();
         });
 
@@ -155,9 +157,12 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
             const startDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 1, day: 1});
             const eindDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 12, day: 31});
 
+            this.isLoading = true;
             this.startlijstService.getLogboek(this.VliegerID, startDatum, eindDatum).then((dataset) => {
+                this.isLoading = false;
                 this.data = dataset;
             }).catch(e => {
+                this.isLoading = false;
                 this.error = e;
             });
         }
