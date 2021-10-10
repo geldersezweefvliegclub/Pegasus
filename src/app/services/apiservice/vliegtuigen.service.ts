@@ -4,27 +4,54 @@ import {APIService} from './api.service';
 import {HeliosType, HeliosVliegtuig, HeliosVliegtuigen, HeliosVliegtuigenDataset} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
 import {KeyValueArray} from '../../types/Utils';
+import {BehaviorSubject} from "rxjs";
+import {SharedService} from "../shared/shared.service";
 
 @Injectable({
     providedIn: 'root'
 })
 export class VliegtuigenService {
-    private vliegtuigen: HeliosVliegtuigen = {dataset: []};
+    private vliegtuigenCache: HeliosVliegtuigen = {dataset: []};     // return waarde van API call
 
-    constructor(private readonly APIService: APIService, private readonly storageService: StorageService) {
+    private ophaalTimer: number;                                // Iedere 15 min halen we de leden op
+    private vliegtuigenStore = new BehaviorSubject(this.vliegtuigenCache.dataset);
+    public readonly vliegtuigenChange = this.vliegtuigenStore.asObservable();      // nieuwe vliegtuigen beschikbaar
+
+    constructor(private readonly APIService: APIService,
+                private readonly sharedService: SharedService,
+                private readonly storageService: StorageService) {
+
+        this.getVliegtuigen().then((dataset) => {
+            this.vliegtuigenStore.next(this.vliegtuigenCache.dataset)    // afvuren event
+        });
+
+        this.ophaalTimer = window.setInterval(() => {
+            this.getVliegtuigen().then((dataset) => {
+                this.vliegtuigenStore.next(this.vliegtuigenCache.dataset)    // afvuren event
+            });
+        }, 1000 * 60 * 15);
+
+        // Als leden zijn aangepast, dan moeten we overzicht opnieuw ophalen
+        this.sharedService.heliosEventFired.subscribe(ev => {
+            if (ev.tabel == "Vliegtuigen") {
+                this.getVliegtuigen().then((dataset) => {
+                    this.vliegtuigenStore.next(this.vliegtuigenCache.dataset)    // afvuren event
+                });
+            }
+        });
     }
 
     async getVliegtuigen(verwijderd: boolean = false, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosVliegtuigenDataset[]> {
         let hash: string = '';
 
-        if (((this.vliegtuigen == null)) && (this.storageService.ophalen('vliegtuigen') != null)) {
-            this.vliegtuigen = this.storageService.ophalen('vliegtuigen');
+        if (((this.vliegtuigenCache == null)) && (this.storageService.ophalen('vliegtuigen') != null)) {
+            this.vliegtuigenCache = this.storageService.ophalen('vliegtuigen');
         }
 
         let getParams: KeyValueArray = params;
 
-        if (this.vliegtuigen != null) { // we hebben eerder de lijst opgehaald
-            hash = this.vliegtuigen.hash as string;
+        if (this.vliegtuigenCache != null) { // we hebben eerder de lijst opgehaald
+            hash = this.vliegtuigenCache.hash as string;
 //            getParams['HASH'] = hash;
         }
 
@@ -39,14 +66,14 @@ export class VliegtuigenService {
         try {
             const response: Response = await this.APIService.get('Vliegtuigen/GetObjects', getParams);
 
-            this.vliegtuigen = await response.json();
-            this.storageService.opslaan('vliegtuigen', this.vliegtuigen);
+            this.vliegtuigenCache = await response.json();
+            this.storageService.opslaan('vliegtuigen', this.vliegtuigenCache);
         } catch (e) {
             if (e.responseCode !== 304) { // server bevat dezelfde data als cache
                 throw(e);
             }
         }
-        return this.vliegtuigen?.dataset as HeliosVliegtuigenDataset[];
+        return this.vliegtuigenCache?.dataset as HeliosVliegtuigenDataset[];
     }
 
     async getVliegtuig(id: number): Promise<HeliosVliegtuig> {

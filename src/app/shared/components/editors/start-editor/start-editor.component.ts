@@ -34,11 +34,14 @@ export class StartEditorComponent implements OnInit {
     toonVliegerNaam: boolean = false;
     toonStartMethode: boolean = true;
 
+    typesAbonnement: Subscription;
     startMethodeTypes: HeliosType[];
     startMethodeTypesFiltered: HeliosType[];
     veldenTypes$: Observable<HeliosType[]>;
 
+    vliegtuigenAbonnement: Subscription;
     vliegtuigen: HeliosVliegtuigenDataset[] = [];
+    aanwezigVliegtuigenAbonnement: Subscription;
     aanwezigVliegtuigen: HeliosVliegtuigenDataset[] = [];
     gekozenVliegtuig: HeliosVliegtuigenDataset;     // het gekozen vliegtuig uit de editor
 
@@ -50,7 +53,11 @@ export class StartEditorComponent implements OnInit {
     // 625 = DDWV'er
     exclLidtypeAlsInzittende: string = "607,609,610,612,613,625"
     exclLidtypeAlsVlieger: string = "613"
+
+    ledenAbonnement: Subscription;
     leden: HeliosLedenDataset[] = [];
+
+    aanwezigLedenAbonnement: Subscription;
     aanwezigLeden: HeliosAanwezigLedenDataset[] = [];
 
     datumAbonnement: Subscription;         // volg de keuze van de kalender
@@ -77,19 +84,6 @@ export class StartEditorComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.typesService.getTypes(5).then(types => this.startMethodeTypes = types);
-        this.typesService.getTypes(9).then(types => this.veldenTypes$ = of(types));
-
-        // Alle vliegtuigen ophalen
-        this.vliegtuigenService.getVliegtuigen().then((dataset) => {
-            this.vliegtuigen = dataset;
-        });
-
-        // nu alle leden ophalen en in goede formaat zetten
-        this.ledenService.getLeden().then((dataset) => {
-            this.leden = dataset;
-        });
-
         // de datum zoals die in de kalender gekozen is, we halen dan de dag afhankelijke gegevens op
         this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
             this.datum = DateTime.fromObject({
@@ -97,35 +91,50 @@ export class StartEditorComponent implements OnInit {
                 month: datum.month,
                 day: datum.day
             })
+        });
 
-            // ophalen welke leden vandaag aanwezig zijn
-            this.aanwezigLedenService.getAanwezig(this.datum, this.datum).then((dataset) => {
-                // alle aanwezig leden
-                this.aanwezigLeden = dataset;
-            });
+        // abonneer op wijziging van types
+        this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
+            this.startMethodeTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 5});
+            this.veldenTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));
+        });
 
-            // ophalen welke vliegtuigen vandaag aanwezig zijn
-            this.aanwezigVliegtuigenService.getAanwezig(this.datum, this.datum).then((dataset) => {
-                // Als er data is, even in juiste formaat zetten. Aanwezig moet hetzelfde formaat hebben als vliegtuigen
-                this.aanwezigVliegtuigen = [];
+        // abonneer op wijziging van leden
+        this.vliegtuigenAbonnement = this.vliegtuigenService.vliegtuigenChange.subscribe(vliegtuigen => {
+            this.vliegtuigen = (vliegtuigen) ? vliegtuigen : [];
+        });
 
-                for (let i = 0; i < dataset.length; i++) {
-                    this.aanwezigVliegtuigen.push(
-                        {
-                            ID: dataset[i].VLIEGTUIG_ID,
-                            REGISTRATIE: dataset[i].REGISTRATIE,
-                            REG_CALL: dataset[i].REG_CALL,
-                            CALLSIGN: dataset[i].CALLSIGN,
-                            TYPE_ID: dataset[i].TYPE_ID,
-                            SLEEPKIST: dataset[i].SLEEPKIST,
-                            TMG: dataset[i].TMG,
-                            ZELFSTART: dataset[i].ZELFSTART,
-                            CLUBKIST: dataset[i].CLUBKIST,
-                            ZITPLAATSEN: dataset[i].ZITPLAATSEN
-                        });
-                }
-            });
-        })
+        // abonneer op wijziging van leden
+        this.ledenAbonnement = this.ledenService.ledenChange.subscribe(leden => {
+            this.leden = (leden) ? leden : [];
+        });
+
+        // abonneer op wijziging van aanwezige leden
+        this.aanwezigLedenAbonnement = this.aanwezigLedenService.aanwezigChange.subscribe(dataset => {
+            this.aanwezigLeden = dataset!;
+        });
+
+        // abonneer op wijziging van aanwezige vliegtuigen
+        this.aanwezigVliegtuigenAbonnement = this.aanwezigVliegtuigenService.aanwezigChange.subscribe(dataset => {
+            // Als er data is, even in juiste formaat zetten. Aanwezig moet hetzelfde formaat hebben als vliegtuigen
+            this.aanwezigVliegtuigen = [];
+
+            for (let i = 0; i < dataset!.length; i++) {
+                this.aanwezigVliegtuigen.push(
+                    {
+                        ID: dataset![i].VLIEGTUIG_ID,
+                        REGISTRATIE: dataset![i].REGISTRATIE,
+                        REG_CALL: dataset![i].REG_CALL,
+                        CALLSIGN: dataset![i].CALLSIGN,
+                        TYPE_ID: dataset![i].TYPE_ID,
+                        SLEEPKIST: dataset![i].SLEEPKIST,
+                        TMG: dataset![i].TMG,
+                        ZELFSTART: dataset![i].ZELFSTART,
+                        CLUBKIST: dataset![i].CLUBKIST,
+                        ZITPLAATSEN: dataset![i].ZITPLAATSEN
+                    });
+            }
+        });
     }
 
     openPopup(id: number | null) {

@@ -1,3 +1,6 @@
+<app-error [error]="error"></app-error>
+<app-success [success]="success"></app-success>
+
 <div class="overflow-auto" *ngIf="data">
     <div *ngIf="data.starts.length > 0">
         <table class="vliegtuigenTabel">
@@ -46,4 +49,8 @@
             </tr>
         </table>
     </div>
+</div>
+
+<div class="spinnerOverlay" *ngIf="isLoading">
+    <app-loader></app-loader>
 </div>

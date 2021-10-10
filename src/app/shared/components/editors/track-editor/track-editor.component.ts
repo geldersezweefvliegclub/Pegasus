@@ -5,6 +5,7 @@ import {TracksService} from "../../../../services/apiservice/tracks.service";
 import {LedenService} from "../../../../services/apiservice/leden.service";
 import {LoginService} from "../../../../services/apiservice/login.service";
 import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
+import {Subscription} from "rxjs";
 
 @Component({
     selector: 'app-track-editor',
@@ -14,6 +15,7 @@ import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
 export class TrackEditorComponent implements OnInit{
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
+    ledenAbonnement: Subscription;
     leden: HeliosLedenDataset[] = [];
     track: HeliosTrack = {}
 
@@ -34,8 +36,9 @@ export class TrackEditorComponent implements OnInit{
     }
 
     ngOnInit() {
-        this.ledenService.getLeden().then((dataset) => {
-            this.leden = dataset;
+        // abonneer op wijziging van leden
+        this.ledenAbonnement = this.ledenService.ledenChange.subscribe(leden => {
+            this.leden = (leden) ? leden : [];
         });
     }
 

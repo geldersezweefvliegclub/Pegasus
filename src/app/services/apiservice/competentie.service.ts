@@ -1,25 +1,28 @@
 import {Injectable} from '@angular/core';
 import {
-    HeliosAanwezigLeden,
-    HeliosAanwezigLedenDataset,
     HeliosCompetenties,
     HeliosCompetentiesDataset,
-    HeliosType,
-    HeliosTypes
 } from "../../types/Helios";
 import {KeyValueArray} from "../../types/Utils";
 import {APIService} from "./api.service";
 import {StorageService} from "../storage/storage.service";
+import {BehaviorSubject} from "rxjs";
 
 @Injectable({
     providedIn: 'root'
 })
 export class CompetentieService {
+    private competentiesCache: HeliosCompetenties = { dataset: []};  // return waarde van API call
 
-    private competenties: HeliosCompetenties = { dataset: []};
+    private competentiesStore = new BehaviorSubject(this.competentiesCache.dataset);
+    public readonly competentiesChange = this.competentiesStore.asObservable();      // nieuwe aanwezigheid beschikbaar
 
     constructor(private readonly apiService: APIService,
                 private readonly storageService: StorageService) {
+
+        this.getCompetenties().then((dataset) => {
+            this.competentiesStore.next(this.competentiesCache.dataset!)    // afvuren event
+        });
     }
 
     async getCompetenties(): Promise<HeliosCompetentiesDataset[]> {
@@ -40,13 +43,13 @@ export class CompetentieService {
         try {
             const response = await this.apiService.get('Competenties/GetObjects', getParams);
 
-            this.competenties = await response.json();
+            this.competentiesCache = await response.json();
             this.storageService.opslaan('competenties', competenties);
         } catch (e) {
             if (e.responseCode !== 304) { // server bevat dezelfde data als cache
                 throw(e);
             }
         }
-        return this.competenties?.dataset as HeliosCompetentiesDataset[];
+        return this.competentiesCache?.dataset as HeliosCompetentiesDataset[];
     }
 }

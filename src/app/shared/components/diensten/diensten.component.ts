@@ -5,6 +5,7 @@ import {DateTime} from "luxon";
 import {SharedService} from "../../../services/shared/shared.service";
 import {HeliosDienstenDataset} from "../../../types/Helios";
 import {DagRoosterComponent} from "../dag-rooster/dag-rooster.component";
+import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
 
 @Component({
     selector: 'app-diensten',
@@ -22,6 +23,10 @@ export class DienstenComponent implements OnInit, OnChanges {
 
     diensten: HeliosDienstenDataset[];
     roosterDatum: DateTime;
+    isLoading: boolean = false;
+
+    success: SuccessMessage | undefined;
+    error: ErrorMessage | undefined;
 
     constructor(private readonly dienstenService: DienstenService,
                 private readonly sharedService: SharedService) {
@@ -65,12 +70,18 @@ export class DienstenComponent implements OnInit, OnChanges {
                 month: 12,
                 day: 31
             })
+
+            this.isLoading = true;
             this.dienstenService.getDiensten(startDatum, eindDatum, undefined, this.VliegerID).then((d) => {
+                this.isLoading = false;
                 if ((this.UitgebreideWeergave) || d.length < 5) {
                     this.diensten = d;
                 } else {
                     this.diensten = d.slice(0, 7);
                 }
+            }).catch(e => {
+                this.error = e;
+                this.isLoading = false;
             });
         }
     }

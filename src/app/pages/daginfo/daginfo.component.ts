@@ -6,7 +6,13 @@ import {SharedService} from '../../services/shared/shared.service';
 import {DateTime} from 'luxon';
 import {Observable, of, Subscription} from 'rxjs';
 import {ErrorMessage, SuccessMessage} from '../../types/Utils';
-import {HeliosDagInfo, HeliosRoosterDataset, HeliosType} from '../../types/Helios';
+import {
+    HeliosDagInfo,
+    HeliosDiensten,
+    HeliosDienstenDataset,
+    HeliosRoosterDataset,
+    HeliosType
+} from '../../types/Helios';
 import {TypesService} from '../../services/apiservice/types.service';
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {
@@ -55,6 +61,12 @@ export class DaginfoComponent implements OnInit {
     dagInfoAbonnement: Subscription;
     dagInfo: HeliosDagInfo;
 
+    dienstenAbonnement: Subscription;
+    roosterAbonnement: Subscription;
+    rooster: HeliosRoosterDataset[];
+    diensten: HeliosDienstenDataset[];
+
+    typesAbonnement: Subscription;
     veldTypes$: Observable<HeliosType[]>;
     startMethodeTypes$: Observable<HeliosType[]>;
 
@@ -85,8 +97,11 @@ export class DaginfoComponent implements OnInit {
         this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
         this.toonUitgebreid = !ui?.isStarttoren;
 
-        this.typesService.getTypes(5).then(types => this.startMethodeTypes$ = of(types));   // startmethodes
-        this.typesService.getTypes(9).then(types => this.veldTypes$ = of(types));           // vliegvelden
+        // abonneer op wijziging van types
+        this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
+            this.startMethodeTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 5}));    // startmethodes
+            this.veldTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));            // vliegvelden
+        });
 
         // de datum zoals die in de kalender gekozen is
         this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
@@ -97,9 +112,21 @@ export class DaginfoComponent implements OnInit {
             })
         })
 
-        // aboneer op wijziging van kalender dataum
+        // abonneer op wijziging van kalender datum
         this.dagInfoAbonnement = this.daginfoService.dagInfoChange.subscribe(di => {
             this.dagInfo = di;
+            this.heeftToegang();
+        });
+
+        // abonneer op wijziging van diensten
+        this.dienstenAbonnement = this.dienstenService.dienstenChange.subscribe(diensten => {
+            this.diensten = (diensten) ? diensten : [];
+            this.heeftToegang();
+        });
+
+        // abonneer op wijziging van rooster
+        this.roosterAbonnement = this.roosterService.roosterChange.subscribe(rooster => {
+            this.rooster = (rooster) ? rooster : [];
             this.heeftToegang();
         });
 
@@ -118,27 +145,29 @@ export class DaginfoComponent implements OnInit {
         if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT || ui?.isStarttoren) {
             geenToegang = false;
         } else {
-            let rooster: HeliosRoosterDataset = {DDWV: false};     // we hebben alleen de DDWV variable nodig
-            try {
-                const r = await this.roosterService.getRooster(this.datum, this.datum);
+            let rooster: HeliosRoosterDataset | undefined = this.rooster.find((dag) => {
+                DateTime.fromSQL(dag.DATUM!) == this.datum
+            })
 
-                if (r.length > 0) {                 // er is een rooster voor de dag
-                    if (r[0].DDWV == true) {        // het is een DWWV dag, misschien toch alles tonen
-                        if (ui?.isBeheerderDDWV) {  // Beheerder DDWV mag op DDWV dag alles inzien
-                            geenToegang = false;
-                        } else {
-                            const d = await this.dienstenService.getDiensten(this.datum, this.datum);
+            if (rooster) {
+                if (rooster.DDWV)               // het is een DWWV dag, misschien toch alles tonen
+                {
+                    if (ui?.isBeheerderDDWV) {  // Beheerder DDWV mag op DDWV dag alles inzien
+                        geenToegang = false;
+                    } else {
+                        let diensten: HeliosDienstenDataset[] | undefined = this.diensten.filter((dag) => {
+                            DateTime.fromSQL(dag.DATUM!) == this.datum
+                        })
 
-                            d.forEach(dienst => {
+                        if (diensten) {
+                            diensten.forEach(dienst => {
                                 if (dienst.LID_ID == this.loginService.userInfo?.LidData?.ID) { // de ingelode gebruiker had dienst, toon alles
                                     geenToegang = false;
                                 }
-                            })
-
+                            });
                         }
                     }
                 }
-            } catch (e) {
             }
         }
         this.geenToegang = geenToegang;
@@ -163,8 +192,7 @@ export class DaginfoComponent implements OnInit {
                     this.success = {titel: "Dag info", beschrijving: d + " is aangepast"}
                 });
             }
-        }
-        catch (e) {
+        } catch (e) {
             this.error = e;
         }
     }
@@ -182,8 +210,7 @@ export class DaginfoComponent implements OnInit {
 
                         this.dagInfo = {};
                     });
-                }
-                catch (e) {
+                } catch (e) {
                     this.error = e;
                 }
             }

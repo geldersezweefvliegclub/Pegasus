@@ -7,6 +7,7 @@ import {ModalComponent} from "../modal/modal.component";
 import {ErrorMessage, HeliosActie, SuccessMessage} from "../../../types/Utils";
 import {SharedService} from "../../../services/shared/shared.service";
 import {CompetentieService} from "../../../services/apiservice/competentie.service";
+import {Subscription} from "rxjs";
 
 export class ProgressieTreeviewItemComponent extends TreeviewItem {
     ProgresssieID: number | undefined;
@@ -25,6 +26,7 @@ export class ProgressieBoomComponent implements OnInit {
     @ViewChild(ModalComponent) private bevestigPopup: ModalComponent;
 
     boom: ProgressieTreeviewItemComponent[];
+    competentiesAbonnement: Subscription;
     competenties: HeliosCompetentiesDataset[];
     values: number[];
     suspend: boolean = false;
@@ -56,12 +58,16 @@ export class ProgressieBoomComponent implements OnInit {
             }
         });
 
+        // abonneer op wijziging van competenties
+        this.competentiesAbonnement = this.competentieService.competentiesChange.subscribe(dataset => {
+            this.competenties = dataset!;
+        });
+
         const ui = this.loginService.userInfo?.Userinfo;
         this.isDisabled = !(ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT);
     }
 
     ngOnInit(): void {
-        this.competentieService.getCompetenties().then((competenties) => this.competenties = competenties)
         this.ophalen();
     }
 

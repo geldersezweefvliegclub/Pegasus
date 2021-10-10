@@ -6,6 +6,7 @@ import {ErrorMessage, HeliosActie, SuccessMessage} from "../../../types/Utils";
 import {SharedService} from "../../../services/shared/shared.service";
 import {LoginService} from "../../../services/apiservice/login.service";
 import {CompetentieService} from "../../../services/apiservice/competentie.service";
+import {Subscription} from "rxjs";
 
 @Component({
     selector: 'app-pvb',
@@ -17,8 +18,10 @@ export class PvbComponent implements OnInit, OnChanges {
 
     PVBs: any[];
     gehaaldeProgressie: HeliosBehaaldeProgressieDataset[];
+    competentiesAbonnement: Subscription;
     competenties: HeliosCompetentiesDataset[];
     suspend: boolean = false;
+    isLoading: boolean = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -37,11 +40,15 @@ export class PvbComponent implements OnInit, OnChanges {
                 }
             }
         });
+
+        // abonneer op wijziging van competenties
+        this.competentiesAbonnement = this.competentieService.competentiesChange.subscribe(dataset => {
+            this.competenties = dataset!;
+        });
     }
 
     ngOnInit(): void {
         this.PVBs = this.configService.getPVB();
-        this.competentieService.getCompetenties().then((competenties) => this.competenties = competenties)
         this.ophalen();
     }
 
@@ -52,7 +59,7 @@ export class PvbComponent implements OnInit, OnChanges {
     }
 
     ophalen(): void {
-        if (!this.PVBs) // er zijn nog geen PVB
+        if (!this.PVBs) // er zijn nog geen PVB geconfigureerd
             return;
 
         // maak CSV string met de competentie IDs van de PVBs
@@ -60,7 +67,14 @@ export class PvbComponent implements OnInit, OnChanges {
             return p.Lokaal + "," + p.Overland;
         }).join(',');
 
-        this.progressieService.getProgressie(this.VliegerID, comptentieIDs).then((p) => this.gehaaldeProgressie = p);
+        this.isLoading = true;
+        this.progressieService.getProgressie(this.VliegerID, comptentieIDs).then((p) => {
+            this.gehaaldeProgressie = p;
+            this.isLoading = false;
+        }).catch(e => {
+            this.error = e;
+            this.isLoading = false;
+        });
     }
 
     PVBgehaald(comptentieID: number): boolean {

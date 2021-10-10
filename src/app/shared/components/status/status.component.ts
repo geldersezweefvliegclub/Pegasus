@@ -6,6 +6,7 @@ import {ErrorMessage, HeliosActie, SuccessMessage} from "../../../types/Utils";
 import {SharedService} from "../../../services/shared/shared.service";
 import {LoginService} from "../../../services/apiservice/login.service";
 import {CompetentieService} from "../../../services/apiservice/competentie.service";
+import {Subscription} from "rxjs";
 
 @Component({
     selector: 'app-status',
@@ -18,8 +19,10 @@ export class StatusComponent implements OnInit, OnChanges {
     cheks: any;
     overig: any;
     gehaaldeProgressie: HeliosBehaaldeProgressieDataset[];
+    competentiesAbonnement: Subscription;
     competenties: HeliosCompetentiesDataset[];
     suspend: boolean = false;
+    isLoading: boolean = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -38,12 +41,16 @@ export class StatusComponent implements OnInit, OnChanges {
                 }
             }
         });
+
+        // abonneer op wijziging van competenties
+        this.competentiesAbonnement = this.competentieService.competentiesChange.subscribe(dataset => {
+            this.competenties = dataset!;
+        });
     }
 
     ngOnInit(): void {
         this.cheks = this.configService.getChecks();
         this.overig = this.configService.getOverig();
-        this.competentieService.getCompetenties().then((competenties) => this.competenties = competenties)
         this.ophalen();
     }
 
@@ -64,7 +71,14 @@ export class StatusComponent implements OnInit, OnChanges {
             return p.CompetentieID;
         }).join(',');
 
-        this.progressieService.getProgressie(this.VliegerID, comptentieIDs).then((p) => this.gehaaldeProgressie = p);
+        this.isLoading = true;
+        this.progressieService.getProgressie(this.VliegerID, comptentieIDs).then((p) => {
+            this.isLoading = false;
+            this.gehaaldeProgressie = p
+        }).catch(e => {
+            this.error = e;
+            this.isLoading = false;
+        });
     }
 
     CheckGehaald(comptentieID: number): boolean {

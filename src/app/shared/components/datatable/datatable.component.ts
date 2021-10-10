@@ -94,17 +94,16 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         if (this.api) {
             this.api.setColumnDefs(this.columnDefs);
             this.api.setRowData(this.rowData);
-        }
 
-        if (changes.hasOwnProperty("loading")) {
-            if (changes["loading"].currentValue) {
-                this.api.showLoadingOverlay()
-            }
-            else {
-            //  is niet nodig, gaat vanzelf
+
+            if (changes.hasOwnProperty("loading")) {
+                if (changes["loading"].currentValue) {
+                    this.api.showLoadingOverlay()
+                } else {
+                    //  is niet nodig, gaat vanzelf
+                }
             }
         }
-
     }
 
     onRowDoubleClicked(event: RowDoubleClickedEvent) {

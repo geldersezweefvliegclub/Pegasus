@@ -12,7 +12,7 @@ import {LedenService} from "../../services/apiservice/leden.service";
 import {TypesService} from "../../services/apiservice/types.service";
 import {faAvianex} from "@fortawesome/free-brands-svg-icons";
 import {ModalComponent} from "../../shared/components/modal/modal.component";
-import {Subscription} from "rxjs";
+import {of, Subscription} from "rxjs";
 import {DateTime} from "luxon";
 import {SharedService} from "../../services/shared/shared.service";
 import * as xlsx from "xlsx";
@@ -27,27 +27,28 @@ import {StartEditorComponent} from "../../shared/components/editors/start-editor
     styleUrls: ['./dashboard-page.component.scss']
 })
 export class DashboardPageComponent implements OnInit {
-    iconCardIcon: IconDefinition = faChartPie;
-    iconProgressie: IconDefinition = faChartLine;
-    iconLogboek: IconDefinition = faClipboardList;
-    iconRooster: IconDefinition = faCalendarAlt;
-    iconRecency: IconDefinition = faTachometerAlt;
-    iconPVB: IconDefinition = faAvianex;
-    iconStatus: IconDefinition = faBookmark;
-    iconExpand: IconDefinition = faExternalLinkSquareAlt;
-    iconPlane: IconDefinition = faPlane;
-    iconTracks: IconDefinition = faAddressCard;
+    private iconCardIcon: IconDefinition = faChartPie;
+    private iconProgressie: IconDefinition = faChartLine;
+    private iconLogboek: IconDefinition = faClipboardList;
+    private iconRooster: IconDefinition = faCalendarAlt;
+    private iconRecency: IconDefinition = faTachometerAlt;
+    private iconPVB: IconDefinition = faAvianex;
+    private iconStatus: IconDefinition = faBookmark;
+    private iconExpand: IconDefinition = faExternalLinkSquareAlt;
+    private iconPlane: IconDefinition = faPlane;
+    private iconTracks: IconDefinition = faAddressCard;
 
-    lidTypes: HeliosType[] = [];
-    lidData: HeliosLid;
+    private typesAbonnement: Subscription;
+    private lidTypes: HeliosType[] = [];
+    private lidData: HeliosLid;
 
-    datumAbonnement: Subscription;         // volg de keuze van de kalender
-    datum: DateTime;                       // de gekozen dag
+    private datumAbonnement: Subscription;         // volg de keuze van de kalender
+    private datum: DateTime;                       // de gekozen dag
 
-    toonTracks: boolean = false;           // mogen de tracks vertoon worden
+    private toonTracks: boolean = false;           // mogen de tracks vertoon worden
 
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
+    private success: SuccessMessage | undefined;
+    private error: ErrorMessage | undefined;
 
     @ViewChild('logboekPopup') private popupLogboek: ModalComponent;
     @ViewChild('dienstenPopup') private popupDiensten: ModalComponent;
@@ -75,7 +76,10 @@ export class DashboardPageComponent implements OnInit {
             })
         })
 
-        this.typesService.getTypes(6).then(types => this.lidTypes = types); // ophalen lidtypes
+        // abonneer op wijziging van types
+        this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
+            this.lidTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 6});    // lidtypes
+        });
 
         // Als lidID is meegegeven in URL, moeten we de lidData ophalen
         this.activatedRoute.queryParams.subscribe(params => {

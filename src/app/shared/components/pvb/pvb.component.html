@@ -17,7 +17,8 @@
                    class="form-check-inline"
                    (change)="zetProgressie($event, p.Lokaal)"
                    [checked]="PVBgehaald(p.Lokaal)"
-                   [disabled]="CheckDisabled(p.Lokaal)">           <!-- als checked, dan disable. Verwijderen via progressie boom -->
+                   [disabled]="CheckDisabled(p.Lokaal)">
+            <!-- als checked, dan disable. Verwijderen via progressie boom -->
         </td>
         <td class="kolom3">
             <input type="checkbox"
@@ -25,7 +26,12 @@
                    class="form-check-inline"
                    (change)="zetProgressie($event, p.Overland)"
                    [checked]="PVBgehaald(p.Overland)"
-                   [disabled]="CheckDisabled(p.Overland)">         <!-- als checked, dan disable. Verwijderen via progressie boom -->
+                   [disabled]="CheckDisabled(p.Overland)">
+            <!-- als checked, dan disable. Verwijderen via progressie boom -->
         </td>
     </tr>
 </table>
+
+<div class="spinnerOverlay" *ngIf="isLoading">
+    <app-loader></app-loader>
+</div>

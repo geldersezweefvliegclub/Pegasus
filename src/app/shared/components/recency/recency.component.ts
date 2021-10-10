@@ -2,6 +2,7 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@an
 import {StartlijstService} from "../../../services/apiservice/startlijst.service";
 import {HeliosRecency} from "../../../types/Helios";
 import {RecencyGrafiekComponent} from "./recency-grafiek/recency-grafiek.component";
+import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
 
 @Component({
     selector: 'app-recency',
@@ -15,6 +16,10 @@ export class RecencyComponent implements OnInit, OnChanges {
     @ViewChild(RecencyGrafiekComponent) private grafiek: RecencyGrafiekComponent;
 
     recency: HeliosRecency;
+    isLoading: boolean = false;
+
+    success: SuccessMessage | undefined;
+    error: ErrorMessage | undefined;
 
     constructor(private readonly startlijstService: StartlijstService) {
     }
@@ -24,7 +29,14 @@ export class RecencyComponent implements OnInit, OnChanges {
     }
 
     ophalen(): void {
-        this.startlijstService.getRecency(this.VliegerID).then((r) => this.recency = r);
+        this.isLoading = true;
+        this.startlijstService.getRecency(this.VliegerID).then((r) => {
+            this.isLoading = false;
+            this.recency = r
+        }).catch(e => {
+            this.error = e;
+            this.isLoading = false;
+        });
     }
 
     ngOnChanges(changes: SimpleChanges) {

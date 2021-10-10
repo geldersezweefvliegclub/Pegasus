@@ -17,6 +17,7 @@ import {ImageCropComponent} from "../../image-crop/image-crop.component";
 import {AvatarComponent} from "../../avatar/avatar.component";
 import {ModalComponent} from "../../modal/modal.component";
 import {PegasusCardComponent} from "../../pegasus-card/pegasus-card.component";
+import {of, Subscription} from "rxjs";
 
 @Component({
     selector: 'app-lid-editor',
@@ -29,32 +30,34 @@ export class LidEditorComponent implements OnInit {
     @Input() isVerwijderMode: boolean = false;
     @Input() isRestoreMode: boolean = false;
 
-    lid: HeliosLid = {};
-    types: HeliosType[];
 
-    wachtwoordVerborgen: boolean = true;
-    oogIcon: IconDefinition = faEye;
-    informatieIcon: IconDefinition = faInfo;
-    infoIcon: IconDefinition = faInfoCircle;
-    persoonIcon: IconDefinition = faUser;
+    private typesAbonnement: Subscription;
+    private types: HeliosType[];
+    private lid: HeliosLid = {};
 
-    controleWachtwoord: string = '';
-    wachtwoord: string = '';
+    private wachtwoordVerborgen: boolean = true;
+    private oogIcon: IconDefinition = faEye;
+    private informatieIcon: IconDefinition = faInfo;
+    private infoIcon: IconDefinition = faInfoCircle;
+    private persoonIcon: IconDefinition = faUser;
 
-    subtitel: string = 'Instellen van gegevens en voorkeuren';
-    titel: string = 'Aanpassen profiel';
-    avatar: string | null | undefined;
+    private controleWachtwoord: string = '';
+    private wachtwoord: string = '';
 
-    isLoading: boolean = false;
+    private subtitel: string = 'Instellen van gegevens en voorkeuren';
+    private titel: string = 'Aanpassen profiel';
+    private avatar: string | null | undefined;
 
-    MedicalDatum: NgbDate | null;
-    GeboorteDatum: NgbDate | null;
+    private isLoading: boolean = false;
 
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
+    private MedicalDatum: NgbDate | null;
+    private GeboorteDatum: NgbDate | null;
+
+    private success: SuccessMessage | undefined;
+    private error: ErrorMessage | undefined;
 
     constructor(
-        private readonly typeService: TypesService,
+        private readonly typesService: TypesService,
         private readonly ledenService: LedenService,
         private readonly loginService: LoginService,
         private readonly imageService: ImageService,
@@ -63,7 +66,11 @@ export class LidEditorComponent implements OnInit {
         private readonly changeDetector: ChangeDetectorRef) {}
 
     ngOnInit(): void {
-        this.typeService.getTypes(6).then(types => this.types = types);
+
+        // abonneer op wijziging van types
+        this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
+            this.types = dataset!.filter((t:HeliosType) => { return t.GROEP == 6});    // lidtypes
+        });
 
         if (this.lidID > 0) {
             this.isLoading = true;

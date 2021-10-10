@@ -26,3 +26,11 @@
   padding-right: 20px;
 }
 
+.spinnerOverlay {
+  position: absolute; /* Sit on top of the page content */
+  top: calc(100% - 30px);
+  left: calc(100% - 25px);
+  font-size: 20px;
+  color: #e6ca87;
+  z-index: 2;
+}

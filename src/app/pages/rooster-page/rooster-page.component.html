@@ -379,8 +379,8 @@
                                    class="form-control"
                                    [(ngModel)]="zoekString"
                                    name="zoekString"
-                                   (keyup)="opvragen()"
-                                   (search)="opvragen()"
+                                   (keyup)="filterLeden()"
+                                   (search)="filterLeden()"
                             >
                             <app-icon-button class="toolbarBtn" iconNaam="fas Redo" (btnClicked)="opvragen()"
                                              btnColor="btn-primary"></app-icon-button>

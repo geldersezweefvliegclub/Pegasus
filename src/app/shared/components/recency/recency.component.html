@@ -1,3 +1,6 @@
+<app-error [error]="error"></app-error>
+<app-success [success]="success"></app-success>
+
 <div *ngIf="recency">
     <a (click)="openRecencyPopup()" class="recencyGrafiek">
         <div class="d-flex flex-column  groen" *ngIf="recency.STATUS_BAROMETER == 'groen'">
@@ -30,5 +33,9 @@
     </div>
 </div>
 
+<div class="spinnerOverlay" *ngIf="isLoading">
+    <app-loader></app-loader>
+</div>
 
 <app-recency-grafiek [VliegerID]="VliegerID" [naam]=""></app-recency-grafiek>
+

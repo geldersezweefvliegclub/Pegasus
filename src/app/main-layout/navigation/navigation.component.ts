@@ -11,12 +11,13 @@ import {HeliosActie, KalenderMaand} from '../../types/Utils';
 import {getBeginEindDatumVanMaand} from '../../utils/Utils';
 
 import {LoginService} from '../../services/apiservice/login.service';
-import {HeliosRoosterDataset} from "../../types/Helios";
+import {HeliosAanwezigLedenDataset, HeliosRoosterDataset} from "../../types/Helios";
 import {RoosterService} from "../../services/apiservice/rooster.service";
 import {DienstenService} from "../../services/apiservice/diensten.service";
 import {VliegtuigenService} from "../../services/apiservice/vliegtuigen.service";
 import {StartlijstService} from '../../services/apiservice/startlijst.service';
 import {DaginfoService} from '../../services/apiservice/daginfo.service';
+import {Subscription} from "rxjs";
 
 
 @Component({
@@ -42,7 +43,7 @@ export class NavigationComponent {
     diensten: string = "";          // daginfos van deze maand in json formaat
     daginfo: string = "";           // daginfos van deze maand in json formaat
 
-    dienstenTimer: number;          // kleine vertraging om data ophalen te beperken
+    dienstenAbonnement: Subscription;
 
     constructor(private readonly loginService: LoginService,
                 private readonly startlijstService: StartlijstService,
@@ -102,18 +103,12 @@ export class NavigationComponent {
             if (ev.tabel == "Vliegtuigen") {
                 this.vliegtuigenBatch();
             }
-            if (ev.tabel == "Diensten") {
-                clearTimeout(this.dienstenTimer);
+        });
 
-                // Wacht even de gebruiker kan nog aan het typen zijn
-                this.dienstenTimer = window.setTimeout(() => {
-                    const ui = this.loginService.userInfo?.LidData;
-                    this.dienstenService.getDiensten(this.startDatum, this.eindDatum, undefined, ui?.ID).then((dataset) => {
-                        this.diensten = JSON.stringify(dataset);
-                    });
-
-                }, 400);
-            }
+        // abonneer op wijziging van diensten
+        this.dienstenAbonnement = this.dienstenService.dienstenChange.subscribe(maandDiensten => {
+            const ui = this.loginService.userInfo?.LidData;
+            this.diensten = JSON.stringify(maandDiensten!.filter((dienst) => { return dienst.LID_ID  == ui!.ID}));
         });
 
         this.vliegtuigenBatch();

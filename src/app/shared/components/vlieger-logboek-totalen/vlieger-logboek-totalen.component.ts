@@ -4,6 +4,7 @@ import {DateTime} from "luxon";
 import {HeliosLogboekTotalen} from "../../../types/Helios";
 import {StartlijstService} from "../../../services/apiservice/startlijst.service";
 import {SharedService} from "../../../services/shared/shared.service";
+import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
 
 @Component({
     selector: 'app-vlieger-logboek-totalen',
@@ -16,6 +17,10 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges {
     datumAbonnement: Subscription;         // volg de keuze van de kalender
     datum: DateTime;                       // de gekozen dag
     data: HeliosLogboekTotalen;
+    isLoading: boolean = false;
+
+    success: SuccessMessage | undefined;
+    error: ErrorMessage | undefined;
 
     constructor(private readonly startlijstService: StartlijstService,
                 private readonly sharedService: SharedService) {
@@ -51,8 +56,13 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges {
     // opvragen van de totalen uit het vlieger logboek
     opvragen(): void {
         if (this.datum) {
+            this.isLoading = true;
             this.startlijstService.getLogboekTotalen(this.VliegerID, this.datum.year).then((dataset) => {
+                this.isLoading = false;
                 this.data = dataset;
+            }).catch(e => {
+                this.error = e;
+                this.isLoading = false;
             });
         }
     }

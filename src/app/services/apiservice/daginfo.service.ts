@@ -19,13 +19,13 @@ import {RoosterService} from "./rooster.service";
     providedIn: 'root'
 })
 export class DaginfoService {
-    private dagInfoTotaal: HeliosDagInfoDagen = { dataset: []};
-    private dagen: HeliosDagInfoDagen = { dataset: []};
-    public dagInfo: HeliosDagInfo = {};             // hier kunnen de componenten de daginfo ophalen (bijv start invoer)
+    private dagInfoTotaalCache: HeliosDagInfoDagen = { dataset: []}; // return waarde van API call
+    private dagenCache: HeliosDagInfoDagen = { dataset: []};         // return waarde van API call
 
     private datumAbonnement: Subscription;         // volg de keuze van de kalender
     private datum: DateTime;                       // de gekozen dag
 
+    public dagInfo: HeliosDagInfo = {};             // hier kunnen de componenten de daginfo ophalen (bijv start invoer)
     private dagInfoStore = new BehaviorSubject(this.dagInfo);
     public readonly dagInfoChange = this.dagInfoStore.asObservable();      // nieuwe dagInfo beschikbaar
 
@@ -63,7 +63,7 @@ export class DaginfoService {
         try {
             const response: Response = await this.APIService.get('Daginfo/GetObjects', getParams);
 
-            this.dagen = await response.json();
+            this.dagenCache = await response.json();
 
         } catch (e) {
             if (e.responseCode !== 404) {       // er is geen data
@@ -71,7 +71,7 @@ export class DaginfoService {
             }
             return [];
         }
-        return this.dagen?.dataset as [];
+        return this.dagenCache?.dataset as [];
     }
 
 
@@ -82,14 +82,14 @@ export class DaginfoService {
             return [];
         }
 
-        if (((this.dagInfoTotaal == null)) && (this.storageService.ophalen('daginfo') != null)) {
-            this.dagInfoTotaal = this.storageService.ophalen('daginfo');
+        if (((this.dagInfoTotaalCache == null)) && (this.storageService.ophalen('daginfo') != null)) {
+            this.dagInfoTotaalCache = this.storageService.ophalen('daginfo');
         }
 
         let getParams: KeyValueArray = params;
 
-        if (this.dagInfoTotaal != null) {           // we hebben eerder de lijst opgehaald
-            hash = this.dagInfoTotaal.hash as string;
+        if (this.dagInfoTotaalCache != null) {           // we hebben eerder de lijst opgehaald
+            hash = this.dagInfoTotaalCache.hash as string;
 //            getParams['HASH'] = hash;
         }
 
@@ -107,14 +107,14 @@ export class DaginfoService {
         try {
             const response: Response = await this.APIService.get('Daginfo/GetObjects', getParams);
 
-            this.dagInfoTotaal = await response.json();
-            this.storageService.opslaan('starts', this.dagInfoTotaal);
+            this.dagInfoTotaalCache = await response.json();
+            this.storageService.opslaan('starts', this.dagInfoTotaalCache);
         } catch (e) {
             if (e.responseCode !== 304) {       // server bevat dezelfde data als cache
                 throw(e);
             }
         }
-        return this.dagInfoTotaal?.dataset as [];
+        return this.dagInfoTotaalCache?.dataset as [];
     }
 
     // haal de daginfo op van een enkele dag

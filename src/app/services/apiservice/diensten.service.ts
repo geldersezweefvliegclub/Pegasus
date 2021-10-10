@@ -10,6 +10,9 @@ import {APIService} from "./api.service";
 import {StorageService} from "../storage/storage.service";
 import {KeyValueArray} from "../../types/Utils";
 import {DateTime} from "luxon";
+import {BehaviorSubject, Subscription} from "rxjs";
+import {SharedService} from "../shared/shared.service";
+import {getBeginEindDatumVanMaand} from "../../utils/Utils";
 
 @Injectable({
     providedIn: 'root'
@@ -17,11 +20,49 @@ import {DateTime} from "luxon";
 
 
 export class DienstenService {
-    private diensten: HeliosDiensten = { dataset: []};
-    private totalen: HeliosDienstenTotaal[] = [];
+    private refreshTimer: number;
+
+    private dienstenCache: HeliosDiensten = { dataset: []};     // return waarde van API call
+    private totalenCache: HeliosDienstenTotaal[] = [];          // return waarde van API call
+
+    private datumAbonnement: Subscription;                  // volg de keuze van de kalender
+    private datum: DateTime;                                // de gekozen dag
+
+    private dienstenStore = new BehaviorSubject(this.dienstenCache.dataset);
+    public readonly dienstenChange = this.dienstenStore.asObservable();      // nieuw rooster beschikbaar
 
     constructor(private readonly apiService: APIService,
-                private readonly storageService: StorageService) {
+                private readonly sharedService: SharedService) {
+
+        // de datum zoals die in de kalender gekozen is
+        this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(datum => {
+            this.datum = DateTime.fromObject({
+                year: datum.year,
+                month: datum.month,
+                day: 1
+            });
+
+            const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
+
+            this.getDiensten(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
+                this.dienstenStore.next(this.dienstenCache.dataset)    // afvuren event
+            });
+        });
+
+        // Als roosterdagen zijn toegevoegd, dan moeten we overzicht opnieuw ophalen
+        this.sharedService.heliosEventFired.subscribe(ev => {
+            if (ev.tabel == "Diensten") {
+                // Niet meteen opvragen, maar bundelen en 1 keer opvragen
+                clearTimeout(this.refreshTimer);
+                this.refreshTimer = window.setTimeout(() => {
+                    const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
+
+                    this.getDiensten(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
+                        this.dienstenStore.next(this.dienstenCache.dataset)    // afvuren event
+                    });
+                }, 500);
+            }
+        });
     }
 
     async getDiensten(startDatum: DateTime, eindDatum: DateTime, dienstType?: number, lidID?: number): Promise<HeliosDienstenDataset[]> {
@@ -38,13 +79,13 @@ export class DienstenService {
 
         try {
             const response: Response = await this.apiService.get('Diensten/GetObjects', getParams);
-            this.diensten = await response.json();
+            this.dienstenCache = await response.json();
         } catch (e) {
             if (e.responseCode !== 304) { // server bevat dezelfde data als cache
                 throw(e);
             }
         }
-        return this.diensten?.dataset as HeliosTracksDataset[];
+        return this.dienstenCache?.dataset as HeliosTracksDataset[];
     }
 
 
@@ -59,8 +100,8 @@ export class DienstenService {
         try {
             const response: Response = await this.apiService.get('Diensten/TotaalDiensten', getParams);
 
-            this.totalen = await response.json();
-            return this.totalen;
+            this.totalenCache = await response.json();
+            return this.totalenCache;
 
         } catch (e) {
             if (e.responseCode !== 304) { // server bevat dezelfde data als cache

@@ -1,31 +1,78 @@
 import {Injectable} from '@angular/core';
 import {StorageService} from '../storage/storage.service';
 import {DateTime} from 'luxon';
-import {KeyValueArray} from '../../types/Utils';
+import {HeliosActie, KeyValueArray} from '../../types/Utils';
 import {APIService} from './api.service';
-import {HeliosAanwezigLeden, HeliosAanwezigLedenDataset, HeliosAanwezigVliegtuigenDataset} from '../../types/Helios';
+import {HeliosAanwezigLeden, HeliosAanwezigLedenDataset} from '../../types/Helios';
+import {BehaviorSubject, Subscription} from "rxjs";
+import {SharedService} from "../shared/shared.service";
 
 
 @Injectable({
     providedIn: 'root'
 })
 export class AanwezigLedenService {
-    private aanwezig: HeliosAanwezigLeden = { dataset: []};
+    private aanwezigCache: HeliosAanwezigLeden = {dataset: []}; // return waarde van API call
+    private datumAbonnement: Subscription;                      // volg de keuze van de kalender
+    private datum: DateTime;                                    // de gekozen dag
 
-    constructor(private readonly APIService: APIService, private readonly storageService: StorageService) {
+    private ophaalTimer: number;                                // Iedere 15 min halen we de aanwezige leden op
+    private aanwezigStore = new BehaviorSubject(this.aanwezigCache.dataset);
+    public readonly aanwezigChange = this.aanwezigStore.asObservable();      // nieuwe aanwezigheid beschikbaar
+
+    constructor(private readonly APIService: APIService,
+                private readonly sharedService: SharedService,
+                private readonly storageService: StorageService) {
+
+        // de datum zoals die in de kalender gekozen is
+        this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
+            this.datum = DateTime.fromObject({
+                year: datum.year,
+                month: datum.month,
+                day: datum.day
+            });
+
+            this.getAanwezig(this.datum,this.datum).then((dataset) => {
+                this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
+            });
+
+            // Als we vandaag geselecteerd hebben, halen we iedere 15 min de data van de server
+            // Iemand kan zich aangemeld hebben, bijv via de app
+            if (this.datum.toISODate() == DateTime.now().toISODate()) {
+                this.ophaalTimer = window.setInterval(() => {
+                    this.getAanwezig(this.datum,this.datum).then((dataset) => {
+                        this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
+                    });
+                }, 1000 * 60 * 15);
+            }
+            else {
+                clearInterval(this.ophaalTimer);
+            }
+
+            // Als start is toegevoegd, dan kan lid aanwezig gemeld worden
+            this.sharedService.heliosEventFired.subscribe(ev => {
+                if (ev.tabel == "Startlijst") {
+                    if (ev.actie == HeliosActie.Add) {
+                        this.getAanwezig(this.datum, this.datum).then((dataset) => {
+                            this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
+                        });
+                    }
+                }
+            });
+        });
     }
 
     async getAanwezig(startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosAanwezigLedenDataset[]> {
         let hash: string = '';
 
-        if (((this.aanwezig == null)) && (this.storageService.ophalen('aanwezigLeden') != null)) {
-            this.aanwezig = this.storageService.ophalen('aanwezigLeden');
+        if (((this.aanwezigCache == null)) && (this.storageService.ophalen('aanwezigLeden') != null)) {
+            this.aanwezigCache = this.storageService.ophalen('aanwezigLeden');
         }
 
         let getParams: KeyValueArray = params;
 
-        if (this.aanwezig != null) { // we hebben eerder de lijst opgehaald
-            hash = this.aanwezig.hash as string;
+        if (this.aanwezigCache != null) { // we hebben eerder de lijst opgehaald
+            hash = this.aanwezigCache.hash as string;
 //      getParams['HASH'] = hash;
         }
 
@@ -39,13 +86,13 @@ export class AanwezigLedenService {
         try {
             const response: Response = await this.APIService.get('AanwezigLeden/GetObjects', getParams);
 
-            this.aanwezig = await response.json();
-            this.storageService.opslaan('aanwezigLeden', this.aanwezig);
+            this.aanwezigCache = await response.json();
+            this.storageService.opslaan('aanwezigLeden', this.aanwezigCache);
         } catch (e) {
             if (e.responseCode !== 304) { // server bevat dezelfde data als cache
                 throw(e);
             }
         }
-        return this.aanwezig?.dataset as HeliosAanwezigLedenDataset[];
+        return this.aanwezigCache?.dataset as HeliosAanwezigLedenDataset[];
     }
 }

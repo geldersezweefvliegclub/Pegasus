@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {ModalComponent} from '../../../shared/components/modal/modal.component';
-import {Observable, of} from 'rxjs';
+import {Observable, of, Subscription} from 'rxjs';
 import {HeliosType} from '../../../types/Helios';
 import {TypesService} from '../../../services/apiservice/types.service';
 import {DateTime} from 'luxon';
@@ -16,6 +16,7 @@ export class ComposeBedrijfComponent {
     @Output() opslaan: EventEmitter<string> = new EventEmitter<string>();
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
+    typesAbonnement: Subscription;
     startMethodeTypes$: Observable<HeliosType[]>;
     clubTypes$: Observable<HeliosType[]>;
     baanTypes$: Observable<HeliosType[]>;
@@ -28,13 +29,15 @@ export class ComposeBedrijfComponent {
     linkerhandCircuit: boolean;
     rechterhandCircuit: boolean;
 
-
     constructor(private readonly typesService: TypesService) {
 
-        this.typesService.getTypes(1).then(types => this.baanTypes$ = of(types));
-        this.typesService.getTypes(5).then(types => this.startMethodeTypes$ = of(types));
-        this.typesService.getTypes(14).then(types => this.luchtruimTypes$ = of(types));
-        this.typesService.getTypes(15).then(types => this.clubTypes$ = of(types));
+        // abonneer op wijziging van types
+        this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
+            this.baanTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 1}));
+            this.startMethodeTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 5}));
+            this.luchtruimTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 14}));
+            this.clubTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 15}));
+        });
     }
 
     // open het popup scherm voor de wizard

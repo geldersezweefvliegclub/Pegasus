@@ -17,7 +17,6 @@ import {
 import {SharedService} from '../../services/shared/shared.service';
 import {Subscription} from 'rxjs';
 import {RoosterService} from '../../services/apiservice/rooster.service';
-import {getBeginEindDatumVanMaand} from '../../utils/Utils';
 import {ErrorMessage} from '../../types/Utils';
 import {DateTime} from 'luxon';
 import {LedenFilterComponent} from "../../shared/components/leden-filter/leden-filter.component";
@@ -64,7 +63,7 @@ export class RoosterPageComponent implements OnInit {
     readonly MIDDAG_HULPLIERIST_TYPE_ID = 1808;
     readonly MIDDAG_STARTLEIDER_TYPE_ID = 1809;
 
-    readonly MaxDienstenPerMaand = 2;
+    private readonly MaxDienstenPerMaand = 2;
 
     toonStartleiders = true;
     toonInstructeurs = true;
@@ -72,16 +71,21 @@ export class RoosterPageComponent implements OnInit {
     toonDDWV = false;
     toonTotalen = false
 
+    typesAbonnement: Subscription;
     dienstTypes: HeliosType[] = [];
-    isStartleider = false;
-    isInstructeur = false;
-    isLierist = false;
-    isDDWV = false;
+    isStartleider: boolean = false;
+    isInstructeur: boolean = false;
+    isLierist: boolean = false;
+    isDDWV: boolean = false;
 
-    toonClubDDWV = 1;            // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
+    toonClubDDWV: number = 1;            // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
 
+    ledenAbonnement: Subscription;
     alleLeden: HeliosLedenDatasetExtended[];
     filteredLeden: HeliosLedenDatasetExtended[];
+
+    dienstenAbonnement: Subscription;
+    roosterAbonnement: Subscription;
     heleRooster: HeliosRoosterDagExtended[];
     filteredRooster: HeliosRoosterDagExtended[];
 
@@ -130,33 +134,33 @@ export class RoosterPageComponent implements OnInit {
             if (this.alleLeden) {       // eerst moeten de leden geladen zijn
                 setTimeout(() => this.opvragenTotalen(), 200);  // kleine vertraging, opvragen Rooster heeft prioriteit
             }
-            this.opvragenRooster();
         })
 
-        this.opvragenLeden();
-        this.typesService.getTypes(18).then(types => this.dienstTypes = types); // ophalen lidtypes
-    }
+        // abonneer op wijziging van rooster
+        this.roosterAbonnement = this.roosterService.roosterChange.subscribe(maandRooster => {
+            this.maandRooster(maandRooster!)
+        });
 
-    /**
-     * Haal alle informatie op
-     * @private
-     */
-    private opvragen() {
-        this.opvragenLeden();
-        this.opvragenRooster();
-    }
+        // abonneer op wijziging van diensten
+        this.dienstenAbonnement = this.dienstenService.dienstenChange.subscribe(maandDiensten => {
+            this.maandDiensten(maandDiensten!)
+        });
 
-    private opvragenLeden() {
-        this.ledenService.getLeden(false).then(leden => {
-            this.alleLeden = leden;
+        // abonneer op wijziging van leden
+        this.ledenAbonnement = this.ledenService.ledenChange.subscribe(leden => {
+            this.alleLeden = (leden) ? leden : [];
             for (let i = 0; i < this.alleLeden.length; i++) {
                 this.alleLeden[i].INGEDEELD_MAAND = 0;
                 this.alleLeden[i].INGEDEELD_JAAR = 0;
             }
             this.applyLedenFilter();
             this.opvragenTotalen();
+        });
 
-        }).catch(e => this.catchError(e));
+        // abonneer op wijziging van types
+        this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
+            this.dienstTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 18});    // type diensten
+        });
     }
 
     private opvragenTotalen() {
@@ -183,32 +187,24 @@ export class RoosterPageComponent implements OnInit {
         }
     }
 
-    private opvragenRooster() {
-        this.isLoading = true;
+    private maandRooster(maandRooster: HeliosRoosterDataset[]) {
+        // lege placeholder voor diensten toevoegen
+        (maandRooster as HeliosRoosterDagExtended[]).forEach(dag => dag.Diensten = []);
 
-        const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
-        this.roosterService.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then(rooster => {
-            this.heleRooster = JSON.parse(JSON.stringify(rooster));
-            this.vulMissendeDagenAan();
-            this.applyRoosterFilter();
+        this.heleRooster = JSON.parse(JSON.stringify(maandRooster));
+        this.applyRoosterFilter();
+    }
 
-            // lege placeholder voor diensten toevoegen
-            this.heleRooster.forEach(dag => dag.Diensten = []);
+    private maandDiensten(maandDiensten: HeliosDienstenDataset[]) {
+        maandDiensten.forEach(dienst => {
+            const roosterIndex = this.heleRooster.findIndex((dag => dag.DATUM == dienst.DATUM));
 
-            this.dienstenService.getDiensten(beginEindDatum.begindatum, beginEindDatum.einddatum).then(diensten => {
-                diensten.forEach(dienst => {
-                    const roosterIndex = this.heleRooster.findIndex((dag => dag.DATUM == dienst.DATUM));
-
-                    if (roosterIndex < 0) {
-                        console.error("Datum " + dienst.DATUM + " onbekend");  // dat mag nooit voorkomen
-                    } else {
-                        this.heleRooster[roosterIndex].Diensten[dienst.TYPE_DIENST_ID!] = dienst;
-                    }
-                });
-                this.isLoading = false;
-            });
-
-        }).catch(e => this.catchError(e));
+            if (roosterIndex < 0) {
+                console.error("Datum " + dienst.DATUM + " onbekend");  // dat mag nooit voorkomen
+            } else {
+                this.heleRooster[roosterIndex].Diensten[dienst.TYPE_DIENST_ID!] = dienst;
+            }
+        });
     }
 
     /**
@@ -220,34 +216,6 @@ export class RoosterPageComponent implements OnInit {
         this.isLoading = false;
     }
 
-    /**
-     * Het opgehaalde rooster kan dagen in de maand missen. Deze functie vult alle data aan zodat elke dag in de maand getoond wordt.
-     * @private
-     * @return {void}
-     */
-    private vulMissendeDagenAan(): void {
-        const dagenInDeMaand = this.datum.daysInMonth;
-
-        let dagenToevoegd = false;
-        for (let i = 0; i < dagenInDeMaand; i++) {
-            const d: DateTime = DateTime.fromObject({month: this.datum.month, year: this.datum.year, day: i + 1});
-            const inRooster = this.heleRooster.findIndex(roosterDag => roosterDag.DATUM == d.toISODate()) >= 0;
-
-            if (!inRooster) {       // datum staat nog niet in de database, gaan we aanmaken
-                dagenToevoegd = true;
-                const roosterRecord: HeliosRoosterDag = {
-                    DATUM: d.toISODate(),
-                    DDWV: (d.weekday <= 5 && d.month >= 4 && d.month <= 9),         // DDWV van april t/m sept
-                    CLUB_BEDRIJF: (d.weekday > 5 && d.month >= 3 && d.month <= 10)  // Clubdagen van maart t/m oktober
-                }
-
-                this.roosterService.addRoosterdag(roosterRecord);
-            }
-        }
-        if (dagenToevoegd) {
-            this.opvragenRooster();
-        }
-    }
 
     /**
      * Wordt in de template gebruikt om te controleren of iemand in een vakje gesleept mag worden. Gaat over lierist.
@@ -800,5 +768,9 @@ export class RoosterPageComponent implements OnInit {
             }
         }
         return ""
+    }
+
+    filterLeden() {
+
     }
 }

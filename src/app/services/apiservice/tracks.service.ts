@@ -9,7 +9,7 @@ import {LoginService} from "./login.service";
     providedIn: 'root'
 })
 export class TracksService {
-    private tracks: HeliosTracks = { dataset: []};
+    private tracksCache: HeliosTracks = { dataset: []};      // return waarde van API call
 
     constructor(private readonly apiService: APIService,
                 private readonly loginService: LoginService,
@@ -40,13 +40,13 @@ export class TracksService {
         try {
             const response: Response = await this.apiService.get('Tracks/GetObjects', getParams);
 
-            this.tracks = await response.json();
+            this.tracksCache = await response.json();
         } catch (e) {
             if (e.responseCode !== 304) { // server bevat dezelfde data als cache
                 throw(e);
             }
         }
-        return this.tracks?.dataset as HeliosTracksDataset[];
+        return this.tracksCache?.dataset as HeliosTracksDataset[];
     }
 
     async getTrack(id: number): Promise<HeliosTrack> {

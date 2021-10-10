@@ -4,6 +4,7 @@ import {HeliosType, HeliosVliegtuig} from '../../../../types/Helios';
 import {VliegtuigenService} from '../../../../services/apiservice/vliegtuigen.service';
 import {TypesService} from '../../../../services/apiservice/types.service';
 import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
+import {of, Subscription} from "rxjs";
 
 @Component({
     selector: 'app-vliegtuig-editor',
@@ -18,7 +19,7 @@ export class VliegtuigEditorComponent  implements  OnInit {
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
-    vliegtuig: HeliosVliegtuig = {
+    private vliegtuig: HeliosVliegtuig = {
         ID: undefined,
         REGISTRATIE: undefined,
         CALLSIGN: undefined,
@@ -33,16 +34,17 @@ export class VliegtuigEditorComponent  implements  OnInit {
         INZETBAAR: undefined,
         OPMERKINGEN: undefined
     };
-    vliegtuigTypes: HeliosType[];
+    private typesAbonnement: Subscription;
+    private vliegtuigTypes: HeliosType[];
 
-    isLoading: boolean = false;
+    private isLoading: boolean = false;
 
-    isVerwijderMode: boolean = false;
-    isRestoreMode: boolean = false;
-    formTitel: string = "";
+    private isVerwijderMode: boolean = false;
+    private isRestoreMode: boolean = false;
+    private formTitel: string = "";
 
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
+    private success: SuccessMessage | undefined;
+    private error: ErrorMessage | undefined;
 
     constructor(
         private readonly vliegtuigenService: VliegtuigenService,
@@ -50,7 +52,10 @@ export class VliegtuigEditorComponent  implements  OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.typesService.getTypes(4).then(types => this.vliegtuigTypes = types);
+        // abonneer op wijziging van types
+        this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
+            this.vliegtuigTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 4});
+        });
     }
 
     openPopup(id: number | null) {

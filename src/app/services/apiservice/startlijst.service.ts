@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {APIService} from './api.service';
 
 import {
-    HeliosAanwezigLedenDataset,
     HeliosLogboek, HeliosLogboekDataset, HeliosLogboekTotalen, HeliosRecency,
     HeliosStart, HeliosStartDataset,
     HeliosStarts,
@@ -22,18 +21,19 @@ interface parameters {
     providedIn: 'root'
 })
 export class StartlijstService {
-    private starts: HeliosStarts = { dataset: []};
-    private vliegdagen: HeliosVliegdagen = { dataset: []};
-    private logboek: HeliosLogboek = { dataset: []};                    // logboek vlieger
+    private startsCache: HeliosStarts = { dataset: []};                      // return waarde van API call
+    private vliegdagenCache: HeliosVliegdagen = { dataset: []};              // return waarde van API call
+    private logboekCache: HeliosLogboek = { dataset: []};                    // return waarde van API call logboek vlieger
+    private vliegtuigLogboekCache: HeliosVliegtuigLogboek = { dataset: []};  // return waarde van API call
+
     private logboekTotalen: HeliosLogboekTotalen | null = null;         // totalen logboek voor vlieger
-    private vliegtuigLogboek: HeliosVliegtuigLogboek = { dataset: []};
     private vliegtuigLogboekTotalen: HeliosVliegtuigLogboekTotalen;
 
-    constructor(private readonly APIService: APIService, private readonly storageService: StorageService) {
+    constructor(private readonly APIService: APIService,
+                private readonly storageService: StorageService) {
     }
 
     async getVliegdagen(startDatum: DateTime, eindDatum: DateTime): Promise<[]> {
-
         let getParams: parameters = {};
         getParams['BEGIN_DATUM'] = startDatum.toISODate();
         getParams['EIND_DATUM'] = eindDatum.toISODate();
@@ -43,26 +43,26 @@ export class StartlijstService {
                 getParams
             );
 
-            this.vliegdagen = await response.json();
+            this.vliegdagenCache = await response.json();
 
         } catch (e) {
             if (e.responseCode !== 404) { // er is geen data
                 throw(e);
             }
         }
-        return this.vliegdagen?.dataset as [];
+        return this.vliegdagenCache?.dataset as [];
     }
 
     async getLogboek(id: number, startDatum: DateTime, eindDatum: DateTime, maxRecords?: number): Promise<HeliosLogboekDataset[]> {
         let hash: string = '';
-        if (((this.logboek == null)) && (this.storageService.ophalen('vlogboek-'+id.toString())  != null)) {
-            this.logboek = this.storageService.ophalen('vlogboek-'+id.toString());
+        if (((this.logboekCache == null)) && (this.storageService.ophalen('vlogboek-'+id.toString())  != null)) {
+            this.logboekCache = this.storageService.ophalen('vlogboek-'+id.toString());
         }
 
         let getParams: parameters = {};
 
-        if (this.logboek != null) {             // we hebben eerder de lijst opgehaald
-            hash = (this.logboek) ? this.logboek.hash as string : '';
+        if (this.logboekCache != null) {             // we hebben eerder de lijst opgehaald
+            hash = (this.logboekCache) ? this.logboekCache.hash as string : '';
       //      getParams['HASH'] = hash;
         }
 
@@ -77,14 +77,14 @@ export class StartlijstService {
         try {
             const response: Response = await this.APIService.get('Startlijst/GetLogboek', getParams);
 
-            this.logboek = await response.json();
-            this.storageService.opslaan('vlogboek-'+id.toString(), this.logboek);
+            this.logboekCache = await response.json();
+            this.storageService.opslaan('vlogboek-'+id.toString(), this.logboekCache);
         } catch (e) {
             if ((e.responseCode !== 304) && (e.responseCode !== 404)) { // er is geen data, of data is ongewijzigd
                 throw(e);
             }
         }
-        return this.logboek?.dataset as HeliosLogboekDataset[];
+        return this.logboekCache?.dataset as HeliosLogboekDataset[];
     }
 
     async getLogboekTotalen(id: number, jaar:number): Promise<HeliosLogboekTotalen> {
@@ -118,14 +118,14 @@ export class StartlijstService {
                 getParams
             );
 
-            this.vliegtuigLogboek = await response.json();
+            this.vliegtuigLogboekCache = await response.json();
 
         } catch (e) {
             if (e.responseCode !== 404) { // er is geen data
                 throw(e);
             }
         }
-        return this.vliegtuigLogboek?.dataset as [];
+        return this.vliegtuigLogboekCache?.dataset as [];
     }
 
     async getVliegtuigLogboekTotalen(id: number, jaar:number): Promise<HeliosVliegtuigLogboekTotalen> {
@@ -149,14 +149,14 @@ export class StartlijstService {
     async getStarts(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise< HeliosStartDataset[]> {
         let hash: string = '';
 
-        if (((this.starts == null)) && (this.storageService.ophalen('starts') != null)) {
-            this.starts = this.storageService.ophalen('starts');
+        if (((this.startsCache == null)) && (this.storageService.ophalen('starts') != null)) {
+            this.startsCache = this.storageService.ophalen('starts');
         }
 
         let getParams: KeyValueArray = params;
 
-        if (this.starts != null) { // we hebben eerder de lijst opgehaald
-            hash = this.starts.hash as string;
+        if (this.startsCache != null) { // we hebben eerder de lijst opgehaald
+            hash = this.startsCache.hash as string;
 //            getParams['HASH'] = hash;
         }
 
@@ -174,14 +174,14 @@ export class StartlijstService {
         try {
             const response: Response = await this.APIService.get('Startlijst/GetObjects', getParams );
 
-            this.starts = await response.json();
-            this.storageService.opslaan('starts', this.starts);
+            this.startsCache = await response.json();
+            this.storageService.opslaan('starts', this.startsCache);
         } catch (e) {
             if (e.responseCode !== 304) { // server bevat dezelfde data als cache
                 throw(e);
             }
         }
-        return this.starts?.dataset as [];
+        return this.startsCache?.dataset as [];
     }
 
     async getStart(id: number): Promise<HeliosStart> {

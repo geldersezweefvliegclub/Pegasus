@@ -13,9 +13,10 @@ import {KeyValueArray} from "../../types/Utils";
     providedIn: 'root'
 })
 export class ProgressieService {
-    private progressie: HeliosBehaaldeProgressie = { dataset: []};
+    private progressieCache: HeliosBehaaldeProgressie = { dataset: []};  // return waarde van API call
+    private kaartCache:HeliosProgressieKaart = { dataset: []};           // return waarde van API call
+
     private boom: HeliosProgressieBoom[] = [];
-    private kaart:HeliosProgressieKaart = { dataset: []};
 
     constructor(private readonly apiService: APIService,
                 private readonly storageService: StorageService) {
@@ -34,11 +35,11 @@ export class ProgressieService {
 
         try {
             const response = await this.apiService.get('Progressie/GetObjects', getParams);
-            this.progressie = await response.json();
+            this.progressieCache = await response.json();
         } catch (e) {
             throw(e);
         }
-        return this.progressie?.dataset as [];
+        return this.progressieCache?.dataset as [];
     }
 
     async behaaldeCompetentie(progressie: HeliosProgressie):Promise<HeliosProgressie> {
@@ -70,8 +71,8 @@ export class ProgressieService {
         getParams['LID_ID'] = lidID.toString();
 
         const response: Response = await this.apiService.get('Progressie/ProgressieKaart', getParams);
-        this.kaart = await response.json();
+        this.kaartCache = await response.json();
 
-        return this.kaart?.dataset as HeliosProgressieKaartDataset[];
+        return this.kaartCache?.dataset as HeliosProgressieKaartDataset[];
     }
 }

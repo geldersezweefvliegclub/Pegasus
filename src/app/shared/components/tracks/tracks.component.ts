@@ -44,8 +44,9 @@ export class TracksComponent implements OnInit {
     deleteIcon: IconDefinition = faMinusCircle;
     restoreIcon: IconDefinition = faUndo;
 
-    data: TracksLedenDataset[] = [];
+    ledenAbonnement: Subscription;
     leden: HeliosLedenDataset[] = [];
+    data: TracksLedenDataset[] = [];
 
     datumAbonnement: Subscription;         // volg de keuze van de kalender
     datum: DateTime;                       // de gekozen dag
@@ -69,6 +70,7 @@ export class TracksComponent implements OnInit {
                 private readonly ledenService: LedenService,
                 private readonly loginService: LoginService,
                 private readonly sharedService: SharedService) {
+
     }
 
     ngOnInit(): void {
@@ -88,18 +90,16 @@ export class TracksComponent implements OnInit {
                 })
             });
 
+            // abonneer op wijziging van leden
+            this.ledenAbonnement = this.ledenService.ledenChange.subscribe(leden => {
+                this.leden = (leden) ? leden : [];
+            });
+
             // Als tracks zijn aangepast, moeten we grid opnieuw laden
             this.sharedService.heliosEventFired.subscribe(ev => {
                 if (ev.tabel == "Startlijst") {
                     this.opvragen();
                 }
-            });
-
-            this.ledenService.getLeden(false).then((dataset) => {
-                this.leden = dataset;
-                this.opvragen();
-            }).catch(e => {
-                this.error = e;
             });
 
             // Als in de progressie tabel is aangepast, moet we onze dataset ook aanpassen

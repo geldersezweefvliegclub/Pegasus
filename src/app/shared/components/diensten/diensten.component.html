@@ -28,4 +28,8 @@
     Er zijn momenteel geen diensten ingeroosterd
 </div>
 
+<div class="spinnerOverlay" *ngIf="isLoading">
+    <app-loader></app-loader>
+</div>
+
 <app-dag-rooster [Datum]="roosterDatum"></app-dag-rooster>
