@@ -219,6 +219,8 @@ export class RoosterPageComponent implements OnInit {
 
     /**
      * Wordt in de template gebruikt om te controleren of iemand in een vakje gesleept mag worden. Gaat over lierist.
+     * @param datum
+     * @param dienst
      * @param {CdkDrag<HeliosLid | HeliosRoosterDataset>} item
      * @return {boolean}
      */
@@ -229,6 +231,8 @@ export class RoosterPageComponent implements OnInit {
 
     /**
      * Wordt in de template gebruikt om te controleren of iemand in een vakje gesleept mag worden. Gaat over instructeurs.
+     * @param datum
+     * @param dienst
      * @param {CdkDrag<HeliosLid | HeliosRoosterDataset>} item
      * @return {boolean}
      */
@@ -239,6 +243,8 @@ export class RoosterPageComponent implements OnInit {
 
     /**
      * Wordt in de template gebruikt om te controleren of iemand in een vakje gesleept mag worden. Gaat over startleiders.
+     * @param datum
+     * @param dienst
      * @param {CdkDrag<HeliosLid | HeliosRoosterDataset>} item
      * @return {boolean}
      */
@@ -768,9 +774,5 @@ export class RoosterPageComponent implements OnInit {
             }
         }
         return ""
-    }
-
-    filterLeden() {
-
     }
 }
