@@ -345,12 +345,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <ng-template #loading>
-                            <div class="d-flex justify-content-center">
-                                <app-loader [isLoading]="isLoading"></app-loader>
-                            </div>
-                        </ng-template>
                     </div>
                 </div>
             </div>
@@ -416,3 +410,8 @@
     </div>
 </ng-template>
 
+<div class="spinnerOverlay" *ngIf="isLoading > 0">
+    <div class="spinnerPosition">
+        <span><img src="assets/img/zandloper.gif" width=100px> Data wordt geladen .....</span>
+    </div>
+</div>

@@ -36,8 +36,7 @@ export class DienstenService {
                 private readonly sharedService: SharedService) {
 
         // de datum zoals die in de kalender gekozen is
-        // De delay is toegevoegd omdat rooster eerst geladen moet worden (is niet netjes, maar werkt goed)
-        this.datumAbonnement = this.sharedService.kalenderMaandChange.pipe(delay(500)).subscribe(datum => {
+        this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(datum => {
             this.datum = DateTime.fromObject({
                 year: datum.year,
                 month: datum.month,

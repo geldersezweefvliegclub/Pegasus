@@ -85,9 +85,13 @@ export class RoosterPageComponent implements OnInit {
     filteredLeden: HeliosLedenDatasetExtended[];
 
     dienstenAbonnement: Subscription;
+    diensten: HeliosDienstenDataset[];
+
     roosterAbonnement: Subscription;
-    heleRooster: HeliosRoosterDagExtended[];
-    filteredRooster: HeliosRoosterDagExtended[];
+    rooster: HeliosRoosterDataset[];
+
+    heleRooster: HeliosRoosterDagExtended[];        // combinatie rooster & diensten
+    filteredRooster: HeliosRoosterDagExtended[];    // combinatie rooster & diensten, welke getoond worden
 
     datumAbonnement: Subscription;         // volg de keuze van de kalender
     datum: DateTime;                       // de gekozen dag
@@ -95,7 +99,7 @@ export class RoosterPageComponent implements OnInit {
     magExporteren: boolean = true;
     magWijzigen: boolean = false;
     opslaanTimer: number;                  // kleine vertraging om data opslaan te beperken
-    isLoading: boolean = false;
+    isLoading: number = 0;
     zoekString: string;
 
     mijnID: string;
@@ -134,16 +138,25 @@ export class RoosterPageComponent implements OnInit {
             if (this.alleLeden) {       // eerst moeten de leden geladen zijn
                 setTimeout(() => this.opvragenTotalen(), 200);  // kleine vertraging, opvragen Rooster heeft prioriteit
             }
+
+            // maak scherm leeg en laat spinner zien
+            this.heleRooster = []
+            this.filteredRooster = []
+            this.isLoading = 2;
         })
 
         // abonneer op wijziging van rooster
         this.roosterAbonnement = this.roosterService.roosterChange.subscribe(maandRooster => {
-            this.maandRooster(maandRooster!)
+            this.rooster = maandRooster!
+            this.isLoading--;               // Deze is klaar met laden
+            this.maandRooster()
         });
 
         // abonneer op wijziging van diensten
-        this.dienstenAbonnement = this.dienstenService.dienstenChange.subscribe(maandDiensten => {
-            this.maandDiensten(maandDiensten!)
+        this.dienstenAbonnement = this.dienstenService.dienstenChange.subscribe(diensten => {
+            this.diensten = diensten!;
+            this.isLoading--;               // Deze is klaar met laden
+            this.maandRooster()
         });
 
         // abonneer op wijziging van leden
@@ -187,35 +200,19 @@ export class RoosterPageComponent implements OnInit {
         }
     }
 
-    private maandRooster(maandRooster: HeliosRoosterDataset[]) {
-        // lege placeholder voor diensten toevoegen
-        (maandRooster as HeliosRoosterDagExtended[]).forEach(dag => dag.Diensten = []);
+    private maandRooster() {
+        const maandRooster: HeliosRoosterDagExtended[] = (this.rooster as HeliosRoosterDagExtended[]);
+
+        maandRooster.forEach(dag => {
+            dag.Diensten = [];              // placeholder, gaan het vullen waar nodig
+
+            const diensten: HeliosDienstenDataset[] = this.diensten.filter((dienst) => dienst.DATUM == dag.DATUM)
+            diensten.forEach((dienst) => dag.Diensten[dienst.TYPE_DIENST_ID!] = dienst)
+        });
 
         this.heleRooster = JSON.parse(JSON.stringify(maandRooster));
         this.applyRoosterFilter();
     }
-
-    private maandDiensten(maandDiensten: HeliosDienstenDataset[]) {
-        maandDiensten.forEach(dienst => {
-            const roosterIndex = this.heleRooster.findIndex((dag => dag.DATUM == dienst.DATUM));
-
-            if (roosterIndex < 0) {
-                console.error("Datum " + dienst.DATUM + " onbekend");  // dat mag nooit voorkomen
-            } else {
-                this.heleRooster[roosterIndex].Diensten[dienst.TYPE_DIENST_ID!] = dienst;
-            }
-        });
-    }
-
-    /**
-     * Vang een API error af
-     * @param {ErrorMessage} e
-     * @private
-     */
-    private catchError(e: ErrorMessage) {
-        this.isLoading = false;
-    }
-
 
     /**
      * Wordt in de template gebruikt om te controleren of iemand in een vakje gesleept mag worden. Gaat over lierist.

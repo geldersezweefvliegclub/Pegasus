@@ -47,7 +47,7 @@ export class RoosterService {
         // Als roosterdagen zijn toegevoegd, dan moeten we overzicht opnieuw ophalen
         // een timeout. roosterdagen worden per maand toegevoegd.
         // Niet voor iedere dag meteen opvragen, maar bundelen en 1 keer opvragen
-        this.sharedService.heliosEventFired.pipe(debounceTime(500)).subscribe(ev => {
+        this.sharedService.heliosEventFired.pipe(debounceTime(1500)).subscribe(ev => {
             if (ev.tabel == "Rooster") {
                 const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
 
