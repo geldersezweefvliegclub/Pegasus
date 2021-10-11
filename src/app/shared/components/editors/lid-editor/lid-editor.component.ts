@@ -31,30 +31,31 @@ export class LidEditorComponent implements OnInit {
     @Input() isRestoreMode: boolean = false;
 
 
-    private typesAbonnement: Subscription;
-    private types: HeliosType[];
-    private lid: HeliosLid = {};
+    typesAbonnement: Subscription;
+    types: HeliosType[];
+    lid: HeliosLid = {};
 
-    private wachtwoordVerborgen: boolean = true;
-    private oogIcon: IconDefinition = faEye;
-    private informatieIcon: IconDefinition = faInfo;
-    private infoIcon: IconDefinition = faInfoCircle;
-    private persoonIcon: IconDefinition = faUser;
+    wachtwoordVerborgen: boolean = true;
+    oogIcon: IconDefinition = faEye;
+    informatieIcon: IconDefinition = faInfo;
+    infoIcon: IconDefinition = faInfoCircle;
+    persoonIcon: IconDefinition = faUser;
 
-    private controleWachtwoord: string = '';
-    private wachtwoord: string = '';
+    controleWachtwoord: string = '';
+    wachtwoord: string = '';
 
-    private subtitel: string = 'Instellen van gegevens en voorkeuren';
-    private titel: string = 'Aanpassen profiel';
-    private avatar: string | null | undefined;
+    subtitel: string = 'Instellen van gegevens en voorkeuren';
+    titel: string = 'Aanpassen profiel';
+    avatar: string | null | undefined;
 
-    private isLoading: boolean = false;
+    isLoading: boolean = false;
+    isSaving: boolean = false;
 
-    private MedicalDatum: NgbDate | null;
-    private GeboorteDatum: NgbDate | null;
+    MedicalDatum: NgbDate | null;
+    GeboorteDatum: NgbDate | null;
 
-    private success: SuccessMessage | undefined;
-    private error: ErrorMessage | undefined;
+    success: SuccessMessage | undefined;
+    error: ErrorMessage | undefined;
 
     constructor(
         private readonly typesService: TypesService,
@@ -149,12 +150,15 @@ export class LidEditorComponent implements OnInit {
     delete(): void {
         let msg: SuccessMessage;
 
+        this.isSaving = true;
         this.ledenService.deleteLid(this.lidID).then(() => {
+            this.isSaving = false;
             this.error = undefined;
             this.success = {titel: "Profiel", beschrijving: this.lid.NAAM + " is verwijderd"}
 
             setTimeout(() => this.router.navigate(['/leden']), 3000);
         }).catch(e => {
+            this.isSaving = false;
             this.success = undefined;
             this.error = e;
         });
@@ -162,12 +166,15 @@ export class LidEditorComponent implements OnInit {
 
     // haal een lid terug door verwijderd vlag te resetten
     restore(): void {
+        this.isSaving = true;
         this.ledenService.restoreLid(this.lid.ID!).then(() => {
+            this.isSaving = false;
             this.error = undefined;
             this.success = {titel: "Profiel", beschrijving: this.lid.NAAM + " is weer beschikbaar"}
 
             setTimeout(() => this.router.navigate(['/leden']), 3000);
         }).catch(e => {
+            this.isSaving = false;
             this.success = undefined;
             this.error = e;
         });
@@ -175,7 +182,9 @@ export class LidEditorComponent implements OnInit {
 
     // update bestaand lid
     updateLid(): void {
+        this.isSaving = true;
         this.ledenService.updateLid(this.lid).then(() => {
+            this.isSaving = false;
             this.error = undefined;
 
             if (this.lidID == this.storageService.ophalen('userInfo').LidData.ID) {
@@ -185,6 +194,7 @@ export class LidEditorComponent implements OnInit {
                 this.success = {titel: "Profiel", beschrijving: "Profiel " + this.lid.NAAM + " is aangepast"}
             }
         }).catch(e => {
+            this.isSaving = false;
             this.success = undefined;
             this.error = e;
         });
@@ -192,10 +202,13 @@ export class LidEditorComponent implements OnInit {
 
     // nieuw lid toevoegen aan het leden bestand
     nieuwLid(): void {
+        this.isSaving = true;
         this.ledenService.addLid(this.lid).then((l) => {
+            this.isSaving = false;
             this.error = undefined;
             this.success = {titel: "Profiel", beschrijving: l.NAAM + " is toegevoegd"}
         }).catch(e => {
+            this.isSaving = false;
             this.success = undefined;
             this.error = e;
         });

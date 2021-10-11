@@ -34,17 +34,18 @@ export class VliegtuigEditorComponent  implements  OnInit {
         INZETBAAR: undefined,
         OPMERKINGEN: undefined
     };
-    private typesAbonnement: Subscription;
-    private vliegtuigTypes: HeliosType[];
+    typesAbonnement: Subscription;
+    vliegtuigTypes: HeliosType[];
 
-    private isLoading: boolean = false;
+    isLoading: boolean = false;
+    isSaving: boolean = false;
 
-    private isVerwijderMode: boolean = false;
-    private isRestoreMode: boolean = false;
-    private formTitel: string = "";
+    isVerwijderMode: boolean = false;
+    isRestoreMode: boolean = false;
+    formTitel: string = "";
 
-    private success: SuccessMessage | undefined;
-    private error: ErrorMessage | undefined;
+    success: SuccessMessage | undefined;
+    error: ErrorMessage | undefined;
 
     constructor(
         private readonly vliegtuigenService: VliegtuigenService,
@@ -66,6 +67,8 @@ export class VliegtuigEditorComponent  implements  OnInit {
             this.formTitel = 'Vliegtuig aanmaken';
             this.vliegtuig = {};
         }
+
+        this.isSaving = false;
         this.isVerwijderMode = false;
         this.isRestoreMode = false;
         this.popup.open();
@@ -91,6 +94,8 @@ export class VliegtuigEditorComponent  implements  OnInit {
     openVerwijderPopup(id: number) {
         this.haalVliegtuigOp(id);
         this.formTitel = 'Vliegtuig verwijderen';
+
+        this.isSaving = false;
         this.isVerwijderMode = true;
         this.isRestoreMode = false;
         this.popup.open();
@@ -99,12 +104,15 @@ export class VliegtuigEditorComponent  implements  OnInit {
     openRestorePopup(id: number) {
         this.haalVliegtuigOp(id);
         this.formTitel = 'Vliegtuig herstellen';
+
+        this.isSaving = false;
         this.isRestoreMode = true;
         this.isVerwijderMode = false;
         this.popup.open();
     }
 
     uitvoeren() {
+        this.isSaving = true;
         if (this.isRestoreMode) {
             this.Herstellen(this.vliegtuig);
         }
@@ -132,6 +140,7 @@ export class VliegtuigEditorComponent  implements  OnInit {
             }
             this.closePopup();
         }).catch(e => {
+            this.isSaving = false;
             this.error = e;
         })
     }
@@ -146,6 +155,7 @@ export class VliegtuigEditorComponent  implements  OnInit {
             }
             this.closePopup();
         }).catch(e => {
+            this.isSaving = false;
             this.error = e;
         })
     }
@@ -160,6 +170,7 @@ export class VliegtuigEditorComponent  implements  OnInit {
             }
             this.closePopup();
         }).catch(e => {
+            this.isSaving = false;
             this.error = e;
         })
     }
@@ -173,6 +184,9 @@ export class VliegtuigEditorComponent  implements  OnInit {
                 beschrijving: regCall + " is weer beschikbaar"
             }
             this.closePopup();
-        });
+        }).catch(e => {
+            this.isSaving = false;
+            this.error = e;
+        })
     }
 }

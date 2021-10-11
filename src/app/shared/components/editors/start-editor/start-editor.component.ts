@@ -64,6 +64,7 @@ export class StartEditorComponent implements OnInit {
     datum: DateTime;                       // de gekozen dag
 
     isLoading: boolean = false;
+    isSaving: boolean = false;
 
     isVerwijderMode: boolean = false;
     isRestoreMode: boolean = false;
@@ -170,6 +171,7 @@ export class StartEditorComponent implements OnInit {
         }
         this.isVerwijderMode = false;
         this.isRestoreMode = false;
+        this.isSaving = false;
 
         this.popup.open();
     }
@@ -267,6 +269,8 @@ export class StartEditorComponent implements OnInit {
     openVerwijderPopup(id: number) {
         this.haalStartOp(id);
         this.formTitel = 'Start verwijderen';
+
+        this.isSaving = false;
         this.isVerwijderMode = true;
         this.isRestoreMode = false;
         this.popup.open();
@@ -275,12 +279,15 @@ export class StartEditorComponent implements OnInit {
     openRestorePopup(id: number) {
         this.haalStartOp(id);
         this.formTitel = 'Start herstellen';
+
+        this.isSaving = false;
         this.isRestoreMode = true;
         this.isVerwijderMode = false;
         this.popup.open();
     }
 
     uitvoeren() {
+        this.isSaving = true;
         if (this.isRestoreMode) {
             this.Herstellen(this.start);
         }
@@ -307,6 +314,7 @@ export class StartEditorComponent implements OnInit {
             }
             this.closePopup();
         }).catch(e => {
+            this.isSaving = false;
             this.error = e;
         })
     }
@@ -321,6 +329,7 @@ export class StartEditorComponent implements OnInit {
 
             this.closePopup();
         }).catch(e => {
+            this.isSaving = false;
             this.error = e;
         })
     }
@@ -334,6 +343,7 @@ export class StartEditorComponent implements OnInit {
             }
             this.closePopup();
         }).catch(e => {
+            this.isSaving = false;
             this.error = e;
         });
     }
@@ -347,6 +357,7 @@ export class StartEditorComponent implements OnInit {
             }
             this.closePopup();
         }).catch(e => {
+            this.isSaving = false;
             this.error = e;
         });
     }

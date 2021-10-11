@@ -20,6 +20,7 @@ export class TrackEditorComponent implements OnInit{
     track: HeliosTrack = {}
 
     isLoading: boolean = false;
+    isSaving: boolean = false;
 
     isVerwijderMode: boolean = false;
     isRestoreMode: boolean = false;
@@ -59,6 +60,7 @@ export class TrackEditorComponent implements OnInit{
                 INSTRUCTEUR_ID: ui?.ID
             };
         }
+        this.isSaving = false;
         this.isVerwijderMode = false;
         this.isRestoreMode = false;
         this.popup.open();
@@ -85,6 +87,8 @@ export class TrackEditorComponent implements OnInit{
         this.haalTrackOp(id);
         this.formTitel = 'Track verwijderen van ' + NAAM;
         this.toonLidSelectie = false;
+
+        this.isSaving = false;
         this.isVerwijderMode = true;
         this.isRestoreMode = false;
         this.popup.open();
@@ -94,12 +98,15 @@ export class TrackEditorComponent implements OnInit{
         this.haalTrackOp(id);
         this.formTitel = 'Track herstellen voor ' + NAAM;
         this.toonLidSelectie = false;
+
+        this.isSaving = false;
         this.isRestoreMode = true;
         this.isVerwijderMode = false;
         this.popup.open();
     }
 
     uitvoeren() {
+        this.isSaving = true;
         if (this.isRestoreMode) {
             this.Herstellen(this.track);
         }
@@ -125,6 +132,7 @@ export class TrackEditorComponent implements OnInit{
             }
             this.closePopup();
         }).catch(e => {
+            this.isSaving = false;
             this.error = e;
         })
     }
@@ -138,6 +146,7 @@ export class TrackEditorComponent implements OnInit{
             }
             this.closePopup();
         }).catch(e => {
+            this.isSaving = false;
             this.error = e;
         })
     }
@@ -150,7 +159,10 @@ export class TrackEditorComponent implements OnInit{
                 beschrijving: "Bericht is verwijderd"
             }
             this.closePopup();
-        });
+        }).catch(e => {
+            this.isSaving = false;
+            this.error = e;
+        })
     }
 
     // de track herstellen, haal de markering 'verwijderd' weg
@@ -161,7 +173,10 @@ export class TrackEditorComponent implements OnInit{
                 beschrijving: "Bericht is weer beschikbaar"
             }
             this.closePopup();
-        });
+        }).catch(e => {
+            this.isSaving = false;
+            this.error = e;
+        })
     }
 
     lidGeselecteerd(id: number | undefined) {
