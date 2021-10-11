@@ -3,7 +3,7 @@
 
 <div class="d-flex h-100">
     <div [ngClass]="BreedteGrid()">
-        <div class="box h-100" >
+        <div class="box h-100">
             <div id="data" style="height: 1px">
                 <table class="w-100">
                     <tr *ngFor="let trk of data" class="trkRow" (click)="trackSelected(trk)"
@@ -143,5 +143,10 @@
     </div>
 </div>
 
+<div class="spinnerOverlay" *ngIf="isLoading">
+    <div class="spinnerPosition">
+        <span><img src="assets/img/zandloper.gif" width=100px> Data wordt geladen .....</span>
+    </div>
+</div>
 
 <app-track-editor *ngIf="this.magToevoegen || this.magWijzigen || this.magVerwijderen"></app-track-editor>

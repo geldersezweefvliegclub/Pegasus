@@ -97,3 +97,23 @@ h4 {
   outline: none !important;
   box-shadow: none;
 }
+
+.spinnerOverlay {
+  position: absolute; /* Sit on top of the page content */
+  top: 80px;
+  left: 0;
+  height: calc(100% - 160px);
+  width: 100%;
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--ag-foreground-color, rgba(0, 0, 0, 0.87));
+  font-family: "Roboto", sans-serif;
+  font-size: 13px;
+  line-height: normal;
+  z-index: 2;
+}
+
+.spinnerPosition {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -55,6 +55,7 @@ export class TracksComponent implements OnInit {
     zoekTimer: number;                  // kleine vertraging om data ophalen te beperken
     deleteMode: boolean = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
     trashMode: boolean = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
+    isLoading: boolean = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -95,12 +96,15 @@ export class TracksComponent implements OnInit {
                 this.leden = (leden) ? leden : [];
             });
 
+            /* TODO WAAROM IS DIT NODIG ??
             // Als tracks zijn aangepast, moeten we grid opnieuw laden
             this.sharedService.heliosEventFired.subscribe(ev => {
                 if (ev.tabel == "Startlijst") {
                     this.opvragen();
                 }
             });
+
+             */
 
             // Als in de progressie tabel is aangepast, moet we onze dataset ook aanpassen
             this.sharedService.heliosEventFired.subscribe(ev => {
@@ -112,6 +116,8 @@ export class TracksComponent implements OnInit {
                     }
                 }
             });
+
+            this.opvragen();
         }
     }
 
@@ -153,18 +159,22 @@ export class TracksComponent implements OnInit {
 
     // Opvragen van de data via de api
     opvragen(): void {
+        console.log("xxxx")
         clearTimeout(this.zoekTimer);
 
         const maxTrackItems = (this.VliegerID) ? -1 : 200; // alle tracks voor een vlieger, anders 200 items
 
         this.zoekTimer = window.setTimeout(() => {
+            this.isLoading = true;
             this.trackService.getTracks(this.trashMode, this.VliegerID, maxTrackItems).then((dataset) => {
+                this.isLoading = false;
                 this.data = dataset as TracksLedenDataset[];
 
                 for (let i = 0; i < this.data.length; i++) {
                     this.data[i].lid = this.leden.find(l => l.ID == this.data[i].LID_ID) as HeliosLedenDataset;
                 }
             }).catch(e => {
+                this.isLoading = false;
                 this.error = e;
             });
         }, 400);
