@@ -3,7 +3,11 @@ import {StorageService} from '../storage/storage.service';
 import {DateTime} from 'luxon';
 import {HeliosActie, KeyValueArray} from '../../types/Utils';
 import {APIService} from './api.service';
-import {HeliosAanwezigVliegtuigen, HeliosAanwezigVliegtuigenDataset} from '../../types/Helios';
+import {
+    HeliosAanwezigLedenDataset,
+    HeliosAanwezigVliegtuigen,
+    HeliosAanwezigVliegtuigenDataset
+} from '../../types/Helios';
 import {BehaviorSubject, Subscription} from "rxjs";
 import {SharedService} from "../shared/shared.service";
 
@@ -17,6 +21,7 @@ export class AanwezigVliegtuigService {
     private datumAbonnement: Subscription;                      // volg de keuze van de kalender
     private datum: DateTime;                                    // de gekozen dag
 
+    private overslaan: boolean = false;
     private ophaalTimer: number;                                // Iedere 15 min halen we de aanwezige vliegtuigen op
     private aanwezigStore = new BehaviorSubject(this.aanwezigCache.dataset);
     public readonly aanwezigChange = this.aanwezigStore.asObservable();      // nieuwe aanwezigheid beschikbaar
@@ -33,7 +38,8 @@ export class AanwezigVliegtuigService {
                 day: datum.day
             });
 
-            this.getAanwezig(this.datum,this.datum).then((dataset) => {
+            this.overslaan = false;     // bij wijzigen datum nooit overslaan
+            this.ophalenAanwezig(this.datum,this.datum).then((dataset) => {
                 this.aanwezigStore.next(this.aanwezigCache.dataset!)    // afvuren event
             });
 
@@ -41,7 +47,7 @@ export class AanwezigVliegtuigService {
             // Iemand kan een vliegtuig aangemeld hebben, bijv via de app
             if (this.datum.toISODate() == DateTime.now().toISODate()) {
                 this.ophaalTimer = window.setInterval(() => {
-                    this.getAanwezig(this.datum,this.datum).then((dataset) => {
+                    this.ophalenAanwezig(this.datum,this.datum).then((dataset) => {
                         this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
                     });
                 }, 1000 * 60 * 15);
@@ -54,13 +60,22 @@ export class AanwezigVliegtuigService {
             this.sharedService.heliosEventFired.subscribe(ev => {
                 if (ev.tabel == "Startlijst") {
                     if (ev.actie == HeliosActie.Add) {
-                        this.getAanwezig(this.datum, this.datum).then((dataset) => {
+                        this.ophalenAanwezig(this.datum, this.datum).then((dataset) => {
                             this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
                         });
                     }
                 }
             });
         });
+    }
+
+    private async ophalenAanwezig(startDatum: DateTime, eindDatum: DateTime): Promise<HeliosAanwezigVliegtuigenDataset[]> {
+        if (this.overslaan) {
+            return this.aanwezigCache?.dataset as HeliosAanwezigVliegtuigenDataset[];
+        }
+        this.overslaan = true;
+        setTimeout(() => this.overslaan = false, 1000 * 5)
+        return await this.getAanwezig(startDatum, eindDatum);
     }
 
     async getAanwezig(startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosAanwezigVliegtuigenDataset[]> {

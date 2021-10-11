@@ -16,6 +16,7 @@ export class LedenService {
     private refreshTimer: number;
     private ledenCache: HeliosLeden  = { dataset: []};       // return waarde van API call
 
+    private overslaan: boolean = false;
     private ophaalTimer: number;                                // Iedere 15 min halen we de leden op
     private ledenStore = new BehaviorSubject(this.ledenCache.dataset);
     public readonly ledenChange = this.ledenStore.asObservable();      // nieuwe leden beschikbaar
@@ -24,12 +25,12 @@ export class LedenService {
                 private readonly sharedService: SharedService,
                 private readonly storageService: StorageService) {
 
-        this.getLeden().then((dataset) => {
+        this.ophalenLeden().then((dataset) => {
             this.ledenStore.next(this.ledenCache.dataset)    // afvuren event
         });
 
         this.ophaalTimer = window.setInterval(() => {
-            this.getLeden().then((dataset) => {
+            this.ophalenLeden().then((dataset) => {
                 this.ledenStore.next(this.ledenCache.dataset)    // afvuren event
             });
         }, 1000 * 60 * 15);
@@ -37,11 +38,20 @@ export class LedenService {
         // Als leden zijn aangepast, dan moeten we overzicht opnieuw ophalen
         this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Leden") {
-                this.getLeden().then((dataset) => {
+                this.ophalenLeden().then((dataset) => {
                     this.ledenStore.next(this.ledenCache.dataset)    // afvuren event
                 });
             }
         });
+    }
+
+    private async ophalenLeden(): Promise<HeliosLedenDataset[]> {
+        if (this.overslaan) {
+            return this.ledenCache?.dataset as HeliosLedenDataset[];
+        }
+        this.overslaan = true;
+        setTimeout(() => this.overslaan = false, 1000 * 5)
+        return await this.getLeden();
     }
 
     async getLeden(verwijderd: boolean = false, zoekString?: string): Promise<HeliosLedenDataset[]> {

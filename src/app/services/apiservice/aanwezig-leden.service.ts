@@ -16,6 +16,7 @@ export class AanwezigLedenService {
     private datumAbonnement: Subscription;                      // volg de keuze van de kalender
     private datum: DateTime;                                    // de gekozen dag
 
+    private overslaan: boolean = false;
     private ophaalTimer: number;                                // Iedere 15 min halen we de aanwezige leden op
     private aanwezigStore = new BehaviorSubject(this.aanwezigCache.dataset);
     public readonly aanwezigChange = this.aanwezigStore.asObservable();      // nieuwe aanwezigheid beschikbaar
@@ -32,7 +33,8 @@ export class AanwezigLedenService {
                 day: datum.day
             });
 
-            this.getAanwezig(this.datum,this.datum).then((dataset) => {
+            this.overslaan = false;     // bij wijzigen datum nooit overslaan
+            this.ophalenAanwezig(this.datum,this.datum).then((dataset) => {
                 this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
             });
 
@@ -40,7 +42,7 @@ export class AanwezigLedenService {
             // Iemand kan zich aangemeld hebben, bijv via de app
             if (this.datum.toISODate() == DateTime.now().toISODate()) {
                 this.ophaalTimer = window.setInterval(() => {
-                    this.getAanwezig(this.datum,this.datum).then((dataset) => {
+                    this.ophalenAanwezig(this.datum,this.datum).then((dataset) => {
                         this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
                     });
                 }, 1000 * 60 * 15);
@@ -53,7 +55,7 @@ export class AanwezigLedenService {
             this.sharedService.heliosEventFired.subscribe(ev => {
                 if (ev.tabel == "Startlijst") {
                     if (ev.actie == HeliosActie.Add) {
-                        this.getAanwezig(this.datum, this.datum).then((dataset) => {
+                        this.ophalenAanwezig(this.datum, this.datum).then((dataset) => {
                             this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
                         });
                     }
@@ -62,9 +64,17 @@ export class AanwezigLedenService {
         });
     }
 
+    private async ophalenAanwezig(startDatum: DateTime, eindDatum: DateTime): Promise<HeliosAanwezigLedenDataset[]> {
+        if (this.overslaan) {
+            return this.aanwezigCache?.dataset as HeliosAanwezigLedenDataset[];
+        }
+        this.overslaan = true;
+        setTimeout(() => this.overslaan = false, 1000 * 5)
+        return await this.getAanwezig(startDatum, eindDatum);
+    }
+
     async getAanwezig(startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosAanwezigLedenDataset[]> {
         let hash: string = '';
-
         if (((this.aanwezigCache == null)) && (this.storageService.ophalen('aanwezigLeden') != null)) {
             this.aanwezigCache = this.storageService.ophalen('aanwezigLeden');
         }
