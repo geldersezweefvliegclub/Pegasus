@@ -13,6 +13,7 @@ import {DateTime} from "luxon";
 import {BehaviorSubject, Subscription} from "rxjs";
 import {SharedService} from "../shared/shared.service";
 import {getBeginEindDatumVanMaand} from "../../utils/Utils";
+import {debounceTime, delay} from "rxjs/operators";
 
 @Injectable({
     providedIn: 'root'
@@ -35,7 +36,8 @@ export class DienstenService {
                 private readonly sharedService: SharedService) {
 
         // de datum zoals die in de kalender gekozen is
-        this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(datum => {
+        // De delay is toegevoegd omdat rooster eerst geladen moet worden (is niet netjes, maar werkt goed)
+        this.datumAbonnement = this.sharedService.kalenderMaandChange.pipe(delay(500)).subscribe(datum => {
             this.datum = DateTime.fromObject({
                 year: datum.year,
                 month: datum.month,
@@ -49,18 +51,15 @@ export class DienstenService {
             });
         });
 
-        // Als roosterdagen zijn toegevoegd, dan moeten we overzicht opnieuw ophalen
-        this.sharedService.heliosEventFired.subscribe(ev => {
+        // Als diensten zijn toegevoegd, dan moeten we overzicht opnieuw ophalen
+        // Niet meteen opvragen, maar bundelen en 1 keer opvragen
+        this.sharedService.heliosEventFired.pipe(debounceTime(500)).subscribe(ev => {
             if (ev.tabel == "Diensten") {
-                // Niet meteen opvragen, maar bundelen en 1 keer opvragen
-                clearTimeout(this.refreshTimer);
-                this.refreshTimer = window.setTimeout(() => {
-                    const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
+                const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
 
-                    this.getDiensten(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
-                        this.dienstenStore.next(this.dienstenCache.dataset)    // afvuren event
-                    });
-                }, 500);
+                this.getDiensten(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
+                    this.dienstenStore.next(this.dienstenCache.dataset)    // afvuren event
+                });
             }
         });
     }

@@ -12,13 +12,12 @@ import {
 import {BehaviorSubject, Subscription} from "rxjs";
 import {SharedService} from "../shared/shared.service";
 import {getBeginEindDatumVanMaand} from "../../utils/Utils";
+import {debounceTime, delay} from "rxjs/operators";
 
 @Injectable({
     providedIn: 'root'
 })
 export class RoosterService {
-    private refreshTimer: number;
-
     private roosterCache: HeliosRooster = {dataset: []};    // return waarde van API call
     private datumAbonnement: Subscription;                  // volg de keuze van de kalender
     private datum: DateTime;                                // de gekozen dag
@@ -46,18 +45,15 @@ export class RoosterService {
         });
 
         // Als roosterdagen zijn toegevoegd, dan moeten we overzicht opnieuw ophalen
-        this.sharedService.heliosEventFired.subscribe(ev => {
+        // een timeout. roosterdagen worden per maand toegevoegd.
+        // Niet voor iedere dag meteen opvragen, maar bundelen en 1 keer opvragen
+        this.sharedService.heliosEventFired.pipe(debounceTime(500)).subscribe(ev => {
             if (ev.tabel == "Rooster") {
-                // een kleine timeout. roosterdagen worden per maand toegevoegd.
-                // Niet voor iedere dag meteen opvragen, maar bundelen en 1 keer opvragen
-                clearTimeout(this.refreshTimer);
-                this.refreshTimer = window.setTimeout(() => {
-                    const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
+                const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
 
-                    this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
-                        this.roosterStore.next(this.roosterCache.dataset)    // afvuren event
-                    });
-                }, 500);
+                this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
+                    this.roosterStore.next(this.roosterCache.dataset)    // afvuren event
+                });
             }
         });
     }

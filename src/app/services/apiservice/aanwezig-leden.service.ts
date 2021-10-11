@@ -6,6 +6,7 @@ import {APIService} from './api.service';
 import {HeliosAanwezigLeden, HeliosAanwezigLedenDataset} from '../../types/Helios';
 import {BehaviorSubject, Subscription} from "rxjs";
 import {SharedService} from "../shared/shared.service";
+import {debounceTime} from "rxjs/operators";
 
 
 @Injectable({
@@ -52,7 +53,7 @@ export class AanwezigLedenService {
             }
 
             // Als start is toegevoegd, dan kan lid aanwezig gemeld worden
-            this.sharedService.heliosEventFired.subscribe(ev => {
+            this.sharedService.heliosEventFired.pipe(debounceTime(1000)).subscribe(ev => {
                 if (ev.tabel == "Startlijst") {
                     if (ev.actie == HeliosActie.Add) {
                         this.ophalenAanwezig(this.datum, this.datum).then((dataset) => {

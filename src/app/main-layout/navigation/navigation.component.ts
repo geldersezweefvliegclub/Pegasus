@@ -18,6 +18,7 @@ import {VliegtuigenService} from "../../services/apiservice/vliegtuigen.service"
 import {StartlijstService} from '../../services/apiservice/startlijst.service';
 import {DaginfoService} from '../../services/apiservice/daginfo.service';
 import {Subscription} from "rxjs";
+import {delay} from "rxjs/operators";
 
 
 @Component({
@@ -68,7 +69,8 @@ export class NavigationComponent {
         this.toonMenuItems();
 
         // Als daginfo of startlijst is aangepast, moet we kalender achtergrond ook updaten
-        this.sharedService.heliosEventFired.subscribe(ev => {
+        // Omdat dit minder belangrijk is dan andere API calls, een kleine vertraging
+        this.sharedService.heliosEventFired.pipe(delay(500)).subscribe(ev => {
             if (ev.tabel == "Daginfo") {
                 if (ev.actie == HeliosActie.Delete || ev.actie == HeliosActie.Restore) {
 
