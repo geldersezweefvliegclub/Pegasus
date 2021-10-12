@@ -735,7 +735,7 @@ export class RoosterPageComponent implements OnInit {
         })
     }
 
-    // Export naar excel
+    // Export naar excel in pivot view
     exportRooster() {
         let exportData: any = [];
         let legeDiensten: any = {};
@@ -743,15 +743,19 @@ export class RoosterPageComponent implements OnInit {
         this.dienstTypes.forEach(dienst => legeDiensten[dienst.OMSCHRIJVING!] = "");
 
         this.filteredRooster.forEach(dag => {
+            const d = DateTime.fromSQL(dag.DATUM!);
+
             let record: any = Object.assign({
-                DATUM: dag.DATUM,
+                DATUM: d.day + "-" + d.month + "-" + d.year,    // Datum in juiste formaat zetten
                 DDWV: dag.DDWV ? "X" : "-",
                 CLUB_BEDRIJF: dag.CLUB_BEDRIJF ? "X" : "-",
                 OPMERKINGEN: dag.OPMERKINGEN
             }, legeDiensten);
 
             dag.Diensten.forEach(dienst => {
-                record[dienst.TYPE_DIENST!] = dienst.NAAM;
+                if (dienst) {
+                    record[dienst.TYPE_DIENST!] = dienst.NAAM;
+                }
             });
             exportData.push(record)
         });

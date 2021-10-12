@@ -130,6 +130,12 @@ export class DashboardPageComponent implements OnInit {
             const eindDatum: DateTime = DateTime.fromObject( {year: this.datum.year, month: 12, day: 31});
 
             this.startlijstService.getLogboek(this.lidData.ID, startDatum, eindDatum).then((dataset) => {
+                // Datum in juiste formaat zetten
+                dataset.forEach((start) => {
+                    const d = DateTime.fromSQL(start.DATUM!);
+                    start.DATUM = d.day + "-" + d.month + "-" + d.year
+                })
+
                 let ws = xlsx.utils.json_to_sheet(dataset);
                 const wb: xlsx.WorkBook = xlsx.utils.book_new();
                 xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');

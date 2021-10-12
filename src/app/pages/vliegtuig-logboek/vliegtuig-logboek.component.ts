@@ -1,5 +1,10 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {HeliosVliegtuig, HeliosVliegtuigenDataset, HeliosVliegtuigLogboekTotalen} from "../../types/Helios";
+import {
+    HeliosLogboekDataset,
+    HeliosVliegtuig,
+    HeliosVliegtuigenDataset,
+    HeliosVliegtuigLogboekTotalen
+} from "../../types/Helios";
 import {ColDef} from "ag-grid-community";
 import {faClock, IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {
@@ -32,7 +37,7 @@ import {ErrorMessage} from "../../types/Utils";
 export class VliegtuigLogboekComponent implements OnInit {
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
-    data: HeliosVliegtuigenDataset[] = [];
+    data: HeliosLogboekDataset[] = [];
     totalen: HeliosVliegtuigLogboekTotalen;
     vliegtuig: HeliosVliegtuig = {};
     REG_CALL: string = "";
@@ -321,10 +326,16 @@ export class VliegtuigLogboekComponent implements OnInit {
 
     // Export naar excel
     exportDataset() {
+        // Datum in juiste formaat zetten
+        this.data.forEach((dag) => {
+            const d = DateTime.fromSQL(dag.DATUM!);
+            dag.DATUM = d.day + "-" + d.month + "-" + d.year
+        })
+
         var ws = xlsx.utils.json_to_sheet(this.data);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
-        xlsx.writeFile(wb, 'vliegtuigen ' + new Date().toJSON().slice(0, 10) + '.xlsx');
+        xlsx.writeFile(wb, 'vliegtuigen ' + this.vliegtuigID + " " + this.datum.year + '.xlsx');
     }
 
     // Tonen van de vluchten grafiek in popup window, is beter leesbaar

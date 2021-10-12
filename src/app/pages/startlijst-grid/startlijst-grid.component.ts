@@ -273,6 +273,10 @@ export class StartlijstGridComponent implements OnInit {
             day: this.datum.day
         })
 
+        const queryParams: KeyValueArray = {}
+        queryParams["SORT"] = "DATUM"
+
+
         let tobeExported: HeliosStartDataset[] = []
         let bestandsnaam: string = datum.toISODate()
         switch (exportDMJ) {
@@ -295,7 +299,7 @@ export class StartlijstGridComponent implements OnInit {
                 })
 
                 try {
-                    tobeExported = await this.startlijstService.getStarts(this.trashMode, vanDatum, totDatum, this.zoekString);
+                    tobeExported = await this.startlijstService.getStarts(this.trashMode, vanDatum, totDatum, this.zoekString, queryParams);
                 } catch (e) {
                     this.error = e;
                     this.isLoading = false;
@@ -318,7 +322,7 @@ export class StartlijstGridComponent implements OnInit {
                 })
 
                 try {
-                    tobeExported = await this.startlijstService.getStarts(this.trashMode, vanDatum, totDatum, this.zoekString);
+                    tobeExported = await this.startlijstService.getStarts(this.trashMode, vanDatum, totDatum, this.zoekString, queryParams);
                 } catch (e) {
                     this.error = e;
                     this.isLoading = false;
@@ -328,6 +332,12 @@ export class StartlijstGridComponent implements OnInit {
                 break;
             }
         }
+
+        // Datum in juiste formaat zetten
+        tobeExported.forEach((dag) => {
+            const d = DateTime.fromSQL(dag.DATUM!);
+            dag.DATUM = d.day + "-" + d.month + "-" + d.year
+        })
 
         const ws = xlsx.utils.json_to_sheet(tobeExported);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
