@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {StartlijstService} from '../../services/apiservice/startlijst.service';
 import {CheckboxRenderComponent} from '../../shared/components/datatable/checkbox-render/checkbox-render.component';
-import {faRecycle} from '@fortawesome/free-solid-svg-icons';
+import {faRecycle, faDownload} from '@fortawesome/free-solid-svg-icons';
 import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {DeleteActionComponent} from '../../shared/components/datatable/delete-action/delete-action.component';
@@ -35,7 +35,8 @@ export class StartlijstGridComponent implements OnInit {
     @ViewChild(ExportStartlijstComponent) exportStartlijstKeuze: ExportStartlijstComponent;
 
     data: HeliosStartDataset[] = [];
-    isLoading: boolean = false
+    isLoading: boolean = false;
+    isExporting: boolean = false;
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
@@ -105,7 +106,7 @@ export class StartlijstGridComponent implements OnInit {
         maxWidth: 100,
         initialWidth: 100,
         resizable: false,
-        suppressSizeToFit:true,
+        suppressSizeToFit: true,
         hide: false,
         cellRenderer: 'deleteAction', headerName: '', sortable: false,
         cellRendererParams: {
@@ -121,7 +122,7 @@ export class StartlijstGridComponent implements OnInit {
         maxWidth: 100,
         initialWidth: 100,
         resizable: false,
-        suppressSizeToFit:true,
+        suppressSizeToFit: true,
         hide: false,
         cellRenderer: 'restoreAction', headerName: '', sortable: false,
         cellRendererParams: {
@@ -141,8 +142,9 @@ export class StartlijstGridComponent implements OnInit {
         restoreAction: RestoreActionComponent
     };
     iconCardIcon: IconDefinition = faClipboardList;
+    downloadIcon: IconDefinition = faDownload;
     filterIcon: IconDefinition = faFilter;
-    prullenbakIcon: IconDefinition  = faRecycle;
+    prullenbakIcon: IconDefinition = faRecycle;
 
     zoekString: string;
     zoekTimer: number;                  // kleine vertraging om data ophalen te beperken
@@ -257,13 +259,14 @@ export class StartlijstGridComponent implements OnInit {
 
     // keuze voor startlijst export
     expoteerStartlijst() {
-        console.log(this.exportStartlijstKeuze)
         this.exportStartlijstKeuze.openPopup();
     }
 
     // Export naar excel
     // ExportDMJ = "dag", "maand" of "jaar"
-    exportDataset(exportDMJ: string) {
+    async exportDataset(exportDMJ: string) {
+        this.isExporting = true;
+
         let datum: DateTime = DateTime.fromObject({
             year: this.datum.year,
             month: this.datum.month,
@@ -271,35 +274,67 @@ export class StartlijstGridComponent implements OnInit {
         })
 
         let tobeExported: HeliosStartDataset[] = []
-        let bestandsnaam : string = datum.toISODate()
+        let bestandsnaam: string = datum.toISODate()
         switch (exportDMJ) {
-            case "dag":
-            {
+            case "dag": {
                 bestandsnaam = datum.toISODate()
                 tobeExported = this.data; // default is dag
                 break;
             }
-            case "maand":
-            {
-                bestandsnaam = datum.month.toString()
-                //TODO data =
+            case "maand": {
+                let vanDatum: DateTime = DateTime.fromObject({
+                    year: this.datum.year,
+                    month: this.datum.month,
+                    day: 1
+                })
+
+                let totDatum: DateTime = DateTime.fromObject({
+                    year: this.datum.year,
+                    month: this.datum.month,
+                    day: this.datum.daysInMonth
+                })
+
+                try {
+                    tobeExported = await this.startlijstService.getStarts(this.trashMode, vanDatum, totDatum, this.zoekString);
+                } catch (e) {
+                    this.error = e;
+                    this.isLoading = false;
+                }
+
+                bestandsnaam = datum.month.toString() + "-" + datum.year.toString()
                 break;
             }
-            case "jaar":
-            {
-                //TODO data =
+            case "jaar": {
+                let vanDatum: DateTime = DateTime.fromObject({
+                    year: this.datum.year,
+                    month: 1,
+                    day: 1
+                })
 
-                bestandsnaam = datum.month.toString()
+                let totDatum: DateTime = DateTime.fromObject({
+                    year: this.datum.year,
+                    month: 12,
+                    day: 31
+                })
+
+                try {
+                    tobeExported = await this.startlijstService.getStarts(this.trashMode, vanDatum, totDatum, this.zoekString);
+                } catch (e) {
+                    this.error = e;
+                    this.isLoading = false;
+                }
+
+                bestandsnaam = datum.year.toString()
                 break;
             }
         }
 
-
-
-        const ws = xlsx.utils.json_to_sheet(this.data);
+        const ws = xlsx.utils.json_to_sheet(tobeExported);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
         xlsx.writeFile(wb, 'startlijst ' + bestandsnaam + '.xlsx');
+
+        this.isExporting = false;
     }
 
     // Als leden-filter aan staat, dan tonen we alleen de openstaande vluchten

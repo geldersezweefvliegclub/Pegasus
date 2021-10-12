@@ -78,4 +78,10 @@
     <app-tijd-invoer></app-tijd-invoer>
     <app-start-editor></app-start-editor>
     <app-export-startlijst (exportDataset)="exportDataset($event)"></app-export-startlijst>
+
+    <div class="exportOverlay" *ngIf="isExporting">
+        <div class="exportPosition">
+            <span class="exportBorder"><fa-icon [icon]="downloadIcon" class="me-3 downloadIcon"></fa-icon> Data wordt geexporteerd .....</span>
+        </div>
+    </div>
 </app-pegasus-card>

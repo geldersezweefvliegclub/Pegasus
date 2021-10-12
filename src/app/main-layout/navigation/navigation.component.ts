@@ -11,7 +11,6 @@ import {HeliosActie, KalenderMaand} from '../../types/Utils';
 import {getBeginEindDatumVanMaand} from '../../utils/Utils';
 
 import {LoginService} from '../../services/apiservice/login.service';
-import {HeliosAanwezigLedenDataset, HeliosRoosterDataset} from "../../types/Helios";
 import {RoosterService} from "../../services/apiservice/rooster.service";
 import {DienstenService} from "../../services/apiservice/diensten.service";
 import {VliegtuigenService} from "../../services/apiservice/vliegtuigen.service";
@@ -19,7 +18,6 @@ import {StartlijstService} from '../../services/apiservice/startlijst.service';
 import {DaginfoService} from '../../services/apiservice/daginfo.service';
 import {Subscription} from "rxjs";
 import {delay} from "rxjs/operators";
-
 
 @Component({
     selector: 'app-navigation',

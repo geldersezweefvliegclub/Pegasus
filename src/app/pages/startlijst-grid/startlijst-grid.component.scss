@@ -30,3 +30,34 @@
 #toolbar {
   flex-grow: 1;
 }
+
+.downloadIcon {
+  font-size: 30px;
+}
+
+.exportOverlay {
+  position: absolute; /* Sit on top of the page content */
+  top: 80px;
+  left: 0;
+  height: calc(100% - 160px);
+  width: 100%;
+  background: rgba(255, 255, 255, 0.5);
+  color: rgba(0, 0, 0, 0.5);
+  font-family: "Roboto", sans-serif;
+  font-size: 13px;
+  line-height: normal;
+  z-index: 2;
+}
+
+.exportBorder {
+  border: solid 2px grey;
+  padding: 10px;
+  z-index: 3;
+  background-color: white;
+}
+
+.exportPosition {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
