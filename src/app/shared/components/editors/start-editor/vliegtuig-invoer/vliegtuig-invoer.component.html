@@ -7,6 +7,8 @@
            bindValue="ID"
            closeOnSelect="true"
            openOnEnter="true"
+           name="VliegtuigID"
+           [required]="!Sleep"
            (ngModelChange)="inputChange($event)"
            [typeahead]="vliegtuigInput$"
            [(ngModel)]="VLIEGTUIG_ID">

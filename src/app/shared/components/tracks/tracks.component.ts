@@ -159,7 +159,6 @@ export class TracksComponent implements OnInit {
 
     // Opvragen van de data via de api
     opvragen(): void {
-        console.log("xxxx")
         clearTimeout(this.zoekTimer);
 
         const maxTrackItems = (this.VliegerID) ? -1 : 200; // alle tracks voor een vlieger, anders 200 items

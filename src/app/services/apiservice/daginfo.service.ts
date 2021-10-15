@@ -142,7 +142,7 @@ export class DaginfoService {
                 DATUM: this.datum.toISODate(),
                 DDWV: rooster[0].DDWV,
                 CLUB_BEDRIJF: rooster[0].CLUB_BEDRIJF,
-                VELD_ID: 901,
+                VELD_ID: undefined,
                 STARTMETHODE_ID: 0,
                 VLIEGBEDRIJF: "",
                 METEO: "",

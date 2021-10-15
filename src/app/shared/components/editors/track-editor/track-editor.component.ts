@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {HeliosLedenDataset, HeliosTrack} from "../../../../types/Helios";
 import {ModalComponent} from "../../modal/modal.component";
 import {TracksService} from "../../../../services/apiservice/tracks.service";
@@ -181,5 +181,14 @@ export class TrackEditorComponent implements OnInit{
 
     lidGeselecteerd(id: number | undefined) {
         this.track.LID_ID = id;
+    }
+
+    opslaanDisabled() {
+        if (this.toonLidSelectie) {
+           return !(this.track.LID_ID && this.track.TEKST) ;
+        }
+        else {
+            return !this.track.TEKST;
+        }
     }
 }

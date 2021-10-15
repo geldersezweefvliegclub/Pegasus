@@ -1,6 +1,7 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {Observable, of, Subject} from 'rxjs';
 import {HeliosVliegtuigenDataset} from '../../../../../types/Helios';
+import {NgSelectComponent} from "@ng-select/ng-select";
 
 @Component({
     selector: 'app-vliegtuig-invoer',
@@ -17,6 +18,8 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
 
     @Output() VliegtuigChanged: EventEmitter<number> = new EventEmitter<number>();
     EventEmitterDelay: number;
+
+    @ViewChild(NgSelectComponent) ngSelect: NgSelectComponent;
 
     vliegtuigInput$ = new Subject<string | null>();
     vliegtuigenSelectie$: Observable<HeliosVliegtuigenDataset[]>;
@@ -64,10 +67,11 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
 
     // De Input datasets zijn gewijzigd, zorg dat combobox goede data krijgt via vliegtuigenSelectie$
     ngOnChanges(changes: SimpleChanges) {
-        // bij update van VLIEGTUIG_ID doen we niets
+        // bij update van VLIEGTUIG_ID kijken we alleen of waarde geldig is
         if (changes.hasOwnProperty("VLIEGTUIG_ID")) {
-             return;
+            return;
         }
+
 
         // Indien we sleepkist moeten invoeren, halen we de andere kisten weg uit het array
         if (this.Sleep) {
@@ -80,7 +84,7 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
             });
         }
 
-        if (this.aanwezig.length > 0)  {
+        if (this.aanwezig.length > 0) {
             this.vliegtuigenSelectie$ = of(this.aanwezig);
         } else {
             this.vliegtuigenSelectie$ = of(this.vliegtuigen);
@@ -88,7 +92,9 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
     }
 
     inputChange(id: number | undefined) {
+
+        // niet alle event doorgeven naar parent.
         clearTimeout(this.EventEmitterDelay);
-        this.EventEmitterDelay = window.setTimeout(() => this.VliegtuigChanged.emit(id), 1000);
+        this.EventEmitterDelay = window.setTimeout(() => this.VliegtuigChanged.emit(id), 500);
     }
 }

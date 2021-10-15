@@ -21,6 +21,7 @@ export class LidInvoerComponent implements OnInit, OnChanges {
     @Input() placeholder: string = "";
     @Input() label: string = "";
     @Input() disabled: boolean = false;
+    @Input() required: boolean = false;
     @Input() excludeLidTypes: string = ""
     @Input() LID_ID: number | undefined;
     @Input() vliegtuig: HeliosVliegtuigenDataset | undefined = undefined
@@ -60,8 +61,6 @@ export class LidInvoerComponent implements OnInit, OnChanges {
         const nweLijst = this.aanwezigFiltered.filter((lid: HeliosAanwezigLedenDataset) => {
             return lid.NAAM!.toLowerCase().includes(searchTerm.toLowerCase());
         });
-
-        console.log(nweLijst);
 
         if ((nweLijst.length > 0) && ((nweLijst.length >= 5) || (searchTerm.length <= 2))) {
             return nweLijst

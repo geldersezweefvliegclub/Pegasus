@@ -3,7 +3,7 @@
 
 <app-modal [titel]="formTitel">
     <div body>
-            <fieldset [disabled]="isVerwijderMode || isRestoreMode">
+            <fieldset [disabled]="isVerwijderMode || isRestoreMode || isLoading || isSaving">
                 <div class="row">
                     <div class="col-12 col-md-6">
                         <label for="REGISTRATIE" class="form-label">Registratie</label>
@@ -12,14 +12,14 @@
                     </div>
                     <div class="col-12 col-md-6">
                         <label for="CALLSIGN" class="form-label">Callsign</label>
-                        <input required name="callsign" type="text" class="form-control" id="CALLSIGN"
+                        <input name="callsign" type="text" class="form-control" id="CALLSIGN"
                                [(ngModel)]="vliegtuig.CALLSIGN">
                     </div>
                 </div>
                 <div class="row my-2">
                     <div class="col-12 col-md-6">
                         <label for="FLARMCODE" class="form-label">Flarmcode</label>
-                        <input required name="flarmcode" type="text" class="form-control" id="FLARMCODE"
+                        <input name="flarmcode" type="text" class="form-control" id="FLARMCODE"
                                [(ngModel)]="vliegtuig.FLARMCODE"
                                min="0"
                         >
@@ -65,7 +65,7 @@
                 <div class="row my-3 align-items-end" *ngIf="vliegtuig.CLUBKIST">
                     <div class="col-12 col-md-6">
                         <label for="VOLGORDE" class="form-label">Volgorde</label>
-                        <input required name="zitplaatsen" type="number" class="form-control" id="VOLGORDE"
+                        <input [required]="vliegtuig.CLUBKIST" name="zitplaatsen" type="number" class="form-control" id="VOLGORDE"
                                [(ngModel)]="vliegtuig.VOLGORDE"
                                min="1" max="25"
                         >
@@ -99,9 +99,9 @@
     </div>
     <div footer>
         <app-icon-button *ngIf="!isLoading && !isSaving && vliegtuig.ID !== undefined && !isRestoreMode && !isVerwijderMode" iconNaam="fas Edit" btnColor="btn-primary"
-                         tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
+                         tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
         <app-icon-button *ngIf="!isLoading && !isSaving && vliegtuig.ID === undefined && !isRestoreMode && !isVerwijderMode" iconNaam="fas Plus" btnColor="btn-primary"
-                         tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
+                         tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
         <app-icon-button *ngIf="!isLoading && !isSaving && isVerwijderMode" iconNaam="fas TrashAlt" btnColor="btn-primary editorDeleteBtn"
                          tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
         <app-icon-button *ngIf="!isLoading && !isSaving && isRestoreMode" iconNaam="fas Undo" btnColor="btn-primary editorRestoreBtn"

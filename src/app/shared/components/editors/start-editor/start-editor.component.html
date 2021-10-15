@@ -25,6 +25,7 @@
                                bindValue="ID"
                                closeOnSelect="true"
                                openOnEnter="true"
+                               required
                                [(ngModel)]="start.VELD_ID">
                     </ng-select>
                 </div>
@@ -34,9 +35,11 @@
                 <div class="col-12 col-md-6 flex-row">
                     <div class="col-12" *ngFor="let radiobutton of startMethodeTypesFiltered">
                         <label>
-                            <input type="radio" name="options" (click)="start.STARTMETHODE_ID = radiobutton.ID"
-                                   [checked]="start.STARTMETHODE_ID === radiobutton.ID"><span
-                                class="ms-3">{{radiobutton.OMSCHRIJVING}}</span>
+                            <div class="SMinvalid"></div>
+                            <input type="radio" name="options"
+                                   (click)="start.STARTMETHODE_ID = radiobutton.ID"
+                                   [checked]="start.STARTMETHODE_ID === radiobutton.ID">
+                            <span class="ms-3" [ngClass]="StartMethodeIngevuld()">{{radiobutton.OMSCHRIJVING}}</span>
                         </label>
                     </div>
                 </div>
@@ -96,7 +99,8 @@
                     </div>
                 </div>
                 <div class="col-2 col-md-2 row align-items-end">
-                    <app-icon-button id="switchVoorAchter" class="toolbarBtn display-1" iconNaam="fas ArrowsAltV" (btnClicked)="omwisselen()"
+                    <app-icon-button id="switchVoorAchter" class="toolbarBtn display-1" iconNaam="fas ArrowsAltV"
+                                     (btnClicked)="omwisselen()"
                                      *ngIf="!toonVliegerNaam && gekozenVliegtuig?.ZITPLAATSEN == 2"
                                      btnColor="btn-secondary"></app-icon-button>
 
@@ -114,7 +118,7 @@
 
                 <div *ngIf="gekozenVliegtuig?.ZITPLAATSEN == 2">
                     <label for="INZITTENDE_NAAM" class="form-label">Naam van de inzittende</label>
-                    <input required name="inzittende" type="text" class="form-control" id="INZITTENDE_NAAM"
+                    <input name="inzittende" type="text" class="form-control" id="INZITTENDE_NAAM"
                            [(ngModel)]="start.INZITTENDENAAM"
                            placeholder="Vul de volledige naam in"
                            min="0"
@@ -126,7 +130,7 @@
                  *ngIf="(!isVerwijderMode && start.VLIEGTUIG_ID) || (isVerwijderMode && start.OPMERKINGEN)">
                 <div class="opmerkingInvoer">
                     <label for="OPMERKINGEN" class="form-label">Opmerkingen</label>
-                    <input required name="inzittende" type="text" class="form-control" id="OPMERKINGEN"
+                    <input name="inzittende" type="text" class="form-control" id="OPMERKINGEN"
                            [(ngModel)]="start.OPMERKINGEN"
                            placeholder="Opmerking, bijv naam inzittende, vliegveld etc"
                     >
@@ -137,14 +141,15 @@
     <div footer>
         <app-icon-button *ngIf="!isLoading && !isSaving && start.ID !== undefined && !isRestoreMode && !isVerwijderMode"
                          iconNaam="fas Edit" btnColor="btn-primary"
-                         tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
+                         tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
         <app-icon-button *ngIf="!isLoading && !isSaving && start.ID === undefined && !isRestoreMode && !isVerwijderMode"
                          iconNaam="fas Plus" btnColor="btn-primary"
-                         tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
+                         tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
         <app-icon-button *ngIf="!isLoading && !isSaving && isVerwijderMode" iconNaam="fas TrashAlt"
                          btnColor="btn-primary editorDeleteBtn"
                          tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
-        <app-icon-button *ngIf="!isLoading && !isSaving && isRestoreMode" iconNaam="fas Undo" btnColor="btn-primary editorRestoreBtn"
+        <app-icon-button *ngIf="!isLoading && !isSaving && isRestoreMode" iconNaam="fas Undo"
+                         btnColor="btn-primary editorRestoreBtn"
                          tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
 
         <button class="btn btn-primary" *ngIf="isLoading || isSaving">

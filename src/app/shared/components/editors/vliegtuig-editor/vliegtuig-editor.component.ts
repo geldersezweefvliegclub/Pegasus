@@ -62,6 +62,7 @@ export class VliegtuigEditorComponent  implements  OnInit {
     openPopup(id: number | null) {
         if (id) {
             this.formTitel = 'Vliegtuig bewerken';
+            this.vliegtuig = {};
             this.haalVliegtuigOp(id);
         } else {
             this.formTitel = 'Vliegtuig aanmaken';
@@ -188,5 +189,12 @@ export class VliegtuigEditorComponent  implements  OnInit {
             this.isSaving = false;
             this.error = e;
         })
+    }
+
+    opslaanDisabled() {
+        if (!this.vliegtuig.CLUBKIST) {
+            return !(this.vliegtuig.REGISTRATIE && this.vliegtuig.ZITPLAATSEN)
+        }
+        return !(this.vliegtuig.REGISTRATIE && this.vliegtuig.ZITPLAATSEN && this.vliegtuig.VOLGORDE && this.vliegtuig.TYPE_ID)
     }
 }

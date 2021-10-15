@@ -97,6 +97,23 @@ input.ng-dirty.ng-invalid {
   background-color: #e9ecef;
 }
 
+// indicatie dat veld onjuist is
+input.ng-invalid {
+  border: 1px solid #ffc107;
+}
+
+select.ng-invalid {
+  border: 1px solid #ffc107;
+}
+
+input.ng-dirty.ng-invalid {
+  border: 1px solid #ffc107;
+}
+
+select.ng-dirty.ng-invalid {
+  border: 1px solid #ffc107;
+}
+
 
 // center kalender in navigatie balk
 .navCalendar .ngb-dp-content.ngb-dp-months {
@@ -142,7 +159,7 @@ ngb-datepicker-navigation-select > .custom-select {
 }
 
 
-// Tonen van waarschuwing dat er geen vlier ingevuld is
+// Tonen van waarschuwing dat er geen vlieger ingevuld is
 // Maar vlucht is nog niet gestart
 .geenVliegerWarning {
   color: #ffc107;

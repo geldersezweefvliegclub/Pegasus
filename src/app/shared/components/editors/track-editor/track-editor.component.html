@@ -9,6 +9,7 @@
                         [LID_ID]="track.LID_ID"
                         [disabled]="isVerwijderMode || isRestoreMode"
                         excludeLidTypes="600,607,609,610,612,613,625"
+                        [required] = true
                         [leden]="leden"
                         (LidChanged)="lidGeselecteerd($event)"
         ></app-lid-invoer>
@@ -25,9 +26,9 @@
     </div>
     <div footer>
         <app-icon-button *ngIf="!isLoading && !isSaving && track.ID !== undefined && !isRestoreMode && !isVerwijderMode" iconNaam="fas Edit" btnColor="btn-primary"
-                         tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
+                         tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
         <app-icon-button *ngIf="!isLoading && !isSaving && track.ID === undefined && !isRestoreMode && !isVerwijderMode" iconNaam="fas Plus" btnColor="btn-primary"
-                         tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
+                         tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
         <app-icon-button *ngIf="!isLoading && !isSaving && isVerwijderMode" iconNaam="fas TrashAlt" btnColor="btn-primary editorDeleteBtn"
                          tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
         <app-icon-button *ngIf="!isLoading && !isSaving && isRestoreMode" iconNaam="fas Undo" btnColor="btn-primary editorRestoreBtn"

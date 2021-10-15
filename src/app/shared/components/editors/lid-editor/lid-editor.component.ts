@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import {NgbDate, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
 import {DateTime} from 'luxon';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
@@ -12,12 +12,7 @@ import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
 import {ImageService} from "../../../../services/apiservice/image.service";
 import {Router} from "@angular/router";
 import {StorageService} from "../../../../services/storage/storage.service";
-import {LedenFilterComponent} from "../../leden-filter/leden-filter.component";
-import {ImageCropComponent} from "../../image-crop/image-crop.component";
-import {AvatarComponent} from "../../avatar/avatar.component";
-import {ModalComponent} from "../../modal/modal.component";
-import {PegasusCardComponent} from "../../pegasus-card/pegasus-card.component";
-import {of, Subscription} from "rxjs";
+import {Subscription} from "rxjs";
 
 @Component({
     selector: 'app-lid-editor',
@@ -29,7 +24,6 @@ export class LidEditorComponent implements OnInit {
     @Input() lidID: number;
     @Input() isVerwijderMode: boolean = false;
     @Input() isRestoreMode: boolean = false;
-
 
     typesAbonnement: Subscription;
     types: HeliosType[];
@@ -73,7 +67,7 @@ export class LidEditorComponent implements OnInit {
             this.types = dataset!.filter((t:HeliosType) => { return t.GROEP == 6});    // lidtypes
         });
 
-        if (this.lidID > 0) {
+        if (this.lidID >= 0) {
             this.isLoading = true;
 
             if (this.isRestoreMode) {

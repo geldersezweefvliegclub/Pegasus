@@ -174,7 +174,7 @@ export class VliegtuigenGridComponent implements OnInit {
     // openen van popup om gegevens van een bestaand vliegtuig aan te passen
     openEditor(event?: RowDoubleClickedEvent) {
         if (this.magWijzigen) {
-            this.editor.openPopup(event?.data.ID);
+            this.editor.openPopup(event?.data);
         }
     }
 

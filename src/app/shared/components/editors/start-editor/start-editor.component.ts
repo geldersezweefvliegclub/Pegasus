@@ -367,4 +367,24 @@ export class StartEditorComponent implements OnInit {
         this.vliegerGeselecteerd(this.start.INZITTENDE_ID);
         this.start.INZITTENDE_ID = tmpID;
     }
+
+    StartMethodeIngevuld(): string {
+        if (this.start.STARTMETHODE_ID) {
+            return ""
+        }
+        else {
+            return "SMinvalid"
+        }
+    }
+
+    opslaanDisabled() {
+        if (!this.start.VLIEGTUIG_ID || !this.start.STARTMETHODE_ID || !this.start.VELD_ID) {
+            return true;
+        }
+
+        if (this.toonVliegerNaam && !this.start.VLIEGERNAAM) {
+            return true;
+        }
+        return false;
+    }
 }
