@@ -3,7 +3,7 @@
 
 <app-modal [titel]="formTitel">
     <div body>
-        <fieldset [disabled]="isVerwijderMode || isRestoreMode">
+        <fieldset [disabled]="isVerwijderMode || isRestoreMode || isLoading || isSaving">
             <div class="row">
                 <div class="col-12 col-md-6">
                     <app-vliegtuig-invoer id="VLIEGTUIG"

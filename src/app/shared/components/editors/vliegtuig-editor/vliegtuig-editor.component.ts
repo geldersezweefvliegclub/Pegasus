@@ -1,6 +1,6 @@
 import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {ModalComponent} from '../../modal/modal.component';
-import {HeliosType, HeliosVliegtuig} from '../../../../types/Helios';
+import {HeliosType, HeliosVliegtuig, HeliosVliegtuigenDataset} from '../../../../types/Helios';
 import {VliegtuigenService} from '../../../../services/apiservice/vliegtuigen.service';
 import {TypesService} from '../../../../services/apiservice/types.service';
 import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
@@ -59,11 +59,27 @@ export class VliegtuigEditorComponent  implements  OnInit {
         });
     }
 
-    openPopup(id: number | null) {
-        if (id) {
+    openPopup(vliegtuig: HeliosVliegtuigenDataset | null) {
+        if (vliegtuig) {
+            // vul alvast de editor met data uit het grid
+            this.vliegtuig = {
+                ID: vliegtuig.ID,
+                REGISTRATIE: vliegtuig.REGISTRATIE,
+                CALLSIGN: vliegtuig.CALLSIGN,
+                FLARMCODE: vliegtuig.FLARMCODE,
+                ZITPLAATSEN: vliegtuig.ZITPLAATSEN,
+                ZELFSTART: vliegtuig.ZELFSTART,
+                CLUBKIST: vliegtuig.CLUBKIST,
+                TMG: vliegtuig.TMG,
+                SLEEPKIST: vliegtuig.SLEEPKIST,
+                TYPE_ID: vliegtuig.TYPE_ID,
+                VOLGORDE: vliegtuig.VOLGORDE,
+                INZETBAAR: vliegtuig.INZETBAAR,
+                OPMERKINGEN: vliegtuig.OPMERKINGEN
+            }
+
             this.formTitel = 'Vliegtuig bewerken';
-            this.vliegtuig = {};
-            this.haalVliegtuigOp(id);
+            this.haalVliegtuigOp(vliegtuig.ID!); // maar data kan gewijzigd zijn, dus toch even data ophalen van API
         } else {
             this.formTitel = 'Vliegtuig aanmaken';
             this.vliegtuig = {};

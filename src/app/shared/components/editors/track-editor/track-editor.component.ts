@@ -6,6 +6,7 @@ import {LedenService} from "../../../../services/apiservice/leden.service";
 import {LoginService} from "../../../../services/apiservice/login.service";
 import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
 import {Subscription} from "rxjs";
+import {TracksLedenDataset} from "../../tracks/tracks.component";
 
 @Component({
     selector: 'app-track-editor',
@@ -43,12 +44,20 @@ export class TrackEditorComponent implements OnInit{
         });
     }
 
-    openPopup(id: number | null, LID_ID?: number, START_ID?: number, NAAM?: string, TEKST?:string) {
-        this.toonLidSelectie = (id || LID_ID) ? false : true;
+    openPopup(track: TracksLedenDataset | null, LID_ID?: number, START_ID?: number, NAAM?: string, TEKST?:string) {
+        this.toonLidSelectie = (track || LID_ID) ? false : true;
 
-        if (id) {
-            this.haalTrackOp(id);
+        if (track) {
+            // vul alvast de editor met data uit het grid
+            this.track = {
+                LID_ID: track.LID_ID,
+                START_ID: track.START_ID,
+                TEKST: track.TEKST,
+                INSTRUCTEUR_ID: track.ID
+            };
+
             this.formTitel = 'Track bewerken van ' + NAAM;
+            this.haalTrackOp(track.ID!);    // maar data kan gewijzigd zijn, dus toch even data ophalen van API
         } else {
             const ui = this.loginService.userInfo?.LidData;
 

@@ -1,10 +1,10 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {
-  HeliosAanwezigLedenDataset,
-  HeliosLedenDataset,
-  HeliosStart,
-  HeliosType,
-  HeliosVliegtuigenDataset
+    HeliosAanwezigLedenDataset,
+    HeliosLedenDataset,
+    HeliosStart, HeliosStartDataset,
+    HeliosType,
+    HeliosVliegtuigenDataset
 } from '../../../../types/Helios';
 import {TypesService} from '../../../../services/apiservice/types.service';
 import {ModalComponent} from '../../modal/modal.component';
@@ -138,10 +138,32 @@ export class StartEditorComponent implements OnInit {
         });
     }
 
-    openPopup(id: number | null) {
-        if (id) {
+    openPopup(start: HeliosStartDataset | null) {
+        if (start) {
+            // vul alvast de editor met data uit het grid
+            this.start = {
+                ID: start.ID,
+                DATUM: start.DATUM,
+                DAGNUMMER: start.DAGNUMMER,
+                VLIEGTUIG_ID: start.VLIEGTUIG_ID,
+                VLIEGER_ID: start.VLIEGER_ID,
+                INZITTENDE_ID: start.INZITTENDE_ID,
+                VLIEGERNAAM: start.VLIEGERNAAM,
+                INZITTENDENAAM: start.INZITTENDENAAM,
+                STARTTIJD: start.STARTTIJD,
+                LANDINGSTIJD: start.LANDINGSTIJD,
+
+                STARTMETHODE_ID: start.STARTMETHODE_ID,
+                VELD_ID: start.VELD_ID,
+                SLEEPKIST_ID: start.SLEEPKIST_ID,
+                SLEEP_HOOGTE: start.SLEEP_HOOGTE,
+
+                OPMERKINGEN: start.OPMERKINGEN,
+                EXTERNAL_ID: start.EXTERNAL_ID
+            };
+
             this.formTitel = 'Start bewerken';
-            this.haalStartOp(id);
+            this.haalStartOp(start.ID as number); // maar data kan gewijzigd zijn, dus toch even data ophalen van API
         } else {
             this.formTitel = `Start aanmaken ${this.datum.day}-${this.datum.month}-${this.datum.year}`;
             this.start = {

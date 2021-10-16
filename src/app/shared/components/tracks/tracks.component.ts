@@ -134,7 +134,7 @@ export class TracksComponent implements OnInit {
 
     // openen van popup om gegevens van een bestaande track aan te passen
     openEditor(trk: TracksLedenDataset) {
-        this.trackEditor.openPopup(trk.ID as number, trk.LID_ID, undefined, trk.LID_NAAM as string);
+        this.trackEditor.openPopup(trk, trk.LID_ID, undefined, trk.LID_NAAM as string);
     }
 
     // openen van popup om track te verwijderen
