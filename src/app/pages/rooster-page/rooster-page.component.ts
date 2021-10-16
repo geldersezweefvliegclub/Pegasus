@@ -17,7 +17,6 @@ import {
 import {SharedService} from '../../services/shared/shared.service';
 import {Subscription} from 'rxjs';
 import {RoosterService} from '../../services/apiservice/rooster.service';
-import {ErrorMessage} from '../../types/Utils';
 import {DateTime} from 'luxon';
 import {LedenFilterComponent} from "../../shared/components/leden-filter/leden-filter.component";
 import {LoginService} from "../../services/apiservice/login.service";
@@ -333,9 +332,6 @@ export class RoosterPageComponent implements OnInit {
         const nieuwContainerId = event.container.id;
         const oudContrainerId = event.previousContainer.id;
 
-        let naam;
-        let id;
-
         // Als de nieuwe container hetzelfde is al de oude, doe dan niks.
         if (nieuwContainerId === oudContrainerId) {
             return;
@@ -643,7 +639,7 @@ export class RoosterPageComponent implements OnInit {
         return "??";
     }
 
-    private zelfIndelen(dienstType: number, datum: string): boolean {
+    zelfIndelen(dienstType: number, datum: string): boolean {
         if (!this.alleLeden)        // Als leden nog niet geladen zijn, kunnen we onzelf ook niet indelen
             return false;
 
@@ -685,12 +681,12 @@ export class RoosterPageComponent implements OnInit {
         const nu: DateTime = DateTime.now();
         const la: DateTime = DateTime.fromSQL(dienstData.LAATSTE_AANPASSING as string);
 
-        if (datum < nu) {
-            return false;   // datum is in het verleden
-        }
-
         if (this.magWijzigen) {
             return true;    // roostermakers en beheerders mogen altijd aanpassingen maken
+        }
+
+        if (datum < nu) {
+            return false;   // datum is in het verleden
         }
 
         const ui = this.loginService.userInfo?.LidData;
@@ -711,10 +707,8 @@ export class RoosterPageComponent implements OnInit {
             return true;    // tot 2 maanden mag je vrij aanpassen
         }
 
-        if (nu.diff(la, "hours").hours < 4) {
-            return true; // tot 4 uur mag je aanpassen
-        }
-        return false;
+        return nu.diff(la, "hours").hours < 4;
+
     }
 
     // laat zien hoe vaak een lid is ingedeeld voor het gekozen jaar
