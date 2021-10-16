@@ -6,7 +6,7 @@ import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {DeleteActionComponent} from '../../shared/components/datatable/delete-action/delete-action.component';
 import {RestoreActionComponent} from '../../shared/components/datatable/restore-action/restore-action.component';
-import {HeliosStartDataset} from '../../types/Helios';
+import {HeliosDienstenDataset, HeliosRoosterDataset, HeliosStartDataset} from '../../types/Helios';
 import {ErrorMessage, KeyValueArray, SuccessMessage} from '../../types/Utils';
 import * as xlsx from 'xlsx';
 import {LoginService} from '../../services/apiservice/login.service';
@@ -23,6 +23,8 @@ import {Subscription} from 'rxjs';
 import {SharedService} from '../../services/shared/shared.service';
 import {nummerSort, tijdSort} from '../../utils/Utils';
 import {ExportStartlijstComponent} from "./export-startlijst/export-startlijst.component";
+import {RoosterService} from "../../services/apiservice/rooster.service";
+import {DienstenService} from "../../services/apiservice/diensten.service";
 
 @Component({
     selector: 'app-startlijst-grid',
@@ -146,6 +148,11 @@ export class StartlijstGridComponent implements OnInit {
     filterIcon: IconDefinition = faFilter;
     prullenbakIcon: IconDefinition = faRecycle;
 
+    dienstenAbonnement: Subscription;
+    roosterAbonnement: Subscription;
+    rooster: HeliosRoosterDataset[];
+    diensten: HeliosDienstenDataset[];
+
     zoekString: string;
     zoekTimer: number;                  // kleine vertraging om data ophalen te beperken
     deleteMode: boolean = false;        // zitten we in delete mode om starts te kunnen verwijderen
@@ -164,8 +171,12 @@ export class StartlijstGridComponent implements OnInit {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
+    VliegerID: number | undefined = undefined;
+
     constructor(private readonly startlijstService: StartlijstService,
                 private readonly loginService: LoginService,
+                private readonly roosterService: RoosterService,
+                private readonly dienstenService: DienstenService,
                 private readonly sharedService: SharedService) {
     }
 
@@ -182,6 +193,19 @@ export class StartlijstGridComponent implements OnInit {
             })
             this.data = [];
             this.opvragen();
+            this.beperkteInvoer();
+        });
+
+        // abonneer op wijziging van diensten
+        this.dienstenAbonnement = this.dienstenService.dienstenChange.subscribe(diensten => {
+            this.diensten = (diensten) ? diensten : [];
+            this.beperkteInvoer();
+        });
+
+        // abonneer op wijziging van rooster
+        this.roosterAbonnement = this.roosterService.roosterChange.subscribe(rooster => {
+            this.rooster = (rooster) ? rooster : [];
+            this.beperkteInvoer();
         });
 
         // Als startlijst is aangepast, moeten we grid opnieuw laden
@@ -198,6 +222,41 @@ export class StartlijstGridComponent implements OnInit {
         this.magExporten = (!ui?.isDDWV) ? true : false;
     }
 
+    // mag de ingelogde gebruiker starts voor iedereen nvullen of alleen voor zichzelf
+    async beperkteInvoer() {
+        this.VliegerID = this.loginService.userInfo?.LidData?.ID;   // als VliegerID gezet is, mogen we alleen voor onszelf invoeren
+        const ui = this.loginService.userInfo?.Userinfo;
+
+        if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT || ui?.isStarttoren) {
+            this.VliegerID = undefined;
+        } else if (this.rooster) {
+            let rooster: HeliosRoosterDataset | undefined = this.rooster.find((dag) => {
+                DateTime.fromSQL(dag.DATUM!) == this.datum
+            })
+
+            if (rooster) {
+                if (rooster.DDWV)               // het is een DWWV dag, misschien toch alles tonen
+                {
+                    if (ui?.isBeheerderDDWV) {  // Beheerder DDWV mag op DDWV dag alles kunnen invoeren
+                        this.VliegerID = undefined;
+                    } else {
+                        let diensten: HeliosDienstenDataset[] | undefined = this.diensten.filter((dag) => {
+                            DateTime.fromSQL(dag.DATUM!) == this.datum
+                        })
+
+                        if (diensten) {
+                            diensten.forEach(dienst => {
+                                if (dienst.LID_ID == this.loginService.userInfo?.LidData?.ID) { // de ingelode gebruiker had dienst, alles kunnen invoeren
+                                    this.VliegerID = undefined;
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // openen van popup om nieuwe start te kunnen invoeren
     addStart(): void {
         if (this.magToevoegen) {
@@ -208,7 +267,7 @@ export class StartlijstGridComponent implements OnInit {
     // openen van popup om bestaande start te kunnen aanpassen
     openEditor(event?: RowDoubleClickedEvent) {
         if (this.magWijzigen) {
-            this.editor.openPopup(event?.data.ID);
+            this.editor.openPopup(event?.data);
         }
     }
 

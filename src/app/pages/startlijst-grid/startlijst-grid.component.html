@@ -76,7 +76,7 @@
     </div>
 
     <app-tijd-invoer></app-tijd-invoer>
-    <app-start-editor></app-start-editor>
+    <app-start-editor [VliegerID]="VliegerID"></app-start-editor>
     <app-export-startlijst (exportDataset)="exportDataset($event)"></app-export-startlijst>
 
     <div class="exportOverlay" *ngIf="isExporting">

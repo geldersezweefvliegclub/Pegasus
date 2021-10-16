@@ -144,7 +144,7 @@ export class DaginfoComponent implements OnInit {
 
         if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT || ui?.isStarttoren) {
             geenToegang = false;
-        } else {
+        } else if (this.rooster) {
             let rooster: HeliosRoosterDataset | undefined = this.rooster.find((dag) => {
                 DateTime.fromSQL(dag.DATUM!) == this.datum
             })
