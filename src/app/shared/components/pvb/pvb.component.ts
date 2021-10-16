@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
 import {HeliosBehaaldeProgressieDataset, HeliosCompetentiesDataset} from "../../../types/Helios";
@@ -7,6 +7,7 @@ import {SharedService} from "../../../services/shared/shared.service";
 import {LoginService} from "../../../services/apiservice/login.service";
 import {CompetentieService} from "../../../services/apiservice/competentie.service";
 import {Subscription} from "rxjs";
+import {ModalComponent} from "../modal/modal.component";
 
 @Component({
     selector: 'app-pvb',
@@ -15,6 +16,7 @@ import {Subscription} from "rxjs";
 })
 export class PvbComponent implements OnInit, OnChanges {
     @Input() VliegerID: number;
+    @ViewChild(ModalComponent) private bevestigPopup: ModalComponent;
 
     PVBs: any[];
     gehaaldeProgressie: HeliosBehaaldeProgressieDataset[];
@@ -25,6 +27,9 @@ export class PvbComponent implements OnInit, OnChanges {
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
+
+    bevestigCompetentie: HeliosCompetentiesDataset | undefined;
+    checkboxSelected: any;
 
     constructor(private readonly loginService: LoginService,
                 private readonly configService: PegasusConfigService,
@@ -109,18 +114,21 @@ export class PvbComponent implements OnInit, OnChanges {
 
     // Progressie kan gezet worden via snelkeuze in deze component, lange weg kan via progressie boom
     zetProgressie(e:any, id:number) {
+        this.bevestigCompetentie = this.competenties.find((c) => c.ID == id);
+        this.checkboxSelected = e;
+
+        this.bevestigPopup.open();
+    }
+
+    updateProgressie() {
         try {
-
-
-            e.target.disabled = true;       // mogen check niet weghalen, dus disable de checkbox
-
             const ui = this.loginService.userInfo?.LidData;
             this.progressieService.behaaldeCompetentie({
                 LID_ID: this.VliegerID,
                 INSTRUCTEUR_ID: ui?.ID,
-                COMPETENTIE_ID: id,
+                COMPETENTIE_ID: this.bevestigCompetentie?.ID,
             }).then((p) => {
-                e.target.disabled = true;       // mogen check niet weghalen, dus disable de checkbox
+                this.checkboxSelected.target.disabled = true;       // mogen check niet weghalen, dus disable de checkbox
                 const c = this.competenties.find((c) => c.ID == p.COMPETENTIE_ID);
 
                 this.success =
@@ -128,6 +136,8 @@ export class PvbComponent implements OnInit, OnChanges {
                     titel: "Progressie",
                     beschrijving: "Competentie '" + c!.ONDERWERP  +"' behaald"
                 }
+                this.bevestigCompetentie = undefined;
+                this.bevestigPopup.close();
             });
 
 

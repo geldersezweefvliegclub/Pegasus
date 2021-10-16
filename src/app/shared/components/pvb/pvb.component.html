@@ -35,3 +35,16 @@
 <div class="spinnerOverlay" *ngIf="isLoading">
     <app-loader></app-loader>
 </div>
+
+<app-modal titel="Bevestig behaalde competentie">
+    <div body *ngIf="bevestigCompetentie">
+        Bevestig dat competentie <b>{{bevestigCompetentie.ONDERWERP}}</b> behaald is.
+    </div>
+
+    <div footer class="row mt-2 justify-content-end">
+        <div class="col-12 d-flex justify-content-end">
+            <app-icon-button type="submit" iconNaam="fas Plus" tekst="Opslaan" (click)="updateProgressie()">
+            </app-icon-button>
+        </div>
+    </div>
+</app-modal>
