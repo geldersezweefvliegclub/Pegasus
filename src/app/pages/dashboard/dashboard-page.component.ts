@@ -12,7 +12,7 @@ import {LedenService} from "../../services/apiservice/leden.service";
 import {TypesService} from "../../services/apiservice/types.service";
 import {faAvianex} from "@fortawesome/free-brands-svg-icons";
 import {ModalComponent} from "../../shared/components/modal/modal.component";
-import {of, Subscription} from "rxjs";
+import {Subscription} from "rxjs";
 import {DateTime} from "luxon";
 import {SharedService} from "../../services/shared/shared.service";
 import * as xlsx from "xlsx";
@@ -27,28 +27,29 @@ import {StartEditorComponent} from "../../shared/components/editors/start-editor
     styleUrls: ['./dashboard-page.component.scss']
 })
 export class DashboardPageComponent implements OnInit {
-    private iconCardIcon: IconDefinition = faChartPie;
-    private iconProgressie: IconDefinition = faChartLine;
-    private iconLogboek: IconDefinition = faClipboardList;
-    private iconRooster: IconDefinition = faCalendarAlt;
-    private iconRecency: IconDefinition = faTachometerAlt;
-    private iconPVB: IconDefinition = faAvianex;
-    private iconStatus: IconDefinition = faBookmark;
-    private iconExpand: IconDefinition = faExternalLinkSquareAlt;
-    private iconPlane: IconDefinition = faPlane;
-    private iconTracks: IconDefinition = faAddressCard;
+    iconCardIcon: IconDefinition = faChartPie;
+    iconProgressie: IconDefinition = faChartLine;
+    iconLogboek: IconDefinition = faClipboardList;
+    iconRooster: IconDefinition = faCalendarAlt;
+    iconRecency: IconDefinition = faTachometerAlt;
+    iconPVB: IconDefinition = faAvianex;
+    iconStatus: IconDefinition = faBookmark;
+    iconExpand: IconDefinition = faExternalLinkSquareAlt;
+    iconPlane: IconDefinition = faPlane;
+    iconTracks: IconDefinition = faAddressCard;
 
-    private typesAbonnement: Subscription;
-    private lidTypes: HeliosType[] = [];
-    private lidData: HeliosLid;
+    typesAbonnement: Subscription;
+    lidTypes: HeliosType[] = [];
+    lidData: HeliosLid;
 
-    private datumAbonnement: Subscription;         // volg de keuze van de kalender
-    private datum: DateTime;                       // de gekozen dag
+    datumAbonnement: Subscription;         // volg de keuze van de kalender
+    datum: DateTime;                       // de gekozen dag
 
-    private toonTracks: boolean = false;           // mogen de tracks vertoon worden
+    toonTracks: boolean = false;           // mogen de tracks vertoon worden
+    isDDWVer: boolean = false;             // DDWV'ers hebben een aangepast dashboard
 
-    private success: SuccessMessage | undefined;
-    private error: ErrorMessage | undefined;
+    success: SuccessMessage | undefined;
+    error: ErrorMessage | undefined;
 
     @ViewChild('logboekPopup') private popupLogboek: ModalComponent;
     @ViewChild('dienstenPopup') private popupDiensten: ModalComponent;
@@ -78,16 +79,22 @@ export class DashboardPageComponent implements OnInit {
 
         // abonneer op wijziging van types
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
-            this.lidTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 6});    // lidtypes
+            this.lidTypes = dataset!.filter((t: HeliosType) => {
+                return t.GROEP == 6
+            });    // lidtypes
         });
 
         // Als lidID is meegegeven in URL, moeten we de lidData ophalen
         this.activatedRoute.queryParams.subscribe(params => {
             if (params['lidID']) {
                 const lidID = params['lidID'];
-                this.ledenService.getLid(lidID).then((l) => this.lidData = l);
+                this.ledenService.getLid(lidID).then((l) => {
+                    this.lidData = l
+                    this.isDDWVer = (this.lidData.LIDTYPE_ID == 625);
+                });
             } else {
                 this.lidData = this.loginService.userInfo?.LidData as HeliosLid;
+                this.isDDWVer = (this.lidData.LIDTYPE_ID == 625);
             }
         });
 
@@ -96,6 +103,7 @@ export class DashboardPageComponent implements OnInit {
         if (ui?.isStarttoren) {
             this.router.navigate(['startlijst']);
         }
+
         this.toonTracks = (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) ? true : false;
     }
 
