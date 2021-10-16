@@ -75,7 +75,8 @@ export class RoosterPageComponent implements OnInit {
     isStartleider: boolean = false;
     isInstructeur: boolean = false;
     isLierist: boolean = false;
-    isDDWV: boolean = false;
+    isDDWVCrew: boolean = false;
+    isDDWVer: boolean = false;
 
     toonClubDDWV: number = 1;            // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
 
@@ -120,7 +121,12 @@ export class RoosterPageComponent implements OnInit {
         this.isLierist = ui?.LidData?.LIERIST as boolean
         this.isStartleider = ui?.LidData?.STARTLEIDER as boolean;
         this.isInstructeur = ui?.LidData?.INSTRUCTEUR as boolean;
-        this.isDDWV = ui?.LidData?.DDWV_CREW as boolean;
+        this.isDDWVCrew = ui?.LidData?.DDWV_CREW as boolean;
+
+        this.isDDWVer = (this.loginService.userInfo?.LidData?.LIDTYPE_ID == 625)
+        if (this.isDDWVer) {
+            this.toonClubDDWV = 2;   // Alleen DDWV
+        }
 
         this.toonTotalen = (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isCIMT || ui?.Userinfo?.isRooster) ? true : false;
 
@@ -156,6 +162,7 @@ export class RoosterPageComponent implements OnInit {
             this.diensten = diensten!;
             this.isLoading--;               // Deze is klaar met laden
             this.maandRooster()
+            this.maandTotaalUser()
         });
 
         // abonneer op wijziging van leden
@@ -176,9 +183,11 @@ export class RoosterPageComponent implements OnInit {
     }
 
     private opvragenTotalen() {
-        if (this.toonTotalen) {
+        if (!this.toonTotalen) {
+            this.maandTotaalUser()
+        }
+        else {
             this.dienstenService.getTotalen(this.datum.year).then(totalen => {
-
                 this.alleLeden.forEach(lid => {
                     const maandIndex = totalen.findIndex((maand => maand.LID_ID == lid.ID && maand.MAAND == this.datum.month));
 
@@ -205,12 +214,31 @@ export class RoosterPageComponent implements OnInit {
         maandRooster.forEach(dag => {
             dag.Diensten = [];              // placeholder, gaan het vullen waar nodig
 
-            const diensten: HeliosDienstenDataset[] = this.diensten.filter((dienst) => dienst.DATUM == dag.DATUM)
-            diensten.forEach((dienst) => dag.Diensten[dienst.TYPE_DIENST_ID!] = dienst)
+            if (this.diensten) {
+                const diensten: HeliosDienstenDataset[] = this.diensten.filter((dienst) => dienst.DATUM == dag.DATUM)
+                diensten.forEach((dienst) => dag.Diensten[dienst.TYPE_DIENST_ID!] = dienst)
+            }
         });
 
         this.heleRooster = JSON.parse(JSON.stringify(maandRooster));
         this.applyRoosterFilter();
+    }
+
+    /**
+     * Bepaal aantal diensten van deze maand voor de ingelogde gebruiker. Totalen API wordt niet gebruikt voor normale gebruikers,
+     * maar alleen voor roostermakers, beheerders. Totaal voor de maand is belangrijk om zelf te kunnen indelen
+     * Je mag hezelf maar beperkt indelen
+     * @private
+     */
+    private maandTotaalUser() {
+        if (this.alleLeden) {
+            const lid = this.alleLeden.find((l) => (l.ID?.toString() == this.mijnID));
+
+            if (lid) {
+                const lidDiensten = this.diensten.filter((dienst) => dienst.LID_ID!.toString() == this.mijnID);
+                lid.INGEDEELD_MAAND = lidDiensten.length;
+            }
+        }
     }
 
     /**
@@ -640,8 +668,9 @@ export class RoosterPageComponent implements OnInit {
     }
 
     zelfIndelen(dienstType: number, datum: string): boolean {
-        if (!this.alleLeden)        // Als leden nog niet geladen zijn, kunnen we onzelf ook niet indelen
-            return false;
+        if (!this.alleLeden || this.isDDWVer)    {
+            return false; // Als leden nog niet geladen zijn, kunnen we onzelf ook niet indelen, DDWVs mogen nooit ingedeeld worden
+        }
 
         const nu: DateTime = DateTime.now();
         const d: DateTime = DateTime.fromSQL(datum);
@@ -674,9 +703,10 @@ export class RoosterPageComponent implements OnInit {
     }
 
     magVerwijderen(dienstData: HeliosDienstenDataset): boolean {
-        if (!dienstData) {
-            return false;       // er is niets te verwijderen
+        if (!dienstData || this.isDDWVer) {
+            return false;       // er is niets te verwijderen, DDWV'ers mogen geen aanpassingen maken
         }
+
         const datum: DateTime = DateTime.fromSQL(dienstData.DATUM as string);
         const nu: DateTime = DateTime.now();
         const la: DateTime = DateTime.fromSQL(dienstData.LAATSTE_AANPASSING as string);

@@ -94,6 +94,7 @@ export class TracksComponent implements OnInit {
             // abonneer op wijziging van leden
             this.ledenAbonnement = this.ledenService.ledenChange.subscribe(leden => {
                 this.leden = (leden) ? leden : [];
+                this.lidToevoegenAanTrack();
             });
 
             /* TODO WAAROM IS DIT NODIG ??
@@ -106,7 +107,7 @@ export class TracksComponent implements OnInit {
 
              */
 
-            // Als in de progressie tabel is aangepast, moet we onze dataset ook aanpassen
+            // Als in de tracks tabel is aangepast, moet we onze dataset ook aanpassen
             this.sharedService.heliosEventFired.subscribe(ev => {
                 if (ev.tabel == "Tracks") {
                     if (!this.VliegerID) {
@@ -122,7 +123,7 @@ export class TracksComponent implements OnInit {
     }
 
     // open de track editor om nieuwe track toe te voegen. Editor opent als popup
-    private openTrackEditor() {
+    openTrackEditor() {
         this.trackEditor.openPopup(null, this.VliegerID, undefined, this.VliegerNaam);
     }
 
@@ -168,16 +169,20 @@ export class TracksComponent implements OnInit {
             this.trackService.getTracks(this.trashMode, this.VliegerID, maxTrackItems).then((dataset) => {
                 this.isLoading = false;
                 this.data = dataset as TracksLedenDataset[];
-
-                for (let i = 0; i < this.data.length; i++) {
-                    this.data[i].lid = this.leden.find(l => l.ID == this.data[i].LID_ID) as HeliosLedenDataset;
-                }
+                this.lidToevoegenAanTrack();
             }).catch(e => {
                 this.isLoading = false;
                 this.error = e;
             });
         }, 400);
     }
+
+    lidToevoegenAanTrack() {
+        for (let i = 0; i < this.data.length; i++) {
+            this.data[i].lid = this.leden.find(l => l.ID == this.data[i].LID_ID) as HeliosLedenDataset;
+        }
+    }
+
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.hasOwnProperty("VliegerID")) {
@@ -206,19 +211,11 @@ export class TracksComponent implements OnInit {
 
     magTrackVerwijderen(trk: TracksLedenDataset) {
         const ui = this.loginService.userInfo;
-
-        if (ui?.Userinfo?.isCIMT || ui?.Userinfo?.isBeheerder || ui?.LidData?.ID == trk.INSTRUCTEUR_ID)
-            return true;
-
-        return false;
+        return (ui?.Userinfo?.isCIMT || ui?.Userinfo?.isBeheerder || ui?.LidData?.ID == trk.INSTRUCTEUR_ID);
     }
 
     magTrackHerstellen(trk: TracksLedenDataset) {
         const ui = this.loginService.userInfo;
-
-        if (ui?.Userinfo?.isCIMT || ui?.Userinfo?.isBeheerder || ui?.LidData?.ID == trk.INSTRUCTEUR_ID)
-            return true;
-
-        return false;
+        return  (ui?.Userinfo?.isCIMT || ui?.Userinfo?.isBeheerder || ui?.LidData?.ID == trk.INSTRUCTEUR_ID);
     }
 }

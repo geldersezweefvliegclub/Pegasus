@@ -1,10 +1,9 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
 import {
     HeliosBehaaldeProgressieDataset,
     HeliosCompetentiesDataset,
-    HeliosVliegtuigenDataset
 } from "../../../types/Helios";
 import {ErrorMessage, HeliosActie, SuccessMessage} from "../../../types/Utils";
 import {SharedService} from "../../../services/shared/shared.service";
@@ -94,10 +93,11 @@ export class StatusComponent implements OnInit, OnChanges {
     CheckGehaald(comptentieID: number): boolean {
         if (!this.gehaaldeProgressie) return false;
 
-        if (this.gehaaldeProgressie.findIndex((p) => p.COMPETENTIE_ID == comptentieID) >= 0) {
+        if (this.gehaaldeProgressie.findIndex((p) => p.COMPETENTIE_ID == comptentieID) < 0) {
+            return false;
+        } else {
             return true;
         }
-        return false;
     }
 
     CheckDisabled(comptentieID: number): boolean {
@@ -133,7 +133,6 @@ export class StatusComponent implements OnInit, OnChanges {
         this.checkboxSelected = e;
 
         this.bevestigPopup.open();
-        console.log(id, this.bevestigCompetentie, this.competenties)
     }
 
     updateProgressie()

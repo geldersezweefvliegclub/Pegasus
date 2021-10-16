@@ -160,7 +160,7 @@
                                                 {{ (dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID]) ? dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div *ngIf="((isStartleider && zelfIndelen(OCHTEND_STARTLEIDER_TYPE_ID, dagInRooster.DATUM)) || (isDDWV && dagInRooster.DDWV))  && !dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID]"
+                                        <div *ngIf="((isStartleider && zelfIndelen(OCHTEND_STARTLEIDER_TYPE_ID, dagInRooster.DATUM)) || (isDDWVCrew && dagInRooster.DDWV))  && !dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID]"
                                              (click)="toekennenDienst(dagInRooster, OCHTEND_STARTLEIDER_TYPE_ID, mijnID, mijnNaam)">
                                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                                         </div>
@@ -204,7 +204,7 @@
                                                 {{ (dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID]) ? dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div *ngIf="((isLierist && zelfIndelen(OCHTEND_LIERIST_TYPE_ID, dagInRooster.DATUM)) || (isDDWV && dagInRooster.DDWV)) && !dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID]"
+                                        <div *ngIf="((isLierist && zelfIndelen(OCHTEND_LIERIST_TYPE_ID, dagInRooster.DATUM)) || (isDDWVCrew && dagInRooster.DDWV)) && !dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID]"
                                              (click)="toekennenDienst(dagInRooster, OCHTEND_LIERIST_TYPE_ID, mijnID, mijnNaam)">
                                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                                         </div>
@@ -358,9 +358,10 @@
                                          iconNaam="fas Filter" (btnClicked)="filterPopup()"
                                          btnColor="btn-primary"></app-icon-button>
 
-                        <app-icon-button class="toolbarBtn" iconNaam="fas CalendarWeek"
+                        <app-icon-button *ngIf="!isDDWVer"
+                                         class="toolbarBtn"
                                          tekst="Club / DDWV"
-                                         (btnClicked)="ToggleWeekendDDWV()"
+                                         iconNaam="fas CalendarWeek" (btnClicked)="ToggleWeekendDDWV()"
                                          btnColor="btn-primary"></app-icon-button>
 
                     </div>
