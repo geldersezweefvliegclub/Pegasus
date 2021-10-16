@@ -176,6 +176,11 @@ export class LedenGridComponent implements OnInit {
         this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
         this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
         this.magExporteren = (!ui?.isDDWV) ? true : false;
+
+        if (this.loginService.userInfo?.LidData?.LIDTYPE_ID == 625) {
+            this.sharedService.ledenlijstFilter.leden = false;
+            this.sharedService.ledenlijstFilter.ddwv = true;
+        }
     }
 
     // openen van popup om lid data van een nieuw lid te kunnen invoeren
@@ -286,9 +291,7 @@ export class LedenGridComponent implements OnInit {
 
     // Toevoegen van een vlieger track aan de database
     ToevoegenTrack(track: HeliosTrack): void {
-        this.trackService.addTrack(track).then((t) => {
-
-        });
+        this.trackService.addTrack(track).then((t) => {});
         this.trackEditor.closePopup();
     }
 
