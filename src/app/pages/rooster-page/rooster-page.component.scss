@@ -7,7 +7,7 @@
 }
 
 td {
-  padding-left: 0px;
+  padding-left: 0;
   padding-right: 5px;
 }
 
@@ -24,7 +24,7 @@ input[type='checkbox'] {
 }
 
 .WeekdagKolom {
-  padding: 0px;
+  padding: 0;
   vertical-align: middle;
 }
 
@@ -68,7 +68,6 @@ input[type='checkbox'] {
 .dayOfTheWeek {
   min-width: 20px;
   line-height: 20px;
-  writing-mode: tb-rl;
   writing-mode: vertical-rl;
   white-space: nowrap;
   text-align: center;
@@ -187,13 +186,13 @@ thead {
 
 
 h4 {
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 
 
 #toolbar {
   margin-top: 10px;
-  margin-bottom: 0px;
+  margin-bottom: 0;
   flex-grow: 1;
   flex-direction: column;
 }
