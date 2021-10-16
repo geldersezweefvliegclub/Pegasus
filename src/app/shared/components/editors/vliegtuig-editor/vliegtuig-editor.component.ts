@@ -4,7 +4,8 @@ import {HeliosType, HeliosVliegtuig, HeliosVliegtuigenDataset} from '../../../..
 import {VliegtuigenService} from '../../../../services/apiservice/vliegtuigen.service';
 import {TypesService} from '../../../../services/apiservice/types.service';
 import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {of, Subscription} from "rxjs";
+import {Subscription} from "rxjs";
+import {LoginService} from "../../../../services/apiservice/login.service";
 
 @Component({
     selector: 'app-vliegtuig-editor',
@@ -19,7 +20,7 @@ export class VliegtuigEditorComponent  implements  OnInit {
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
-    private vliegtuig: HeliosVliegtuig = {
+    vliegtuig: HeliosVliegtuig = {
         ID: undefined,
         REGISTRATIE: undefined,
         CALLSIGN: undefined,
@@ -40,6 +41,8 @@ export class VliegtuigEditorComponent  implements  OnInit {
     isLoading: boolean = false;
     isSaving: boolean = false;
 
+    magWijzigen: boolean = false;
+
     isVerwijderMode: boolean = false;
     isRestoreMode: boolean = false;
     formTitel: string = "";
@@ -49,6 +52,7 @@ export class VliegtuigEditorComponent  implements  OnInit {
 
     constructor(
         private readonly vliegtuigenService: VliegtuigenService,
+        private readonly loginService: LoginService,
         private readonly typesService: TypesService
     ) {}
 
@@ -80,9 +84,20 @@ export class VliegtuigEditorComponent  implements  OnInit {
 
             this.formTitel = 'Vliegtuig bewerken';
             this.haalVliegtuigOp(vliegtuig.ID!); // maar data kan gewijzigd zijn, dus toch even data ophalen van API
+
+            // Voor een bestaand vliegtuig, aanpassen van registratie is beperkt
+            // Wanneer lid vliegtuig verkoopt en nieuw vliegtuig koopt, dan kan het zijn dat het callsign op
+            // oude en nieuwe vliegtuig hetzelfde is. Dat lokt uit dat lid registratie van bestaande vliegtuig record aanpast
+            // alle eerdere vluchten komen dan ook op de nieuwe registratie. Nieuw vliegtuig = new record in database
+
+            // Foutieve invoer kan opgelost worden in toren of door beheerder
+            const ui = this.loginService.userInfo?.Userinfo;
+            this.magWijzigen = (ui?.isBeheerder || ui?.isStarttoren) ? true : false;
+
         } else {
             this.formTitel = 'Vliegtuig aanmaken';
             this.vliegtuig = {};
+            this.magWijzigen = true;
         }
 
         this.isSaving = false;
