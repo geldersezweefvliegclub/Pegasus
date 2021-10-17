@@ -94,7 +94,7 @@ export class DashboardPageComponent implements OnInit {
                 });
             } else {
                 this.lidData = this.loginService.userInfo?.LidData as HeliosLid;
-                this.isDDWVer = (this.lidData.LIDTYPE_ID == 625);
+                this.isDDWVer = (this.loginService.userInfo?.Userinfo?.isDDWV!);
             }
         });
 

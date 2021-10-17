@@ -34,19 +34,20 @@
                 </div>
                 <div class="row my-2">
                     <div class="col-6 col-md-3">
+                        <input name="CLUBKIST" type="checkbox" class="form-check-input" id="CLUBKIST" [disabled]="!magClubkistWijzigen"
+                               [(ngModel)]="vliegtuig.CLUBKIST">
+                        <label class="form-check-label ms-2" for="CLUBKIST">
+                            Clubkist
+                        </label>
+                    </div>
+                    <div class="col-6 col-md-3">
                         <input name="ZELFSTART" type="checkbox" class="form-check-input" id="ZELFSTART"
                                [(ngModel)]="vliegtuig.ZELFSTART">
                         <label class="form-check-label ms-2" for="ZELFSTART">
                             Zelfstart
                         </label>
                     </div>
-                    <div class="col-6 col-md-3">
-                        <input name="CLUBKIST" type="checkbox" class="form-check-input" id="CLUBKIST"
-                               [(ngModel)]="vliegtuig.CLUBKIST">
-                        <label class="form-check-label ms-2" for="CLUBKIST">
-                            Clubkist
-                        </label>
-                    </div>
+
                     <div class="col-6 col-md-3">
                         <input name="TMG" type="checkbox" class="form-check-input" id="TMG"
                                [(ngModel)]="vliegtuig.TMG">

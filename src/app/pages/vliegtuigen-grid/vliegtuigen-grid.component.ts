@@ -132,6 +132,7 @@ export class VliegtuigenGridComponent implements OnInit {
     magToevoegen: boolean = false;
     magVerwijderen: boolean = false;
     magWijzigen: boolean = false;
+    magClubkistWijzigen: boolean = false;
     magExporten: boolean = false;
 
     success: SuccessMessage | undefined;
@@ -158,9 +159,10 @@ export class VliegtuigenGridComponent implements OnInit {
         this.opvragen();
 
         const ui = this.loginService.userInfo?.Userinfo;
-        this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
+        this.magClubkistWijzigen = (ui?.isBeheerder! || ui?.isCIMT!);
+        this.magToevoegen = (!ui?.isDDWV) ? true : false;
         this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
-        this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
+        this.magWijzigen = (!ui?.isDDWV) ? true : false;
         this.magExporten = (!ui?.isDDWV) ? true : false;
     }
 
@@ -174,7 +176,14 @@ export class VliegtuigenGridComponent implements OnInit {
     // openen van popup om gegevens van een bestaand vliegtuig aan te passen
     openEditor(event?: RowDoubleClickedEvent) {
         if (this.magWijzigen) {
-            this.editor.openPopup(event?.data as HeliosVliegtuigenDataset);
+
+            // clubkisten mag niet iedereen aanpassen
+            if (!event?.data.CLUBKIST) {
+                this.editor.openPopup(event?.data as HeliosVliegtuigenDataset);
+            }
+            else if (this.magClubkistWijzigen) {
+                this.editor.openPopup(event?.data as HeliosVliegtuigenDataset);
+            }
         }
     }
 

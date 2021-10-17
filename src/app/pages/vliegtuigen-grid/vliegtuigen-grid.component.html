@@ -55,7 +55,10 @@
                     <div class="col-4">
                         <div class="d-flex justify-content-end">
                             <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
-                                             btnColor="btn-secondary" *ngIf="this.magVerwijderen"
+                                             btnColor="btn-secondary" *ngIf="this.magVerwijderen && !deleteMode"
+                                             (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                            <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
+                                             btnColor="btn btn-outline-primary" *ngIf="deleteMode"
                                              (btnClicked)="deleteModeJaNee()"></app-icon-button>
                         </div>
                     </div>

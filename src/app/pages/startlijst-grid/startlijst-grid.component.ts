@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {StartlijstService} from '../../services/apiservice/startlijst.service';
 import {CheckboxRenderComponent} from '../../shared/components/datatable/checkbox-render/checkbox-render.component';
-import {faRecycle, faDownload} from '@fortawesome/free-solid-svg-icons';
+import {faRecycle, faDownload, faArrowCircleLeft} from '@fortawesome/free-solid-svg-icons';
 import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {DeleteActionComponent} from '../../shared/components/datatable/delete-action/delete-action.component';
@@ -73,7 +73,8 @@ export class StartlijstGridComponent implements OnInit {
             comparator: tijdSort,
             cellRendererParams: {
                 tijdClicked: (record: HeliosStartDataset) => {
-                    this.tijdInvoerEditor.openStarttijdPopup(record);
+                    if (!this.deleteMode)
+                        this.tijdInvoerEditor.openStarttijdPopup(record);
                 }
             },
         },
@@ -85,7 +86,8 @@ export class StartlijstGridComponent implements OnInit {
             comparator: tijdSort,
             cellRendererParams: {
                 tijdClicked: (record: HeliosStartDataset) => {
-                    this.tijdInvoerEditor.openLandingsTijdPopup(record);
+                    if (!this.deleteMode)
+                        this.tijdInvoerEditor.openLandingsTijdPopup(record);
                 }
             },
         },
@@ -266,7 +268,7 @@ export class StartlijstGridComponent implements OnInit {
 
     // openen van popup om bestaande start te kunnen aanpassen
     openEditor(event?: RowDoubleClickedEvent) {
-        if (this.magWijzigen) {
+        if (this.magWijzigen && !this.deleteMode) {
             this.editor.openPopup(event?.data);
         }
     }
@@ -275,7 +277,12 @@ export class StartlijstGridComponent implements OnInit {
     deleteModeJaNee() {
         if (this.magVerwijderen) {
             this.deleteMode = !this.deleteMode;
+
+            if (!this.deleteMode) {
+                this.trashMode = false;
+            }
             this.kolomDefinitie();
+            this.opvragen();
         }
     }
 

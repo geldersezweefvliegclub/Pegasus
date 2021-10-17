@@ -123,7 +123,7 @@ export class RoosterPageComponent implements OnInit {
         this.isInstructeur = ui?.LidData?.INSTRUCTEUR as boolean;
         this.isDDWVCrew = ui?.LidData?.DDWV_CREW as boolean;
 
-        this.isDDWVer = (this.loginService.userInfo?.LidData?.LIDTYPE_ID == 625)
+        this.isDDWVer = (this.loginService.userInfo?.Userinfo?.isDDWV!);
         if (this.isDDWVer) {
             this.toonClubDDWV = 2;   // Alleen DDWV
         }

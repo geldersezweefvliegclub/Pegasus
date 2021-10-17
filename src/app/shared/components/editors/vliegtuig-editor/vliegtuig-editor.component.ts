@@ -42,6 +42,7 @@ export class VliegtuigEditorComponent  implements  OnInit {
     isSaving: boolean = false;
 
     magWijzigen: boolean = false;
+    magClubkistWijzigen: boolean = false;
 
     isVerwijderMode: boolean = false;
     isRestoreMode: boolean = false;
@@ -93,6 +94,7 @@ export class VliegtuigEditorComponent  implements  OnInit {
             // Foutieve invoer kan opgelost worden in toren of door beheerder
             const ui = this.loginService.userInfo?.Userinfo;
             this.magWijzigen = (ui?.isBeheerder || ui?.isStarttoren) ? true : false;
+            this.magClubkistWijzigen = (ui?.isBeheerder! || ui?.isCIMT!);
 
         } else {
             this.formTitel = 'Vliegtuig aanmaken';

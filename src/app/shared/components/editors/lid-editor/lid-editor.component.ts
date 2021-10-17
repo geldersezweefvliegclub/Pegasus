@@ -142,8 +142,6 @@ export class LidEditorComponent implements OnInit {
 
     // markeer lid als verwijderd
     delete(): void {
-        let msg: SuccessMessage;
-
         this.isSaving = true;
         this.ledenService.deleteLid(this.lidID).then(() => {
             this.isSaving = false;
@@ -373,10 +371,7 @@ export class LidEditorComponent implements OnInit {
             return false;
         }
 
-        if (ui?.isBeheerder || ui?.isBeheerderDDWV) {
-            return true;
-        }
-        return false;
+        return (ui?.isBeheerder || ui?.isBeheerderDDWV);
     }
 }
 

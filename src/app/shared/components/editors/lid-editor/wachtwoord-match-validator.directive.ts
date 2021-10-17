@@ -11,7 +11,7 @@ export class WachtwoordMatchValidatorDirective {
     const wachtwoord = control.get('wachtwoord');
     const controleWachtwoord = control.get('herhaalwachtwoord');
 
-    if (wachtwoord && controleWachtwoord && wachtwoord.value === controleWachtwoord.value) {
+    if ((!wachtwoord && !controleWachtwoord) || (wachtwoord && controleWachtwoord && wachtwoord.value == controleWachtwoord.value)) {
       wachtwoord?.setErrors(null);
       controleWachtwoord?.setErrors(null);
       return null;

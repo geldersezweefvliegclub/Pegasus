@@ -177,7 +177,7 @@ export class LedenGridComponent implements OnInit {
         this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
         this.magExporteren = (!ui?.isDDWV) ? true : false;
 
-        if (this.loginService.userInfo?.LidData?.LIDTYPE_ID == 625) {
+        if (this.loginService.userInfo?.Userinfo?.isDDWV!) {
             this.sharedService.ledenlijstFilter.leden = false;
             this.sharedService.ledenlijstFilter.ddwv = true;
         }

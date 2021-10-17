@@ -18,7 +18,7 @@
     Twee-staps verificatie biedt extra beveiliging bij het inloggen.
 </ng-template>
 
-<form #profielForm *ngIf="this.lid">
+<form *ngIf="this.lid">
     <div class="row">
         <div class="col-8">
             <app-pegasus-card [titel]="titel" [subtitel]="subtitel" class="h-100" [img]="avatar">
@@ -339,6 +339,7 @@
             </app-pegasus-card>
         </div>
     </div>
+
     <div class="row mt-2 justify-content-end">
         <div class="col-3 d-flex justify-content-end">
             <app-icon-button *ngIf="!isLoading && !isSaving && lid.ID !== undefined && !isRestoreMode && !isVerwijderMode"
@@ -347,6 +348,7 @@
                              tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
 
             <app-icon-button *ngIf="!isLoading && !isSaving && lid.ID === undefined && !isRestoreMode && !isVerwijderMode"
+                             [disabled]="informatieGroup.invalid || persoonGroup.invalid"
                              iconNaam="fas Plus" btnColor="btn-primary"
                              tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
 
@@ -364,3 +366,4 @@
         </div>
     </div>
 </form>
+
