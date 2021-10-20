@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {StartlijstService} from '../../services/apiservice/startlijst.service';
 import {CheckboxRenderComponent} from '../../shared/components/datatable/checkbox-render/checkbox-render.component';
-import {faRecycle, faDownload, faArrowCircleLeft} from '@fortawesome/free-solid-svg-icons';
+import {faRecycle, faDownload} from '@fortawesome/free-solid-svg-icons';
 import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {DeleteActionComponent} from '../../shared/components/datatable/delete-action/delete-action.component';
@@ -26,6 +26,10 @@ import {ExportStartlijstComponent} from "./export-startlijst/export-startlijst.c
 import {RoosterService} from "../../services/apiservice/rooster.service";
 import {DienstenService} from "../../services/apiservice/diensten.service";
 
+type HeliosStartDatasetExtended = HeliosStartDataset & {
+    inTijdspan?: boolean
+}
+
 @Component({
     selector: 'app-startlijst-grid',
     templateUrl: './startlijst-grid.component.html',
@@ -36,7 +40,7 @@ export class StartlijstGridComponent implements OnInit {
     @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
     @ViewChild(ExportStartlijstComponent) exportStartlijstKeuze: ExportStartlijstComponent;
 
-    data: HeliosStartDataset[] = [];
+    data: HeliosStartDatasetExtended[] = [];
     isLoading: boolean = false;
     isExporting: boolean = false;
 
@@ -101,6 +105,10 @@ export class StartlijstGridComponent implements OnInit {
         {field: 'SLEEP_HOOGTE', headerName: 'Sleep hoogte', sortable: true, hide: true, comparator: nummerSort},
         {field: 'VELD', headerName: 'Veld', sortable: true, hide: true},
     ];
+
+    rowClassRules = {
+        'start_niet_wijzigbaar': function(params: any) { return !params.data.inTijdspan; },
+    }
 
     columns: ColDef[] = this.dataColumns;
 
@@ -195,8 +203,6 @@ export class StartlijstGridComponent implements OnInit {
                 day: datum.day
             })
             this.data = [];
-            this.opvragen();
-            this.beperkteInvoer();
 
             const ui = this.loginService.userInfo?.Userinfo;
             const nu:  DateTime = DateTime.now()
@@ -213,6 +219,8 @@ export class StartlijstGridComponent implements OnInit {
                     this.inTijdspan = true;                 // zitten nog binnen 45 dagen
                 }
             }
+            this.opvragen();
+            this.beperkteInvoer();
         });
 
         // abonneer op wijziging van diensten
@@ -238,8 +246,9 @@ export class StartlijstGridComponent implements OnInit {
         this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isDDWV || ui?.isClubVlieger) ? true : false;
         this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isClubVlieger) ? true : false;
         this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isDDWV || ui?.isClubVlieger) ? true : false;
-        this.magExporteren = (!ui?.isDDWV && !ui?.isStarttoren) ? true : false;
+        this.magExporteren = (!ui?.isDDWV && !ui?.isStarttoren);
     }
+
 
     // mag de ingelogde gebruiker starts voor iedereen nvullen of alleen voor zichzelf
     async beperkteInvoer() {
@@ -329,7 +338,10 @@ export class StartlijstGridComponent implements OnInit {
 
         this.isLoading = true;
         this.startlijstService.getStarts(this.trashMode, this.datum, this.datum, this.zoekString, queryParams).then((dataset) => {
-            this.data = dataset;
+            this.data = (dataset) ? dataset : [];
+            for (let i = 0; i < this.data.length; i++) {
+                this.data[i].inTijdspan = this.inTijdspan;
+            }
             this.isLoading = false;
         }).catch(e => {
             this.error = e;

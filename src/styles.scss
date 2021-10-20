@@ -302,7 +302,7 @@ canvas.recencyGrafiek.chartjs-render-monitor {
   }
 
   .dropdown-divider {
-    border: 0px;
+    border: 0;
   }
 }
 
@@ -316,3 +316,7 @@ canvas.recencyGrafiek.chartjs-render-monitor {
   color: red !important;
 }
 
+.start_niet_wijzigbaar {
+  color: #878585 !important;
+  cursor: not-allowed;
+}

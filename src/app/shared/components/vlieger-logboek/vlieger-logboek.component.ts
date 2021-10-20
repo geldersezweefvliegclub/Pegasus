@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {ColDef, RowDoubleClickedEvent} from "ag-grid-community";
-import {HeliosLogboekDataset, HeliosStartDataset, HeliosTrack} from "../../../types/Helios";
+import {HeliosLogboekDataset, HeliosTrack} from "../../../types/Helios";
 import {DateTime, Interval} from "luxon";
 import {Subscription} from "rxjs";
 import {StartlijstService} from "../../../services/apiservice/startlijst.service";
@@ -19,6 +19,10 @@ import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
 import {StartEditorComponent} from "../editors/start-editor/start-editor.component";
 import {DeleteActionComponent} from "../datatable/delete-action/delete-action.component";
 
+type HeliosLogboekDatasetExtended = HeliosLogboekDataset & {
+    inTijdspan?: boolean
+}
+
 @Component({
     selector: 'app-vlieger-logboek',
     templateUrl: './vlieger-logboek.component.html',
@@ -35,7 +39,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
     @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
     @ViewChild(StartEditorComponent) startEditor: StartEditorComponent;
 
-    data: HeliosLogboekDataset[] = [];
+    data: HeliosLogboekDatasetExtended[] = [];
     datumAbonnement: Subscription;         // volg de keuze van de kalender
     datum: DateTime;                       // de gekozen dag
 
@@ -59,8 +63,8 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
             cellRenderer: 'startTijdRender',
             comparator: tijdSort,
             cellRendererParams: {
-                tijdClicked: (record: HeliosStartDataset) => {
-                    if (this.inTijdspan(record)) {
+                tijdClicked: (record: HeliosLogboekDatasetExtended) => {
+                    if (record.inTijdspan) {
                         this.tijdInvoerEditor.openStarttijdPopup(record);
                     }
                 }
@@ -73,8 +77,8 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
             cellRenderer: 'landingsTijdRender',
             comparator: tijdSort,
             cellRendererParams: {
-                tijdClicked: (record: HeliosStartDataset) => {
-                    if (this.inTijdspan(record)) {
+                tijdClicked: (record: HeliosLogboekDatasetExtended) => {
+                    if (record.inTijdspan) {
                         this.tijdInvoerEditor.openLandingsTijdPopup(record);
                     }
                 }
@@ -117,6 +121,10 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
             }
         },
     }];
+
+    rowClassRules = {
+        'start_niet_wijzigbaar': function(params: any) { return !params.data.inTijdspan; },
+    }
 
     frameworkComponents = {
         datumRender: DatumRenderComponent,
@@ -164,7 +172,20 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
             this.isLoading = true;
             this.startlijstService.getLogboek(this.VliegerID, startDatum, eindDatum).then((dataset) => {
                 this.isLoading = false;
-                this.data = dataset;
+                this.data = (dataset) ? dataset : [];
+
+                const ui = this.loginService.userInfo;
+                const nu:  DateTime = DateTime.now()
+
+                for (let i = 0; i < this.data.length; i++) {
+                    const diff = Interval.fromDateTimes(DateTime.fromSQL(this.data[i].DATUM!), nu);
+                    if (diff.length("days") > 45) {
+                        this.data[i].inTijdspan = ui!.Userinfo!.isBeheerder!;   // alleen beheerder mag na 45 dagen wijzigen
+                    }
+                    else {
+                        this.data[i].inTijdspan = true; // zitten nog binnen 45 dagen
+                    }
+                }
             }).catch(e => {
                 this.isLoading = false;
                 this.error = e;
@@ -174,20 +195,9 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
 
     // openen van popup om bestaande start te kunnen aanpassen
     openStartEditor(event?: RowDoubleClickedEvent) {
-        if (this.inTijdspan(event?.data)) {
+        if (event?.data.inTijdspan) {
             this.startEditor.openPopup(event?.data);
         }
-    }
-
-    // mogen we editen
-    inTijdspan(record: HeliosStartDataset) {
-        const nu:  DateTime = DateTime.now()
-
-        const diff = Interval.fromDateTimes(DateTime.fromSQL(record.DATUM!), nu);
-        if (diff.length("days") > 45) {
-            return (this.loginService!.userInfo!.Userinfo!.isBeheerder!)      // alleen beheerder mag na 45 dagen wijzigen
-        }
-        return true;
     }
 
     // open de track editor om nieuwe track toe te voegen. Edit opent als popup
@@ -214,7 +224,10 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
 
         this.columns = this.dataColumns;
         if (!this.deleteMode) {
-            this.columns = this.aanmakenTrackColumn.concat(this.dataColumns);
+            const ui = this.loginService.userInfo?.Userinfo
+            if (ui!.isBeheerder || ui!.isCIMT || ui!.isInstructeur) {
+                this.columns = this.aanmakenTrackColumn.concat(this.dataColumns);
+            }
         } else {
             this.columns = this.deleteColumn.concat(this.dataColumns);
         }

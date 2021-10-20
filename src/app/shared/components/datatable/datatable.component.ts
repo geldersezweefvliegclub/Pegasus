@@ -7,6 +7,7 @@ import {
     RowSelectedEvent
 } from 'ag-grid-community';
 import {StorageService} from '../../../services/storage/storage.service';
+import {LoginService} from "../../../services/apiservice/login.service";
 
 @Component({
     selector: 'app-datatable',
@@ -45,11 +46,10 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     private api: GridApi;
     private columnStateTimer: number | null = null;
 
-    private noRowsTemplate;
-    private loadingTemplate;
+    noRowsTemplate;
+    loadingTemplate;
 
-
-    constructor(private readonly storageService: StorageService) {
+    constructor() {
         this.loadingTemplate = '<span><img src="assets/img/zandloper.gif" width=100px> Data wordt geladen .....</span>';
         this.noRowsTemplate = '<span>Geen informatie beschikbaar</span>';
     }

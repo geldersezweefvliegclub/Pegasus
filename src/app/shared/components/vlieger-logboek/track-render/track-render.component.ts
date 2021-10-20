@@ -4,7 +4,6 @@ import {AgRendererComponent} from "ag-grid-angular";
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {ICellRendererParams} from "ag-grid-community";
 import {LoginService} from "../../../../services/apiservice/login.service";
-import {DateTime, Interval} from "luxon";
 
 @Component({
     selector: 'app-track-render',
@@ -12,33 +11,20 @@ import {DateTime, Interval} from "luxon";
     styleUrls: ['./track-render.component.scss']
 })
 export class TrackRenderComponent implements AgRendererComponent {
-    private params: any;
+    params: any;
     trackIcon: IconDefinition = faAddressCard;
 
     LID_ID: number;
     NAAM: string;
-
-    inTijdspan: boolean = false;
 
     constructor(private readonly loginService: LoginService) {
     }
 
     agInit(params: ICellRendererParams): void {
         this.params = params;
-
         this.LID_ID = -1;
 
         const ui = this.loginService.userInfo;
-        const nu:  DateTime = DateTime.now()
-
-        const diff = Interval.fromDateTimes(DateTime.fromSQL(this.params.data.DATUM), nu);
-        if (diff.length("days") > 45) {
-            this.inTijdspan = ui!.Userinfo!.isBeheerder!;     // alleen beheerder mag na 45 dagen wijzigen
-        }
-        else {
-            this.inTijdspan = true;                 // zitten nog binnen 45 dagen
-        }
-
         if (this.params.data.INZITTENDE_ID) {
             if (ui!.LidData!.ID !== this.params.data.INZITTENDE_ID) {
                 this.LID_ID = params.data.INZITTENDE_ID;

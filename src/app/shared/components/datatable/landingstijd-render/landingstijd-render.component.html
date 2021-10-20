@@ -1,4 +1,7 @@
-<div *ngIf="this.landingsTijd" class="landingstijd" (click)="tijdClicked()">{{landingsTijd}}</div>
+<div *ngIf="params.data.inTijdspan">
+    <div *ngIf="this.landingsTijd" class="landingstijd" (click)="tijdClicked()">{{landingsTijd}}</div>
 
-<app-icon-button class="toolbarBtn" iconNaam="fas PlaneArrival" (btnClicked)="tijdClicked()" *ngIf="this.toonButton"
-                 btnColor="landingsBtn"></app-icon-button>
+    <app-icon-button class="toolbarBtn" iconNaam="fas PlaneArrival" (btnClicked)="tijdClicked()" *ngIf="this.toonButton"
+                     btnColor="landingsBtn"></app-icon-button>
+</div>
+<div *ngIf="!params.data.inTijdspan">{{landingsTijd}}</div>

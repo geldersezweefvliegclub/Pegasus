@@ -10,7 +10,7 @@ import {AgRendererComponent} from 'ag-grid-angular';
 
 
 export class StarttijdRenderComponent implements AgRendererComponent {
-  private params: any;
+  params: any;
   startTijd: string;         // string met de tijd om te tonen
 
   constructor() {
