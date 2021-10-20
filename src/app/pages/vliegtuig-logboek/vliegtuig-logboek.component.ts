@@ -68,7 +68,8 @@ export class VliegtuigLogboekComponent implements OnInit {
 
     columns: ColDef[] = this.dataColumns;
     error: ErrorMessage | undefined;
-    magExporten: boolean = false;
+    magExporteren: boolean = false;
+    toonGrafiek: boolean = false;
 
     /*-BarChart-----------*/
     barChartOptions: ChartOptions = {
@@ -189,7 +190,8 @@ export class VliegtuigLogboekComponent implements OnInit {
         })
 
         let ui = this.loginService.userInfo?.Userinfo;
-        this.magExporten = (!ui?.isDDWV) ? true : false;
+        this.magExporteren = (!ui?.isDDWV && !ui?.isStarttoren) ? true : false;
+        this.toonGrafiek = (!ui?.isStarttoren) ? true : false;
     }
 
     // Opvragen van de data via de api

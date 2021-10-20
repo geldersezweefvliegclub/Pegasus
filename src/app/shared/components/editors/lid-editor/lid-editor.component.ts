@@ -175,7 +175,8 @@ export class LidEditorComponent implements OnInit {
     // update bestaand lid
     updateLid(): void {
         this.isSaving = true;
-        this.ledenService.updateLid(this.lid).then(() => {
+        this.lid.NAAM = undefined;      // Wordt door de server bepaald en is te wijzigen
+        this.ledenService.updateLid(this.lid).then((l) => {
             this.isSaving = false;
             this.error = undefined;
 
@@ -183,7 +184,7 @@ export class LidEditorComponent implements OnInit {
                 this.success = {titel: "Profiel", beschrijving: "Uw profiel is aangepast"}
             }
             else {
-                this.success = {titel: "Profiel", beschrijving: "Profiel " + this.lid.NAAM + " is aangepast"}
+                this.success = {titel: "Profiel", beschrijving: "Profiel " + l.NAAM + " is aangepast"}
             }
         }).catch(e => {
             this.isSaving = false;
@@ -310,7 +311,7 @@ export class LidEditorComponent implements OnInit {
             }
 
             case 'OPMERKINGEN': {
-                if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT || ui?.isRooster) {
+                if (ui?.isBeheerder || ui?.isCIMT || ui?.isRooster) {
                     return false;
                 }
                 break;

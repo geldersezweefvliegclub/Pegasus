@@ -145,9 +145,8 @@ export class DaginfoComponent implements OnInit {
         if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT || ui?.isStarttoren) {
             geenToegang = false;
         } else if (this.rooster) {
-            let rooster: HeliosRoosterDataset | undefined = this.rooster.find((dag) => {
-                DateTime.fromSQL(dag.DATUM!) == this.datum
-            })
+            const d = this.datum.toSQL().substr(0, 10);
+            let rooster: HeliosRoosterDataset | undefined = this.rooster.find((dag) => d == dag.DATUM!)
 
             if (rooster) {
                 if (rooster.DDWV)               // het is een DWWV dag, misschien toch alles tonen
@@ -155,9 +154,7 @@ export class DaginfoComponent implements OnInit {
                     if (ui?.isBeheerderDDWV) {  // Beheerder DDWV mag op DDWV dag alles inzien
                         geenToegang = false;
                     } else {
-                        let diensten: HeliosDienstenDataset[] | undefined = this.diensten.filter((dag) => {
-                            DateTime.fromSQL(dag.DATUM!) == this.datum
-                        })
+                        const diensten: HeliosDienstenDataset[] | undefined = this.diensten.filter((dag) => d == dag.DATUM!)
 
                         if (diensten) {
                             diensten.forEach(dienst => {
@@ -171,6 +168,11 @@ export class DaginfoComponent implements OnInit {
             }
         }
         this.geenToegang = geenToegang;
+    }
+
+    // Mogen we uberhaupt de daginfo opslaan
+    magOpslaan() {
+        return (this.dagInfo.VELD_ID && this.dagInfo.STARTMETHODE_ID && this.dagInfo.STARTMETHODE_ID > 0);
     }
 
     // opslaan van de ingevoerde dag rapport

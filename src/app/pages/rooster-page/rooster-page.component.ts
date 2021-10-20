@@ -77,6 +77,7 @@ export class RoosterPageComponent implements OnInit {
     isLierist: boolean = false;
     isDDWVCrew: boolean = false;
     isDDWVer: boolean = false;
+    isCIMT: boolean = false;
 
     toonClubDDWV: number = 1;            // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
 
@@ -122,6 +123,7 @@ export class RoosterPageComponent implements OnInit {
         this.isStartleider = ui?.LidData?.STARTLEIDER as boolean;
         this.isInstructeur = ui?.LidData?.INSTRUCTEUR as boolean;
         this.isDDWVCrew = ui?.LidData?.DDWV_CREW as boolean;
+        this.isCIMT = ui?.Userinfo?.isCIMT as boolean;
 
         this.isDDWVer = (this.loginService.userInfo?.Userinfo?.isDDWV!);
         if (this.isDDWVer) {
@@ -667,6 +669,13 @@ export class RoosterPageComponent implements OnInit {
         return "??";
     }
 
+    datumInToekomst(datum: string) {
+        const nu: DateTime = DateTime.now();
+        const d: DateTime = DateTime.fromSQL(datum);
+
+        return (d > nu) // datum is in het verleden
+    }
+
     zelfIndelen(dienstType: number, datum: string): boolean {
         if (!this.alleLeden || this.isDDWVer)    {
             return false; // Als leden nog niet geladen zijn, kunnen we onzelf ook niet indelen, DDWVs mogen nooit ingedeeld worden
@@ -675,7 +684,7 @@ export class RoosterPageComponent implements OnInit {
         const nu: DateTime = DateTime.now();
         const d: DateTime = DateTime.fromSQL(datum);
 
-        if (d < nu) {
+        if (!this.datumInToekomst(datum)) {
             return false;   // datum is in het verleden
         }
 

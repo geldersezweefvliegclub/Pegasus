@@ -37,6 +37,11 @@ textarea {
   height: calc(100vh - 200px);
 }
 
+ng-select.ng-invalid {
+  border: 1px solid #ffc107;
+}
+
+
 .svgImage {
   width: 50%
 }

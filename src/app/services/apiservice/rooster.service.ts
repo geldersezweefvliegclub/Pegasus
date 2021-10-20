@@ -85,6 +85,13 @@ export class RoosterService {
         const dagenInDeMaand = this.datum.daysInMonth;
         let retValue = false;
 
+        const nu: DateTime = DateTime.now();
+
+        // als maand in het verleden is, gaan we niets doen
+        if (this.datum.year*100 + this.datum.month < nu.year*100+nu.month) {
+            return false;
+        }
+
         for (let i = 0; i < dagenInDeMaand; i++) {
             const d: DateTime = DateTime.fromObject({month: this.datum.month, year: this.datum.year, day: i + 1});
             const inRooster = roosterDagen.findIndex(roosterDag => roosterDag.DATUM == d.toISODate()) >= 0;

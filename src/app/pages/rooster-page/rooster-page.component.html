@@ -41,7 +41,7 @@
                                                        [name]="'DDWV' + i"
                                                        [(ngModel)]="dagInRooster.DDWV"
                                                        (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
-                                                       [disabled]="!magWijzigen">
+                                                       [disabled]="!magWijzigen && !isCIMT">
                                                 <label [for]="'DDWV' + i" class="form-check-label">DDWV</label>
                                             </div>
                                             <div class="text-nowrap">
@@ -50,7 +50,7 @@
                                                        [name]="'Clubbedrijf' + i"
                                                        [(ngModel)]="dagInRooster.CLUB_BEDRIJF"
                                                        (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
-                                                       [disabled]="!magWijzigen">
+                                                       [disabled]="!magWijzigen && !isCIMT">
                                                 <label [for]="'Clubbedrijf' + i"
                                                        class="labelClub form-check-label">Club
                                                     bedrijf</label>
@@ -160,7 +160,7 @@
                                                 {{ (dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID]) ? dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div *ngIf="((isStartleider && zelfIndelen(OCHTEND_STARTLEIDER_TYPE_ID, dagInRooster.DATUM)) || (isDDWVCrew && dagInRooster.DDWV))  && !dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID]"
+                                        <div *ngIf="((isStartleider && zelfIndelen(OCHTEND_STARTLEIDER_TYPE_ID, dagInRooster.DATUM)) || (isDDWVCrew && dagInRooster.DDWV && datumInToekomst(dagInRooster.DATUM)))  && !dagInRooster.Diensten[OCHTEND_STARTLEIDER_TYPE_ID]"
                                              (click)="toekennenDienst(dagInRooster, OCHTEND_STARTLEIDER_TYPE_ID, mijnID, mijnNaam)">
                                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                                         </div>
@@ -204,7 +204,7 @@
                                                 {{ (dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID]) ? dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID].NAAM : "" }}
                                             </div>
                                         </div>
-                                        <div *ngIf="((isLierist && zelfIndelen(OCHTEND_LIERIST_TYPE_ID, dagInRooster.DATUM)) || (isDDWVCrew && dagInRooster.DDWV)) && !dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID]"
+                                        <div *ngIf="((isLierist && zelfIndelen(OCHTEND_LIERIST_TYPE_ID, dagInRooster.DATUM)) || (isDDWVCrew && dagInRooster.DDWV && datumInToekomst(dagInRooster.DATUM))) && !dagInRooster.Diensten[OCHTEND_LIERIST_TYPE_ID]"
                                              (click)="toekennenDienst(dagInRooster, OCHTEND_LIERIST_TYPE_ID, mijnID, mijnNaam)">
                                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                                         </div>
@@ -285,7 +285,7 @@
                                             [name]="'OPMERKINGEN' + i"
                                             [(ngModel)]="dagInRooster.OPMERKINGEN"
                                             (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
-                                            [disabled]="!magWijzigen"
+                                            [disabled]="!magWijzigen && !isCIMT"
                                             class="w-100 text-invoer form-control opmerkingen"
                                             [rows]="2" style="resize: none"></textarea>
                                 </td>

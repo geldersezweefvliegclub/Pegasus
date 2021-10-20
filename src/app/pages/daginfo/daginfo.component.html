@@ -17,7 +17,6 @@
         <object data="/assets/img/geen_toegang.svg" type="image/svg+xml" class="svgImage"></object>
     </div>
 
-
     <div class="d-flex flex-column justify-content-between box h-100" *ngIf="!geenToegang">
         <div class="mb-2">
             <div class="row mt-n8 rowDagInfo1">
@@ -30,6 +29,7 @@
 
                         <label for="VELD" class="form-label">Vliegveld</label>
                         <ng-select id="VELD"
+                                   required
                                    [items]="veldTypes$ | async"
                                    placeholder="Vliegveld waar we starten"
                                    bindLabel="OMSCHRIJVING"
@@ -50,6 +50,7 @@
 
                         <label for="STARTMETHODE" class="form-label">Start methode</label>
                         <ng-select id="STARTMETHODE"
+                                   required
                                    [items]="startMethodeTypes$ | async"
                                    placeholder="Standaard start methode"
                                    bindLabel="OMSCHRIJVING"
@@ -60,7 +61,8 @@
                         </ng-select>
                         <div class="mt-2 d-flex flex-row justify-content-between">
                             <div>
-                                <input type="checkbox" id="DDWV" class="form-check-inline" [(ngModel)]="dagInfo.DDWV">
+                                <input type="checkbox" id="DDWV" class="form-check-inline"
+                                       [(ngModel)]="dagInfo.DDWV">
                                 <label for="DDWV" class="form-check-label">DDWV</label>
                             </div>
 
@@ -119,7 +121,8 @@
                                   class="w-100 text-invoer form-control"
                                   [rows]="tekstRegels"></textarea>
 
-                            <app-icon-button class="ms-2" iconNaam="fas PencilAlt" (btnClicked)="invullenVliegbedrijf()"
+                            <app-icon-button class="ms-2" iconNaam="fas PencilAlt"
+                                             (btnClicked)="invullenVliegbedrijf()"
                                              btnColor="btn-primary"></app-icon-button>
                         </div>
                     </app-pegasus-card>
@@ -184,7 +187,8 @@
         <div class="row" id="toolbar">
             <div class="col-6" *ngIf="magToevoegen || toonUitgebreid">
                 <div class="d-flex">
-                    <app-icon-button class="toolbarBtn"
+                    <app-icon-button [disabled]="!magOpslaan()"
+                                     class="toolbarBtn"
                                      tekst="Opslaan"
                                      iconNaam="far PlusSquare" (btnClicked)="opslaanDagInfo()"
                                      btnColor="btn-primary"></app-icon-button>

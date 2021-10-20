@@ -4,6 +4,7 @@ import {AgRendererComponent} from "ag-grid-angular";
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {ICellRendererParams} from "ag-grid-community";
 import {LoginService} from "../../../../services/apiservice/login.service";
+import {DateTime, Interval} from "luxon";
 
 @Component({
     selector: 'app-track-render',
@@ -17,6 +18,8 @@ export class TrackRenderComponent implements AgRendererComponent {
     LID_ID: number;
     NAAM: string;
 
+    inTijdspan: boolean = false;
+
     constructor(private readonly loginService: LoginService) {
     }
 
@@ -25,14 +28,24 @@ export class TrackRenderComponent implements AgRendererComponent {
 
         this.LID_ID = -1;
 
-        const ui = this.loginService.userInfo?.LidData;
+        const ui = this.loginService.userInfo;
+        const nu:  DateTime = DateTime.now()
+
+        const diff = Interval.fromDateTimes(DateTime.fromSQL(this.params.data.DATUM), nu);
+        if (diff.length("days") > 45) {
+            this.inTijdspan = ui!.Userinfo!.isBeheerder!;     // alleen beheerder mag na 45 dagen wijzigen
+        }
+        else {
+            this.inTijdspan = true;                 // zitten nog binnen 45 dagen
+        }
+
         if (this.params.data.INZITTENDE_ID) {
-            if (ui?.ID !== this.params.data.INZITTENDE_ID) {
+            if (ui!.LidData!.ID !== this.params.data.INZITTENDE_ID) {
                 this.LID_ID = params.data.INZITTENDE_ID;
                 this.NAAM = params.data.INZITTENDENAAM;
             }
         }
-        if (ui?.ID !== this.params.data.VLIEGER_ID) {
+        if (ui!.LidData!.ID !== this.params.data.VLIEGER_ID) {
             this.LID_ID = params.data.VLIEGER_ID;
             this.NAAM = params.data.VLIEGERNAAM;
         }

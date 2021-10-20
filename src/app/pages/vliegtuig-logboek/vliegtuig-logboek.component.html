@@ -3,10 +3,10 @@
 <app-pegasus-card titel="Logboek {{REG_CALL}}"
                subtitel="Cummulatieven per vliegdag"
                [icon]="iconCardIcon"
-               [exportEnabled]="this.magExporten"
+               [exportEnabled]="this.magExporteren"
                (excelExport)="exportDataset()">
     <div class="box h-100">
-        <div class="d-flex pe-3 headerCards">
+        <div class="d-flex pe-3 headerCards" *ngIf="toonGrafiek">
             <div class="card col-6 grafiekCard me-2" *ngIf="barChartData.length > 0">
                 <div class="clearBarChart">
                     <a (click)="clearGrafiekData()">
@@ -79,7 +79,7 @@
             </div>
 
         </div>
-        <div class="row vliegtuiggrid overflow-hidden">
+        <div class="row overflow-hidden" [ngClass]="{'vliegtuiggrid': toonGrafiek, 'vliegtuiggrid-full' : !toonGrafiek }">
             <app-datatable
                     id="vliegtuiglogboekgrid"
                     [rowData]="data"

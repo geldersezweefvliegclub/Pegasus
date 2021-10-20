@@ -133,8 +133,9 @@ export class NavigationComponent {
         const ui = this.loginService.userInfo?.Userinfo;
 
         const tracks = this.routes.find(route => route.path == "tracks") as CustomRoute;
-        if (!ui?.isCIMT && !ui?.isInstructeur && !ui?.isBeheerder) {
-            tracks.excluded = true
+        tracks.excluded = true  // default, daginfo is niet van toepassing voor de meeste leden
+        if (ui?.isCIMT || ui?.isInstructeur || ui?.isBeheerder) {
+            tracks.excluded = false
         }
 
         const daginfo = this.routes.find(route => route.path == "daginfo") as CustomRoute;
@@ -159,7 +160,7 @@ export class NavigationComponent {
 
         // alleen echter gebruiker hebben toegang tot ledenlijst, starttoren, zusterclubs, etc dus niet
         const leden = this.routes.find(route => route.path == "leden") as CustomRoute;
-        if (!ui?.isDDWV && !ui?.isClubVlieger) {
+        if (!ui?.isDDWV && !ui?.isClubVlieger && !ui?.isStarttoren) {
             leden.excluded = true
         }
 

@@ -11,7 +11,7 @@ import {ErrorMessage, KeyValueArray, SuccessMessage} from '../../types/Utils';
 import * as xlsx from 'xlsx';
 import {LoginService} from '../../services/apiservice/login.service';
 import {faClipboardList} from '@fortawesome/free-solid-svg-icons/faClipboardList';
-import {DateTime} from 'luxon';
+import {DateTime, Interval} from 'luxon';
 import {VliegerRenderComponent} from './vlieger-render/vlieger-render.component';
 import {InzittendeRenderComponent} from './inzittende-render/inzittende-render.component';
 import {faFilter} from '@fortawesome/free-solid-svg-icons/faFilter';
@@ -73,7 +73,7 @@ export class StartlijstGridComponent implements OnInit {
             comparator: tijdSort,
             cellRendererParams: {
                 tijdClicked: (record: HeliosStartDataset) => {
-                    if (!this.deleteMode)
+                    if (!this.deleteMode && this.inTijdspan)
                         this.tijdInvoerEditor.openStarttijdPopup(record);
                 }
             },
@@ -86,7 +86,7 @@ export class StartlijstGridComponent implements OnInit {
             comparator: tijdSort,
             cellRendererParams: {
                 tijdClicked: (record: HeliosStartDataset) => {
-                    if (!this.deleteMode)
+                    if (!this.deleteMode && this.inTijdspan)
                         this.tijdInvoerEditor.openLandingsTijdPopup(record);
                 }
             },
@@ -168,7 +168,8 @@ export class StartlijstGridComponent implements OnInit {
     magToevoegen: boolean = false;
     magVerwijderen: boolean = false;
     magWijzigen: boolean = false;
-    magExporten: boolean = false;
+    inTijdspan: boolean = false;          //  Mogen we starts aanpassen. Mag niet in de toekomst en ook niet meer dan 45 dagen geleden
+    magExporteren: boolean = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -196,6 +197,22 @@ export class StartlijstGridComponent implements OnInit {
             this.data = [];
             this.opvragen();
             this.beperkteInvoer();
+
+            const ui = this.loginService.userInfo?.Userinfo;
+            const nu:  DateTime = DateTime.now()
+
+            if (datum.year*10000+datum.month*100+datum.day > nu.year*10000+nu.month*100+nu.day) {
+                this.inTijdspan = false;    // datum is in de toekomst
+            }
+            else {
+                const diff = Interval.fromDateTimes(datum, nu);
+                if (diff.length("days") > 45) {
+                    this.inTijdspan = ui?.isBeheerder!;     // alleen beheerder mag na 45 dagen wijzigen
+                }
+                else {
+                    this.inTijdspan = true;                 // zitten nog binnen 45 dagen
+                }
+            }
         });
 
         // abonneer op wijziging van diensten
@@ -221,7 +238,7 @@ export class StartlijstGridComponent implements OnInit {
         this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isDDWV || ui?.isClubVlieger) ? true : false;
         this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isClubVlieger) ? true : false;
         this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isDDWV || ui?.isClubVlieger) ? true : false;
-        this.magExporten = (!ui?.isDDWV) ? true : false;
+        this.magExporteren = (!ui?.isDDWV && !ui?.isStarttoren) ? true : false;
     }
 
     // mag de ingelogde gebruiker starts voor iedereen nvullen of alleen voor zichzelf
@@ -232,9 +249,8 @@ export class StartlijstGridComponent implements OnInit {
         if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT || ui?.isStarttoren) {
             this.VliegerID = undefined;
         } else if (this.rooster) {
-            let rooster: HeliosRoosterDataset | undefined = this.rooster.find((dag) => {
-                DateTime.fromSQL(dag.DATUM!) == this.datum
-            })
+            const d = this.datum.toSQL().substr(0, 10);
+            const rooster: HeliosRoosterDataset | undefined = this.rooster.find((dag) => d == dag.DATUM)
 
             if (rooster) {
                 if (rooster.DDWV)               // het is een DWWV dag, misschien toch alles tonen
@@ -242,9 +258,7 @@ export class StartlijstGridComponent implements OnInit {
                     if (ui?.isBeheerderDDWV) {  // Beheerder DDWV mag op DDWV dag alles kunnen invoeren
                         this.VliegerID = undefined;
                     } else {
-                        let diensten: HeliosDienstenDataset[] | undefined = this.diensten.filter((dag) => {
-                            DateTime.fromSQL(dag.DATUM!) == this.datum
-                        })
+                        const diensten: HeliosDienstenDataset[] | undefined = this.diensten.filter((dag) => d == dag.DATUM)
 
                         if (diensten) {
                             diensten.forEach(dienst => {
@@ -268,7 +282,7 @@ export class StartlijstGridComponent implements OnInit {
 
     // openen van popup om bestaande start te kunnen aanpassen
     openEditor(event?: RowDoubleClickedEvent) {
-        if (this.magWijzigen && !this.deleteMode) {
+        if (this.magWijzigen && !this.deleteMode && this.inTijdspan) {
             this.editor.openPopup(event?.data);
         }
     }

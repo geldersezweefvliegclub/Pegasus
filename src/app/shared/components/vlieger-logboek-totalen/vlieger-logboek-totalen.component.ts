@@ -45,6 +45,13 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges {
             }
             this.opvragen();
         })
+
+        // Als in de startlijst tabel is aangepast, moet we onze dataset ook aanpassen
+        this.sharedService.heliosEventFired.subscribe(ev => {
+            if (ev.tabel == "Startlijst") {
+                    this.opvragen();
+                }
+        });
     }
 
     ngOnChanges(changes: SimpleChanges) {

@@ -172,10 +172,10 @@ export class LedenGridComponent implements OnInit {
         this.opvragen();
 
         const ui = this.loginService.userInfo?.Userinfo;
-        this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
-        this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
-        this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
-        this.magExporteren = (!ui?.isDDWV) ? true : false;
+        this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
+        this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
+        this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
+        this.magExporteren = (!ui?.isDDWV && !ui?.isStarttoren) ? true : false;
 
         if (this.loginService.userInfo?.Userinfo?.isDDWV!) {
             this.sharedService.ledenlijstFilter.leden = false;

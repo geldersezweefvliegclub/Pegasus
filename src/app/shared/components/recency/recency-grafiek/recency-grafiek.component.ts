@@ -1,4 +1,4 @@
-import {Component, Input, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from "rxjs";
 import {DateTime} from "luxon";
 import {SharedService} from "../../../../services/shared/shared.service";
@@ -17,7 +17,7 @@ import {AnnotationOptions} from "chartjs-plugin-annotation";
     styleUrls: ['./recency-grafiek.component.scss']
 })
 
-export class RecencyGrafiekComponent {
+export class RecencyGrafiekComponent implements  OnInit{
     @Input() VliegerID: number;
     @Input() naam: string;
 
@@ -152,7 +152,7 @@ export class RecencyGrafiekComponent {
     constructor(private readonly startlijstService: StartlijstService,
                 private readonly sharedService: SharedService) {}
 
-    openPopup() {
+    ngOnInit(): void {
         // de datum zoals die in de kalender gekozen is
         this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
             this.datum = DateTime.fromObject({
@@ -160,17 +160,20 @@ export class RecencyGrafiekComponent {
                 month: jaarMaand.month,
                 day: 1
             })
-            this.opvragen();
+        });
+    }
 
-            // zet de jaargrenzen
-            if (this.JaarGrens1.type === "line") {
-                this.JaarGrens1.value = 'Jan ' + (this.datum.year-1).toString()
-            }
+    openPopup() {
+        this.opvragen();
 
-            if (this.JaarGrens2.type === "line") {
-                this.JaarGrens2.value = 'Jan ' + this.datum.year.toString()
-            }
-        })
+        // zet de jaargrenzen
+        if (this.JaarGrens1.type === "line") {
+            this.JaarGrens1.value = 'Jan ' + (this.datum.year-1).toString()
+        }
+
+        if (this.JaarGrens2.type === "line") {
+            this.JaarGrens2.value = 'Jan ' + this.datum.year.toString()
+        }
         this.popup.open();
     }
 
