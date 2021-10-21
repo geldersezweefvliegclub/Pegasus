@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {APIService} from './api.service';
-import {HeliosAanwezigLedenDataset, HeliosTracks, HeliosType, HeliosTypes} from '../../types/Helios';
+import {HeliosType, HeliosTypes} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
 import {KeyValueArray} from '../../types/Utils';
 import {BehaviorSubject} from "rxjs";
@@ -17,6 +17,13 @@ export class TypesService {
     constructor(private readonly apiService: APIService,
                 private readonly storageService: StorageService) {
 
+        // We hebben misschien eerder de types opgehaald. Die gebruiken we totdat de API data heeft opgehaald
+        if (this.storageService.ophalen('types') != null) {
+            this.typesCache = this.storageService.ophalen('types');
+            this.typesStore.next(this.typesCache.dataset!)    // afvuren event met opgeslagen type dataset
+        }
+
+        // We gaan nu de API aanroepen om data op te halen
         this.getTypes().then((dataset) => {
             this.typesStore.next(this.typesCache.dataset!)    // afvuren event
         });
@@ -24,21 +31,15 @@ export class TypesService {
 
     async getTypes(): Promise<HeliosType[]> {
         let hash: string = '';
-
-        if (this.storageService.ophalen('types') != null) {
-            this.typesCache = this.storageService.ophalen('types');
-        }
-
         let getParams: KeyValueArray = {};
 
         if (this.typesCache != null) { // we hebben eerder de lijst opgehaald
             hash = hash as string;
-//      getParams['HASH'] = hash;
+            getParams['HASH'] = hash;
         }
 
         try {
             const response = await this.apiService.get('Types/GetObjects', getParams);
-
             this.typesCache = await response.json();
             this.storageService.opslaan('types', this.typesCache);
         } catch (e) {

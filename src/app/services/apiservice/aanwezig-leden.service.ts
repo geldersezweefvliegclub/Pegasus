@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {StorageService} from '../storage/storage.service';
 import {DateTime} from 'luxon';
 import {HeliosActie, KeyValueArray} from '../../types/Utils';
 import {APIService} from './api.service';
@@ -23,8 +22,7 @@ export class AanwezigLedenService {
     public readonly aanwezigChange = this.aanwezigStore.asObservable();      // nieuwe aanwezigheid beschikbaar
 
     constructor(private readonly APIService: APIService,
-                private readonly sharedService: SharedService,
-                private readonly storageService: StorageService) {
+                private readonly sharedService: SharedService) {
 
         // de datum zoals die in de kalender gekozen is
         this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
@@ -76,15 +74,11 @@ export class AanwezigLedenService {
 
     async getAanwezig(startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosAanwezigLedenDataset[]> {
         let hash: string = '';
-        if (((this.aanwezigCache == null)) && (this.storageService.ophalen('aanwezigLeden') != null)) {
-            this.aanwezigCache = this.storageService.ophalen('aanwezigLeden');
-        }
-
         let getParams: KeyValueArray = params;
 
         if (this.aanwezigCache != null) { // we hebben eerder de lijst opgehaald
             hash = this.aanwezigCache.hash as string;
-//      getParams['HASH'] = hash;
+            getParams['HASH'] = hash;
         }
 
         getParams['BEGIN_DATUM'] = startDatum.toISODate();
@@ -96,9 +90,7 @@ export class AanwezigLedenService {
 
         try {
             const response: Response = await this.APIService.get('AanwezigLeden/GetObjects', getParams);
-
             this.aanwezigCache = await response.json();
-            this.storageService.opslaan('aanwezigLeden', this.aanwezigCache);
         } catch (e) {
             if (e.responseCode !== 304) { // server bevat dezelfde data als cache
                 throw(e);

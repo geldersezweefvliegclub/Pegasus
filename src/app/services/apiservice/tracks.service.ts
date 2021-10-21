@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
 import {APIService} from "./api.service";
-import {HeliosAanwezigLedenDataset, HeliosTrack, HeliosTracks, HeliosTracksDataset} from "../../types/Helios";
+import {HeliosTrack, HeliosTracks, HeliosTracksDataset} from "../../types/Helios";
 import {KeyValueArray} from "../../types/Utils";
-import {StorageService} from "../storage/storage.service";
 import {LoginService} from "./login.service";
 
 @Injectable({
@@ -12,9 +11,7 @@ export class TracksService {
     private tracksCache: HeliosTracks = { dataset: []};      // return waarde van API call
 
     constructor(private readonly apiService: APIService,
-                private readonly loginService: LoginService,
-                private readonly storageService: StorageService) {}
-
+                private readonly loginService: LoginService) {}
 
     async getTracks(verwijderd: boolean = false, lidID?:number, max?: number): Promise<HeliosTracksDataset[]> {
 
@@ -39,7 +36,6 @@ export class TracksService {
 
         try {
             const response: Response = await this.apiService.get('Tracks/GetObjects', getParams);
-
             this.tracksCache = await response.json();
         } catch (e) {
             if (e.responseCode !== 304) { // server bevat dezelfde data als cache

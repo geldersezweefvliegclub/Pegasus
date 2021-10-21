@@ -180,7 +180,8 @@ export class LidEditorComponent implements OnInit {
             this.isSaving = false;
             this.error = undefined;
 
-            if (this.lidID == this.storageService.ophalen('userInfo').LidData.ID) {
+            const ui = this.loginService.userInfo?.LidData
+            if (this.lidID == ui!.ID) {
                 this.success = {titel: "Profiel", beschrijving: "Uw profiel is aangepast"}
             }
             else {

@@ -1,19 +1,15 @@
 import {Injectable} from '@angular/core';
 import {APIService} from './api.service';
 
-import {HeliosAanwezigLedenDataset, HeliosLeden, HeliosLedenDataset, HeliosLid} from '../../types/Helios';
-import {StorageService} from '../storage/storage.service';
+import {HeliosLeden, HeliosLedenDataset, HeliosLid} from '../../types/Helios';
 import {KeyValueArray} from '../../types/Utils';
 import {BehaviorSubject} from "rxjs";
-import {DateTime} from "luxon";
-import {getBeginEindDatumVanMaand} from "../../utils/Utils";
 import {SharedService} from "../shared/shared.service";
 
 @Injectable({
     providedIn: 'root'
 })
 export class LedenService {
-    private refreshTimer: number;
     private ledenCache: HeliosLeden  = { dataset: []};       // return waarde van API call
 
     private overslaan: boolean = false;
@@ -22,8 +18,7 @@ export class LedenService {
     public readonly ledenChange = this.ledenStore.asObservable();      // nieuwe leden beschikbaar
 
     constructor(private readonly apiService: APIService,
-                private readonly sharedService: SharedService,
-                private readonly storageService: StorageService) {
+                private readonly sharedService: SharedService) {
 
         this.ophalenLeden().then((dataset) => {
             this.ledenStore.next(this.ledenCache.dataset)    // afvuren event
@@ -56,16 +51,11 @@ export class LedenService {
 
     async getLeden(verwijderd: boolean = false, zoekString?: string): Promise<HeliosLedenDataset[]> {
         let hash: string = '';
-
-        if (((this.ledenCache == null)) && (this.storageService.ophalen('leden') != null)) {
-            this.ledenCache = this.storageService.ophalen('leden');
-        }
-
         let getParams: KeyValueArray = {};
 
         if (this.ledenCache != null) { // we hebben eerder de lijst opgehaald
             hash = this.ledenCache.hash as string;
-//            getParams['HASH'] = hash;
+            getParams['HASH'] = hash;
         }
 
         if (zoekString) {
@@ -80,7 +70,6 @@ export class LedenService {
             const response: Response = await this.apiService.get('Leden/GetObjects', getParams);
 
             this.ledenCache = await response.json();
-            this.storageService.opslaan('leden', this.ledenCache);
         } catch (e) {
             if (e.responseCode !== 304) { // server bevat dezelfde data als cache
                 throw(e);
@@ -91,7 +80,6 @@ export class LedenService {
 
     async getLid(id: number): Promise<HeliosLid> {
         const response: Response = await this.apiService.get('Leden/GetObject', {'ID': id.toString()});
-
         return response.json();
     }
 
@@ -102,7 +90,6 @@ export class LedenService {
 
     async updateLid(lid: HeliosLid) {
         const response: Response = await this.apiService.put('Leden/SaveObject', JSON.stringify(lid));
-
         return response.json();
     }
 

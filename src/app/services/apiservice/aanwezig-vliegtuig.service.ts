@@ -1,10 +1,8 @@
 import {Injectable} from '@angular/core';
-import {StorageService} from '../storage/storage.service';
 import {DateTime} from 'luxon';
 import {HeliosActie, KeyValueArray} from '../../types/Utils';
 import {APIService} from './api.service';
 import {
-    HeliosAanwezigLedenDataset,
     HeliosAanwezigVliegtuigen,
     HeliosAanwezigVliegtuigenDataset
 } from '../../types/Helios';
@@ -28,8 +26,7 @@ export class AanwezigVliegtuigService {
     public readonly aanwezigChange = this.aanwezigStore.asObservable();      // nieuwe aanwezigheid beschikbaar
 
     constructor(private readonly APIService: APIService,
-                private readonly sharedService: SharedService,
-                private readonly storageService: StorageService) {
+                private readonly sharedService: SharedService) {
 
         // de datum zoals die in de kalender gekozen is
         this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
@@ -81,16 +78,11 @@ export class AanwezigVliegtuigService {
 
     async getAanwezig(startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosAanwezigVliegtuigenDataset[]> {
         let hash: string = '';
-
-        if (((this.aanwezigCache == null)) && (this.storageService.ophalen('aanwezigVliegtuigen') != null)) {
-            this.aanwezigCache = this.storageService.ophalen('aanwezigVliegtuigen');
-        }
-
         let getParams: KeyValueArray = params;
 
         if (this.aanwezigCache != null) { // we hebben eerder de lijst opgehaald
             hash = this.aanwezigCache.hash as string;
-//      getParams['HASH'] = hash;
+            getParams['HASH'] = hash;
         }
 
         getParams['BEGIN_DATUM'] = startDatum.toISODate();
@@ -100,12 +92,9 @@ export class AanwezigVliegtuigService {
             getParams['SELECTIE'] = zoekString;
         }
 
-
         try {
             const response: Response = await this.APIService.get('AanwezigVliegtuigen/GetObjects', getParams);
-
             this.aanwezigCache = await response.json();
-            this.storageService.opslaan('aanwezigVliegtuigen', this.aanwezigCache);
         } catch (e) {
             if (e.responseCode !== 304) { // server bevat dezelfde data als cache
                 throw(e);

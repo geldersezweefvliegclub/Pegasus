@@ -2,8 +2,6 @@ import {Injectable} from '@angular/core';
 import {APIService} from './api.service';
 
 import {
-    HeliosLedenDataset,
-    HeliosType,
     HeliosVliegtuig,
     HeliosVliegtuigen,
     HeliosVliegtuigenDataset
@@ -28,6 +26,13 @@ export class VliegtuigenService {
                 private readonly sharedService: SharedService,
                 private readonly storageService: StorageService) {
 
+        // We hebben misschien eerder de vliegtuigen opgehaald. Die gebruiken we totdat de API data heeft opgehaald
+        if (this.storageService.ophalen('vliegtuigen') != null) {
+            this.vliegtuigenCache = this.storageService.ophalen('vliegtuigen');
+            this.vliegtuigenStore.next(this.vliegtuigenCache.dataset!)    // afvuren event met opgeslagen vliegtuigen dataset
+        }
+
+        // We gaan nu de API aanroepen om data op te halen
         this.ophalenVliegtuigen().then((dataset) => {
             this.vliegtuigenStore.next(this.vliegtuigenCache.dataset)    // afvuren event
         });
@@ -59,16 +64,11 @@ export class VliegtuigenService {
 
     async getVliegtuigen(verwijderd: boolean = false, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosVliegtuigenDataset[]> {
         let hash: string = '';
-
-        if (((this.vliegtuigenCache == null)) && (this.storageService.ophalen('vliegtuigen') != null)) {
-            this.vliegtuigenCache = this.storageService.ophalen('vliegtuigen');
-        }
-
         let getParams: KeyValueArray = params;
 
         if (this.vliegtuigenCache != null) { // we hebben eerder de lijst opgehaald
             hash = this.vliegtuigenCache.hash as string;
-//            getParams['HASH'] = hash;
+            getParams['HASH'] = hash;
         }
 
         if (zoekString) {
@@ -81,7 +81,6 @@ export class VliegtuigenService {
 
         try {
             const response: Response = await this.APIService.get('Vliegtuigen/GetObjects', getParams);
-
             this.vliegtuigenCache = await response.json();
             this.storageService.opslaan('vliegtuigen', this.vliegtuigenCache);
         } catch (e) {
@@ -112,7 +111,6 @@ export class VliegtuigenService {
             await this.APIService.delete('Vliegtuigen/DeleteObject', {'ID': id.toString()});
         } catch (e) {
             throw(e);
-
         }
     }
 

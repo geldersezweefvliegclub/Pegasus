@@ -1,28 +1,23 @@
 import {Injectable} from '@angular/core';
 import {
-    HeliosAanwezigLedenDataset,
     HeliosDienst,
     HeliosDiensten,
     HeliosDienstenDataset, HeliosDienstenTotaal,
     HeliosTracksDataset
 } from "../../types/Helios";
 import {APIService} from "./api.service";
-import {StorageService} from "../storage/storage.service";
 import {KeyValueArray} from "../../types/Utils";
 import {DateTime} from "luxon";
 import {BehaviorSubject, Subscription} from "rxjs";
 import {SharedService} from "../shared/shared.service";
 import {getBeginEindDatumVanMaand} from "../../utils/Utils";
-import {debounceTime, delay} from "rxjs/operators";
+import {debounceTime} from "rxjs/operators";
 
 @Injectable({
     providedIn: 'root'
 })
 
-
 export class DienstenService {
-    private refreshTimer: number;
-
     private dienstenCache: HeliosDiensten = { dataset: []};     // return waarde van API call
     private totalenCache: HeliosDienstenTotaal[] = [];          // return waarde van API call
 

@@ -55,15 +55,11 @@ export class StartlijstService {
 
     async getLogboek(id: number, startDatum: DateTime, eindDatum: DateTime, maxRecords?: number): Promise<HeliosLogboekDataset[]> {
         let hash: string = '';
-        if (((this.logboekCache == null)) && (this.storageService.ophalen('vlogboek-'+id.toString())  != null)) {
-            this.logboekCache = this.storageService.ophalen('vlogboek-'+id.toString());
-        }
-
         let getParams: parameters = {};
 
         if (this.logboekCache != null) {             // we hebben eerder de lijst opgehaald
             hash = (this.logboekCache) ? this.logboekCache.hash as string : '';
-      //      getParams['HASH'] = hash;
+            getParams['HASH'] = hash;
         }
 
         getParams['LID_ID'] = id.toString();
@@ -78,7 +74,6 @@ export class StartlijstService {
             const response: Response = await this.APIService.get('Startlijst/GetLogboek', getParams);
 
             this.logboekCache = await response.json();
-            this.storageService.opslaan('vlogboek-'+id.toString(), this.logboekCache);
         } catch (e) {
             if ((e.responseCode !== 304) && (e.responseCode !== 404)) { // er is geen data, of data is ongewijzigd
                 throw(e);
@@ -157,7 +152,7 @@ export class StartlijstService {
 
         if (this.startsCache != null) { // we hebben eerder de lijst opgehaald
             hash = this.startsCache.hash as string;
-//            getParams['HASH'] = hash;
+            getParams['HASH'] = hash;
         }
 
         getParams['BEGIN_DATUM'] = startDatum.toISODate();

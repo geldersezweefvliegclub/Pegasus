@@ -20,6 +20,13 @@ export class CompetentieService {
     constructor(private readonly apiService: APIService,
                 private readonly storageService: StorageService) {
 
+        // We hebben misschien eerder de comptenties opgehaald. Die gebruiken we totdat de API data heeft opgehaald
+        if (this.storageService.ophalen('competenties') != null) {
+            this.competentiesCache = this.storageService.ophalen('competenties');
+            this.competentiesStore.next(this.competentiesCache.dataset!)    // afvuren event met opgeslagen vliegtuigen dataset
+        }
+
+        // We gaan nu de API aanroepen om data op te halen
         this.getCompetenties().then((dataset) => {
             this.competentiesStore.next(this.competentiesCache.dataset!)    // afvuren event
         });
@@ -28,16 +35,11 @@ export class CompetentieService {
     async getCompetenties(): Promise<HeliosCompetentiesDataset[]> {
         let competenties: HeliosCompetenties | null = null;
         let hash: string = '';
-
-        if (this.storageService.ophalen('competenties') != null) {
-            competenties = this.storageService.ophalen('competenties');
-        }
-
         let getParams: KeyValueArray = {};
 
-        if (competenties != null) { // we hebben eerder de lijst opgehaald
+        if (this.competentiesCache != null) { // we hebben eerder de lijst opgehaald
             hash = hash as string;
-//      getParams['HASH'] = hash;
+            getParams['HASH'] = hash;
         }
 
         try {

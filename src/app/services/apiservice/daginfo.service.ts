@@ -3,7 +3,6 @@ import {APIService} from './api.service';
 import {DateTime} from 'luxon';
 import {KeyValueArray} from '../../types/Utils';
 import {
-    HeliosCompetentiesDataset,
     HeliosDagInfo,
     HeliosDagInfoDagen,
     HeliosDagInfosDataset,
@@ -82,15 +81,11 @@ export class DaginfoService {
             return [];
         }
 
-        if (((this.dagInfoTotaalCache == null)) && (this.storageService.ophalen('daginfo') != null)) {
-            this.dagInfoTotaalCache = this.storageService.ophalen('daginfo');
-        }
-
         let getParams: KeyValueArray = params;
 
         if (this.dagInfoTotaalCache != null) {           // we hebben eerder de lijst opgehaald
             hash = this.dagInfoTotaalCache.hash as string;
-//            getParams['HASH'] = hash;
+            getParams['HASH'] = hash;
         }
 
         getParams['BEGIN_DATUM'] = startDatum.toISODate();
@@ -106,9 +101,7 @@ export class DaginfoService {
 
         try {
             const response: Response = await this.APIService.get('Daginfo/GetObjects', getParams);
-
             this.dagInfoTotaalCache = await response.json();
-            this.storageService.opslaan('starts', this.dagInfoTotaalCache);
         } catch (e) {
             if (e.responseCode !== 304) {       // server bevat dezelfde data als cache
                 throw(e);
@@ -154,8 +147,6 @@ export class DaginfoService {
             };
             return this.dagInfo;
         }
-        console.error("Onjuiste aanroep getDagInfo()");
-        return {DATUM: this.datum.toISODate()};  // dit mag nooit
     }
 
     // opslaan van een nieuw daginfo record
@@ -195,9 +186,6 @@ export class DaginfoService {
     // als we weten dat gebruiker geen toegang heeft, hoeven we ook niets op te vragen
     magDagInfoOphalen(): boolean {
         const ui = this.loginService.userInfo?.Userinfo;
-        if (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isInstructeur || ui?.isCIMT || ui?.isStarttoren || ui?.isDDWVCrew) {
-            return true;
-        }
-        return false;
+        return (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isInstructeur || ui?.isCIMT || ui?.isStarttoren || ui?.isDDWVCrew) ? true : false;
     }
 }
