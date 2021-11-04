@@ -19,8 +19,8 @@ export class DienstenComponent implements OnInit, OnChanges {
 
     @ViewChild(DagRoosterComponent) popup: DagRoosterComponent;
 
-    datumAbonnement: Subscription;         // volg de keuze van de kalender
-    datum: DateTime;                       // de gekozen dag
+    private datumAbonnement: Subscription;  // volg de keuze van de kalender
+    datum: DateTime;                        // de gekozen dag
 
     diensten: HeliosDienstenDataset[];
     roosterDatum: DateTime;

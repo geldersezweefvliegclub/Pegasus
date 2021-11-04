@@ -66,7 +66,7 @@ export class VliegtuigenService {
             });
         }, 1000 * 60 * 15);
 
-        // Als leden zijn aangepast, dan moeten we overzicht opnieuw ophalen
+        // Als vliegtuigen zijn aangepast, dan moeten we overzicht opnieuw ophalen
         this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Vliegtuigen") {
                 this.ophalenVliegtuigen().then((dataset) => {

@@ -13,7 +13,7 @@ export class ComposeMeteoComponent {
     @Output() opslaan: EventEmitter<string> = new EventEmitter<string>();
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
-    typesAbonnement: Subscription;
+    private typesAbonnement: Subscription;
 
     windSterkteTypes$: Observable<HeliosType[]>;
     windRichtingTypes$: Observable<HeliosType[]>;

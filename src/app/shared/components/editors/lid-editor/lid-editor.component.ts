@@ -25,7 +25,7 @@ export class LidEditorComponent implements OnInit {
     @Input() isVerwijderMode: boolean = false;
     @Input() isRestoreMode: boolean = false;
 
-    typesAbonnement: Subscription;
+    private typesAbonnement: Subscription;
     types: HeliosType[];
     lid: HeliosLid = {};
 

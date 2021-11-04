@@ -16,7 +16,7 @@ export class ComposeBedrijfComponent {
     @Output() opslaan: EventEmitter<string> = new EventEmitter<string>();
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
-    typesAbonnement: Subscription;
+    private typesAbonnement: Subscription;
     startMethodeTypes$: Observable<HeliosType[]>;
     clubTypes$: Observable<HeliosType[]>;
     baanTypes$: Observable<HeliosType[]>;

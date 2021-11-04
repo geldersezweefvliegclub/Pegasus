@@ -48,6 +48,7 @@ export class NavigationComponent implements OnInit, OnDestroy  {
 
     private dienstenAbonnement: Subscription;
     private dbEventAbonnement: Subscription;
+    private vliegtuigenAbonnement: Subscription;
 
     constructor(private readonly loginService: LoginService,
                 private readonly startlijstService: StartlijstService,
@@ -108,9 +109,6 @@ export class NavigationComponent implements OnInit, OnDestroy  {
                     });
                 }
             }
-            if (ev.tabel == "Vliegtuigen") {
-                this.vliegtuigenBatch();
-            }
         });
 
         // abonneer op wijziging van diensten
@@ -119,26 +117,22 @@ export class NavigationComponent implements OnInit, OnDestroy  {
             this.diensten = JSON.stringify(maandDiensten!.filter((dienst) => { return dienst.LID_ID  == ui!.ID}));
         });
 
-        this.vliegtuigenBatch();
+        // abonneer op wijziging van vliegtuigen
+        this.vliegtuigenAbonnement = this.vliegtuigenService.vliegtuigenChange.subscribe(vliegtuigen => {
+            let nietInzetbaar = 0;
+
+            vliegtuigen!.forEach(kist => {
+                if ((!kist.INZETBAAR) && (kist.CLUBKIST)) nietInzetbaar++;
+            });
+
+            const v = this.routes.find(route => route.path == "vliegtuigen") as CustomRoute;
+            v.batch = nietInzetbaar;
+        });
     }
 
     ngOnDestroy(): void {
         if (this.dienstenAbonnement)    this.dienstenAbonnement.unsubscribe();
         if (this.dbEventAbonnement)     this.dbEventAbonnement.unsubscribe();
-    }
-
-    // bepaald de batch voor vliegtuigen menu, wordt getoond als clubkist niet inzetbaar is
-    vliegtuigenBatch() {
-        this.vliegtuigenService.getVliegtuigen(false, undefined, {CLUBKIST: "true"}).then((kisten) => {
-            let nietInzetbaar = 0;
-
-            kisten.forEach(kist => {
-                if (!kist.INZETBAAR) nietInzetbaar++;
-            });
-
-            const v = this.routes.find(route => route.path == "vliegtuigen") as CustomRoute;
-            v.batch = nietInzetbaar;
-        })
     }
 
     // welke menu items mogen getoond worden

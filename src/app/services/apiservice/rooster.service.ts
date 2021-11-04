@@ -89,10 +89,14 @@ export class RoosterService {
             this.roosterCache = await response.json();
 
         } catch (e) {
-            if (e.responseCode !== 404) { // er is geen data
+
+            if (e.responseCode === 404) { // er is geen data
+                return [];
+            }
+
+            if (e.responseCode !== 704) {  // er is geen nieuwe data
                 throw(e);
             }
-            return [];
         }
         return this.roosterCache!.dataset as HeliosRoosterDataset[];
     }

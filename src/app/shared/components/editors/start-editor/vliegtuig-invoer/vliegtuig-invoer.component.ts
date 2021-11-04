@@ -78,7 +78,7 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
     // De Input datasets zijn gewijzigd, zorg dat combobox goede data krijgt via vliegtuigenSelectie$
     ngOnChanges(changes: SimpleChanges) {
         // bij update van VLIEGTUIG_ID kijken we alleen of waarde geldig is
-        if (changes.hasOwnProperty("VLIEGTUIG_ID")) {
+        if ((changes.hasOwnProperty("VLIEGTUIG_ID")) &&  this.vliegtuigenSelectie$) {
             return;
         }
 
@@ -93,6 +93,7 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
                 return (vliegtuig.SLEEPKIST == true);
             });
         }
+
 
         if (this.aanwezig.length > 0) {
             this.vliegtuigenSelectie$ = of(this.aanwezig);

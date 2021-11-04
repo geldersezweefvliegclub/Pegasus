@@ -35,7 +35,7 @@ export class VliegtuigEditorComponent  implements  OnInit {
         INZETBAAR: undefined,
         OPMERKINGEN: undefined
     };
-    typesAbonnement: Subscription;
+    private typesAbonnement: Subscription;
     vliegtuigTypes: HeliosType[];
 
     isLoading: boolean = false;

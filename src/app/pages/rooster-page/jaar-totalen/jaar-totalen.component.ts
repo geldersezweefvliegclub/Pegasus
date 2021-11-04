@@ -42,8 +42,8 @@ export class JaarTotalenComponent implements OnInit {
 
     jaarTotalen: JaarTotaal[];
 
-    datumAbonnement: Subscription;         // volg de keuze van de kalender
-    datum: DateTime;                       // de gekozen dag
+    private datumAbonnement: Subscription;      // volg de keuze van de kalender
+    datum: DateTime;                            // de gekozen dag
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},

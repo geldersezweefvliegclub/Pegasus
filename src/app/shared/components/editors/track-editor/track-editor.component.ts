@@ -16,7 +16,7 @@ import {TracksLedenDataset} from "../../tracks/tracks.component";
 export class TrackEditorComponent implements OnInit{
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
-    ledenAbonnement: Subscription;
+    private ledenAbonnement: Subscription;
     leden: HeliosLedenDataset[] = [];
     track: HeliosTrack = {}
 

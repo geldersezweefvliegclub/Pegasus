@@ -37,14 +37,14 @@ export class StartEditorComponent implements OnInit {
     toonVliegerNaam: boolean = false;
     toonStartMethode: boolean = true;
 
-    typesAbonnement: Subscription;
+    private typesAbonnement: Subscription;
     startMethodeTypes: HeliosType[];
     startMethodeTypesFiltered: HeliosType[];
     veldenTypes$: Observable<HeliosType[]>;
 
-    vliegtuigenAbonnement: Subscription;
+    private vliegtuigenAbonnement: Subscription;
     vliegtuigen: HeliosVliegtuigenDataset[] = [];
-    aanwezigVliegtuigenAbonnement: Subscription;
+    private aanwezigVliegtuigenAbonnement: Subscription;
     aanwezigVliegtuigen: HeliosVliegtuigenDataset[] = [];
     gekozenVliegtuig: HeliosVliegtuigenDataset;     // het gekozen vliegtuig uit de editor
 
@@ -57,14 +57,14 @@ export class StartEditorComponent implements OnInit {
     exclLidtypeAlsInzittende: string = "607,609,610,612,613,625"
     exclLidtypeAlsVlieger: string = "613"
 
-    ledenAbonnement: Subscription;
+    private ledenAbonnement: Subscription;
     leden: HeliosLedenDataset[] = [];
 
-    aanwezigLedenAbonnement: Subscription;
+    private aanwezigLedenAbonnement: Subscription;
     aanwezigLeden: HeliosAanwezigLedenDataset[] = [];
 
-    datumAbonnement: Subscription;         // volg de keuze van de kalender
-    datum: DateTime;                       // de gekozen dag
+    private datumAbonnement: Subscription;      // volg de keuze van de kalender
+    datum: DateTime;                            // de gekozen dag
 
     isLoading: boolean = false;
     isSaving: boolean = false;
@@ -103,7 +103,7 @@ export class StartEditorComponent implements OnInit {
             this.veldenTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));
         });
 
-        // abonneer op wijziging van leden
+        // abonneer op wijziging van vliegtuigen
         this.vliegtuigenAbonnement = this.vliegtuigenService.vliegtuigenChange.subscribe(vliegtuigen => {
             this.vliegtuigen = (vliegtuigen) ? vliegtuigen : [];
         });
