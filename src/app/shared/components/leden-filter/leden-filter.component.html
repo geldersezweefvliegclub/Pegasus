@@ -26,6 +26,13 @@
                     </div>
                     <div>
                         <input type="checkbox"
+                               id="Sleepvliegers" class="form-check-inline"
+                               [(ngModel)]="sharedService.ledenlijstFilter.sleepvliegers"
+                               (ngModelChange)="filterDataChanged()">
+                        <label for="DDWV-Crew" class="form-check-label">Sleepvliegers</label>
+                    </div>
+                    <div>
+                        <input type="checkbox"
                                id="DDWV-Crew" class="form-check-inline"
                                [(ngModel)]="sharedService.ledenlijstFilter.crew"
                                (ngModelChange)="filterDataChanged()">

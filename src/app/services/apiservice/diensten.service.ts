@@ -12,6 +12,7 @@ import {BehaviorSubject, Subscription} from "rxjs";
 import {SharedService} from "../shared/shared.service";
 import {getBeginEindDatumVanMaand} from "../../utils/Utils";
 import {debounceTime} from "rxjs/operators";
+import {LoginService} from "./login.service";
 
 @Injectable({
     providedIn: 'root'
@@ -28,6 +29,7 @@ export class DienstenService {
     public readonly dienstenChange = this.dienstenStore.asObservable();      // nieuw rooster beschikbaar
 
     constructor(private readonly apiService: APIService,
+                private readonly loginService: LoginService,
                 private readonly sharedService: SharedService) {
 
         // de datum zoals die in de kalender gekozen is
@@ -38,11 +40,14 @@ export class DienstenService {
                 day: 1
             });
 
-            const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
+            // we kunnen alleen data ophalen als we ingelogd zijn, en starttoren heeft niets nodig
+            if (this.loginService.isIngelogd() && (!this.loginService.userInfo?.Userinfo!.isStarttoren)) {
+                const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
 
-            this.getDiensten(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
-                this.dienstenStore.next(this.dienstenCache.dataset)    // afvuren event
-            });
+                this.getDiensten(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
+                    this.dienstenStore.next(this.dienstenCache.dataset)    // afvuren event
+                });
+            }
         });
 
         // Als diensten zijn toegevoegd, dan moeten we overzicht opnieuw ophalen
@@ -56,6 +61,17 @@ export class DienstenService {
                 });
             }
         });
+
+        // nadat we ingelogd zijn kunnen we de diensten ophalen, starttoren heeft niets nodig
+        if ((!this.loginService.userInfo?.Userinfo!.isStarttoren)) {
+            loginService.inloggenSucces.subscribe(() => {
+                const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
+
+                this.getDiensten(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
+                    this.dienstenStore.next(this.dienstenCache.dataset)    // afvuren event
+                });
+            });
+        }
     }
 
     async getDiensten(startDatum: DateTime, eindDatum: DateTime, dienstType?: number, lidID?: number): Promise<HeliosDienstenDataset[]> {
@@ -63,6 +79,9 @@ export class DienstenService {
         getParams['BEGIN_DATUM'] = startDatum.toISODate();
         getParams['EIND_DATUM'] = eindDatum.toISODate();
 
+        if ((this.dienstenCache != undefined)  && (this.dienstenCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
+            getParams['HASH'] = this.dienstenCache.hash;
+        }
         if (lidID != undefined) {
             getParams['LID_ID'] = lidID.toString();
         }
@@ -74,7 +93,7 @@ export class DienstenService {
             const response: Response = await this.apiService.get('Diensten/GetObjects', getParams);
             this.dienstenCache = await response.json();
         } catch (e) {
-            if (e.responseCode !== 304) { // server bevat dezelfde data als cache
+            if (e.responseCode !== 704) { // server bevat dezelfde data als cache
                 throw(e);
             }
         }
@@ -97,7 +116,7 @@ export class DienstenService {
             return this.totalenCache;
 
         } catch (e) {
-            if (e.responseCode !== 304) { // server bevat dezelfde data als cache
+            if (e.responseCode !== 704) { // server bevat dezelfde data als cache
                 throw(e);
             }
         }

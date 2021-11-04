@@ -1,0 +1,90 @@
+<app-error [error]="error"></app-error>
+<app-success [success]="success"></app-success>
+
+<app-pegasus-card titel="Audit"
+                  subtitel="Een overzicht van alle wijzigingen"
+                  [icon]="iconCardIcon"
+                  [exportEnabled]="this.magExporten"
+                  (excelExport)="exportDataset()">
+    <div class="box">
+        <div class="d-flex h-100">
+            <div class="col-9 h-100">
+                <app-datatable
+                        id="auditgrid"
+                        [rowData]="data"
+                        [columnDefs]="dataColumns"
+                        [loading]="isLoading"
+                        (rowSelected)="selectRow($event)"
+                        class="h-100 mt-n8"></app-datatable>
+            </div>
+            <div class="col-3 kolomRechts ml-2" *ngIf="data">
+                <div class="table-rechts">
+                    <table>
+                        <tr>
+                            <td colspan="2">
+                                <div class="header">Orgineel</div>
+                            </td>
+                        </tr>
+                        <tr *ngFor="let item of voor | keyvalue">
+                            <td>
+                                <div class="auditlineKey">{{item.key}}</div>
+                            </td>
+                            <td>
+                                <div class="auditline">{{item.value}}</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2">
+                                <div class="header">Data</div>
+                            </td>
+                        </tr>
+                        <tr *ngFor="let item of wijziging | keyvalue">
+                            <td>
+                                <div class="auditlineKey">{{item.key}}</div>
+                            </td>
+                            <td>
+                                <div class="auditline">{{item.value}}</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2">
+                                <div class="header">Resultaat</div>
+                            </td>
+                        </tr>
+                        <tr *ngFor="let item of resultaat | keyvalue">
+                            <td>
+                                <div class="auditlineKey">{{item.key}}</div>
+                            </td>
+                            <td>
+                                <div class="auditline">{{item.value}}</div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-start" id="toolbar">
+            <div class="col-10">
+                <div class="row justify-content-between" id="zoekbar">
+                    <div class="col-8">
+                        <div class="d-flex justify-content-begin align-items-end text-nowrap">
+                            <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>
+                            <input id="zoekInput"
+                                   type="search"
+                                   class="form-control"
+                                   [(ngModel)]="zoekString"
+                                   name="zoekString"
+                                   (keyup)="opvragen()"
+                                   (search)="opvragen()"
+                            >
+                            <app-icon-button class="toolbarBtn" iconNaam="fas Redo" (btnClicked)="opvragen()"
+                                             btnColor="btn-primary"></app-icon-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-pegasus-card>

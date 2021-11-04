@@ -1,8 +1,8 @@
-import {Component} from '@angular/core';
-import {CustomRoute, routes} from '../../routing.module';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {CustomRoute, beheerRoutes, routes} from '../../routing.module';
 
 import {Router} from '@angular/router';
-import {faSignOutAlt} from '@fortawesome/free-solid-svg-icons';
+import {faBug, faSignOutAlt, faWrench} from '@fortawesome/free-solid-svg-icons';
 import {NgbCalendar, NgbDate, NgbDatepickerNavigateEvent, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {SharedService} from '../../services/shared/shared.service';
 import {DateTime} from 'luxon';
@@ -18,19 +18,23 @@ import {StartlijstService} from '../../services/apiservice/startlijst.service';
 import {DaginfoService} from '../../services/apiservice/daginfo.service';
 import {Subscription} from "rxjs";
 import {delay} from "rxjs/operators";
+import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 
 @Component({
     selector: 'app-navigation',
     templateUrl: './navigation.component.html',
     styleUrls: ['./navigation.component.scss']
 })
-export class NavigationComponent {
-    routes = routes;
-    logUit = faSignOutAlt;
+export class NavigationComponent implements OnInit, OnDestroy  {
+    readonly routes = routes;
+    readonly beheerRoutes = beheerRoutes;
+    readonly logUitIcon: IconDefinition = faSignOutAlt;
+    readonly beheerIcon: IconDefinition = faWrench;
 
     kalenderMaand: KalenderMaand;
     startDatum: DateTime;
     eindDatum: DateTime;
+    showBeheer: boolean = false;
 
     vandaag = this.calendar.getToday();
     kalenderIngave: NgbDateStruct = {year: this.vandaag.year, month: this.vandaag.month, day: this.vandaag.day};  // de gekozen dag
@@ -42,7 +46,8 @@ export class NavigationComponent {
     diensten: string = "";          // daginfos van deze maand in json formaat
     daginfo: string = "";           // daginfos van deze maand in json formaat
 
-    dienstenAbonnement: Subscription;
+    private dienstenAbonnement: Subscription;
+    private dbEventAbonnement: Subscription;
 
     constructor(private readonly loginService: LoginService,
                 private readonly startlijstService: StartlijstService,
@@ -64,11 +69,14 @@ export class NavigationComponent {
             this.kalenderLaatsteDatum = {year: this.vandaag.year + 1, month: 12, day: 31}
         }
 
+    }
+
+    ngOnInit() {
         this.toonMenuItems();
 
         // Als daginfo of startlijst is aangepast, moet we kalender achtergrond ook updaten
         // Omdat dit minder belangrijk is dan andere API calls, een kleine vertraging
-        this.sharedService.heliosEventFired.pipe(delay(500)).subscribe(ev => {
+        this.dbEventAbonnement = this.sharedService.heliosEventFired.pipe(delay(500)).subscribe(ev => {
             if (ev.tabel == "Daginfo") {
                 if (ev.actie == HeliosActie.Delete || ev.actie == HeliosActie.Restore) {
 
@@ -112,6 +120,11 @@ export class NavigationComponent {
         });
 
         this.vliegtuigenBatch();
+    }
+
+    ngOnDestroy(): void {
+        if (this.dienstenAbonnement)    this.dienstenAbonnement.unsubscribe();
+        if (this.dbEventAbonnement)     this.dbEventAbonnement.unsubscribe();
     }
 
     // bepaald de batch voor vliegtuigen menu, wordt getoond als clubkist niet inzetbaar is

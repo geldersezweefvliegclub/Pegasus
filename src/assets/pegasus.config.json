@@ -1,5 +1,5 @@
 {
-  "url": "http://localhost:4200/api/",
+  "url": "https://development.gezc.org/",
   "zelfDienstIndelen": [
     {
       "TypeDienst": 1800,
@@ -78,29 +78,29 @@
   ],
   "checks": {
     "Jaren": [
-      2021,
-      2020
+      2022,
+      2021
     ],
     "Check": [
       {
         "Omschrijving": "Jaar check",
         "CompetentieID": [
-          305,
-          302
+          312,
+          305
         ]
       },
       {
         "Omschrijving": "Vragenlijst XLT",
         "CompetentieID": [
-          306,
-          303
+          313,
+          306
         ]
       },
       {
         "Omschrijving": "Vragenlijst Arcus",
         "CompetentieID": [
-          307,
-          -1
+          314,
+          307
         ]
       }
     ]
@@ -120,7 +120,7 @@
     },
     {
       "Omschrijving": "TurboInstructeur",
-      "CompetentieID": -1
+      "CompetentieID": 289
     },
     {
       "Omschrijving": "DDWV",

@@ -8,8 +8,9 @@ import {
 } from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
 import {KeyValueArray} from '../../types/Utils';
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Subscription} from "rxjs";
 import {SharedService} from "../shared/shared.service";
+import {LoginService} from "./login.service";
 
 @Injectable({
     providedIn: 'root'
@@ -19,10 +20,13 @@ export class VliegtuigenService {
 
     private overslaan: boolean = false;
     private ophaalTimer: number;                                // Iedere 15 min halen we de leden op
+    private fallbackTimer: number;                              // Timer om te zorgen dat data geladen echt is
     private vliegtuigenStore = new BehaviorSubject(this.vliegtuigenCache.dataset);
+    private dbEventAbonnement: Subscription;
     public readonly vliegtuigenChange = this.vliegtuigenStore.asObservable();      // nieuwe vliegtuigen beschikbaar
 
     constructor(private readonly APIService: APIService,
+                private readonly loginService: LoginService,
                 private readonly sharedService: SharedService,
                 private readonly storageService: StorageService) {
 
@@ -32,10 +36,29 @@ export class VliegtuigenService {
             this.vliegtuigenStore.next(this.vliegtuigenCache.dataset!)    // afvuren event met opgeslagen vliegtuigen dataset
         }
 
-        // We gaan nu de API aanroepen om data op te halen
-        this.ophalenVliegtuigen().then((dataset) => {
-            this.vliegtuigenStore.next(this.vliegtuigenCache.dataset)    // afvuren event
+        // nadat we ingelogd zijn kunnen we de vliegtuigen ophalen
+        loginService.inloggenSucces.subscribe(() => {
+            this.ophalenVliegtuigen().then((dataset) => {
+                this.vliegtuigenStore.next(this.vliegtuigenCache.dataset)    // afvuren event
+            });
         });
+
+        // Deze timer kijkt periodiek of de data er is. API call bij inloggen kan mislukt zijn dus dit is de fallback
+        this.fallbackTimer = window.setInterval(() => {
+            if (this.loginService.isIngelogd()) {
+                let ophalen = false;
+                if (this.vliegtuigenCache === undefined) {
+                    ophalen = true
+                } else if (this.vliegtuigenCache.dataset!.length < 1) {
+                    ophalen = true;
+                }
+                if (ophalen) {
+                    this.ophalenVliegtuigen().then((dataset) => {
+                        this.vliegtuigenStore.next(this.vliegtuigenCache.dataset)    // afvuren event
+                    });
+                }
+            }
+        }, 1000 * 60);  // iedere minuut
 
         this.ophaalTimer = window.setInterval(() => {
             this.ophalenVliegtuigen().then((dataset) => {
@@ -44,7 +67,7 @@ export class VliegtuigenService {
         }, 1000 * 60 * 15);
 
         // Als leden zijn aangepast, dan moeten we overzicht opnieuw ophalen
-        this.sharedService.heliosEventFired.subscribe(ev => {
+        this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Vliegtuigen") {
                 this.ophalenVliegtuigen().then((dataset) => {
                     this.vliegtuigenStore.next(this.vliegtuigenCache.dataset)    // afvuren event
@@ -63,14 +86,11 @@ export class VliegtuigenService {
     }
 
     async getVliegtuigen(verwijderd: boolean = false, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosVliegtuigenDataset[]> {
-        let hash: string = '';
         let getParams: KeyValueArray = params;
 
-        if (this.vliegtuigenCache != null) { // we hebben eerder de lijst opgehaald
-            hash = this.vliegtuigenCache.hash as string;
-            getParams['HASH'] = hash;
+        if ((this.vliegtuigenCache != undefined)  && (this.vliegtuigenCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
+            getParams['HASH'] = this.vliegtuigenCache.hash
         }
-
         if (zoekString) {
             getParams['SELECTIE'] = zoekString;
         }
@@ -84,7 +104,7 @@ export class VliegtuigenService {
             this.vliegtuigenCache = await response.json();
             this.storageService.opslaan('vliegtuigen', this.vliegtuigenCache);
         } catch (e) {
-            if (e.responseCode !== 304) { // server bevat dezelfde data als cache
+            if (e.responseCode !== 704) { // server bevat dezelfde data als cache
                 throw(e);
             }
         }

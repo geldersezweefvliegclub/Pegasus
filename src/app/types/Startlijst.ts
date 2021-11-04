@@ -90,6 +90,8 @@ export interface paths {
           VLIEGTUIG_ID?: number;
           /** Wanneer 'true', toon alleen de vluchten die nog niet geland zijn, of waar gezagvoeder onbekend is */
           OPEN_STARTS?: boolean;
+          /** Toon alleen start op DDWV dagen */
+          DDWV?: boolean;
         };
       };
       responses: {
@@ -461,6 +463,8 @@ export interface components {
       OPMERKINGEN?: string;
       /** Extra text om ID van extern systeem op te slaan */
       EXTERNAL_ID?: string;
+      /** Is dit een passagiers start */
+      PAX?: boolean;
     };
     oper_startlijst: components["schemas"]["oper_startlijst_in"] & {
       /** Is dit record gemarkeerd als verwijderd? */
@@ -483,6 +487,12 @@ export interface components {
       VLIEGERNAAM_LID?: string;
       /** De naam van de inzittende zoals dat in ref_leden staat */
       INZITTENDENAAM_LID?: string;
+      /** Het lidtype van het lid zoals dat in ref_leden staat */
+      VLIEGER_LIDTYPE_ID?: number;
+      /** Het lidtype van de inzittende zoals dat in ref_leden staat */
+      INZITTENDE_LIDTYPE_ID?: number;
+      /** Is deze vlucht op een DDWV dag uitgevoerd */
+      VERWIJDERD?: boolean;
       /** De manier van de start */
       STARTMETHODE?: string;
       /** Naam van het vliegveld waarop gestart is */

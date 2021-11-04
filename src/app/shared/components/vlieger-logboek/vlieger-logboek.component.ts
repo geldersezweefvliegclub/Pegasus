@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {ColDef, RowDoubleClickedEvent} from "ag-grid-community";
 import {HeliosLogboekDataset, HeliosTrack} from "../../../types/Helios";
 import {DateTime, Interval} from "luxon";
@@ -29,7 +29,7 @@ type HeliosLogboekDatasetExtended = HeliosLogboekDataset & {
     styleUrls: ['./vlieger-logboek.component.scss']
 })
 
-export class VliegerLogboekComponent implements OnInit, OnChanges {
+export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
     @Input() id: string;
     @Input() VliegerID: number;
     @Input() deleteMode: boolean;
@@ -40,8 +40,9 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
     @ViewChild(StartEditorComponent) startEditor: StartEditorComponent;
 
     data: HeliosLogboekDatasetExtended[] = [];
-    datumAbonnement: Subscription;         // volg de keuze van de kalender
-    datum: DateTime;                       // de gekozen dag
+    private dbEventAbonnement: Subscription;
+    private datumAbonnement: Subscription;  // volg de keuze van de kalender
+    datum: DateTime;                        // de gekozen dag
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -144,23 +145,32 @@ export class VliegerLogboekComponent implements OnInit, OnChanges {
     ngOnInit(): void {
         // de datum zoals die in de kalender gekozen is
         this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
+            // ophalen is alleen nodig als er een ander jaar gekozen is in de kalendar
+            const ophalen = ((this.datum == undefined) || (this.datum.year != jaarMaand.year))
             this.datum = DateTime.fromObject({
                 year: jaarMaand.year,
                 month: jaarMaand.month,
                 day: 1
             })
-            this.data = [];
-            this.opvragen();
+            if (ophalen) {
+                this.data = [];
+                this.opvragen();
+            }
         });
 
         // Als daginfo of startlijst is aangepast, moet we kalender achtergrond ook updaten
-        this.sharedService.heliosEventFired.subscribe(ev => {
+        this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Startlijst") {
                 this.opvragen();
             }
         });
 
         this.kolomDefinitie();
+    }
+
+    ngOnDestroy(): void {
+        if (this.dbEventAbonnement)     this.dbEventAbonnement.unsubscribe();
+        if (this.datumAbonnement)       this.datumAbonnement.unsubscribe();
     }
 
     // opvragen van het vlieger logboek

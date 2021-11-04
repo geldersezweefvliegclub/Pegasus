@@ -41,7 +41,9 @@ export class LoginPageComponent implements OnInit {
         "/assets/img/18500.jpg",
         "/assets/img/19218.jpg",
         "/assets/img/19507.jpg",
-        "/assets/img/50832.jpg"
+        "/assets/img/50832.jpg",
+        "/assets/img/20201025.jpg",
+        "/assets/img/20201025.jpg"
     ];
     toonFoto: string = this.urlFoto();
 
@@ -52,6 +54,8 @@ export class LoginPageComponent implements OnInit {
         setInterval(() => {
             this.toonFoto = this.urlFoto()
         }, 15000)
+
+        this.loginService.uitloggen();      // zeker weten dat er geen userinfo is achter gebleven van vorige sessie
     }
 
     // geef de url terug van een willekeurige foto

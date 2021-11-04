@@ -13,6 +13,7 @@ import {BehaviorSubject, Subscription} from "rxjs";
 import {SharedService} from "../shared/shared.service";
 import {getBeginEindDatumVanMaand} from "../../utils/Utils";
 import {debounceTime, delay} from "rxjs/operators";
+import {LoginService} from "./login.service";
 
 @Injectable({
     providedIn: 'root'
@@ -26,6 +27,7 @@ export class RoosterService {
     public readonly roosterChange = this.roosterStore.asObservable();      // nieuw rooster beschikbaar
 
     constructor(private readonly APIService: APIService,
+                private readonly loginService: LoginService,
                 private readonly sharedService: SharedService) {
 
         // de datum zoals die in de kalender gekozen is
@@ -36,12 +38,15 @@ export class RoosterService {
                 day: 1
             });
 
-            const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
+            // we kunnen alleen data ophalen als we ingelogd zijn, en starttoren heeft niets nodig
+            if (this.loginService.isIngelogd() && (!this.loginService.userInfo?.Userinfo!.isStarttoren)) {
+                const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
 
-            this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
-                if (!this.vulMissendeDagenAan(dataset))
-                    this.roosterStore.next(this.roosterCache.dataset)    // afvuren event
-            });
+                this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
+                    if (!this.vulMissendeDagenAan(dataset))
+                        this.roosterStore.next(this.roosterCache.dataset)    // afvuren event
+                });
+            }
         });
 
         // Als roosterdagen zijn toegevoegd, dan moeten we overzicht opnieuw ophalen
@@ -56,12 +61,28 @@ export class RoosterService {
                 });
             }
         });
+
+        // nadat we ingelogd zijn kunnen we de rooster ophalen, starttoren heeft niets nodig
+        if ((!this.loginService.userInfo?.Userinfo!.isStarttoren)) {
+            loginService.inloggenSucces.subscribe(() => {
+                const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
+
+                this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
+                    if (!this.vulMissendeDagenAan(dataset))
+                        this.roosterStore.next(this.roosterCache.dataset)    // afvuren event
+                });
+            });
+        }
     }
 
     async getRooster(startDatum: DateTime, eindDatum: DateTime): Promise<HeliosRoosterDataset[]> {
         let getParams: KeyValueArray = {};
         getParams['BEGIN_DATUM'] = startDatum.toISODate();
         getParams['EIND_DATUM'] = eindDatum.toISODate();
+
+        if ((this.roosterCache != undefined)  && (this.roosterCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
+            getParams['HASH'] = this.roosterCache.hash;
+        }
 
         try {
             const response: Response = await this.APIService.get('Rooster/GetObjects', getParams);

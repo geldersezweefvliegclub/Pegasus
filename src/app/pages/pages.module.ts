@@ -42,6 +42,7 @@ import { TrackRenderComponent } from './leden-grid/track-render/track-render.com
 import { TracksGridComponent } from './tracks-grid/tracks-grid.component';
 import { JaarTotalenComponent } from './rooster-page/jaar-totalen/jaar-totalen.component';
 import { ExportStartlijstComponent } from './startlijst-grid/export-startlijst/export-startlijst.component';
+import { AuditPageComponent } from './audit-page/audit-page.component';
 
 @NgModule({
   imports: [
@@ -90,6 +91,7 @@ import { ExportStartlijstComponent } from './startlijst-grid/export-startlijst/e
     TracksGridComponent,
     JaarTotalenComponent,
     ExportStartlijstComponent,
+    AuditPageComponent
   ],
   exports: [
     PegasusCardComponent,

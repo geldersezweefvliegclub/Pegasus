@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {VliegtuigenService} from '../../services/apiservice/vliegtuigen.service';
 
 import {faPlane, faRecycle} from '@fortawesome/free-solid-svg-icons';
@@ -27,6 +27,7 @@ import {nummerSort} from '../../utils/Utils';
 import {StartlijstService} from "../../services/apiservice/startlijst.service";
 import {DateTime} from "luxon";
 import {SharedService} from "../../services/shared/shared.service";
+import {Subscription} from "rxjs";
 
 type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
     toonLogboek?: boolean;
@@ -37,7 +38,7 @@ type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
     templateUrl: './vliegtuigen-grid.component.html',
     styleUrls: ['./vliegtuigen-grid.component.scss']
 })
-export class VliegtuigenGridComponent implements OnInit {
+export class VliegtuigenGridComponent implements OnInit, OnDestroy {
     @ViewChild(VliegtuigEditorComponent) editor: VliegtuigEditorComponent;
 
     data:HeliosVliegtuigenDatasetExtended[] = [];
@@ -138,6 +139,8 @@ export class VliegtuigenGridComponent implements OnInit {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
+    private dbEventAbonnement: Subscription;
+
     constructor(private readonly vliegtuigenService: VliegtuigenService,
                 private readonly startlijstService: StartlijstService,
                 private readonly loginService: LoginService,
@@ -145,7 +148,7 @@ export class VliegtuigenGridComponent implements OnInit {
                 private readonly sharedService: SharedService) {
 
         // Als vliegtuig is aangepast, moeten we grid opnieuw laden
-        this.sharedService.heliosEventFired.subscribe(ev => {
+        this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Startlijst") {
                 this.opvragen();
             }
@@ -155,7 +158,6 @@ export class VliegtuigenGridComponent implements OnInit {
     ngOnInit(): void {
         // plaats de juiste kolommen in het grid
         this.kolomDefinitie();
-
         this.opvragen();
 
         const ui = this.loginService.userInfo?.Userinfo;
@@ -164,6 +166,17 @@ export class VliegtuigenGridComponent implements OnInit {
         this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
         this.magWijzigen = (!ui?.isDDWV) ? true : false;
         this.magExporten = (!ui?.isDDWV) ? true : false;
+
+        // Als startlijst is aangepast, moeten we grid opnieuw laden
+        this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
+            if (ev.tabel == "Vliegtuigen") {
+                this.opvragen();
+            }
+        });
+    }
+
+    ngOnDestroy(): void {
+        if (this.dbEventAbonnement)     this.dbEventAbonnement.unsubscribe();
     }
 
     // openen van popup om de data van een nieuw vliegtuig te kunnen invoeren

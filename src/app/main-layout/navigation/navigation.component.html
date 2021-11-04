@@ -17,16 +17,36 @@
                     </a>
                 </ng-template>
 
-                <a
-                        class="list-group-item list-group-item-action waves-effect"
-                        (click)="Uitloggen()">
-                    <fa-icon [icon]="logUit" class="me-3"></fa-icon>
+                <a class="list-group-item list-group-item-action waves-effect"
+                   (click)="Uitloggen()">
+                    <fa-icon [icon]="logUitIcon" class="me-3"></fa-icon>
                     Uitloggen
                 </a>
-
             </div>
 
+
             <div class="w-100 overflow-auto" *ngIf="!this.loginService.userInfo?.Userinfo.isStarttoren">
+                <a class="list-group-item list-group-item-action waves-effect"
+                   (click)="showBeheer = !showBeheer">
+                    <fa-icon [icon]="beheerIcon" class="me-3"></fa-icon>
+                    Beheer
+                    <div *ngIf="showBeheer">
+                        <ng-template ngFor let-route [ngForOf]="beheerRoutes">
+                            <a
+                                    class="list-group-item list-group-item-action waves-effect py-2"
+                                    routerLinkActive="active"
+                                    *ngIf="!route.excluded"
+                                    [routerLink]="route.path"
+                            >
+                                <div class="text-nowrap">
+                                    <fa-icon [icon]="route.icon" class="ms-3 me-3"></fa-icon>
+                                    {{route.text}}
+                                </div>
+                            </a>
+                        </ng-template>
+                    </div>
+                </a>
+
                 <ngb-datepicker
                     #d
                     name="datumIngave"

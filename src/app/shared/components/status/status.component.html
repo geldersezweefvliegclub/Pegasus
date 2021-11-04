@@ -12,15 +12,16 @@
             {{c.Omschrijving}}
         </td>
         <td class="kolom2">
-            <input type="checkbox"
+            <input type="checkbox" *ngIf="competentieBestaat(c.CompetentieID[0])"
                    id="L{{c.CompetentieID[0]}}"
                    class="form-check-inline"
+
                    (change)="zetProgressie($event, c.CompetentieID[0])"
                    [checked]="CheckGehaald(c.CompetentieID[0])"
                    [disabled]="CheckDisabled(c.CompetentieID[0])">       <!-- als checked, dan disable. Verwijderen via progressie boom -->
         </td>
         <td class="kolom3">
-            <input type="checkbox"
+            <input type="checkbox" *ngIf="competentieBestaat(c.CompetentieID[1])"
                    id="O{{c.CompetentieID[1]}}"
                    class="form-check-inline"
                    (change)="zetProgressie($event, c.CompetentieID[1])"
@@ -36,7 +37,7 @@
             {{o.Omschrijving}}
         </td>
         <td class="kolom2">
-            <input type="checkbox"
+            <input type="checkbox" *ngIf="competentieBestaat(o.CompetentieID)"
                    id="{{o.CompetentieID}}"
                    class="form-check-inline"
                    (change)="zetProgressie($event, o.CompetentieID)"

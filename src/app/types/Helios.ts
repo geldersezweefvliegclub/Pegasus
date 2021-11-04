@@ -11,6 +11,7 @@ import {components as roosterComponents} from './Rooster';
 import {components as tracksComponents} from './Tracks';
 import {components as dienstenComponents} from './Diensten';
 import {components as competentiesComponents} from './Competenties';
+import {components as auditComponents} from './Audit';
 
 export type HeliosUserinfo = loginComponents['schemas']['Userinfo'];
 
@@ -61,6 +62,9 @@ export type HeliosProgressieKaartDataset = progressieComponents['schemas']['prog
 export type HeliosRooster = roosterComponents['schemas']['view_rooster']
 export type HeliosRoosterDataset = roosterComponents['schemas']['view_rooster_dataset']
 export type HeliosRoosterDag = roosterComponents['schemas']['oper_rooster']
+
+export type HeliosAudit = auditComponents['schemas']['view_audit']
+export type HeliosAuditDataset = auditComponents['schemas']['view_audit_dataset']
 
 export type HeliosTrack = tracksComponents['schemas']['oper_tracks'];
 export type HeliosTracks = tracksComponents['schemas']['view_tracks'];

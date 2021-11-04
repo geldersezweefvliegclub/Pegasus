@@ -24,8 +24,10 @@ export class ModalComponent {
         // this.content.nativeEle   // TODO
         this.modalRef = this.modalService.open(this.content, {
             ariaLabelledBy: 'modal-basic-title',
-            windowClass: this.popupClass
-        })
+            windowClass: this.popupClass,
+        });
+
+        this.modalRef.result.then()
     }
 
     close() {

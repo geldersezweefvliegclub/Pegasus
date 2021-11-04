@@ -15,6 +15,7 @@
                                    type="search"
                                    class="form-control"
                                    [(ngModel)]="tijdIngevoerd"
+                                   [disabled]="isLoading || isSaving"
                                    [ngbTypeahead]="search"
                                    (ngModelChange)="veldInvoer($event)"
                                    (keydown)="keyDown($event)"
@@ -31,7 +32,10 @@
             </fieldset>
     </div>
     <div footer>
-        <app-icon-button *ngIf="!isLoading" iconNaam="fas Edit" btnColor="btn-primary" [disabled]="!tijdOK"
+        <app-icon-button *ngIf="!isLoading && !isSaving" iconNaam="fas Edit" btnColor="btn-primary" [disabled]="!tijdOK"
                          tekst="Opslaan" (btnClicked)="opslaan()"></app-icon-button>
+        <button class="btn btn-primary" *ngIf="isLoading || isSaving">
+            <span><app-loader></app-loader></span>
+        </button>
     </div>
 </app-modal>

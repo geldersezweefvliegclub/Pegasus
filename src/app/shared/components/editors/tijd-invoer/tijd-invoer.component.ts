@@ -35,6 +35,7 @@ export class TijdInvoerComponent {
     start: HeliosStart;
 
     isLoading: boolean = false;
+    isSaving: boolean = false;
     formTitel: string = "";
     label: string = "";
     overdag: string[];
@@ -91,6 +92,9 @@ export class TijdInvoerComponent {
             this.tijdOK = true;
         }
         this.popup.open();
+
+        // geef tijd invoer de focus, moeten wachten tot alles op het scherm staat
+        setTimeout(()=> this.tijdInvoerElement.nativeElement.focus(), 200);
     }
 
     openLandingsTijdPopup(record: HeliosStartDataset) {
@@ -124,6 +128,8 @@ export class TijdInvoerComponent {
             this.tijdOK = true;
         }
         this.popup.open();
+        // geef tijd invoer de focus, moeten wachten tot alles op het scherm staat
+        setTimeout(()=> this.tijdInvoerElement.nativeElement.focus(), 200);
     }
 
     closePopup() {
@@ -133,6 +139,7 @@ export class TijdInvoerComponent {
     // ophalen van de start, zodat we altijd met de laatste data werken
     async haalStartOp(id: number): Promise<void> {
         this.isLoading = true;
+        this.isSaving = false;
 
         try {
             await this.startlijstService.getStart(id).then((start) => {
@@ -167,20 +174,24 @@ export class TijdInvoerComponent {
 
     // De starttijd is ingevoerd/aangepast. Opslaan van de starttijd
     opslaanStartTijd(start: HeliosStart) {
+        this.isSaving = true;
         this.startlijstService.startTijd(start.ID as number, start.STARTTIJD as string).then((s) => {
             const b = (s.STARTTIJD) ? `Starttijd ${s.STARTTIJD} opgeslagen` : 'Starttijd verwijderd'
             this.success = {
                 titel: "Startlijst",
                 beschrijving: b
             }
+            this.isSaving = false;
             this.closePopup();
         }).catch(e => {
+            this.isSaving = false;
             this.error = e;
         });
     }
 
     // De landingstijd is ingevoerd/aangepast. Opslaan van de landingstijd
     opslaanLandingsTijd(start: HeliosStart) {
+        this.isSaving = true;
         this.startlijstService.landingsTijd(start.ID as number, start.LANDINGSTIJD as string).then((s) =>
         {
             const b = (s.LANDINGSTIJD) ? `Landingstijd ${s.LANDINGSTIJD} opgeslagen` : 'Landingstijd verwijderd'
@@ -188,8 +199,10 @@ export class TijdInvoerComponent {
                 titel: "Startlijst",
                 beschrijving: b
             }
+            this.isSaving = false;
             this.closePopup();
         }).catch(e => {
+            this.isSaving = false;
             this.error = e;
         });
     }

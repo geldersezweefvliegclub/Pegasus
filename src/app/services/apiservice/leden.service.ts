@@ -3,8 +3,9 @@ import {APIService} from './api.service';
 
 import {HeliosLeden, HeliosLedenDataset, HeliosLid} from '../../types/Helios';
 import {KeyValueArray} from '../../types/Utils';
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Subscription} from "rxjs";
 import {SharedService} from "../shared/shared.service";
+import {LoginService} from "./login.service";
 
 @Injectable({
     providedIn: 'root'
@@ -14,14 +15,20 @@ export class LedenService {
 
     private overslaan: boolean = false;
     private ophaalTimer: number;                                // Iedere 15 min halen we de leden op
+    private fallbackTimer: number;                              // Timer om te zorgen dat data geladen echt is
     private ledenStore = new BehaviorSubject(this.ledenCache.dataset);
+    private dbEventAbonnement: Subscription;
     public readonly ledenChange = this.ledenStore.asObservable();      // nieuwe leden beschikbaar
 
     constructor(private readonly apiService: APIService,
+                private readonly loginService: LoginService,
                 private readonly sharedService: SharedService) {
 
-        this.ophalenLeden().then((dataset) => {
-            this.ledenStore.next(this.ledenCache.dataset)    // afvuren event
+        // nadat we ingelogd zijn kunnen we de vliegtuigen ophalen
+        loginService.inloggenSucces.subscribe(() => {
+            this.ophalenLeden().then((dataset) => {
+                this.ledenStore.next(this.ledenCache.dataset)    // afvuren event
+            });
         });
 
         this.ophaalTimer = window.setInterval(() => {
@@ -30,8 +37,25 @@ export class LedenService {
             });
         }, 1000 * 60 * 15);
 
+        // Deze timer kijkt periodiek of de data er is. API call bij inloggen kan mislukt zijn dus dit is de fallback
+        this.fallbackTimer = window.setInterval(() => {
+            if (this.loginService.isIngelogd()) {
+                let ophalen = false;
+                if (this.ledenCache === undefined) {
+                    ophalen = true
+                } else if (this.ledenCache.dataset!.length < 1) {
+                    ophalen = true;
+                }
+                if (ophalen) {
+                    this.ophalenLeden().then((dataset) => {
+                        this.ledenStore.next(this.ledenCache.dataset)    // afvuren event
+                    });
+                }
+            }
+        }, 1000 * 60);  // iedere minuut
+
         // Als leden zijn aangepast, dan moeten we overzicht opnieuw ophalen
-        this.sharedService.heliosEventFired.subscribe(ev => {
+        this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Leden") {
                 this.ophalenLeden().then((dataset) => {
                     this.ledenStore.next(this.ledenCache.dataset)    // afvuren event
@@ -50,18 +74,14 @@ export class LedenService {
     }
 
     async getLeden(verwijderd: boolean = false, zoekString?: string): Promise<HeliosLedenDataset[]> {
-        let hash: string = '';
         let getParams: KeyValueArray = {};
 
-        if (this.ledenCache != null) { // we hebben eerder de lijst opgehaald
-            hash = this.ledenCache.hash as string;
-            getParams['HASH'] = hash;
+        if ((this.ledenCache != undefined)  && (this.ledenCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
+            getParams['HASH'] = this.ledenCache.hash;
         }
-
         if (zoekString) {
             getParams['SELECTIE'] = zoekString;
         }
-
         if (verwijderd) {
             getParams['VERWIJDERD'] = "true";
         }
@@ -71,7 +91,7 @@ export class LedenService {
 
             this.ledenCache = await response.json();
         } catch (e) {
-            if (e.responseCode !== 304) { // server bevat dezelfde data als cache
+            if (e.responseCode !== 704) { // server bevat dezelfde data als cache
                 throw(e);
             }
         }

@@ -41,6 +41,7 @@ export class APIService {
             method: 'POST',
             headers: headers,
             body: body,
+            credentials: 'include'
         });
         //todo response heeft een .ok property. Mogelijk beter te gebruiken? (Zoals get())
         if (response.status != 200) {  // 200 is normaal voor post
@@ -60,6 +61,7 @@ export class APIService {
             method: 'PUT',
             headers: headers,
             body: body,
+            credentials: 'include'
         });
         // todo .ok property gebruiken?
         if (response.status != 200) {  // 200 is normaal voor put
@@ -79,6 +81,7 @@ export class APIService {
 
         const response = await fetch(`${this.URL}${url}`, {
             method: 'DELETE',
+            credentials: 'include'
         });
         // todo .ok gebruiken?
         if (response.status != 204) { // 204 is normaal voor delete
@@ -95,6 +98,7 @@ export class APIService {
 
         const response = await fetch(`${this.URL}${url}`, {
             method: 'PATCH',
+            credentials: 'include'
         });
 
         // todo .ok gebruiken?

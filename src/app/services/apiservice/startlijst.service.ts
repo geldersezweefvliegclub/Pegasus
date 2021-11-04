@@ -12,6 +12,7 @@ import {
 import {StorageService} from '../storage/storage.service';
 import {KeyValueArray} from '../../types/Utils';
 import {DateTime} from 'luxon';
+import {LoginService} from "./login.service";
 
 interface parameters {
     [key: string]: string;
@@ -30,6 +31,7 @@ export class StartlijstService {
     private vliegtuigLogboekTotalen: HeliosVliegtuigLogboekTotalen;
 
     constructor(private readonly APIService: APIService,
+                private readonly loginService: LoginService,
                 private readonly storageService: StorageService) {
     }
 
@@ -37,6 +39,11 @@ export class StartlijstService {
         let getParams: parameters = {};
         getParams['BEGIN_DATUM'] = startDatum.toISODate();
         getParams['EIND_DATUM'] = eindDatum.toISODate();
+
+        // starttoren heeft geen vliegdagen nodig
+        if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
+            return [];
+        }
 
         try {
             const response: Response = await this.APIService.get('Startlijst/GetVliegDagen',
@@ -54,12 +61,15 @@ export class StartlijstService {
     }
 
     async getLogboek(id: number, startDatum: DateTime, eindDatum: DateTime, maxRecords?: number): Promise<HeliosLogboekDataset[]> {
-        let hash: string = '';
         let getParams: parameters = {};
 
-        if (this.logboekCache != null) {             // we hebben eerder de lijst opgehaald
-            hash = (this.logboekCache) ? this.logboekCache.hash as string : '';
-            getParams['HASH'] = hash;
+        // starttoren heeft geen logboek nodig
+        if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
+            return [];
+        }
+
+        if ((this.logboekCache != undefined)  && (this.logboekCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
+            getParams['HASH'] = this.logboekCache.hash;
         }
 
         getParams['LID_ID'] = id.toString();
@@ -72,10 +82,9 @@ export class StartlijstService {
 
         try {
             const response: Response = await this.APIService.get('Startlijst/GetLogboek', getParams);
-
             this.logboekCache = await response.json();
         } catch (e) {
-            if ((e.responseCode !== 304) && (e.responseCode !== 404)) { // er is geen data, of data is ongewijzigd
+            if ((e.responseCode !== 704) && (e.responseCode !== 404)) { // er is geen data, of data is ongewijzigd
                 throw(e);
             }
         }
@@ -86,6 +95,12 @@ export class StartlijstService {
         interface parameters {
             [key: string]: string;
         }
+
+        // starttoren heeft geen logboek totalen nodig
+        if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
+            return {};
+        }
+
 
         let getParams: parameters = {};
         getParams['LID_ID'] = id.toString();
@@ -142,17 +157,10 @@ export class StartlijstService {
     }
 
     async getStarts(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise< HeliosStartDataset[]> {
-        let hash: string = '';
-
-        if (((this.startsCache == null)) && (this.storageService.ophalen('starts') != null)) {
-            this.startsCache = this.storageService.ophalen('starts');
-        }
-
         let getParams: KeyValueArray = params;
 
-        if (this.startsCache != null) { // we hebben eerder de lijst opgehaald
-            hash = this.startsCache.hash as string;
-            getParams['HASH'] = hash;
+        if ((this.startsCache != undefined)  && (this.startsCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
+            getParams['HASH'] = this.startsCache.hash;
         }
 
         getParams['BEGIN_DATUM'] = startDatum.toISODate();
@@ -168,11 +176,9 @@ export class StartlijstService {
 
         try {
             const response: Response = await this.APIService.get('Startlijst/GetObjects', getParams );
-
             this.startsCache = await response.json();
-            this.storageService.opslaan('starts', this.startsCache);
         } catch (e) {
-            if (e.responseCode !== 304) { // server bevat dezelfde data als cache
+            if (e.responseCode !== 704) { // server bevat dezelfde data als cache
                 throw(e);
             }
         }
@@ -189,6 +195,11 @@ export class StartlijstService {
 
         let getParams: KeyValueArray = {};
         getParams['VLIEGER_ID'] = lidID.toString();
+
+        // starttoren heeft geen recency nodig
+        if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
+            return {};
+        }
 
         if (datum) {
             getParams['DATUM'] = datum.toISODate();

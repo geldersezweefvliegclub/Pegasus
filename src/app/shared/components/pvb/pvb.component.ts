@@ -1,4 +1,14 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    SimpleChanges,
+    ViewChild
+} from '@angular/core';
 import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
 import {HeliosBehaaldeProgressieDataset, HeliosCompetentiesDataset} from "../../../types/Helios";
@@ -14,13 +24,14 @@ import {ModalComponent} from "../modal/modal.component";
     templateUrl: './pvb.component.html',
     styleUrls: ['./pvb.component.scss']
 })
-export class PvbComponent implements OnInit, OnChanges {
+export class PvbComponent implements OnInit, OnChanges, OnDestroy {
     @Input() VliegerID: number;
     @ViewChild(ModalComponent) private bevestigPopup: ModalComponent;
 
     PVBs: any[];
     gehaaldeProgressie: HeliosBehaaldeProgressieDataset[];
-    competentiesAbonnement: Subscription;
+    private dbEventAbonnement: Subscription;
+    private competentiesAbonnement: Subscription;
     competenties: HeliosCompetentiesDataset[];
     suspend: boolean = false;
     isLoading: boolean = false;
@@ -35,10 +46,11 @@ export class PvbComponent implements OnInit, OnChanges {
                 private readonly configService: PegasusConfigService,
                 private readonly sharedService: SharedService,
                 private readonly competentieService: CompetentieService,
-                private readonly progressieService: ProgressieService) {
+                private readonly progressieService: ProgressieService) { }
 
+    ngOnInit(): void {
         // Als in de progressie tabel is aangepast, moet we onze dataset ook aanpassen
-        this.sharedService.heliosEventFired.subscribe(ev => {
+        this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Progressie") {
                 if (!this.suspend && (ev.actie == HeliosActie.Add || ev.actie == HeliosActie.Delete)) {
                     this.ophalen();
@@ -50,11 +62,13 @@ export class PvbComponent implements OnInit, OnChanges {
         this.competentiesAbonnement = this.competentieService.competentiesChange.subscribe(dataset => {
             this.competenties = dataset!;
         });
-    }
-
-    ngOnInit(): void {
         this.PVBs = this.configService.getPVB();
         this.ophalen();
+    }
+
+    ngOnDestroy(): void {
+        if (this.dbEventAbonnement)         this.dbEventAbonnement.unsubscribe();
+        if (this.competentiesAbonnement)    this.competentiesAbonnement.unsubscribe();
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -114,6 +128,8 @@ export class PvbComponent implements OnInit, OnChanges {
 
     // Progressie kan gezet worden via snelkeuze in deze component, lange weg kan via progressie boom
     zetProgressie(e:any, id:number) {
+        e.currentTarget.checked = false;    // vinkje niet zetten, pas als we een update gedaan hebben
+
         this.bevestigCompetentie = this.competenties.find((c) => c.ID == id);
         this.checkboxSelected = e;
 
@@ -128,6 +144,7 @@ export class PvbComponent implements OnInit, OnChanges {
                 INSTRUCTEUR_ID: ui?.ID,
                 COMPETENTIE_ID: this.bevestigCompetentie?.ID,
             }).then((p) => {
+                this.checkboxSelected.target.checked = true;        // nu mogen we afvinken
                 this.checkboxSelected.target.disabled = true;       // mogen check niet weghalen, dus disable de checkbox
                 const c = this.competenties.find((c) => c.ID == p.COMPETENTIE_ID);
 
@@ -146,6 +163,12 @@ export class PvbComponent implements OnInit, OnChanges {
         catch (e) {
             this.error = e;
         }
+    }
+
+    competentieBestaat(id: number) {
+        if (this.competenties.length == 0)
+            return false;
+        return (this.competenties.findIndex(c => c.ID == id) < 0) ? false : true;
     }
 }
 

@@ -7,17 +7,20 @@ import {KeyValueArray} from "../../types/Utils";
 import {APIService} from "./api.service";
 import {StorageService} from "../storage/storage.service";
 import {BehaviorSubject} from "rxjs";
+import {LoginService} from "./login.service";
 
 @Injectable({
     providedIn: 'root'
 })
 export class CompetentieService {
-    private competentiesCache: HeliosCompetenties = { dataset: []};  // return waarde van API call
+    private competentiesCache: HeliosCompetenties = {dataset: []};  // return waarde van API call
+    private fallbackTimer: number;                           // Timer om te zorgen dat data geladen echt is
 
     private competentiesStore = new BehaviorSubject(this.competentiesCache.dataset);
     public readonly competentiesChange = this.competentiesStore.asObservable();      // nieuwe aanwezigheid beschikbaar
 
     constructor(private readonly apiService: APIService,
+                private readonly loginService: LoginService,
                 private readonly storageService: StorageService) {
 
         // We hebben misschien eerder de comptenties opgehaald. Die gebruiken we totdat de API data heeft opgehaald
@@ -26,29 +29,51 @@ export class CompetentieService {
             this.competentiesStore.next(this.competentiesCache.dataset!)    // afvuren event met opgeslagen vliegtuigen dataset
         }
 
-        // We gaan nu de API aanroepen om data op te halen
-        this.getCompetenties().then((dataset) => {
-            this.competentiesStore.next(this.competentiesCache.dataset!)    // afvuren event
+        // Deze timer kijkt periodiek of de data er is. API call bij inloggen kan mislukt zijn dus dit is de fallback
+        this.fallbackTimer = window.setInterval(() => {
+            if (this.loginService.isIngelogd()) {
+                let ophalen = false;
+                if (this.competentiesCache === undefined) {
+                    ophalen = true
+                } else if (this.competentiesCache.dataset!.length < 1) {
+                    ophalen = true;
+                }
+                if (ophalen) {
+                    this.getCompetenties().then((dataset) => {
+                        this.competentiesStore.next(this.competentiesCache.dataset!)    // afvuren event
+                    });
+                }
+            }
+        }, 1000 * 60);  // iedere minuut
+
+        // nadat we ingelogd zijn kunnen we de comptenties ophalen
+        loginService.inloggenSucces.subscribe(() => {
+            this.getCompetenties().then((dataset) => {
+                this.competentiesStore.next(this.competentiesCache.dataset!)    // afvuren event
+            });
         });
     }
 
     async getCompetenties(): Promise<HeliosCompetentiesDataset[]> {
         let competenties: HeliosCompetenties | null = null;
-        let hash: string = '';
         let getParams: KeyValueArray = {};
 
-        if (this.competentiesCache != null) { // we hebben eerder de lijst opgehaald
-            hash = hash as string;
-            getParams['HASH'] = hash;
+        // starttoren heeft geen competenties nodig
+        if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
+            return [];
+        }
+
+        if ((this.competentiesCache != undefined) && (this.competentiesCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
+            getParams['HASH'] = this.competentiesCache.hash;
         }
 
         try {
             const response = await this.apiService.get('Competenties/GetObjects', getParams);
 
             this.competentiesCache = await response.json();
-            this.storageService.opslaan('competenties', competenties);
+            this.storageService.opslaan('competenties', this.competentiesCache);
         } catch (e) {
-            if (e.responseCode !== 304) { // server bevat dezelfde data als cache
+            if (e.responseCode !== 704) { // server bevat dezelfde data als cache
                 throw(e);
             }
         }

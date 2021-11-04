@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {CdkDrag, CdkDragDrop} from '@angular/cdk/drag-drop';
 import {LedenService} from '../../services/apiservice/leden.service';
 import {
@@ -42,7 +42,7 @@ type HeliosRoosterDagExtended = HeliosRoosterDag & {
     templateUrl: './rooster-page.component.html',
     styleUrls: ['./rooster-page.component.scss']
 })
-export class RoosterPageComponent implements OnInit {
+export class RoosterPageComponent implements OnInit, OnDestroy {
     @ViewChild(LedenFilterComponent) ledenFilter: LedenFilterComponent;
     @ViewChild(JaarTotalenComponent) private jaarTotalen: JaarTotalenComponent;
 
@@ -61,40 +61,43 @@ export class RoosterPageComponent implements OnInit {
     readonly MIDDAG_LIERIST_TYPE_ID = 1807;
     readonly MIDDAG_HULPLIERIST_TYPE_ID = 1808;
     readonly MIDDAG_STARTLEIDER_TYPE_ID = 1809;
+    readonly SLEEPVLIEGER_TYPE_ID = 1810;
 
     private readonly MaxDienstenPerMaand = 2;
 
     toonStartleiders = true;
     toonInstructeurs = true;
     toonLieristen = true;
+    toonSleepvliegers = true;
     toonDDWV = false;
     toonTotalen = false
 
-    typesAbonnement: Subscription;
+    private typesAbonnement: Subscription;
     dienstTypes: HeliosType[] = [];
     isStartleider: boolean = false;
     isInstructeur: boolean = false;
     isLierist: boolean = false;
+    isSleepvlieger: boolean = false;
     isDDWVCrew: boolean = false;
     isDDWVer: boolean = false;
     isCIMT: boolean = false;
 
     toonClubDDWV: number = 1;            // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
 
-    ledenAbonnement: Subscription;
+    private ledenAbonnement: Subscription;
     alleLeden: HeliosLedenDatasetExtended[];
     filteredLeden: HeliosLedenDatasetExtended[];
 
-    dienstenAbonnement: Subscription;
+    private dienstenAbonnement: Subscription;
     diensten: HeliosDienstenDataset[];
 
-    roosterAbonnement: Subscription;
+    private roosterAbonnement: Subscription;
     rooster: HeliosRoosterDataset[];
 
     heleRooster: HeliosRoosterDagExtended[];        // combinatie rooster & diensten
     filteredRooster: HeliosRoosterDagExtended[];    // combinatie rooster & diensten, welke getoond worden
 
-    datumAbonnement: Subscription;         // volg de keuze van de kalender
+    private datumAbonnement: Subscription; // volg de keuze van de kalender
     datum: DateTime;                       // de gekozen dag
 
     magExporteren: boolean = true;
@@ -122,6 +125,7 @@ export class RoosterPageComponent implements OnInit {
         this.isLierist = ui?.LidData?.LIERIST as boolean
         this.isStartleider = ui?.LidData?.STARTLEIDER as boolean;
         this.isInstructeur = ui?.LidData?.INSTRUCTEUR as boolean;
+        this.isSleepvlieger = ui?.LidData?.SLEEPVLIEGER as boolean;
         this.isDDWVCrew = ui?.LidData?.DDWV_CREW as boolean;
         this.isCIMT = ui?.Userinfo?.isCIMT as boolean;
 
@@ -182,6 +186,14 @@ export class RoosterPageComponent implements OnInit {
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
             this.dienstTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 18});    // type diensten
         });
+    }
+
+    ngOnDestroy(): void {
+        if (this.typesAbonnement)       this.typesAbonnement.unsubscribe();
+        if (this.ledenAbonnement)       this.ledenAbonnement.unsubscribe();
+        if (this.dienstenAbonnement)    this.dienstenAbonnement.unsubscribe();
+        if (this.roosterAbonnement)     this.roosterAbonnement.unsubscribe();
+        if (this.datumAbonnement)       this.datumAbonnement.unsubscribe();
     }
 
     private opvragenTotalen() {
@@ -279,6 +291,18 @@ export class RoosterPageComponent implements OnInit {
         return this.controleerGeschiktheid(item, datum, 'STARTLEIDER');
     }
 
+    /**
+     * Wordt in de template gebruikt om te controleren of iemand in een vakje gesleept mag worden. Gaat over instructeurs.
+     * @param datum
+     * @param dienst
+     * @param {CdkDrag<HeliosLid | HeliosRoosterDataset>} item
+     * @return {boolean}
+     */
+    sleepvliegerEvaluatie(datum: string, dienst: number, item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
+        if (!this.dienstBeschikbaar(datum, dienst)) return false;
+        return this.controleerGeschiktheid(item, datum, 'SLEEPVLIEGER');
+    }
+
     // voorkom dat ingevulde dienst overschreven wordt
     dienstBeschikbaar(datum: string, dienst: number): boolean {
         const roosterIndex = this.heleRooster.findIndex((dag => dag.DATUM == datum));
@@ -294,7 +318,7 @@ export class RoosterPageComponent implements OnInit {
      * Deze functie evalueert of de content een bepaalde rol is. Als dat zo is, returned hij true, anders false.
      * Als de meegegeven rol bijv. LIERIST is, kan een instructeur bijv. geen lieristdienst draaien.
      */
-    controleerGeschiktheid(item: CdkDrag<HeliosLid | HeliosRoosterDataset>, datum: string, rol: 'LIERIST' | 'INSTRUCTEUR' | 'STARTLEIDER'): boolean {
+    controleerGeschiktheid(item: CdkDrag<HeliosLid | HeliosRoosterDataset>, datum: string, rol: 'LIERIST' | 'INSTRUCTEUR' | 'STARTLEIDER' | 'SLEEPVLIEGER'): boolean {
         // Content komt uit de ledenlijst of niet
 
         const roosterIndex = this.heleRooster.findIndex((dag => dag.DATUM == datum));
@@ -313,6 +337,8 @@ export class RoosterPageComponent implements OnInit {
                     return (ddwv) ? data.DDWV_CREW! : data.LIERIST!;
                 case 'INSTRUCTEUR':
                     return data.INSTRUCTEUR!;
+                case 'SLEEPVLIEGER':
+                    return data.SLEEPVLIEGER!;
                 case 'STARTLEIDER':
                     return (ddwv) ? data.DDWV_CREW! : data.STARTLEIDER!;
             }
@@ -332,6 +358,8 @@ export class RoosterPageComponent implements OnInit {
                     return (ddwv) ? data.DDWV_CREW! : lid.LIERIST!;
                 case 'INSTRUCTEUR':
                     return lid.INSTRUCTEUR!;
+                case 'SLEEPVLIEGER':
+                    return data.SLEEPVLIEGER!;
                 case 'STARTLEIDER':
                     return (ddwv) ? data.DDWV_CREW! : lid.STARTLEIDER!;
             }
@@ -433,8 +461,8 @@ export class RoosterPageComponent implements OnInit {
                 this.heleRooster[roosterIndex].Diensten[typeDienstID].NAAM = naam;
             });
 
-            // totalen aanpassen, maar alleen als we een clubdag hebben
-            if (this.heleRooster[roosterIndex].CLUB_BEDRIJF) {
+            // totalen aanpassen, maar alleen als we een clubdag hebben en sleepdiensten tellen niet mee
+            if ((this.heleRooster[roosterIndex].CLUB_BEDRIJF) && (typeDienstID != this.SLEEPVLIEGER_TYPE_ID)) {
                 const ledenIndex = this.alleLeden.findIndex((lid => lid.ID == lid_id));
                 if (ledenIndex < 0) {
                     console.error("Lid " + lid_id + " onbekend");  // dat mag nooit voorkomen
@@ -486,8 +514,8 @@ export class RoosterPageComponent implements OnInit {
 
         this.dienstenService.deleteDienst(roosterdag.Diensten[typeDienstID].ID!).then(() => delete this.heleRooster[roosterIndex].Diensten[typeDienstID]);
 
-        // totalen aanpassen als het een clubdag is
-        if (roosterdag.CLUB_BEDRIJF) {
+        // totalen aanpassen als het een clubdag is, sleepdiensten tellen niet mee
+        if ((roosterdag.CLUB_BEDRIJF) && (typeDienstID != this.SLEEPVLIEGER_TYPE_ID)) {
             const ledenIndex = this.alleLeden.findIndex((lid => lid.ID == roosterdag.Diensten[typeDienstID].LID_ID));
             if (ledenIndex < 0) {
                 console.error("Lid " + roosterdag.Diensten[typeDienstID].LID_ID + " onbekend");  // dat mag nooit voorkomen
@@ -522,12 +550,14 @@ export class RoosterPageComponent implements OnInit {
         this.toonStartleiders = false;
         this.toonInstructeurs = false;
         this.toonLieristen = false;
+        this.toonSleepvliegers = false;
         this.toonDDWV = false;
 
         // als er geen filters zijn, dan tonen we alles
         if (!this.sharedService.ledenlijstFilter.startleiders &&
             !this.sharedService.ledenlijstFilter.lieristen &&
             !this.sharedService.ledenlijstFilter.instructeurs &&
+            !this.sharedService.ledenlijstFilter.sleepvliegers &&
             !this.sharedService.ledenlijstFilter.crew) {
             toonAlles = true;
         }
@@ -536,6 +566,7 @@ export class RoosterPageComponent implements OnInit {
             this.toonStartleiders = true;
             this.toonInstructeurs = true;
             this.toonLieristen = true;
+            this.toonSleepvliegers = true;
         } else {      // aha, er zijn wel filters gezet
             if (this.sharedService.ledenlijstFilter.startleiders) {
                 this.toonStartleiders = true;
@@ -545,6 +576,9 @@ export class RoosterPageComponent implements OnInit {
             }
             if (this.sharedService.ledenlijstFilter.lieristen) {
                 this.toonLieristen = true;
+            }
+            if (this.sharedService.ledenlijstFilter.sleepvliegers) {
+                this.toonSleepvliegers = true;
             }
             if (this.sharedService.ledenlijstFilter.crew) {
                 this.toonDDWV = true;
@@ -577,6 +611,8 @@ export class RoosterPageComponent implements OnInit {
             } else if (this.sharedService.ledenlijstFilter.instructeurs && this.alleLeden[i].INSTRUCTEUR == true) {
                 tonen = true;
             } else if (this.sharedService.ledenlijstFilter.crew && this.alleLeden[i].DDWV_CREW == true) {
+                tonen = true;
+            } else if (this.sharedService.ledenlijstFilter.sleepvliegers && this.alleLeden[i].SLEEPVLIEGER == true) {
                 tonen = true;
             }
 
@@ -637,6 +673,9 @@ export class RoosterPageComponent implements OnInit {
         }
         if (this.toonLieristen) {
             columns += 2;
+        }
+        if (this.toonSleepvliegers) {
+            columns += 1;
         }
         const breedte = 100 / columns;
         return 'width:' + breedte + '%';
@@ -800,13 +839,18 @@ export class RoosterPageComponent implements OnInit {
     }
 
 
-    mijnDienstClass(dienst: HeliosDienstenDataset): string {
+    lidInRoosterClass(dienst: HeliosDienstenDataset): string {
+        let classes = ""
+        if (this.magWijzigen && this.toonSleepvliegers && this.toonStartleiders && this.toonLieristen && this.toonInstructeurs) {
+            classes += "lidInRooster ";
+        }
+
         if (dienst) {
             const ui = this.loginService.userInfo?.LidData;
             if (dienst.LID_ID == ui?.ID) {
-                return "mijnDienst"
+                classes += "mijnDienst"
             }
         }
-        return ""
+        return classes;
     }
 }

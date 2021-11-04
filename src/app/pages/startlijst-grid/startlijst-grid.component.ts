@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {StartlijstService} from '../../services/apiservice/startlijst.service';
 import {CheckboxRenderComponent} from '../../shared/components/datatable/checkbox-render/checkbox-render.component';
 import {faRecycle, faDownload} from '@fortawesome/free-solid-svg-icons';
@@ -35,7 +35,7 @@ type HeliosStartDatasetExtended = HeliosStartDataset & {
     templateUrl: './startlijst-grid.component.html',
     styleUrls: ['./startlijst-grid.component.scss']
 })
-export class StartlijstGridComponent implements OnInit {
+export class StartlijstGridComponent implements OnInit, OnDestroy {
     @ViewChild(StartEditorComponent) editor: StartEditorComponent;
     @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
     @ViewChild(ExportStartlijstComponent) exportStartlijstKeuze: ExportStartlijstComponent;
@@ -158,8 +158,9 @@ export class StartlijstGridComponent implements OnInit {
     filterIcon: IconDefinition = faFilter;
     prullenbakIcon: IconDefinition = faRecycle;
 
-    dienstenAbonnement: Subscription;
-    roosterAbonnement: Subscription;
+    private dbEventAbonnement: Subscription;
+    private dienstenAbonnement: Subscription;
+    private roosterAbonnement: Subscription;
     rooster: HeliosRoosterDataset[];
     diensten: HeliosDienstenDataset[];
 
@@ -170,7 +171,7 @@ export class StartlijstGridComponent implements OnInit {
 
     filterOn: boolean = false;
 
-    datumAbonnement: Subscription;         // volg de keuze van de kalender
+    private datumAbonnement: Subscription;         // volg de keuze van de kalender
     datum: DateTime;                       // de gekozen dag in de kalender
 
     magToevoegen: boolean = false;
@@ -236,7 +237,7 @@ export class StartlijstGridComponent implements OnInit {
         });
 
         // Als startlijst is aangepast, moeten we grid opnieuw laden
-        this.sharedService.heliosEventFired.subscribe(ev => {
+        this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Startlijst") {
                 this.opvragen();
             }
@@ -249,6 +250,12 @@ export class StartlijstGridComponent implements OnInit {
         this.magExporteren = (!ui?.isDDWV && !ui?.isStarttoren);
     }
 
+    ngOnDestroy(): void {
+        if (this.dbEventAbonnement)     this.dbEventAbonnement.unsubscribe();
+        if (this.roosterAbonnement)     this.roosterAbonnement.unsubscribe();
+        if (this.dienstenAbonnement)    this.dienstenAbonnement.unsubscribe();
+        if (this.datumAbonnement)       this.datumAbonnement.unsubscribe();
+    }
 
     // mag de ingelogde gebruiker starts voor iedereen nvullen of alleen voor zichzelf
     async beperkteInvoer() {

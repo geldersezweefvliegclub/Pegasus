@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {HeliosLedenDataset, HeliosTrack, HeliosTracksDataset} from "../../../types/Helios";
 import {TracksService} from "../../../services/apiservice/tracks.service";
 import {SharedService} from "../../../services/shared/shared.service";
@@ -28,7 +28,7 @@ export interface TracksLedenDataset extends HeliosTracksDataset {
     templateUrl: './tracks.component.html',
     styleUrls: ['./tracks.component.scss']
 })
-export class TracksComponent implements OnInit {
+export class TracksComponent implements OnInit, OnDestroy {
     @Input() VliegerID: number;
     @Input() VliegerNaam: string;
     @Input() toonLid: boolean = false;
@@ -44,11 +44,12 @@ export class TracksComponent implements OnInit {
     deleteIcon: IconDefinition = faMinusCircle;
     restoreIcon: IconDefinition = faUndo;
 
-    ledenAbonnement: Subscription;
+    private dbEventAbonnement: Subscription;
+    private ledenAbonnement: Subscription;
     leden: HeliosLedenDataset[] = [];
     data: TracksLedenDataset[] = [];
 
-    datumAbonnement: Subscription;         // volg de keuze van de kalender
+    private datumAbonnement: Subscription; // volg de keuze van de kalender
     datum: DateTime;                       // de gekozen dag
 
     zoekString: string;
@@ -71,7 +72,6 @@ export class TracksComponent implements OnInit {
                 private readonly ledenService: LedenService,
                 private readonly loginService: LoginService,
                 private readonly sharedService: SharedService) {
-
     }
 
     ngOnInit(): void {
@@ -99,7 +99,7 @@ export class TracksComponent implements OnInit {
 
             /* TODO WAAROM IS DIT NODIG ??
             // Als tracks zijn aangepast, moeten we grid opnieuw laden
-            this.sharedService.heliosEventFired.subscribe(ev => {
+            this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
                 if (ev.tabel == "Startlijst") {
                     this.opvragen();
                 }
@@ -108,7 +108,7 @@ export class TracksComponent implements OnInit {
              */
 
             // Als in de tracks tabel is aangepast, moet we onze dataset ook aanpassen
-            this.sharedService.heliosEventFired.subscribe(ev => {
+            this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
                 if (ev.tabel == "Tracks") {
                     if (!this.VliegerID) {
                         this.opvragen();
@@ -120,6 +120,12 @@ export class TracksComponent implements OnInit {
 
             this.opvragen();
         }
+    }
+
+    ngOnDestroy(): void {
+        if (this.dbEventAbonnement)   this.dbEventAbonnement.unsubscribe();
+        if (this.datumAbonnement)     this.datumAbonnement.unsubscribe();
+        if (this.datumAbonnement)     this.datumAbonnement.unsubscribe();
     }
 
     // open de track editor om nieuwe track toe te voegen. Editor opent als popup

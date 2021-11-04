@@ -14,7 +14,7 @@ import {
   faKey,
   faPlane,
   faUser,
-  faUsers
+  faUsers, faWaveSquare
 } from '@fortawesome/free-solid-svg-icons';
 import {faClipboardList} from '@fortawesome/free-solid-svg-icons/faClipboardList';
 import {StartlijstGridComponent} from './pages/startlijst-grid/startlijst-grid.component';
@@ -24,6 +24,7 @@ import {LedenGridComponent} from './pages/leden-grid/leden-grid.component';
 import {VliegtuigLogboekComponent} from './pages/vliegtuig-logboek/vliegtuig-logboek.component';
 import {RoosterPageComponent} from './pages/rooster-page/rooster-page.component';
 import {TracksGridComponent} from "./pages/tracks-grid/tracks-grid.component";
+import {AuditPageComponent} from "./pages/audit-page/audit-page.component";
 
 export interface CustomRoute extends Route {
   excluded: boolean;
@@ -44,8 +45,17 @@ export const routes: CustomRoute[] = [
   {path: 'login', component: LoginPageComponent, excluded: true, icon: faKey, text: 'Help'},
   {path: 'profiel', component: ProfielPageComponent, excluded: false, icon: faUser, text: 'Profiel'},
   {path: 'rooster', component: RoosterPageComponent, excluded: false, icon: faCalendarDay, text: 'Rooster'},
+
+  {path: 'audit', component: AuditPageComponent, excluded: true, icon: faWaveSquare, text: 'Audit'},
+
   {path: '**', component: NotFoundComponent, excluded: true, icon: faUser, text: 'EXCLUDED'},
 ];
+
+
+export const beheerRoutes: CustomRoute[] = [
+  {path: 'audit', component: AuditPageComponent, excluded: false, icon: faWaveSquare, text: 'Audit'},
+];
+
 
 
 @NgModule({

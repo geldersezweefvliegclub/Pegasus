@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
 import {
@@ -18,14 +18,15 @@ import {ModalComponent} from "../modal/modal.component";
     styleUrls: ['./status.component.scss']
 })
 
-export class StatusComponent implements OnInit, OnChanges {
+export class StatusComponent implements OnInit, OnChanges, OnDestroy {
     @Input() VliegerID: number;
     @ViewChild(ModalComponent) private bevestigPopup: ModalComponent;
 
     cheks: any;
     overig: any;
     gehaaldeProgressie: HeliosBehaaldeProgressieDataset[];
-    competentiesAbonnement: Subscription;
+    private dbEventAbonnement: Subscription;
+    private competentiesAbonnement: Subscription;
     competenties: HeliosCompetentiesDataset[];
     suspend: boolean = false;
     isLoading: boolean = false;
@@ -40,10 +41,11 @@ export class StatusComponent implements OnInit, OnChanges {
                 private readonly configService: PegasusConfigService,
                 private readonly sharedService: SharedService,
                 private readonly competentieService: CompetentieService,
-                private readonly progressieService: ProgressieService) {
+                private readonly progressieService: ProgressieService) {  }
 
+    ngOnInit(): void {
         // Als in de progressie tabel is aangepast, moet we onze dataset ook aanpassen
-        this.sharedService.heliosEventFired.subscribe(ev => {
+        this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Progressie") {
                 if (!this.suspend && (ev.actie == HeliosActie.Add || ev.actie == HeliosActie.Delete)) {
                     this.ophalen();
@@ -55,12 +57,14 @@ export class StatusComponent implements OnInit, OnChanges {
         this.competentiesAbonnement = this.competentieService.competentiesChange.subscribe(dataset => {
             this.competenties = dataset!;
         });
-    }
-
-    ngOnInit(): void {
         this.cheks = this.configService.getChecks();
         this.overig = this.configService.getOverig();
         this.ophalen();
+    }
+
+    ngOnDestroy(): void {
+        if (this.dbEventAbonnement)         this.dbEventAbonnement.unsubscribe();
+        if (this.competentiesAbonnement)    this.competentiesAbonnement.unsubscribe();
     }
 
     ophalen(): void {
@@ -129,9 +133,10 @@ export class StatusComponent implements OnInit, OnChanges {
 
     // Progressie kan gezet worden via snelkeuze in deze component, lange weg kan via progressie boom
     zetProgressie(e:any, id:number) {
+        e.currentTarget.checked = false;    // vinkje niet zetten, pas als we een update gedaan hebben
+
         this.bevestigCompetentie = this.competenties.find((c) => c.ID == id);
         this.checkboxSelected = e;
-
         this.bevestigPopup.open();
     }
 
@@ -144,6 +149,7 @@ export class StatusComponent implements OnInit, OnChanges {
                     INSTRUCTEUR_ID: ui?.ID,
                     COMPETENTIE_ID: this.bevestigCompetentie?.ID,
                 }).then((p) => {
+                this.checkboxSelected.target.checked = true;        // nu mogen we afvinken
                 this.checkboxSelected.target.disabled = true;       // mogen check niet weghalen, dus disable de checkbox
                     this.success =
                     {
@@ -159,6 +165,11 @@ export class StatusComponent implements OnInit, OnChanges {
         catch (e) {
             this.error = e;
         }
+    }
 
+    competentieBestaat(id: number) {
+        if (this.competenties.length == 0)
+            return false;
+        return (this.competenties.findIndex(c => c.ID == id) < 0) ? false : true;
     }
 }

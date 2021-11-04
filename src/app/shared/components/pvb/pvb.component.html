@@ -12,7 +12,7 @@
             {{p.Type}}
         </td>
         <td class="kolom2">
-            <input type="checkbox"
+            <input type="checkbox" *ngIf="competentieBestaat(p.Lokaal)"
                    id="L{{p.Type}}"
                    class="form-check-inline"
                    (change)="zetProgressie($event, p.Lokaal)"
@@ -21,7 +21,7 @@
             <!-- als checked, dan disable. Verwijderen via progressie boom -->
         </td>
         <td class="kolom3">
-            <input type="checkbox"
+            <input type="checkbox" *ngIf="competentieBestaat(p.Overland)"
                    id="O{{p.Type}}"
                    class="form-check-inline"
                    (change)="zetProgressie($event, p.Overland)"

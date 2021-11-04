@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
 import {LoginService} from '../../services/apiservice/login.service';
 import {DaginfoService} from '../../services/apiservice/daginfo.service';
@@ -39,7 +39,7 @@ import {DienstenService} from "../../services/apiservice/diensten.service";
     templateUrl: './daginfo.component.html',
     styleUrls: ['./daginfo.component.scss']
 })
-export class DaginfoComponent implements OnInit {
+export class DaginfoComponent implements OnInit, OnDestroy{
     @ViewChild(ComposeMeteoComponent) meteoWizard: ComposeMeteoComponent;
     @ViewChild(ComposeBedrijfComponent) bedrijfWizard: ComposeBedrijfComponent;
     @ViewChild(DagRoosterComponent) dienstenWizard: DagRoosterComponent;
@@ -55,18 +55,18 @@ export class DaginfoComponent implements OnInit {
     iconIncident: IconDefinition = faFrown;
     iconDefault: IconDefinition = faFileImport;
 
-    datumAbonnement: Subscription;         // volg de keuze van de kalender
+    private datumAbonnement: Subscription;         // volg de keuze van de kalender
     datum: DateTime;                       // de gekozen dag
 
-    dagInfoAbonnement: Subscription;
+    private dagInfoAbonnement: Subscription;
     dagInfo: HeliosDagInfo;
 
-    dienstenAbonnement: Subscription;
-    roosterAbonnement: Subscription;
+    private dienstenAbonnement: Subscription;
+    private roosterAbonnement: Subscription;
     rooster: HeliosRoosterDataset[];
     diensten: HeliosDienstenDataset[];
 
-    typesAbonnement: Subscription;
+    private typesAbonnement: Subscription;
     veldTypes$: Observable<HeliosType[]>;
     startMethodeTypes$: Observable<HeliosType[]>;
 
@@ -135,6 +135,14 @@ export class DaginfoComponent implements OnInit {
         if (dagInfoTekstRegels) {
             this.tekstRegels = +dagInfoTekstRegels;    // conversie van string naar number
         }
+    }
+
+    ngOnDestroy(): void {
+        if (this.typesAbonnement)       this.typesAbonnement.unsubscribe();
+        if (this.dagInfoAbonnement)     this.dagInfoAbonnement.unsubscribe();
+        if (this.datumAbonnement)       this.datumAbonnement.unsubscribe();
+        if (this.dienstenAbonnement)    this.dienstenAbonnement.unsubscribe();
+        if (this.roosterAbonnement)     this.roosterAbonnement.unsubscribe();
     }
 
     // mag de gebruiker de dag info zien?

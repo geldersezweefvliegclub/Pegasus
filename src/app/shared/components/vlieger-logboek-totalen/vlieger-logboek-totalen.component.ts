@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {Subscription} from "rxjs";
 import {DateTime} from "luxon";
 import {HeliosLogboekTotalen} from "../../../types/Helios";
@@ -11,10 +11,11 @@ import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
     templateUrl: './vlieger-logboek-totalen.component.html',
     styleUrls: ['./vlieger-logboek-totalen.component.scss']
 })
-export class VliegerLogboekTotalenComponent implements OnInit, OnChanges {
+export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDestroy {
     @Input() VliegerID: number;
 
-    datumAbonnement: Subscription;         // volg de keuze van de kalender
+    private dbEventAbonnement: Subscription;
+    private datumAbonnement: Subscription;         // volg de keuze van de kalender
     datum: DateTime;                       // de gekozen dag
     data: HeliosLogboekTotalen;
     isLoading: boolean = false;
@@ -29,29 +30,38 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges {
     ngOnInit(): void {
         // de datum zoals die in de kalender gekozen is
         this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
+            // ophalen is alleen nodig als er een ander jaar gekozen is in de kalendar
+            const ophalen = ((this.datum == undefined) || (this.datum.year != jaarMaand.year))
             this.datum = DateTime.fromObject({
                 year: jaarMaand.year,
                 month: jaarMaand.month,
                 day: 1
             })
 
-            this.data = {
-                "totaal": 0,
-                "laatste_aanpassing": "0000-00-00 00:00:00",
-                "hash": "0",
-                "starts": [],
-                "vliegtuigen": [],
-                "jaar": {"STARTS": 0, "INSTRUCTIE_STARTS": 0, "VLIEGTIJD": "0:00"}
+            if (ophalen) {
+                this.data = {
+                    "totaal": 0,
+                    "laatste_aanpassing": "0000-00-00 00:00:00",
+                    "hash": "0",
+                    "starts": [],
+                    "vliegtuigen": [],
+                    "jaar": {"STARTS": 0, "INSTRUCTIE_STARTS": 0, "VLIEGTIJD": "0:00"}
+                }
+                this.opvragen();
             }
-            this.opvragen();
         })
 
         // Als in de startlijst tabel is aangepast, moet we onze dataset ook aanpassen
-        this.sharedService.heliosEventFired.subscribe(ev => {
+        this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Startlijst") {
                     this.opvragen();
                 }
         });
+    }
+
+    ngOnDestroy(): void {
+        if (this.dbEventAbonnement) this.dbEventAbonnement.unsubscribe();
+        if (this.datumAbonnement)   this.datumAbonnement.unsubscribe();
     }
 
     ngOnChanges(changes: SimpleChanges) {

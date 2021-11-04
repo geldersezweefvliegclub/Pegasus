@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {
     HeliosAanwezigLedenDataset,
     HeliosLedenDataset,
@@ -20,6 +20,8 @@ import {AanwezigLedenService} from '../../../../services/apiservice/aanwezig-led
 import {SharedService} from '../../../../services/shared/shared.service';
 import {DaginfoService} from '../../../../services/apiservice/daginfo.service';
 import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
+import {NgSelectComponent} from "@ng-select/ng-select";
+import {VliegtuigInvoerComponent} from "./vliegtuig-invoer/vliegtuig-invoer.component";
 
 @Component({
     selector: 'app-start-editor',
@@ -29,6 +31,7 @@ import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
 export class StartEditorComponent implements OnInit {
     @Input() VliegerID: number;                                 // wordt gezet bij aanroep vanuit logboek
     @ViewChild(ModalComponent) private popup: ModalComponent;
+    @ViewChild(VliegtuigInvoerComponent) vliegtuigInvoerComponent: VliegtuigInvoerComponent;
 
     start: HeliosStart = {};
     toonVliegerNaam: boolean = false;
@@ -196,6 +199,11 @@ export class StartEditorComponent implements OnInit {
         this.isSaving = false;
 
         this.popup.open();
+
+        // open de lijst met vliegtuigen, bij aan,maken nieuwe start
+        if (!start) {
+            this.vliegtuigInvoerComponent.ngSelect.open();
+        }
     }
 
     closePopup() {

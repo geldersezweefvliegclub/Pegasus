@@ -32,7 +32,7 @@
             </div>
 
             <div class="row my-2" *ngIf="start.VLIEGTUIG_ID && toonStartMethode">
-                <div class="col-12 col-md-6 flex-row">
+                <div class="col-6 flex-row">
                     <div class="col-12" *ngFor="let radiobutton of startMethodeTypesFiltered">
                         <label>
                             <div class="SMinvalid"></div>
@@ -42,6 +42,13 @@
                             <span class="ms-3" [ngClass]="StartMethodeIngevuld()">{{radiobutton.OMSCHRIJVING}}</span>
                         </label>
                     </div>
+                </div>
+                <div class="col-6" *ngIf="gekozenVliegtuig?.ZITPLAATSEN == 2">
+                    <input name="PAX" type="checkbox" class="form-check-input" id="PAX"
+                           [(ngModel)]="start.PAX">
+                    <label class="form-check-label ms-2" for="PAX">
+                        Passagiers start
+                    </label>
                 </div>
             </div>
 
@@ -83,7 +90,7 @@
                             ></app-lid-invoer>
                         </div>
                     </div>
-                    <div class="row my-2" *ngIf="!toonVliegerNaam && gekozenVliegtuig?.ZITPLAATSEN == 2">
+                    <div class="row my-2" *ngIf="!toonVliegerNaam && !start.PAX && gekozenVliegtuig?.ZITPLAATSEN == 2">
                         <div class="col-12 col-md-12">
                             <app-lid-invoer id="INZITTENDE"
                                             placeholder="Selecteer inzittende"
@@ -101,13 +108,13 @@
                 <div class="col-2 col-md-2 row align-items-end">
                     <app-icon-button id="switchVoorAchter" class="toolbarBtn display-1" iconNaam="fas ArrowsAltV"
                                      (btnClicked)="omwisselen()"
-                                     *ngIf="!toonVliegerNaam && gekozenVliegtuig?.ZITPLAATSEN == 2"
+                                     *ngIf="!toonVliegerNaam && !start.PAX && gekozenVliegtuig?.ZITPLAATSEN == 2"
                                      btnColor="btn-secondary"></app-icon-button>
 
                 </div>
             </div>
-            <div class="row my-2 namenInvullen" *ngIf="toonVliegerNaam">
-                <div>
+            <div class="row my-2 namenInvullen" *ngIf="toonVliegerNaam || start.PAX">
+                <div *ngIf="!start.PAX">
                     <label for="VLIEGER_NAAM" class="form-label">Naam van de vlieger</label>
                     <input required name="vliegernaam" type="text" class="form-control" id="VLIEGER_NAAM"
                            [(ngModel)]="start.VLIEGERNAAM"

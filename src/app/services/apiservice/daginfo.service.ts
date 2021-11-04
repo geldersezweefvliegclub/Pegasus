@@ -75,19 +75,15 @@ export class DaginfoService {
 
 
     async getDagInfoDagen(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<[]> {
-        let hash: string = '';
-
         if (!this.magDagInfoOphalen()) {
             return [];
         }
 
         let getParams: KeyValueArray = params;
 
-        if (this.dagInfoTotaalCache != null) {           // we hebben eerder de lijst opgehaald
-            hash = this.dagInfoTotaalCache.hash as string;
-            getParams['HASH'] = hash;
+        if ((this.dagInfoTotaalCache != undefined)  && (this.dagInfoTotaalCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
+            getParams['HASH'] = this.dagInfoTotaalCache.hash;
         }
-
         getParams['BEGIN_DATUM'] = startDatum.toISODate();
         getParams['EIND_DATUM'] = eindDatum.toISODate();
 
@@ -103,7 +99,7 @@ export class DaginfoService {
             const response: Response = await this.APIService.get('Daginfo/GetObjects', getParams);
             this.dagInfoTotaalCache = await response.json();
         } catch (e) {
-            if (e.responseCode !== 304) {       // server bevat dezelfde data als cache
+            if (e.responseCode !== 704) {       // server bevat dezelfde data als cache
                 throw(e);
             }
         }

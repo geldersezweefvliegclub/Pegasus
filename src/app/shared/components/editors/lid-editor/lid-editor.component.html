@@ -23,7 +23,7 @@
         <div class="col-8">
             <app-pegasus-card [titel]="titel" [subtitel]="subtitel" class="h-100" [img]="avatar">
                 <div avatar>
-                   <app-image-crop (opslaan)="uploadFoto($event)" (cropped)="setAvatar($event)"
+                    <app-image-crop (opslaan)="uploadFoto($event)" (cropped)="setAvatar($event)"
                                     *ngIf="!this.isVerwijderMode && !this.isRestoreMode"></app-image-crop>
                 </div>
 
@@ -91,7 +91,7 @@
                                            ngbDatepicker #d="ngbDatepicker"
                                            id="geboortedatum"
                                            [ngModel]="GeboorteDatum"
-                                           (dateSelect) = "GeboorteDatum = $event"
+                                           (dateSelect)="GeboorteDatum = $event"
                                     >
                                     <div class="input-group-append">
                                         <app-icon-button iconNaam="far Calendar" (btnClicked)="d.toggle()"
@@ -144,13 +144,27 @@
                                            ngbDatepicker #medical="ngbDatepicker"
                                            id="MEDICAL"
                                            [ngModel]="MedicalDatum"
-                                           (dateSelect) = "MedicalDatum = $event"
+                                           (dateSelect)="MedicalDatum = $event"
                                     >
                                     <div class="input-group-append">
                                         <app-icon-button iconNaam="far Calendar" (btnClicked)="medical.toggle()"
                                                          btnColor="btn-primary"></app-icon-button>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-4"></div>
+                            <div class="col-4">
+                                <label for="sleutel1" class="form-label">Sleutel GeZC</label>
+                                <input type="text" name="sleutel1" class="form-control" id="sleutel1"
+                                       [(ngModel)]="lid.SLEUTEL1">
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-8"></div>
+                            <div class="col-4">
+                                <label for="sleutel2" class="form-label">Sleutel Terlet</label>
+                                <input type="text" name="sleutel2" class="form-control" id="sleutel2"
+                                       [(ngModel)]="lid.SLEUTEL2">
                             </div>
                         </div>
                         <div class="row mt-2" *ngIf="isVisible('wachtwoorden')">
@@ -301,14 +315,28 @@
                                 DDWV-Crew
                             </label>
                         </div>
-                        <div class="text-nowrap">
-                            <input class="form-check-inline" type="checkbox" id="DDWV_BEHEERDER" name="DDWV_BEHEERDER"
-                                   [disabled]="isDisabled('DDWV_BEHEERDER')"
-                                   [(ngModel)]="lid.DDWV_BEHEERDER" (ngModelChange)="isgoogleAuthNodig()">
-                            <label class="form-check-label" for="DDWV_BEHEERDER"
-                                   [ngClass]="disabledClass('DDWV_BEHEERDER')">
-                                DDWV Beheerder
-                            </label>
+                        <div class="col-8">
+                            <div class="text-nowrap">
+                                <input class="form-check-inline" type="checkbox" id="DDWV_BEHEERDER"
+                                       name="DDWV_BEHEERDER"
+                                       [disabled]="isDisabled('DDWV_BEHEERDER')"
+                                       [(ngModel)]="lid.DDWV_BEHEERDER" (ngModelChange)="isgoogleAuthNodig()">
+                                <label class="form-check-label" for="DDWV_BEHEERDER"
+                                       [ngClass]="disabledClass('DDWV_BEHEERDER')">
+                                    DDWV Beheerder
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="text-nowrap">
+                                <input class="form-check-inline" type="checkbox" id="SLEEPVLIEGER" name="SLEEPVLIEGER"
+                                       [disabled]="isDisabled('SLEEPVLIEGER')"
+                                       [(ngModel)]="lid.SLEEPVLIEGER">
+                                <label class="form-check-label" for="SLEEPVLIEGER"
+                                       [ngClass]="disabledClass('SLEEPVLIEGER')">
+                                    Sleepvlieger
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div class="row mt-2" *ngIf="isVisible('BETAALD')">
@@ -342,15 +370,17 @@
 
     <div class="row mt-2 justify-content-end">
         <div class="col-3 d-flex justify-content-end">
-            <app-icon-button *ngIf="!isLoading && !isSaving && lid.ID !== undefined && !isRestoreMode && !isVerwijderMode"
-                             [disabled]="informatieGroup.invalid || persoonGroup.invalid"
-                             iconNaam="fas Edit" btnColor="btn-primary"
-                             tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
+            <app-icon-button
+                    *ngIf="!isLoading && !isSaving && lid.ID !== undefined && !isRestoreMode && !isVerwijderMode"
+                    [disabled]="informatieGroup.invalid || persoonGroup.invalid"
+                    iconNaam="fas Edit" btnColor="btn-primary"
+                    tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
 
-            <app-icon-button *ngIf="!isLoading && !isSaving && lid.ID === undefined && !isRestoreMode && !isVerwijderMode"
-                             [disabled]="informatieGroup.invalid || persoonGroup.invalid"
-                             iconNaam="fas Plus" btnColor="btn-primary"
-                             tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
+            <app-icon-button
+                    *ngIf="!isLoading && !isSaving && lid.ID === undefined && !isRestoreMode && !isVerwijderMode"
+                    [disabled]="informatieGroup.invalid || persoonGroup.invalid"
+                    iconNaam="fas Plus" btnColor="btn-primary"
+                    tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
 
             <app-icon-button *ngIf="!isLoading && !isSaving && isVerwijderMode" iconNaam="fas TrashAlt"
                              btnColor="btn-primary editorDeleteBtn"

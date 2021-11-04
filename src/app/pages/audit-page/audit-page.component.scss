@@ -1,0 +1,62 @@
+.box {
+  display: flex;
+  flex-flow: column;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: stretch;
+  height: calc(100vh - 125px);
+}
+
+.row {
+  --bs-gutter-x: 0;
+}
+
+.toolbarBtn {
+  margin-left: 0.4em;
+  margin-right: 0.4em;
+}
+
+
+#zoekLabel {
+  margin-right: 2em;
+}
+#zoekInput {
+  width: 30%;
+}
+
+.data {
+  flex-grow: 100;
+}
+
+#toolbar {
+  flex-grow: 1;
+}
+
+.kolomRechts {
+  border-left-style: double;
+  border-color: #626161;
+  margin-left: 10px;
+}
+
+.table-rechts {
+  padding: 10px;
+  overflow-y: scroll;
+  height: 100%;
+}
+
+.header {
+  padding-top: 4px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.auditlineKey {
+  font-size: 10px;
+  color: #d39206;
+  margin-right: 5px;
+}
+
+.auditline {
+  font-size: 8px;
+}
+

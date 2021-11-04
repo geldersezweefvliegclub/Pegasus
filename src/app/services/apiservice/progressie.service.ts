@@ -8,6 +8,7 @@ import {
     HeliosProgressie, HeliosProgressieKaartDataset, HeliosProgressieKaart, HeliosAanwezigLedenDataset
 } from "../../types/Helios";
 import {KeyValueArray} from "../../types/Utils";
+import {LoginService} from "./login.service";
 
 @Injectable({
     providedIn: 'root'
@@ -19,16 +20,24 @@ export class ProgressieService {
     private boom: HeliosProgressieBoom[] = [];
 
     constructor(private readonly apiService: APIService,
+                private readonly loginService: LoginService,
                 private readonly storageService: StorageService) {
     }
 
     async getProgressie(lidID:number, comptentiesIDs?: string): Promise<HeliosBehaaldeProgressieDataset[]> {
         let progressie: HeliosBehaaldeProgressie | null = null;
-        let hash: string = '';
+
+        // starttoren heeft geen progressie nodig
+        if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
+            return [];
+        }
 
         let getParams: KeyValueArray = {};
         getParams['LID_ID'] = lidID.toString();
 
+        if ((this.progressieCache != undefined)  && (this.progressieCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
+            getParams['HASH'] = this.progressieCache.hash;
+        }
         if (comptentiesIDs) {
             getParams['IN'] = comptentiesIDs;
         }
@@ -60,6 +69,11 @@ export class ProgressieService {
         let getParams: KeyValueArray = {};
         getParams['LID_ID'] = lidID.toString();
 
+        // starttoren heeft geen progressie nodig
+        if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
+            return [];
+        }
+
         const response:Response = await this.apiService.get('Progressie/ProgressieBoom', getParams);
         this.boom = await response.json();
 
@@ -69,6 +83,11 @@ export class ProgressieService {
     async getProgressieKaart(lidID:number):Promise<HeliosProgressieKaartDataset[]> {
         let getParams: KeyValueArray = {};
         getParams['LID_ID'] = lidID.toString();
+
+        // starttoren heeft geen progressie nodig
+        if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
+            return [];
+        }
 
         const response: Response = await this.apiService.get('Progressie/ProgressieKaart', getParams);
         this.kaartCache = await response.json();

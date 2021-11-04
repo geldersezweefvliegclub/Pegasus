@@ -35,7 +35,7 @@ export class ProfielPageComponent {
                 const ui = this.loginService.userInfo?.LidData;
                 if (this.lidID != ui?.ID)    // we beijken profiel van iemand anders
                 {
-                    if (params['delete']) {     // we zijn onderweeg om lid te verwijderen
+                    if (params['delete']) {     // we zijn onderweg om lid te verwijderen
                         this.isVerwijderMode = true;
                         this.isRestoreMode = false;
                     }

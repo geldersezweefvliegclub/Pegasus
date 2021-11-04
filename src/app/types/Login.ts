@@ -123,6 +123,8 @@ export interface components {
       STARTTOREN?: boolean;
       /** Is dit lid  belast met het maken van roosters */
       ROOSTER?: boolean;
+      /** Is dit lid ook een sleepvlieger */
+      SLEEPVLIEGER?: boolean;
       /** Moet clubblad per post verstuurd worden */
       CLUBBLAD_POST?: boolean;
       /** Verloopdatum van het medical */
@@ -151,16 +153,10 @@ export interface components {
       LidData?: components["schemas"]["ref_leden"];
       /** Gebruik dit object voor applicatie permissies */
       Userinfo?: {
-        /** Datum, isStartleider ben je namelijk alleen op de dag dat je dienst hebt */
-        DATUM?: string;
-        /** Mag de ingelode gebruiker schrijven in de database */
-        magSchrijven?: boolean;
         /** Is de ingelogde gebruiker de DDWV beheerder */
         isBeheerderDDWV?: boolean;
         /** Is de ingelogde gebruiker de applicatie beheerder */
         isBeheerder?: boolean;
-        /** Is de ingelogde gebruiker een startleider (alleen op de dag zelf) */
-        isStartleider?: boolean;
         /** Is de ingelogde gebruiker de rooster maker */
         isRooster?: boolean;
         /** Is de ingelogde gebruiker een instructeur */

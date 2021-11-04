@@ -1,11 +1,9 @@
-import {Injectable} from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import {APIService} from './api.service';
 import {Base64} from 'js-base64';
 
-import {HeliosUserinfo} from '../../types/Helios';
+import {HeliosUserinfo, HeliosVliegtuig} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
-import {Subscription} from "rxjs";
-import {DateTime} from "luxon";
 import {SharedService} from "../shared/shared.service";
 
 
@@ -14,26 +12,13 @@ import {SharedService} from "../shared/shared.service";
 })
 export class LoginService {
     userInfo: HeliosUserinfo | null = null;
-    keepAliveTimer: number;
+    inloggenSucces: EventEmitter<void> = new EventEmitter<void>();
 
-    datumAbonnement: Subscription;         // volg de keuze van de kalender
-    datum: DateTime;                       // de gekozen dag
+    private keepAliveTimer: number;
 
     constructor(private readonly APIService: APIService,
                 private readonly sharedService: SharedService,
                 private readonly storageService: StorageService) {
-
-        // de datum zoals die in de kalender gekozen is
-        this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
-            this.datum = DateTime.fromObject({
-                year: datum.year,
-                month: datum.month,
-                day: datum.day
-            })
-            if (this.isIngelogd()) {
-                this.getUserInfo();
-            }
-        })
     }
 
     isIngelogd(): boolean {
@@ -61,10 +46,17 @@ export class LoginService {
 
         if (response.ok) {
             await this.getUserInfo();
+            this.successEmit();
 
             clearTimeout(this.keepAliveTimer);
             this.keepAliveTimer = window.setInterval(() => this.getUserInfo(), 1000 * 60 * 30); // 30 min
         }
+    }
+
+    // laat iedereen weten dat we ingelogd zijn, we wachten even zodat alle componenten geladen zijn
+    // doen we dat niet, dan komt abbonement later dan event en missen het event
+    successEmit() {
+        setTimeout(() => this.inloggenSucces.emit(), 100);
     }
 
     async sendSMS(gebruikersnaam: string, wachtwoord: string): Promise<void> {

@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {faRecycle, faUsers} from '@fortawesome/free-solid-svg-icons';
 import {HeliosLedenDataset, HeliosTrack} from '../../types/Helios';
 import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
@@ -183,6 +183,7 @@ export class LedenGridComponent implements OnInit {
         }
     }
 
+
     // openen van popup om lid data van een nieuw lid te kunnen invoeren
     addLid(): void {
         this.router.navigate(['profiel'], {queryParams: {lidID: -1}}).then();
@@ -277,6 +278,9 @@ export class LedenGridComponent implements OnInit {
                 continue;
             }
             if (this.sharedService.ledenlijstFilter.crew && this.dataset[i].DDWV_CREW == false) {
+                continue;
+            }
+            if (this.sharedService.ledenlijstFilter.sleepvliegers && this.dataset[i].SLEEPVLIEGER == false) {
                 continue;
             }
 

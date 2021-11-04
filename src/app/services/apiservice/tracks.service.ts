@@ -23,6 +23,9 @@ export class TracksService {
 
         let getParams: KeyValueArray = {};
 
+        if ((this.tracksCache != undefined)  && (this.tracksCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
+            getParams['HASH'] = this.tracksCache.hash;
+        }
         if (lidID) {
             getParams['LID_ID'] = lidID.toString();
         }
@@ -38,7 +41,7 @@ export class TracksService {
             const response: Response = await this.apiService.get('Tracks/GetObjects', getParams);
             this.tracksCache = await response.json();
         } catch (e) {
-            if (e.responseCode !== 304) { // server bevat dezelfde data als cache
+            if (e.responseCode !== 704) { // server bevat dezelfde data als cache
                 throw(e);
             }
         }

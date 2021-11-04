@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {TreeviewItem, TreeviewConfig} from 'ngx-treeview';
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
 import {HeliosCompetentiesDataset, HeliosProgressie, HeliosProgressieBoom} from "../../../types/Helios";
@@ -21,12 +21,14 @@ export class ProgressieTreeviewItemComponent extends TreeviewItem {
     styleUrls: ['./progressie-boom.component.scss']
 })
 
-export class ProgressieBoomComponent implements OnInit {
+export class ProgressieBoomComponent implements OnInit, OnDestroy {
     @Input() VliegerID: number;
     @ViewChild(ModalComponent) private bevestigPopup: ModalComponent;
 
+    private dbEventAbonnement: Subscription;
+    private competentiesAbonnement: Subscription;
     boom: ProgressieTreeviewItemComponent[];
-    competentiesAbonnement: Subscription;
+
     competenties: HeliosCompetentiesDataset[];
     values: number[];
     suspend: boolean = false;
@@ -47,10 +49,11 @@ export class ProgressieBoomComponent implements OnInit {
     constructor(private readonly loginService: LoginService,
                 private readonly sharedService: SharedService,
                 private readonly competentieService: CompetentieService,
-                private readonly progressieService: ProgressieService) {
+                private readonly progressieService: ProgressieService) {  }
 
+    ngOnInit(): void {
         // Als in de progressie tabel is aangepast, moet we onze dataset ook aanpassen
-        this.sharedService.heliosEventFired.subscribe(ev => {
+        this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Progressie") {
                 if (!this.suspend && (ev.actie == HeliosActie.Add || ev.actie == HeliosActie.Delete)) {
                     this.ophalen();
@@ -65,10 +68,12 @@ export class ProgressieBoomComponent implements OnInit {
 
         const ui = this.loginService.userInfo?.Userinfo;
         this.isDisabled = !(ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT);
+        this.ophalen();
     }
 
-    ngOnInit(): void {
-        this.ophalen();
+    ngOnDestroy(): void {
+        if (this.dbEventAbonnement)         this.dbEventAbonnement.unsubscribe();
+        if (this.competentiesAbonnement)    this.competentiesAbonnement.unsubscribe();
     }
 
     ophalen(): void {

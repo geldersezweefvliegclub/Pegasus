@@ -63,7 +63,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         if (this.columnStateTimer) {
             clearInterval(this.columnStateTimer);
         }

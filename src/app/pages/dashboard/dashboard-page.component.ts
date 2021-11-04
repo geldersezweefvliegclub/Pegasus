@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {
     faBookmark, faAddressCard, faCalendarAlt, faChartLine, faChartPie,
@@ -26,7 +26,7 @@ import {StartEditorComponent} from "../../shared/components/editors/start-editor
     templateUrl: './dashboard-page.component.html',
     styleUrls: ['./dashboard-page.component.scss']
 })
-export class DashboardPageComponent implements OnInit {
+export class DashboardPageComponent implements OnInit, OnDestroy {
     iconCardIcon: IconDefinition = faChartPie;
     iconProgressie: IconDefinition = faChartLine;
     iconLogboek: IconDefinition = faClipboardList;
@@ -38,11 +38,11 @@ export class DashboardPageComponent implements OnInit {
     iconPlane: IconDefinition = faPlane;
     iconTracks: IconDefinition = faAddressCard;
 
-    typesAbonnement: Subscription;
+    private typesAbonnement: Subscription;
     lidTypes: HeliosType[] = [];
     lidData: HeliosLid;
 
-    datumAbonnement: Subscription;         // volg de keuze van de kalender
+    private datumAbonnement: Subscription; // volg de keuze van de kalender
     datum: DateTime;                       // de gekozen dag
 
     toonTracks: boolean = false;           // mogen de tracks vertoon worden
@@ -105,6 +105,11 @@ export class DashboardPageComponent implements OnInit {
         }
 
         this.toonTracks = (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) ? true : false;
+    }
+
+    ngOnDestroy(): void {
+        if (this.datumAbonnement)  this.datumAbonnement.unsubscribe();
+        if (this.typesAbonnement)  this.typesAbonnement.unsubscribe();
     }
 
     // Met welk lidmaatschap hebben te maken, geef de omschrijving

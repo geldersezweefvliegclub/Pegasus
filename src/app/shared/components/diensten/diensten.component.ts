@@ -6,6 +6,7 @@ import {SharedService} from "../../../services/shared/shared.service";
 import {HeliosDienstenDataset} from "../../../types/Helios";
 import {DagRoosterComponent} from "../dag-rooster/dag-rooster.component";
 import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
+import {LoginService} from "../../../services/apiservice/login.service";
 
 @Component({
     selector: 'app-diensten',
@@ -29,6 +30,7 @@ export class DienstenComponent implements OnInit, OnChanges {
     error: ErrorMessage | undefined;
 
     constructor(private readonly dienstenService: DienstenService,
+                private readonly loginService: LoginService,
                 private readonly sharedService: SharedService) {
     }
 
@@ -50,6 +52,11 @@ export class DienstenComponent implements OnInit, OnChanges {
     }
 
     ophalen(): void {
+        // starttoren heeft geen data nodig
+        if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
+            return;
+        }
+
         if (this.datum) {
             let startMaand: number = this.datum.month; // laat alles vanaf gekozen maand zien
             let startDag: number = this.datum.day; // laat alles vanaf gekozen maand zien

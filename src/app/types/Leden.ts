@@ -299,6 +299,8 @@ export interface components {
       STARTTOREN?: boolean;
       /** Is dit lid  belast met het maken van roosters */
       ROOSTER?: boolean;
+      /** Is dit lid ook een sleepvlieger */
+      SLEEPVLIEGER?: boolean;
       /** Moet clubblad per post verstuurd worden */
       CLUBBLAD_POST?: boolean;
       /** Verloopdatum van het medical */
@@ -317,6 +319,10 @@ export interface components {
       HEEFT_BETAALD?: boolean;
       /** Staat privacy mode (AVG / GDPR) uit/aan */
       PRIVACY?: boolean;
+      /** Het serienummner van sleutel 1 (GeZC) */
+      SLEUTEL1?: string;
+      /** Het serienummner van sleutel 2 (SNZT) */
+      SLEUTEL2?: string;
       /** Extra text om opmerkingen toe te voegen */
       OPMERKINGEN?: string;
     };
