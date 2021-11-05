@@ -1,10 +1,25 @@
 
+.box {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: stretch;
+}
+
 .datatable-hoogte {
-  min-height: 400px;
+  min-height: 200px;
+  flex: 1 0 auto;
 }
 
 .tracks-hoogte {
-  height: 600px;
+  min-height: 200px;
+  flex: 3 0 auto;
+}
+
+.progressie-hoogte {
+  min-height: 200px;
+  flex: 1 0 auto;
 }
 
 .expand {
@@ -37,3 +52,5 @@
 .toolbarBtn {
   margin-right: 20px;
 }
+
+

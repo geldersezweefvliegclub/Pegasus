@@ -46,7 +46,9 @@ export class ProgressieService {
             const response = await this.apiService.get('Progressie/GetObjects', getParams);
             this.progressieCache = await response.json();
         } catch (e) {
-            throw(e);
+            if (e.responseCode !== 704) {  // er is geen nieuwe data
+                throw(e);
+            }
         }
         return this.progressieCache?.dataset as [];
     }

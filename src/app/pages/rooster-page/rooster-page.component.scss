@@ -107,7 +107,7 @@ input[type='checkbox'] {
 }
 
 .roosterTabel {
-  height: calc(100vh - 170px);
+  height: calc(100% - 10px);
   overflow-y: auto;
   border: #939393 1px solid;
   margin-left: 15px;
@@ -146,7 +146,7 @@ thead {
 }
 
 #LEDENLIJST {
-  height: calc(100vh - 205px);
+  height: calc(100vh - 270px);
   overflow-y: auto;
 }
 
