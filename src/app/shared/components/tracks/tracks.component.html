@@ -2,7 +2,7 @@
 <app-success [success]="success"></app-success>
 
 <div class="d-flex h-100">
-    <div [ngClass]="BreedteGrid()">
+    <div [class]="toonLid ? 'col-sm-12 col-xxl-9' : 'col-12'">
         <div class="box h-100">
             <div id="data" style="height: 1px">
                 <table class="w-100">
@@ -98,7 +98,7 @@
         </div>
     </div>
 
-    <div class="col-3 kolomRechts" *ngIf="toonLid">
+    <div class="col-3 kolomRechts d-none d-xxl-block" *ngIf="toonLid">
         <div *ngIf="geselecteerdLid">
             <h4>{{Naam}}</h4>
             <div class="container">

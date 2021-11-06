@@ -55,7 +55,7 @@ export class LoginPageComponent implements OnInit {
             this.toonFoto = this.urlFoto()
         }, 15000)
 
-        this.loginService.uitloggen();      // zeker weten dat er geen userinfo is achter gebleven van vorige sessie
+        //this.loginService.uitloggen();      // zeker weten dat er geen userinfo is achter gebleven van vorige sessie
     }
 
     // geef de url terug van een willekeurige foto

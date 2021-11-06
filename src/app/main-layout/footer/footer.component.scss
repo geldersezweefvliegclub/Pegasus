@@ -1,3 +1,19 @@
-#footer {
+.page-footer{
   margin-right: 15px;
+  margin-left: 15px;
+  display: flex;
+  flex-direction: row;
+}
+
+.hamburger-menu {
+  margin-top: 5px;
+  margin-right: 10px;
+}
+
+.sidebarMenu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 250px;
+  z-index: 100;
 }

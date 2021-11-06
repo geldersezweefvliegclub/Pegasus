@@ -853,4 +853,17 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         }
         return classes;
     }
+
+    toonRechts() {
+        if (!this.magWijzigen) {
+            return false;
+        }
+
+        if (window.innerWidth < 1400) {
+            if (this.toonInstructeurs && this.toonLieristen && this.toonStartleiders && this.toonSleepvliegers) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

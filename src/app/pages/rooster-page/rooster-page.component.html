@@ -281,7 +281,7 @@
                                     </div>
                                 </td>
                                 <td *ngIf="toonSleepvliegers">
-                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF">
+                                    <div class="d-flex">
                                         <div
                                                 class="drop-container"
                                                 cdkDropList
@@ -318,7 +318,7 @@
                         </table>
 
                     </div>
-                    <div class="kolomRechts" *ngIf="magWijzigen">
+                    <div class="kolomRechts" *ngIf="toonRechts()">
                         <a class="class" (click)="toonJaarRooster()"><h4>Leden</h4></a>
                         <div class="expandLogboek">
                             <a class="clickable" (click)="sorteer()">
@@ -375,7 +375,7 @@
             </div>
             <div class="row justify-content-start" id="toolbar">
                 <div class="d-flex row">
-                    <div class="col-3">
+                    <div class="col-xl-4 col-sm-5">
 
                         <app-icon-button *ngIf="magWijzigen"
                                          class="toolbarBtn"
@@ -390,7 +390,7 @@
                                          btnColor="btn-primary"></app-icon-button>
 
                     </div>
-                    <div class="col-9">
+                    <div class="col-xl-8 col-sm-7">
                         <div class="d-flex align-items-end text-nowrap" id="zoekbar" *ngIf="magWijzigen">
 
                             <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>

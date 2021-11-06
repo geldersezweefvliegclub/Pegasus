@@ -196,10 +196,6 @@ export class TracksComponent implements OnInit, OnDestroy {
         }
     }
 
-    BreedteGrid() {
-        return (this.toonLid) ? "col-9" : "col-12";        // 9 breed met naam, 12 alleen grid
-    }
-
     trackSelected(l: TracksLedenDataset) {
         this.geselecteerdLid = l.LID_ID as number;
         this.Naam = l.lid.NAAM as string;

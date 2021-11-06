@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {CustomRoute, beheerRoutes, routes} from '../../routing.module';
 
 import {Router} from '@angular/router';
@@ -26,6 +26,8 @@ import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
     styleUrls: ['./navigation.component.scss']
 })
 export class NavigationComponent implements OnInit, OnDestroy  {
+    @Input() topMenu: boolean = false;
+
     readonly routes = routes;
     readonly beheerRoutes = beheerRoutes;
     readonly logUitIcon: IconDefinition = faSignOutAlt;
@@ -69,7 +71,6 @@ export class NavigationComponent implements OnInit, OnDestroy  {
             this.kalenderEersteDatum = {year: 2015, month: 1, day: 1}
             this.kalenderLaatsteDatum = {year: this.vandaag.year + 1, month: 12, day: 31}
         }
-
     }
 
     ngOnInit() {
@@ -241,5 +242,9 @@ export class NavigationComponent implements OnInit, OnDestroy  {
         }
 
         return classes;
+    }
+
+    toonLogo() {
+        return (((window.innerHeight > 725) && (!this.showBeheer)) || (window.innerHeight > 900))
     }
 }

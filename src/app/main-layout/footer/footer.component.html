@@ -1,5 +1,16 @@
-<footer id="footer" class="page-footer text-white-50 text-center font-small bg-primary mt-1 rounded">
-    <div class="py-2">
+<footer class="page-footer">
+    <app-icon-button *ngIf="toonHamburgerMenu()"
+            class="hamburger-menu"
+            iconNaam="fas Bars" (btnClicked)="menuShowHide()" btnColor="">
+    </app-icon-button>
+
+    <div class=" bg-primary mt-1 rounded py-2 text-white-50  font-small  text-center w-100">
         © {{jaartal}} Copyright Gelderse Zweefvliegclub
     </div>
 </footer>
+
+
+
+<app-navigation class="sidebarMenu" [topMenu]="true" *ngIf="toonMenu">
+
+</app-navigation>

@@ -96,6 +96,7 @@ input[type='checkbox'] {
   flex-grow: 100;
   flex-direction: column;
   overflow: hidden;
+  max-height: calc(100vh - 235px);
 }
 
 .dataContent {

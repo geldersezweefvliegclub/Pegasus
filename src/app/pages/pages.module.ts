@@ -4,6 +4,7 @@ import {RouterModule} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import {SharedModule} from '../shared/shared.module';
 import {PegasusCardComponent} from '../shared/components/pegasus-card/pegasus-card.component';
@@ -44,6 +45,7 @@ import { JaarTotalenComponent } from './rooster-page/jaar-totalen/jaar-totalen.c
 import { ExportStartlijstComponent } from './startlijst-grid/export-startlijst/export-startlijst.component';
 import { AuditPageComponent } from './audit-page/audit-page.component';
 
+
 @NgModule({
   imports: [
     CommonModule,
@@ -61,7 +63,8 @@ import { AuditPageComponent } from './audit-page/audit-page.component';
     ChartsModule,
     LazyLoadImageModule,
     NgbPopoverModule,
-    DragDropModule
+    DragDropModule,
+    FlexLayoutModule,
   ],
   declarations: [
     DashboardPageComponent,

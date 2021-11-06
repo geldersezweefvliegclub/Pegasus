@@ -14,6 +14,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {LazyLoadImageModule} from "ng-lazyload-image";
 import {PegasusConfigService} from "./services/shared/pegasus-config.service";
 import { HttpClientModule } from '@angular/common/http';
+import {ExtendedModule} from "@angular/flex-layout";
 
 
 export function initializeApp(appConfigService: PegasusConfigService) {
@@ -42,6 +43,7 @@ export function initializeApp(appConfigService: PegasusConfigService) {
         NgbModule,
         HttpClientModule,
         TreeviewModule.forRoot(),
+        ExtendedModule,
     ],
     providers: [
         PegasusConfigService,
