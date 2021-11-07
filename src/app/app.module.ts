@@ -15,6 +15,8 @@ import {LazyLoadImageModule} from "ng-lazyload-image";
 import {PegasusConfigService} from "./services/shared/pegasus-config.service";
 import { HttpClientModule } from '@angular/common/http';
 import {ExtendedModule} from "@angular/flex-layout";
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 
 export function initializeApp(appConfigService: PegasusConfigService) {
@@ -44,6 +46,12 @@ export function initializeApp(appConfigService: PegasusConfigService) {
         HttpClientModule,
         TreeviewModule.forRoot(),
         ExtendedModule,
+        ServiceWorkerModule.register('ngsw-worker.js', {
+          enabled: environment.production,
+          // Register the ServiceWorker as soon as the app is stable
+          // or after 30 seconds (whichever comes first).
+          registrationStrategy: 'registerImmediately'
+        }),
     ],
     providers: [
         PegasusConfigService,

@@ -2,7 +2,7 @@
     <div *ngIf="!naarDashboard">{{grid_vliegernaam}}</div>
 
     <div *ngIf="naarDashboard">
-        <a [routerLink]="['/dashboard']" [queryParams]="{lidID: lidID}">{{grid_vliegernaam}}</a>
+        <a aria-label="Naar dashboard" [routerLink]="['/dashboard']" [queryParams]="{lidID: lidID}">{{grid_vliegernaam}}</a>
     </div>
 </div>
 <p *ngIf="this.warning || this.error">

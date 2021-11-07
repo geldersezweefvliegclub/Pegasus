@@ -3,7 +3,7 @@
         <div class="d-flex flex-column justify-content-between" [ngClass]="{'min-vh-100': !topMenu,'bovenop': topMenu}">
 
             <div class="list-group list-group-flush p-3">
-                <img src="/assets/img/logo.png" class="logo" *ngIf="toonLogo()">
+                <img src="/assets/img/logo.png" class="logo" alt="logo" *ngIf="toonLogo()">
                 <ng-template ngFor let-route [ngForOf]="routes">
                     <a
                             class="list-group-item list-group-item-action waves-effect py-2"

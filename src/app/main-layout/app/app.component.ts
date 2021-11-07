@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
 import {LoginService} from '../../services/apiservice/login.service';
+import {SwUpdate} from "@angular/service-worker";
 
 @Component({
     selector: 'app-root',
@@ -10,8 +11,13 @@ import {LoginService} from '../../services/apiservice/login.service';
 
 export class AppComponent {
     isIngelogd: boolean = this.loginService.isIngelogd();
+    updateAvailable: boolean = false;
 
-    constructor(private readonly router: Router, private readonly loginService: LoginService) {
+    constructor(private readonly router: Router,
+                private readonly loginService: LoginService,
+                private readonly updates: SwUpdate) {
+
+        updates.available.subscribe(() => this.updateAvailable = true);
         router.events.subscribe((val) => {
             if (val instanceof NavigationEnd) {
                 this.navigeerNaarLogin();

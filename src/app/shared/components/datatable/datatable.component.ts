@@ -50,7 +50,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     loadingTemplate;
 
     constructor() {
-        this.loadingTemplate = '<span><img src="assets/img/zandloper.gif" width=100px> Data wordt geladen .....</span>';
+        this.loadingTemplate = '<span><img src="assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Data wordt geladen .....</span>';
         this.noRowsTemplate = '<span>Geen informatie beschikbaar</span>';
     }
 

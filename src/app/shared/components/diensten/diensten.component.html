@@ -7,19 +7,19 @@
     </tr>
 
     <tr *ngFor="let dienst of diensten;let i = index">
-        <td class="datum clickable"><a (click)="toonDagRooster(dienst.DATUM)" class="clickable">{{toonDatum(dienst.DATUM)}}</a></td>
+        <td class="datum clickable"><a aria-label="Toon diensten van de dag" (click)="toonDagRooster(dienst.DATUM)" class="clickable">{{toonDatum(dienst.DATUM)}}</a></td>
         <td>{{dienst.TYPE_DIENST}}</td>
         <td class="midden" *ngIf="UitgebreideWeergave">
             <input type="checkbox"
                    class="form-check-inline"
                    [checked]="dienst.AFWEZIG"
-                   disabled=true>
+                   disabled>
         </td>
         <td class="midden" *ngIf="UitgebreideWeergave">
             <input type="checkbox"
                    class="form-check-inline"
                    [checked]="dienst.AANWEZIG"
-                   disabled=true>
+                   disabled>
         </td>
     </tr>
 </table>

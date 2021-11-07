@@ -10,7 +10,7 @@ import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
     styleUrls: ['./logboek-render.component.scss']
 })
 export class LogboekRenderComponent implements AgRendererComponent {
-    private params: any;
+    params: any;
     logboekIcon: IconDefinition = faFileAlt;
 
     constructor() {

@@ -56,7 +56,7 @@
                                   subtitel="Ingeroosterde diensten"
                                   [icon]="iconRooster">
                     <div class="expand">
-                        <a class="clickable" (click)="toonDienstenGroot()">
+                        <a aria-label="Toon diensten groter" class="clickable" (click)="toonDienstenGroot()">
                             <fa-icon [icon]="iconExpand"></fa-icon>
                         </a>
                     </div>
@@ -72,7 +72,7 @@
                                   subtitel="Overzicht van de vluchten"
                                   [icon]="iconLogboek">
                     <div class="expand">
-                        <a class="clickable" (click)="toonLogboekGroot()">
+                        <a aria-label="Toon logboek groter" class="clickable" (click)="toonLogboekGroot()">
                             <fa-icon [icon]="iconExpand"></fa-icon>
                         </a>
                     </div>
@@ -127,7 +127,7 @@
     <div body>
         <div class="popupLargeWrapper">
             <div class="excel">
-                <img class="logo" src="/assets/img/excel-logo.png" (click)="this.exportLogboek()"/>
+                <img class="logo" src="/assets/img/excel-logo.png" alt="excel logo" (click)="this.exportLogboek()"/>
             </div>
             <app-vlieger-logboek
                     id="vliegerlogboekgrid-groot"

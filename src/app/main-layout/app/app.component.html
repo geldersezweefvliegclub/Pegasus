@@ -1,3 +1,7 @@
+<div class="alert alert-info" *ngIf="updateAvailable">
+    <p>Er is een nieuwe versie beschikbaar. Klik <a aria-label="nieuwe software versie" href="#">hier</a> om bij te werken</p>
+</div>
+
 <div class="row mx-0">
     <div class="col-1 col-md-2 ps-0 d-none d-xl-block" *ngIf="isIngelogd">
         <app-navigation class="sticky-top"></app-navigation>

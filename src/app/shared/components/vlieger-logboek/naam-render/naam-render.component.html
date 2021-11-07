@@ -1,6 +1,6 @@
 <div *ngIf="!naarDashboard">{{naam}}</div>
 
 <div *ngIf="naarDashboard">
-    <a [routerLink]="['/dashboard']" [queryParams]="{lidID: lidID}">{{naam}}</a>
+    <a aria-label="Naar dashboard" [routerLink]="['/dashboard']" [queryParams]="{lidID: lidID}">{{naam}}</a>
 </div>
 

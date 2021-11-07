@@ -9,7 +9,7 @@
         <div class="d-flex pe-3 headerCards" *ngIf="toonGrafiek">
             <div class="card col-6 grafiekCard me-2" *ngIf="barChartData.length > 0">
                 <div class="clearBarChart">
-                    <a (click)="clearGrafiekData()">
+                    <a aria-label="opschonen grafiek" (click)="clearGrafiekData()">
                         <fa-icon [icon]="clearChartIcon"></fa-icon>
                     </a>
                 </div>
@@ -45,7 +45,7 @@
 
             <div class="card col-6 grafiekCard ms-1" *ngIf="lineChartData.length > 0">
                 <div class="clearBarChart">
-                    <a (click)="clearGrafiekData()">
+                    <a aria-label="opschonen grafiek" (click)="clearGrafiekData()">
                         <fa-icon [icon]="clearChartIcon"></fa-icon>
                     </a>
                 </div>

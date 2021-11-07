@@ -45,12 +45,15 @@
 .logo {
   padding: 5px 5px 20px 5px;
   border-bottom: #dfdfdf solid 1px;
+  width: 100%;
+  height: auto;
 }
 
 
 .bovenop {
-  min-height: calc(100vh - 54px);
+  min-height: calc(100vh - 70px);
   background-color: #f1eeee;
   border-right: #a2a4a6 solid 2px;
-  box-shadow: 2px 0px #b2b2b4
+  box-shadow: 2px 0px #b2b2b4;
+  overflow: auto;
 }

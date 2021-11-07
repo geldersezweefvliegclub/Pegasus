@@ -319,9 +319,9 @@
 
                     </div>
                     <div class="kolomRechts" *ngIf="toonRechts()">
-                        <a class="class" (click)="toonJaarRooster()"><h4>Leden</h4></a>
+                        <a aria-label="Toon jaarrooster" class="class" (click)="toonJaarRooster()"><h4>Leden</h4></a>
                         <div class="expandLogboek">
-                            <a class="clickable" (click)="sorteer()">
+                            <a aria-label="Sorteer op aantal diensten" class="clickable" (click)="sorteer()">
                                 <fa-icon [icon]="iconSort"></fa-icon>
                             </a>
                         </div>
@@ -439,6 +439,6 @@
 
 <div class="spinnerOverlay" *ngIf="isLoading > 0">
     <div class="spinnerPosition">
-        <span><img src="assets/img/zandloper.gif" width=100px> Data wordt geladen .....</span>
+        <span><img src="assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Data wordt geladen .....</span>
     </div>
 </div>

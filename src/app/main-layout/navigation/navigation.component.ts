@@ -52,7 +52,7 @@ export class NavigationComponent implements OnInit, OnDestroy  {
     private dbEventAbonnement: Subscription;
     private vliegtuigenAbonnement: Subscription;
 
-    constructor(private readonly loginService: LoginService,
+    constructor(readonly loginService: LoginService,
                 private readonly startlijstService: StartlijstService,
                 private readonly daginfoService: DaginfoService,
                 private readonly roosterService: RoosterService,
@@ -245,6 +245,6 @@ export class NavigationComponent implements OnInit, OnDestroy  {
     }
 
     toonLogo() {
-        return (((window.innerHeight > 725) && (!this.showBeheer)) || (window.innerHeight > 900))
+        return (((window.innerHeight > 800) && (!this.showBeheer)) || (window.innerHeight > 900))
     }
 }

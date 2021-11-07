@@ -23,7 +23,8 @@
                         <td *ngIf="toonLid" class="naamCell">
                             <div class="d-flex">
                                 <app-avatar [url]="trk.lid.AVATAR" *ngIf="trk.lid"></app-avatar>
-                                <div class="naam text-nowrap"><a [routerLink]="['/dashboard']"
+                                <div class="naam text-nowrap"><a aria-label="Naar dashboard"
+                                                                 [routerLink]="['/dashboard']"
                                                                  [queryParams]='{lidID: trk.LID_ID}'>{{trk.LID_NAAM}}</a>
                                 </div>
                             </div>
@@ -148,7 +149,7 @@
 
 <div class="spinnerOverlay" *ngIf="isLoading">
     <div class="spinnerPosition">
-        <span><img src="assets/img/zandloper.gif" width=100px> Data wordt geladen .....</span>
+        <span><img src="assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Data wordt geladen .....</span>
     </div>
 </div>
 
