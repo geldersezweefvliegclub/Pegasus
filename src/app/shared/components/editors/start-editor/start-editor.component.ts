@@ -97,7 +97,7 @@ export class StartEditorComponent implements OnInit {
             })
         });
 
-        // abonneer op wijziging van types
+        // abonneer op wijziging van lidTypes
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
             this.startMethodeTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 5});
             this.veldenTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));

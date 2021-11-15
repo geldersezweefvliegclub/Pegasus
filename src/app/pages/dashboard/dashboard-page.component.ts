@@ -40,6 +40,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
     private typesAbonnement: Subscription;
     lidTypes: HeliosType[] = [];
+    statusTypes: HeliosType[] = [];
     lidData: HeliosLid;
 
     private datumAbonnement: Subscription; // volg de keuze van de kalender
@@ -56,6 +57,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     @ViewChild(StartEditorComponent) private startEditor: StartEditorComponent;
 
     verwijderMode: boolean = false;
+    magVerwijderen: boolean = false;
 
     constructor(private readonly ledenService: LedenService,
                 private readonly loginService: LoginService,
@@ -77,11 +79,10 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
             })
         })
 
-        // abonneer op wijziging van types
+        // abonneer op wijziging van lidTypes
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
-            this.lidTypes = dataset!.filter((t: HeliosType) => {
-                return t.GROEP == 6
-            });    // lidtypes
+            this.lidTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 6});          // lidtypes
+            this.statusTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 19});      // status types (DBO, solo, brevet)```````
         });
 
         // Als lidID is meegegeven in URL, moeten we de lidData ophalen
@@ -105,6 +106,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         }
 
         this.toonTracks = (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) ? true : false;
+        this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur) ? true : false;
     }
 
     ngOnDestroy(): void {
@@ -121,6 +123,15 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         return "";
     }
 
+    // Welke vlieg status heeft dit lid
+    getStatusType(): string {
+        const t = this.statusTypes.find(type => type.ID == this.lidData.STATUSTYPE_ID) as HeliosType;
+        if (t) {
+            return t.OMSCHRIJVING!;
+        }
+        return "";
+    }
+
     // laat meer vluchten zien van logboek in een popupLogboek window
     toonLogboekGroot(): void {
         this.popupLogboek.open();
@@ -130,6 +141,11 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         this.popupDiensten.open();
     }
 
+    // mogen we vlieger status aanpassen
+    statusWijzigbaar(): boolean {
+        const ui = this.loginService.userInfo?.Userinfo;
+        return (ui?.isBeheerder! || ui?.isCIMT!);
+    }
 
     // Toevoegen van een start
     addStart() {
@@ -175,5 +191,25 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
                 xlsx.writeFile(wb, 'progressiekaart ' + this.lidData.NAAM + '-' + new Date().toJSON().slice(0, 10) + '.xlsx');
             });
         }
+    }
+
+    // aanpassen van de vliegstatus in lid record
+    wijzigVliegStatus() {
+        const upd: HeliosLid = {ID: this.lidData.ID, STATUSTYPE_ID: this.lidData.STATUSTYPE_ID}
+
+        this.ledenService.updateLid(upd).then((l) => {
+            this.error = undefined;
+
+            const ui = this.loginService.userInfo?.LidData
+            if (l.ID == ui!.ID) {
+                this.success = {titel: "Profiel", beschrijving: "Uw vliegstatus is aangepast"}
+            }
+            else {
+                this.success = {titel: "Profiel", beschrijving: "Vliegstatus van " + l.NAAM + " is aangepast"}
+            }
+        }).catch(e => {
+            this.success = undefined;
+            this.error = e;
+        });
     }
 }

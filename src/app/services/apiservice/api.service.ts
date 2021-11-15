@@ -2,12 +2,14 @@ import {Injectable} from '@angular/core';
 import {ErrorMessage, HeliosActie, KeyValueArray} from '../../types/Utils';
 import {SharedService} from '../shared/shared.service';
 import {PegasusConfigService} from "../shared/pegasus-config.service";
+import {Base64} from "js-base64";
 
 @Injectable({
     providedIn: 'root'
 })
 export class APIService {
     private readonly URL:string = 'http://localhost:4200/api/'
+    private BearerToken: string | null = null;
 
     constructor(private readonly sharedService: SharedService,
                 private readonly configService: PegasusConfigService) {
@@ -16,14 +18,25 @@ export class APIService {
         if (url) this.URL = url;
     }
 
+    // opslaan van de token die we met inloggen hebben vekregen
+    async setBearerToken(token: string) {
+        this.BearerToken = token;
+    }
+
     async get(url: string, params?: KeyValueArray, headers?: Headers): Promise<Response> {
         if (params) {
             url = this.prepareEndpoint(url, params);
         }
 
+        const apiHeaders: Headers =  (headers) ? headers : new Headers();
+
+        if (!apiHeaders?.has('Authorization') && this.BearerToken) {
+            apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
+        }
+
         const response = await fetch(`${this.URL}${url}`, {
             method: 'GET',
-            headers: headers,
+            headers: apiHeaders,
             credentials: 'include'
         });
 

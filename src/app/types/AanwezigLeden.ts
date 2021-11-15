@@ -84,7 +84,7 @@ export interface paths {
           SELECTIE?: string;
           /** Een of meerdere leden database IDs in CSV formaat. AND conditie als er geen andere parameters zijn, anders OR conditie */
           IN?: string;
-          /** Zoek op een of meerder lid types. Types als CSV formaat */
+          /** Zoek op een of meerder lid lidTypes. Types als CSV formaat */
           TYPES?: string;
           /** Begin datum (inclusief deze dag) */
           BEGIN_DATUM?: string;
@@ -337,9 +337,9 @@ export interface components {
       LAATSTE_AANPASSING?: string;
     };
     view_aanwezig_leden_dataset: components["schemas"]["oper_aanwezig_leden"] & {
-      /** Korte beschrijving van het vliegtuig types */
+      /** Korte beschrijving van het vliegtuig lidTypes */
       VLIEGTUIGTYPE_CODE?: string;
-      /** Beschrijving van het vliegtuig types */
+      /** Beschrijving van het vliegtuig lidTypes */
       VLIEGTUIGTYPE_OMS?: string;
       /** Vliegtuig registratie en callsign van overland vliegtuig */
       REG_CALL?: string;

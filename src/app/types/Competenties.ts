@@ -76,7 +76,7 @@ export interface paths {
           START?: number;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
-          /** Haal alle types op van een specieke leerfase */
+          /** Haal alle lidTypes op van een specieke leerfase */
           LEERFASE_ID?: string;
         };
       };

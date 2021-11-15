@@ -53,4 +53,13 @@
   margin-right: 20px;
 }
 
+#STATUS {
+  background-color: #a7a7a7;
+  border: none;
+}
 
+#STATUS:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}

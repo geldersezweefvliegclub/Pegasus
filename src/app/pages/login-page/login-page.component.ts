@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {LoginService} from '../../services/apiservice/login.service';
 import {ErrorMessage} from '../../types/Utils';
 import {Router} from '@angular/router';
 
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
+import {CodeInputComponent} from "angular-code-input";
 
 @Component({
     selector: 'app-login-page',
@@ -13,6 +14,8 @@ import {faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
 })
 
 export class LoginPageComponent implements OnInit {
+    @ViewChild(CodeInputComponent) private codeInput: CodeInputComponent;
+
     oogIcon: IconDefinition = faEye;
 
     gebruikersnaam: string = '';
@@ -54,8 +57,6 @@ export class LoginPageComponent implements OnInit {
         setInterval(() => {
             this.toonFoto = this.urlFoto()
         }, 15000)
-
-        //this.loginService.uitloggen();      // zeker weten dat er geen userinfo is achter gebleven van vorige sessie
     }
 
     // geef de url terug van een willekeurige foto
@@ -80,6 +81,10 @@ export class LoginPageComponent implements OnInit {
 
             if (e.responseCode == 406) {
                 this.showSecret = true;
+
+                // kleine timeout om component eerst zichtbaar te maken
+                setTimeout(() => this.codeInput.focusOnField(0), 250)
+
             } else {
                 this.error = e;
             }

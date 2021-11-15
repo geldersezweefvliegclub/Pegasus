@@ -279,6 +279,8 @@ export interface components {
       LIDNR?: string;
       /** Het soort lid (jeugdlid, lid, donateur). Verwijzing naar type tabel */
       LIDTYPE_ID?: number;
+      /** De vliegstatus van het lid (DBO, solist, brevethouder), NULL indien niet van toepassing */
+      STATUSTYPE_ID?: number;
       /** Zusterclub lidmaatschap van lid. Nodig voor DDWV. */
       ZUSTERCLUB_ID?: number;
       /** Mag dit lid lieren? */

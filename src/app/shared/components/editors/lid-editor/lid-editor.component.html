@@ -233,31 +233,26 @@
                                     [disabled]="isDisabled('lidmaatschap')"
                                     [(ngModel)]="lid.LIDTYPE_ID">
                                 <option
-                                        *ngFor="let type of types"
+                                        *ngFor="let type of lidTypes"
                                         [value]="type.ID"
                                 >{{type.OMSCHRIJVING}}</option>
                             </select>
                         </div>
                     </div>
                     <div class="row mt-2">
-                        <div class="col-4 mt-4">
-                            <div class="text-nowrap">
-                                <input class="form-check-inline" type="checkbox" id="LIERIST" name="LIERIST"
-                                       [disabled]="isDisabled('LIERIST')"
-                                       [(ngModel)]="lid.LIERIST">
-                                <label class="form-check-label" for="LIERIST" [ngClass]="disabledClass('LIERIST')">
-                                    Lierist
-                                </label>
-                            </div>
-                            <div class="text-nowrap">
-                                <input class="form-check-inline" type="checkbox" id="STARTLEIDER" name="STARTLEIDER"
-                                       [disabled]="isDisabled('STARTLEIDER')"
-                                       [(ngModel)]="lid.STARTLEIDER">
-                                <label class="form-check-label" for="STARTLEIDER"
-                                       [ngClass]="disabledClass('STARTLEIDER')">
-                                    Startleider
-                                </label>
-                            </div>
+                        <div class="col-4">
+                            <label for="STATUS" class="form-label"
+                                   [ngClass]="disabledClass('STATUS')">Vlieg status</label>
+                            <select class="form-select" id="STATUS" name="STATUS"
+                                    [disabled]="isDisabled('STATUS')"
+                                    [(ngModel)]="lid.STATUSTYPE_ID">
+                                <option value="undefined">n.v.t.</option>
+                                <option
+                                        *ngFor="let type of statusTypes"
+                                        [value]="type.ID"
+                                >{{type.OMSCHRIJVING}}</option>
+
+                            </select>
                         </div>
                         <div class="col-4 mt-4">
                             <div class="text-nowrap">
@@ -280,15 +275,6 @@
                         </div>
                         <div class="col-4 mt-4">
                             <div class="text-nowrap">
-                                <input class="form-check-inline" type="checkbox" id="STARTTOREN" name="STARTTOREN"
-                                       [disabled]="isDisabled('STARTTOREN')"
-                                       [(ngModel)]="lid.STARTTOREN" (ngModelChange)="isgoogleAuthNodig()">
-                                <label class="form-check-label" for="STARTTOREN"
-                                       [ngClass]="disabledClass('STARTTOREN')">
-                                    Starttoren
-                                </label>
-                            </div>
-                            <div class="text-nowrap">
                                 <input class="form-check-inline" type="checkbox" id="ROOSTER" name="ROOSTER"
                                        [disabled]="isDisabled('ROOSTER')"
                                        [(ngModel)]="lid.ROOSTER" (ngModelChange)="isgoogleAuthNodig()">
@@ -307,15 +293,15 @@
                         </div>
                     </div>
                     <div class="row mt-2">
-                        <div class="text-nowrap">
-                            <input class="form-check-inline" type="checkbox" id="DDWV_CREW" name="DDWV_CREW"
-                                   [disabled]="isDisabled('DDWV_CREW')"
-                                   [(ngModel)]="lid.DDWV_CREW" (ngModelChange)="isgoogleAuthNodig()">
-                            <label class="form-check-label" for="DDWV_CREW" [ngClass]="disabledClass('DDWV_CREW')">
-                                DDWV-Crew
-                            </label>
-                        </div>
                         <div class="col-8">
+                            <div class="text-nowrap">
+                                <input class="form-check-inline" type="checkbox" id="DDWV_CREW" name="DDWV_CREW"
+                                       [disabled]="isDisabled('DDWV_CREW')"
+                                       [(ngModel)]="lid.DDWV_CREW" (ngModelChange)="isgoogleAuthNodig()">
+                                <label class="form-check-label" for="DDWV_CREW" [ngClass]="disabledClass('DDWV_CREW')">
+                                    DDWV-Crew
+                                </label>
+                            </div>
                             <div class="text-nowrap">
                                 <input class="form-check-inline" type="checkbox" id="DDWV_BEHEERDER"
                                        name="DDWV_BEHEERDER"
@@ -329,6 +315,23 @@
                         </div>
                         <div class="col-4">
                             <div class="text-nowrap">
+                                <input class="form-check-inline" type="checkbox" id="LIERIST" name="LIERIST"
+                                       [disabled]="isDisabled('LIERIST')"
+                                       [(ngModel)]="lid.LIERIST">
+                                <label class="form-check-label" for="LIERIST" [ngClass]="disabledClass('LIERIST')">
+                                    Lierist
+                                </label>
+                            </div>
+                            <div class="text-nowrap">
+                                <input class="form-check-inline" type="checkbox" id="STARTLEIDER" name="STARTLEIDER"
+                                       [disabled]="isDisabled('STARTLEIDER')"
+                                       [(ngModel)]="lid.STARTLEIDER">
+                                <label class="form-check-label" for="STARTLEIDER"
+                                       [ngClass]="disabledClass('STARTLEIDER')">
+                                    Startleider
+                                </label>
+                            </div>
+                            <div class="text-nowrap">
                                 <input class="form-check-inline" type="checkbox" id="SLEEPVLIEGER" name="SLEEPVLIEGER"
                                        [disabled]="isDisabled('SLEEPVLIEGER')"
                                        [(ngModel)]="lid.SLEEPVLIEGER">
@@ -339,14 +342,25 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-2" *ngIf="isVisible('BETAALD')">
-                        <div class="col-6 mt-4">
-                            <div>
+                    <div class="row mt-2">
+                        <div class="col-8">
+                            <div *ngIf="isVisible('BETAALD')">
                                 <input class="form-check-inline" type="checkbox" id="betaald" name="betaald"
                                        [disabled]="isDisabled('BETAALD')"
                                        [(ngModel)]="lid.HEEFT_BETAALD">
                                 <label class="form-check-label" for="betaald" [ngClass]="disabledClass('BETAALD')">
                                     Heeft betaald
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="text-nowrap">
+                                <input class="form-check-inline" type="checkbox" id="STARTTOREN" name="STARTTOREN"
+                                       [disabled]="isDisabled('STARTTOREN')"
+                                       [(ngModel)]="lid.STARTTOREN" (ngModelChange)="isgoogleAuthNodig()">
+                                <label class="form-check-label" for="STARTTOREN"
+                                       [ngClass]="disabledClass('STARTTOREN')">
+                                    Starttoren
                                 </label>
                             </div>
                         </div>

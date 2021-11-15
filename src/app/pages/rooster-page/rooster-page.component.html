@@ -335,7 +335,7 @@
                             <div *ngIf="filteredLeden && filteredLeden.length == 0" class="d-flex justify-content-center">
                                 Geen resultaten gevonden
                             </div>
-                            <div class="card my-1"
+                            <div class="card my-1" [ngClass.lt-lg]="'mb-3'"
                                  *ngFor="let lid of filteredLeden"
                                  [cdkDragData]="lid" cdkDrag>
                                 <div *cdkDragPreview>

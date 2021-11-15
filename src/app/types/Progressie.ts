@@ -340,7 +340,7 @@ export interface components {
       VOLGORDE?: number;
       /** In welke leerfase zit deze competentie. Verwijzing naar ref_types */
       LEERFASE_ID?: number;
-      /** Omschrijving uit de types tabel */
+      /** Omschrijving uit de lidTypes tabel */
       LEERFASE?: string;
       /** Volgnummer */
       BLOK?: string;

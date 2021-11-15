@@ -58,7 +58,7 @@ export class VliegtuigEditorComponent  implements  OnInit {
     ) {}
 
     ngOnInit(): void {
-        // abonneer op wijziging van types
+        // abonneer op wijziging van lidTypes
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
             this.vliegtuigTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 4});
         });

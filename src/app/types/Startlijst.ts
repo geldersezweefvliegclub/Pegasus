@@ -80,7 +80,7 @@ export interface paths {
           EIND_DATUM?: string;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
-          /** De startmethode van de start. Zie voor ID de types met groep 5 */
+          /** De startmethode van de start. Zie voor ID de lidTypes met groep 5 */
           STARTMETHODE_ID?: string;
           /** Zoek in de NAAM, VLIEGTUIG */
           SELECTIE?: string;

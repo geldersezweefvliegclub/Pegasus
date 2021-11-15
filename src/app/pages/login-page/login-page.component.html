@@ -16,7 +16,8 @@
                                     class="form-control mb-2"
                                     [(ngModel)]="gebruikersnaam"
                                     name="gebruikersnaam"
-                                    minlength="2" required>
+                                    minlength="2" required
+                                    autocomplete="username">
                         </div>
                     </div>
                     <div class="row">
@@ -29,7 +30,8 @@
                                         class="form-control mb-2"
                                         [(ngModel)]="wachtwoord"
                                         name="wachtwoord"
-                                        minlength="2" required>
+                                        minlength="2" required
+                                        autocomplete="current-password">
                                 <span class="input-group-text passwordIcon" (click)="verbergWachtwoord()"><fa-icon
                                         [icon]="oogIcon"></fa-icon></span>
                             </div>

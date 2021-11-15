@@ -82,8 +82,6 @@ export class LedenGridComponent implements OnInit {
         },
     ];
 
-    columns: ColDef[] = this.dataColumns;
-
     // kolom om record te verwijderen
     deleteColumn: ColDef[] = [{
         pinned: 'left',
@@ -117,7 +115,7 @@ export class LedenGridComponent implements OnInit {
     }];
 
     // kolom om vlieger track aan te maken
-    aanmakenTrackColumn: ColDef = {
+    aanmakenTrackColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 100,
         initialWidth: 100,
@@ -131,7 +129,9 @@ export class LedenGridComponent implements OnInit {
                 this.openTrackEditor(LID_ID, NAAM);
             }
         },
-    };
+    }];
+
+    columns: ColDef[];
 
     frameworkComponents = {
         avatarRender: AvatarRenderComponent,
@@ -206,10 +206,11 @@ export class LedenGridComponent implements OnInit {
         const ui = this.loginService.userInfo?.Userinfo;
 
         if (!this.deleteMode) {
-            this.columns = this.dataColumns;
-            // toevoegen van add track kolom
             if (ui?.isInstructeur || ui?.isCIMT || ui?.isBeheerder) {
-                this.dataColumns.push(this.aanmakenTrackColumn);
+                this.columns = this.aanmakenTrackColumn.concat(this.dataColumns);
+            }
+            else {
+                this.columns = this.dataColumns;
             }
         } else {
             if (this.trashMode) {
@@ -218,6 +219,25 @@ export class LedenGridComponent implements OnInit {
                 this.columns = this.deleteColumn.concat(this.dataColumns);
             }
         }
+
+
+        /*
+
+
+        if (!this.deleteMode) {
+            this.columns = this.dataColumns;
+            // toevoegen van add track kolom
+
+            }
+        } else {
+            if (this.trashMode) {
+                this.columns = this.restoreColumn.concat(this.dataColumns);
+            } else {
+                this.columns = this.deleteColumn.concat(this.dataColumns);
+            }
+        }
+
+         */
     }
 
     // Opvragen van de data via de api

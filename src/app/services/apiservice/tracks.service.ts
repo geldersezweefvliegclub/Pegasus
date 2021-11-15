@@ -26,7 +26,7 @@ export class TracksService {
         if ((this.tracksCache != undefined)  && (this.tracksCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
             getParams['HASH'] = this.tracksCache.hash;
         }
-        if (lidID) {
+        if (lidID && lidID >= 0) {
             getParams['LID_ID'] = lidID.toString();
         }
         if ((max) && (max > 0)) {

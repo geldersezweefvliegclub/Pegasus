@@ -6,10 +6,14 @@ import {HeliosUserinfo, HeliosVliegtuig} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
 import {SharedService} from "../shared/shared.service";
 
+interface BearerToken {
+    TOKEN: string;
+}
 
 @Injectable({
     providedIn: 'root'
 })
+
 export class LoginService {
     userInfo: HeliosUserinfo | null = null;
     inloggenSucces: EventEmitter<void> = new EventEmitter<void>();
@@ -45,6 +49,9 @@ export class LoginService {
         const response: Response = await this.APIService.get('Login/Login', params, headers);
 
         if (response.ok) {
+            const login: BearerToken = await response.json();
+            this.APIService.setBearerToken(login.TOKEN);
+
             await this.getUserInfo();
             this.successEmit();
 

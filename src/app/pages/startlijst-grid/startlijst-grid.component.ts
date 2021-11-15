@@ -221,7 +221,7 @@ export class StartlijstGridComponent implements OnInit, OnDestroy {
                 }
             }
             this.opvragen();
-            this.beperkteInvoer();
+            this.magVerwijderen = (!this.beperkteInvoer()) ? true : false;
         });
 
         // abonneer op wijziging van diensten
@@ -245,7 +245,7 @@ export class StartlijstGridComponent implements OnInit, OnDestroy {
 
         const ui = this.loginService.userInfo?.Userinfo;
         this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isDDWV || ui?.isClubVlieger) ? true : false;
-        this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isClubVlieger) ? true : false;
+        this.magVerwijderen = (!this.beperkteInvoer()) ? true : false;
         this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isDDWV || ui?.isClubVlieger) ? true : false;
         this.magExporteren = (!ui?.isDDWV && !ui?.isStarttoren);
     }
@@ -257,8 +257,8 @@ export class StartlijstGridComponent implements OnInit, OnDestroy {
         if (this.datumAbonnement)       this.datumAbonnement.unsubscribe();
     }
 
-    // mag de ingelogde gebruiker starts voor iedereen nvullen of alleen voor zichzelf
-    async beperkteInvoer() {
+    // mag de ingelogde gebruiker starts voor iedereen invullen of alleen voor zichzelf
+    beperkteInvoer(): boolean {
         this.VliegerID = this.loginService.userInfo?.LidData?.ID;   // als VliegerID gezet is, mogen we alleen voor onszelf invoeren
         const ui = this.loginService.userInfo?.Userinfo;
 
@@ -287,6 +287,7 @@ export class StartlijstGridComponent implements OnInit, OnDestroy {
                 }
             }
         }
+        return (this.VliegerID == this.loginService.userInfo?.LidData?.ID)
     }
 
     // openen van popup om nieuwe start te kunnen invoeren

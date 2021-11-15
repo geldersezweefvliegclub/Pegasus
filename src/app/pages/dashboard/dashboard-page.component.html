@@ -1,3 +1,6 @@
+<app-error [error]="error"></app-error>
+<app-success [success]="success"></app-success>
+
 <app-pegasus-card titel="Dashboard"
                   subtitel="Een verzameling van nuttige info"
                   [icon]="iconCardIcon">
@@ -6,19 +9,32 @@
         <div class="row bg-tertiary rounded px-5 text-white">
             <div class="col-8 d-flex flex-column justify-content-center" *ngIf="lidData">
                 <h2 class="fw-bold mb-0">{{lidData.NAAM}}</h2>
+                <p class="mb-0" *ngIf="lidData">{{getLidType()}}</p>
             </div>
             <div class="col-4 d-flex justify-content-end">
                 <div class="row">
-                    <div class="col-6 d-flex flex-column justify-content-center">
-                        <p class="mb-0" *ngIf="lidData">{{getLidType()}}<br>{{lidData.LIDNR}}</p>
+                    <div class="col-8 d-flex flex-column justify-content-center">
+                        <select class="form-select" id="STATUS" name="STATUS" *ngIf="statusWijzigbaar()"
+                                [(ngModel)]="lidData.STATUSTYPE_ID"
+                                (change)="wijzigVliegStatus()" >
+                            <option value="undefined">n.v.t.</option>
+                            <option
+                                    *ngFor="let type of statusTypes"
+                                    [value]="type.ID"
+                            >{{type.OMSCHRIJVING}}</option>
+
+                        </select>
+                        <div *ngIf="!statusWijzigbaar()">
+                            <p>Vliegstatus<br>
+                            <b>{{getStatusType()}}</b></p>
+                        </div>
                     </div>
-                    <div class="col-6">
+                    <div class="col-4">
                         <app-avatar [url]="lidData.AVATAR" [naam]="lidData.NAAM" *ngIf="lidData"></app-avatar>
                     </div>
                 </div>
             </div>
         </div>
-
         <div class="row mt-4" *ngIf="!isDDWVer">
             <div class="col-3">
                 <app-pegasus-card id="statusCard"
@@ -123,6 +139,7 @@
     </div>
 </app-pegasus-card>
 
+
 <app-modal #logboekPopup popupClass="popupLarge" titel="Logboek van {{lidData.NAAM}}" *ngIf="lidData">
     <div body>
         <div class="popupLargeWrapper">
@@ -140,7 +157,7 @@
                                  iconNaam="far PlusSquare" (btnClicked)="addStart()"
                                  btnColor="btn-primary"></app-icon-button>
                 <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
-                                 btnColor="btn-secondary"
+                                 btnColor="btn-secondary" *ngIf="magVerwijderen"
                                  (btnClicked)="verwijderMode = !verwijderMode"></app-icon-button>
             </div>
         </div>

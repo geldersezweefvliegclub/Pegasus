@@ -70,9 +70,10 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     gridReady(ready: any) {
+        console.log(this.id, "grid ready")
         this.api = ready.api;
-        this.api.setColumnDefs(this.columnDefs);
 
+        this.api.setColumnDefs(this.columnDefs);
         this.api.sizeColumnsToFit()
 
         // automatisch column aanpassen bij wijzigen window size
@@ -95,7 +96,6 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
             this.api.setColumnDefs(this.columnDefs);
             this.api.setRowData(this.rowData);
 
-
             if (changes.hasOwnProperty("loading")) {
                 if (changes["loading"].currentValue) {
                     this.api.showLoadingOverlay()
@@ -103,6 +103,10 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
                     //  is niet nodig, gaat vanzelf
                 }
             }
+        }
+        else
+        {
+            console.log("no api", this.id)
         }
     }
 

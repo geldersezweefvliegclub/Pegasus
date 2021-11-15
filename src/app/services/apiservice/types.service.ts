@@ -20,7 +20,7 @@ export class TypesService {
                 private readonly loginService: LoginService,
                 private readonly storageService: StorageService) {
 
-        // We hebben misschien eerder de types opgehaald. Die gebruiken we totdat de API data heeft opgehaald
+        // We hebben misschien eerder de lidTypes opgehaald. Die gebruiken we totdat de API data heeft opgehaald
         if (this.storageService.ophalen('types') != null) {
             this.typesCache = this.storageService.ophalen('types');
             this.typesStore.next(this.typesCache.dataset!)    // afvuren event met opgeslagen type dataset
@@ -43,7 +43,7 @@ export class TypesService {
             }
         }, 1000 * 60);  // iedere minuut
 
-        // nadat we ingelogd zijn kunnen we de types ophalen
+        // nadat we ingelogd zijn kunnen we de lidTypes ophalen
         loginService.inloggenSucces.subscribe(() => {
             this.getTypes().then((dataset) => {
                 this.typesStore.next(this.typesCache.dataset!)    // afvuren event

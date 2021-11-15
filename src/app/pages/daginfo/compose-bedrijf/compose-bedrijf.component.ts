@@ -31,7 +31,7 @@ export class ComposeBedrijfComponent {
 
     constructor(private readonly typesService: TypesService) {
 
-        // abonneer op wijziging van types
+        // abonneer op wijziging van lidTypes
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
             this.baanTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 1}));
             this.startMethodeTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 5}));

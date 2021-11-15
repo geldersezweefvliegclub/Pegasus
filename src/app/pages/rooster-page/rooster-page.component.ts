@@ -182,7 +182,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             this.opvragenTotalen();
         });
 
-        // abonneer op wijziging van types
+        // abonneer op wijziging van lidTypes
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
             this.dienstTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 18});    // type diensten
         });

@@ -222,7 +222,6 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
             } else {
                 this.columns = this.deleteColumn.concat(this.dataColumns);
             }
-
         }
     }
 
@@ -273,16 +272,16 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
         {
             // for each over de starts
             this.logboek.forEach((s) => {
-                const vliegtuig = this.data.find(v => v.ID == s.VLIEGTUIG_ID);
-                if (vliegtuig) { vliegtuig.toonLogboek = true; console.log(vliegtuig) }
+                const vliegtuig = this.data.find(v => (v.ID == s.VLIEGTUIG_ID) && s.STARTTIJD);
+                if (vliegtuig) { vliegtuig.toonLogboek = true; }
             });
         }
         else
         {
             // for each over de vliegtuigen
             this.data.forEach((vliegtuig) => {
-                const start = this.logboek.find(s => s.VLIEGTUIG_ID == vliegtuig.ID);
-                if (start) { vliegtuig.toonLogboek = true; console.log(vliegtuig) }
+                const start = this.logboek.find(s => (s.VLIEGTUIG_ID == vliegtuig.ID) && s.STARTTIJD);
+                if (start) { vliegtuig.toonLogboek = true; }
             });
         }
     }

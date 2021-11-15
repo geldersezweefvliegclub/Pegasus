@@ -1,4 +1,14 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {
+    AfterContentInit,
+    AfterViewInit,
+    Component,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    SimpleChanges,
+    ViewChild
+} from '@angular/core';
 import {ColDef, RowDoubleClickedEvent} from "ag-grid-community";
 import {HeliosLogboekDataset, HeliosTrack} from "../../../types/Helios";
 import {DateTime, Interval} from "luxon";
@@ -143,27 +153,30 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnInit(): void {
-        // de datum zoals die in de kalender gekozen is
-        this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
-            // ophalen is alleen nodig als er een ander jaar gekozen is in de kalendar
-            const ophalen = ((this.datum == undefined) || (this.datum.year != jaarMaand.year))
-            this.datum = DateTime.fromObject({
-                year: jaarMaand.year,
-                month: jaarMaand.month,
-                day: 1
-            })
-            if (ophalen) {
-                this.data = [];
-                this.opvragen();
-            }
-        });
+        // Op safari hebben we een korte vertraging nodig op te zorgen dat initialisatie gedaan is
+        setTimeout(() => {
+            // de datum zoals die in de kalender gekozen is
+            this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
+                // ophalen is alleen nodig als er een ander jaar gekozen is in de kalendar
+                const ophalen = ((this.datum == undefined) || (this.datum.year != jaarMaand.year))
+                this.datum = DateTime.fromObject({
+                    year: jaarMaand.year,
+                    month: jaarMaand.month,
+                    day: 1
+                })
+                if (ophalen) {
+                    this.data = [];
+                    this.opvragen();
+                }
+            });
 
-        // Als daginfo of startlijst is aangepast, moet we kalender achtergrond ook updaten
-        this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
-            if (ev.tabel == "Startlijst") {
-                this.opvragen();
-            }
-        });
+            // Als daginfo of startlijst is aangepast, moet we kalender achtergrond ook updaten
+            this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
+                if (ev.tabel == "Startlijst") {
+                    this.opvragen();
+                }
+            });
+        }, 250);
 
         this.kolomDefinitie();
     }
@@ -182,22 +195,25 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
             this.isLoading = true;
             this.startlijstService.getLogboek(this.VliegerID, startDatum, eindDatum).then((dataset) => {
                 this.isLoading = false;
-                this.data = (dataset) ? dataset : [];
+                console.log("this.isLoading = false;");
+                let data:HeliosLogboekDatasetExtended[] = (dataset) ? dataset : [];
 
                 const ui = this.loginService.userInfo;
                 const nu:  DateTime = DateTime.now()
 
-                for (let i = 0; i < this.data.length; i++) {
-                    const diff = Interval.fromDateTimes(DateTime.fromSQL(this.data[i].DATUM!), nu);
+                for (let i = 0; i < data.length; i++) {
+                    const diff = Interval.fromDateTimes(DateTime.fromSQL(data[i].DATUM!), nu);
                     if (diff.length("days") > 45) {
-                        this.data[i].inTijdspan = ui!.Userinfo!.isBeheerder!;   // alleen beheerder mag na 45 dagen wijzigen
+                        data[i].inTijdspan = ui!.Userinfo!.isBeheerder!;   // alleen beheerder mag na 45 dagen wijzigen
                     }
                     else {
-                        this.data[i].inTijdspan = true; // zitten nog binnen 45 dagen
+                        data[i].inTijdspan = true; // zitten nog binnen 45 dagen
                     }
                 }
+                this.data = data;
             }).catch(e => {
                 this.isLoading = false;
+                this.data = [];
                 this.error = e;
             });
         }

@@ -26,7 +26,8 @@ export class LidEditorComponent implements OnInit {
     @Input() isRestoreMode: boolean = false;
 
     private typesAbonnement: Subscription;
-    types: HeliosType[];
+    lidTypes: HeliosType[];
+    statusTypes: HeliosType[];
     lid: HeliosLid = {};
 
     wachtwoordVerborgen: boolean = true;
@@ -62,9 +63,10 @@ export class LidEditorComponent implements OnInit {
 
     ngOnInit(): void {
 
-        // abonneer op wijziging van types
+        // abonneer op wijziging van lidTypes
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
-            this.types = dataset!.filter((t:HeliosType) => { return t.GROEP == 6});    // lidtypes
+            this.lidTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 6});          // lidtypes
+            this.statusTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 19});      // status types (DBO, solo, brevet)```````
         });
 
         if (this.lidID >= 0) {
@@ -86,7 +88,7 @@ export class LidEditorComponent implements OnInit {
                     // gebruik twee locale variable voor datum ingave
                     this.MedicalDatum = this.converteerDatumNaarNgbDate(lid.MEDICAL);
                     this.GeboorteDatum = this.converteerDatumNaarNgbDate(lid.GEBOORTE_DATUM);
-                    this.avatar = lid.AVATAR;
+                    this.avatar = lid.AVATAR + "";  // voorkom dat lid.avatar undefined is. Dan kan je geen avatar uploaden
                     this.isLoading = false;
                 });
             }
@@ -276,6 +278,12 @@ export class LidEditorComponent implements OnInit {
             case 'lidnummer':
             case 'lidmaatschap': {
                 if (ui?.isBeheerder || ui?.isBeheerderDDWV) {
+                    return false;
+                }
+                break;
+            }
+            case 'STATUS': {
+                if (ui?.isBeheerder || ui?.isCIMT) {
                     return false;
                 }
                 break;
