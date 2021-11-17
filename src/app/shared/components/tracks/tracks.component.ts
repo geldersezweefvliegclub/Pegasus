@@ -133,6 +133,12 @@ export class TracksComponent implements OnInit, OnDestroy {
         this.trackEditor.openPopup(null, this.VliegerID, undefined, this.VliegerNaam);
     }
 
+    // open de track editor om nieuwe track toe te voegen. Editor opent als popup
+    replyTrackEditor(trk: TracksLedenDataset) {
+        const tekst = "In reactie op: \n----------------\n" + trk.TEKST + "\n----------------\n";
+        this.trackEditor.openPopup(null, trk.LID_ID, undefined, trk.LID_NAAM, tekst);
+    }
+
     // Toevoegen van een vlieger track aan de database
     ToevoegenTrack(track: HeliosTrack): void {
         this.trackService.addTrack(track);

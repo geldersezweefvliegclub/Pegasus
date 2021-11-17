@@ -29,7 +29,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td>
+                        <td style="width: 100%;">
                             <div class="trackHeader">
                                 Op {{datumString(trk.INGEVOERD)}} om {{tijdString(trk.INGEVOERD)}}
                                 schreef {{trk.INSTRUCTEUR_NAAM}}
@@ -38,6 +38,9 @@
                             <div class="tekstbox">
                                 {{trk.TEKST}}
                             </div>
+                        </td>
+                        <td class="replyColumn">
+                            <app-icon-button iconNaam="fas Reply" class="tracksReplyIcon" (btnClicked)="replyTrackEditor(trk)"></app-icon-button>
                         </td>
                     </tr>
                 </table>
