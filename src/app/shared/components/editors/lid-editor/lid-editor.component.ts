@@ -200,6 +200,7 @@ export class LidEditorComponent implements OnInit {
     nieuwLid(): void {
         this.isSaving = true;
         this.ledenService.addLid(this.lid).then((l) => {
+            this.lid = l;
             this.isSaving = false;
             this.error = undefined;
             this.success = {titel: "Profiel", beschrijving: l.NAAM + " is toegevoegd"}

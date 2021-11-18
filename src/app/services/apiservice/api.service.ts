@@ -19,8 +19,8 @@ export class APIService {
     }
 
     // opslaan van de token die we met inloggen hebben vekregen
-    async setBearerToken(token: string) {
-        this.BearerToken = token;
+    async setBearerToken(token?: string) {
+        this.BearerToken = (token) ? token : null;
     }
 
     async get(url: string, params?: KeyValueArray, headers?: Headers): Promise<Response> {

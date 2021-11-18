@@ -2,7 +2,7 @@ import {EventEmitter, Injectable} from '@angular/core';
 import {APIService} from './api.service';
 import {Base64} from 'js-base64';
 
-import {HeliosUserinfo, HeliosVliegtuig} from '../../types/Helios';
+import {HeliosUserinfo} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
 import {SharedService} from "../shared/shared.service";
 
@@ -17,8 +17,6 @@ interface BearerToken {
 export class LoginService {
     userInfo: HeliosUserinfo | null = null;
     inloggenSucces: EventEmitter<void> = new EventEmitter<void>();
-
-    private keepAliveTimer: number;
 
     constructor(private readonly APIService: APIService,
                 private readonly sharedService: SharedService,
@@ -50,15 +48,32 @@ export class LoginService {
 
         if (response.ok) {
             const login: BearerToken = await response.json();
+            this.storageService.opslaan("bearer", login.TOKEN);
             this.APIService.setBearerToken(login.TOKEN);
 
             await this.getUserInfo();
             this.successEmit();
-
-            clearTimeout(this.keepAliveTimer);
-            this.keepAliveTimer = window.setInterval(() => this.getUserInfo(), 1000 * 60 * 30); // 30 min
         }
     }
+
+    // Haal nieuw token op zodat de sessie alive blijft
+    async relogin(): Promise<boolean> {
+        try {
+            const response: Response = await this.APIService.get('Login/Relogin');
+            if (response.ok) {
+                const login: BearerToken = await response.json();
+
+                this.storageService.opslaan("bearer", login.TOKEN);
+                this.APIService.setBearerToken(login.TOKEN);
+            }
+        }
+        catch (e) {
+            this.APIService.setBearerToken();
+            return false;
+        }
+        return true;
+    }
+
 
     // laat iedereen weten dat we ingelogd zijn, we wachten even zodat alle componenten geladen zijn
     // doen we dat niet, dan komt abbonement later dan event en missen het event
@@ -92,5 +107,6 @@ export class LoginService {
     uitloggen(): void {
         this.userInfo = null;
         this.storageService.verwijder("userInfo");
+        this.storageService.verwijder("bearer");
     }
 }

@@ -12,6 +12,7 @@ import {SwUpdate} from "@angular/service-worker";
 export class AppComponent {
     isIngelogd: boolean = this.loginService.isIngelogd();
     updateAvailable: boolean = false;
+    private keepAliveTimer: number;
 
     constructor(private readonly router: Router,
                 private readonly loginService: LoginService,
@@ -24,10 +25,24 @@ export class AppComponent {
             }
         });
 
-        // bij het opstarten zijn we reeds ingelogd. Deel dit met alle componenten
+        // bij het opstarten zijn we miischien ingelogd. Deel dit met alle componenten
         if (this.isIngelogd) {
             setTimeout(() => loginService.successEmit(), 2000);
         }
+
+        // nadat we ingelogd zijn, blijven we controleren of we ingelogd zijn, zo niet, dan loggen we uit
+        loginService.inloggenSucces.subscribe(() => {
+            this.keepAliveTimer = setInterval(() => {
+               loginService.relogin().then((success) => {
+                   if (!success) {                                          // niet meer ingelogd
+                       clearInterval(this.keepAliveTimer);                  // dan ook stoppen met controleren
+
+                       loginService.uitloggen();                            // verwijder inloginfo
+                       this.router.navigate(['login']).then();    // ga noar login pagina
+                   }
+               })
+            }, 1000*60 * 10);   // 10 minuten
+        });
     }
 
   private navigeerNaarLogin() {
