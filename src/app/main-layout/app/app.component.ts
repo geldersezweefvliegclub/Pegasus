@@ -2,6 +2,8 @@ import {Component} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
 import {LoginService} from '../../services/apiservice/login.service';
 import {SwUpdate} from "@angular/service-worker";
+import {debounceTime} from "rxjs/operators";
+import {SharedService} from "../../services/shared/shared.service";
 
 @Component({
     selector: 'app-root',
@@ -16,6 +18,7 @@ export class AppComponent {
 
     constructor(private readonly router: Router,
                 private readonly loginService: LoginService,
+                private readonly sharedService: SharedService,
                 private readonly updates: SwUpdate) {
 
         updates.available.subscribe(() => this.updateAvailable = true);
@@ -42,6 +45,17 @@ export class AppComponent {
                    }
                })
             }, 1000*60 * 10);   // 10 minuten
+        });
+
+        // We houden failure van api bij. Als we zien dat de server ons niet meer kent = error 501
+        // doordat bijvoorbeeld de computer in slaapstand is geweest, dan loggen we uit
+        this.sharedService.heliosEventFailed.pipe(debounceTime(1000)).subscribe(error => {
+            if (error.responseCode == 501) {   
+                clearInterval(this.keepAliveTimer);                  // stoppen met controleren
+
+                loginService.uitloggen();                            // verwijder inloginfo
+                this.router.navigate(['login']).then();    // ga noar login pagina
+            }
         });
     }
 

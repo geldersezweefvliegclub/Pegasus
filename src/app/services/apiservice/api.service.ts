@@ -146,11 +146,12 @@ export class APIService {
             beschrijving = response.statusText;                         // HTTP error berichten
         }
 
-        response.statusText
-        throw {
+        const error: ErrorMessage = {
             responseCode: response.status,
             beschrijving: beschrijving
         }
 
+        this.sharedService.fireHeliosFailure(error);
+        throw error;
     }
 }
