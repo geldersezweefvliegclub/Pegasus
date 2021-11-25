@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
-import {HeliosEvent, KalenderMaand} from '../../types/Utils';
+import {ErrorMessage, HeliosEvent, KalenderMaand} from '../../types/Utils';
 
 
 export interface FilterLedenData {
@@ -36,7 +36,8 @@ export class SharedService {
     private datumStore = new BehaviorSubject(this.vandaag);
     private kalenderMaandStore = new BehaviorSubject(this.kalenderMaand);
 
-    private heliosEventSubject: Subject<HeliosEvent> = new Subject<HeliosEvent>();  // data in de database is aangepast
+    private heliosEventSubject: Subject<HeliosEvent> = new Subject<HeliosEvent>();          // data in de database is aangepast
+    private heliosFailedSubject: Subject<ErrorMessage> = new Subject<ErrorMessage>();       // api call heef gefaald
 
     public readonly ingegevenDatum = this.datumStore.asObservable();                // nieuwe datum gekozen
     public readonly kalenderMaandChange = this.kalenderMaandStore.asObservable();   // nieuwe maand / jaar gekozen in de kalender
@@ -55,6 +56,9 @@ export class SharedService {
     // laat andere component weten dat er iets in de database is aangepast
     public readonly heliosEventFired: Observable<HeliosEvent> = this.heliosEventSubject.asObservable();
 
+    // laat andere component weten dat er iets in de database is aangepast
+    public readonly heliosEventFailed: Observable<ErrorMessage> = this.heliosFailedSubject.asObservable();
+
     // afvuren event dat een andere maand / jaar gekozen is in de kalender
     zetKalenderMaand(kalenderMaand: KalenderMaand) {
         this.kalenderMaandStore.next(kalenderMaand)
@@ -69,5 +73,10 @@ export class SharedService {
     // Er is iets in de database gewijzigd
     fireHeliosEvent(event: HeliosEvent) {
         this.heliosEventSubject.next(event);
+    }
+
+    // Er is iets in de database gewijzigd
+    fireHeliosFailure(error: ErrorMessage) {
+        this.heliosFailedSubject.next(error);
     }
 }
