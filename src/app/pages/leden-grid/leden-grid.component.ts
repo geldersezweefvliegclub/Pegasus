@@ -65,8 +65,9 @@ export class LedenGridComponent implements OnInit {
         {field: 'ADRES', headerName: 'Adres', sortable: true, cellRenderer: 'adresRender'},
         {field: 'TELEFOON', headerName: 'Telefoon', sortable: false, cellRenderer: 'telefoonRender'},
 
-        {field: 'LIDTYPE', headerName: 'Lidmaatschap', sortable: true, hide: true},
-        {field: 'ZUSTERCLUB', headerName: 'Club', sortable: true, hide: true},
+        {field: 'LIDTYPE', headerName: 'Lidmaatschap', sortable: true, hide: !this.toonLidType()},
+        {field: 'STATUS', headerName: 'Status', sortable: true, hide: !this.toonStatus()},
+        {field: 'ZUSTERCLUB', headerName: 'Club', sortable: true, hide: !this.toonZusterClub()},
 
         {field: 'INSTRUCTEUR', headerName: 'Instructeur', sortable: true, cellRenderer: 'checkboxRender'},
         {field: 'LIERIST', headerName: 'Lierist', sortable: true, cellRenderer: 'checkboxRender'},
@@ -335,5 +336,20 @@ export class LedenGridComponent implements OnInit {
         if (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isInstructeur || ui?.isCIMT || ui!.isRooster) {
             this.router.navigate(['profiel'], {queryParams: {lidID: $event.data.ID}});
         }
+    }
+
+    private toonStatus() {
+        const ui = this.loginService.userInfo?.Userinfo;
+        return (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isInstructeur || ui?.isCIMT) ? true : false;
+    }
+
+    private toonLidType() {
+        const ui = this.loginService.userInfo?.Userinfo;
+        return (ui?.isBeheerder || ui?.isBeheerderDDWV) ? true : false;
+    }
+
+    private toonZusterClub() {
+        const ui = this.loginService.userInfo?.Userinfo;
+        return (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
     }
 }

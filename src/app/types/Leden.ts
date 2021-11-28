@@ -339,6 +339,8 @@ export interface components {
     view_leden_dataset: components["schemas"]["ref_leden"] & {
       /** Lidtype in text */
       LIDTYPE?: string;
+      /** Vliegstatus, zoals DBO, Solist of Brevethouder */
+      STATUS?: string;
       /** Naam van de zusterclub */
       ZUSTERCLUB?: string;
     };
