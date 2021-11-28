@@ -31,6 +31,10 @@
         <p class="titel">Vorig jaar</p>
         <p class="beschrijving">{{recency.STARTS_VORIG_JAAR}} starts en {{recency.UREN_VORIG_JAAR}} uur</p>
     </div>
+    <div *ngIf="recency.STARTS_INSTRUCTIE >= 0" (click)="openInstructiePopup()" class="recencyGrafiek">
+        <p class="titel">Instructie laatste 3 jaar</p>
+        <p class="beschrijving">{{recency.STARTS_INSTRUCTIE}} starts en {{recency.UREN_INSTRUCTIE}} uur</p>
+    </div>
 </div>
 
 <div class="spinnerOverlay" *ngIf="isLoading">
@@ -38,4 +42,5 @@
 </div>
 
 <app-recency-grafiek [VliegerID]="VliegerID" [naam]=""></app-recency-grafiek>
+<app-instructie-grafiek [VliegerID]="VliegerID" [naam]=""></app-instructie-grafiek>
 

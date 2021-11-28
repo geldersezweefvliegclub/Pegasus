@@ -48,6 +48,7 @@ import { OnderdrukNulComponent } from './components/datatable/onderdruk-nul/onde
 import { DienstenComponent } from './components/diensten/diensten.component';
 import { DagRoosterComponent } from './components/dag-rooster/dag-rooster.component';
 import { SuccessComponent } from './components/success/success.component';
+import { InstructieGrafiekComponent } from './components/recency/instructie-grafiek/instructie-grafiek.component';
 
 @NgModule({
     imports: [
@@ -103,7 +104,8 @@ import { SuccessComponent } from './components/success/success.component';
     OnderdrukNulComponent,
     DienstenComponent,
     DagRoosterComponent,
-    SuccessComponent
+    SuccessComponent,
+    InstructieGrafiekComponent
   ],
     exports: [
         LidEditorComponent,

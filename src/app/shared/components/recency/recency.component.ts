@@ -3,6 +3,7 @@ import {StartlijstService} from "../../../services/apiservice/startlijst.service
 import {HeliosRecency} from "../../../types/Helios";
 import {RecencyGrafiekComponent} from "./recency-grafiek/recency-grafiek.component";
 import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
+import {InstructieGrafiekComponent} from "./instructie-grafiek/instructie-grafiek.component";
 
 @Component({
     selector: 'app-recency',
@@ -13,7 +14,8 @@ export class RecencyComponent implements OnInit, OnChanges {
     @Input() VliegerID: number;
     @Input() naam: string;
 
-    @ViewChild(RecencyGrafiekComponent) private grafiek: RecencyGrafiekComponent;
+    @ViewChild(RecencyGrafiekComponent) private grafiekRecency: RecencyGrafiekComponent;
+    @ViewChild(InstructieGrafiekComponent) private grafiekInstructie: InstructieGrafiekComponent;
 
     recency: HeliosRecency;
     isLoading: boolean = false;
@@ -46,6 +48,10 @@ export class RecencyComponent implements OnInit, OnChanges {
     }
 
     openRecencyPopup(): void {
-        this.grafiek.openPopup();
+        this.grafiekRecency.openPopup();
+    }
+
+    openInstructiePopup(): void {
+        this.grafiekInstructie.openPopup();
     }
 }

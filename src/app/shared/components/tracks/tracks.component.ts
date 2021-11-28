@@ -78,7 +78,7 @@ export class TracksComponent implements OnInit, OnDestroy {
         const ui = this.loginService.userInfo?.Userinfo;
         this.magToevoegen = (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) ? true : false;
         this.magVerwijderen = (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) ? true : false;
-        this.magWijzigen = (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) ? true : false;
+        this.magWijzigen = (ui?.isBeheerder || ui?.isCIMT) ? true : false;
 
         // Alleen als we onderstaande rollen hebben kunnen we Tracks gebruiken
         if (ui?.isCIMT || ui?.isInstructeur || ui?.isBeheerder) {
@@ -147,7 +147,15 @@ export class TracksComponent implements OnInit, OnDestroy {
 
     // openen van popup om gegevens van een bestaande track aan te passen
     openEditor(trk: TracksLedenDataset) {
-        this.trackEditor.openPopup(trk, trk.LID_ID, undefined, trk.LID_NAAM as string);
+        const ui = this.loginService.userInfo?.LidData;
+
+        // Je mag alleen tracks van jezelf wijzigen
+        if ((trk.INSTRUCTEUR_ID == ui!.ID) || (this.magWijzigen)) {
+            this.trackEditor.openPopup(trk, trk.LID_ID, undefined, trk.LID_NAAM as string);
+        }
+        else {
+            window.alert("U bent niet gemachtigd om deze track aan te passen");
+        }
     }
 
     // openen van popup om track te verwijderen

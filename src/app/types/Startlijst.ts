@@ -80,7 +80,7 @@ export interface paths {
           EIND_DATUM?: string;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
-          /** De startmethode van de start. Zie voor ID de lidTypes met groep 5 */
+          /** De startmethode van de start. Zie voor ID de types met groep 5 */
           STARTMETHODE_ID?: string;
           /** Zoek in de NAAM, VLIEGTUIG */
           SELECTIE?: string;
@@ -563,6 +563,7 @@ export interface components {
       jaar?: {
         STARTS?: number;
         INSTRUCTIE_STARTS?: number;
+        INSTRUCTIE_UREN?: string;
         VLIEGTIJD?: string;
       };
     };
@@ -632,12 +633,16 @@ export interface components {
       }[];
     };
     recency: {
-      STARTS_DRIE_MND?: string;
-      STARTS_VORIG_JAAR?: string;
-      STARTS_DIT_JAAR?: string;
+      STARTS_DRIE_MND?: number;
+      STARTS_VORIG_JAAR?: number;
+      STARTS_DIT_JAAR?: number;
+      /** aantal instructie starts in laatste 3 jaar (alleen voor instructeurs) */
+      STARTS_INSTRUCTIE?: number;
       UREN_DRIE_MND?: string;
       UREN_VORIG_JAAR?: string;
       UREN_DIT_JAAR?: string;
+      /** aantal instructie uren in laatste 3 jaar (alleen voor instructeurs) */
+      UREN_INSTRUCTIE?: string;
       STATUS_BAROMETER?: string;
       /** 0-10 = rood, 10-20 = geel, > 20 = groen.  Geeft inzicht waarde in de status */
       WAARDE?: number;

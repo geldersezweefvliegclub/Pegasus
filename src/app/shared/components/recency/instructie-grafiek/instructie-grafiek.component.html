@@ -1,11 +1,11 @@
-<app-modal popupClass="popupLarge" titel="Recency verloop {{naam}} over 24 maanden">
+<app-modal popupClass="popupLarge" titel="Instructie bevoegdheid {{naam}} over 36 maanden">
     <div body>
         <div *ngIf="bezig">
             <ngb-progressbar type="info" [value]="counter" showValue="true" max="36" [striped]="true"></ngb-progressbar>
         </div>
         <div class="barchart-wrapper popupLargeWrapper" *ngIf="!bezig">
             <div class="linechart-wrapper inlineGrafiek">
-                <canvas class="recencyGrafiek" baseChart *ngIf="waardes"
+                <canvas class="recencyGrafiek" baseChart *ngIf="uren"
                         [datasets]="lineChartData"
                         [labels]="lineChartLabels"
                         [options]="lineChartOptions"
@@ -17,4 +17,3 @@
         </div>
     </div>
 </app-modal>
-

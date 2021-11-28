@@ -45,7 +45,7 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDest
                     "hash": "0",
                     "starts": [],
                     "vliegtuigen": [],
-                    "jaar": {"STARTS": 0, "INSTRUCTIE_STARTS": 0, "VLIEGTIJD": "0:00"}
+                    "jaar": {"STARTS": 0, "INSTRUCTIE_STARTS": 0, "INSTRUCTIE_UREN": "0:00", "VLIEGTIJD": "0:00"}
                 }
                 this.opvragen();
             }
