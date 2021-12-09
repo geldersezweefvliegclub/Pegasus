@@ -34,6 +34,8 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
     vliegtuigInput$ = new Subject<string | null>();
     vliegtuigenSelectie$: Observable<HeliosVliegtuigenDataset[]>;
 
+    inzetbaar: boolean = true;
+
     constructor() {
     }
 
@@ -103,6 +105,9 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
     }
 
     inputChange(id: number | undefined) {
+
+        const vliegtuig = this.vliegtuigen.find(v => v.ID == id);
+        this.inzetbaar = (vliegtuig) ? vliegtuig.INZETBAAR! : true;
 
         // niet alle event doorgeven naar parent.
         clearTimeout(this.EventEmitterDelay);
