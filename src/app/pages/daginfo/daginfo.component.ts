@@ -153,7 +153,7 @@ export class DaginfoComponent implements OnInit, OnDestroy{
         if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT || ui?.isStarttoren) {
             geenToegang = false;
         } else if (this.rooster) {
-            const d = this.datum.toSQL().substr(0, 10);
+            const d = this.datum.toISODate();
             let rooster: HeliosRoosterDataset | undefined = this.rooster.find((dag) => d == dag.DATUM!)
 
             if (rooster) {

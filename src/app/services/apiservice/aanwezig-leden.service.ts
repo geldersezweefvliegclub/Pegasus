@@ -101,7 +101,7 @@ export class AanwezigLedenService {
             const response: Response = await this.APIService.get('AanwezigLeden/GetObjects', getParams);
             this.aanwezigCache = await response.json();
         } catch (e) {
-            if (e.responseCode !== 704) { // server bevat dezelfde data als cache
+            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde data als cache
                 throw(e);
             }
         }

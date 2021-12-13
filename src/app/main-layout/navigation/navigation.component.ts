@@ -160,22 +160,28 @@ export class NavigationComponent implements OnInit, OnDestroy  {
             dashboard.excluded = true
         }
 
-        // alleen echter gebruiker hebben profiel, starttoren, zusterclubs, etc dus niet
+        // alleen echte gebruiker hebben profiel, starttoren, zusterclubs, etc dus niet
         const profiel = this.routes.find(route => route.path == "profiel") as CustomRoute;
         if (!ui?.isDDWV && !ui?.isClubVlieger) {
             profiel.excluded = true
         }
 
-        // alleen echter gebruiker hebben toegang tot ledenlijst, starttoren, zusterclubs, etc dus niet
+        // alleen echte gebruiker hebben toegang tot ledenlijst, starttoren, zusterclubs, etc dus niet
         const leden = this.routes.find(route => route.path == "leden") as CustomRoute;
         if (!ui?.isDDWV && !ui?.isClubVlieger && !ui?.isStarttoren) {
             leden.excluded = true
         }
 
-        // alleen echter gebruiker hebben toegang tot rooster, starttoren, zusterclubs, etc dus niet
+        // alleen echte gebruiker hebben toegang tot rooster, starttoren, zusterclubs, etc dus niet
         const rooster = this.routes.find(route => route.path == "rooster") as CustomRoute;
         if (!ui?.isDDWV && !ui?.isClubVlieger) {
             rooster.excluded = true
+        }
+
+        // alleen clubvliegers en starttoren hebben toegnag tot reservering
+        const reserveringen = this.routes.find(route => route.path == "reserveringen") as CustomRoute;
+        if (!ui?.isClubVlieger && !ui?.isStarttoren) {
+            reserveringen.excluded = true
         }
     }
 

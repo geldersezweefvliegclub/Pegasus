@@ -26,6 +26,7 @@ import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {TypesService} from "../../services/apiservice/types.service";
 import {JaarTotalenComponent} from "./jaar-totalen/jaar-totalen.component";
 import {PegasusConfigService} from "../../services/shared/pegasus-config.service";
+import {DagVanDeWeek} from "../../utils/Utils";
 
 type HeliosLedenDatasetExtended = HeliosLedenDataset & {
     INGEDEELD_MAAND?: number
@@ -656,7 +657,12 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
                     break;
             }
         }
-        this.filteredRooster = tmpRooster
+        if (tmpRooster.length > 0) {
+            this.filteredRooster = tmpRooster;
+        }
+        else {
+            this.filteredRooster = this.heleRooster;
+        }
     }
 
     KolomBreedte() {
@@ -684,28 +690,6 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
     ToggleWeekendDDWV() {
         this.toonClubDDWV = ++this.toonClubDDWV % 3;
         this.applyRoosterFilter();
-    }
-
-    DagVanDeWeek(dag: string): string {
-        const dt: DateTime = DateTime.fromSQL(dag as string);
-
-        switch (dt.weekday) {
-            case 1:
-                return "Maandag";
-            case 2:
-                return "Dinsdag";
-            case 3:
-                return "Woensdag";
-            case 4:
-                return "Donderdag";
-            case 5:
-                return "Vrijdag";
-            case 6:
-                return "Zaterdag";
-            case 7:
-                return "Zondag";
-        }
-        return "??";
     }
 
     datumInToekomst(datum: string) {
@@ -865,5 +849,10 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             }
         }
         return true;
+    }
+
+    // Dit is al geimplementeerd in util.ts
+    DagVanDeWeek(DATUM: string) {
+        return DagVanDeWeek(DATUM);
     }
 }

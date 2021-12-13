@@ -12,6 +12,7 @@ import {components as tracksComponents} from './Tracks';
 import {components as dienstenComponents} from './Diensten';
 import {components as competentiesComponents} from './Competenties';
 import {components as auditComponents} from './Audit';
+import {components as reserveringComponents} from './Reservering';
 
 export type HeliosUserinfo = loginComponents['schemas']['Userinfo'];
 
@@ -74,3 +75,7 @@ export type HeliosDienst = dienstenComponents['schemas']['oper_diensten'];
 export type HeliosDiensten = dienstenComponents['schemas']['view_diensten'];
 export type HeliosDienstenDataset = dienstenComponents['schemas']['view_diensten_dataset'];
 export type HeliosDienstenTotaal = dienstenComponents['schemas']['diensten_totaal'];
+
+export type HeliosReservering = reserveringComponents['schemas']['oper_reservering'];
+export type HeliosReserveringen = reserveringComponents['schemas']['view_reserveringen'];
+export type HeliosReserveringenDataset = reserveringComponents['schemas']['view_reserveringen_dataset'];

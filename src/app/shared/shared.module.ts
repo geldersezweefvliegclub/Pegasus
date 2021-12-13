@@ -49,6 +49,7 @@ import { DienstenComponent } from './components/diensten/diensten.component';
 import { DagRoosterComponent } from './components/dag-rooster/dag-rooster.component';
 import { SuccessComponent } from './components/success/success.component';
 import { InstructieGrafiekComponent } from './components/recency/instructie-grafiek/instructie-grafiek.component';
+import { BoekingEditorComponent } from './components/editors/boeking-editor/boeking-editor.component';
 
 @NgModule({
     imports: [
@@ -105,7 +106,8 @@ import { InstructieGrafiekComponent } from './components/recency/instructie-graf
     DienstenComponent,
     DagRoosterComponent,
     SuccessComponent,
-    InstructieGrafiekComponent
+    InstructieGrafiekComponent,
+    BoekingEditorComponent
   ],
     exports: [
         LidEditorComponent,
@@ -132,7 +134,8 @@ import { InstructieGrafiekComponent } from './components/recency/instructie-graf
         TracksComponent,
         TrackEditorComponent,
         DienstenComponent,
-        DagRoosterComponent
+        DagRoosterComponent,
+        BoekingEditorComponent
     ],
   providers: [],
   schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

@@ -51,8 +51,6 @@ export class StartlijstGridComponent implements OnInit, OnDestroy {
         {field: 'CALLSIGN', headerName: 'Callsign', sortable: true, hide: true, enableRowGroup: true},
         {field: 'REG_CALL', headerName: 'RegCall', sortable: true, enableRowGroup: true},
         {field: 'CLUBKIST', headerName: 'Clubkist', sortable: true, cellRenderer: 'checkboxRender', hide: true},
-        {field: 'STARTMETHODE', headerName: 'Start methode', sortable: true, hide: true, enableRowGroup: true},
-
         {
             field: 'VLIEGERNAAM_LID',
             headerName: 'Vlieger',
@@ -67,7 +65,7 @@ export class StartlijstGridComponent implements OnInit, OnDestroy {
             enableRowGroup: true,
             cellRenderer: 'inzittendeRender'
         },
-
+        {field: 'STARTMETHODE', headerName: 'Start methode', sortable: true, hide: false, enableRowGroup: true},
         {
             field: 'STARTTIJD',
             headerName: 'Starttijd',

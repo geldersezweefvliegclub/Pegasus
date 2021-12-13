@@ -28,3 +28,26 @@ export const getBeginEindDatumVanMaand = (maand: number, jaar: number): { begind
   const eindDatum = DateTime.fromObject({month: maand, year: jaar, day: dagenInDeMaand});
   return {begindatum: startDatum, einddatum: eindDatum};
 };
+
+
+export const DagVanDeWeek = (datum: string): string => {
+  const dt: DateTime = DateTime.fromSQL(datum);
+
+  switch (dt.weekday) {
+    case 1:
+      return "Maandag";
+    case 2:
+      return "Dinsdag";
+    case 3:
+      return "Woensdag";
+    case 4:
+      return "Donderdag";
+    case 5:
+      return "Vrijdag";
+    case 6:
+      return "Zaterdag";
+    case 7:
+      return "Zondag";
+  }
+  return "??";
+}

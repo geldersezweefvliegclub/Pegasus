@@ -25,6 +25,8 @@ import {VliegtuigLogboekComponent} from './pages/vliegtuig-logboek/vliegtuig-log
 import {RoosterPageComponent} from './pages/rooster-page/rooster-page.component';
 import {TracksGridComponent} from "./pages/tracks-grid/tracks-grid.component";
 import {AuditPageComponent} from "./pages/audit-page/audit-page.component";
+import {ReserveringPageComponent} from "./pages/reservering-page/reservering-page.component";
+import {faAvianex} from "@fortawesome/free-brands-svg-icons";
 
 export interface CustomRoute extends Route {
   excluded: boolean;
@@ -39,6 +41,7 @@ export const routes: CustomRoute[] = [
   {path: 'startlijst', component: StartlijstGridComponent, excluded: false, icon: faClipboardList, text: 'Startlijst'},
   {path: 'daginfo', component: DaginfoComponent, excluded: false, icon: faCalendarAlt, text: 'Dag info'},
   {path: 'tracks', component: TracksGridComponent, excluded: false, icon: faAddressCard, text: 'Tracks'},
+  {path: 'reserveringen', component: ReserveringPageComponent, excluded: false, icon: faAvianex, text: 'Kist reserveren'},
   {path: 'leden', component: LedenGridComponent, excluded: false, icon: faUsers, text: 'Ledenlijst'},
   {path: 'vlogboek', component: VliegtuigLogboekComponent, excluded: true, icon: faPlane, text: 'Vliegtuig logboek'},
   {path: 'vliegtuigen', component: VliegtuigenGridComponent, excluded: false, icon: faPlane, text: 'Vliegtuigen'},

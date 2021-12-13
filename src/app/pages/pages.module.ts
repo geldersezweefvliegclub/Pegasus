@@ -44,7 +44,8 @@ import { TracksGridComponent } from './tracks-grid/tracks-grid.component';
 import { JaarTotalenComponent } from './rooster-page/jaar-totalen/jaar-totalen.component';
 import { ExportStartlijstComponent } from './startlijst-grid/export-startlijst/export-startlijst.component';
 import { AuditPageComponent } from './audit-page/audit-page.component';
-
+import { ReserveringPageComponent } from './reservering-page/reservering-page.component';
+import { KistSelectieComponent } from './reservering-page/kist-selectie/kist-selectie.component';
 
 @NgModule({
   imports: [
@@ -94,7 +95,9 @@ import { AuditPageComponent } from './audit-page/audit-page.component';
     TracksGridComponent,
     JaarTotalenComponent,
     ExportStartlijstComponent,
-    AuditPageComponent
+    AuditPageComponent,
+    ReserveringPageComponent,
+    KistSelectieComponent
   ],
   exports: [
     PegasusCardComponent,

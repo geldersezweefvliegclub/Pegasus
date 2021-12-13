@@ -164,9 +164,21 @@ export class StartEditorComponent implements OnInit {
                 OPMERKINGEN: start.OPMERKINGEN,
                 EXTERNAL_ID: start.EXTERNAL_ID
             };
+            if (start.ID) {
+                this.formTitel = 'Start bewerken';
+                this.haalStartOp(start.ID as number); // maar data kan gewijzigd zijn, dus toch even data ophalen van API
+            }
+            else
+            {
+                this.formTitel = `Start aanmaken ${this.datum.day}-${this.datum.month}-${this.datum.year}`;
 
-            this.formTitel = 'Start bewerken';
-            this.haalStartOp(start.ID as number); // maar data kan gewijzigd zijn, dus toch even data ophalen van API
+                // zet de juiste parameters (doe alsof er invoer heeft plaatsgevonden)
+                this.vliegtuigGeselecteerd(this.start.VLIEGTUIG_ID);
+                this.vliegerGeselecteerd(this.start.VLIEGER_ID);
+
+                console.log(this.start)
+                console.log(this.veldenTypes$)
+            }
         } else {
             this.formTitel = `Start aanmaken ${this.datum.day}-${this.datum.month}-${this.datum.year}`;
             this.start = {
@@ -251,7 +263,7 @@ export class StartEditorComponent implements OnInit {
             // 507 = Zelfstart
             if (this.gekozenVliegtuig.ZELFSTART) {
                 this.toonStartMethode = true;
-                this.startMethodeTypesFiltered.push(this.startMethodeTypes.find(type => type.ID == 507) as HeliosType);
+                this.startMethodeTypesFiltered.push(this.startMethodeTypes.find(type => type.ID == 506) as HeliosType);
             }
 
             // Deze kunnen niet gesleept of gelierd worden

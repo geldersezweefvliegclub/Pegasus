@@ -1,0 +1,135 @@
+.box {
+  display: flex;
+  flex-flow: column;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: stretch;
+}
+
+td {
+  padding-left: 5px;
+  padding-right: 0px;
+}
+
+.rotation-wrapper {
+  display: flex;
+}
+
+.dayOfTheWeek {
+  min-width: 20px;
+  line-height: 20px;
+  writing-mode: vertical-rl;
+  white-space: nowrap;
+  text-align: center;
+  transform: rotate(180deg);
+}
+
+.Maandag {
+  background-color: #E0E2DB;
+}
+
+.Dinsdag {
+  background-color: #D2D4C8;
+}
+
+.Woensdag {
+  background-color: #B8BDB5;
+}
+
+.Donderdag {
+  background-color: #D2D4C8;
+}
+
+.Vrijdag {
+  background-color: #E0E2DB;
+}
+
+.Zaterdag {
+  background-color: #e6ca87;
+}
+
+.Zondag {
+  background-color: #d5ac4a;
+}
+
+.reservering {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 0.2px solid #e3e3e3;
+  height: 2em;
+  width: 100%;
+  padding-left: 0.25em;
+  background: #e9ecef;
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  margin-top: 0.25em;
+}
+
+.button-reservering {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-left: 0.25em;
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+::ng-deep {
+  .button-reservering > button {
+    font-size: 0.8rem;
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+  }
+}
+
+.beschikbaar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 2em;
+  width: 100%;
+  padding-left: 0.25em;
+  color: #548a04;
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  margin-top: 0.25em;
+}
+
+.lidInRooster {
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+#data {
+  flex-grow: 100;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: calc(100vh - 235px);
+}
+
+.dataContent {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: stretch;
+}
+
+.reserveringTabel {
+  height: calc(100% - 10px);
+  overflow-y: auto;
+  border: #939393 1px solid;
+  margin-left: 15px;
+
+  flex-grow: 100;
+  flex-direction: row;
+
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+.clubBedrijf {
+  background-color: #e9ecef;
+}

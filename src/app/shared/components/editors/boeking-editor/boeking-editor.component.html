@@ -1,0 +1,88 @@
+<app-error [error]="error"></app-error>
+<app-success [success]="success"></app-success>
+
+<app-modal titel="Nieuwe boeking">
+    <div body>
+        <form>
+            <div class="row my-2">
+                <app-lid-invoer id="LID"
+                                placeholder="Selecteer lid"
+                                label="Lid"
+                                [LID_ID]="lidID"
+                                excludeLidTypes="600,606,607,608,609,610,611,612,613,625"
+                                [required]=true
+                                [leden]="leden"
+                                (LidChanged)="lidGeselecteerd($event)">
+
+                </app-lid-invoer>
+            </div>
+            <div class="row my-2">
+                <div class="col-12 col-md-6">
+                    <app-vliegtuig-invoer id="VLIEGTUIG"
+                                          [VLIEGTUIG_ID]="vliegtuigID"
+                                          [vliegtuigen]="clubVliegtuigen"
+                                          (VliegtuigChanged)="vliegtuigGeselecteerd($event)"
+                                          label="Vliegtuig"
+                    ></app-vliegtuig-invoer>
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-md-6">
+                    <label class="form-label" for="eersteDag">Vanaf</label>
+                    <div class="input-group">
+                        <input name="eersteDag" class="form-control" placeholder="dd-mm-yyyy"
+                               ngbDatepicker #df="ngbDatepicker"
+                               id="eersteDag"
+                               required
+                               appDatumValidator
+                               [ngModel]="eersteDag"
+                               (dateSelect)="eersteDag = $event"
+                        >
+                        <div class="input-group-append">
+                            <app-icon-button iconNaam="far Calendar" (btnClicked)="df.toggle()"
+                                             btnColor="btn-primary"></app-icon-button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label" for="laatsteDag">Laatste dag</label>
+                    <div class="input-group">
+                        <input name="laatsteDag" class="form-control" placeholder="dd-mm-yyyy"
+                               [ngClass]="{'ng-invalid': !vanTotOke()}"
+                               ngbDatepicker #dl="ngbDatepicker"
+                               id="laatsteDag"
+                               required
+                               appDatumValidator
+                               [ngModel]="laatsteDag"
+                               (dateSelect)="laatsteDag = $event"
+                        >
+                        <div class="input-group-append">
+                            <app-icon-button iconNaam="far Calendar" (btnClicked)="dl.toggle()"
+                                             btnColor="btn-primary"></app-icon-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="opmerkingInvoer">
+                    <label for="OPMERKINGEN" class="form-label">Opmerkingen</label>
+                    <input name="inzittende" type="text" class="form-control" id="OPMERKINGEN"
+                           [(ngModel)]="opmerkingen"
+                           placeholder="Opmerking, bijvoorbeeld NK, Euroglide, Safari"
+                    >
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div footer>
+        <app-icon-button *ngIf="!isSaving" iconNaam="fas Edit" btnColor="btn-primary"
+                         [disabled]="opslaanDisabled()"
+                         tekst="Opslaan" (btnClicked)="aanmakenReserveringen()"></app-icon-button>
+
+        <button class="btn btn-primary" *ngIf="isSaving">
+            <span><app-loader></app-loader></span>
+        </button>
+    </div>
+</app-modal>

@@ -29,7 +29,6 @@ export class APIService {
         }
 
         const apiHeaders: Headers =  (headers) ? headers : new Headers();
-
         if (!apiHeaders?.has('Authorization') && this.BearerToken) {
             apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
         }
@@ -50,9 +49,14 @@ export class APIService {
     // Dit is een string voor JSON, of FormData voor foto's
     async post(url: string, body: string|FormData, headers?: Headers): Promise<Response> {
 
+        const apiHeaders: Headers =  (headers) ? headers : new Headers();
+        if (!apiHeaders?.has('Authorization') && this.BearerToken) {
+            apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
+        }
+
         const response = await fetch(`${this.URL}${url}`, {
             method: 'POST',
-            headers: headers,
+            headers: apiHeaders,
             body: body,
             credentials: 'include'
         });
@@ -70,9 +74,14 @@ export class APIService {
     // Aanroepen put request om record te wijzigen
     async put(url: string, body: string, headers?: Headers): Promise<Response> {
 
+        const apiHeaders: Headers =  (headers) ? headers : new Headers();
+        if (!apiHeaders?.has('Authorization') && this.BearerToken) {
+            apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
+        }
+
         const response = await fetch(`${this.URL}${url}`, {
             method: 'PUT',
-            headers: headers,
+            headers: apiHeaders,
             body: body,
             credentials: 'include'
         });
@@ -92,8 +101,14 @@ export class APIService {
             url = this.prepareEndpoint(url, params);
         }
 
+        const apiHeaders: Headers = new Headers();
+        if (!apiHeaders?.has('Authorization') && this.BearerToken) {
+            apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
+        }
+
         const response = await fetch(`${this.URL}${url}`, {
             method: 'DELETE',
+            headers: apiHeaders,
             credentials: 'include'
         });
         // todo .ok gebruiken?
@@ -109,8 +124,14 @@ export class APIService {
             url = this.prepareEndpoint(url, params);
         }
 
+        const apiHeaders: Headers = new Headers();
+        if (!apiHeaders?.has('Authorization') && this.BearerToken) {
+            apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
+        }
+
         const response = await fetch(`${this.URL}${url}`, {
             method: 'PATCH',
+            headers: apiHeaders,
             credentials: 'include'
         });
 

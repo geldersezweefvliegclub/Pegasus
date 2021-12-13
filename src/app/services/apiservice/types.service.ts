@@ -64,7 +64,7 @@ export class TypesService {
             this.typesCache = await response.json();
             this.storageService.opslaan('types', this.typesCache);
         } catch (e) {
-            if (e.responseCode !== 704) { // server bevat dezelfde data als cache
+            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde data als cache
                 throw(e);
             }
         }

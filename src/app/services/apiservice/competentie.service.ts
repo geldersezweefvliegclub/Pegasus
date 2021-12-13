@@ -73,7 +73,7 @@ export class CompetentieService {
             this.competentiesCache = await response.json();
             this.storageService.opslaan('competenties', this.competentiesCache);
         } catch (e) {
-            if (e.responseCode !== 704) { // server bevat dezelfde data als cache
+            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde data als cache
                 throw(e);
             }
         }

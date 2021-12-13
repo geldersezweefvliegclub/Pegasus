@@ -41,7 +41,7 @@ export class TracksService {
             const response: Response = await this.apiService.get('Tracks/GetObjects', getParams);
             this.tracksCache = await response.json();
         } catch (e) {
-            if (e.responseCode !== 704) { // server bevat dezelfde data als cache
+            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde data als cache
                 throw(e);
             }
         }

@@ -1,0 +1,140 @@
+<app-error [error]="error"></app-error>
+<app-success [success]="success"></app-success>
+
+<app-pegasus-card titel="Kist reservering"
+                  subtitel="Reserveer je kist voor een DDWV dag"
+                  [icon]="reserveringIcon"
+                  [exportEnabled]="this.magExporteren"
+                  (excelExport)="exportDataset()">
+
+    <div class="h-100">
+        <div class="box h-100">
+            <div id="data">
+                <div class="dataContent">
+                    <div class="reserveringTabel">
+                        <table class="table">
+                            <thead>
+                            <th></th>
+                            <th></th>
+                            <th *ngFor="let clubKist of clubVliegtuigenFiltered;let i = index">
+                                {{clubKist.CALLSIGN}}
+                            </th>
+                            </thead>
+                            <tbody>
+
+                            <tr *ngFor="let dagInRooster of filteredRooster;let r = index"
+                                [ngClass]="isClubBedrijf(dagInRooster.DATUM) ? 'clubBedrijf' : ''">
+                                <td class="WeekdagKolom" [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
+                                    <div class="rotation-wrapper">
+                                        <div class="dayOfTheWeek">
+                                            {{DagVanDeWeek(dagInRooster.DATUM)}}
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="d-flex dagInfo row m-0">
+                                        <div class="p-0">
+                                            <div class="text-nowrap fw-bold">
+                                                {{dagInRooster.DATUM | date: 'dd-MM-yyyy'}}
+                                            </div>
+                                            <div>
+                                                <input type="checkbox" class="form-check-inline" [id]="'DDWV' + r"
+                                                       [name]="'DDWV' + r"
+                                                       [(ngModel)]="dagInRooster.DDWV"
+                                                       disabled>
+                                                <label [for]="'DDWV' + r" class="form-check-label">DDWV</label>
+                                            </div>
+                                            <div class="text-nowrap">
+                                                <input type="checkbox" class="form-check-inline"
+                                                       [id]="'Clubbedrijf' + r"
+                                                       [name]="'Clubbedrijf' + r"
+                                                       [(ngModel)]="dagInRooster.CLUB_BEDRIJF"
+                                                       disabled>
+                                                <label [for]="'Clubbedrijf' + r"
+                                                       class="labelClub form-check-label">Club
+                                                    bedrijf</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td *ngFor="let clubKist of clubVliegtuigenFiltered;let i = index"
+                                    [ngStyle]="{'width.%': 100/(clubVliegtuigenFiltered.length+2)}">
+                                    <div class="d-flex w-100">
+                                        <div *ngIf="toonStartButton(dagInRooster.DATUM, clubKist.ID)" class="w-100">
+                                            <app-icon-button
+                                                    class="button-reservering"
+                                                    (btnClicked)="nieuweStart(dagInRooster.DATUM, clubKist.ID)"
+                                                    [tekst]="ToonNaam(dagInRooster.DATUM, clubKist.ID)">
+                                            </app-icon-button>
+                                        </div>
+                                        <div *ngIf="!toonStartButton(dagInRooster.DATUM, clubKist.ID)">
+                                            <div class="d-flex flex-row">
+                                                <div [ngClass]="htmlClassReservering(dagInRooster.DATUM, clubKist.ID)">
+                                                    {{ ToonNaam(dagInRooster.DATUM, clubKist.ID)}}
+                                                </div>
+                                                <div *ngIf="magReserveren(dagInRooster.DATUM, clubKist.ID) && magNogReserveren"
+                                                     (click)="toekennenReservering(dagInRooster.DATUM, clubKist.ID)">
+                                                    <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                                </div>
+                                                <div *ngIf="magVerwijderen(dagInRooster.DATUM, clubKist.ID)"
+                                                     (click)="verwijderReservering(dagInRooster.DATUM, clubKist.ID)">
+                                                    <ng-template *ngTemplateOutlet="reset"></ng-template>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="ToonOpmerking(dagInRooster.DATUM, clubKist.ID)">
+                                                {{ ToonOpmerking(dagInRooster.DATUM, clubKist.ID)}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-start" id="toolbar">
+                <div class="d-flex row">
+                    <div class="col-8">
+                        <app-icon-button
+                                class="toolbarBtn"
+                                tekst="Filter"
+                                iconNaam="fas Filter" (btnClicked)="toonKistSelectie()"
+                                btnColor="btn-primary"></app-icon-button>
+
+                        <app-icon-button
+                                class="toolbarBtn ps-2"
+                                tekst="Club / DDWV"
+                                iconNaam="fas CalendarWeek" (btnClicked)="ToggleWeekendDDWV()"
+                                btnColor="btn-primary"></app-icon-button>
+                    </div>
+                    <div class="col-4">
+                        <div class="d-flex justify-content-end" *ngIf="magBoeken">
+                            <app-icon-button
+                                    class="toolbarBtn"
+                                    tekst="Boeking"
+                                    iconNaam="far PlusSquare" (btnClicked)="nieuweBoeking()"
+                                    btnColor="btn-primary"></app-icon-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-kist-selectie [clubVliegtuigen]="clubVliegtuigen" (change)="changeTonen($event)"></app-kist-selectie>
+    <app-boeking-editor [clubVliegtuigen]="clubVliegtuigen" (boekingToegevoegd)="opvragen()"></app-boeking-editor>
+    <app-start-editor></app-start-editor>
+</app-pegasus-card>
+
+<ng-template #reset>
+    <div class="d-flex flex-column justify-content-center h-100 text-black-50 clickable px-1">
+        <fa-icon [icon]="resetIcon"></fa-icon>
+    </div>
+</ng-template>
+
+<ng-template #assign>
+    <div class="d-flex flex-column justify-content-center h-100 text-black-50 clickable px-1">
+        <fa-icon [icon]="assignIcon"></fa-icon>
+    </div>
+</ng-template>

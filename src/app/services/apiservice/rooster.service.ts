@@ -94,7 +94,7 @@ export class RoosterService {
                 return [];
             }
 
-            if (e.responseCode !== 704) {  // er is geen nieuwe data
+            if ((e.responseCode !== 304) && (e.responseCode !== 704)) {  // er is geen nieuwe data
                 throw(e);
             }
         }

@@ -1,0 +1,14 @@
+<app-modal titel="Keuze van kisten">
+    <div body>
+        <table class="">
+            <tr *ngFor="let kist of clubVliegtuigen;let i = index">
+                <td>
+                    <input type="checkbox"
+                           class="form-check-inline"
+                           [checked]="kist.Tonen" (change)="changeTonen(kist.ID)">
+                </td>
+                <td>{{kist.REG_CALL}}</td>
+            </tr>
+        </table>
+    </div>
+</app-modal>
