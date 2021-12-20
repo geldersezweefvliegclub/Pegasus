@@ -22,9 +22,9 @@ export class LoginPageComponent implements OnInit {
     wachtwoord: string = '';
     wachtwoordVerborgen: boolean = true;
 
+    showSecret: boolean = false;
     secret: string = '';
     isLoading = false;
-    showSecret: boolean = false;
     error: ErrorMessage;
 
     fotoAlbum = [
@@ -96,6 +96,10 @@ export class LoginPageComponent implements OnInit {
         this.oogIcon = this.wachtwoordVerborgen ? faEye : faEyeSlash;
     }
 
+    showLostPassword(): boolean {
+        return this.gebruikersnaam.length > 2;
+    }
+
     // Als je geen Google authenticator hebt, kan de code per SMS verstuurd worden door het backend
     sendSMS(): void {
         this.isLoading = true;
@@ -105,5 +109,10 @@ export class LoginPageComponent implements OnInit {
             this.error = e;
             this.isLoading = false;
         })
+    }
+
+    // stuur een email met nieuw wachtwoord
+    recoverEmail() {
+        this.loginService.resetWachtwoord(this.gebruikersnaam).then(() => alert("Een email met het nieuwe wachtwoord is verstuurd"));
     }
 }

@@ -23,4 +23,3 @@ export class KistSelectieComponent  {
         this.aangepast.emit(id);
     }
 }
-

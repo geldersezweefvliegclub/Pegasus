@@ -74,6 +74,14 @@ export class LoginService {
         return true;
     }
 
+    // Verstuur een mail met het nieuwe wachtwoord
+    async resetWachtwoord(gebruikersnaam: string) {
+        const headers = new Headers();
+        const base64encoded = Base64.encode(`${gebruikersnaam}:""`);
+        headers.append('Authorization', `Basic ${base64encoded}`);
+
+        await this.APIService.get('Login/ResetWachtwoord', undefined, headers);
+    }
 
     // laat iedereen weten dat we ingelogd zijn, we wachten even zodat alle componenten geladen zijn
     // doen we dat niet, dan komt abbonement later dan event en missen het event
@@ -82,7 +90,6 @@ export class LoginService {
     }
 
     async sendSMS(gebruikersnaam: string, wachtwoord: string): Promise<void> {
-
         const headers = new Headers();
         const base64encoded = Base64.encode(`${gebruikersnaam}:${wachtwoord}`);
         headers.append('Authorization', `Basic ${base64encoded}`);

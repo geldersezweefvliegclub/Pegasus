@@ -122,7 +122,7 @@
             </div>
         </div>
     </div>
-    <app-kist-selectie [clubVliegtuigen]="clubVliegtuigen" (change)="changeTonen($event)"></app-kist-selectie>
+    <app-kist-selectie [clubVliegtuigen]="clubVliegtuigen" (aangepast)="changeTonen($event)"></app-kist-selectie>
     <app-boeking-editor [clubVliegtuigen]="clubVliegtuigen" (boekingToegevoegd)="opvragen()"></app-boeking-editor>
     <app-start-editor></app-start-editor>
 </app-pegasus-card>

@@ -47,7 +47,8 @@
                     </div>
                     <div class="row mt-4">
                         <div class="col d-flex"
-                             [ngClass]="{'justify-content-end': !showSecret, 'justify-content-between': showSecret }">
+                             [ngClass]="{'justify-content-end': !showSecret && !showLostPassword(), 'justify-content-between': showSecret || showLostPassword() }">
+                            <a *ngIf="showLostPassword()" class="lostPassword" (click)="recoverEmail()">Wachtwoord vergeten</a>
                             <button class="btn btn-secondary mr-2" type="button" (click)="sendSMS()"
                                     [disabled]="form.invalid" *ngIf="showSecret">
                                 <span *ngIf="!isLoading">SMS</span>

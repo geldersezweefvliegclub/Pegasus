@@ -1,5 +1,5 @@
 {
-  "url": "http://10.10.10.198/helios/",
+  "url": "http://localhost:4200/api/",
   "zelfDienstIndelen": [
     {
       "TypeDienst": 1800,
