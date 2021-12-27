@@ -1,3 +1,15 @@
+<ng-template #medicalVerlopen>
+    Uw medical is verlopen
+</ng-template>
+
+<ng-template #medicalOntbreekt>
+    Uw medical is niet ingevuld
+</ng-template>
+
+<ng-template #avatarOntbreekt>
+    Uw avatar ontbreekt, graag toevoegen.
+</ng-template>
+
 <nav>
     <div class="card ps-0 rounded-0" >
         <div class="d-flex flex-column justify-content-between" [ngClass]="{'min-vh-100': !topMenu,'bovenop': topMenu}">
@@ -14,7 +26,7 @@
                         <div class="text-nowrap">
                             <fa-icon [icon]="route.icon" class="me-3"></fa-icon>
                             {{route.text}}
-                            <span class="badge bg-danger ms-2" *ngIf="route.batch">{{route.batch}}</span>
+                            <div class="badge bg-danger ms-2" *ngIf="route.batch" [innerHTML]="route.batch"></div>
                         </div>
                     </a>
                 </ng-template>

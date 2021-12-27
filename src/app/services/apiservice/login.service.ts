@@ -1,10 +1,12 @@
-import {EventEmitter, Injectable} from '@angular/core';
+import {EventEmitter, Injectable, OnInit} from '@angular/core';
 import {APIService} from './api.service';
 import {Base64} from 'js-base64';
 
 import {HeliosUserinfo} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
 import {SharedService} from "../shared/shared.service";
+import {BehaviorSubject, Subscription} from "rxjs";
+import {delay} from "rxjs/operators";
 
 interface BearerToken {
     TOKEN: string;
@@ -14,15 +16,30 @@ interface BearerToken {
     providedIn: 'root'
 })
 
-export class LoginService {
+export class LoginService  {
     userInfo: HeliosUserinfo | null = null;
+    private userInfoStore = new BehaviorSubject(this.userInfo);
+    public readonly userInfoChange = this.userInfoStore.asObservable();      // nieuwe userInfo beschikbaar
+
     inloggenSucces: EventEmitter<void> = new EventEmitter<void>();
+
+    private dbEventAbonnement: Subscription;
+
+
 
     constructor(private readonly APIService: APIService,
                 private readonly sharedService: SharedService,
                 private readonly storageService: StorageService) {
-    }
 
+        // als we ons profiel aanpassen, dan moeten we userinfo ook aanpassen
+        this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
+            if (ev.tabel == "Leden") {
+                if (ev.data.ID == this.userInfo?.LidData?.ID) {
+                    this.getUserInfo().then(() => this.userInfoStore.next(this.userInfo))    // afvuren event
+                }
+            }
+        });
+    }
     isIngelogd(): boolean {
         if (this.userInfo == null) {
             if (this.storageService.ophalen("userInfo") == null) {
@@ -97,12 +114,8 @@ export class LoginService {
         await this.APIService.get('Login/SendSMS', undefined, headers);
     }
 
-    async getUserInfo(datum?: Date): Promise<void> {
-
+    async getUserInfo(): Promise<void> {
         let urlParams: string = "";
-        if (datum) {
-            urlParams = "?DATUM=" + datum.toISOString().split('T')[0];
-        }
 
         const response: Response = await this.APIService.get('Login/GetUserInfo' + urlParams);
         if (response.ok) {

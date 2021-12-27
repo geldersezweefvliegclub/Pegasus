@@ -51,6 +51,8 @@ export class NavigationComponent implements OnInit, OnDestroy  {
     private dienstenAbonnement: Subscription;
     private dbEventAbonnement: Subscription;
     private vliegtuigenAbonnement: Subscription;
+    private dagInfoAbonnement: Subscription;
+    private userInfoAbonnement: Subscription;
 
     constructor(readonly loginService: LoginService,
                 private readonly startlijstService: StartlijstService,
@@ -112,6 +114,19 @@ export class NavigationComponent implements OnInit, OnDestroy  {
             }
         });
 
+        // abonneer op wijziging van kalender datum
+        this.dagInfoAbonnement = this.daginfoService.dagInfoChange.subscribe(di => {
+            const m = this.routes.find(route => route.path == "daginfo") as CustomRoute;
+            const ui = this.loginService.userInfo?.Userinfo;
+
+            if ((ui?.isStarttoren) && ((di.VELD_ID == undefined) || (di.STARTMETHODE_ID == undefined))) {
+                m.batch = "<div class=\"fas fa-exclamation-triangle \"></div>";
+            }
+            else {
+                m.batch = undefined;
+            }
+        });
+
         // abonneer op wijziging van diensten
         this.dienstenAbonnement = this.dienstenService.dienstenChange.subscribe(maandDiensten => {
             const ui = this.loginService.userInfo?.LidData;
@@ -129,11 +144,18 @@ export class NavigationComponent implements OnInit, OnDestroy  {
             const v = this.routes.find(route => route.path == "vliegtuigen") as CustomRoute;
             v.batch = nietInzetbaar;
         });
+
+        // abonneer op wijziging van profiel via userInfo
+        this.userInfoAbonnement = this.loginService.userInfoChange.subscribe(userInfo => {
+            this.toonMenuItems();
+        });
     }
 
     ngOnDestroy(): void {
         if (this.dienstenAbonnement)    this.dienstenAbonnement.unsubscribe();
         if (this.dbEventAbonnement)     this.dbEventAbonnement.unsubscribe();
+        if (this.dagInfoAbonnement)     this.dagInfoAbonnement.unsubscribe();
+        if (this.userInfoAbonnement)    this.userInfoAbonnement.unsubscribe();
     }
 
     // welke menu items mogen getoond worden
@@ -164,6 +186,36 @@ export class NavigationComponent implements OnInit, OnDestroy  {
         const profiel = this.routes.find(route => route.path == "profiel") as CustomRoute;
         if (!ui?.isDDWV && !ui?.isClubVlieger) {
             profiel.excluded = true
+        }
+        else {
+            // is profiel compleet ingevuld. Zo nee dan waarschuwing
+            let showBatch= false;
+
+            if (ui?.isClubVlieger) {
+                const lData = this.loginService.userInfo?.LidData;
+
+                if (lData!.AVATAR == null) {
+                    showBatch = true;
+                }
+                else {
+                    if (lData!.MEDICAL == null) {
+                        showBatch = true;
+                    } else {
+                        const medicalVerloopt = DateTime.fromSQL(lData!.MEDICAL);
+
+                        if (medicalVerloopt < DateTime.now()) {
+                            showBatch = true;
+                        }
+                    }
+                }
+            }
+
+            if (showBatch) {
+                profiel.batch = "<div class=\"fas fa-exclamation-triangle \"></div>";
+            }
+            else {
+                profiel.batch = undefined;
+            }
         }
 
         // alleen echte gebruiker hebben toegang tot ledenlijst, starttoren, zusterclubs, etc dus niet

@@ -385,6 +385,16 @@ export class LidEditorComponent implements OnInit {
 
         return (ui?.isBeheerder || ui?.isBeheerderDDWV);
     }
+
+    MedicalVerlopen() {
+        if (this.MedicalDatum == null) {
+            return false;
+        }
+        const d = DateTime.fromObject({ year: this.MedicalDatum.year,
+                                            month: this.MedicalDatum.month,
+                                            day: this.MedicalDatum.day})
+        return (d < DateTime.now());
+    }
 }
 
 

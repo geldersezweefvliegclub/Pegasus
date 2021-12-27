@@ -27,6 +27,10 @@
                                     *ngIf="!this.isVerwijderMode && !this.isRestoreMode"></app-image-crop>
                 </div>
 
+                <div class="cssWarning cssWarningAvatar" *ngIf="lid.AVATAR == null">
+                    <div class="fas fa-exclamation-triangle"></div>
+                    Avatar ontbreekt
+                </div>
                 <fieldset [disabled]="isVerwijderMode || isRestoreMode || isDisabled('BASIS')">
                     <div #persoonGroup="ngModelGroup" ngModelGroup="persoonGroup" appWachtwoordMatchValidator>
                         <div class="row">
@@ -90,7 +94,7 @@
                                     <input name="geboortedatum" class="form-control" placeholder="dd-mm-yyyy"
                                            ngbDatepicker #d="ngbDatepicker"
                                            id="geboortedatum"
-                                           [ngModel]="GeboorteDatum"
+                                           [(ngModel)]="GeboorteDatum"
                                            (dateSelect)="GeboorteDatum = $event"
                                     >
                                     <div class="input-group-append">
@@ -138,17 +142,29 @@
                         </div>
                         <div class="row mt-2">
                             <div class="col-4">
-                                <label class="form-label" for="MEDICAL">Geldigheid medical</label>
-                                <div class="input-group">
-                                    <input name="MEDICAL" class="form-control" placeholder="dd-mm-yyyy"
-                                           ngbDatepicker #medical="ngbDatepicker"
-                                           id="MEDICAL"
-                                           [ngModel]="MedicalDatum"
-                                           (dateSelect)="MedicalDatum = $event"
-                                    >
-                                    <div class="input-group-append">
-                                        <app-icon-button iconNaam="far Calendar" (btnClicked)="medical.toggle()"
-                                                         btnColor="btn-primary"></app-icon-button>
+                                <div class="d-flex flex-row">
+                                    <div>
+                                        <label class="form-label" for="MEDICAL">Geldigheid medical</label>
+                                        <div class="input-group">
+                                            <input name="MEDICAL" class="form-control" placeholder="dd-mm-yyyy"
+                                                   ngbDatepicker #medical="ngbDatepicker"
+                                                   id="MEDICAL"
+                                                   [(ngModel)]="MedicalDatum"
+                                                   (dateSelect)="MedicalDatum = $event"
+                                            >
+                                            <div class="input-group-append">
+                                                <app-icon-button iconNaam="far Calendar" (btnClicked)="medical.toggle()"
+                                                                 btnColor="btn-primary"></app-icon-button>
+                                            </div>
+                                        </div>
+                                        <div class="cssWarning" *ngIf="MedicalDatum == null">
+                                            <div class="fas fa-exclamation-triangle"></div>
+                                            Medical ontbreekt
+                                        </div>
+                                        <div class="cssWarning" *ngIf="MedicalVerlopen()">
+                                            <div class="fas fa-exclamation-triangle"></div>
+                                            Medical verlopen
+                                        </div>
                                     </div>
                                 </div>
                             </div>
