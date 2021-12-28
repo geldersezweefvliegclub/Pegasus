@@ -215,7 +215,10 @@ export class StartlijstService {
     }
 
     async updateStart(start: HeliosStart) {
-        const response: Response = await this.APIService.put('Startlijst/SaveObject', JSON.stringify(start));
+        const replacer = (key:string, value:any) =>
+            typeof value === 'undefined' ? null : value;
+
+        const response: Response = await this.APIService.put('Startlijst/SaveObject', JSON.stringify(start, replacer));
 
         return response.json();
     }

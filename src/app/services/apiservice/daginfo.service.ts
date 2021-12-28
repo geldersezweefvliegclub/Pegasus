@@ -159,7 +159,10 @@ export class DaginfoService {
 
     // update een bestaand daginfo record
     async updateDagInfo(daginfo: HeliosDagInfo) {
-        const response: Response = await this.APIService.put('Daginfo/SaveObject', JSON.stringify(daginfo));
+        const replacer = (key:string, value:any) =>
+            typeof value === 'undefined' ? null : value;
+
+        const response: Response = await this.APIService.put('Daginfo/SaveObject', JSON.stringify(daginfo, replacer));
 
         // opslaan als class variable en fire event
         response.clone().json().then((di) => {

@@ -109,7 +109,10 @@ export class LedenService {
     }
 
     async updateLid(lid: HeliosLid) {
-        const response: Response = await this.apiService.put('Leden/SaveObject', JSON.stringify(lid));
+        const replacer = (key:string, value:any) =>
+            typeof value === 'undefined' ? null : value;
+
+        const response: Response = await this.apiService.put('Leden/SaveObject', JSON.stringify(lid, replacer));
         return response.json();
     }
 

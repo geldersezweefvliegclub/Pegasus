@@ -140,7 +140,10 @@ export class RoosterService {
     }
 
     async updateRoosterdag(roosterDag: HeliosRoosterDag) {
-        const response: Response = await this.APIService.put('Rooster/SaveObject', JSON.stringify(roosterDag));
+        const replacer = (key:string, value:any) =>
+            typeof value === 'undefined' ? null : value;
+
+        const response: Response = await this.APIService.put('Rooster/SaveObject', JSON.stringify(roosterDag, replacer));
 
         return response.json();
     }

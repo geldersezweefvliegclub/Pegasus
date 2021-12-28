@@ -129,9 +129,12 @@ export class DienstenService {
     }
 
     async updateDienst(dienst: HeliosDienst) {
+        const replacer = (key:string, value:any) =>
+            typeof value === 'undefined' ? null : value;
+
         dienst.ROOSTER_ID = undefined;
         dienst.INGEVOERD_DOOR_ID = undefined;
-        const response: Response = await this.apiService.put('Diensten/SaveObject', JSON.stringify(dienst));
+        const response: Response = await this.apiService.put('Diensten/SaveObject', JSON.stringify(dienst, replacer));
 
         return response.json();
     }

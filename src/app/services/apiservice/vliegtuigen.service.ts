@@ -122,7 +122,10 @@ export class VliegtuigenService {
     }
 
     async updateVliegtuig(vliegtuig: HeliosVliegtuig) {
-        const response: Response = await this.APIService.put('Vliegtuigen/SaveObject', JSON.stringify(vliegtuig));
+        const replacer = (key:string, value:any) =>
+            typeof value === 'undefined' ? null : value;
+
+        const response: Response = await this.APIService.put('Vliegtuigen/SaveObject', JSON.stringify(vliegtuig, replacer));
         return response.json();
     }
 

@@ -48,12 +48,10 @@ export class APIService {
     // Aanroepen post request om het aanmaken van nieuw record
     // Dit is een string voor JSON, of FormData voor foto's
     async post(url: string, body: string|FormData, headers?: Headers): Promise<Response> {
-
         const apiHeaders: Headers =  (headers) ? headers : new Headers();
         if (!apiHeaders?.has('Authorization') && this.BearerToken) {
             apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
         }
-
         const response = await fetch(`${this.URL}${url}`, {
             method: 'POST',
             headers: apiHeaders,
@@ -78,7 +76,6 @@ export class APIService {
         if (!apiHeaders?.has('Authorization') && this.BearerToken) {
             apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
         }
-
         const response = await fetch(`${this.URL}${url}`, {
             method: 'PUT',
             headers: apiHeaders,
