@@ -4,7 +4,8 @@ import {
     HeliosLedenDataset,
     HeliosStart, HeliosStartDataset,
     HeliosType,
-    HeliosVliegtuigenDataset
+    HeliosVliegtuigenDataset,
+    HeliosBehaaldeProgressieDataset
 } from '../../../../types/Helios';
 import {TypesService} from '../../../../services/apiservice/types.service';
 import {ModalComponent} from '../../modal/modal.component';
@@ -22,6 +23,7 @@ import {DaginfoService} from '../../../../services/apiservice/daginfo.service';
 import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
 import {NgSelectComponent} from "@ng-select/ng-select";
 import {VliegtuigInvoerComponent} from "./vliegtuig-invoer/vliegtuig-invoer.component";
+import {ProgressieService} from "../../../../services/apiservice/progressie.service";
 
 @Component({
     selector: 'app-start-editor',
@@ -36,6 +38,7 @@ export class StartEditorComponent implements OnInit {
     start: HeliosStart = {};
     toonVliegerNaam: boolean = false;
     toonStartMethode: boolean = true;
+    toonWaarschuwing: boolean = false;          // mag het lid op die vliegtuig vliegen volgens kruisjeslijst?
 
     private typesAbonnement: Subscription;
     startMethodeTypes: HeliosType[];
@@ -80,6 +83,7 @@ export class StartEditorComponent implements OnInit {
         private readonly startlijstService: StartlijstService,
         private readonly vliegtuigenService: VliegtuigenService,
         private readonly aanwezigVliegtuigenService: AanwezigVliegtuigService,
+        private readonly progressieService: ProgressieService,
         private readonly ledenService: LedenService,
         private readonly aanwezigLedenService: AanwezigLedenService,
         private readonly typesService: TypesService,
@@ -249,6 +253,7 @@ export class StartEditorComponent implements OnInit {
     vliegtuigGeselecteerd(id: number | undefined) {
         this.start.VLIEGTUIG_ID = id;
         this.gekozenVliegtuig = this.vliegtuigen.find(vliegtuig => vliegtuig.ID == id) as HeliosVliegtuigenDataset;
+        this.vliegtuigTypeBevoegd();
 
         this.startMethodeTypesFiltered = [];
         if (this.gekozenVliegtuig) {
@@ -305,8 +310,14 @@ export class StartEditorComponent implements OnInit {
                 }
             }
         }
+        this.vliegtuigTypeBevoegd();
     }
 
+    // De inzittende is nu ook bekend
+    inzittendeGeselecteerd($event: number) {
+        this.start.INZITTENDE_ID = $event;
+        this.vliegtuigTypeBevoegd();
+    }
 
     openVerwijderPopup(id: number) {
         this.haalStartOp(id);
@@ -401,6 +412,48 @@ export class StartEditorComponent implements OnInit {
         }).catch(e => {
             this.isSaving = false;
             this.error = e;
+        });
+    }
+
+    vliegtuigTypeBevoegd() {
+        // moeten natuurlijk vlieger en vliegtuig ingevoerd hebben
+        if (!this.start.VLIEGTUIG_ID || !this.start.VLIEGER_ID) {
+            this.toonWaarschuwing = false;
+            return;
+        }
+
+        // alleen controle op clubvliegtuigen
+        if (this.gekozenVliegtuig.CLUBKIST == false) {
+            return;
+        }
+
+        if (this.start.INZITTENDE_ID) {
+            const inzittende = this.leden.find(lid => lid.ID == this.start.INZITTENDE_ID) as HeliosLedenDataset;
+
+            if (inzittende.INSTRUCTEUR == true) {  // als inzittende een instructeur is, geven we geen waarschuwing
+                this.toonWaarschuwing = false;
+                return;
+            }
+        }
+
+        let competentieIDs: string = "";
+        if (this.gekozenVliegtuig.BEVOEGDHEID_LOKAAL_ID) {
+            competentieIDs = this.gekozenVliegtuig.BEVOEGDHEID_LOKAAL_ID.toString();
+        }
+        if (this.gekozenVliegtuig.BEVOEGDHEID_OVERLAND_ID) {
+            if (competentieIDs != "") {
+                competentieIDs += ",";
+            }
+            competentieIDs += this.gekozenVliegtuig.BEVOEGDHEID_OVERLAND_ID;
+        }
+
+        if (competentieIDs == "") {             // Blijkbaar is er geen bevoegdheid nodig
+            this.toonWaarschuwing = false;
+            return;
+        }
+
+        this.progressieService.getProgressie(this.start.VLIEGER_ID, competentieIDs).then((progressie:  HeliosBehaaldeProgressieDataset[]) => {
+            this.toonWaarschuwing = progressie.length > 0 ? false : true;
         });
     }
 

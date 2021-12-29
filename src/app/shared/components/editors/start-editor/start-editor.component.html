@@ -88,6 +88,10 @@
                                             [vliegtuig]="gekozenVliegtuig"
                                             (LidChanged)="vliegerGeselecteerd($event)"
                             ></app-lid-invoer>
+                            <div *ngIf="toonWaarschuwing" class="flex-row cssWarning">
+                                <div class="fas fa-exclamation-triangle "></div>
+                                Vlieger onbevoegd
+                            </div>
                         </div>
                     </div>
                     <div class="row my-2" *ngIf="!toonVliegerNaam && !start.PAX && gekozenVliegtuig?.ZITPLAATSEN == 2">
@@ -100,7 +104,7 @@
                                             [aanwezig]="aanwezigLeden"
                                             [excludeLidTypes]="exclLidtypeAlsInzittende"
                                             [leden]="leden"
-                                            (LidChanged)="start.INZITTENDE_ID = $event"
+                                            (LidChanged)="inzittendeGeselecteerd($event)"
                             ></app-lid-invoer>
                         </div>
                     </div>

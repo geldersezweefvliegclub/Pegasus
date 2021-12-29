@@ -1,18 +1,26 @@
-import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ModalComponent} from '../../modal/modal.component';
-import {HeliosType, HeliosVliegtuig, HeliosVliegtuigenDataset} from '../../../../types/Helios';
+import {
+    HeliosCompetenties,
+    HeliosCompetentiesDataset,
+    HeliosType,
+    HeliosVliegtuig,
+    HeliosVliegtuigenDataset
+} from '../../../../types/Helios';
 import {VliegtuigenService} from '../../../../services/apiservice/vliegtuigen.service';
 import {TypesService} from '../../../../services/apiservice/types.service';
 import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
 import {Subscription} from "rxjs";
 import {LoginService} from "../../../../services/apiservice/login.service";
+import {CompetentieService} from "../../../../services/apiservice/competentie.service";
+import {PegasusConfigService} from "../../../../services/shared/pegasus-config.service";
 
 @Component({
     selector: 'app-vliegtuig-editor',
     templateUrl: './vliegtuig-editor.component.html',
     styleUrls: ['./vliegtuig-editor.component.scss']
 })
-export class VliegtuigEditorComponent  implements  OnInit {
+export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
     @Output() add: EventEmitter<HeliosVliegtuig> = new EventEmitter<HeliosVliegtuig>();
     @Output() update: EventEmitter<HeliosVliegtuig> = new EventEmitter<HeliosVliegtuig>();
     @Output() delete: EventEmitter<HeliosVliegtuig> = new EventEmitter<HeliosVliegtuig>();
@@ -51,17 +59,28 @@ export class VliegtuigEditorComponent  implements  OnInit {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
+    PVBs: any[];        // proef van bekwaamheid met kruisjeslijst (lokaal / overland)
+
     constructor(
         private readonly vliegtuigenService: VliegtuigenService,
+        private readonly competentiesService: CompetentieService,
+        private readonly configService: PegasusConfigService,
         private readonly loginService: LoginService,
         private readonly typesService: TypesService
     ) {}
 
     ngOnInit(): void {
-        // abonneer op wijziging van lidTypes
+        // abonneer op wijziging van vliegtuigTypes
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
             this.vliegtuigTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 4});
         });
+
+        this.PVBs = this.configService.getPVB();
+        console.log(this.PVBs)
+    }
+
+    ngOnDestroy() {
+        if (this.typesAbonnement)           this.typesAbonnement.unsubscribe();
     }
 
     openPopup(vliegtuig: HeliosVliegtuigenDataset | null) {

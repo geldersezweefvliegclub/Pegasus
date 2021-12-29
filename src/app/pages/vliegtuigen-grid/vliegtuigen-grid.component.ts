@@ -9,6 +9,7 @@ import {DeleteActionComponent} from '../../shared/components/datatable/delete-ac
 import {RestoreActionComponent} from '../../shared/components/datatable/restore-action/restore-action.component';
 import {LogboekRenderComponent} from "../../shared/components/datatable/logboek-render/logboek-render.component";
 import {ZitplaatsRenderComponent} from './zitplaats-render/zitplaats-render.component';
+import {HandboekRenderComponent} from './handboek-render/handboek-render.component';
 import {CheckboxRenderComponent} from '../../shared/components/datatable/checkbox-render/checkbox-render.component';
 
 import {
@@ -47,7 +48,7 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
-        {field: 'REGISTRATIE', headerName: 'Registratie', sortable: true},
+        {field: 'REGISTRATIE', headerName: 'Registratie', cellRenderer: 'handboekRender', sortable: true},
         {field: 'CALLSIGN', headerName: 'Callsign', sortable: true},
         {field: 'VOLGORDE', headerName: 'Volgorde', sortable: true, hide: true},
         {field: 'ZITPLAATSEN', headerName: 'Zitplaatsen', sortable: true, cellRenderer: 'zitplaatsRender'},
@@ -117,6 +118,7 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
 
     frameworkComponents = {
         zitplaatsRender: ZitplaatsRenderComponent,
+        handboekRender: HandboekRenderComponent,
         checkboxRender: CheckboxRenderComponent,
         logboekRender: LogboekRenderComponent,
         deleteAction: DeleteActionComponent,

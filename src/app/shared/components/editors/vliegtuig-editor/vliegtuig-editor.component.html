@@ -89,6 +89,31 @@
                         </label>
                     </div>
                 </div>
+                <div class="row my-3 align-items-end" *ngIf="vliegtuig.CLUBKIST">
+                    <div class="col-12 col-md-12">
+                        <label for="URL" class="form-label">URL naar handboek</label>
+                        <input type="text" class="form-control" id="URL"
+                               [(ngModel)]="vliegtuig.URL">
+                    </div>
+                </div>
+                <div class="row my-3 align-items-end" *ngIf="vliegtuig.CLUBKIST">
+                    <div class="col-12 col-md-6" >
+                        <label for="LOKAAL" class="form-label">Bevoegheid lokaal</label>
+                        <select class="form-select" [(ngModel)]="vliegtuig.BEVOEGDHEID_LOKAAL_ID"
+                                name="BEVOEGDHEID_LOKAAL_ID" id="LOKAAL">
+                            <option *ngFor="let competentie of PVBs"
+                                    [value]="competentie.Lokaal">{{competentie.Type}}</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-6" >
+                        <label for="OVERLAND" class="form-label">Bevoegheid overland</label>
+                        <select class="form-select" [(ngModel)]="vliegtuig.BEVOEGDHEID_OVERLAND_ID"
+                                name="BEVOEGDHEID_OVERLAND_ID" id="OVERLAND">
+                            <option *ngFor="let competentie of PVBs"
+                                    [value]="competentie.Overland">{{competentie.Type}}</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="row my-3 align-items-end">
                     <div class="col-12 col-md-12">
                         <label for="OPMERKINGEN" class="form-label">Opmerkingen</label>

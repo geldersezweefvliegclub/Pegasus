@@ -46,6 +46,7 @@ import { ExportStartlijstComponent } from './startlijst-grid/export-startlijst/e
 import { AuditPageComponent } from './audit-page/audit-page.component';
 import { ReserveringPageComponent } from './reservering-page/reservering-page.component';
 import { KistSelectieComponent } from './reservering-page/kist-selectie/kist-selectie.component';
+import { HandboekRenderComponent } from './vliegtuigen-grid/handboek-render/handboek-render.component';
 
 @NgModule({
   imports: [
@@ -97,7 +98,8 @@ import { KistSelectieComponent } from './reservering-page/kist-selectie/kist-sel
     ExportStartlijstComponent,
     AuditPageComponent,
     ReserveringPageComponent,
-    KistSelectieComponent
+    KistSelectieComponent,
+    HandboekRenderComponent
   ],
   exports: [
     PegasusCardComponent,

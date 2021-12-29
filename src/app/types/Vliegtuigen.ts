@@ -245,6 +245,12 @@ export interface components {
       VOLGORDE?: number;
       /** Mag het vliegtuig vliegen? */
       INZETBAAR?: boolean;
+      /** URL naar het handboek */
+      URL?: string;
+      /** Link naar comptentie om met deze kist lokaal te vliegen */
+      BEVOEGDHEID_LOKAAL_ID?: number;
+      /** Link naar comptentie om met deze kist overland te vliegen */
+      BEVOEGDHEID_OVERLAND_ID?: number;
       /** De opmerkingen die ingevoerd zijn */
       OPMERKINGEN?: string;
     };
@@ -259,6 +265,10 @@ export interface components {
       VLIEGTUIGTYPE?: string;
       /** Vliegtuig registratie en callsign */
       REG_CALL?: string;
+      /** Omschrijving van lokale bevoegdheid */
+      BEVOEGDHEID_LOKAAL?: string;
+      /** Omschrijving van overland bevoegdheid */
+      BEVOEGDHEID_OVERLAND?: string;
     };
     view_vliegtuigen: {
       /** Aantal records dat voldoet aan de criteria in de database */
