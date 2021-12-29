@@ -98,7 +98,7 @@
                 </div>
                 <div class="row my-3 align-items-end" *ngIf="vliegtuig.CLUBKIST">
                     <div class="col-12 col-md-6" >
-                        <label for="LOKAAL" class="form-label">Bevoegheid lokaal</label>
+                        <label for="LOKAAL" class="form-label">Bevoegdheid lokaal</label>
                         <select class="form-select" [(ngModel)]="vliegtuig.BEVOEGDHEID_LOKAAL_ID"
                                 name="BEVOEGDHEID_LOKAAL_ID" id="LOKAAL">
                             <option *ngFor="let competentie of PVBs"
@@ -106,7 +106,7 @@
                         </select>
                     </div>
                     <div class="col-12 col-md-6" >
-                        <label for="OVERLAND" class="form-label">Bevoegheid overland</label>
+                        <label for="OVERLAND" class="form-label">Bevoegdheid overland</label>
                         <select class="form-select" [(ngModel)]="vliegtuig.BEVOEGDHEID_OVERLAND_ID"
                                 name="BEVOEGDHEID_OVERLAND_ID" id="OVERLAND">
                             <option *ngFor="let competentie of PVBs"
