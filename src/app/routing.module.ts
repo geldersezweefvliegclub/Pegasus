@@ -12,7 +12,7 @@ import {
   faCalendarDay,
   faChartPie,
   faKey,
-  faPlane,
+  faPlane, faPlaneDeparture,
   faUser,
   faUsers, faWaveSquare
 } from '@fortawesome/free-solid-svg-icons';
@@ -38,7 +38,7 @@ export interface CustomRoute extends Route {
 export const routes: CustomRoute[] = [
   {path: '', pathMatch: 'full', redirectTo: 'dashboard', excluded: true, icon: faUser, text: 'EXCLUDED'},
   {path: 'dashboard', component: DashboardPageComponent, excluded: false, icon: faChartPie, text: 'Dashboard'},
-  {path: 'vluchten', component: VluchtenGridComponent, excluded: false, icon: faClipboardList, text: 'Vluchten'},
+  {path: 'vluchten', component: VluchtenGridComponent, excluded: false, icon: faPlaneDeparture, text: 'Vluchten'},
   {path: 'daginfo', component: DaginfoComponent, excluded: false, icon: faCalendarAlt, text: 'Dag info'},
   {path: 'tracks', component: TracksGridComponent, excluded: false, icon: faAddressCard, text: 'Tracks'},
   {path: 'reserveringen', component: ReserveringPageComponent, excluded: false, icon: faAvianex, text: 'Kist reserveren'},
