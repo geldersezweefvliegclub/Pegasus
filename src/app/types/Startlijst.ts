@@ -459,6 +459,8 @@ export interface components {
       SLEEP_HOOGTE?: number;
       /** Op welk veld is er gestart. Verwijzing naar type tabel */
       VELD_ID?: number;
+      /** Start strip. Verwijzing naar type tabel */
+      BAAN_ID?: number;
       /** Extra text om opmerkingen toe te voegen */
       OPMERKINGEN?: string;
       /** Extra text om ID van extern systeem op te slaan */
@@ -492,11 +494,13 @@ export interface components {
       /** Het lidtype van de inzittende zoals dat in ref_leden staat */
       INZITTENDE_LIDTYPE_ID?: number;
       /** Is deze vlucht op een DDWV dag uitgevoerd */
-      VERWIJDERD?: boolean;
+      DDWV?: boolean;
       /** De manier van de start */
       STARTMETHODE?: string;
       /** Naam van het vliegveld waarop gestart is */
       VELD?: string;
+      /** Startstrip */
+      Baan?: string;
     };
     view_startlijst: {
       /** Aantal records dat voldoet aan de criteria in de database */
@@ -545,6 +549,8 @@ export interface components {
       STARTMETHODE?: string;
       /** Vliegveld waar gestart is */
       VELD?: string;
+      /** Start strip */
+      BAAN?: string;
       /** De opmerkingen die ingevoerd zijn */
       OPMERKINGEN?: string;
     };

@@ -1,10 +1,5 @@
-<div class="d-flex">
-    <label for="VLIEGTUIG-INVOER" class="form-label">{{label}}</label>
-    <div *ngIf="!inzetbaar" class="flex-row cssWarning">
-        <div class="fas fa-exclamation-triangle " *ngIf="!inzetbaar"></div>
-        Niet inzetbaar!
-    </div>
-</div>
+
+<label for="VLIEGTUIG-INVOER" class="form-label">{{label}}</label>
 <ng-select id="VLIEGTUIG-INVOER"
            [items]="vliegtuigenSelectie$ | async"
            [disabled]="disabled"
@@ -19,3 +14,7 @@
            [typeahead]="vliegtuigInput$"
            [(ngModel)]="VLIEGTUIG_ID">
 </ng-select>
+<div *ngIf="!inzetbaar" class="flex-row cssWarning">
+    <div class="fas fa-exclamation-triangle " *ngIf="!inzetbaar"></div>
+    Niet inzetbaar!
+</div>

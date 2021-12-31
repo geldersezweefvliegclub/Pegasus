@@ -5,7 +5,7 @@
     <div body>
         <fieldset [disabled]="isVerwijderMode || isRestoreMode || isLoading || isSaving">
             <div class="row">
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-5">
                     <app-vliegtuig-invoer id="VLIEGTUIG"
                                           [disabled]="isVerwijderMode || isRestoreMode"
                                           [VLIEGTUIG_ID]="start.VLIEGTUIG_ID"
@@ -15,7 +15,7 @@
                                           label="Vliegtuig"
                     ></app-vliegtuig-invoer>
                 </div>
-                <div class="col-12 col-md-6" *ngIf="start.VLIEGTUIG_ID">
+                <div class="col-12 col-md-4" *ngIf="start.VLIEGTUIG_ID">
                     <label for="VELD" class="form-label">Veld</label>
                     <ng-select id="VELD"
                                [disabled]="isVerwijderMode || isRestoreMode"
@@ -27,6 +27,19 @@
                                openOnEnter="true"
                                required
                                [(ngModel)]="start.VELD_ID">
+                    </ng-select>
+                </div>
+                <div class="col-12 col-md-3" *ngIf="start.VLIEGTUIG_ID">
+                    <label for="VELD" class="form-label">Strip</label>
+                    <ng-select id="BAAN"
+                               [disabled]="isVerwijderMode || isRestoreMode"
+                               [items]="baanTypes$ | async"
+                               placeholder="Strip"
+                               bindLabel="OMSCHRIJVING"
+                               bindValue="ID"
+                               closeOnSelect="true"
+                               openOnEnter="true"
+                               [(ngModel)]="start.BAAN_ID">
                     </ng-select>
                 </div>
             </div>
@@ -110,7 +123,7 @@
                     </div>
                 </div>
                 <div class="col-2 col-md-2 row align-items-end">
-                    <app-icon-button id="switchVoorAchter" class="toolbarBtn display-1" iconNaam="fas ArrowsAltV"
+                    <app-icon-button id="switchVoorAchter" class="toolbarBtn display-1" iconNaam="fas ExchangeAlt"
                                      (btnClicked)="omwisselen()"
                                      *ngIf="!toonVliegerNaam && !start.PAX && gekozenVliegtuig?.ZITPLAATSEN == 2"
                                      btnColor="btn-secondary"></app-icon-button>

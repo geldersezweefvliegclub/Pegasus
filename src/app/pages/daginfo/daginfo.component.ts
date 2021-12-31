@@ -68,6 +68,7 @@ export class DaginfoComponent implements OnInit, OnDestroy{
 
     private typesAbonnement: Subscription;
     veldTypes$: Observable<HeliosType[]>;
+    baanTypes$: Observable<HeliosType[]>;
     startMethodeTypes$: Observable<HeliosType[]>;
 
     magToevoegen: boolean = false;
@@ -101,6 +102,7 @@ export class DaginfoComponent implements OnInit, OnDestroy{
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
             this.startMethodeTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 5}));    // startmethodes
             this.veldTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));            // vliegvelden
+            this.baanTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 1}));            // vliegvelden
         });
 
         // de datum zoals die in de kalender gekozen is

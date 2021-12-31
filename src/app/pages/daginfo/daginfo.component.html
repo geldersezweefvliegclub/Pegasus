@@ -26,19 +26,34 @@
                                       titel="Vliegveld"
                                       subtitel="Waar we vliegen"
                                       [icon]="iconVliegveld">
+                        <div class="d-flex flex-row">
+                            <div class="col-8">
+                                <label for="VELD" class="form-label">Vliegveld</label>
+                                <ng-select id="VELD"
+                                           required
+                                           [items]="veldTypes$ | async"
+                                           placeholder="Vliegveld waar we starten"
+                                           bindLabel="OMSCHRIJVING"
+                                           bindValue="ID"
+                                           closeOnSelect="true"
+                                           openOnEnter="true"
+                                           [(ngModel)]="dagInfo.VELD_ID">
+                                </ng-select>
 
-                        <label for="VELD" class="form-label">Vliegveld</label>
-                        <ng-select id="VELD"
-                                   required
-                                   [items]="veldTypes$ | async"
-                                   placeholder="Vliegveld waar we starten"
-                                   bindLabel="OMSCHRIJVING"
-                                   bindValue="ID"
-                                   closeOnSelect="true"
-                                   openOnEnter="true"
-                                   [(ngModel)]="dagInfo.VELD_ID">
-                        </ng-select>
-
+                            </div>
+                            <div class="col-4 ms-2">
+                                <label for="Baan" class="form-label">Strip</label>
+                                <ng-select id="BAAN"
+                                           [items]="baanTypes$ | async"
+                                           placeholder="Strip"
+                                           bindLabel="OMSCHRIJVING"
+                                           bindValue="ID"
+                                           closeOnSelect="true"
+                                           openOnEnter="true"
+                                           [(ngModel)]="dagInfo.BAAN_ID">
+                                </ng-select>
+                            </div>
+                        </div>
                     </app-pegasus-card>
                 </div>
                 <div class="col-3">

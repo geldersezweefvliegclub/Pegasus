@@ -44,6 +44,7 @@ export class StartEditorComponent implements OnInit {
     startMethodeTypes: HeliosType[];
     startMethodeTypesFiltered: HeliosType[];
     veldenTypes$: Observable<HeliosType[]>;
+    baanTypes$: Observable<HeliosType[]>;
 
     private vliegtuigenAbonnement: Subscription;
     vliegtuigen: HeliosVliegtuigenDataset[] = [];
@@ -105,6 +106,7 @@ export class StartEditorComponent implements OnInit {
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
             this.startMethodeTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 5});
             this.veldenTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));
+            this.baanTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 1}));
         });
 
         // abonneer op wijziging van vliegtuigen
@@ -162,6 +164,7 @@ export class StartEditorComponent implements OnInit {
 
                 STARTMETHODE_ID: start.STARTMETHODE_ID,
                 VELD_ID: start.VELD_ID,
+                BAAN_ID: start.BAAN_ID,
                 SLEEPKIST_ID: start.SLEEPKIST_ID,
                 SLEEP_HOOGTE: start.SLEEP_HOOGTE,
 
@@ -179,9 +182,6 @@ export class StartEditorComponent implements OnInit {
                 // zet de juiste parameters (doe alsof er invoer heeft plaatsgevonden)
                 this.vliegtuigGeselecteerd(this.start.VLIEGTUIG_ID);
                 this.vliegerGeselecteerd(this.start.VLIEGER_ID);
-
-                console.log(this.start)
-                console.log(this.veldenTypes$)
             }
         } else {
             this.formTitel = `Start aanmaken ${this.datum.day}-${this.datum.month}-${this.datum.year}`;
@@ -199,6 +199,7 @@ export class StartEditorComponent implements OnInit {
 
                 STARTMETHODE_ID: this.daginfoService.dagInfo.STARTMETHODE_ID,
                 VELD_ID: this.daginfoService.dagInfo.VELD_ID,
+                BAAN_ID: this.daginfoService.dagInfo.BAAN_ID,
                 SLEEPKIST_ID: undefined,
                 SLEEP_HOOGTE: undefined,
 
