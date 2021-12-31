@@ -17,7 +17,7 @@ import {
   faUsers, faWaveSquare
 } from '@fortawesome/free-solid-svg-icons';
 import {faClipboardList} from '@fortawesome/free-solid-svg-icons/faClipboardList';
-import {StartlijstGridComponent} from './pages/startlijst-grid/startlijst-grid.component';
+import {VluchtenGridComponent} from './pages/vluchten-grid/vluchten-grid.component';
 import {VliegtuigenGridComponent} from './pages/vliegtuigen-grid/vliegtuigen-grid.component';
 import {DaginfoComponent} from './pages/daginfo/daginfo.component';
 import {LedenGridComponent} from './pages/leden-grid/leden-grid.component';
@@ -38,7 +38,7 @@ export interface CustomRoute extends Route {
 export const routes: CustomRoute[] = [
   {path: '', pathMatch: 'full', redirectTo: 'dashboard', excluded: true, icon: faUser, text: 'EXCLUDED'},
   {path: 'dashboard', component: DashboardPageComponent, excluded: false, icon: faChartPie, text: 'Dashboard'},
-  {path: 'startlijst', component: StartlijstGridComponent, excluded: false, icon: faClipboardList, text: 'Startlijst'},
+  {path: 'vluchten', component: VluchtenGridComponent, excluded: false, icon: faClipboardList, text: 'Vluchten'},
   {path: 'daginfo', component: DaginfoComponent, excluded: false, icon: faCalendarAlt, text: 'Dag info'},
   {path: 'tracks', component: TracksGridComponent, excluded: false, icon: faAddressCard, text: 'Tracks'},
   {path: 'reserveringen', component: ReserveringPageComponent, excluded: false, icon: faAvianex, text: 'Kist reserveren'},

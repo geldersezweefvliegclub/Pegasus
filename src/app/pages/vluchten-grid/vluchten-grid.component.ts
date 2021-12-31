@@ -32,10 +32,10 @@ type HeliosStartDatasetExtended = HeliosStartDataset & {
 
 @Component({
     selector: 'app-startlijst-grid',
-    templateUrl: './startlijst-grid.component.html',
-    styleUrls: ['./startlijst-grid.component.scss']
+    templateUrl: './vluchten-grid.component.html',
+    styleUrls: ['./vluchten-grid.component.scss']
 })
-export class StartlijstGridComponent implements OnInit, OnDestroy {
+export class VluchtenGridComponent implements OnInit, OnDestroy {
     @ViewChild(StartEditorComponent) editor: StartEditorComponent;
     @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
     @ViewChild(ExportStartlijstComponent) exportStartlijstKeuze: ExportStartlijstComponent;

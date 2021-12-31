@@ -17,10 +17,10 @@ import {VliegtuigenGridComponent} from './vliegtuigen-grid/vliegtuigen-grid.comp
 import {ZitplaatsRenderComponent} from './vliegtuigen-grid/zitplaats-render/zitplaats-render.component';
 import {LedenGridComponent} from './leden-grid/leden-grid.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {StartlijstGridComponent} from './startlijst-grid/startlijst-grid.component';
+import {VluchtenGridComponent} from './vluchten-grid/vluchten-grid.component';
 import {NgbDatepickerModule, NgbPopoverModule, NgbTypeaheadModule} from '@ng-bootstrap/ng-bootstrap';
-import {VliegerRenderComponent} from './startlijst-grid/vlieger-render/vlieger-render.component';
-import {InzittendeRenderComponent} from './startlijst-grid/inzittende-render/inzittende-render.component';
+import {VliegerRenderComponent} from './vluchten-grid/vlieger-render/vlieger-render.component';
+import {InzittendeRenderComponent} from './vluchten-grid/inzittende-render/inzittende-render.component';
 import {StarttijdRenderComponent} from '../shared/components/datatable/starttijd-render/starttijd-render.component';
 import {LandingstijdRenderComponent} from '../shared/components/datatable/landingstijd-render/landingstijd-render.component';
 import {DaginfoComponent} from './daginfo/daginfo.component';
@@ -42,7 +42,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import { TrackRenderComponent } from './leden-grid/track-render/track-render.component';
 import { TracksGridComponent } from './tracks-grid/tracks-grid.component';
 import { JaarTotalenComponent } from './rooster-page/jaar-totalen/jaar-totalen.component';
-import { ExportStartlijstComponent } from './startlijst-grid/export-startlijst/export-startlijst.component';
+import { ExportStartlijstComponent } from './vluchten-grid/export-startlijst/export-startlijst.component';
 import { AuditPageComponent } from './audit-page/audit-page.component';
 import { ReserveringPageComponent } from './reservering-page/reservering-page.component';
 import { KistSelectieComponent } from './reservering-page/kist-selectie/kist-selectie.component';
@@ -76,7 +76,7 @@ import { HandboekRenderComponent } from './vliegtuigen-grid/handboek-render/hand
     VliegtuigenGridComponent,
     ZitplaatsRenderComponent,
     LedenGridComponent,
-    StartlijstGridComponent,
+    VluchtenGridComponent,
     VliegerRenderComponent,
     InzittendeRenderComponent,
     StarttijdRenderComponent,
