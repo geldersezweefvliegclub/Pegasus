@@ -135,7 +135,7 @@ export class LidEditorComponent implements OnInit {
         else if (this.isVerwijderMode) {
             this.delete()
         }
-        else if (this.lid.ID && this.lid.ID > 0) {
+        else if (this.lid.ID != undefined && this.lid.ID >= 0) {
             this.updateLid()
         } else {
             this.nieuwLid()
