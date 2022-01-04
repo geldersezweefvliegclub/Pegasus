@@ -50,6 +50,7 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
     isSaving: boolean = false;
 
     magWijzigen: boolean = false;
+
     magClubkistWijzigen: boolean = false;
 
     isVerwijderMode: boolean = false;
@@ -76,7 +77,6 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
         });
 
         this.PVBs = this.configService.getPVB();
-        console.log(this.PVBs)
     }
 
     ngOnDestroy() {
@@ -114,7 +114,6 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
             const ui = this.loginService.userInfo?.Userinfo;
             this.magWijzigen = (ui?.isBeheerder || ui?.isStarttoren) ? true : false;
             this.magClubkistWijzigen = (ui?.isBeheerder! || ui?.isCIMT!);
-
         } else {
             this.formTitel = 'Vliegtuig aanmaken';
             this.vliegtuig = {};
