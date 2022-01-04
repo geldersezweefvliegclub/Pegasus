@@ -327,7 +327,7 @@ export class LedenGridComponent implements OnInit {
         let ws = xlsx.utils.json_to_sheet(this.leden);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
-        xlsx.writeFile(wb, 'vliegtuigen ' + new Date().toJSON().slice(0, 10) + '.xlsx');
+        xlsx.writeFile(wb, 'leden ' + new Date().toJSON().slice(0, 10) + '.xlsx');
     }
 
     // Wordt aangeroepen bij een dubbel klik op een rij.
