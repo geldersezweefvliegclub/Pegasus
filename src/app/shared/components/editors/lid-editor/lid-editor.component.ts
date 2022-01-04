@@ -128,6 +128,24 @@ export class LidEditorComponent implements OnInit {
             this.lid.MEDICAL = undefined;
         }
 
+        // opbouwen van de volledige naam
+        this.lid.NAAM = "";
+        if (this.lid.VOORNAAM && this.lid.VOORNAAM!.length > 0) {
+            this.lid.NAAM += this.lid.VOORNAAM;
+        }
+        if (this.lid.TUSSENVOEGSEL && this.lid.TUSSENVOEGSEL!.length > 0) {
+            if (this.lid.NAAM != "") {
+                this.lid.NAAM += " ";
+            }
+            this.lid.NAAM += this.lid.TUSSENVOEGSEL;
+        }
+        if (this.lid.ACHTERNAAM && this.lid.ACHTERNAAM!.length > 0) {
+            if (this.lid.NAAM != "") {
+                this.lid.NAAM += " ";
+            }
+            this.lid.NAAM += this.lid.ACHTERNAAM;
+        }
+
         // nu opslaan van de data
         if (this.isRestoreMode) {
             this.restore()
@@ -177,7 +195,6 @@ export class LidEditorComponent implements OnInit {
     // update bestaand lid
     updateLid(): void {
         this.isSaving = true;
-        this.lid.NAAM = undefined;      // Wordt door de server bepaald en is te wijzigen
         this.ledenService.updateLid(this.lid).then((l) => {
             this.isSaving = false;
             this.error = undefined;
