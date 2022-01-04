@@ -102,7 +102,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         const ui = this.loginService.userInfo?.Userinfo;
 
         if (ui?.isStarttoren) {
-            this.router.navigate(['startlijst']);
+            this.router.navigate(['vluchten']);
         }
 
         this.toonTracks = (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) ? true : false;
