@@ -24,6 +24,7 @@ import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
 import {NgSelectComponent} from "@ng-select/ng-select";
 import {VliegtuigInvoerComponent} from "./vliegtuig-invoer/vliegtuig-invoer.component";
 import {ProgressieService} from "../../../../services/apiservice/progressie.service";
+import {LoginService} from "../../../../services/apiservice/login.service";
 
 @Component({
     selector: 'app-start-editor',
@@ -72,6 +73,7 @@ export class StartEditorComponent implements OnInit {
 
     isLoading: boolean = false;
     isSaving: boolean = false;
+    magAltijdWijzigen: boolean = false;
 
     isVerwijderMode: boolean = false;
     isRestoreMode: boolean = false;
@@ -86,6 +88,7 @@ export class StartEditorComponent implements OnInit {
         private readonly aanwezigVliegtuigenService: AanwezigVliegtuigService,
         private readonly progressieService: ProgressieService,
         private readonly ledenService: LedenService,
+        private readonly loginService: LoginService,
         private readonly aanwezigLedenService: AanwezigLedenService,
         private readonly typesService: TypesService,
         private readonly daginfoService: DaginfoService,
@@ -93,6 +96,9 @@ export class StartEditorComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        const ui = this.loginService.userInfo?.Userinfo;
+        this.magAltijdWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
+
         // de datum zoals die in de kalender gekozen is, we halen dan de dag afhankelijke gegevens op
         this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
             this.datum = DateTime.fromObject({
