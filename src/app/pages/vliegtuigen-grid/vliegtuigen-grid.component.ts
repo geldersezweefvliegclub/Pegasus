@@ -165,7 +165,7 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
         const ui = this.loginService.userInfo?.Userinfo;
         this.magClubkistWijzigen = (ui?.isBeheerder! || ui?.isCIMT!);
         this.magToevoegen = (!ui?.isDDWV) ? true : false;
-        this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
+        this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
         this.magWijzigen = (!ui?.isDDWV) ? true : false;
         this.magExporten = (!ui?.isDDWV) ? true : false;
 
