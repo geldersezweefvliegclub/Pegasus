@@ -182,7 +182,7 @@ export class TracksComponent implements OnInit, OnDestroy {
     opvragen(): void {
         clearTimeout(this.zoekTimer);
 
-        const maxTrackItems = (this.VliegerID) ? -1 : 200; // alle tracks voor een vlieger, anders 200 items
+        const maxTrackItems = (this.VliegerID) ? -1 : 100; // alle tracks voor een vlieger, anders 100 items
 
         this.zoekTimer = window.setTimeout(() => {
             this.isLoading = true;
