@@ -40,6 +40,7 @@ export class StartEditorComponent implements OnInit {
     toonVliegerNaam: boolean = false;
     toonStartMethode: boolean = true;
     toonWaarschuwing: boolean = false;          // mag het lid op die vliegtuig vliegen volgens kruisjeslijst?
+    medicalWaarschuwing: boolean = false;       // Controleer op geldigheid medical
 
     private typesAbonnement: Subscription;
     startMethodeTypes: HeliosType[];
@@ -300,6 +301,7 @@ export class StartEditorComponent implements OnInit {
         const gekozenVlieger = this.leden.find(lid => lid.ID == id) as HeliosLedenDataset;
 
         if (!gekozenVlieger) {
+            this.medicalWaarschuwing = false;
             this.toonVliegerNaam = false;
         } else {
             switch (gekozenVlieger.LIDTYPE_ID) {
@@ -308,11 +310,22 @@ export class StartEditorComponent implements OnInit {
                 case 610:   // oprotkabel
                 case 612:   // penningmeester
                 {
+                    this.medicalWaarschuwing = false;
                     this.toonVliegerNaam = true;
                     break;
                 }
                 default: {
                     this.toonVliegerNaam = false;
+
+                    if (!gekozenVlieger.MEDICAL) {
+                        this.medicalWaarschuwing = true;   // medical niet ingevoerd
+                    }
+                    else {
+                        // is medical verlopen op de vliegdag?
+
+                        const d = DateTime.fromSQL(gekozenVlieger.MEDICAL);
+                        this.medicalWaarschuwing =  (d < this.datum);
+                    }
                     break;
                 }
             }

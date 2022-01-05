@@ -105,6 +105,10 @@
                                 <div class="fas fa-exclamation-triangle "></div>
                                 Vlieger onbevoegd
                             </div>
+                            <div *ngIf="medicalWaarschuwing" class="flex-row cssWarning">
+                                <div class="fas fa-exclamation-triangle "></div>
+                                Controleer medical
+                            </div>
                         </div>
                     </div>
                     <div class="row my-2" *ngIf="!toonVliegerNaam && !start.PAX && gekozenVliegtuig?.ZITPLAATSEN == 2">
