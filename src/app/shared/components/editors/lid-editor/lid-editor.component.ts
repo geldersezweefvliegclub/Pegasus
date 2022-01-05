@@ -221,6 +221,8 @@ export class LidEditorComponent implements OnInit {
             this.isSaving = false;
             this.error = undefined;
             this.success = {titel: "Profiel", beschrijving: l.NAAM + " is toegevoegd"}
+
+            setTimeout(() => this.router.navigate(['/leden']), 3000);
         }).catch(e => {
             this.isSaving = false;
             this.success = undefined;
