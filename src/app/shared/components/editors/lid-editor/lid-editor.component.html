@@ -157,13 +157,15 @@
                                                                  btnColor="btn-primary"></app-icon-button>
                                             </div>
                                         </div>
-                                        <div class="cssWarning" *ngIf="MedicalDatum == null">
-                                            <div class="fas fa-exclamation-triangle"></div>
-                                            Medical ontbreekt
-                                        </div>
-                                        <div class="cssWarning" *ngIf="MedicalVerlopen()">
-                                            <div class="fas fa-exclamation-triangle"></div>
-                                            Medical verlopen
+                                        <div *ngIf="lid.LIDTYPE_ID == 601 || lid.LIDTYPE_ID == 602 || lid.LIDTYPE_ID">
+                                            <div class="cssWarning" *ngIf="MedicalDatum == null">
+                                                <div class="fas fa-exclamation-triangle"></div>
+                                                Medical ontbreekt
+                                            </div>
+                                            <div class="cssWarning" *ngIf="MedicalVerlopen()">
+                                                <div class="fas fa-exclamation-triangle"></div>
+                                                Medical verlopen
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
