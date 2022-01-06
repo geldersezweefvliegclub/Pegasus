@@ -165,7 +165,7 @@ export class NavigationComponent implements OnInit, OnDestroy  {
         const tracks = this.routes.find(route => route.path == "tracks") as CustomRoute;
         tracks.excluded = true  // default, daginfo is niet van toepassing voor de meeste leden
         if (ui?.isCIMT || ui?.isInstructeur || ui?.isBeheerder) {
-            tracks.excluded = false
+            tracks.excluded = false;
         }
 
         const daginfo = this.routes.find(route => route.path == "daginfo") as CustomRoute;
@@ -179,11 +179,15 @@ export class NavigationComponent implements OnInit, OnDestroy  {
         // starttoren heeft geen dashboard
         const dashboard = this.routes.find(route => route.path == "dashboard") as CustomRoute;
         if (ui?.isStarttoren) {
-            dashboard.excluded = true
+            dashboard.excluded = true;
+        }
+        else {
+            dashboard.excluded = false;
         }
 
         // alleen echte gebruiker hebben profiel, starttoren, zusterclubs, etc dus niet
         const profiel = this.routes.find(route => route.path == "profiel") as CustomRoute;
+        profiel.excluded = false;
         if (!ui?.isDDWV && !ui?.isClubVlieger) {
             profiel.excluded = true
         }
@@ -221,19 +225,28 @@ export class NavigationComponent implements OnInit, OnDestroy  {
         // alleen echte gebruiker hebben toegang tot ledenlijst, starttoren, zusterclubs, etc dus niet
         const leden = this.routes.find(route => route.path == "leden") as CustomRoute;
         if (!ui?.isDDWV && !ui?.isClubVlieger && !ui?.isStarttoren) {
-            leden.excluded = true
+            leden.excluded = true;
+        }
+        else {
+            leden.excluded = false;
         }
 
         // alleen echte gebruiker hebben toegang tot rooster, starttoren, zusterclubs, etc dus niet
         const rooster = this.routes.find(route => route.path == "rooster") as CustomRoute;
         if (!ui?.isDDWV && !ui?.isClubVlieger) {
-            rooster.excluded = true
+            rooster.excluded = true;
+        }
+        else {
+            rooster.excluded = false;
         }
 
         // alleen clubvliegers en starttoren hebben toegnag tot reservering
         const reserveringen = this.routes.find(route => route.path == "reserveringen") as CustomRoute;
         if (!ui?.isClubVlieger && !ui?.isStarttoren) {
-            reserveringen.excluded = true
+            reserveringen.excluded = true;
+        }
+        else {
+            reserveringen.excluded = false;
         }
     }
 
