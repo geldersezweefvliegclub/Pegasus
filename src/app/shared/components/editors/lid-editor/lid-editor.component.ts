@@ -402,7 +402,11 @@ export class LidEditorComponent implements OnInit {
             return false;
         }
 
-        return (ui?.isBeheerder || ui?.isBeheerderDDWV);
+        if (this.lid.AUTH == false) {
+            return false;
+        }
+
+        return this.lid.SECRET?.startsWith("http");     // heeft url als secret gevuld is
     }
 
     MedicalVerlopen() {
