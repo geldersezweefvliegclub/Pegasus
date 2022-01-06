@@ -105,6 +105,8 @@ export class LoginPageComponent implements OnInit {
         this.isLoading = true;
         this.loginService.sendSMS(this.gebruikersnaam, this.wachtwoord).then(() => {
             this.isLoading = false;
+            this.secret = '';
+            alert("U ontvangt spoedig een SMS met de inlogcode.");
         }).catch(e => {
             this.error = e;
             this.isLoading = false;
