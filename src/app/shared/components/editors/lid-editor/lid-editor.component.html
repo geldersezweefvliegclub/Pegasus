@@ -94,6 +94,8 @@
                                     <input name="geboortedatum" class="form-control" placeholder="dd-mm-yyyy"
                                            ngbDatepicker #d="ngbDatepicker"
                                            id="geboortedatum"
+                                           [minDate]="{year: vandaag.year-90, month: 1, day: 1}"
+                                           [maxDate]="{year: vandaag.year, month: 1, day: 1}"
                                            [(ngModel)]="GeboorteDatum"
                                            (dateSelect)="GeboorteDatum = $event"
                                     >
@@ -149,6 +151,8 @@
                                             <input name="MEDICAL" class="form-control" placeholder="dd-mm-yyyy"
                                                    ngbDatepicker #medical="ngbDatepicker"
                                                    id="MEDICAL"
+                                                   [minDate]="{year: vandaag.year-5, month: vandaag.month, day: vandaag.day}"
+                                                   [maxDate]="{year: vandaag.year+5, month: vandaag.month, day: vandaag.day}"
                                                    [(ngModel)]="MedicalDatum"
                                                    (dateSelect)="MedicalDatum = $event"
                                             >
@@ -162,7 +166,7 @@
                                                 <div class="fas fa-exclamation-triangle"></div>
                                                 Medical ontbreekt
                                             </div>
-                                            <div class="cssWarning" *ngIf="MedicalVerlopen()">
+                                            <div class="cssWarning" *ngIf="medicalVerlopen()">
                                                 <div class="fas fa-exclamation-triangle"></div>
                                                 Medical verlopen
                                             </div>

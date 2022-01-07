@@ -49,6 +49,8 @@ export class LidEditorComponent implements OnInit {
     MedicalDatum: NgbDate | null;
     GeboorteDatum: NgbDate | null;
 
+    vandaag: DateTime = DateTime.now();
+
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
@@ -59,14 +61,19 @@ export class LidEditorComponent implements OnInit {
         private readonly imageService: ImageService,
         private readonly storageService: StorageService,
         private readonly router: Router,
-        private readonly changeDetector: ChangeDetectorRef) {}
+        private readonly changeDetector: ChangeDetectorRef) {
+    }
 
     ngOnInit(): void {
 
         // abonneer op wijziging van lidTypes
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
-            this.lidTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 6});          // lidtypes
-            this.statusTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 19});      // status types (DBO, solo, brevet)```````
+            this.lidTypes = dataset!.filter((t: HeliosType) => {
+                return t.GROEP == 6
+            });          // lidtypes
+            this.statusTypes = dataset!.filter((t: HeliosType) => {
+                return t.GROEP == 19
+            });      // status types (DBO, solo, brevet)```````
         });
 
         if (this.lidID >= 0) {
@@ -75,8 +82,7 @@ export class LidEditorComponent implements OnInit {
             if (this.isRestoreMode) {
                 this.titel = 'Lid herstellen';
                 this.subtitel = 'Een oud lid is weer terug, maak de verwijdering ongedaan';
-            }
-            else if (this.isVerwijderMode) {
+            } else if (this.isVerwijderMode) {
                 this.titel = 'Lid verwijderen';
                 this.subtitel = 'Geen lid meer dan markeren als verwijderd';
             }
@@ -91,8 +97,7 @@ export class LidEditorComponent implements OnInit {
                     this.avatar = lid.AVATAR + "";  // voorkom dat lid.avatar undefined is. Dan kan je geen avatar uploaden
                     this.isLoading = false;
                 });
-            }
-            catch(e) {
+            } catch (e) {
                 this.isLoading = false;
             }
         } else {
@@ -116,15 +121,13 @@ export class LidEditorComponent implements OnInit {
         // en nu de twee locale variablen terug in het object zetten
         if (this.GeboorteDatum != null) {
             this.lid.GEBOORTE_DATUM = this.converteerDatumNaarISO(this.GeboorteDatum);
-        }
-        else {
+        } else {
             this.lid.GEBOORTE_DATUM = undefined;
         }
 
         if (this.MedicalDatum != null) {
             this.lid.MEDICAL = this.converteerDatumNaarISO(this.MedicalDatum);
-        }
-        else {
+        } else {
             this.lid.MEDICAL = undefined;
         }
 
@@ -149,11 +152,9 @@ export class LidEditorComponent implements OnInit {
         // nu opslaan van de data
         if (this.isRestoreMode) {
             this.restore()
-        }
-        else if (this.isVerwijderMode) {
+        } else if (this.isVerwijderMode) {
             this.delete()
-        }
-        else if (this.lid.ID != undefined && this.lid.ID >= 0) {
+        } else if (this.lid.ID != undefined && this.lid.ID >= 0) {
             this.updateLid()
         } else {
             this.nieuwLid()
@@ -202,8 +203,7 @@ export class LidEditorComponent implements OnInit {
             const ui = this.loginService.userInfo?.LidData
             if (this.lidID == ui!.ID) {
                 this.success = {titel: "Profiel", beschrijving: "Uw profiel is aangepast"}
-            }
-            else {
+            } else {
                 this.success = {titel: "Profiel", beschrijving: "Profiel " + l.NAAM + " is aangepast"}
             }
         }).catch(e => {
@@ -235,11 +235,10 @@ export class LidEditorComponent implements OnInit {
         return unformatted.isValid ? unformatted.toISODate().toString() : '';
     }
 
-    converteerDatumNaarNgbDate(datum: string | undefined): NgbDate|null {
+    converteerDatumNaarNgbDate(datum: string | undefined): NgbDate | null {
         if (datum) {
             return NgbDate.from(DateTime.fromSQL(datum));
-        }
-        else
+        } else
             return null;
     }
 
@@ -247,6 +246,7 @@ export class LidEditorComponent implements OnInit {
         this.wachtwoordVerborgen = !this.wachtwoordVerborgen;
         this.oogIcon = this.wachtwoordVerborgen ? faEye : faEyeSlash;
     }
+
     setAvatar($event: string) {
         this.avatar = $event;
         this.changeDetector.detectChanges();
@@ -260,9 +260,7 @@ export class LidEditorComponent implements OnInit {
             this.imageService.uploadFoto(this.lidID, image).then(() => {
                 this.success = {titel: "upload avatar", beschrijving: "Foto is succesvol opgeslagen"};
             });
-        }
-        catch (e)
-        {
+        } catch (e) {
             this.success = undefined;
             this.error = e;
         }
@@ -381,8 +379,7 @@ export class LidEditorComponent implements OnInit {
         return false;
     }
 
-    ikBenHetZelf(): boolean
-    {
+    ikBenHetZelf(): boolean {
         return this.loginService.userInfo?.LidData?.ID == this.lidID
     }
 
@@ -409,15 +406,16 @@ export class LidEditorComponent implements OnInit {
         return this.lid.SECRET?.startsWith("http");     // heeft url als secret gevuld is
     }
 
-    MedicalVerlopen() {
+    medicalVerlopen() {
         if (this.MedicalDatum == null) {
             return false;
         }
-        const d = DateTime.fromObject({ year: this.MedicalDatum.year,
-                                            month: this.MedicalDatum.month,
-                                            day: this.MedicalDatum.day})
+        const d = DateTime.fromObject({
+            year: this.MedicalDatum.year,
+            month: this.MedicalDatum.month,
+            day: this.MedicalDatum.day
+        })
         return (d < DateTime.now());
     }
 }
-
 
