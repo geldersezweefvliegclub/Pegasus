@@ -383,7 +383,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
             return "reservering";
         }
 
-        return (this.magReserveren(datum, vliegtuigID)) ? "beschikbaar" : "";
+        return (this.magReserveren(datum, vliegtuigID)) ? "beschikbaar" : "nietBeschikbaar";
     }
 
     // in popup is gekozen om vliegtuig wel of niet te tonen in het grid

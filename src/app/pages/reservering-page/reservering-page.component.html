@@ -68,8 +68,8 @@
                                                     [tekst]="ToonNaam(dagInRooster.DATUM, clubKist.ID)">
                                             </app-icon-button>
                                         </div>
-                                        <div *ngIf="!toonStartButton(dagInRooster.DATUM, clubKist.ID)">
-                                            <div class="d-flex flex-row">
+                                        <div *ngIf="!toonStartButton(dagInRooster.DATUM, clubKist.ID)" class="w-100">
+                                            <div class="d-flex flex-row w-100">
                                                 <div [ngClass]="htmlClassReservering(dagInRooster.DATUM, clubKist.ID)">
                                                     {{ ToonNaam(dagInRooster.DATUM, clubKist.ID)}}
                                                 </div>

@@ -6,6 +6,9 @@
   align-items: stretch;
 }
 
+th {
+  padding-left: 25px;
+}
 td {
   padding-left: 5px;
   padding-right: 0px;
@@ -58,7 +61,7 @@ td {
   justify-content: center;
   align-items: center;
   border: 0.2px solid #e3e3e3;
-  height: 2em;
+  height: 2.3em;
   width: 100%;
   padding-left: 0.25em;
   background: #e9ecef;
@@ -89,12 +92,20 @@ td {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 2em;
+  height: 2.3em;
   width: 100%;
   padding-left: 0.25em;
-  color: #548a04;
+  color: #939393;
+  background-color: #f5f5f5;
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
   margin-top: 0.25em;
+}
+
+.nietBeschikbaar {
+  height: 2.3em;
+  width: 100%;
+  padding-left: 0.25em;
+  background-color: #f5f5f5;;
 }
 
 .lidInRooster {
@@ -132,4 +143,11 @@ td {
 
 .clubBedrijf {
   background-color: #e9ecef;
+}
+
+thead {
+  background: white;
+  position: sticky;
+  top: 0;
+  border-bottom: 1px solid #939393 ;
 }
