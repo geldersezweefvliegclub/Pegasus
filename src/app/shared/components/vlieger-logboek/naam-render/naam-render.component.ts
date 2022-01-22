@@ -33,7 +33,7 @@ export class NaamRenderComponent implements AgRendererComponent {
                 this.lidID = params.data.INZITTENDE_ID;
 
                 const ui = this.loginService.userInfo?.Userinfo;
-                this.naarDashboard = (ui?.isBeheerder || ui?.isCIMT || ui?.isInstructeur) as boolean;
+                this.naarDashboard = (this.lidID && (ui?.isBeheerder || ui?.isCIMT || ui?.isInstructeur)) as boolean;
             }
         }
     }

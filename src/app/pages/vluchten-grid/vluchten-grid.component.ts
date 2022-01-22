@@ -102,6 +102,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         {field: 'SLEEPKIST_ID', headerName: 'Sleepkist ID', sortable: true, hide: true, comparator: nummerSort},
         {field: 'SLEEP_HOOGTE', headerName: 'Sleep hoogte', sortable: true, hide: true, comparator: nummerSort},
         {field: 'VELD', headerName: 'Veld', sortable: true, hide: true},
+        {field: 'CHECKSTART', headerName: 'Trainingsvlucht', hide: false, sortable: true, cellRenderer: 'checkboxRender'},
     ];
 
     rowClassRules = {

@@ -63,6 +63,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
         {field: 'DATUM', headerName: 'Datum', sortable: true, cellRenderer: 'datumRender'},
         {field: 'REG_CALL', headerName: 'Vliegtuig', sortable: true},
         {field: 'VELD', headerName: 'Veld', hide: true},
+        {field: 'CHECKSTART', headerName: 'Trainingsvlucht', hide: true, sortable: true, cellRenderer: 'checkboxRender'},
         {field: 'STARTMETHODE', headerName: 'Start methode', hide: true, sortable: true},
         {field: 'VLIEGERNAAM', headerName: 'Vlieger', sortable: true, cellRenderer: 'naamRender'},
         {field: 'INZITTENDENAAM', headerName: 'Inzittende', sortable: true, cellRenderer: 'naamRender'},

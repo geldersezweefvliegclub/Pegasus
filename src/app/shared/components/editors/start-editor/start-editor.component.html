@@ -57,11 +57,22 @@
                     </div>
                 </div>
                 <div class="col-6" *ngIf="gekozenVliegtuig?.ZITPLAATSEN == 2">
-                    <input name="PAX" type="checkbox" class="form-check-input" id="PAX"
-                           [(ngModel)]="start.PAX">
-                    <label class="form-check-label ms-2" for="PAX">
-                        Passagiers start
-                    </label>
+                    <div class="d-flex flex-column">
+                        <div *ngIf="start.CHECKSTART !== true && magPaxVliegen()">
+                            <input name="PAX" type="checkbox" class="form-check-input" id="PAX"
+                                   [(ngModel)]="start.PAX">
+                            <label class="form-check-label ms-2" for="PAX">
+                                Passagiers start
+                            </label>
+                        </div>
+                        <div *ngIf="start.PAX !== true && magCheckZetten()" >
+                            <input name="CHECKSTART" type="checkbox" class="form-check-input" id="CHECKSTART"
+                                   [(ngModel)]="start.CHECKSTART">
+                            <label class="form-check-label ms-2" for="CHECKSTART">
+                                Trainingsvlucht
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -98,6 +109,7 @@
                                             [aanwezig]="aanwezigLeden"
                                             [excludeLidTypes]="exclLidtypeAlsVlieger"
                                             [leden]="leden"
+                                            [alleenPaxVliegers]="start.PAX"
                                             [vliegtuig]="gekozenVliegtuig"
                                             (LidChanged)="vliegerGeselecteerd($event)"
                             ></app-lid-invoer>
@@ -111,7 +123,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row my-2" *ngIf="!toonVliegerNaam && !start.PAX && gekozenVliegtuig?.ZITPLAATSEN == 2">
+
+                    <div class="namenInvullen" *ngIf="toonVliegerNaam">
+                        <label for="VLIEGER_NAAM" class="form-label">Naam van de vlieger</label>
+                        <input required name="vliegernaam" type="text" class="form-control" id="VLIEGER_NAAM"
+                               [(ngModel)]="start.VLIEGERNAAM"
+                               placeholder="Vul de volledige naam in"
+                               min="0"
+                        >
+                    </div>
+
+                    <div class="row my-2" *ngIf="gekozenVliegtuig?.ZITPLAATSEN == 2 && toonInzittendeNaam < 2 && !start.PAX">
                         <div class="col-12 col-md-12">
                             <app-lid-invoer id="INZITTENDE"
                                             placeholder="Selecteer inzittende"
@@ -125,32 +147,21 @@
                             ></app-lid-invoer>
                         </div>
                     </div>
+
+                    <div class="namenInvullen" *ngIf="start.PAX || toonInzittendeNaam > 0">
+                        <label for="INZITTENDE_NAAM" class="form-label">Naam van de inzittende</label>
+                        <input name="inzittende" type="text" class="form-control" id="INZITTENDE_NAAM"
+                               [(ngModel)]="start.INZITTENDENAAM"
+                               placeholder="Vul de volledige naam in"
+                               min="0"
+                        >
+                    </div>
                 </div>
-                <div class="col-2 col-md-2 row align-items-end">
+                <div class="col-2 col-md-2 row align-items-center">
                     <app-icon-button id="switchVoorAchter" class="toolbarBtn display-1" iconNaam="fas ExchangeAlt"
                                      (btnClicked)="omwisselen()"
-                                     *ngIf="!toonVliegerNaam && !start.PAX && gekozenVliegtuig?.ZITPLAATSEN == 2"
+                                     *ngIf="magOmwisselen()"
                                      btnColor="btn-secondary"></app-icon-button>
-
-                </div>
-            </div>
-            <div class="row my-2 namenInvullen" *ngIf="toonVliegerNaam || start.PAX">
-                <div *ngIf="!start.PAX">
-                    <label for="VLIEGER_NAAM" class="form-label">Naam van de vlieger</label>
-                    <input required name="vliegernaam" type="text" class="form-control" id="VLIEGER_NAAM"
-                           [(ngModel)]="start.VLIEGERNAAM"
-                           placeholder="Vul de volledige naam in"
-                           min="0"
-                    >
-                </div>
-
-                <div *ngIf="gekozenVliegtuig?.ZITPLAATSEN == 2">
-                    <label for="INZITTENDE_NAAM" class="form-label">Naam van de inzittende</label>
-                    <input name="inzittende" type="text" class="form-control" id="INZITTENDE_NAAM"
-                           [(ngModel)]="start.INZITTENDENAAM"
-                           placeholder="Vul de volledige naam in"
-                           min="0"
-                    >
                 </div>
             </div>
 

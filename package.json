@@ -32,6 +32,7 @@
     "@ng-select/ng-select": "^7.0.0",
     "ag-grid-angular": "^24.1.0",
     "ag-grid-community": "^24.1.0",
+    "ag-grid-enterprise": "^26.2.1",
     "angular-code-input": "^1.4.0",
     "animate.css": "^4.1.1",
     "bootstrap": "^5.0.1",

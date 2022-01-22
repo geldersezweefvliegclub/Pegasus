@@ -283,6 +283,8 @@ export interface components {
       STATUSTYPE_ID?: number;
       /** Zusterclub lidmaatschap van lid. Nodig voor DDWV. */
       ZUSTERCLUB_ID?: number;
+      /** Buddy van de vlieger, leeftijdsbeleid */
+      BUDDY_ID?: number;
       /** Mag dit lid lieren? */
       LIERIST?: boolean;
       /** Kan dit lid het startbedrijf leiden? */
@@ -337,12 +339,16 @@ export interface components {
       LAATSTE_AANPASSING?: string;
     };
     view_leden_dataset: components["schemas"]["ref_leden"] & {
+      /** Heeft lid PAX competentie behaald */
+      PAX?: boolean;
       /** Lidtype in text */
       LIDTYPE?: string;
       /** Vliegstatus, zoals DBO, Solist of Brevethouder */
       STATUS?: string;
       /** Naam van de zusterclub */
       ZUSTERCLUB?: string;
+      /** Naam van de buddy */
+      BUDDY?: string;
     };
     view_leden: {
       /** Aantal records dat voldoet aan de criteria in de database */

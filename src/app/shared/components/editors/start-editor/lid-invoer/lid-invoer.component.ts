@@ -8,7 +8,7 @@ import {
     SimpleChanges
 } from '@angular/core';
 import {Observable, of, Subject} from 'rxjs';
-import {HeliosAanwezigLedenDataset, HeliosVliegtuigenDataset} from '../../../../../types/Helios';
+import {HeliosAanwezigLedenDataset, HeliosLedenDataset, HeliosVliegtuigenDataset} from '../../../../../types/Helios';
 
 @Component({
     selector: 'app-lid-invoer',
@@ -16,13 +16,14 @@ import {HeliosAanwezigLedenDataset, HeliosVliegtuigenDataset} from '../../../../
     styleUrls: ['./lid-invoer.component.scss']
 })
 export class LidInvoerComponent implements OnInit, OnChanges {
-    @Input() leden: HeliosAanwezigLedenDataset[] = [];
+    @Input() leden: HeliosLedenDataset[] = [];
     @Input() aanwezig: HeliosAanwezigLedenDataset[] = [];
     @Input() placeholder: string = "";
     @Input() label: string = "";
     @Input() disabled: boolean = false;
     @Input() required: boolean = false;
     @Input() excludeLidTypes: string = ""
+    @Input() alleenPaxVliegers: boolean = false;
     @Input() LID_ID: number | undefined;
     @Input() vliegtuig: HeliosVliegtuigenDataset | undefined = undefined
 
@@ -79,6 +80,9 @@ export class LidInvoerComponent implements OnInit, OnChanges {
             if (this.excludeLidTypes) {
                 if (this.excludeLidTypes.includes(item.LIDTYPE_ID!.toString())) {
                     return;    // we moeten dit lid niet opnemen omdat lidtype niet voldoet
+                }
+                if ((this.alleenPaxVliegers) && (item.PAX !== true)) {
+                    return;    // We zoeken alleen leden die PAX mogenvliegen
                 }
             }
             this.ledenFiltered.push(
@@ -143,6 +147,6 @@ export class LidInvoerComponent implements OnInit, OnChanges {
             this.InputChangeEventFired = true;  // laat weten dat we event gaan afvuren
             setTimeout(() => this.InputChangeEventFired = false, 100); // en reset na 100 ms
             this.LidChanged.emit(id);
-        }, 1000);
+        }, 500);
     }
 }

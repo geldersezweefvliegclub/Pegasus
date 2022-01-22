@@ -22,6 +22,7 @@ import {nummerSort} from '../../utils/Utils';
 import {TrackEditorComponent} from "../../shared/components/editors/track-editor/track-editor.component";
 import {TracksService} from "../../services/apiservice/tracks.service";
 import {TrackRenderComponent} from "./track-render/track-render.component";
+import {DatumRenderComponent} from "../../shared/components/datatable/datum-render/datum-render.component";
 
 
 @Component({
@@ -65,14 +66,30 @@ export class LedenGridComponent implements OnInit {
         {field: 'ADRES', headerName: 'Adres', sortable: true, cellRenderer: 'adresRender'},
         {field: 'TELEFOON', headerName: 'Telefoon', sortable: false, cellRenderer: 'telefoonRender'},
 
+        {field: 'MEDICAL', headerName: 'Medical', sortable: true, hide: true, cellRenderer: 'datumRender'},
+        {field: 'GEBOORTE_DATUM', headerName: 'Geb datum', sortable: true, hide: true, cellRenderer: 'datumRender'},
         {field: 'LIDTYPE', headerName: 'Lidmaatschap', sortable: true, hide: !this.toonLidType()},
+        {field: 'LIDNR', headerName: 'Lid nummer', sortable: true, hide: true},
         {field: 'STATUS', headerName: 'Status', sortable: true, hide: !this.toonStatus()},
         {field: 'ZUSTERCLUB', headerName: 'Club', sortable: true, hide: !this.toonZusterClub()},
+        {field: 'BUDDY', headerName: 'Buddy', sortable: true, hide: true},
+        {field: 'INLOGNAAM', headerName: 'Loginnaam', sortable: true, hide: true},
 
+        {field: 'CIMT', headerName: 'CIMT', sortable: true, cellRenderer: 'checkboxRender'},
         {field: 'INSTRUCTEUR', headerName: 'Instructeur', sortable: true, cellRenderer: 'checkboxRender'},
         {field: 'LIERIST', headerName: 'Lierist', sortable: true, cellRenderer: 'checkboxRender'},
         {field: 'STARTLEIDER', headerName: 'Startleider', sortable: true, cellRenderer: 'checkboxRender'},
+        {field: 'SLEEPVLIEGER', headerName: 'Sleepvlieger', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
+        {field: 'STARTTOREN', headerName: 'Starttoren', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
+        {field: 'ROOSTER', headerName: 'Rooster', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
+        {field: 'AUTH', headerName: '2 Factor', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
+
         {field: 'DDWV_CREW', headerName: 'DDWV crew', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
+        {field: 'DDWV_BEHEERDER', headerName: 'DDWV beheerder', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
+        {field: 'BEHEERDER', headerName: 'Beheerder', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
+        {field: 'SLEUTEL1', headerName: 'Sleutel GeZC', sortable: true, hide: true },
+        {field: 'SLEUTEL2', headerName: 'Sleutel Terlet', sortable: true, hide: true },
+
 
         {
             field: 'CLUBBLAD_POST',
@@ -144,6 +161,7 @@ export class LedenGridComponent implements OnInit {
         deleteAction: DeleteActionComponent,
         restoreAction: RestoreActionComponent,
         trackRender: TrackRenderComponent,
+        datumRender: DatumRenderComponent
     };
     iconCardIcon: IconDefinition = faUsers;
     prullenbakIcon: IconDefinition = faRecycle;

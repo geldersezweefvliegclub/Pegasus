@@ -4,7 +4,7 @@ import {DateTime} from 'luxon';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {faEye, faEyeSlash, faInfo, faInfoCircle, faUser} from '@fortawesome/free-solid-svg-icons';
 import {TypesService} from '../../../../services/apiservice/types.service';
-import {HeliosLid, HeliosType} from '../../../../types/Helios';
+import {HeliosAanwezigLedenDataset, HeliosLedenDataset, HeliosLid, HeliosType} from '../../../../types/Helios';
 import {LedenService} from '../../../../services/apiservice/leden.service';
 import {LoginService} from "../../../../services/apiservice/login.service";
 import {NgbDateFRParserFormatter} from "../../../ngb-date-fr-parser-formatter";
@@ -24,6 +24,9 @@ export class LidEditorComponent implements OnInit {
     @Input() lidID: number;
     @Input() isVerwijderMode: boolean = false;
     @Input() isRestoreMode: boolean = false;
+
+    private ledenAbonnement: Subscription;
+    instructeurs: HeliosLedenDataset[] = []
 
     private typesAbonnement: Subscription;
     lidTypes: HeliosType[];
@@ -75,6 +78,20 @@ export class LidEditorComponent implements OnInit {
                 return t.GROEP == 19
             });      // status types (DBO, solo, brevet)```````
         });
+
+        // abonneer op wijziging van leden, maar hebben alleen instructeurs nodid
+        this.ledenAbonnement = this.ledenService.ledenChange.subscribe(leden => {
+            this.instructeurs = (leden) ? leden.filter((lid) => lid.INSTRUCTEUR == true) : [];
+
+            if (!leden) {
+                this.instructeurs = [];
+            }
+            else {
+                this.instructeurs = leden.filter((lid: HeliosLedenDataset) => {
+                    return lid.INSTRUCTEUR;
+                });
+            }
+        })
 
         if (this.lidID >= 0) {
             this.isLoading = true;
@@ -337,7 +354,12 @@ export class LidEditorComponent implements OnInit {
                 }
                 break;
             }
-
+            case 'BUDDY': {
+                if (ui?.isBeheerder || ui?.isCIMT) {
+                    return false;
+                }
+                break;
+            }
             case 'OPMERKINGEN': {
                 if (ui?.isBeheerder || ui?.isCIMT || ui?.isRooster) {
                     return false;

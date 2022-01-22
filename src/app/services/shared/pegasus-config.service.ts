@@ -63,6 +63,7 @@ export class PegasusConfigService {
 
 export interface IPegasusConfig {
     url: string,
+    passagiersAantekeningID: string,
 
     zelfDienstIndelen: [
         {

@@ -234,14 +234,14 @@
                               [icon]="informatieIcon">
                 <div #informatieGroup="ngModelGroup" ngModelGroup="informatieGroup">
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-5">
                             <label for="gebruiker" class="form-label"
                                    [ngClass]="disabledClass('gebruiker')">Gebruiker</label>
                             <input type="text" name="gebruiker" class="form-control" id="gebruiker"
                                    [disabled]="isDisabled('gebruiker')"
                                    [(ngModel)]="lid.INLOGNAAM">
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                             <label for="gebruiker" class="form-label"
                                    [ngClass]="disabledClass('lidnummer')">Lidnummer</label>
                             <input type="text" name="lidnummer" class="form-control" id="lidnummer"
@@ -262,7 +262,7 @@
                         </div>
                     </div>
                     <div class="row mt-2">
-                        <div class="col-4">
+                        <div class="col-5">
                             <label for="STATUS" class="form-label"
                                    [ngClass]="disabledClass('STATUS')">Vlieg status</label>
                             <select class="form-select" id="STATUS" name="STATUS"
@@ -276,7 +276,20 @@
 
                             </select>
                         </div>
-                        <div class="col-4 mt-4">
+                        <div class="col-7 mt-7">
+                            <app-lid-invoer id="BUDDY"
+                                            placeholder="Selecteer buddy"
+                                            label="Buddy"
+                                            [LID_ID]="lid.BUDDY_ID"
+                                            [disabled]="isDisabled('BUDDY')"
+                                            [leden]="instructeurs"
+                                            (LidChanged)="lid.BUDDY_ID = $event"
+                            ></app-lid-invoer>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row mt-2">
+                        <div class="col-4">
                             <div class="text-nowrap">
                                 <input class="form-check-inline" type="checkbox" id="CIMT" name="CIMT"
                                        [disabled]="isDisabled('CIMT')"
@@ -295,27 +308,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-4 mt-4">
-                            <div class="text-nowrap">
-                                <input class="form-check-inline" type="checkbox" id="ROOSTER" name="ROOSTER"
-                                       [disabled]="isDisabled('ROOSTER')"
-                                       [(ngModel)]="lid.ROOSTER" (ngModelChange)="isgoogleAuthNodig()">
-                                <label class="form-check-label" for="ROOSTER" [ngClass]="disabledClass('ROOSTER')">
-                                    Rooster
-                                </label>
-                            </div>
-                            <div class="text-nowrap">
-                                <input class="form-check-inline" type="checkbox" id="BEHEERDER" name="BEHEERDER"
-                                       [disabled]="isDisabled('BEHEERDER')"
-                                       [(ngModel)]="lid.BEHEERDER" (ngModelChange)="isgoogleAuthNodig()">
-                                <label class="form-check-label" for="BEHEERDER" [ngClass]="disabledClass('BEHEERDER')">
-                                    Beheerder
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-8">
+                        <div class="col-4">
                             <div class="text-nowrap">
                                 <input class="form-check-inline" type="checkbox" id="DDWV_CREW" name="DDWV_CREW"
                                        [disabled]="isDisabled('DDWV_CREW')"
@@ -337,6 +330,35 @@
                         </div>
                         <div class="col-4">
                             <div class="text-nowrap">
+                                <input class="form-check-inline" type="checkbox" id="ROOSTER" name="ROOSTER"
+                                       [disabled]="isDisabled('ROOSTER')"
+                                       [(ngModel)]="lid.ROOSTER" (ngModelChange)="isgoogleAuthNodig()">
+                                <label class="form-check-label" for="ROOSTER" [ngClass]="disabledClass('ROOSTER')">
+                                    Rooster
+                                </label>
+                            </div>
+                            <div class="text-nowrap">
+                                <input class="form-check-inline" type="checkbox" id="BEHEERDER" name="BEHEERDER"
+                                       [disabled]="isDisabled('BEHEERDER')"
+                                       [(ngModel)]="lid.BEHEERDER" (ngModelChange)="isgoogleAuthNodig()">
+                                <label class="form-check-label" for="BEHEERDER" [ngClass]="disabledClass('BEHEERDER')">
+                                    Beheerder
+                                </label>
+                            </div>
+                            <div class="text-nowrap">
+                                <input class="form-check-inline" type="checkbox" id="STARTTOREN" name="STARTTOREN"
+                                       [disabled]="isDisabled('STARTTOREN')"
+                                       [(ngModel)]="lid.STARTTOREN" (ngModelChange)="isgoogleAuthNodig()">
+                                <label class="form-check-label" for="STARTTOREN"
+                                       [ngClass]="disabledClass('STARTTOREN')">
+                                    Starttoren
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-4">
+                            <div class="text-nowrap">
                                 <input class="form-check-inline" type="checkbox" id="LIERIST" name="LIERIST"
                                        [disabled]="isDisabled('LIERIST')"
                                        [(ngModel)]="lid.LIERIST">
@@ -344,6 +366,8 @@
                                     Lierist
                                 </label>
                             </div>
+                        </div>
+                        <div class="col-4">
                             <div class="text-nowrap">
                                 <input class="form-check-inline" type="checkbox" id="STARTLEIDER" name="STARTLEIDER"
                                        [disabled]="isDisabled('STARTLEIDER')"
@@ -353,6 +377,8 @@
                                     Startleider
                                 </label>
                             </div>
+                        </div>
+                        <div class="col-4">
                             <div class="text-nowrap">
                                 <input class="form-check-inline" type="checkbox" id="SLEEPVLIEGER" name="SLEEPVLIEGER"
                                        [disabled]="isDisabled('SLEEPVLIEGER')"
@@ -376,17 +402,10 @@
                             </div>
                         </div>
                         <div class="col-4">
-                            <div class="text-nowrap">
-                                <input class="form-check-inline" type="checkbox" id="STARTTOREN" name="STARTTOREN"
-                                       [disabled]="isDisabled('STARTTOREN')"
-                                       [(ngModel)]="lid.STARTTOREN" (ngModelChange)="isgoogleAuthNodig()">
-                                <label class="form-check-label" for="STARTTOREN"
-                                       [ngClass]="disabledClass('STARTTOREN')">
-                                    Starttoren
-                                </label>
-                            </div>
+
                         </div>
                     </div>
+                    <hr>
                     <div class="row mt-3" *ngIf="toonSecret()">
                         <div class="d-flex">
                             <img class="QRcode me-2" alt="QR code" [src]="lid.SECRET">

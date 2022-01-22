@@ -38,6 +38,7 @@ export class StartEditorComponent implements OnInit {
 
     start: HeliosStart = {};
     toonVliegerNaam: boolean = false;
+    toonInzittendeNaam: number = 0;
     toonStartMethode: boolean = true;
     toonWaarschuwing: boolean = false;          // mag het lid op die vliegtuig vliegen volgens kruisjeslijst?
     medicalWaarschuwing: boolean = false;       // Controleer op geldigheid medical
@@ -55,12 +56,11 @@ export class StartEditorComponent implements OnInit {
     gekozenVliegtuig: HeliosVliegtuigenDataset;     // het gekozen vliegtuig uit de editor
 
     // 607 = zusterclub
-    // 609 = nieuwlid
     // 610 = oprotkabel
     // 612 = penningmeester
     // 613 = systeem gebruiker
     // 625 = DDWV'er
-    exclLidtypeAlsInzittende: string = "607,609,610,612,613,625"
+    exclLidtypeAlsInzittende: string = "607,610,612,613,625"
     exclLidtypeAlsVlieger: string = "613"
 
     private ledenAbonnement: Subscription;
@@ -172,6 +172,8 @@ export class StartEditorComponent implements OnInit {
                 STARTMETHODE_ID: start.STARTMETHODE_ID,
                 VELD_ID: start.VELD_ID,
                 BAAN_ID: start.BAAN_ID,
+                PAX: start.PAX,
+                CHECKSTART: start.CHECKSTART,
                 SLEEPKIST_ID: start.SLEEPKIST_ID,
                 SLEEP_HOOGTE: start.SLEEP_HOOGTE,
 
@@ -207,6 +209,8 @@ export class StartEditorComponent implements OnInit {
                 STARTMETHODE_ID: this.daginfoService.dagInfo.STARTMETHODE_ID,
                 VELD_ID: this.daginfoService.dagInfo.VELD_ID,
                 BAAN_ID: this.daginfoService.dagInfo.BAAN_ID,
+                PAX: false,
+                CHECKSTART: false,
                 SLEEPKIST_ID: undefined,
                 SLEEP_HOOGTE: undefined,
 
@@ -293,6 +297,8 @@ export class StartEditorComponent implements OnInit {
         // 613 = systeem gebruiker
         // 625 = DDWV'er
         this.exclLidtypeAlsVlieger = (this.gekozenVliegtuig?.CLUBKIST) ? "607,610,613,625" : "613";
+
+        this.tonenInzittendeNaam();
     }
 
     // De vlieger is nu ingevoerd
@@ -305,8 +311,12 @@ export class StartEditorComponent implements OnInit {
             this.toonVliegerNaam = false;
         } else {
             switch (gekozenVlieger.LIDTYPE_ID) {
-                case 607:   // zusterclub
                 case 609:   // nieuw lid
+                {
+                    this.toonVliegerNaam = true;
+                    break;
+                }
+                case 607:   // zusterclub
                 case 610:   // oprotkabel
                 case 612:   // penningmeester
                 {
@@ -330,14 +340,50 @@ export class StartEditorComponent implements OnInit {
                 }
             }
         }
+        this.tonenInzittendeNaam();
         this.vliegtuigTypeBevoegd();
     }
 
     // De inzittende is nu ook bekend
-    inzittendeGeselecteerd($event: number) {
+    inzittendeGeselecteerd($event: number |undefined ) {
         this.start.INZITTENDE_ID = $event;
+        this.tonenInzittendeNaam();
         this.vliegtuigTypeBevoegd();
     }
+
+    //  this.toonInzittendeNaam: 0, naam hoeft niet ingevoerd te worden
+    //  this.toonInzittendeNaam: 1, naam mag ingevoerd worden, maar ook inzittende combobox tonen
+    //  this.toonInzittendeNaam: 2, toon alleen de naam invoer
+    tonenInzittendeNaam() {
+        if ((this.gekozenVliegtuig) && (this.gekozenVliegtuig.ZITPLAATSEN !== 2)) return false;  // voor eenzitters geen naam tonen
+        const gekozenVlieger = this.leden.find(lid => lid.ID == this.start.VLIEGER_ID) as HeliosLedenDataset;
+        const gekozenInzittende = this.leden.find(lid => lid.ID == this.start.INZITTENDE_ID) as HeliosLedenDataset;
+
+        if (gekozenVlieger) {
+            switch (gekozenVlieger.LIDTYPE_ID) {
+                case 607:   // zusterclub
+                case 610:   // oprotkabel
+                case 612:   // penningmeester
+                {
+                    this.toonInzittendeNaam = 2;
+                    return;
+                }
+                default :
+                {
+                    this.toonInzittendeNaam = 0;
+                    break;
+                }
+            }
+        }
+
+        if (gekozenInzittende) {
+            this.toonInzittendeNaam = (gekozenInzittende.LIDTYPE_ID == 609) ? 1 : 0; // 609 = nieuwlid
+        }
+        else {
+            this.toonInzittendeNaam = 0;
+        }
+    }
+
 
     openVerwijderPopup(id: number) {
         this.haalStartOp(id);
@@ -446,6 +492,20 @@ export class StartEditorComponent implements OnInit {
         if (this.gekozenVliegtuig.CLUBKIST == false) {
             return;
         }
+        const gekozenVlieger = this.leden.find(lid => lid.ID == this.start.VLIEGER_ID) as HeliosLedenDataset;
+
+        if (gekozenVlieger) {
+            switch (gekozenVlieger.LIDTYPE_ID) {
+                case 609:   // nieuw lid
+                case 607:   // zusterclub
+                case 610:   // oprotkabel
+                case 612:   // penningmeester
+                {
+                    this.toonWaarschuwing = false;
+                    return;
+                }
+            }
+        }
 
         if (this.start.INZITTENDE_ID) {
             const inzittende = this.leden.find(lid => lid.ID == this.start.INZITTENDE_ID) as HeliosLedenDataset;
@@ -477,10 +537,44 @@ export class StartEditorComponent implements OnInit {
         });
     }
 
-    omwisselen() {
-        const tmpID: number | undefined = this.start.VLIEGER_ID;
-        this.vliegerGeselecteerd(this.start.INZITTENDE_ID);
-        this.start.INZITTENDE_ID = tmpID;
+    // mag de gebruiker de vlucht afvinken als trainingsvlucht
+    magCheckZetten() {
+        const ui = this.loginService.userInfo?.Userinfo;
+        const magCheckZetten = (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) ? true : false;
+
+        if (magCheckZetten == false) {
+            return false;
+        }
+
+        const gekozenVlieger = this.leden.find(lid => lid.ID == this.start.VLIEGER_ID) as HeliosLedenDataset;
+        if (!gekozenVlieger) {
+            return false;   // Vlieger moet bekend zijn
+        } else {
+            // Checkstart alleen mogelijk bij leden
+            switch (gekozenVlieger.LIDTYPE_ID) {
+                case 601:  break;  // Erelid
+                case 602:  break;  // Lid
+                case 603:  break;  // Jeugdlid
+                default: {
+                    return false;
+                }
+            }
+        }
+
+        // Trainingsvlucht is alleen van toepassing voor brevethouders
+        if (gekozenVlieger.STATUSTYPE_ID !== 1903) {
+            return false;
+        }
+
+        // De inzittende moet wel een instructeur zijn
+        if (this.start.INZITTENDE_ID) {
+            const inzittende = this.leden.find(lid => lid.ID == this.start.INZITTENDE_ID) as HeliosLedenDataset;
+
+            if ((inzittende.INSTRUCTEUR == true) || (inzittende.CIMT == true)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     StartMethodeIngevuld(): string {
@@ -501,5 +595,47 @@ export class StartEditorComponent implements OnInit {
             return true;
         }
         return false;
+    }
+
+    magPaxVliegen() {
+        const gekozenVlieger = this.leden.find(lid => lid.ID == this.start.VLIEGER_ID) as HeliosLedenDataset;
+        if (!gekozenVlieger) {
+            return true;            // Vlieger is niet ingevoerd, laten we checkbox maar tonen
+        }
+        return gekozenVlieger.PAX;  // Mag vlieger PAX vliegen
+    }
+
+    magOmwisselen() {
+        if (this.gekozenVliegtuig?.ZITPLAATSEN !== 2)     return false;
+        if (this.start.PAX == true)                       return false;
+
+        return true;
+    }
+
+    omwisselen() {
+        let alleenNamenOmwisselen = false;
+
+        const gekozenVlieger = this.leden.find(lid => lid.ID == this.start.VLIEGER_ID) as HeliosLedenDataset;
+        if (gekozenVlieger) {
+            switch (gekozenVlieger.LIDTYPE_ID) {
+                case 607:   // zusterclub
+                case 610:   // oprotkabel
+                case 612:   // penningmeester
+                {
+                    alleenNamenOmwisselen = true;
+                }
+            }
+        }
+
+        const tmpID: number | undefined = this.start.VLIEGER_ID;
+        const tmpNaam: string | undefined = this.start.VLIEGERNAAM;
+
+        if (!alleenNamenOmwisselen) {
+            this.vliegerGeselecteerd(this.start.INZITTENDE_ID);
+            this.start.INZITTENDE_ID = tmpID;
+        }
+
+        this.start.VLIEGERNAAM = this.start.INZITTENDENAAM;
+        this.start.INZITTENDENAAM = tmpNaam;
     }
 }

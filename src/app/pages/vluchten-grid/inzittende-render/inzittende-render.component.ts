@@ -27,7 +27,7 @@ export class InzittendeRenderComponent implements AgRendererComponent {
         const ui = this.loginService.userInfo?.Userinfo;
 
         this.lidID = params.data.INZITTENDE_ID;
-        this.naarDashboard = (ui?.isBeheerder || ui?.isCIMT || ui?.isInstructeur) as boolean;
+        this.naarDashboard = (this.lidID && (ui?.isBeheerder || ui?.isCIMT || ui?.isInstructeur)) as boolean;
       }
       this.grid_inzittendenaam = params.data.INZITTENDENAAM_LID;
     }

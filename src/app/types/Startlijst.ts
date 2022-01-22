@@ -467,6 +467,10 @@ export interface components {
       EXTERNAL_ID?: string;
       /** Is dit een passagiers start */
       PAX?: boolean;
+      /** Is dit een trainingsvlucht start */
+      CHECKSTART?: boolean;
+      /** Is dit een instructie vlucht */
+      INSTRUCTIEVLUCHT?: boolean;
     };
     oper_startlijst: components["schemas"]["oper_startlijst_in"] & {
       /** Is dit record gemarkeerd als verwijderd? */
