@@ -67,7 +67,7 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy {
         });
 
         const ui = this.loginService.userInfo?.Userinfo;
-        this.isDisabled = !(ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT);
+        this.isDisabled = !(ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) || (this.VliegerID == this.loginService.userInfo?.LidData?.ID);
         this.ophalen();
     }
 

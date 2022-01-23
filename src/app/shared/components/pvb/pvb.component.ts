@@ -108,6 +108,11 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
 
     CheckDisabled(comptentieID: number): boolean {
         const ui = this.loginService.userInfo?.Userinfo;
+
+        if (this.VliegerID == this.loginService.userInfo?.LidData?.ID) {
+            return true;    // niet voor jezelf vinkjes zetten
+        }
+
         if (!ui?.isBeheerder && !ui?.isInstructeur && !ui?.isCIMT) {
             return true;    // alleen beheerder, instructeuers en CIMT mogen competentie zetten
         }
