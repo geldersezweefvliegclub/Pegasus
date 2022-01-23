@@ -25,6 +25,7 @@ import {nummerSort, tijdSort} from '../../utils/Utils';
 import {ExportStartlijstComponent} from "./export-startlijst/export-startlijst.component";
 import {RoosterService} from "../../services/apiservice/rooster.service";
 import {DienstenService} from "../../services/apiservice/diensten.service";
+import {PegasusConfigService} from "../../services/shared/pegasus-config.service";
 
 type HeliosStartDatasetExtended = HeliosStartDataset & {
     inTijdspan?: boolean
@@ -176,7 +177,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     magToevoegen: boolean = false;
     magVerwijderen: boolean = false;
     magWijzigen: boolean = false;
-    inTijdspan: boolean = false;          //  Mogen we starts aanpassen. Mag niet in de toekomst en ook niet meer dan 45 dagen geleden
+    inTijdspan: boolean = false;          //  Mogen we starts aanpassen. Mag niet in de toekomst en ook niet meer dan xx dagen geleden.  xx is geconfigureerd in pegasus.config
     magExporteren: boolean = false;
 
     success: SuccessMessage | undefined;
@@ -188,6 +189,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
                 private readonly loginService: LoginService,
                 private readonly roosterService: RoosterService,
                 private readonly dienstenService: DienstenService,
+                private readonly configService: PegasusConfigService,
                 private readonly sharedService: SharedService) {
     }
 
@@ -212,11 +214,11 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
             }
             else {
                 const diff = Interval.fromDateTimes(datum, nu);
-                if (diff.length("days") > 45) {
-                    this.inTijdspan = ui?.isBeheerder!;     // alleen beheerder mag na 45 dagen wijzigen
+                if (diff.length("days") > this.configService.maxZelfEditDagen()) {
+                    this.inTijdspan = ui?.isBeheerder!;     // alleen beheerder mag na xx dagen wijzigen. xx is geconfigureerd in pegasus.config
                 }
                 else {
-                    this.inTijdspan = true;                 // zitten nog binnen 45 dagen
+                    this.inTijdspan = true;                 // zitten nog binnen de termijn
                 }
             }
             this.opvragen();

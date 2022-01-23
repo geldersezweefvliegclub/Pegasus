@@ -1,6 +1,8 @@
 {
   "url": "http://localhost:4200/api/",
   "passagiersAantekeningID": 271,
+  "maxZelfDienstenIndelen": 5,
+  "maxZelfEditDagen": 14,
 
   "zelfDienstIndelen": [
     {

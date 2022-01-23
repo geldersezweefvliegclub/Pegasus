@@ -28,6 +28,7 @@ import {TracksService} from "../../../services/apiservice/tracks.service";
 import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
 import {StartEditorComponent} from "../editors/start-editor/start-editor.component";
 import {DeleteActionComponent} from "../datatable/delete-action/delete-action.component";
+import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
 
 type HeliosLogboekDatasetExtended = HeliosLogboekDataset & {
     inTijdspan?: boolean
@@ -149,6 +150,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
 
     constructor(private readonly startlijstService: StartlijstService,
                 private readonly trackService: TracksService,
+                private readonly configService: PegasusConfigService,
                 private readonly sharedService: SharedService,
                 private readonly loginService: LoginService) {
     }
@@ -204,11 +206,11 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
 
                 for (let i = 0; i < data.length; i++) {
                     const diff = Interval.fromDateTimes(DateTime.fromSQL(data[i].DATUM!), nu);
-                    if (diff.length("days") > 45) {
-                        data[i].inTijdspan = ui!.Userinfo!.isBeheerder!;   // alleen beheerder mag na 45 dagen wijzigen
+                    if (diff.length("days") > this.configService.maxZelfEditDagen()) {
+                        data[i].inTijdspan = ui!.Userinfo!.isBeheerder!;   // alleen beheerder mag na xx dagen wijzigen. xx is geconfigureerd in pegasus.config
                     }
                     else {
-                        data[i].inTijdspan = true; // zitten nog binnen 45 dagen
+                        data[i].inTijdspan = true; // zitten nog binnen de termijn
                     }
                 }
                 this.data = data;

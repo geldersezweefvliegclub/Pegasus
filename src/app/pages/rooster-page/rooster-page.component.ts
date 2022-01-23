@@ -63,9 +63,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
     readonly MIDDAG_HULPLIERIST_TYPE_ID = 1808;
     readonly MIDDAG_STARTLEIDER_TYPE_ID = 1809;
     readonly SLEEPVLIEGER_TYPE_ID = 1810;
-
-    private readonly MaxDienstenPerMaand = 2;
-
+    
     toonStartleiders = true;
     toonInstructeurs = true;
     toonLieristen = true;
@@ -718,7 +716,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         }
 
         // je mag jezelf maar beperkt indelen, geldt niet voor roostermakers en beheerders
-        if (!this.magWijzigen && (lid.INGEDEELD_MAAND! >= this.MaxDienstenPerMaand)) {
+        if (!this.magWijzigen && (lid.INGEDEELD_MAAND! >= this.configService.maxZelfDienstenIndelen())) {
             return false;
         }
 

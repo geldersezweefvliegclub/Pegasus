@@ -59,16 +59,25 @@ export class PegasusConfigService {
     public getZelfIndelen(): any {
         return this.pegasusConfig.zelfDienstIndelen;
     }
+
+    public maxZelfDienstenIndelen(): number {
+        return (this.pegasusConfig.maxZelfDienstenIndelen) ? this.pegasusConfig.maxZelfDienstenIndelen : 2;
+    }
+
+    public maxZelfEditDagen(): number {
+        return (this.pegasusConfig.maxZelfEditDagen) ? this.pegasusConfig.maxZelfEditDagen : 14;
+    }
 }
 
 export interface IPegasusConfig {
-    url: string,
-    passagiersAantekeningID: string,
+    url: string;
+    maxZelfDienstenIndelen: number | undefined,
+    maxZelfEditDagen: number | undefined,
 
     zelfDienstIndelen: [
         {
             TypeDienst: number,
-            ZelfIndelen: boolean
+            ZelfIndelen: boolean,
         }
     ]
 
