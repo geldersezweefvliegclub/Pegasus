@@ -13,7 +13,7 @@ export class HandboekRenderComponent implements AgRendererComponent {
   constructor() { }
 
   agInit(params: ICellRendererParams): void {
-    this.url = params.data.URL;
+    this.url = (params.data.URL) ? params.data.URL : '';
     this.txt = params.value;
   }
 

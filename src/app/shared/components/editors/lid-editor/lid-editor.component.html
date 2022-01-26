@@ -174,15 +174,24 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-4">
+                                <label for="sleutel1" class="form-label">KNVvL lidnummer</label>
+                                <input type="text" name="knvvl" class="form-control" id="knvvl"
+                                       [(ngModel)]="lid.KNVVL_LIDNUMMER">
+                            </div>
+                            <div class="col-4">
+                                <label for="sleutel1" class="form-label">Brevet nummer</label>
+                                <input type="text" name="brevet" class="form-control" id="brevet"
+                                       [(ngModel)]="lid.BREVET_NUMMER">
+                            </div>
+                        </div>
+                        <div class="row mt-2">
                             <div class="col-4"></div>
                             <div class="col-4">
                                 <label for="sleutel1" class="form-label">Sleutel GeZC</label>
                                 <input type="text" name="sleutel1" class="form-control" id="sleutel1"
                                        [(ngModel)]="lid.SLEUTEL1">
                             </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-8"></div>
                             <div class="col-4">
                                 <label for="sleutel2" class="form-label">Sleutel Terlet</label>
                                 <input type="text" name="sleutel2" class="form-control" id="sleutel2"

@@ -163,7 +163,7 @@ export class NavigationComponent implements OnInit, OnDestroy  {
         const ui = this.loginService.userInfo?.Userinfo;
 
         const tracks = this.routes.find(route => route.path == "tracks") as CustomRoute;
-        tracks.excluded = true  // default, daginfo is niet van toepassing voor de meeste leden
+        tracks.excluded = true  // default, tracks is niet van toepassing voor de meeste leden
         if (ui?.isCIMT || ui?.isInstructeur || ui?.isBeheerder) {
             tracks.excluded = false;
         }

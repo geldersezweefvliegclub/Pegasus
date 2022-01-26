@@ -51,6 +51,8 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         {field: 'REGISTRATIE', headerName: 'Registratie', sortable: true, hide: true, enableRowGroup: true},
         {field: 'CALLSIGN', headerName: 'Callsign', sortable: true, hide: true, enableRowGroup: true},
         {field: 'REG_CALL', headerName: 'RegCall', sortable: true, enableRowGroup: true},
+        {field: 'VELD', headerName: 'Veld', sortable: true, hide: true},
+        {field: 'CHECKSTART', headerName: 'Trainingsvlucht', hide: true, sortable: true, cellRenderer: 'checkboxRender'},
         {field: 'CLUBKIST', headerName: 'Clubkist', sortable: true, cellRenderer: 'checkboxRender', hide: true},
         {
             field: 'VLIEGERNAAM_LID',
@@ -95,15 +97,13 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
             },
         },
         {field: 'DUUR', headerName: 'Duur', sortable: true, comparator: tijdSort},
-        {field: 'OPMERKINGEN', headerName: 'Opmerkingen', sortable: true},
         {field: 'VLIEGTUIG_ID', headerName: 'Vliegtuig ID', sortable: true, hide: true},
         {field: 'STARTMETHODE_ID', headerName: 'Startmethode ID', sortable: true, hide: true, comparator: nummerSort},
         {field: 'VLIEGER_ID', headerName: 'Vlieger ID', sortable: true, hide: true, comparator: nummerSort},
         {field: 'INZITTENDE_ID', headerName: 'Inzittende ID', sortable: true, hide: true, comparator: nummerSort},
         {field: 'SLEEPKIST_ID', headerName: 'Sleepkist ID', sortable: true, hide: true, comparator: nummerSort},
         {field: 'SLEEP_HOOGTE', headerName: 'Sleep hoogte', sortable: true, hide: true, comparator: nummerSort},
-        {field: 'VELD', headerName: 'Veld', sortable: true, hide: true},
-        {field: 'CHECKSTART', headerName: 'Trainingsvlucht', hide: false, sortable: true, cellRenderer: 'checkboxRender'},
+        {field: 'OPMERKINGEN', headerName: 'Opmerkingen', sortable: true},
     ];
 
     rowClassRules = {

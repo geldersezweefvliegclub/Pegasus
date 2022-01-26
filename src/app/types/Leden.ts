@@ -327,6 +327,10 @@ export interface components {
       SLEUTEL1?: string;
       /** Het serienummner van sleutel 2 (SNZT) */
       SLEUTEL2?: string;
+      /** Het lidmaatschapsnummer van de KNVVL */
+      KNVVL_LIDNUMMER?: string;
+      /** Het nummer van het brevet */
+      BREVET_NUMMER?: string;
       /** Extra text om opmerkingen toe te voegen */
       OPMERKINGEN?: string;
     };
