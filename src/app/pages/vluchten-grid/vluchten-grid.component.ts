@@ -43,6 +43,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
     data: HeliosStartDatasetExtended[] = [];
     isLoading: boolean = false;
+    isStarttoren: boolean = false;
     isExporting: boolean = false;
 
     dataColumns: ColDef[] = [
@@ -51,6 +52,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         {field: 'REGISTRATIE', headerName: 'Registratie', sortable: true, hide: true, enableRowGroup: true},
         {field: 'CALLSIGN', headerName: 'Callsign', sortable: true, hide: true, enableRowGroup: true},
         {field: 'REG_CALL', headerName: 'RegCall', sortable: true, enableRowGroup: true},
+        {field: 'VLIEGTUIGTYPE', headerName: 'Type', sortable: true, hide: this.isStarttoren},
         {field: 'VELD', headerName: 'Veld', sortable: true, hide: true},
         {field: 'CHECKSTART', headerName: 'Trainingsvlucht', hide: true, sortable: true, cellRenderer: 'checkboxRender'},
         {field: 'CLUBKIST', headerName: 'Clubkist', sortable: true, cellRenderer: 'checkboxRender', hide: true},
@@ -209,6 +211,8 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
             const ui = this.loginService.userInfo?.Userinfo;
             const nu:  DateTime = DateTime.now()
+
+            this.isStarttoren = ui!.isStarttoren as boolean;
 
             if (datum.year*10000+datum.month*100+datum.day > nu.year*10000+nu.month*100+nu.day) {
                 this.inTijdspan = false;    // datum is in de toekomst
