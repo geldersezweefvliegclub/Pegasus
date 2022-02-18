@@ -103,7 +103,7 @@ export class DagRoosterComponent {
             tekst += 'Onbekend: ' + onbekendString;
         }
 
-            this.opslaan.emit(tekst);
+        this.opslaan.emit(tekst);
         this.popup.close();
     }
 }
