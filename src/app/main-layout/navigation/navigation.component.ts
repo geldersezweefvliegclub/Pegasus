@@ -19,6 +19,7 @@ import {DaginfoService} from '../../services/apiservice/daginfo.service';
 import {Subscription} from "rxjs";
 import {delay} from "rxjs/operators";
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import {PegasusConfigService} from "../../services/shared/pegasus-config.service";
 
 @Component({
     selector: 'app-navigation',
@@ -61,6 +62,7 @@ export class NavigationComponent implements OnInit, OnDestroy  {
                 private readonly dienstenService: DienstenService,
                 private readonly vliegtuigenService: VliegtuigenService,
                 private readonly sharedService: SharedService,
+                private readonly configService: PegasusConfigService,
                 private readonly router: Router,
                 private readonly calendar: NgbCalendar) {
         const ui = this.loginService.userInfo?.Userinfo;
@@ -161,6 +163,7 @@ export class NavigationComponent implements OnInit, OnDestroy  {
     // welke menu items mogen getoond worden
     toonMenuItems() {
         const ui = this.loginService.userInfo?.Userinfo;
+        const verbergen = this.configService.getVerborgenMenuItems();
 
         const tracks = this.routes.find(route => route.path == "tracks") as CustomRoute;
         tracks.excluded = true  // default, tracks is niet van toepassing voor de meeste leden
@@ -172,13 +175,15 @@ export class NavigationComponent implements OnInit, OnDestroy  {
         daginfo.excluded = true;    // default, daginfo is niet van toepassing voor de meeste leden
 
         // laten we dag info zien
-        if (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isInstructeur || ui?.isCIMT || ui?.isStarttoren || ui?.isDDWVCrew) {
-            daginfo.excluded = false;
+        if (!verbergen.includes('daginfo')) {
+            if (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isInstructeur || ui?.isCIMT || ui?.isStarttoren || ui?.isDDWVCrew) {
+                daginfo.excluded = false;
+            }
         }
 
         // starttoren heeft geen dashboard
         const dashboard = this.routes.find(route => route.path == "dashboard") as CustomRoute;
-        if (ui?.isStarttoren) {
+        if (verbergen.includes('dashboard') || ui?.isStarttoren) {
             dashboard.excluded = true;
         }
         else {
@@ -188,7 +193,7 @@ export class NavigationComponent implements OnInit, OnDestroy  {
         // alleen echte gebruiker hebben profiel, starttoren, zusterclubs, etc dus niet
         const profiel = this.routes.find(route => route.path == "profiel") as CustomRoute;
         profiel.excluded = false;
-        if (!ui?.isDDWV && !ui?.isClubVlieger) {
+        if (verbergen.includes('profiel') || (!ui?.isDDWV && !ui?.isClubVlieger)) {
             profiel.excluded = true
         }
         else {
@@ -224,7 +229,7 @@ export class NavigationComponent implements OnInit, OnDestroy  {
 
         // alleen echte gebruiker hebben toegang tot ledenlijst, starttoren, zusterclubs, etc dus niet
         const leden = this.routes.find(route => route.path == "leden") as CustomRoute;
-        if (!ui?.isDDWV && !ui?.isClubVlieger && !ui?.isStarttoren) {
+        if (verbergen.includes('leden') || (!ui?.isDDWV && !ui?.isClubVlieger && !ui?.isStarttoren)) {
             leden.excluded = true;
         }
         else {
@@ -233,7 +238,7 @@ export class NavigationComponent implements OnInit, OnDestroy  {
 
         // alleen echte gebruiker hebben toegang tot rooster, starttoren, zusterclubs, etc dus niet
         const rooster = this.routes.find(route => route.path == "rooster") as CustomRoute;
-        if (!ui?.isDDWV && !ui?.isClubVlieger) {
+        if (verbergen.includes('rooster') || (!ui?.isDDWV && !ui?.isClubVlieger)) {
             rooster.excluded = true;
         }
         else {
@@ -242,7 +247,7 @@ export class NavigationComponent implements OnInit, OnDestroy  {
 
         // alleen clubvliegers en starttoren hebben toegnag tot reservering
         const reserveringen = this.routes.find(route => route.path == "reserveringen") as CustomRoute;
-        if (!ui?.isClubVlieger && !ui?.isStarttoren) {
+        if (verbergen.includes('reserveringen') || (!ui?.isClubVlieger && !ui?.isStarttoren)) {
             reserveringen.excluded = true;
         }
         else {

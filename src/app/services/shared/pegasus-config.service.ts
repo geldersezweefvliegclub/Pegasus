@@ -60,6 +60,10 @@ export class PegasusConfigService {
         return this.pegasusConfig.diensten;
     }
 
+    public getVerborgenMenuItems(): string[] {
+        return this.pegasusConfig.menuItemsNietTonen;
+    }
+
     public maxZelfDienstenIndelen(): number {
         return (this.pegasusConfig.maxZelfDienstenIndelen) ? this.pegasusConfig.maxZelfDienstenIndelen : 2;
     }
@@ -71,8 +75,10 @@ export class PegasusConfigService {
 
 export interface IPegasusConfig {
     url: string;
-    maxZelfDienstenIndelen: number | undefined,
-    maxZelfEditDagen: number | undefined,
+    maxZelfDienstenIndelen: number | undefined;
+    maxZelfEditDagen: number | undefined;
+
+    menuItemsNietTonen: string[];
 
     diensten: [
         {

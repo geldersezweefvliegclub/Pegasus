@@ -4,6 +4,10 @@
   "maxZelfDienstenIndelen": 5,
   "maxZelfEditDagen": 14,
 
+  "menuItemsNietTonen" : [
+    "reserveringen"
+  ],
+
   "diensten": [
     {
       "Tonen": true,
