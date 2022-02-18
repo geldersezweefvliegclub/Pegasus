@@ -56,8 +56,8 @@ export class PegasusConfigService {
         return this.pegasusConfig.airport;
     }
 
-    public getZelfIndelen(): any {
-        return this.pegasusConfig.zelfDienstIndelen;
+    public getDienstConfig(): any {
+        return this.pegasusConfig.diensten;
     }
 
     public maxZelfDienstenIndelen(): number {
@@ -74,8 +74,9 @@ export interface IPegasusConfig {
     maxZelfDienstenIndelen: number | undefined,
     maxZelfEditDagen: number | undefined,
 
-    zelfDienstIndelen: [
+    diensten: [
         {
+            Tonen: boolean,
             TypeDienst: number,
             ZelfIndelen: boolean,
         }

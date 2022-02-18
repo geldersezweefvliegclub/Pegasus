@@ -10,16 +10,20 @@
                     <div class="roosterTabel">
                         <table class="table">
                             <thead>
-                            <th scope="col"></th>
-                            <th scope="col" class="DagBreedte">Dag</th>
-                            <th scope="col" *ngIf="toonInstructeurs" [style]="KolomBreedte()">DDI</th>
-                            <th scope="col" *ngIf="toonInstructeurs" [style]="KolomBreedte()">Instructeur</th>
-                            <th scope="col" *ngIf="toonStartleiders || toonDDWV" [style]="KolomBreedte()">Startleider
-                            </th>
-                            <th scope="col" *ngIf="toonLieristen || toonDDWV" [style]="KolomBreedte()">Lierist</th>
-                            <th scope="col" *ngIf="toonLieristen" [style]="KolomBreedte()">Hulplierist</th>
-                            <th scope="col" *ngIf="toonSleepvliegers" [style]="KolomBreedte()">Sleepvlieger</th>
-                            <th scope="col" id="headerOpmerkingen">Opmerkingen</th>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col" class="DagBreedte">Dag</th>
+                                    <th scope="col" *ngIf="toonKolomDDI &&  toonInstructeurs" [style]="KolomBreedte()">DDI</th>
+                                    <th scope="col" *ngIf="toonKolomInstructeurs && toonInstructeurs" [style]="KolomBreedte()">Instructeur</th>
+                                    <th scope="col" *ngIf="toonKolomStartleiders && (toonStartleiders || toonDDWV)" [style]="KolomBreedte()">Startleider
+                                    </th>
+                                    <th scope="col" *ngIf="toonKolomStartleidersIO &&  toonStartleiders" [style]="KolomBreedte()">Startleider 2
+                                    </th>
+                                    <th scope="col" *ngIf="toonKolomLierist && (toonLieristen || toonDDWV)" [style]="KolomBreedte()">Lierist</th>
+                                    <th scope="col" *ngIf="toonKolomHulpLierist && toonLieristen" [style]="KolomBreedte()">Hulplierist</th>
+                                    <th scope="col" *ngIf="toonKolomSleepvlieger && toonSleepvliegers" [style]="KolomBreedte()">Sleepvlieger</th>
+                                    <th scope="col" id="headerOpmerkingen">Opmerkingen</th>
+                                </tr>
                             </thead>
                             <tbody>
 
@@ -60,8 +64,8 @@
                                     </div>
                                 </td>
 
-                                <td *ngIf="toonInstructeurs">
-                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF">
+                                <td *ngIf="toonKolomDDI && toonInstructeurs" >
+                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF && toonDienst(OCHTEND_DDI_TYPE_ID)">
                                         <div
                                                 class="drop-container"
                                                 cdkDropList
@@ -82,7 +86,7 @@
                                             <ng-template *ngTemplateOutlet="reset"></ng-template>
                                         </div>
                                     </div>
-                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF">
+                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF && toonDienst(MIDDAG_DDI_TYPE_ID)">
                                         <div
                                                 class="drop-container"
                                                 cdkDropList
@@ -104,8 +108,8 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td *ngIf="toonInstructeurs">
-                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF">
+                                <td *ngIf="toonKolomInstructeurs && toonInstructeurs">
+                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF && toonDienst(OCHTEND_INSTRUCTEUR_TYPE_ID)">
                                         <div
                                                 class="drop-container"
                                                 cdkDropList
@@ -126,7 +130,7 @@
                                             <ng-template *ngTemplateOutlet="reset"></ng-template>
                                         </div>
                                     </div>
-                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF">
+                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF && toonDienst(MIDDAG_INSTRUCTEUR_TYPE_ID)">
                                         <div
                                                 class="drop-container"
                                                 cdkDropList
@@ -148,7 +152,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td *ngIf="toonStartleiders || toonDDWV">
+                                <td *ngIf="toonKolomStartleiders && (toonStartleiders || toonDDWV) && toonDienst(OCHTEND_STARTLEIDER_TYPE_ID)">
                                     <div class="d-flex">
                                         <div
                                                 class="drop-container"
@@ -170,7 +174,7 @@
                                             <ng-template *ngTemplateOutlet="reset"></ng-template>
                                         </div>
                                     </div>
-                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF">
+                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF  && toonDienst(MIDDAG_STARTLEIDER_TYPE_ID)">
                                         <div
                                                 class="drop-container"
                                                 cdkDropList
@@ -192,8 +196,52 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td *ngIf="toonLieristen || toonDDWV">
-                                    <div class="d-flex">
+                                <td *ngIf="toonKolomStartleidersIO && toonStartleiders">
+                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF &&  toonDienst(OCHTEND_STARTLEIDER_IO_TYPE_ID)">
+                                        <div
+                                                class="drop-container"
+                                                cdkDropList
+                                                [id]="dagInRooster.DATUM + ',' + OCHTEND_STARTLEIDER_IO_TYPE_ID"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster, OCHTEND_STARTLEIDER_IO_TYPE_ID);"
+                                                [cdkDropListData]="dagInRooster"
+                                                [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this, dagInRooster.DATUM, OCHTEND_STARTLEIDER_IO_TYPE_ID)">
+                                            <div cdkDrag  [ngClass]="lidInRoosterClass(dagInRooster.Diensten[OCHTEND_STARTLEIDER_IO_TYPE_ID])">
+                                                {{ (dagInRooster.Diensten[OCHTEND_STARTLEIDER_IO_TYPE_ID]) ? dagInRooster.Diensten[OCHTEND_STARTLEIDER_IO_TYPE_ID].NAAM : "" }}
+                                            </div>
+                                        </div>
+                                        <div *ngIf="(isStartleider && zelfIndelen(OCHTEND_STARTLEIDER_IO_TYPE_ID, dagInRooster.DATUM))  && !dagInRooster.Diensten[OCHTEND_STARTLEIDER_IO_TYPE_ID]"
+                                             (click)="toekennenDienst(dagInRooster, OCHTEND_STARTLEIDER_IO_TYPE_ID, mijnID, mijnNaam)">
+                                            <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                        </div>
+                                        <div *ngIf="magVerwijderen(dagInRooster.Diensten[OCHTEND_STARTLEIDER_IO_TYPE_ID])"
+                                             (click)="verwijderDienst(dagInRooster, OCHTEND_STARTLEIDER_IO_TYPE_ID)">
+                                            <ng-template *ngTemplateOutlet="reset"></ng-template>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF && toonDienst(MIDDAG_STARTLEIDER_TYPE_ID)">
+                                        <div
+                                                class="drop-container"
+                                                cdkDropList
+                                                [id]="dagInRooster.DATUM + ',' + MIDDAG_STARTLEIDER_IO_TYPE_ID"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster, MIDDAG_STARTLEIDER_IO_TYPE_ID);"
+                                                [cdkDropListData]="dagInRooster"
+                                                [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this, dagInRooster.DATUM, MIDDAG_STARTLEIDER_IO_TYPE_ID)">
+                                            <div cdkDrag  [ngClass]="lidInRoosterClass(dagInRooster.Diensten[MIDDAG_STARTLEIDER_IO_TYPE_ID])">
+                                                {{ (dagInRooster.Diensten[MIDDAG_STARTLEIDER_IO_TYPE_ID]) ? dagInRooster.Diensten[MIDDAG_STARTLEIDER_IO_TYPE_ID].NAAM : "" }}
+                                            </div>
+                                        </div>
+                                        <div *ngIf="isStartleider && zelfIndelen(MIDDAG_STARTLEIDER_IO_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[MIDDAG_STARTLEIDER_IO_TYPE_ID]"
+                                             (click)="toekennenDienst(dagInRooster, MIDDAG_STARTLEIDER_IO_TYPE_ID, mijnID, mijnNaam)">
+                                            <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                        </div>
+                                        <div *ngIf="magVerwijderen(dagInRooster.Diensten[MIDDAG_STARTLEIDER_IO_TYPE_ID])"
+                                             (click)="verwijderDienst(dagInRooster, MIDDAG_STARTLEIDER_IO_TYPE_ID)">
+                                            <ng-template *ngTemplateOutlet="reset"></ng-template>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td *ngIf="toonKolomLierist && (toonLieristen || toonDDWV)">
+                                    <div class="d-flex" *ngIf="toonDienst(OCHTEND_LIERIST_TYPE_ID)">
                                         <div
                                                 class="drop-container"
                                                 cdkDropList
@@ -214,7 +262,7 @@
                                             <ng-template *ngTemplateOutlet="reset"></ng-template>
                                         </div>
                                     </div>
-                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF">
+                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF  && toonDienst(MIDDAG_LIERIST_TYPE_ID)">
                                         <div
                                                 class="drop-container"
                                                 cdkDropList
@@ -236,8 +284,8 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td *ngIf="toonLieristen">
-                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF">
+                                <td *ngIf="toonKolomHulpLierist && toonLieristen">
+                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF && toonDienst(OCHTEND_HULPLIERIST_TYPE_ID)">
                                         <div
                                                 class="drop-container"
                                                 cdkDropList
@@ -258,7 +306,7 @@
                                             <ng-template *ngTemplateOutlet="reset"></ng-template>
                                         </div>
                                     </div>
-                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF">
+                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF && toonDienst(MIDDAG_HULPLIERIST_TYPE_ID)">
                                         <div
                                                 class="drop-container"
                                                 cdkDropList
@@ -280,8 +328,8 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td *ngIf="toonSleepvliegers">
-                                    <div class="d-flex">
+                                <td *ngIf="toonKolomSleepvlieger && toonSleepvliegers">
+                                    <div class="d-flex" toonDienst(SLEEPVLIEGER_TYPE_ID)>
                                         <div
                                                 class="drop-container"
                                                 cdkDropList

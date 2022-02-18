@@ -57,11 +57,13 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
     readonly OCHTEND_LIERIST_TYPE_ID = 1802;
     readonly OCHTEND_HULPLIERIST_TYPE_ID = 1803;
     readonly OCHTEND_STARTLEIDER_TYPE_ID = 1804;
+    readonly OCHTEND_STARTLEIDER_IO_TYPE_ID = 1811;
     readonly MIDDAG_DDI_TYPE_ID = 1805;
     readonly MIDDAG_INSTRUCTEUR_TYPE_ID = 1806;
     readonly MIDDAG_LIERIST_TYPE_ID = 1807;
     readonly MIDDAG_HULPLIERIST_TYPE_ID = 1808;
     readonly MIDDAG_STARTLEIDER_TYPE_ID = 1809;
+    readonly MIDDAG_STARTLEIDER_IO_TYPE_ID = 1812;
     readonly SLEEPVLIEGER_TYPE_ID = 1810;
     
     toonStartleiders = true;
@@ -69,7 +71,15 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
     toonLieristen = true;
     toonSleepvliegers = true;
     toonDDWV = false;
-    toonTotalen = false
+    toonTotalen = false;
+
+    toonKolomDDI = true;
+    toonKolomInstructeurs = true;
+    toonKolomStartleiders = true;
+    toonKolomStartleidersIO = true;
+    toonKolomLierist = true;
+    toonKolomHulpLierist = true;
+    toonKolomSleepvlieger = true;
 
     private typesAbonnement: Subscription;
     dienstTypes: HeliosType[] = [];
@@ -132,6 +142,14 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         if (this.isDDWVer) {
             this.toonClubDDWV = 2;   // Alleen DDWV
         }
+
+        this.toonKolomDDI = this.toonKolom([this.OCHTEND_DDI_TYPE_ID, this.MIDDAG_DDI_TYPE_ID]);
+        this.toonKolomInstructeurs = this.toonKolom([this.OCHTEND_INSTRUCTEUR_TYPE_ID, this.MIDDAG_INSTRUCTEUR_TYPE_ID]);
+        this.toonKolomStartleiders = this.toonKolom([this.OCHTEND_STARTLEIDER_TYPE_ID, this.MIDDAG_STARTLEIDER_TYPE_ID]);
+        this.toonKolomStartleidersIO = this.toonKolom([this.OCHTEND_STARTLEIDER_IO_TYPE_ID, this.MIDDAG_STARTLEIDER_IO_TYPE_ID]);
+        this.toonLieristen = this.toonKolom([this.OCHTEND_LIERIST_TYPE_ID, this.MIDDAG_LIERIST_TYPE_ID]);
+        this.toonKolomHulpLierist = this.toonKolom([this.OCHTEND_HULPLIERIST_TYPE_ID, this.MIDDAG_HULPLIERIST_TYPE_ID]);
+        this.toonKolomSleepvlieger = this.toonKolom([this.SLEEPVLIEGER_TYPE_ID]);
 
         this.toonTotalen = (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isCIMT || ui?.Userinfo?.isRooster) ? true : false;
 
@@ -254,6 +272,27 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         }
     }
 
+    private toonKolom(diensten: number[]): boolean {
+        for (let i=0 ; i < diensten.length ; i++) {
+            const indeelbareDienst = this.configService.getDienstConfig().find((d: any) => (d.TypeDienst == diensten[i]));
+
+            if (indeelbareDienst) {
+                if (indeelbareDienst.Tonen) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public toonDienst(dienstType: number): boolean {
+        const indeelbareDienst = this.configService.getDienstConfig().find((d: any) => (d.TypeDienst == dienstType));
+
+        if (indeelbareDienst) {
+            if (indeelbareDienst.Tonen) return true;
+        }
+        return false;
+    }
     /**
      * Wordt in de template gebruikt om te controleren of iemand in een vakje gesleept mag worden. Gaat over lierist.
      * @param datum
@@ -720,8 +759,8 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        if (this.configService.getZelfIndelen()) {
-            const indeelbareDienst = this.configService.getZelfIndelen().find((d: any) => (d.TypeDienst == dienstType));
+        if (this.configService.getDienstConfig()) {
+            const indeelbareDienst = this.configService.getDienstConfig().find((d: any) => (d.TypeDienst == dienstType));
 
             // Dienst is bekend in config, return of je jezelf mag Indelen
             if (indeelbareDienst) {
@@ -754,8 +793,8 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             return false;   // mogen natuurlijk geen aanpassing maken op diensten van iemand anders
         }
 
-        if (this.configService.getZelfIndelen()) {
-            const indeelbareDienst = this.configService.getZelfIndelen().find((d: any) => (d.TypeDienst == dienstData.TYPE_DIENST_ID));
+        if (this.configService.getDienstConfig()) {
+            const indeelbareDienst = this.configService.getDienstConfig().find((d: any) => (d.TypeDienst == dienstData.TYPE_DIENST_ID));
             // Dienst is bekend in config, return of je jezelf mag Indelen
             if (indeelbareDienst) {
                 if (!indeelbareDienst.ZelfIndelen)

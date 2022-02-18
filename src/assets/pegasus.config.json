@@ -4,41 +4,70 @@
   "maxZelfDienstenIndelen": 5,
   "maxZelfEditDagen": 14,
 
-  "zelfDienstIndelen": [
+  "diensten": [
     {
+      "Tonen": true,
       "TypeDienst": 1800,
       "ZelfIndelen": true
     },
     {
+      "Tonen": true,
       "TypeDienst": 1801,
       "ZelfIndelen": true
     },
     {
+      "Tonen": true,
       "TypeDienst": 1802,
       "ZelfIndelen": true
     },
     {
+      "Tonen": true,
+      "TypeDienst": 1803,
+      "ZelfIndelen": true
+    },
+    {
+      "Tonen": true,
       "TypeDienst": 1804,
       "ZelfIndelen": true
     },
     {
+      "Tonen": false,
       "TypeDienst": 1805,
       "ZelfIndelen": true
     },
     {
+      "Tonen": true,
       "TypeDienst": 1806,
       "ZelfIndelen": true
     },
     {
+      "Tonen": true,
       "TypeDienst": 1807,
       "ZelfIndelen": true
     },
     {
+      "Tonen": true,
       "TypeDienst": 1808,
       "ZelfIndelen": true
     },
     {
+      "Tonen": true,
       "TypeDienst": 1809,
+      "ZelfIndelen": true
+    },
+    {
+      "Tonen": true,
+      "TypeDienst": 1810,
+      "ZelfIndelen": true
+    },
+    {
+      "Tonen": true,
+      "TypeDienst": 1811,
+      "ZelfIndelen": true
+    },
+    {
+      "Tonen": true,
+      "TypeDienst": 1812,
       "ZelfIndelen": true
     }
   ],
