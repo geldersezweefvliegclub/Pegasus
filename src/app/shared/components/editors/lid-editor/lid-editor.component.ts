@@ -285,7 +285,7 @@ export class LidEditorComponent implements OnInit {
 
     isgoogleAuthNodig(): boolean {
         if (this.lid.BEHEERDER || this.lid.DDWV_BEHEERDER || this.lid.INSTRUCTEUR || this.lid.CIMT ||
-            this.lid.DDWV_CREW || this.lid.ROOSTER || this.lid.STARTTOREN) {
+            this.lid.DDWV_CREW || this.lid.ROOSTER || this.lid.STARTTOREN || this.lid.RAPPORTEUR) {
             this.lid.AUTH = true;
             return true;
         }
@@ -333,6 +333,7 @@ export class LidEditorComponent implements OnInit {
             }
             case 'CIMT':
             case 'STARTTOREN':
+            case 'RAPPORTEUR':
             case 'ROOSTER':
             case 'BEHEERDER':
             case 'DDWV_BEHEERDER':

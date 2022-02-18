@@ -316,6 +316,15 @@
                                     Instructeur
                                 </label>
                             </div>
+                            <div class="text-nowrap">
+                                <input class="form-check-inline" type="checkbox" id="RAPPORTEUR" name="RAPPORTEUR"
+                                       [disabled]="isDisabled('RAPPORTEUR')"
+                                       [(ngModel)]="lid.RAPPORTEUR" (ngModelChange)="isgoogleAuthNodig()">
+                                <label class="form-check-label" for="RAPPORTEUR"
+                                       [ngClass]="disabledClass('RAPPORTEUR')">
+                                    Rapporteur
+                                </label>
+                            </div>
                         </div>
                         <div class="col-4">
                             <div class="text-nowrap">

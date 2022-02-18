@@ -307,6 +307,8 @@ export interface components {
       SLEEPVLIEGER?: boolean;
       /** Moet clubblad per post verstuurd worden */
       CLUBBLAD_POST?: boolean;
+      /** Heeft lid toegang tot alle starts / logboeken voor rapportage */
+      RAPPORTEUR?: boolean;
       /** Verloopdatum van het medical */
       MEDICAL?: string;
       /** Geboorte datum van het lid */
