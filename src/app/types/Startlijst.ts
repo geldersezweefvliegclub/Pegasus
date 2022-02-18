@@ -555,6 +555,8 @@ export interface components {
       VELD?: string;
       /** Start strip */
       BAAN?: string;
+      /** Vliegtuig type */
+      VLIEGTUIGTYPE?: string;
       /** De opmerkingen die ingevoerd zijn */
       OPMERKINGEN?: string;
     };
