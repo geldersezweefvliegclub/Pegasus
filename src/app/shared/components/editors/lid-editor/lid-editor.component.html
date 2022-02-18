@@ -406,6 +406,15 @@
                                     Sleepvlieger
                                 </label>
                             </div>
+                            <div class="text-nowrap">
+                                <input class="form-check-inline" type="checkbox" id="GASTENVLIEGER" name="GASTENVLIEGER"
+                                       [disabled]="isDisabled('GASTENVLIEGER')"
+                                       [(ngModel)]="lid.GASTENVLIEGER">
+                                <label class="form-check-label" for="GASTENVLIEGER"
+                                       [ngClass]="disabledClass('GASTENVLIEGER')">
+                                    Gastenvlieger
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div class="row mt-2">

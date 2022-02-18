@@ -21,6 +21,7 @@
                                     </th>
                                     <th scope="col" *ngIf="toonKolomLierist && (toonLieristen || toonDDWV)" [style]="KolomBreedte()">Lierist</th>
                                     <th scope="col" *ngIf="toonKolomHulpLierist && toonLieristen" [style]="KolomBreedte()">Hulplierist</th>
+                                    <th scope="col" *ngIf="toonKolomGastenvlieger && toonGastenVliegers" [style]="KolomBreedte()">Gastenvlieger</th>
                                     <th scope="col" *ngIf="toonKolomSleepvlieger && toonSleepvliegers" [style]="KolomBreedte()">Sleepvlieger</th>
                                     <th scope="col" id="headerOpmerkingen">Opmerkingen</th>
                                 </tr>
@@ -328,8 +329,54 @@
                                         </div>
                                     </div>
                                 </td>
+
+                                <td *ngIf="toonKolomGastenvlieger && toonGastenVliegers">
+                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF && toonDienst(GASTEN_VLIEGER1_TYPE_ID)">
+                                        <div
+                                                class="drop-container"
+                                                cdkDropList
+                                                [id]="dagInRooster.DATUM + ',' + GASTEN_VLIEGER1_TYPE_ID"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster, GASTEN_VLIEGER1_TYPE_ID);"
+                                                [cdkDropListData]="dagInRooster"
+                                                [cdkDropListEnterPredicate]="gastVliegerEvaluatie.bind(this, dagInRooster.DATUM, GASTEN_VLIEGER1_TYPE_ID)">
+                                            <div cdkDrag  [ngClass]="lidInRoosterClass(dagInRooster.Diensten[GASTEN_VLIEGER1_TYPE_ID])">
+                                                {{ (dagInRooster.Diensten[GASTEN_VLIEGER1_TYPE_ID]) ? dagInRooster.Diensten[GASTEN_VLIEGER1_TYPE_ID].NAAM : "" }}
+                                            </div>
+                                        </div>
+                                        <div *ngIf="isLierist && zelfIndelen(GASTEN_VLIEGER1_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[GASTEN_VLIEGER1_TYPE_ID]"
+                                             (click)="toekennenDienst(dagInRooster, GASTEN_VLIEGER1_TYPE_ID, mijnID, mijnNaam)">
+                                            <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                        </div>
+                                        <div *ngIf="magVerwijderen(dagInRooster.Diensten[GASTEN_VLIEGER1_TYPE_ID])"
+                                             (click)="verwijderDienst(dagInRooster, GASTEN_VLIEGER1_TYPE_ID)">
+                                            <ng-template *ngTemplateOutlet="reset"></ng-template>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF && toonDienst(GASTEN_VLIEGER2_TYPE_ID)">
+                                        <div
+                                                class="drop-container"
+                                                cdkDropList
+                                                [id]="dagInRooster.DATUM + ',' + GASTEN_VLIEGER2_TYPE_ID"
+                                                (cdkDropListDropped)="onDropInRooster($event, dagInRooster, GASTEN_VLIEGER2_TYPE_ID);"
+                                                [cdkDropListData]="dagInRooster"
+                                                [cdkDropListEnterPredicate]="gastVliegerEvaluatie.bind(this, dagInRooster.DATUM, GASTEN_VLIEGER2_TYPE_ID)">
+                                            <div cdkDrag  [ngClass]="lidInRoosterClass(dagInRooster.Diensten[GASTEN_VLIEGER2_TYPE_ID])">
+                                                {{ (dagInRooster.Diensten[GASTEN_VLIEGER2_TYPE_ID]) ? dagInRooster.Diensten[GASTEN_VLIEGER2_TYPE_ID].NAAM : "" }}
+                                            </div>
+                                        </div>
+                                        <div *ngIf="isLierist && zelfIndelen(GASTEN_VLIEGER2_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[GASTEN_VLIEGER2_TYPE_ID]"
+                                             (click)="toekennenDienst(dagInRooster, GASTEN_VLIEGER2_TYPE_ID, mijnID, mijnNaam)">
+                                            <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                        </div>
+                                        <div *ngIf="magVerwijderen(dagInRooster.Diensten[GASTEN_VLIEGER2_TYPE_ID])"
+                                             (click)="verwijderDienst(dagInRooster, GASTEN_VLIEGER2_TYPE_ID)">
+                                            <ng-template *ngTemplateOutlet="reset"></ng-template>
+                                        </div>
+                                    </div>
+                                </td>
+
                                 <td *ngIf="toonKolomSleepvlieger && toonSleepvliegers">
-                                    <div class="d-flex" toonDienst(SLEEPVLIEGER_TYPE_ID)>
+                                    <div class="d-flex" *ngIf="toonDienst(SLEEPVLIEGER_TYPE_ID)">
                                         <div
                                                 class="drop-container"
                                                 cdkDropList
@@ -412,6 +459,7 @@
                                                 <span *ngIf="lid.STARTLEIDER">Startleider </span>
                                                 <span *ngIf="lid.INSTRUCTEUR">Instructeur </span>
                                                 <span *ngIf="lid.SLEEPVLIEGER">Sleepvlieger </span>
+                                                <span *ngIf="lid.GASTENVLIEGER">Gastenvlieger </span>
                                             </p>
                                         </div>
                                     </div>
@@ -480,6 +528,7 @@
             <span *ngIf="lid.STARTLEIDER">Startleider </span>
             <span *ngIf="lid.INSTRUCTEUR">Instructeur </span>
             <span *ngIf="lid.SLEEPVLIEGER">Sleepvlieger </span>
+            <span *ngIf="lid.GASTENVLIEGER">Gastenvlieger </span>
         </p>
 
     </div>

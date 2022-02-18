@@ -325,7 +325,8 @@ export class LidEditorComponent implements OnInit {
             }
             case 'LIERIST':
             case 'STARTLEIDER':
-            case 'SLEEPVLIEGER': {
+            case 'SLEEPVLIEGER':
+            case 'GASTENVLIEGER': {
                 if (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isRooster) {
                     return false;
                 }

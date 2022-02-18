@@ -309,6 +309,8 @@ export interface components {
       CLUBBLAD_POST?: boolean;
       /** Heeft lid toegang tot alle starts / logboeken voor rapportage */
       RAPPORTEUR?: boolean;
+      /** Wordt dit lid ingedeeld om gasten te vliegen */
+      GASTENVLIEGER?: boolean;
       /** Verloopdatum van het medical */
       MEDICAL?: string;
       /** Geboorte datum van het lid */

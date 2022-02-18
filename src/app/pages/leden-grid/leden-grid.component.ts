@@ -324,6 +324,9 @@ export class LedenGridComponent implements OnInit {
             if (this.sharedService.ledenlijstFilter.sleepvliegers && this.dataset[i].SLEEPVLIEGER == false) {
                 continue;
             }
+            if (this.sharedService.ledenlijstFilter.gastenVliegers && this.dataset[i].GASTENVLIEGER == false) {
+                continue;
+            }
 
             this.leden.push(this.dataset[i]);
         }

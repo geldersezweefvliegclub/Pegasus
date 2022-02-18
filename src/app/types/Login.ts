@@ -28,13 +28,39 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          /** 2factor token */
-          token?: string;
+          /** token van SMS of Google Authenticator */
+          token: string;
         };
       };
       responses: {
         /** OK, ingelogd */
-        200: unknown;
+        200: {
+          content: {
+            "application/json": components["schemas"]["token"];
+          };
+        };
+        /** Mislukt */
+        401: unknown;
+        /** Niet aanvaardbaar, input ontbreekt */
+        406: unknown;
+      };
+    };
+  };
+  "/Login/Relogin": {
+    get: {
+      parameters: {
+        query: {
+          /** bearer token */
+          token: string;
+        };
+      };
+      responses: {
+        /** OK, ingelogd */
+        200: {
+          content: {
+            "application/json": components["schemas"]["token"];
+          };
+        };
         /** Mislukt */
         401: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
@@ -68,10 +94,26 @@ export interface paths {
       };
     };
   };
+  "//Login/ResetWachtwoord": {
+    get: {
+      responses: {
+        /** Aanvraag verwerkt. Ook status 200 als email versturen mislukt is. Dit om te voorkomen dat we te veel info prijsgeven */
+        200: unknown;
+        /** Niet aanvaardbaar, input ontbreekt */
+        406: unknown;
+        /** Data verwerkingsfout */
+        500: unknown;
+      };
+    };
+  };
 }
 
 export interface components {
   schemas: {
+    token: {
+      /** JSON Web Token - JWT */
+      TOKEN?: string;
+    };
     ref_leden: {
       /** Database ID van het lid record */
       ID?: number;
@@ -127,6 +169,10 @@ export interface components {
       SLEEPVLIEGER?: boolean;
       /** Moet clubblad per post verstuurd worden */
       CLUBBLAD_POST?: boolean;
+      /** Heeft lid toegang tot alle starts / logboeken voor rapportage */
+      RAPPORTEUR?: boolean;
+      /** Wordt dit lid ingedeeld om gasten te vliegen */
+      GASTENVLIEGER?: boolean;
       /** Verloopdatum van het medical */
       MEDICAL?: string;
       /** Geboorte datum van het lid */
@@ -165,6 +211,8 @@ export interface components {
         isCIMT?: boolean;
         /** Is de ingelogde gebruiker de starttoren? */
         isStarttoren?: boolean;
+        /** Is de ingelogde gebruiker verantwoordelijk voor start rapportage & logboeken */
+        isRapporteur?: boolean;
         /** Maakt de ingelogde gebruiker onderdeel uit van de DDWV crew ? */
         isDDWVCrew?: boolean;
         /** Is de ingelogde gebruiker aangemeld voor vandaag */

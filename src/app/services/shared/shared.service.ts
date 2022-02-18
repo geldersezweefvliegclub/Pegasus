@@ -12,6 +12,7 @@ export interface FilterLedenData {
     startleiders: boolean,
     instructeurs: boolean,
     sleepvliegers: boolean,
+    gastenVliegers: boolean,
 }
 
 
@@ -50,7 +51,8 @@ export class SharedService {
         instructeurs: false,
         startleiders: false,
         lieristen: false,
-        sleepvliegers: false
+        sleepvliegers: false,
+        gastenVliegers: false
     }
 
     // laat andere component weten dat er iets in de database is aangepast

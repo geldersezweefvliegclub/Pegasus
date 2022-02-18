@@ -65,11 +65,14 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
     readonly MIDDAG_STARTLEIDER_TYPE_ID = 1809;
     readonly MIDDAG_STARTLEIDER_IO_TYPE_ID = 1812;
     readonly SLEEPVLIEGER_TYPE_ID = 1810;
+    readonly GASTEN_VLIEGER1_TYPE_ID = 1813;
+    readonly GASTEN_VLIEGER2_TYPE_ID = 1814;
     
     toonStartleiders = true;
     toonInstructeurs = true;
     toonLieristen = true;
     toonSleepvliegers = true;
+    toonGastenVliegers = true;
     toonDDWV = false;
     toonTotalen = false;
 
@@ -80,6 +83,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
     toonKolomLierist = true;
     toonKolomHulpLierist = true;
     toonKolomSleepvlieger = true;
+    toonKolomGastenvlieger = true;
 
     private typesAbonnement: Subscription;
     dienstTypes: HeliosType[] = [];
@@ -90,6 +94,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
     isDDWVCrew: boolean = false;
     isDDWVer: boolean = false;
     isCIMT: boolean = false;
+    isGastenVlieger: boolean = true;
 
     toonClubDDWV: number = 1;            // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
 
@@ -137,6 +142,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         this.isSleepvlieger = ui?.LidData?.SLEEPVLIEGER as boolean;
         this.isDDWVCrew = ui?.LidData?.DDWV_CREW as boolean;
         this.isCIMT = ui?.Userinfo?.isCIMT as boolean;
+        this.isGastenVlieger = ui?.LidData?.GASTENVLIEGER as boolean;
 
         this.isDDWVer = (this.loginService.userInfo?.Userinfo?.isDDWV!);
         if (this.isDDWVer) {
@@ -150,6 +156,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         this.toonLieristen = this.toonKolom([this.OCHTEND_LIERIST_TYPE_ID, this.MIDDAG_LIERIST_TYPE_ID]);
         this.toonKolomHulpLierist = this.toonKolom([this.OCHTEND_HULPLIERIST_TYPE_ID, this.MIDDAG_HULPLIERIST_TYPE_ID]);
         this.toonKolomSleepvlieger = this.toonKolom([this.SLEEPVLIEGER_TYPE_ID]);
+        this.toonKolomGastenvlieger = this.toonKolom([this.GASTEN_VLIEGER1_TYPE_ID, this.GASTEN_VLIEGER2_TYPE_ID]);
 
         this.toonTotalen = (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isCIMT || ui?.Userinfo?.isRooster) ? true : false;
 
@@ -341,6 +348,18 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         return this.controleerGeschiktheid(item, datum, 'SLEEPVLIEGER');
     }
 
+    /**
+     * Wordt in de template gebruikt om te controleren of iemand in een vakje gesleept mag worden. Gaat over instructeurs.
+     * @param datum
+     * @param dienst
+     * @param {CdkDrag<HeliosLid | HeliosRoosterDataset>} item
+     * @return {boolean}
+     */
+    gastVliegerEvaluatie(datum: string, dienst: number, item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
+        if (!this.dienstBeschikbaar(datum, dienst)) return false;
+        return this.controleerGeschiktheid(item, datum, 'GASTENVLIEGER');
+    }
+
     // voorkom dat ingevulde dienst overschreven wordt
     dienstBeschikbaar(datum: string, dienst: number): boolean {
         const roosterIndex = this.heleRooster.findIndex((dag => dag.DATUM == datum));
@@ -356,7 +375,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
      * Deze functie evalueert of de content een bepaalde rol is. Als dat zo is, returned hij true, anders false.
      * Als de meegegeven rol bijv. LIERIST is, kan een instructeur bijv. geen lieristdienst draaien.
      */
-    controleerGeschiktheid(item: CdkDrag<HeliosLid | HeliosRoosterDataset>, datum: string, rol: 'LIERIST' | 'INSTRUCTEUR' | 'STARTLEIDER' | 'SLEEPVLIEGER'): boolean {
+    controleerGeschiktheid(item: CdkDrag<HeliosLid | HeliosRoosterDataset>, datum: string, rol: 'LIERIST' | 'INSTRUCTEUR' | 'STARTLEIDER' | 'SLEEPVLIEGER' | 'GASTENVLIEGER'): boolean {
         // Content komt uit de ledenlijst of niet
 
         const roosterIndex = this.heleRooster.findIndex((dag => dag.DATUM == datum));
@@ -379,6 +398,8 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
                     return data.SLEEPVLIEGER!;
                 case 'STARTLEIDER':
                     return (ddwv) ? data.DDWV_CREW! : data.STARTLEIDER!;
+                case 'GASTENVLIEGER':
+                    return data.GASTENVLIEGER!;
             }
             return false;
         } else {
@@ -400,6 +421,8 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
                     return data.SLEEPVLIEGER!;
                 case 'STARTLEIDER':
                     return (ddwv) ? data.DDWV_CREW! : lid.STARTLEIDER!;
+                case 'GASTENVLIEGER':
+                    return data.GASTENVLIEGER!;
             }
 
             return false;
@@ -596,6 +619,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             !this.sharedService.ledenlijstFilter.lieristen &&
             !this.sharedService.ledenlijstFilter.instructeurs &&
             !this.sharedService.ledenlijstFilter.sleepvliegers &&
+            !this.sharedService.ledenlijstFilter.gastenVliegers &&
             !this.sharedService.ledenlijstFilter.crew) {
             toonAlles = true;
         }
@@ -617,6 +641,9 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             }
             if (this.sharedService.ledenlijstFilter.sleepvliegers) {
                 this.toonSleepvliegers = true;
+            }
+            if (this.sharedService.ledenlijstFilter.gastenVliegers) {
+                this.toonGastenVliegers = true;
             }
             if (this.sharedService.ledenlijstFilter.crew) {
                 this.toonDDWV = true;
@@ -651,6 +678,8 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             } else if (this.sharedService.ledenlijstFilter.crew && this.alleLeden[i].DDWV_CREW == true) {
                 tonen = true;
             } else if (this.sharedService.ledenlijstFilter.sleepvliegers && this.alleLeden[i].SLEEPVLIEGER == true) {
+                tonen = true;
+            } else if (this.sharedService.ledenlijstFilter.gastenVliegers && this.alleLeden[i].GASTENVLIEGER == true) {
                 tonen = true;
             }
 
