@@ -166,6 +166,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
     zoekString: string;
     zoekTimer: number;                  // kleine vertraging om data ophalen te beperken
+    refreshTimer: number;                  // kleine vertraging om data ophalen te beperken
     deleteMode: boolean = false;        // zitten we in delete mode om starts te kunnen verwijderen
     trashMode: boolean = false;         // zitten in restore mode om starts te kunnen terughalen
 
@@ -256,6 +257,8 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         if (this.roosterAbonnement)     this.roosterAbonnement.unsubscribe();
         if (this.dienstenAbonnement)    this.dienstenAbonnement.unsubscribe();
         if (this.datumAbonnement)       this.datumAbonnement.unsubscribe();
+
+        clearTimeout(this.refreshTimer);
     }
 
     // mag de ingelogde gebruiker starts voor iedereen invullen of alleen voor zichzelf
@@ -340,6 +343,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     // Opvragen van de data via de api
     opvragen() {
         let queryParams: KeyValueArray = {};
+        clearTimeout(this.refreshTimer);
 
         if (this.filterOn) {
             queryParams["OPEN_STARTS"] = "true"
@@ -356,6 +360,8 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
             this.error = e;
             this.isLoading = false;
         });
+
+        this.refreshTimer = window.setTimeout(() => this.opvragen(), 1000 * 60 * 5);  // iedere 5 minuten
     }
 
     // keuze voor startlijst export
