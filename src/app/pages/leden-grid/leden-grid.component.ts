@@ -23,6 +23,7 @@ import {TrackEditorComponent} from "../../shared/components/editors/track-editor
 import {TracksService} from "../../services/apiservice/tracks.service";
 import {TrackRenderComponent} from "./track-render/track-render.component";
 import {DatumRenderComponent} from "../../shared/components/datatable/datum-render/datum-render.component";
+import {DateTime} from "luxon";
 
 
 @Component({
@@ -176,6 +177,7 @@ export class LedenGridComponent implements OnInit {
     magVerwijderen: boolean = false;
     magWijzigen: boolean = false;
     magExporteren: boolean = false;
+    toonBulkEmail: boolean = false;
 
     constructor(private readonly ledenService: LedenService,
                 private readonly loginService: LoginService,
@@ -195,6 +197,7 @@ export class LedenGridComponent implements OnInit {
         this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
         this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
         this.magExporteren = (!ui?.isDDWV && !ui?.isStarttoren) ? true : false;
+        this.toonBulkEmail = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT || ui?.isRooster) ? true : false;
 
         if ((!ui?.isBeheerder) && (!ui?.isBeheerderDDWV)) {
             if (this.loginService.userInfo?.Userinfo?.isDDWV!) {
@@ -349,6 +352,18 @@ export class LedenGridComponent implements OnInit {
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
         xlsx.writeFile(wb, 'leden ' + new Date().toJSON().slice(0, 10) + '.xlsx');
+    }
+
+    bulkEmail() {
+        const ui = this.loginService.userInfo?.LidData;
+        const toEmail: String  = ui!.EMAIL as String;
+        let bcc: String="";
+
+        this.leden.forEach((lid) => {
+            bcc += lid.EMAIL + ","
+        })
+        console.log(bcc);
+        window.location.href = `mailto:${toEmail}?bcc=${bcc}`;
     }
 
     // Wordt aangeroepen bij een dubbel klik op een rij.

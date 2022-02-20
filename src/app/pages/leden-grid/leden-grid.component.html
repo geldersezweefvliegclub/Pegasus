@@ -58,6 +58,8 @@
                             >
                             <app-icon-button class="toolbarBtn" iconNaam="fas Redo" (btnClicked)="opvragen()"
                                              btnColor="btn-primary"></app-icon-button>
+                            <app-icon-button class="toolbarBtn" iconNaam="fas MailBulk" (btnClicked)="bulkEmail()" *ngIf="toonBulkEmail"
+                                             btnColor="btn-secondary"></app-icon-button>
                         </div>
                     </div>
                     <div class="col-4">
