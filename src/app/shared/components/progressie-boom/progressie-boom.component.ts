@@ -106,9 +106,11 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy {
         if (!boomTak.children) {
             nieuwetak.checked = boomTak.IS_BEHAALD == 2
             if (nieuwetak.checked) {
+                console.log
                 const dateParts: string[] = boomTak.INGEVOERD!.substr(0, 10).split('-');
                 const datum = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
 
+              //TODO  console.log(datum, dateParts, boomTak.INGEVOERD, boomTak.INGEVOERD!.substr(0, 10).split('-'));
                 nieuwetak.Instructeur = boomTak.INSTRUCTEUR_NAAM!;
                 nieuwetak.ProgresssieID = boomTak.PROGRESSIE_ID!;
                 nieuwetak.Behaald = datum;

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {VliegtuigenService} from '../../services/apiservice/vliegtuigen.service';
 
 import {faPlane, faRecycle} from '@fortawesome/free-solid-svg-icons';
@@ -27,7 +27,7 @@ import {Router} from "@angular/router";
 import {nummerSort} from '../../utils/Utils';
 import {StartlijstService} from "../../services/apiservice/startlijst.service";
 import {DateTime} from "luxon";
-import {SharedService} from "../../services/shared/shared.service";
+import {SchermGrootte, SharedService} from "../../services/shared/shared.service";
 import {Subscription} from "rxjs";
 
 type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
@@ -96,8 +96,8 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
     // kolom om logboek te zien
     logboekColumn: ColDef[] = [{
         pinned: 'left',
-        maxWidth: 100,
-        initialWidth: 100,
+        maxWidth: 50,
+        initialWidth: 50,
         resizable: false,
         suppressSizeToFit:true,
         hide: false,
@@ -161,13 +161,7 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
         // plaats de juiste kolommen in het grid
         this.kolomDefinitie();
         this.opvragen();
-
-        const ui = this.loginService.userInfo?.Userinfo;
-        this.magClubkistWijzigen = (ui?.isBeheerder! || ui?.isCIMT!);
-        this.magToevoegen = (!ui?.isDDWV) ? true : false;
-        this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
-        this.magWijzigen = (!ui?.isDDWV) ? true : false;
-        this.magExporten = (!ui?.isDDWV) ? true : false;
+        this.zetPermissie();
 
         // Als startlijst is aangepast, moeten we grid opnieuw laden
         this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
@@ -179,6 +173,20 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         if (this.dbEventAbonnement)     this.dbEventAbonnement.unsubscribe();
+    }
+
+    @HostListener('window:resize', ['$event'])
+    onWindowResize() {
+        if(this.sharedService.getSchermSize() == SchermGrootte.xs)
+        {
+            this.kolomDefinitie();
+            this.zetPermissie();
+        }
+        else
+        {
+            this.kolomDefinitie();
+            this.zetPermissie();
+        }
     }
 
     // openen van popup om de data van een nieuw vliegtuig te kunnen invoeren
@@ -214,6 +222,23 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
         this.opvragen();
     }
 
+    zetPermissie() {
+        const ui = this.loginService.userInfo?.Userinfo;
+        this.magToevoegen = (!ui?.isDDWV) ? true : false;
+
+        if (this.sharedService.getSchermSize() < SchermGrootte.lg) {
+            this.magVerwijderen = false;
+            this.magWijzigen = false;
+        }
+        else {
+            this.magClubkistWijzigen = (ui?.isBeheerder! || ui?.isCIMT!);
+
+            this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
+            this.magWijzigen = (!ui?.isDDWV) ? true : false;
+            this.magExporten = (!ui?.isDDWV) ? true : false;
+        }
+    }
+
     // Welke kolommen moet worden getoond in het grid
     kolomDefinitie() {
         if (!this.deleteMode) {
@@ -225,6 +250,25 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
                 this.columns = this.deleteColumn.concat(this.dataColumns);
             }
         }
+
+        let kolom: ColDef;
+        kolom = this.columns.find(c => c.field == "CLUBKIST") as ColDef;
+        kolom.hide = this.sharedService.getSchermSize() == SchermGrootte.xs;
+
+        kolom = this.columns.find(c => c.field == "FLARMCODE") as ColDef;
+        kolom.hide = this.sharedService.getSchermSize() <= SchermGrootte.md;
+
+        kolom = this.columns.find(c => c.field == "ZELFSTART") as ColDef;
+        kolom.hide = this.sharedService.getSchermSize() == SchermGrootte.xs;
+
+        kolom = this.columns.find(c => c.field == "SLEEPKIST") as ColDef;
+        kolom.hide = this.sharedService.getSchermSize() == SchermGrootte.xs;
+
+        kolom = this.columns.find(c => c.field == "TMG") as ColDef;
+        kolom.hide = this.sharedService.getSchermSize() == SchermGrootte.xs;
+
+        kolom = this.columns.find(c => c.field == "OPMERKINGEN") as ColDef;
+        kolom.hide = this.sharedService.getSchermSize() == SchermGrootte.xs;
     }
 
     // Opvragen van de data via de api

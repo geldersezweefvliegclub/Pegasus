@@ -50,6 +50,7 @@ import { DagRoosterComponent } from './components/dag-rooster/dag-rooster.compon
 import { SuccessComponent } from './components/success/success.component';
 import { InstructieGrafiekComponent } from './components/recency/instructie-grafiek/instructie-grafiek.component';
 import { BoekingEditorComponent } from './components/editors/boeking-editor/boeking-editor.component';
+import { DatumKortRenderComponent } from './components/datatable/datum-kort-render/datum-kort-render.component';
 
 @NgModule({
     imports: [
@@ -107,7 +108,8 @@ import { BoekingEditorComponent } from './components/editors/boeking-editor/boek
     DagRoosterComponent,
     SuccessComponent,
     InstructieGrafiekComponent,
-    BoekingEditorComponent
+    BoekingEditorComponent,
+    DatumKortRenderComponent
   ],
     exports: [
         LidEditorComponent,

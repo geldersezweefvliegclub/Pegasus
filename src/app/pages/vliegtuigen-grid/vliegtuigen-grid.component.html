@@ -10,6 +10,7 @@
         <div id="data">
             <app-datatable
                     id="vliegtuiggrid"
+                    [pagination]="false"
                     [rowData]="data"
                     [columnDefs]="columns"
                     [loading]="isLoading"
@@ -18,8 +19,8 @@
                     (rowDoubleClicked)="openEditor($event)"
                     class="h-100 mt-n8"></app-datatable>
         </div>
-        <div class="row justify-content-start" id="toolbar">
-            <div class="col-2" *ngIf="this.magToevoegen">
+        <div class="row justify-content-start mt-2" id="toolbar">
+            <div class="col-4 col-xl-2" *ngIf="this.magToevoegen">
                 <app-icon-button class="toolbarBtn"
                                  tekst="Toevoegen"
                                  iconNaam="far PlusSquare" (btnClicked)="addVliegtuig()"
@@ -35,24 +36,25 @@
                     </label>
                 </div>
             </div>
-            <div class="col-10">
+            <div class="col-8 col-xl-10">
                 <div class="row justify-content-between" id="zoekbar">
-                    <div class="col-8">
+                    <div class="col-12 col-sm-8 flex-grow-1">
                         <div class="d-flex justify-content-begin align-items-end text-nowrap">
                             <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>
                             <input id="zoekInput"
                                    type="search"
                                    class="form-control"
                                    [(ngModel)]="zoekString"
+                                   [ngClass.lt-md]="'w-100'"
                                    name="zoekString"
                                    (keyup)="opvragen()"
                                    (search)="opvragen()"
                             >
-                            <app-icon-button class="toolbarBtn" iconNaam="fas Redo" (btnClicked)="opvragen()"
+                            <app-icon-button class="toolbarBtn d-none d-md-block" iconNaam="fas Redo" (btnClicked)="opvragen()"
                                              btnColor="btn-primary"  ></app-icon-button>
                         </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-4" *ngIf="this.magVerwijderen">
                         <div class="d-flex justify-content-end">
                             <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
                                              btnColor="btn-secondary" *ngIf="this.magVerwijderen && !deleteMode"

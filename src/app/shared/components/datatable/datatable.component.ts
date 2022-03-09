@@ -1,4 +1,14 @@
-import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    HostListener,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    SimpleChanges
+} from '@angular/core';
 import {
     ColDef,
     GridApi,
@@ -69,6 +79,11 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
+    @HostListener('window:resize', ['$event'])
+    onWindowResize() {
+        this.sizeColumnsToFit();
+    }
+
     gridReady(ready: any) {
         console.log(this.id, "grid ready")
         this.api = ready.api;
@@ -92,6 +107,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
+        this.options.pagination = this.pagination;
         if (this.api) {
             this.api.setColumnDefs(this.columnDefs);
             this.api.setRowData(this.rowData);

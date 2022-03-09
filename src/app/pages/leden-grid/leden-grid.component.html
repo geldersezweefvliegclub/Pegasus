@@ -10,6 +10,7 @@
             <app-datatable
                     id="ledengrid"
                     rowHeight=70
+                    [pagination]="toonBladwijzer"
                     [rowData]="leden"
                     [columnDefs]="columns"
                     [loading]="isLoading"
@@ -17,7 +18,7 @@
                     (rowDoubleClicked)="bewerkLid($event)"
                     class="h-100 mt-n8"></app-datatable>
         </div>
-        <div class="row justify-content-start" id="toolbar">
+        <div class="row justify-content-start mt-2" id="toolbar">
             <div class="col-4">
                 <div class="d-flex">
                     <app-icon-button class="toolbarBtn"
@@ -45,24 +46,25 @@
             </div>
             <div class="col-8">
                 <div class="row justify-content-between" id="zoekbar">
-                    <div class="col-8">
+                    <div class="col-8 flex-grow-1" [gdColumn.lt-md]="12">
                         <div class="d-flex justify-content-begin align-items-end text-nowrap">
                             <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>
                             <input id="zoekInput"
                                    type="search"
                                    class="form-control"
                                    [(ngModel)]="zoekString"
+                                   [ngClass.lt-md]="'w-100'"
                                    name="zoekString"
                                    (keyup)="opvragen()"
                                    (search)="opvragen()"
                             >
-                            <app-icon-button class="toolbarBtn" iconNaam="fas Redo" (btnClicked)="opvragen()"
+                            <app-icon-button class="toolbarBtn d-none d-md-block" iconNaam="fas Redo" (btnClicked)="opvragen()"
                                              btnColor="btn-primary"></app-icon-button>
                             <app-icon-button class="toolbarBtn" iconNaam="fas MailBulk" (btnClicked)="bulkEmail()" *ngIf="toonBulkEmail"
                                              btnColor="btn-secondary"></app-icon-button>
                         </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-4" *ngIf="this.magVerwijderen">
                         <div class="d-flex justify-content-end">
                             <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
                                              btnColor="btn-secondary" *ngIf="this.magVerwijderen && !deleteMode"

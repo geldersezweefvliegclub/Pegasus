@@ -20,7 +20,7 @@
                                 <fa-icon [icon]="restoreIcon" class="restoreBtn"></fa-icon>
                             </button>
                         </td>
-                        <td *ngIf="toonLid" class="naamCell">
+                        <td *ngIf="toonLid && lidColumn()" class="naamCell">
                             <div class="d-flex">
                                 <app-avatar [url]="trk.lid.AVATAR" *ngIf="trk.lid"></app-avatar>
                                 <div class="naam text-nowrap"><a aria-label="Naar dashboard"
@@ -30,6 +30,13 @@
                             </div>
                         </td>
                         <td style="width: 100%;">
+                            <div class="d-flex" *ngIf="!lidColumn()">
+                                <app-avatar [url]="trk.lid.AVATAR" *ngIf="trk.lid"></app-avatar>
+                                <div class="naam text-nowrap"><a aria-label="Naar dashboard"
+                                                                 [routerLink]="['/dashboard']"
+                                                                 [queryParams]='{lidID: trk.LID_ID}'>{{trk.LID_NAAM}}</a>
+                                </div>
+                            </div>
                             <div class="trackHeader">
                                 Op {{datumString(trk.INGEVOERD)}} om {{tijdString(trk.INGEVOERD)}}
                                 schreef {{trk.INSTRUCTEUR_NAAM}}
@@ -39,7 +46,7 @@
                                 {{trk.TEKST}}
                             </div>
                         </td>
-                        <td class="replyColumn">
+                        <td class="replyColumn" *ngIf="!deleteMode">
                             <app-icon-button iconNaam="fas Reply" class="tracksReplyIcon" (btnClicked)="replyTrackEditor(trk)"></app-icon-button>
                         </td>
                     </tr>

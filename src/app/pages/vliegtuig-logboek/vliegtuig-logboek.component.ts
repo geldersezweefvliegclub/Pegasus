@@ -328,6 +328,9 @@ export class VliegtuigLogboekComponent implements OnInit {
 
     // Export naar excel
     exportDataset() {
+        // maak een kopie, anders wordt dataset aangepast en dan gaat het later fout
+        const toExcel:HeliosLogboekDataset[]  = JSON.parse(JSON.stringify(this.data));
+
         // Datum in juiste formaat zetten
         this.data.forEach((dag) => {
             const d = DateTime.fromSQL(dag.DATUM!);

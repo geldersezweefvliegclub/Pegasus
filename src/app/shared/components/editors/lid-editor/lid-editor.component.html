@@ -20,7 +20,7 @@
 
 <form *ngIf="this.lid">
     <div class="row">
-        <div class="col-8">
+        <div class="col-12 col-xl-7 col-xxl-8">
             <app-pegasus-card [titel]="titel" [subtitel]="subtitel" class="h-100" [img]="avatar">
                 <div avatar>
                     <app-image-crop (opslaan)="uploadFoto($event)" (cropped)="setAvatar($event)"
@@ -34,53 +34,53 @@
                 <fieldset [disabled]="isVerwijderMode || isRestoreMode || isDisabled('BASIS')">
                     <div #persoonGroup="ngModelGroup" ngModelGroup="persoonGroup" appWachtwoordMatchValidator>
                         <div class="row">
-                            <div class="col-5">
+                            <div class="col-12 col-md-5 ">
                                 <label for="voornaam" class="form-label">Voornaam</label>
                                 <input type="text" name="voornaam" class="form-control" id="voornaam"
                                        [(ngModel)]="lid.VOORNAAM">
                             </div>
-                            <div class="col-2">
+                            <div class="col-4 col-md-2">
                                 <label for="tussenvoegsel" class="form-label">Tussenvoegsel</label>
                                 <input type="text" name="tussenvoegsel" class="form-control" id="tussenvoegsel"
                                        [(ngModel)]="lid.TUSSENVOEGSEL">
                             </div>
-                            <div class="col-5">
+                            <div class="col-8 col-md-5">
                                 <label for="achternaam" class="form-label">Achternaam</label>
                                 <input type="text" name="achternaam" class="form-control" id="achternaam" required
                                        [(ngModel)]="lid.ACHTERNAAM">
                             </div>
                         </div>
                         <div class="row mt-2">
-                            <div class="col-5">
+                            <div class="col-12 col-md-5">
                                 <label for="adres" class="form-label">Adres</label>
                                 <input type="text" name="adres" class="form-control" id="adres"
                                        [(ngModel)]="lid.ADRES">
                             </div>
-                            <div class="col-2">
+                            <div class="col-5 col-md-2">
                                 <label for="postcode" class="form-label">Postcode</label>
                                 <input type="text" name="postcode" class="form-control" id="postcode"
                                        [(ngModel)]="lid.POSTCODE">
                             </div>
-                            <div class="col-5">
+                            <div class="col-7 col-md-5">
                                 <label for="woonplaats" class="form-label">Woonplaats</label>
                                 <input type="text" name="woonplaats" class="form-control" id="woonplaats"
                                        [(ngModel)]="lid.WOONPLAATS">
                             </div>
                         </div>
                         <div class="row mt-2">
-                            <div class="col-4">
+                            <div class="col-6 col-md-4">
                                 <label for="telefoon" class="form-label">Telefoon</label>
                                 <input type="tel" name="telefoon" class="form-control" id="telefoon"
                                        appTelefoonValidator
                                        [(ngModel)]="lid.TELEFOON">
                             </div>
-                            <div class="col-4">
+                            <div class="col-6 col-md-4">
                                 <label for="mobiel" class="form-label">Mobiel</label>
                                 <input type="tel" name="mobiel" class="form-control" id="mobiel"
                                        appTelefoonValidator
                                        [(ngModel)]="lid.MOBIEL">
                             </div>
-                            <div class="col-4">
+                            <div class="col-6 col-md-4">
                                 <label for="noodnummer" class="form-label">Noodnummer</label>
                                 <input type="tel" name="noodnummer" class="form-control" id="noodnummer"
                                        appTelefoonValidator
@@ -88,7 +88,7 @@
                             </div>
                         </div>
                         <div class="row mt-2">
-                            <div class="col-4">
+                            <div class="col-10 col-md-4">
                                 <label class="form-label" for="geboortedatum">Geboortedatum</label>
                                 <div class="input-group">
                                     <input name="geboortedatum" class="form-control" placeholder="dd-mm-yyyy"
@@ -105,12 +105,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-4">
+                            <div class="col-12 col-md-4">
                                 <label for="email" class="form-label">Email</label>
                                 <input type="email" name="email" [(ngModel)]="lid.EMAIL" class="form-control"
                                        id="email" email required>
                             </div>
-                            <div class="col-4 d-flex align-items-center mt-4">
+                            <div class="col-12 col-md-4 d-flex align-items-center mt-4">
                                 <div class="row w-100">
                                     <div class="col-12">
                                         <input type="checkbox" name="privacy" class="form-check-inline" id="privacy"
@@ -143,7 +143,7 @@
                             </div>
                         </div>
                         <div class="row mt-2">
-                            <div class="col-4">
+                            <div class="col-12 col-md-4">
                                 <div class="d-flex flex-row">
                                     <div>
                                         <label class="form-label" for="MEDICAL">Geldigheid medical</label>
@@ -174,32 +174,32 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-4">
-                                <label for="sleutel1" class="form-label">KNVvL lidnummer</label>
+                            <div class="col-10 col-md-4">
+                                <label for="knvvl" class="form-label">KNVvL lidnummer</label>
                                 <input type="text" name="knvvl" class="form-control" id="knvvl"
                                        [(ngModel)]="lid.KNVVL_LIDNUMMER">
                             </div>
-                            <div class="col-4">
-                                <label for="sleutel1" class="form-label">Brevet nummer</label>
+                            <div class="col-10 col-md-4">
+                                <label for="brevet" class="form-label">Brevet nummer</label>
                                 <input type="text" name="brevet" class="form-control" id="brevet"
                                        [(ngModel)]="lid.BREVET_NUMMER">
                             </div>
                         </div>
                         <div class="row mt-2">
-                            <div class="col-4"></div>
-                            <div class="col-4">
+                            <div class="col-4 d-none d-xs-block d-md-block"></div>
+                            <div class="col-6 col-md-4">
                                 <label for="sleutel1" class="form-label">Sleutel GeZC</label>
                                 <input type="text" name="sleutel1" class="form-control" id="sleutel1"
                                        [(ngModel)]="lid.SLEUTEL1">
                             </div>
-                            <div class="col-4">
+                            <div class="col-6 col-md-4">
                                 <label for="sleutel2" class="form-label">Sleutel Terlet</label>
                                 <input type="text" name="sleutel2" class="form-control" id="sleutel2"
                                        [(ngModel)]="lid.SLEUTEL2">
                             </div>
                         </div>
                         <div class="row mt-2" *ngIf="isVisible('wachtwoorden')">
-                            <div class="col-6">
+                            <div class="col-12 col-md-6 col-xl-5 col-xxl-4">
                                 <label class="form-label" for="wachtwoord">
                                     Wachtwoord
                                 </label>
@@ -215,7 +215,7 @@
                                             [icon]="oogIcon"></fa-icon></span>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-12 col-md-6 col-xl-5 col-xxl-4">
                                 <label class="form-label" for="herhaalwachtwoord">
                                     Herhaal wachtwoord
                                 </label>
@@ -236,7 +236,7 @@
                 </fieldset>
             </app-pegasus-card>
         </div>
-        <div class="col-4">
+        <div class="col-12 col-xl-5 col-xxl-4 mt-4 mt-sm-0">
             <app-pegasus-card class="kleineKaart"
                               titel="Lidinformatie"
                               subtitel="Toegekende functies en andere informatie over het lidmaatschap"
@@ -298,7 +298,7 @@
                     </div>
                     <hr>
                     <div class="row mt-2">
-                        <div class="col-4">
+                        <div class="col-6 col-sm-4">
                             <div class="text-nowrap">
                                 <input class="form-check-inline" type="checkbox" id="CIMT" name="CIMT"
                                        [disabled]="isDisabled('CIMT')"
@@ -326,7 +326,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-6 col-sm-4">
                             <div class="text-nowrap">
                                 <input class="form-check-inline" type="checkbox" id="DDWV_CREW" name="DDWV_CREW"
                                        [disabled]="isDisabled('DDWV_CREW')"
@@ -346,7 +346,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-6 col-sm-4">
                             <div class="text-nowrap">
                                 <input class="form-check-inline" type="checkbox" id="ROOSTER" name="ROOSTER"
                                        [disabled]="isDisabled('ROOSTER')"
@@ -375,7 +375,7 @@
                         </div>
                     </div>
                     <div class="row mt-2">
-                        <div class="col-4">
+                        <div class="col-6 col-sm-4">
                             <div class="text-nowrap">
                                 <input class="form-check-inline" type="checkbox" id="LIERIST" name="LIERIST"
                                        [disabled]="isDisabled('LIERIST')"
@@ -385,7 +385,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-6 col-sm-4">
                             <div class="text-nowrap">
                                 <input class="form-check-inline" type="checkbox" id="STARTLEIDER" name="STARTLEIDER"
                                        [disabled]="isDisabled('STARTLEIDER')"
@@ -396,7 +396,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-6 col-sm-4">
                             <div class="text-nowrap">
                                 <input class="form-check-inline" type="checkbox" id="SLEEPVLIEGER" name="SLEEPVLIEGER"
                                        [disabled]="isDisabled('SLEEPVLIEGER')"

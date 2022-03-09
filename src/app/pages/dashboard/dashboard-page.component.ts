@@ -6,7 +6,7 @@ import {
     faTachometerAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import {LoginService} from "../../services/apiservice/login.service";
-import {HeliosLid, HeliosType} from "../../types/Helios";
+import {HeliosLid, HeliosLogboekDataset, HeliosType} from "../../types/Helios";
 import {ActivatedRoute, Router} from "@angular/router";
 import {LedenService} from "../../services/apiservice/leden.service";
 import {TypesService} from "../../services/apiservice/types.service";
@@ -159,13 +159,16 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
             const eindDatum: DateTime = DateTime.fromObject( {year: this.datum.year, month: 12, day: 31});
 
             this.startlijstService.getLogboek(this.lidData.ID, startDatum, eindDatum).then((dataset) => {
+
+                // maak een kopie, anders wordt dataset aangepast en dan gaat het later fout
+                const toExcel: HeliosLogboekDataset[] = JSON.parse(JSON.stringify(dataset));
                 // Datum in juiste formaat zetten
-                dataset.forEach((start) => {
+                toExcel.forEach((start) => {
                     const d = DateTime.fromSQL(start.DATUM!);
                     start.DATUM = d.day + "-" + d.month + "-" + d.year
                 })
 
-                let ws = xlsx.utils.json_to_sheet(dataset);
+                let ws = xlsx.utils.json_to_sheet(toExcel);
                 const wb: xlsx.WorkBook = xlsx.utils.book_new();
                 xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
                 xlsx.writeFile(wb, 'logboek ' + this.datum.year.toString() + '-' + new Date().toJSON().slice(0, 10) + '.xlsx');

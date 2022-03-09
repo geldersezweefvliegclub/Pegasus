@@ -18,16 +18,21 @@
                     (rowDoubleClicked)="openEditor($event)"
                     class="h-100 mt-n8"></app-datatable>
         </div>
-        <div class="row justify-content-start" id="toolbar">
-            <div class="col-xl-3 col-sm-4">
+        <div class="row justify-content-start mt-2" id="toolbar">
+            <div class="col-4 col-xl-3">
                 <div class="d-flex flex-row">
                     <input type="checkbox" class="btn-check" id="filterBtn" name="filterMode"
                            [(ngModel)]="filterOn"
                            (click)="filter()">
+                    <app-icon-button class="btn btn-outline-primary"
+                                     tekst="Filter"
+                                     iconNaam="fas Filter" btnColor="btn-"></app-icon-button>
+                    <!--
                     <label class="btn btn-outline-primary recycleBtn" for="filterBtn">
                         <fa-icon [icon]="filterIcon"></fa-icon>
                         Filter
                     </label>
+                    -->
 
                     <div>
                         <app-icon-button class="toolbarBtn"
@@ -47,10 +52,10 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-9 col-sm-8">
-                <div class="row justify-content-between" id="zoekbar">
+            <div class="col-8 col-xl-9">
+                <div class="d-flex flex-row justify-content-between" id="zoekbar">
                     <div class="col-8">
-                        <div class="d-flex justify-content-begin al8ign-items-end text-nowrap">
+                        <div class="d-flex justify-content-begin align-items-end text-nowrap"  *ngIf="toonZoeken">
                             <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>
                             <input id="zoekInput"
                                    type="search"

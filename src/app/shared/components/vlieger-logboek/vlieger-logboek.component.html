@@ -1,7 +1,7 @@
 <app-error [error]="error"></app-error>
 <app-success [success]="success"></app-success>
 
-<div class="h-100">
+<div class="h-100 mobielHoogte">
     <app-datatable
             [id]=id
             [rowData]="data"
@@ -10,6 +10,7 @@
             [rowClassRules]="rowClassRules"
             [frameworkComponents]="frameworkComponents"
             (rowDoubleClicked)="openStartEditor($event)"
+            [pagination]="false"
             class="h-100">
     </app-datatable>
 

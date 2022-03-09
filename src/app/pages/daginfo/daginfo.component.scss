@@ -24,9 +24,15 @@ textarea {
 
 .tekstregels {
   position: absolute;
-  align-self: flex-end;
+  align-items: end;
+  display: flex;
+  flex-direction: column;
   right: 15px;
   top: 12px;
+}
+
+#TEKSTREGELS {
+  width: 50px;
 }
 
 .midden {
@@ -40,7 +46,6 @@ textarea {
 ng-select.ng-invalid {
   border: 1px solid #ffc107;
 }
-
 
 .svgImage {
   width: 50%

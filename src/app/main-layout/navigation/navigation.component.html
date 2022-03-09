@@ -64,6 +64,7 @@
                 </a>
 
                 <ngb-datepicker
+                    *ngIf="!kleineDatum()"
                     #d
                     name="datumIngave"
                     class="navCalendar w-100"
@@ -76,7 +77,15 @@
 
                     [dayTemplate]="t">
                 </ngb-datepicker>
+
+                <div *ngIf="kleineDatum()" class="list-group-item d-flex" >
+                    <input ngbDatepicker disabled="true" [(ngModel)]="kalenderIngave" class="kleineDatum">
+                    <app-icon-button iconNaam="far Calendar" (btnClicked)="popupKalender.openPopup()"
+                                             btnColor="btn-primary"></app-icon-button>
+                </div>
             </div>
+
+
         </div>
     </div>
 
@@ -87,4 +96,13 @@
     </ng-template>
 </nav>
 
-
+<app-popup-kalender
+    [daginfo]="daginfo"
+    [diensten]="diensten"
+    [vliegdagen]="vliegdagen"
+    [kalenderEersteDatum]="kalenderEersteDatum"
+    [kalenderLaatsteDatum]="kalenderLaatsteDatum"
+    [kalenderIngave]="kalenderIngave"
+    (dateSelect)="NieuweDatum($event)"
+    (navigate)="KalenderAndereMaand($event)"
+></app-popup-kalender>

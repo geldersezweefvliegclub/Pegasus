@@ -187,6 +187,7 @@ export class DaginfoComponent implements OnInit, OnDestroy{
 
     // opslaan van de ingevoerde dag rapport
     opslaanDagInfo() {
+        console.log(this.dagInfo.DATUM);
         const datum = this.dagInfo.DATUM!.split('-');
         const d = datum[2] + '-' + datum[1] + '-' + datum[0];
 

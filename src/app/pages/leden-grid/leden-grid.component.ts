@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
 import {faRecycle, faUsers} from '@fortawesome/free-solid-svg-icons';
 import {HeliosLedenDataset, HeliosTrack} from '../../types/Helios';
 import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
@@ -15,7 +15,7 @@ import {AdresRenderComponent} from './adres-render/adres-render.component';
 import {TelefoonRenderComponent} from './telefoon-render/telefoon-render.component';
 import {EmailRenderComponent} from './email-render/email-render.component';
 import {LedenFilterComponent} from '../../shared/components/leden-filter/leden-filter.component';
-import {SharedService} from '../../services/shared/shared.service';
+import {SchermGrootte, SharedService} from '../../services/shared/shared.service';
 import {NaamRenderComponent} from './naam-render/naam-render.component';
 import {Router} from '@angular/router';
 import {nummerSort} from '../../utils/Utils';
@@ -23,7 +23,6 @@ import {TrackEditorComponent} from "../../shared/components/editors/track-editor
 import {TracksService} from "../../services/apiservice/tracks.service";
 import {TrackRenderComponent} from "./track-render/track-render.component";
 import {DatumRenderComponent} from "../../shared/components/datatable/datum-render/datum-render.component";
-import {DateTime} from "luxon";
 
 
 @Component({
@@ -47,7 +46,7 @@ export class LedenGridComponent implements OnInit {
             sortable: false,
             cellRenderer: 'avatarRender',
             initialWidth: 100,
-            width: 110,
+            width: 80,
             resizable: false,
             suppressSizeToFit: true,
             cellClass: 'geenDots'
@@ -136,8 +135,8 @@ export class LedenGridComponent implements OnInit {
     // kolom om vlieger track aan te maken
     aanmakenTrackColumn: ColDef[] = [{
         pinned: 'left',
-        maxWidth: 100,
-        initialWidth: 100,
+        maxWidth: 60,
+        initialWidth: 60,
         resizable: false,
         suppressSizeToFit: true,
         hide: false,
@@ -178,7 +177,7 @@ export class LedenGridComponent implements OnInit {
     magWijzigen: boolean = false;
     magExporteren: boolean = false;
     toonBulkEmail: boolean = false;
-
+    toonBladwijzer: boolean = false;
     constructor(private readonly ledenService: LedenService,
                 private readonly loginService: LoginService,
                 private readonly trackService: TracksService,
@@ -191,13 +190,42 @@ export class LedenGridComponent implements OnInit {
         // plaats de juiste kolommen in het grid
         this.kolomDefinitie();
         this.opvragen();
+        this.zetPermissie();
+    }
 
+    @HostListener('window:resize', ['$event'])
+    onWindowResize() {
+        if(this.sharedService.getSchermSize() == SchermGrootte.xs)
+        {
+            this.toonBladwijzer = false;
+            this.kolomDefinitie();
+            this.zetPermissie();
+        }
+        else
+        {
+            this.toonBladwijzer = true;
+            this.kolomDefinitie();
+            this.zetPermissie();
+        }
+    }
+
+    zetPermissie(): void {
         const ui = this.loginService.userInfo?.Userinfo;
-        this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
-        this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
-        this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
-        this.magExporteren = (!ui?.isDDWV && !ui?.isStarttoren) ? true : false;
-        this.toonBulkEmail = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT || ui?.isRooster) ? true : false;
+
+        if (this.sharedService.getSchermSize() < SchermGrootte.lg) {
+            this.magToevoegen = false;
+            this.magVerwijderen = false;
+            this.magWijzigen = false;
+            this.magExporteren = false;
+            this.toonBulkEmail = false;
+        }
+        else {
+            this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
+            this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
+            this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
+            this.magExporteren = (!ui?.isDDWV && !ui?.isStarttoren) ? true : false;
+            this.toonBulkEmail = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT || ui?.isRooster) ? true : false;
+        }
 
         if ((!ui?.isBeheerder) && (!ui?.isBeheerderDDWV)) {
             if (this.loginService.userInfo?.Userinfo?.isDDWV!) {
@@ -206,8 +234,6 @@ export class LedenGridComponent implements OnInit {
             }
         }
     }
-
-
     // openen van popup om lid data van een nieuw lid te kunnen invoeren
     addLid(): void {
         this.router.navigate(['profiel'], {queryParams: {lidID: -1}}).then();
@@ -230,7 +256,7 @@ export class LedenGridComponent implements OnInit {
         const ui = this.loginService.userInfo?.Userinfo;
 
         if (!this.deleteMode) {
-            if (ui?.isInstructeur || ui?.isCIMT || ui?.isBeheerder) {
+            if ((ui?.isInstructeur || ui?.isCIMT || ui?.isBeheerder) && this.sharedService.getSchermSize() > SchermGrootte.xs){
                 this.columns = this.aanmakenTrackColumn.concat(this.dataColumns);
             }
             else {
@@ -244,24 +270,45 @@ export class LedenGridComponent implements OnInit {
             }
         }
 
+        let kolom: ColDef;
+        kolom = this.columns.find(c => c.field == "ADRES") as ColDef;
+        kolom.hide = this.sharedService.getSchermSize() == SchermGrootte.xs;
 
-        /*
+        kolom = this.columns.find(c => c.field == "CIMT") as ColDef;
+        kolom.hide = this.sharedService.getSchermSize() <= SchermGrootte.lg;
 
+        kolom = this.columns.find(c => c.field == "INSTRUCTEUR") as ColDef;
+        kolom.hide = this.sharedService.getSchermSize() == SchermGrootte.xs;
 
-        if (!this.deleteMode) {
-            this.columns = this.dataColumns;
-            // toevoegen van add track kolom
+        kolom = this.columns.find(c => c.field == "STARTLEIDER") as ColDef;
+        kolom.hide = this.sharedService.getSchermSize() == SchermGrootte.xs;
 
-            }
-        } else {
-            if (this.trashMode) {
-                this.columns = this.restoreColumn.concat(this.dataColumns);
-            } else {
-                this.columns = this.deleteColumn.concat(this.dataColumns);
-            }
+        kolom = this.columns.find(c => c.field == "LIERIST") as ColDef;
+        kolom.hide = this.sharedService.getSchermSize() == SchermGrootte.xs;
+
+        kolom = this.columns.find(c => c.field == "STATUS") as ColDef;
+        if (ui?.isInstructeur || ui?.isCIMT || ui?.isBeheerder){
+            kolom.hide = this.sharedService.getSchermSize() <= SchermGrootte.md;
+        }
+        else  {
+            kolom.hide = true;
         }
 
-         */
+        kolom = this.columns.find(c => c.field == "LIDTYPE") as ColDef;
+        if (ui?.isInstructeur || ui?.isCIMT || ui?.isBeheerder || ui?.isBeheerderDDWV){
+            kolom.hide = this.sharedService.getSchermSize() <= SchermGrootte.xl;
+        }
+        else  {
+            kolom.hide = true;
+        }
+
+        kolom = this.columns.find(c => c.field == "ZUSTERCLUB") as ColDef;
+        if (ui?.isInstructeur || ui?.isCIMT || ui?.isBeheerder || ui?.isBeheerderDDWV){
+            kolom.hide = this.sharedService.getSchermSize() <= SchermGrootte.xl;
+        }
+        else  {
+            kolom.hide = true;
+        }
     }
 
     // Opvragen van de data via de api

@@ -1,7 +1,12 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 import {fas} from '@fortawesome/free-solid-svg-icons';
 import {far, IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {FlipProp} from '@fortawesome/fontawesome-svg-core';
+import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
+import {VliegtuigenService} from "../../../services/apiservice/vliegtuigen.service";
+import {StartlijstService} from "../../../services/apiservice/startlijst.service";
+import {LoginService} from "../../../services/apiservice/login.service";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-icon-button',
@@ -18,9 +23,13 @@ export class IconButtonComponent implements OnInit {
     @Output() btnClicked: EventEmitter<void> = new EventEmitter<void>();
 
     faIcon: IconDefinition;
+    toonTekst: boolean = true;
 
+    constructor(private readonly sharedService: SharedService) {}
 
     ngOnInit(): void {
+        this.toonTekst = (this.sharedService.getSchermSize() > SchermGrootte.md)
+
         if (this.iconNaam) {
             let parts: string[] = this.iconNaam.split(' ');
 
@@ -46,5 +55,10 @@ export class IconButtonComponent implements OnInit {
 
     buttonClicked() {
         this.btnClicked.emit();
+    }
+
+    @HostListener('window:resize', ['$event'])
+    onWindowResize() {
+        this.toonTekst = (this.sharedService.getSchermSize() > SchermGrootte.md)
     }
 }

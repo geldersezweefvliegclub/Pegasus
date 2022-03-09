@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {StartlijstService} from '../../services/apiservice/startlijst.service';
 import {CheckboxRenderComponent} from '../../shared/components/datatable/checkbox-render/checkbox-render.component';
 import {faRecycle, faDownload} from '@fortawesome/free-solid-svg-icons';
@@ -20,7 +20,7 @@ import {LandingstijdRenderComponent} from '../../shared/components/datatable/lan
 import {TijdInvoerComponent} from '../../shared/components/editors/tijd-invoer/tijd-invoer.component';
 import {StartEditorComponent} from '../../shared/components/editors/start-editor/start-editor.component';
 import {Subscription} from 'rxjs';
-import {SharedService} from '../../services/shared/shared.service';
+import {SchermGrootte, SharedService} from '../../services/shared/shared.service';
 import {nummerSort, tijdSort} from '../../utils/Utils';
 import {ExportStartlijstComponent} from "./export-startlijst/export-startlijst.component";
 import {RoosterService} from "../../services/apiservice/rooster.service";
@@ -173,6 +173,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     trashMode: boolean = false;         // zitten in restore mode om starts te kunnen terughalen
 
     filterOn: boolean = false;
+    toonZoeken: boolean = true;
 
     private datumAbonnement: Subscription;         // volg de keuze van de kalender
     datum: DateTime;                       // de gekozen dag in de kalender
@@ -331,8 +332,16 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         this.opvragen();
     }
 
+    @HostListener('window:resize', ['$event'])
+    onWindowResize() {
+        this.kolomDefinitie();
+    }
+
+
     // Welke kolommen moet worden getoond in het grid
     kolomDefinitie() {
+        this.toonZoeken = this.sharedService.getSchermSize() != SchermGrootte.xs
+
         if (!this.deleteMode) {
             this.columns = this.dataColumns;
         } else {

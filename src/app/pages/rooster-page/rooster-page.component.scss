@@ -28,6 +28,10 @@ input[type='checkbox'] {
   vertical-align: middle;
 }
 
+.DatumKolom {
+
+}
+
 .Maandag {
   background-color: #E0E2DB;
 }
@@ -131,6 +135,7 @@ thead {
   position: sticky;
   top: 0;
   border-bottom: 1px solid #939393 ;
+  z-index: 10;
 }
 
 .kolomRechts {

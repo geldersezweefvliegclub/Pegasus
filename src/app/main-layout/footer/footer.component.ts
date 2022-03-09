@@ -1,12 +1,9 @@
 import {Component} from '@angular/core';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faFilter} from "@fortawesome/free-solid-svg-icons/faFilter";
 import {faBars} from "@fortawesome/free-solid-svg-icons";
-import {LoginService} from "../../services/apiservice/login.service";
 
 import {Router} from "@angular/router";
-import {NgbCalendar} from "@ng-bootstrap/ng-bootstrap";
-import {SharedService} from "../../services/shared/shared.service";
+import {SchermGrootte, SharedService} from "../../services/shared/shared.service";
 
 @Component({
     selector: 'app-footer',
@@ -31,7 +28,7 @@ export class FooterComponent {
     menuIcon: IconDefinition = faBars;
 
     toonHamburgerMenu() {
-        return (window.innerWidth < 1200);
+        return (this.sharedService.getSchermSize() <= SchermGrootte.lg);
     }
 
     menuShowHide() {

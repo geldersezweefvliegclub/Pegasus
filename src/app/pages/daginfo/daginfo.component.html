@@ -2,7 +2,7 @@
 <app-success [success]="success"></app-success>
 
 <app-pegasus-card titel="Dag info"
-                  subtitel="Informatie over de vliegdag"
+                  subtitel="Informatie over de vliegdag {{datum.day}}-{{datum.month}}-{{datum.year}}"
                   [icon]="iconCardIcon">
     <div class="tekstregels">
         <label for="TEKSTREGELS" class="form-label">Aantal tekstregels</label>
@@ -20,7 +20,7 @@
     <div class="d-flex flex-column justify-content-between box h-100" *ngIf="!geenToegang">
         <div class="mb-2">
             <div class="row mt-n8 rowDagInfo1">
-                <div class="col-3">
+                <div class="col-12 col-sm-6 col-md-3">
                     <app-pegasus-card id="veldCard"
                                       class="kleineKaart"
                                       titel="Vliegveld"
@@ -56,7 +56,7 @@
                         </div>
                     </app-pegasus-card>
                 </div>
-                <div class="col-3">
+                <div class="col-12 col-sm-6 col-md-3 mt-4 mt-sm-0">
                     <app-pegasus-card id="defaultCard"
                                       class="kleineKaart"
                                       titel="Standaard"
@@ -89,7 +89,7 @@
                         </div>
                     </app-pegasus-card>
                 </div>
-                <div class="col-6">
+                <div class="col-12 col-md-6 mt-4 mt-md-0">
                     <app-pegasus-card id="dienstenCard"
                                       class="kleineKaart"
                                       titel="Diensten"
@@ -108,7 +108,7 @@
             </div>
 
             <div class="row rowDagInfo2" *ngIf="toonUitgebreid">
-                <div class="col-6">
+                <div class="col-12 col-md-6">
                     <app-pegasus-card id="meteoCard"
                                       class="kleineKaart"
                                       titel="Meteo"
@@ -125,7 +125,7 @@
                         </div>
                     </app-pegasus-card>
                 </div>
-                <div class="col-6">
+                <div class="col-12 col-md-6 mt-4 mt-md-0">
                     <app-pegasus-card id="bedrijfCard"
                                       class="kleineKaart"
                                       titel="Vliegbedrijf"
@@ -145,7 +145,7 @@
             </div>
 
             <div class="row rowDagInfo3" *ngIf="toonUitgebreid">
-                <div class="col-6">
+                <div class="col-12 col-md-6">
                     <app-pegasus-card id="vliegendCard"
                                       class="kleineKaart"
                                       titel="Vliegend"
@@ -157,7 +157,7 @@
                                   [rows]="tekstRegels"></textarea>
                     </app-pegasus-card>
                 </div>
-                <div class="col-6">
+                <div class="col-12 col-md-6 mt-4 mt-sm-0">
                     <app-pegasus-card id="rollendCard"
                                       class="kleineKaart"
                                       titel="Rollend"
@@ -172,11 +172,11 @@
             </div>
 
             <div class="row rowDagInfo4" *ngIf="toonUitgebreid">
-                <div class="col-6">
+                <div class="col-12 col-sm-6">
                     <app-pegasus-card id="verslagCard"
                                       class="kleineKaart"
                                       titel="Verslag"
-                                      subtitel="Toelichting en bijzonderheden"
+                                      subtitel="Toelichting en bijzonderheden over de vliegdag"
                                       [icon]="iconVerslag">
 
                         <textarea [(ngModel)]="dagInfo.VERSLAG" name="VERSLAG"
@@ -184,7 +184,7 @@
                                   [rows]="tekstRegels"></textarea>
                     </app-pegasus-card>
                 </div>
-                <div class="col-6">
+                <div class="col-12 col-sm-6 mt-4 mt-sm-0">
                     <app-pegasus-card id="incidentCard"
                                       class="kleineKaart"
                                       titel="Incidenten"

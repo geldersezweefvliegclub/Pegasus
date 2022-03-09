@@ -1,16 +1,17 @@
-import {Component, Input, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, HostListener, Input, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {HeliosLedenDataset, HeliosTrack, HeliosTracksDataset} from "../../../types/Helios";
 import {TracksService} from "../../../services/apiservice/tracks.service";
-import {SharedService} from "../../../services/shared/shared.service";
+import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
 import {TrackEditorComponent} from "../editors/track-editor/track-editor.component";
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {
-    faBookmark,
     faAddressCard,
+    faBookmark,
     faMinusCircle,
     faPlane,
     faRecycle,
-    faTachometerAlt, faUndo
+    faTachometerAlt,
+    faUndo
 } from "@fortawesome/free-solid-svg-icons";
 import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
 import {LedenService} from "../../../services/apiservice/leden.service";
@@ -233,5 +234,9 @@ export class TracksComponent implements OnInit, OnDestroy {
     magTrackHerstellen(trk: TracksLedenDataset) {
         const ui = this.loginService.userInfo;
         return  (ui?.Userinfo?.isCIMT || ui?.Userinfo?.isBeheerder || ui?.LidData?.ID == trk.INSTRUCTEUR_ID);
+    }
+
+    lidColumn(): boolean {
+        return this.sharedService.getSchermSize() >= SchermGrootte.md;
     }
 }

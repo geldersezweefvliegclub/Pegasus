@@ -1,10 +1,10 @@
-import {Component, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {CustomRoute, beheerRoutes, routes} from '../../routing.module';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {beheerRoutes, CustomRoute, routes} from '../../routing.module';
 
 import {Router} from '@angular/router';
-import {faBug, faSignOutAlt, faWrench} from '@fortawesome/free-solid-svg-icons';
-import {NgbCalendar, NgbDate, NgbDatepickerNavigateEvent, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
-import {SharedService} from '../../services/shared/shared.service';
+import {faSignOutAlt, faWrench} from '@fortawesome/free-solid-svg-icons';
+import {NgbCalendar, NgbDate, NgbDatepickerNavigateEvent, NgbDateStruct, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
+import {SchermGrootte, SharedService} from '../../services/shared/shared.service';
 import {DateTime} from 'luxon';
 
 import {HeliosActie, KalenderMaand} from '../../types/Utils';
@@ -20,14 +20,19 @@ import {Subscription} from "rxjs";
 import {delay} from "rxjs/operators";
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {PegasusConfigService} from "../../services/shared/pegasus-config.service";
+import {LedenFilterComponent} from "../../shared/components/leden-filter/leden-filter.component";
+import {PopupKalenderComponent} from "./popup-kalender/popup-kalender.component";
+import {NgbDateFRParserFormatter} from "../../shared/ngb-date-fr-parser-formatter";
 
 @Component({
     selector: 'app-navigation',
     templateUrl: './navigation.component.html',
-    styleUrls: ['./navigation.component.scss']
+    styleUrls: ['./navigation.component.scss'],
+    providers: [{provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter}]
 })
 export class NavigationComponent implements OnInit, OnDestroy  {
     @Input() topMenu: boolean = false;
+    @ViewChild(PopupKalenderComponent) popupKalender: PopupKalenderComponent;
 
     readonly routes = routes;
     readonly beheerRoutes = beheerRoutes;
@@ -253,6 +258,15 @@ export class NavigationComponent implements OnInit, OnDestroy  {
         else {
             reserveringen.excluded = false;
         }
+
+        // alleen beheer als we voldoende scherm ter beschkkign hebben
+        const beheer = this.routes.find(route => route.path == "beheer") as CustomRoute;
+        if (verbergen.includes('beheer') || (this.sharedService.getSchermSize() < SchermGrootte.lg) || (window.innerHeight < 600)) {
+            reserveringen.excluded = true;
+        }
+        else {
+            reserveringen.excluded = false;
+        }
     }
 
     // het is voorbij en we gaan terug naar de login pagina
@@ -263,7 +277,8 @@ export class NavigationComponent implements OnInit, OnDestroy  {
 
     // laat iedereen weten dat er een nieuwe datum is gekozen
     NieuweDatum(datum: NgbDate) {
-        this.sharedService.zetKalenderDatum(this.kalenderIngave)
+        this.sharedService.zetKalenderDatum(datum);
+        this.kalenderIngave = datum;
     }
 
     // de kalender popup toont andere maand, ophalen vliegdagen
@@ -322,5 +337,9 @@ export class NavigationComponent implements OnInit, OnDestroy  {
 
     toonLogo() {
         return (((window.innerHeight > 800) && (!this.showBeheer)) || (window.innerHeight > 900))
+    }
+
+    kleineDatum() {
+        return (window.innerHeight < 700)
     }
 }

@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {HostListener, Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {ErrorMessage, HeliosEvent, KalenderMaand} from '../../types/Utils';
@@ -15,6 +15,22 @@ export interface FilterLedenData {
     gastenVliegers: boolean,
 }
 
+export enum SchermGrootte {
+    /* bootstrap defintie
+    X-Small	            xs	<576px
+    Small	            sm	≥576px
+    Medium	            md	≥768px
+    Large	            lg	≥992px
+    Extra large	        xl	≥1200px
+    Extra extra large	xxl	≥1400px
+    */
+    xs,
+    sm,
+    md,
+    lg,
+    xl,
+    xxl
+}
 
 @Injectable({
     providedIn: 'root'
@@ -80,5 +96,25 @@ export class SharedService {
     // Er is iets in de database gewijzigd
     fireHeliosFailure(error: ErrorMessage) {
         this.heliosFailedSubject.next(error);
+    }
+
+    // Wat is scherm grootte
+    public getSchermSize() : SchermGrootte {
+        if (window.innerWidth >= 1400) {
+            return SchermGrootte.xxl;
+        }
+        else if (window.innerWidth >= 1200) {
+            return SchermGrootte.xl;
+        }
+        else if (window.innerWidth >= 992) {
+            return SchermGrootte.lg;
+        }
+        else if (window.innerWidth >= 768) {
+            return SchermGrootte.md;
+        }
+        else if (window.innerWidth >= 576) {
+            return SchermGrootte.sm;
+        }
+        return SchermGrootte.xs;
     }
 }
