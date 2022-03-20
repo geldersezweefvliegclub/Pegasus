@@ -8,10 +8,10 @@ import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
     selector: 'app-vlieger-render',
-    templateUrl: './vlieger-render.component.html',
-    styleUrls: ['./vlieger-render.component.scss']
+    templateUrl: './voorin-render.component.html',
+    styleUrls: ['./voorin-render.component.scss']
 })
-export class VliegerRenderComponent implements AgRendererComponent {
+export class VoorinRenderComponent implements AgRendererComponent {
     warningIcon:IconDefinition = faExclamationTriangle;
     lidID: string;
     grid_vliegernaam: string;

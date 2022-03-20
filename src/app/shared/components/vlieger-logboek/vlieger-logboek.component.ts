@@ -20,9 +20,11 @@ import {StartEditorComponent} from "../editors/start-editor/start-editor.compone
 import {DeleteActionComponent} from "../datatable/delete-action/delete-action.component";
 import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
 import {DatumKortRenderComponent} from "../datatable/datum-kort-render/datum-kort-render.component";
+import {IconRenderComponent} from "./icon-render/icon-render.component";
 
 type HeliosLogboekDatasetExtended = HeliosLogboekDataset & {
     inTijdspan?: boolean
+    DatumDM?: string;
 }
 
 @Component({
@@ -36,10 +38,13 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
     @Input() VliegerID: number;
     @Input() deleteMode: boolean;
     @Input() Kolommen: string = "";
+    @Input() MaxItems: number = 1000;
 
     @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
     @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
     @ViewChild(StartEditorComponent) startEditor: StartEditorComponent;
+
+    toonLogboekKlein: boolean = false;     // Klein formaat van het vliegerlogboek
 
     data: HeliosLogboekDatasetExtended[] = [];
     private dbEventAbonnement: Subscription;
@@ -89,6 +94,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
             },
         },
         {field: 'DUUR', headerName: 'Duur', sortable: true, comparator: tijdSort},
+        {headerName: 'I T P', cellRenderer: 'iconRender', maxWidth: 60, minWidth: 60},
         {field: 'OPMERKINGEN', headerName: 'Opmerkingen', hide: true}
     ];
     columns: ColDef[] = this.dataColumns;
@@ -133,6 +139,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
     frameworkComponents = {
         datumRender: DatumRenderComponent,
         datumKortRender: DatumKortRenderComponent,
+        iconRender: IconRenderComponent,
         naamRender: NaamRenderComponent,
         trackRender: TrackRenderComponent,
         startTijdRender: StarttijdRenderComponent,
@@ -181,6 +188,12 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
         if (this.datumAbonnement)       this.datumAbonnement.unsubscribe();
     }
 
+    // laat groot of klein logvboek zijn, afhankelijk van scherm
+    @HostListener('window:resize', ['$event'])
+    onWindowResize() {
+        this.kolomDefinitie();
+    }
+
     // opvragen van het vlieger logboek
     opvragen(): void {
         if (this.datum) {
@@ -203,6 +216,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
                     else {
                         data[i].inTijdspan = true; // zitten nog binnen de termijn
                     }
+                    data[i].DatumDM = this.sharedService.datumDM(data[i].DATUM!)
                 }
                 this.data = data;
             }).catch(e => {
@@ -214,9 +228,9 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     // openen van popup om bestaande start te kunnen aanpassen
-    openStartEditor(event?: RowDoubleClickedEvent) {
-        if (event?.data.inTijdspan) {
-            this.startEditor.openPopup(event?.data);
+    openStartEditor(vlucht: HeliosLogboekDatasetExtended) {
+        if (vlucht.inTijdspan) {
+            this.startEditor.openPopup(vlucht);
         }
     }
 
@@ -231,13 +245,9 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
         this.trackEditor.closePopup();
     }
 
-    @HostListener('window:resize', ['$event'])
-    onWindowResize() {
-        this.kolomDefinitie();
-    }
-
     // Welke kolommen moet worden getoond in het grid
     kolomDefinitie() {
+        this.toonLogboekKlein = (this.sharedService.getSchermSize() < SchermGrootte.xl);
 
         let kolom: ColDef;
         kolom = this.columns.find(c => c.field == "STARTMETHODE") as ColDef;
@@ -265,16 +275,14 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         kolom = this.columns.find(c => c.field == "VLIEGERNAAM") as ColDef;
-        kolom.hide = this.sharedService.getSchermSize() <= SchermGrootte.sm;
+        kolom.hide = this.sharedService.getSchermSize() <= SchermGrootte.lg;
 
         kolom = this.columns.find(c => c.field == "INZITTENDENAAM") as ColDef;
-        kolom.hide = this.sharedService.getSchermSize() <= SchermGrootte.sm;
+        kolom.hide = this.sharedService.getSchermSize() <= SchermGrootte.lg;
 
 
         this.columns = this.dataColumns;
         if (!this.deleteMode) {
-            console.log(this.sharedService.getSchermSize() >= SchermGrootte.md);
-
             const ui = this.loginService.userInfo?.Userinfo
             if ((ui!.isBeheerder || ui!.isCIMT || ui!.isInstructeur) && (this.sharedService.getSchermSize() >= SchermGrootte.md)) {
                 this.columns = this.aanmakenTrackColumn.concat(this.dataColumns);

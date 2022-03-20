@@ -47,8 +47,20 @@
   padding-right: 10px;
 }
 
+.datumVeld {
+  margin-right: 0.375rem;
+  padding: 5px 10px 5px 10px;
+  border: 1px solid #c4c2c1;
+  border-radius: 2px;
+  color: #9a9a9a;
+}
 .linker-menu {
   background-color: #f1f1f1;
+  width: 270px;
+}
+
+.linker-menu-smal {
+  width: 210px !important;
 }
 
 .logoContainer {

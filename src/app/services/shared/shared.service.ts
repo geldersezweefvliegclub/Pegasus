@@ -117,4 +117,14 @@ export class SharedService {
         }
         return SchermGrootte.xs;
     }
+
+    datumDMJ(ISOdatum: string): string {
+        const datePart = ISOdatum.split('-');
+        return datePart[2] + '-' + datePart[1] + '-' + datePart[0];
+    }
+
+    datumDM(ISOdatum: string): string {
+        const datePart = ISOdatum.split('-');
+        return datePart[2] + '-' + datePart[1];
+    }
 }

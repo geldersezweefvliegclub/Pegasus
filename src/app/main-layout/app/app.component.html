@@ -2,16 +2,16 @@
     <p>Er is een nieuwe versie beschikbaar. Klik <a aria-label="nieuwe software versie" href="#">hier</a> om bij te werken</p>
 </div>
 
-<div class="row mx-0">
-    <div class="col-1 col-md-2 ps-0 d-none d-xl-block" *ngIf="isIngelogd">
+<main class="d-flex maxHoogte">
+    <div class="ps-0 d-none d-xl-block" *ngIf="isIngelogd">
         <app-navigation class="sticky-top"></app-navigation>
     </div>
-    <main class="p-0" [class]="isIngelogd ? 'col-sm-12 col-xl-10' : 'col-12'">
+    <div class="w-100">
         <div [ngClass]="'hoogte-desktop'" [ngClass.lt-lg]="'hoogte-tablet'" class="card">
             <div class="card-body">
                 <router-outlet></router-outlet>
             </div>
         </div>
         <app-footer *ngIf="isIngelogd"></app-footer>
-    </main>
-</div>
+    </div>
+</main>

@@ -19,8 +19,8 @@ import {LedenGridComponent} from './leden-grid/leden-grid.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {VluchtenGridComponent} from './vluchten-grid/vluchten-grid.component';
 import {NgbDatepickerModule, NgbPopoverModule, NgbTypeaheadModule} from '@ng-bootstrap/ng-bootstrap';
-import {VliegerRenderComponent} from './vluchten-grid/vlieger-render/vlieger-render.component';
-import {InzittendeRenderComponent} from './vluchten-grid/inzittende-render/inzittende-render.component';
+import {VoorinRenderComponent} from './vluchten-grid/voorin-render/voorin-render.component';
+import {AchterinRenderComponent} from './vluchten-grid/achterin-render/achterin-render.component';
 import {StarttijdRenderComponent} from '../shared/components/datatable/starttijd-render/starttijd-render.component';
 import {LandingstijdRenderComponent} from '../shared/components/datatable/landingstijd-render/landingstijd-render.component';
 import {DaginfoComponent} from './daginfo/daginfo.component';
@@ -47,6 +47,7 @@ import { AuditPageComponent } from './audit-page/audit-page.component';
 import { ReserveringPageComponent } from './reservering-page/reservering-page.component';
 import { KistSelectieComponent } from './reservering-page/kist-selectie/kist-selectie.component';
 import { HandboekRenderComponent } from './vliegtuigen-grid/handboek-render/handboek-render.component';
+import { StartlijstPageComponent } from './startlijst-page/startlijst-page.component';
 
 @NgModule({
   imports: [
@@ -66,7 +67,7 @@ import { HandboekRenderComponent } from './vliegtuigen-grid/handboek-render/hand
     LazyLoadImageModule,
     NgbPopoverModule,
     DragDropModule,
-    FlexLayoutModule,
+    FlexLayoutModule
   ],
   declarations: [
     DashboardPageComponent,
@@ -77,8 +78,8 @@ import { HandboekRenderComponent } from './vliegtuigen-grid/handboek-render/hand
     ZitplaatsRenderComponent,
     LedenGridComponent,
     VluchtenGridComponent,
-    VliegerRenderComponent,
-    InzittendeRenderComponent,
+    VoorinRenderComponent,
+    AchterinRenderComponent,
     StarttijdRenderComponent,
     LandingstijdRenderComponent,
     DaginfoComponent,
@@ -99,7 +100,8 @@ import { HandboekRenderComponent } from './vliegtuigen-grid/handboek-render/hand
     AuditPageComponent,
     ReserveringPageComponent,
     KistSelectieComponent,
-    HandboekRenderComponent
+    HandboekRenderComponent,
+    StartlijstPageComponent,
   ],
   exports: [
     PegasusCardComponent,

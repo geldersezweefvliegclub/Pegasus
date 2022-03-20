@@ -1,0 +1,15 @@
+<div class="h-100 d-flex flex-row iconGroep">
+    <div class="column">
+        <div *ngIf="!toonInstructieVlucht" class="geenIcoontje">-</div>
+        <div *ngIf="toonInstructieVlucht" class="icoontje" data-toggle="tooltip" title="Instructie vlucht">I</div>
+    </div>
+
+    <div class="column">
+        <div *ngIf="!toonCheckStart" class="geenIcoontje">-</div>
+        <div *ngIf="toonCheckStart" class="icoontje" data-toggle="tooltip" title="Trainingsvlucht">T</div>
+    </div>
+    <div class="column">
+        <div *ngIf="!toonPax" class="geenIcoontje">-</div>
+        <div *ngIf="toonPax" class="icoontje" data-toggle="tooltip" title="Passagiers">P</div>
+    </div>
+</div>

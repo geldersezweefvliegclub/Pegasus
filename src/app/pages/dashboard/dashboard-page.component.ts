@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {
     faBookmark, faAddressCard, faCalendarAlt, faChartLine, faChartPie,
@@ -14,7 +14,7 @@ import {faAvianex} from "@fortawesome/free-brands-svg-icons";
 import {ModalComponent} from "../../shared/components/modal/modal.component";
 import {Subscription} from "rxjs";
 import {DateTime} from "luxon";
-import {SharedService} from "../../services/shared/shared.service";
+import {SchermGrootte, SharedService} from "../../services/shared/shared.service";
 import * as xlsx from "xlsx";
 import {StartlijstService} from "../../services/apiservice/startlijst.service";
 import {ProgressieService} from "../../services/apiservice/progressie.service";
@@ -27,16 +27,16 @@ import {StartEditorComponent} from "../../shared/components/editors/start-editor
     styleUrls: ['./dashboard-page.component.scss']
 })
 export class DashboardPageComponent implements OnInit, OnDestroy {
-    iconCardIcon: IconDefinition = faChartPie;
-    iconProgressie: IconDefinition = faChartLine;
-    iconLogboek: IconDefinition = faClipboardList;
-    iconRooster: IconDefinition = faCalendarAlt;
-    iconRecency: IconDefinition = faTachometerAlt;
-    iconPVB: IconDefinition = faAvianex;
-    iconStatus: IconDefinition = faBookmark;
-    iconExpand: IconDefinition = faExternalLinkSquareAlt;
-    iconPlane: IconDefinition = faPlane;
-    iconTracks: IconDefinition = faAddressCard;
+    readonly iconCardIcon: IconDefinition = faChartPie;
+    readonly iconProgressie: IconDefinition = faChartLine;
+    readonly iconLogboek: IconDefinition = faClipboardList;
+    readonly iconRooster: IconDefinition = faCalendarAlt;
+    readonly iconRecency: IconDefinition = faTachometerAlt;
+    readonly iconPVB: IconDefinition = faAvianex;
+    readonly iconStatus: IconDefinition = faBookmark;
+    readonly iconExpand: IconDefinition = faExternalLinkSquareAlt;
+    readonly iconPlane: IconDefinition = faPlane;
+    readonly iconTracks: IconDefinition = faAddressCard;
 
     private typesAbonnement: Subscription;
     lidTypes: HeliosType[] = [];
@@ -46,6 +46,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     private datumAbonnement: Subscription; // volg de keuze van de kalender
     datum: DateTime;                       // de gekozen dag
 
+    toonLogboekKlein: boolean = false;     // Klein formaat van het vliegerlogboek
     toonTracks: boolean = false;           // mogen de tracks vertoon worden
     isDDWVer: boolean = false;             // DDWV'ers hebben een aangepast dashboard
 

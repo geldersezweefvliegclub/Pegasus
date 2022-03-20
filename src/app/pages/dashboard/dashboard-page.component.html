@@ -10,7 +10,7 @@
             <table class="w-100">
                 <tr>
                     <td class="w-100">
-                        <h2 class="ms-2" *ngIf="lidData">{{lidData.NAAM}}</h2>
+                        <h2 class="ms-2 mb-0" *ngIf="lidData">{{lidData.NAAM}}</h2>
                     </td>
                     <td [rowSpan]="2">
                         <app-avatar class="me-2" [url]="lidData.AVATAR" [naam]="lidData.NAAM" *ngIf="lidData"></app-avatar>
@@ -42,7 +42,7 @@
             </table>
         </div>
         <div class="row mt-4" *ngIf="!isDDWVer">
-            <div class="col-12 col-sm-6 col-md-3">
+            <div class="col-12 col-sm-6 col-xl-3 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
                 <app-pegasus-card id="statusCard"
                                   class="kleineKaart"
                                   titel="Status"
@@ -51,7 +51,7 @@
                     <app-status [VliegerID]="lidData.ID" *ngIf="lidData"></app-status>
                 </app-pegasus-card>
             </div>
-            <div class="col-12 col-sm-6 col-md-3 mt-4 mt-sm-0">
+            <div class="col-12 col-sm-6 col-xl-3 mt-4 mt-sm-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
                 <app-pegasus-card id="pvbCard"
                                   class="kleineKaart"
                                   titel="PVB"
@@ -61,7 +61,7 @@
                 </app-pegasus-card>
             </div>
 
-            <div class="col-12 col-sm-6 col-md-3 mt-4 mt-md-0">
+            <div class="col-12 col-sm-6 col-xl-3 mt-4 mt-xl-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
                 <app-pegasus-card id="recencyCard"
                                   class="kleineKaart"
                                   titel="Recency"
@@ -71,7 +71,7 @@
                 </app-pegasus-card>
             </div>
 
-            <div class="col-12 col-sm-6 col-md-3 mt-4 mt-md-0">
+            <div class="col-12 col-sm-6 col-xl-3 mt-4 mt-xl-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
                 <app-pegasus-card id="dientenCard"
                                   class="kleineKaart"
                                   titel="Diensten"
@@ -86,8 +86,10 @@
                 </app-pegasus-card>
             </div>
         </div>
+
+        <!-- logboek -->
         <div class="row mt-4 datatable-hoogte">
-            <div class="col-12 col-md-8 col-lg-9">
+            <div class="col-12 col-lg-8 col-xl-9 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
                 <app-pegasus-card id="logboekCard"
                                   class="kleineKaart"
                                   titel="Logboek {{datum.year}}"
@@ -99,12 +101,13 @@
                         </a>
                     </div>
                     <app-vlieger-logboek *ngIf="lidData"
-                                         id="vliegerlogboekgrid-klein"
+                                         MaxItems=5
+                                         id="vliegerlogboekgrid"
                                          [VliegerID]="lidData.ID">
                     </app-vlieger-logboek>
                 </app-pegasus-card>
             </div>
-            <div class="col-12 col-md-auto col-lg-auto mt-4 mt-md-0">
+            <div class="col-12 col-lg-4 col-xl-3 mt-4 mt-lg-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
                 <app-pegasus-card id="logboekCardSummary"
                                   class="kleineKaart"
                                   titel="Totalen {{datum.year}}"
@@ -115,8 +118,10 @@
                 </app-pegasus-card>
             </div>
         </div>
+
+        <!-- progressie -->
         <div class="row mt-4 progressie-hoogte" *ngIf="!isDDWVer">
-            <div class="col-12">
+            <div class="col-12 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
                 <app-pegasus-card id="progressieCard"
                                   class="kleineKaart"
                                   titel="Progressiekaart"
@@ -132,7 +137,7 @@
         </div>
 
         <div class="row mt-4 tracks-hoogte flex-grow" *ngIf="toonTracks">
-            <div class="col-12">
+            <div class="col-12 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
                 <app-pegasus-card id="tracksCard"
                                   class="kleineKaart"
                                   titel="Tracks"
@@ -152,19 +157,22 @@
             <div class="excel">
                 <img class="logo" src="/assets/img/excel-logo.png" alt="excel logo" (click)="this.exportLogboek()"/>
             </div>
-            <app-vlieger-logboek
-                    id="vliegerlogboekgrid-groot"
-                    Kolommen="OPMERKINGEN,VELD,STARTMETHODE"
-                    [VliegerID]="lidData.ID"
-                    [deleteMode]="verwijderMode"></app-vlieger-logboek>
-            <div class="toolbar">
-                <app-icon-button class="toolbarBtn"
-                                 tekst="Toevoegen"
-                                 iconNaam="far PlusSquare" (btnClicked)="addStart()"
-                                 btnColor="btn-primary"></app-icon-button>
-                <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
-                                 btnColor="btn-secondary" *ngIf="magVerwijderen"
-                                 (btnClicked)="verwijderMode = !verwijderMode"></app-icon-button>
+            <div class="d-flex flex-column justify-content-between h-100">
+                <app-vlieger-logboek
+                        class="maxHoogte"
+                        id="vliegerlogboekgrid-groot"
+                        Kolommen="OPMERKINGEN,VELD,STARTMETHODE"
+                        [VliegerID]="lidData.ID"
+                        [deleteMode]="verwijderMode"></app-vlieger-logboek>
+                <div class="toolbar logboekToolbar">
+                    <app-icon-button class="toolbarBtn"
+                                     tekst="Toevoegen"
+                                     iconNaam="far PlusSquare" (btnClicked)="addStart()"
+                                     btnColor="btn-primary"></app-icon-button>
+                    <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
+                                     btnColor="btn-secondary" *ngIf="magVerwijderen"
+                                     (btnClicked)="verwijderMode = !verwijderMode"></app-icon-button>
+                </div>
             </div>
         </div>
     </div>

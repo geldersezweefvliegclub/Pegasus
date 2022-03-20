@@ -35,7 +35,7 @@ export class AppComponent {
 
         // nadat we ingelogd zijn, blijven we controleren of we ingelogd zijn, zo niet, dan loggen we uit
         loginService.inloggenSucces.subscribe(() => {
-            this.keepAliveTimer = setInterval(() => {
+            this.keepAliveTimer = window.setInterval(() => {
                loginService.relogin().then((success) => {
                    if (!success) {                                          // niet meer ingelogd
                        clearInterval(this.keepAliveTimer);                  // dan ook stoppen met controleren

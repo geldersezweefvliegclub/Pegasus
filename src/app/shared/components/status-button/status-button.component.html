@@ -1,0 +1,9 @@
+<div class="btn knop">
+    <input type="checkbox" class="btn-check" id="statusBtn" name="filterMode"
+           [(ngModel)]="actief"
+           (click)="buttonClicked()">
+    <label class="d-flex btn btn-outline-primary statusBtn" for="statusBtn">
+        <fa-icon [icon]="faIcon" [ngClass]="{'me-3': tekst.length > 0 && toonTekst}" *ngIf="faIcon"></fa-icon>
+        <div *ngIf="toonTekst">{{tekst}}</div>
+    </label>
+</div>

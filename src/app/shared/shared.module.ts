@@ -51,6 +51,9 @@ import { SuccessComponent } from './components/success/success.component';
 import { InstructieGrafiekComponent } from './components/recency/instructie-grafiek/instructie-grafiek.component';
 import { BoekingEditorComponent } from './components/editors/boeking-editor/boeking-editor.component';
 import { DatumKortRenderComponent } from './components/datatable/datum-kort-render/datum-kort-render.component';
+import { StatusButtonComponent } from './components/status-button/status-button.component';
+import { IconRenderComponent } from './components/vlieger-logboek/icon-render/icon-render.component';
+import { VluchtCardComponent } from './components/vlucht-card/vlucht-card.component';
 
 @NgModule({
     imports: [
@@ -109,7 +112,10 @@ import { DatumKortRenderComponent } from './components/datatable/datum-kort-rend
     SuccessComponent,
     InstructieGrafiekComponent,
     BoekingEditorComponent,
-    DatumKortRenderComponent
+    DatumKortRenderComponent,
+    StatusButtonComponent,
+    IconRenderComponent,
+    VluchtCardComponent
   ],
     exports: [
         LidEditorComponent,
@@ -137,7 +143,9 @@ import { DatumKortRenderComponent } from './components/datatable/datum-kort-rend
         TrackEditorComponent,
         DienstenComponent,
         DagRoosterComponent,
-        BoekingEditorComponent
+        BoekingEditorComponent,
+        StatusButtonComponent,
+        VluchtCardComponent
     ],
   providers: [],
   schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

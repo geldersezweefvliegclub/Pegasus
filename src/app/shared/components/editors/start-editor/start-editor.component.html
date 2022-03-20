@@ -1,6 +1,14 @@
 <app-error [error]="error"></app-error>
 <app-success [success]="success"></app-success>
 
+<ng-template #alleenPAX>
+    Alleen vliegers met passagersbevoegdheid mogen deze vlucht uitvoeren.
+</ng-template>
+
+<ng-template #alleenInstructeurs>
+    Voor een instructievlucht moet een instructeur achterin zitten.
+</ng-template>
+
 <app-modal [titel]="formTitel">
     <div body>
         <fieldset [disabled]="isVerwijderMode || isRestoreMode || isLoading || isSaving">
@@ -58,14 +66,21 @@
                 </div>
                 <div class="col-6" *ngIf="gekozenVliegtuig?.ZITPLAATSEN == 2">
                     <div class="d-flex flex-column">
-                        <div *ngIf="start.CHECKSTART !== true && magPaxVliegen()">
+                        <div *ngIf="start.CHECKSTART !== true && start.INSTRUCTIEVLUCHT !== true && magPaxVliegen()">
                             <input name="PAX" type="checkbox" class="form-check-input" id="PAX"
                                    [(ngModel)]="start.PAX">
                             <label class="form-check-label ms-2" for="PAX">
                                 Passagiers start
                             </label>
                         </div>
-                        <div *ngIf="start.PAX !== true && magCheckZetten()" >
+                        <div *ngIf="start.PAX !== true && kanInstructieVluchtZijn()">
+                            <input name="PAX" type="checkbox" class="form-check-input" id="INSTRUCTIEVLUCHT"
+                                   [(ngModel)]="start.INSTRUCTIEVLUCHT">
+                            <label class="form-check-label ms-2" for="PAX">
+                                Instructie start
+                            </label>
+                        </div>
+                        <div *ngIf="start.PAX !== true && start.INSTRUCTIEVLUCHT && magCheckZetten()" >
                             <input name="CHECKSTART" type="checkbox" class="form-check-input" id="CHECKSTART"
                                    [(ngModel)]="start.CHECKSTART">
                             <label class="form-check-label ms-2" for="CHECKSTART">
@@ -101,23 +116,26 @@
                 <div class="col-10 col-md-10">
                     <div class="row my-2" *ngIf="start.VLIEGTUIG_ID">
                         <div class="col-12 col-md-12">
-                            <app-lid-invoer id="VLIEGER"
-                                            placeholder="Selecteer vlieger"
-                                            label="Vlieger"
-                                            [LID_ID]="start.VLIEGER_ID"
-                                            [disabled]="isVerwijderMode || isRestoreMode || ((VliegerID == start.VLIEGER_ID && VliegerID >0) && !magAltijdWijzigen)"
-                                            [aanwezig]="aanwezigLeden"
-                                            [excludeLidTypes]="exclLidtypeAlsVlieger"
-                                            [leden]="leden"
-                                            [alleenPaxVliegers]="start.PAX"
-                                            [vliegtuig]="gekozenVliegtuig"
-                                            (LidChanged)="vliegerGeselecteerd($event)"
-                            ></app-lid-invoer>
-                            <div *ngIf="toonWaarschuwing" class="flex-row cssWarning">
+                            <div>
+                                <app-lid-invoer id="VLIEGER"
+                                                [placeholder]="gekozenVliegtuig?.ZITPLAATSEN == 2 ? 'Wie zit voorin?' : 'Wie is de vlieger' "
+                                                [label]="gekozenVliegtuig?.ZITPLAATSEN == 2 ? 'Voorin' : 'Vlieger' "
+                                                [LID_ID]="start.VLIEGER_ID"
+                                                [disabled]="isVerwijderMode || isRestoreMode || ((VliegerID == start.VLIEGER_ID && VliegerID >0) && !magAltijdWijzigen)"
+                                                [aanwezig]="aanwezigLeden"
+                                                [excludeLidTypes]="exclLidtypeAlsVlieger"
+                                                [leden]="leden"
+                                                [alleenPaxVliegers]="start.PAX"
+                                                [vliegtuig]="gekozenVliegtuig"
+                                                (LidChanged)="vliegerGeselecteerd($event)"
+                                                [uitleg]="start.PAX ? alleenPAX : undefined"
+                                ></app-lid-invoer>
+                            </div>
+                            <div *ngIf="toonWaarschuwing && !start.INSTRUCTIEVLUCHT" class="flex-row cssWarning">
                                 <div class="fas fa-exclamation-triangle "></div>
                                 Vlieger onbevoegd
                             </div>
-                            <div *ngIf="medicalWaarschuwing" class="flex-row cssWarning">
+                            <div *ngIf="medicalWaarschuwing && !start.INSTRUCTIEVLUCHT" class="flex-row cssWarning">
                                 <div class="fas fa-exclamation-triangle "></div>
                                 Controleer medical
                             </div>
@@ -129,22 +147,31 @@
                         <input required name="vliegernaam" type="text" class="form-control" id="VLIEGER_NAAM"
                                [(ngModel)]="start.VLIEGERNAAM"
                                placeholder="Vul de volledige naam in"
-                               min="0"
-                        >
+                               min="0">
                     </div>
 
                     <div class="row my-2" *ngIf="gekozenVliegtuig?.ZITPLAATSEN == 2 && toonInzittendeNaam < 2 && !start.PAX">
                         <div class="col-12 col-md-12">
                             <app-lid-invoer id="INZITTENDE"
-                                            placeholder="Selecteer inzittende"
-                                            label="Inzittende"
+                                            placeholder="Wie zit achterin"
+                                            label="Achterin"
                                             [LID_ID]="start.INZITTENDE_ID"
                                             [disabled]="isVerwijderMode || isRestoreMode || ((VliegerID == start.INZITTENDE_ID && VliegerID >0) && !magAltijdWijzigen)"
                                             [aanwezig]="aanwezigLeden"
                                             [excludeLidTypes]="exclLidtypeAlsInzittende"
+                                            [alleenInstructeurs]="start.INSTRUCTIEVLUCHT"
                                             [leden]="leden"
                                             (LidChanged)="inzittendeGeselecteerd($event)"
+                                            [uitleg]="start.INSTRUCTIEVLUCHT ? alleenInstructeurs : undefined"
                             ></app-lid-invoer>
+                            <div *ngIf="toonWaarschuwing && start.INSTRUCTIEVLUCHT" class="flex-row cssWarning">
+                                <div class="fas fa-exclamation-triangle "></div>
+                                Vlieger onbevoegd
+                            </div>
+                            <div *ngIf="medicalWaarschuwing && start.INSTRUCTIEVLUCHT" class="flex-row cssWarning">
+                                <div class="fas fa-exclamation-triangle "></div>
+                                Controleer medical
+                            </div>
                         </div>
                     </div>
 

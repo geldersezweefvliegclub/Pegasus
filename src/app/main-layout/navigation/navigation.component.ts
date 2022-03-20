@@ -3,7 +3,13 @@ import {beheerRoutes, CustomRoute, routes} from '../../routing.module';
 
 import {Router} from '@angular/router';
 import {faSignOutAlt, faWrench} from '@fortawesome/free-solid-svg-icons';
-import {NgbCalendar, NgbDate, NgbDatepickerNavigateEvent, NgbDateStruct, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
+import {
+    NgbCalendar,
+    NgbDate,
+    NgbDateParserFormatter,
+    NgbDatepickerNavigateEvent,
+    NgbDateStruct
+} from '@ng-bootstrap/ng-bootstrap';
 import {SchermGrootte, SharedService} from '../../services/shared/shared.service';
 import {DateTime} from 'luxon';
 
@@ -20,7 +26,6 @@ import {Subscription} from "rxjs";
 import {delay} from "rxjs/operators";
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {PegasusConfigService} from "../../services/shared/pegasus-config.service";
-import {LedenFilterComponent} from "../../shared/components/leden-filter/leden-filter.component";
 import {PopupKalenderComponent} from "./popup-kalender/popup-kalender.component";
 import {NgbDateFRParserFormatter} from "../../shared/ngb-date-fr-parser-formatter";
 
@@ -45,6 +50,7 @@ export class NavigationComponent implements OnInit, OnDestroy  {
     showBeheer: boolean = false;
 
     vandaag = this.calendar.getToday();
+    datumDMY: string = this.vandaag.day + "-" + this.vandaag.month + "-" + this.vandaag.year;
     kalenderIngave: NgbDateStruct = {year: this.vandaag.year, month: this.vandaag.month, day: this.vandaag.day};  // de gekozen dag
 
     kalenderEersteDatum: NgbDateStruct;
@@ -279,6 +285,8 @@ export class NavigationComponent implements OnInit, OnDestroy  {
     NieuweDatum(datum: NgbDate) {
         this.sharedService.zetKalenderDatum(datum);
         this.kalenderIngave = datum;
+
+        this.datumDMY = datum.day + "-" + datum.month + "-" + datum.year;
     }
 
     // de kalender popup toont andere maand, ophalen vliegdagen
@@ -340,6 +348,6 @@ export class NavigationComponent implements OnInit, OnDestroy  {
     }
 
     kleineDatum() {
-        return (window.innerHeight < 700)
+        return (window.innerHeight < 700 || this.sharedService.getSchermSize() < SchermGrootte.xxl)
     }
 }

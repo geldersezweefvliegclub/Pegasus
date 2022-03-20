@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {AgRendererComponent} from "ag-grid-angular";
 import {ICellRendererParams} from "ag-grid-community";
+import {SharedService} from "../../../../services/shared/shared.service";
 
 @Component({
   selector: 'app-datum-kort-render',
@@ -10,14 +11,13 @@ import {ICellRendererParams} from "ag-grid-community";
 export class DatumKortRenderComponent implements AgRendererComponent {
   public datum: string;
 
-  constructor() {
+  constructor(private readonly sharedService: SharedService) {
   }
 
   agInit(params: ICellRendererParams): void {
 
     if (params.value) {
-      const datePart = params.value.split('-');
-      this.datum = datePart[2] + '-' + datePart[1];
+      this.datum = this.sharedService.datumDM(params.value)
     } else {
       this.datum = "";
     }

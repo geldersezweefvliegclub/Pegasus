@@ -44,7 +44,6 @@
 }
 
 .toolbar {
-  position: absolute;
   z-index: 5;
   margin-top: -30px;    // over grid footer heen leggen
 }
@@ -64,3 +63,14 @@
   outline: none;
   box-shadow: none;
 }
+
+.logboekToolbar {
+  background-color: white;
+  margin-top: 5px;
+}
+
+.maxHoogte {
+  overflow: scroll;
+}
+
+

@@ -187,22 +187,19 @@ export class DaginfoComponent implements OnInit, OnDestroy{
 
     // opslaan van de ingevoerde dag rapport
     opslaanDagInfo() {
-        console.log(this.dagInfo.DATUM);
-        const datum = this.dagInfo.DATUM!.split('-');
-        const d = datum[2] + '-' + datum[1] + '-' + datum[0];
-
         try {
             if (this.dagInfo.ID == undefined) {
+                this.dagInfo.DATUM = this.datum.year + '-' + this.datum.month + '-' + this.datum.day
                 this.daginfoService.addDagInfo(this.dagInfo).then((di) => {
                     this.dagInfo = di;
                     this.error = undefined;
-                    this.success = {titel: "Dag info", beschrijving: d + " is toegevoegd"}
+                    this.success = {titel: "Dag info", beschrijving: this.sharedService.datumDMJ(di.DATUM) + " is toegevoegd"}
                 });
             } else {
                 this.daginfoService.updateDagInfo(this.dagInfo).then((di) => {
                     this.dagInfo = di;
                     this.error = undefined
-                    this.success = {titel: "Dag info", beschrijving: d + " is aangepast"}
+                    this.success = {titel: "Dag info", beschrijving: this.sharedService.datumDMJ(di.DATUM)  + " is aangepast"}
                 });
             }
         } catch (e) {

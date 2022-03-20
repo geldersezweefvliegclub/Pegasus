@@ -5,11 +5,11 @@ import {LoginService} from "../../../services/apiservice/login.service";
 
 @Component({
   selector: 'app-inzittende-render',
-  templateUrl: './inzittende-render.component.html',
-  styleUrls: ['./inzittende-render.component.scss']
+  templateUrl: './achterin-render.component.html',
+  styleUrls: ['./achterin-render.component.scss']
 })
 
-export class InzittendeRenderComponent implements AgRendererComponent {
+export class AchterinRenderComponent implements AgRendererComponent {
   grid_inzittendenaam: string;
   lidID: string;
   naarDashboard: boolean = false;

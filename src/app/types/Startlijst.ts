@@ -493,6 +493,8 @@ export interface components {
       VLIEGERNAAM_LID?: string;
       /** De naam van de inzittende zoals dat in ref_leden staat */
       INZITTENDENAAM_LID?: string;
+      /** Vliegtuig type */
+      VLIEGTUIGTYPE?: string;
       /** Het lidtype van het lid zoals dat in ref_leden staat */
       VLIEGER_LIDTYPE_ID?: number;
       /** Het lidtype van de inzittende zoals dat in ref_leden staat */
@@ -504,7 +506,7 @@ export interface components {
       /** Naam van het vliegveld waarop gestart is */
       VELD?: string;
       /** Startstrip */
-      Baan?: string;
+      BAAN?: string;
     };
     view_startlijst: {
       /** Aantal records dat voldoet aan de criteria in de database */
@@ -557,6 +559,12 @@ export interface components {
       BAAN?: string;
       /** Vliegtuig type */
       VLIEGTUIGTYPE?: string;
+      /** Is dit een pax start */
+      PAX?: boolean;
+      /** Is dit een trainingsvlucht start */
+      CHECKSTART?: boolean;
+      /** Is dit een instructie vlucht */
+      INSTRUCTIEVLUCHT?: boolean;
       /** De opmerkingen die ingevoerd zijn */
       OPMERKINGEN?: string;
     };

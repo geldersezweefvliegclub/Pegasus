@@ -1,7 +1,8 @@
 import {Component, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {StartlijstService} from '../../services/apiservice/startlijst.service';
 import {CheckboxRenderComponent} from '../../shared/components/datatable/checkbox-render/checkbox-render.component';
-import {faRecycle, faDownload} from '@fortawesome/free-solid-svg-icons';
+import {faDownload} from '@fortawesome/free-solid-svg-icons';
+import {faClipboardList} from '@fortawesome/free-solid-svg-icons/faClipboardList';
 import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {DeleteActionComponent} from '../../shared/components/datatable/delete-action/delete-action.component';
@@ -10,11 +11,7 @@ import {HeliosDienstenDataset, HeliosRoosterDataset, HeliosStartDataset} from '.
 import {ErrorMessage, KeyValueArray, SuccessMessage} from '../../types/Utils';
 import * as xlsx from 'xlsx';
 import {LoginService} from '../../services/apiservice/login.service';
-import {faClipboardList} from '@fortawesome/free-solid-svg-icons/faClipboardList';
 import {DateTime, Interval} from 'luxon';
-import {VliegerRenderComponent} from './vlieger-render/vlieger-render.component';
-import {InzittendeRenderComponent} from './inzittende-render/inzittende-render.component';
-import {faFilter} from '@fortawesome/free-solid-svg-icons/faFilter';
 import {StarttijdRenderComponent} from '../../shared/components/datatable/starttijd-render/starttijd-render.component';
 import {LandingstijdRenderComponent} from '../../shared/components/datatable/landingstijd-render/landingstijd-render.component';
 import {TijdInvoerComponent} from '../../shared/components/editors/tijd-invoer/tijd-invoer.component';
@@ -26,6 +23,8 @@ import {ExportStartlijstComponent} from "./export-startlijst/export-startlijst.c
 import {RoosterService} from "../../services/apiservice/rooster.service";
 import {DienstenService} from "../../services/apiservice/diensten.service";
 import {PegasusConfigService} from "../../services/shared/pegasus-config.service";
+import {VoorinRenderComponent} from "./voorin-render/voorin-render.component";
+import {AchterinRenderComponent} from "./achterin-render/achterin-render.component";
 
 type HeliosStartDatasetExtended = HeliosStartDataset & {
     inTijdspan?: boolean
@@ -58,17 +57,17 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         {field: 'CLUBKIST', headerName: 'Clubkist', sortable: true, cellRenderer: 'checkboxRender', hide: true},
         {
             field: 'VLIEGERNAAM_LID',
-            headerName: 'Vlieger',
+            headerName: 'Voorin',
             sortable: true,
             enableRowGroup: true,
-            cellRenderer: 'vliegerRender'
+            cellRenderer: 'voorinRender'
         },
         {
             field: 'INZITTENDENAAM_LID',
-            headerName: 'Inzittende',
+            headerName: 'Achterin',
             sortable: true,
             enableRowGroup: true,
-            cellRenderer: 'inzittendeRender'
+            cellRenderer: 'achterinRender'
         },
         {field: 'STARTMETHODE', headerName: 'Start methode', sortable: true, hide: false, enableRowGroup: true},
         {
@@ -147,8 +146,8 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     }];
 
     frameworkComponents = {
-        vliegerRender: VliegerRenderComponent,
-        inzittendeRender: InzittendeRenderComponent,
+        voorinRender: VoorinRenderComponent,
+        achterinRender: AchterinRenderComponent,
         startTijdRender: StarttijdRenderComponent,
         landingsTijdRender: LandingstijdRenderComponent,
         checkboxRender: CheckboxRenderComponent,
@@ -157,8 +156,6 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     };
     iconCardIcon: IconDefinition = faClipboardList;
     downloadIcon: IconDefinition = faDownload;
-    filterIcon: IconDefinition = faFilter;
-    prullenbakIcon: IconDefinition = faRecycle;
 
     private dbEventAbonnement: Subscription;
     private dienstenAbonnement: Subscription;
@@ -173,9 +170,10 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     trashMode: boolean = false;         // zitten in restore mode om starts te kunnen terughalen
 
     filterOn: boolean = false;
-    toonZoeken: boolean = true;
+    toonRefresh: boolean = true;
+    toonStartlijstKlein: boolean = false;     // Klein formaat van de startlijst
 
-    private datumAbonnement: Subscription;         // volg de keuze van de kalender
+    private datumAbonnement: Subscription; // volg de keuze van de kalender
     datum: DateTime;                       // de gekozen dag in de kalender
 
     magToevoegen: boolean = false;
@@ -340,7 +338,8 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
     // Welke kolommen moet worden getoond in het grid
     kolomDefinitie() {
-        this.toonZoeken = this.sharedService.getSchermSize() != SchermGrootte.xs
+        this.toonStartlijstKlein = (this.sharedService.getSchermSize() < SchermGrootte.xl);
+        this.toonRefresh = (this.sharedService.getSchermSize() != SchermGrootte.xs);
 
         if (!this.deleteMode) {
             this.columns = this.dataColumns;

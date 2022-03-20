@@ -1,0 +1,59 @@
+<div class="kaart" (dblclick)="openStartEditor()" *ngIf="start">
+    <table class="w-100">
+        <tr>
+            <td class="w-75"><b>{{this.datumDM}}</b> {{start.REG_CALL}}</td>
+            <td class="rechts vliegtuigtype">{{start.VLIEGTUIGTYPE}}</td>
+            <td class="rechts">
+                <div class="d-flex flex-row justify-content-end iconGroep">
+                    <div class="column">
+                        <div *ngIf="!start.INSTRUCTIEVLUCHT" class="geenIcoontje">-</div>
+                        <div *ngIf="start.INSTRUCTIEVLUCHT" class="icoontje" data-toggle="tooltip" title="Instructie vlucht">I</div>
+                    </div>
+
+                    <div class="column">
+                        <div *ngIf="!start.CHECKSTART" class="geenIcoontje">-</div>
+                        <div *ngIf="start.CHECKSTART" class="icoontje" data-toggle="tooltip" title="Trainingsvlucht">T</div>
+                    </div>
+                    <div class="column">
+                        <div *ngIf="!start.PAX" class="geenIcoontje">-</div>
+                        <div *ngIf="start.PAX" class="icoontje" data-toggle="tooltip" title="Passagiers">P</div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td *ngIf="!naarDashboard(start.VLIEGER_ID)">{{start.VLIEGERNAAM_LID}}</td>
+            <td *ngIf="naarDashboard(start.VLIEGER_ID)"><a aria-label="Naar dashboard" [routerLink]="['/dashboard']" [queryParams]="{lidID: start.VLIEGER_ID}">{{start.VLIEGERNAAM_LID}}</a></td>
+
+            <td class="tijd rechts" *ngIf="!this.inTijdspan || !start.STARTTIJD">{{start.STARTTIJD}}</td>
+            <td class="tijd rechts" *ngIf="this.inTijdspan && start.STARTTIJD" (click)="startTijdClicked()">{{start.STARTTIJD}}</td>
+
+
+            <td class="rechts" *ngIf="start.STARTTIJD && start.LANDINGSTIJD">{{start.STARTMETHODE}}</td>
+            <td class="rechts laag" *ngIf="!start.STARTTIJD && !start.LANDINGSTIJD" rowspan="3">
+                <app-icon-button class="toolbarBtn" iconNaam="fas PlaneDeparture" (btnClicked)="startTijdClicked()"
+                                 btnColor="startBtn"></app-icon-button>
+            </td>
+            <td class="rechts laag" *ngIf="start.STARTTIJD && !start.LANDINGSTIJD" rowspan="3">
+                <app-icon-button class="toolbarBtn" iconNaam="fas PlaneArrival" (btnClicked)="landingsTijdClicked()"
+                                 btnColor="landingsBtn"></app-icon-button>
+            </td>
+        </tr>
+        <tr>
+            <td *ngIf="!naarDashboard(start.INZITTENDE_ID)">{{start.INZITTENDENAAM_LID}}</td>
+            <td *ngIf="naarDashboard(start.INZITTENDE_ID)"><a aria-label="Naar dashboard" [routerLink]="['/dashboard']" [queryParams]="{lidID: start.INZITTENDE_ID}">{{start.INZITTENDENAAM_LID}}</a></td>
+
+            <td class="tijd rechts" *ngIf="!this.inTijdspan || !start.LANDINGSTIJD">{{start.LANDINGSTIJD}}</td>
+            <td class="tijd rechts" *ngIf="this.inTijdspan && start.LANDINGSTIJD" (click)="landingsTijdClicked()">{{start.LANDINGSTIJD}}</td>
+
+            <td class="rechts" *ngIf="start.STARTTIJD && start.LANDINGSTIJD">{{start.DUUR}}</td>
+        </tr>
+        <tr *ngIf="start.OPMERKINGEN">
+            <td colspan="2">{{start.OPMERKINGEN}}</td>
+        </tr>
+    </table>
+</div>
+
+<app-tijd-invoer></app-tijd-invoer>
+<app-start-editor [VliegerID]="start.VLIEGER_ID" *ngIf="start"></app-start-editor>
+<app-track-editor></app-track-editor>

@@ -1,4 +1,9 @@
 <label for="LID" class="form-label">{{label}}</label>
+
+<fa-icon class="text-info ms-2 clickable" *ngIf="uitleg" [icon]="infoIcon"
+         [ngbPopover]="uitleg"
+         placement="right"></fa-icon>
+
 <ng-select id="LID"
            [items]="ledenSelectie$ | async"
            [disabled]="disabled"

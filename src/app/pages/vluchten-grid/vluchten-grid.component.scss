@@ -19,12 +19,10 @@
   margin-right: 2em;
 }
 
-#zoekInput {
-  width: 30%;
-}
-
-#data {
+.data {
   flex-grow: 100;
+  overflow: scroll;
+  max-height: calc(100vh - 215px);
 }
 
 #toolbar {

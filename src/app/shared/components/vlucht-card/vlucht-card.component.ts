@@ -1,0 +1,76 @@
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {HeliosLogboekDataset, HeliosStartDataset} from "../../../types/Helios";
+import {LoginService} from "../../../services/apiservice/login.service";
+import {TijdInvoerComponent} from "../editors/tijd-invoer/tijd-invoer.component";
+import {TrackEditorComponent} from "../editors/track-editor/track-editor.component";
+import {StartEditorComponent} from "../editors/start-editor/start-editor.component";
+import {DateTime, Interval} from "luxon";
+import {SharedService} from "../../../services/shared/shared.service";
+import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
+
+@Component({
+  selector: 'app-vlucht-card',
+  templateUrl: './vlucht-card.component.html',
+  styleUrls: ['./vlucht-card.component.scss']
+})
+export class VluchtCardComponent implements OnInit {
+  @Input() logboek: HeliosLogboekDataset;
+  @Input() start: HeliosStartDataset;
+
+  @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
+  @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
+  @ViewChild(StartEditorComponent) startEditor: StartEditorComponent;
+
+  inTijdspan: boolean = false;
+  datumDM: string;
+
+  constructor(private readonly configService: PegasusConfigService,
+              private readonly loginService: LoginService,
+              private readonly sharedService: SharedService) { }
+
+  ngOnInit(): void {
+    if (!this.start) {
+      this.start = JSON.parse(JSON.stringify(this.logboek));    // alles harmoniseren naar start object
+
+      // mismatch start & logboek oplossen
+      this.start.VLIEGERNAAM_LID = this.logboek.VLIEGERNAAM;
+      this.start.INZITTENDENAAM_LID = this.logboek.INZITTENDENAAM;
+    }
+
+    const ui = this.loginService.userInfo;
+    const nu:  DateTime = DateTime.now()
+
+    const diff = Interval.fromDateTimes(DateTime.fromSQL(this.start.DATUM!), nu);
+    if (diff.length("days") > this.configService.maxZelfEditDagen()) {
+      this.inTijdspan = ui!.Userinfo!.isBeheerder!;   // alleen beheerder mag na xx dagen wijzigen. xx is geconfigureerd in pegasus.config
+    }
+    else {
+      this.inTijdspan = true; // zitten nog binnen de termijn
+    }
+    this.datumDM = this.sharedService.datumDM(this.start.DATUM!)
+  }
+
+  // Moeten we link tonen naar dashboard
+  naarDashboard(id: number): boolean {
+    const ui = this.loginService.userInfo;
+    if (id == undefined || id == ui!.LidData?.ID) {
+      return false;
+    }
+    return (ui!.Userinfo!.isBeheerder || ui!.Userinfo!.isCIMT || ui!.Userinfo!.isInstructeur) as boolean;
+  }
+
+  // openen van popup om bestaande start te kunnen aanpassen
+  openStartEditor() {
+    if (this.inTijdspan) {
+      this.startEditor.openPopup(this.start);
+    }
+  }
+
+  startTijdClicked() {
+    this.tijdInvoerEditor.openStarttijdPopup(this.start);
+  }
+
+  landingsTijdClicked() {
+    this.tijdInvoerEditor.openLandingsTijdPopup(this.start);
+  }
+}

@@ -38,10 +38,15 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
         CLUBKIST: undefined,
         TMG: undefined,
         SLEEPKIST: undefined,
+        TRAINER: undefined,
         TYPE_ID: undefined,
+        URL: undefined,
         VOLGORDE: undefined,
         INZETBAAR: undefined,
-        OPMERKINGEN: undefined
+        BEVOEGDHEID_LOKAAL_ID: undefined,
+        BEVOEGDHEID_OVERLAND_ID: undefined,
+        OPMERKINGEN: undefined,
+
     };
     private typesAbonnement: Subscription;
     vliegtuigTypes: HeliosType[];
@@ -174,6 +179,11 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
         }
 
         if (!this.isVerwijderMode && !this.isRestoreMode) {
+            // Alleen tweezitters van de club kunnen een DBO vliegtuig zijn
+            if (!this.vliegtuig.CLUBKIST || this.vliegtuig.ZITPLAATSEN != 2) {
+                this.vliegtuig.TRAINER = false;
+            }
+
             if (this.vliegtuig.ID) {
                 this.Aanpassen(this.vliegtuig);
             } else {

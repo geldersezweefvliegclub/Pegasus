@@ -239,6 +239,8 @@ export interface components {
       TMG?: boolean;
       /** Is het een sleepvliegtuig? */
       SLEEPKIST?: boolean;
+      /** Wordt vliegtuig ingezet voor DBO opleiding */
+      TRAINER?: boolean;
       /** Link naar vliegtuig type tabel. Alleen nodig voor clubvliegtuigen */
       TYPE_ID?: number;
       /** Volgorde van vliegtuiglijst, bedoeld voor club vliegtuigen */

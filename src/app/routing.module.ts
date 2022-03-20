@@ -14,9 +14,8 @@ import {
   faKey,
   faPlane, faPlaneDeparture,
   faUser,
-  faUsers, faWaveSquare
+  faUsers, faWaveSquare, faMousePointer, faPenFancy, faPen
 } from '@fortawesome/free-solid-svg-icons';
-import {faClipboardList} from '@fortawesome/free-solid-svg-icons/faClipboardList';
 import {VluchtenGridComponent} from './pages/vluchten-grid/vluchten-grid.component';
 import {VliegtuigenGridComponent} from './pages/vliegtuigen-grid/vliegtuigen-grid.component';
 import {DaginfoComponent} from './pages/daginfo/daginfo.component';
@@ -27,6 +26,7 @@ import {TracksGridComponent} from "./pages/tracks-grid/tracks-grid.component";
 import {AuditPageComponent} from "./pages/audit-page/audit-page.component";
 import {ReserveringPageComponent} from "./pages/reservering-page/reservering-page.component";
 import {faAvianex} from "@fortawesome/free-brands-svg-icons";
+import {StartlijstPageComponent} from "./pages/startlijst-page/startlijst-page.component";
 
 export interface CustomRoute extends Route {
   excluded: boolean;
@@ -39,6 +39,7 @@ export const routes: CustomRoute[] = [
   {path: '', pathMatch: 'full', redirectTo: 'dashboard', excluded: true, icon: faUser, text: 'EXCLUDED'},
   {path: 'dashboard', component: DashboardPageComponent, excluded: false, icon: faChartPie, text: 'Dashboard'},
   {path: 'vluchten', component: VluchtenGridComponent, excluded: false, icon: faPlaneDeparture, text: 'Vluchten'},
+  {path: 'startlijst', component: StartlijstPageComponent, excluded: false, icon: faPen, text: 'Startlijst'},
   {path: 'daginfo', component: DaginfoComponent, excluded: false, icon: faCalendarAlt, text: 'Dag info'},
   {path: 'tracks', component: TracksGridComponent, excluded: false, icon: faAddressCard, text: 'Tracks'},
   {path: 'reserveringen', component: ReserveringPageComponent, excluded: false, icon: faAvianex, text: 'Kist reserveren'},

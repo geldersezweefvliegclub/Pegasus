@@ -64,7 +64,21 @@
                     </div>
                 </div>
                 <div class="row my-3 align-items-end" *ngIf="vliegtuig.CLUBKIST">
-                    <div class="col-12 col-md-6">
+                    <div class="col-3 ">
+                        <input name="INZETBAAR" type="checkbox" class="form-check-input" id="INZETBAAR"
+                               [(ngModel)]="vliegtuig.INZETBAAR">
+                        <label class="form-check-label ms-2" for="CLUBKIST">
+                            Inzetbaar
+                        </label>
+                    </div>
+                    <div class="col-6">
+                        <input name="TRAINER" type="checkbox" class="form-check-input" id="TRAINER" [disabled]="vliegtuig.ZITPLAATSEN != 2"
+                               [(ngModel)]="vliegtuig.TRAINER">
+                        <label for="TRAINER" class="form-check-label ms-2">DBO Trainer</label>
+                    </div>
+                </div>
+                <div class="row my-3 align-items-end" *ngIf="vliegtuig.CLUBKIST">
+                    <div class="col-12 col-md-3">
                         <label for="VOLGORDE" class="form-label">Volgorde</label>
                         <input [required]="vliegtuig.CLUBKIST" name="zitplaatsen" type="number" class="form-control" id="VOLGORDE"
                                [(ngModel)]="vliegtuig.VOLGORDE"
@@ -78,22 +92,6 @@
                             <option *ngFor="let vliegtuigType of vliegtuigTypes"
                                     [value]="vliegtuigType.ID">{{vliegtuigType.OMSCHRIJVING}}</option>
                         </select>
-                    </div>
-                </div>
-                <div class="row my-3 align-items-end" *ngIf="vliegtuig.CLUBKIST">
-                    <div class="col-3 col-md-3">
-                        <input name="INZETBAAR" type="checkbox" class="form-check-input" id="INZETBAAR"
-                               [(ngModel)]="vliegtuig.INZETBAAR">
-                        <label class="form-check-label ms-2" for="CLUBKIST">
-                            Inzetbaar
-                        </label>
-                    </div>
-                </div>
-                <div class="row my-3 align-items-end" *ngIf="vliegtuig.CLUBKIST">
-                    <div class="col-12 col-md-12">
-                        <label for="URL" class="form-label">URL naar handboek</label>
-                        <input type="text" class="form-control" id="URL"
-                               [(ngModel)]="vliegtuig.URL">
                     </div>
                 </div>
                 <div class="row my-3 align-items-end" *ngIf="vliegtuig.CLUBKIST">
@@ -112,6 +110,13 @@
                             <option *ngFor="let competentie of PVBs"
                                     [value]="competentie.Overland">{{competentie.Type}}</option>
                         </select>
+                    </div>
+                </div>
+                <div class="row my-3 align-items-end" *ngIf="vliegtuig.CLUBKIST">
+                    <div class="col-12 col-md-12">
+                        <label for="URL" class="form-label">URL naar handboek</label>
+                        <input type="text" class="form-control" id="URL"
+                               [(ngModel)]="vliegtuig.URL">
                     </div>
                 </div>
                 <div class="row my-3 align-items-end">

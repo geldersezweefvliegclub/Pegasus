@@ -33,13 +33,12 @@
                                          btnColor="btn-primary" *ngIf="!this.deleteMode"></app-icon-button>
 
                         <div *ngIf="this.deleteMode">
-                            <input type="checkbox" class="btn-check" id="trashBtn" name="prullenbakMode"
-                                   [(ngModel)]="trashMode"
-                                   (ngModelChange)="trashModeJaNee()">
-                            <label class="btn btn-outline-primary recycleBtn" for="trashBtn">
-                                <fa-icon [icon]="prullenbakIcon"></fa-icon>
-                                Prullenbak
-                            </label>
+                            <app-status-button
+                                    tekst="Prullenbak"
+                                    [actief]="trashMode"
+                                    (btnClicked)="trashModeJaNee()"
+                                    iconNaam="fas Recycle">
+                            </app-status-button>
                         </div>
                     </div>
                 </div>

@@ -1,7 +1,7 @@
 <app-error [error]="error"></app-error>
 <app-success [success]="success"></app-success>
 
-<div class="h-100 mobielHoogte">
+<div class="gridHoogte" *ngIf="!toonLogboekKlein">
     <app-datatable
             [id]=id
             [rowData]="data"
@@ -9,12 +9,20 @@
             [loading]="isLoading"
             [rowClassRules]="rowClassRules"
             [frameworkComponents]="frameworkComponents"
-            (rowDoubleClicked)="openStartEditor($event)"
-            [pagination]="false"
+            (rowDoubleClicked)="openStartEditor($event.data)"
+            [pagination]="true"
             class="h-100">
     </app-datatable>
-
-    <app-tijd-invoer></app-tijd-invoer>
-    <app-start-editor [VliegerID]="VliegerID"></app-start-editor>
-    <app-track-editor></app-track-editor>
 </div>
+<div class="mobielHoogte" *ngIf="toonLogboekKlein">
+    <div *ngFor="let vlucht of data;let i = index">
+        <div *ngIf="i < MaxItems">
+            <app-vlucht-card [logboek]="vlucht"></app-vlucht-card>
+        </div>
+    </div>
+</div>
+
+<app-tijd-invoer></app-tijd-invoer>
+<app-start-editor [VliegerID]="VliegerID"></app-start-editor>
+<app-track-editor></app-track-editor>
+

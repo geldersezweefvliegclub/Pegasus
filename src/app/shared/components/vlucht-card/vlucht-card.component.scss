@@ -1,0 +1,55 @@
+
+.kaart {
+  margin: 4px 0px 4px 0px;
+  padding: 0px 2px 0px 2px;
+  border-radius: 5px;
+  border: 1px solid #c4c2c1;
+  background-color: #f2f2f2;
+}
+
+.tijd {
+  min-width: 50px;
+}
+
+.rechts
+{
+  text-align: right;
+}
+
+.laag {
+  vertical-align: bottom;
+}
+
+.vliegtuigtype {
+  min-width: 90px;
+}
+
+.iconGroep {
+  margin: 0;
+}
+
+.icoontje {
+  margin-right: 2px;
+  margin-left: 2px;
+  padding-left: 2px;
+  padding-right: 2px;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  border: 1px solid #626161FF;
+  color: black;
+  text-align: center;
+  font: 13px "Courier New"
+}
+
+.geenIcoontje {
+  margin-right: 2px;
+  margin-left: 2px;
+  padding-left: 2px;
+  padding-right: 2px;
+  width: 15px;
+  height: 15px;
+  color: black;
+  text-align: center;
+  font: 13px "Courier New"
+}

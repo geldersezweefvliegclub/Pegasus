@@ -12,7 +12,8 @@
 
 <nav>
     <div class="card ps-0 rounded-0" >
-        <div class="linker-menu d-flex flex-column justify-content-between" [ngClass]="{'min-vh-100': !topMenu,'bovenop': topMenu}">
+        <div class="linker-menu d-flex flex-column justify-content-between"
+             [ngClass]="{'min-vh-100': !topMenu,'bovenop': topMenu, 'linker-menu-smal': kleineDatum()}">
 
             <div class="list-group list-group-flush p-3">
                 <div class="logoContainer" *ngIf="toonLogo()">
@@ -41,7 +42,7 @@
             </div>
 
 
-            <div class="w-100 overflow-auto" *ngIf="!this.loginService.userInfo?.Userinfo.isStarttoren">
+            <div class="list-group list-group-flush p-3" *ngIf="!this.loginService.userInfo?.Userinfo.isStarttoren">
                 <a class="list-group-item list-group-item-action waves-effect"
                    (click)="showBeheer = !showBeheer">
                     <fa-icon [icon]="beheerIcon" class="me-3"></fa-icon>
@@ -63,23 +64,25 @@
                     </div>
                 </a>
 
-                <ngb-datepicker
-                    *ngIf="!kleineDatum()"
-                    #d
-                    name="datumIngave"
-                    class="navCalendar w-100"
-                    outsideDays="hidden"
-                    [minDate]="kalenderEersteDatum"
-                    [maxDate]="kalenderLaatsteDatum"
-                    [(ngModel)]="kalenderIngave"
-                    (dateSelect)="NieuweDatum($event)"
-                    (navigate)="KalenderAndereMaand($event)"
+                <div class="w-100 overflow-auto" *ngIf="!kleineDatum()">
+                    <ngb-datepicker
+                        *ngIf="!kleineDatum()"
+                        #d
+                        name="datumIngave"
+                        class="navCalendar w-100"
+                        outsideDays="hidden"
+                        [minDate]="kalenderEersteDatum"
+                        [maxDate]="kalenderLaatsteDatum"
+                        [(ngModel)]="kalenderIngave"
+                        (dateSelect)="NieuweDatum($event)"
+                        (navigate)="KalenderAndereMaand($event)"
 
-                    [dayTemplate]="t">
-                </ngb-datepicker>
+                        [dayTemplate]="t">
+                    </ngb-datepicker>
+                </div>
 
                 <div *ngIf="kleineDatum()" class="list-group-item d-flex" >
-                    <input ngbDatepicker disabled="true" [(ngModel)]="kalenderIngave" class="kleineDatum">
+                    <div class="datumVeld">{{datumDMY}}</div>
                     <app-icon-button iconNaam="far Calendar" (btnClicked)="popupKalender.openPopup()"
                                              btnColor="btn-primary"></app-icon-button>
                 </div>

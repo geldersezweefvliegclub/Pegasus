@@ -25,6 +25,8 @@ import {NgSelectComponent} from "@ng-select/ng-select";
 import {VliegtuigInvoerComponent} from "./vliegtuig-invoer/vliegtuig-invoer.component";
 import {ProgressieService} from "../../../../services/apiservice/progressie.service";
 import {LoginService} from "../../../../services/apiservice/login.service";
+import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import {faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
     selector: 'app-start-editor',
@@ -289,6 +291,14 @@ export class StartEditorComponent implements OnInit {
                 this.start.STARTMETHODE_ID = 507;
                 this.toonStartMethode = false;
             }
+
+            if ((this.gekozenVliegtuig.ZITPLAATSEN == 2) && (this.gekozenVliegtuig.TRAINER) && (this.start.ID == undefined)) {
+                this.start.INSTRUCTIEVLUCHT = true;
+            }
+
+            if (this.gekozenVliegtuig.ZITPLAATSEN == 1) {
+                this.start.INSTRUCTIEVLUCHT = false;
+            }
         }
 
         // Indien clubkist dan mogen er een aantal lidtypes hierop niet vliegen
@@ -307,7 +317,6 @@ export class StartEditorComponent implements OnInit {
         const gekozenVlieger = this.leden.find(lid => lid.ID == id) as HeliosLedenDataset;
 
         if (!gekozenVlieger) {
-            this.medicalWaarschuwing = false;
             this.toonVliegerNaam = false;
         } else {
             switch (gekozenVlieger.LIDTYPE_ID) {
@@ -320,28 +329,18 @@ export class StartEditorComponent implements OnInit {
                 case 610:   // oprotkabel
                 case 612:   // penningmeester
                 {
-                    this.medicalWaarschuwing = false;
                     this.toonVliegerNaam = true;
                     break;
                 }
                 default: {
                     this.toonVliegerNaam = false;
-
-                    if (!gekozenVlieger.MEDICAL) {
-                        this.medicalWaarschuwing = true;   // medical niet ingevoerd
-                    }
-                    else {
-                        // is medical verlopen op de vliegdag?
-
-                        const d = DateTime.fromSQL(gekozenVlieger.MEDICAL);
-                        this.medicalWaarschuwing =  (d < this.datum);
-                    }
                     break;
                 }
             }
         }
         this.tonenInzittendeNaam();
         this.vliegtuigTypeBevoegd();
+        this.medicalCheck();
     }
 
     // De inzittende is nu ook bekend
@@ -349,6 +348,8 @@ export class StartEditorComponent implements OnInit {
         this.start.INZITTENDE_ID = $event;
         this.tonenInzittendeNaam();
         this.vliegtuigTypeBevoegd();
+
+        this.medicalCheck();
     }
 
     //  this.toonInzittendeNaam: 0, naam hoeft niet ingevoerd te worden
@@ -384,7 +385,6 @@ export class StartEditorComponent implements OnInit {
         }
     }
 
-
     openVerwijderPopup(id: number) {
         this.haalStartOp(id);
         this.formTitel = 'Start verwijderen';
@@ -406,20 +406,33 @@ export class StartEditorComponent implements OnInit {
     }
 
     uitvoeren() {
-        this.isSaving = true;
-        if (this.isRestoreMode) {
-            this.Herstellen(this.start);
+        // extra vraag om instructie vlucht, indien nodig
+        let doorgaan = true;
+
+        if (this.gekozenVliegtuig.ZITPLAATSEN == 2 && !this.isVerwijderMode && !this.isRestoreMode) {
+            const inzittende = this.leden.find(lid => lid.ID == this.start.INZITTENDE_ID) as HeliosLedenDataset;
+
+            if (inzittende && inzittende.INSTRUCTEUR && !this.start.INSTRUCTIEVLUCHT) {
+                doorgaan = confirm("Bevestig dat dit GEEN instructie vlucht is.");
+            }
         }
 
-        if (this.isVerwijderMode) {
-            this.Verwijderen(this.start);
-        }
+        if (doorgaan) {
+            this.isSaving = true;
+            if (this.isRestoreMode) {
+                this.Herstellen(this.start);
+            }
 
-        if (!this.isVerwijderMode && !this.isRestoreMode) {
-            if (this.start.ID) {
-                this.Aanpassen(this.start);
-            } else {
-                this.Toevoegen(this.start);
+            if (this.isVerwijderMode) {
+                this.Verwijderen(this.start);
+            }
+
+            if (!this.isVerwijderMode && !this.isRestoreMode) {
+                if (this.start.ID) {
+                    this.Aanpassen(this.start);
+                } else {
+                    this.Toevoegen(this.start);
+                }
             }
         }
     }
@@ -481,6 +494,41 @@ export class StartEditorComponent implements OnInit {
         });
     }
 
+    // check of medical op orde is. Check inzittende wanneer het een instructie vlucht is
+    medicalCheck() {
+        const checkID = this.start.INSTRUCTIEVLUCHT ? this.start.INZITTENDE_ID : this.start.VLIEGER_ID
+        const gekozenVlieger = this.leden.find(lid => lid.ID == checkID) as HeliosLedenDataset;
+
+        if (!gekozenVlieger) {
+            this.medicalWaarschuwing = false;
+        } else {
+            switch (gekozenVlieger.LIDTYPE_ID) {
+                case 609:   // nieuw lid
+                case 607:   // zusterclub
+                case 610:   // oprotkabel
+                case 612:   // penningmeester
+                {
+                    this.medicalWaarschuwing = false;
+                    break;
+                }
+                default: {
+                    if (!gekozenVlieger.MEDICAL) {
+                        this.medicalWaarschuwing = true;   // medical niet ingevoerd
+                    }
+                    else {
+                        // is medical verlopen op de vliegdag?
+
+                        const d = DateTime.fromSQL(gekozenVlieger.MEDICAL);
+                        this.medicalWaarschuwing =  (d < this.datum);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    // Mag het lid vliegen op het gekozen vliegtuig. Alleen van toepassing op clubkisten
+    // Voor instructie vlucht, checken we de inzittende ipv vlieger
     vliegtuigTypeBevoegd() {
         // moeten natuurlijk vlieger en vliegtuig ingevoerd hebben
         if (!this.start.VLIEGTUIG_ID || !this.start.VLIEGER_ID) {
@@ -492,7 +540,8 @@ export class StartEditorComponent implements OnInit {
         if (this.gekozenVliegtuig.CLUBKIST == false) {
             return;
         }
-        const gekozenVlieger = this.leden.find(lid => lid.ID == this.start.VLIEGER_ID) as HeliosLedenDataset;
+        const checkID = this.start.INSTRUCTIEVLUCHT ? this.start.INZITTENDE_ID : this.start.VLIEGER_ID
+        const gekozenVlieger = this.leden.find(lid => lid.ID == checkID) as HeliosLedenDataset;
 
         if (gekozenVlieger) {
             switch (gekozenVlieger.LIDTYPE_ID) {
@@ -546,6 +595,10 @@ export class StartEditorComponent implements OnInit {
             return false;
         }
 
+        if (!this.start.INSTRUCTIEVLUCHT) {
+            return false; // alleen een instructie vlucht kan afgetekend worden als trainingsvlucht
+        }
+
         const gekozenVlieger = this.leden.find(lid => lid.ID == this.start.VLIEGER_ID) as HeliosLedenDataset;
         if (!gekozenVlieger) {
             return false;   // Vlieger moet bekend zijn
@@ -575,6 +628,15 @@ export class StartEditorComponent implements OnInit {
             }
         }
         return false;
+    }
+
+    // Kan de vlucht een instructie vlucht zijn? Instrcuteur moet dan achterin
+    kanInstructieVluchtZijn() {
+        const inzittende = this.leden.find(lid => lid.ID == this.start.INZITTENDE_ID) as HeliosLedenDataset;
+        if (!inzittende) {
+            return true;            // Inzittende is niet ingevoerd, laten we checkbox maar tonen
+        }
+        return inzittende.INSTRUCTEUR;  // Is inzittende een instructeur
     }
 
     StartMethodeIngevuld(): string {
@@ -607,6 +669,7 @@ export class StartEditorComponent implements OnInit {
 
     magOmwisselen() {
         if (this.gekozenVliegtuig?.ZITPLAATSEN !== 2)     return false;
+        if (this.start.INSTRUCTIEVLUCHT == true)          return false;
         if (this.start.PAX == true)                       return false;
 
         return true;

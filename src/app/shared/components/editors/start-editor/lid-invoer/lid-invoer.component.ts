@@ -9,6 +9,8 @@ import {
 } from '@angular/core';
 import {Observable, of, Subject} from 'rxjs';
 import {HeliosAanwezigLedenDataset, HeliosLedenDataset, HeliosVliegtuigenDataset} from '../../../../../types/Helios';
+import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import {faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
     selector: 'app-lid-invoer',
@@ -20,15 +22,19 @@ export class LidInvoerComponent implements OnInit, OnChanges {
     @Input() aanwezig: HeliosAanwezigLedenDataset[] = [];
     @Input() placeholder: string = "";
     @Input() label: string = "";
+    @Input() uitleg: string;
     @Input() disabled: boolean = false;
     @Input() required: boolean = false;
     @Input() excludeLidTypes: string = ""
     @Input() alleenPaxVliegers: boolean = false;
+    @Input() alleenInstructeurs: boolean = false;
     @Input() LID_ID: number | undefined;
     @Input() vliegtuig: HeliosVliegtuigenDataset | undefined = undefined
 
     @Output() LidChanged: EventEmitter<number> = new EventEmitter<number>();
     EventEmitterDelay: number;
+
+    readonly infoIcon: IconDefinition = faInfoCircle;
 
     lidInput$ = new Subject<string | null>();
     ledenFiltered: HeliosAanwezigLedenDataset[] = [];
@@ -66,7 +72,6 @@ export class LidInvoerComponent implements OnInit, OnChanges {
         if ((nweLijst.length > 0) && ((nweLijst.length >= 5) || (searchTerm.length <= 2))) {
             return nweLijst
         }
-
         // nee, geen aanwezige leden, dan alle leden
         return this.ledenFiltered.filter((lid: HeliosAanwezigLedenDataset) => {
             return lid.NAAM!.toLowerCase().includes(searchTerm.toLowerCase());
@@ -81,9 +86,12 @@ export class LidInvoerComponent implements OnInit, OnChanges {
                 if (this.excludeLidTypes.includes(item.LIDTYPE_ID!.toString())) {
                     return;    // we moeten dit lid niet opnemen omdat lidtype niet voldoet
                 }
-                if ((this.alleenPaxVliegers) && (item.PAX !== true)) {
-                    return;    // We zoeken alleen leden die PAX mogenvliegen
-                }
+            }
+            if ((this.alleenPaxVliegers) && (item.PAX !== true)) {
+                return;    // We zoeken alleen leden die PAX mogenvliegen
+            }
+            if ((this.alleenInstructeurs) && (item.INSTRUCTEUR !== true)) {
+                return;    // We zoeken alleen leden die instructeur zijn
             }
             this.ledenFiltered.push(
                 {
@@ -98,8 +106,8 @@ export class LidInvoerComponent implements OnInit, OnChanges {
         if (!this.excludeLidTypes) {
             this.aanwezigFiltered = this.aanwezig;
         } else {
-
             this.aanwezigFiltered = this.aanwezig.filter((lid: HeliosAanwezigLedenDataset) => {
+                if (!lid.INSTRUCTEUR && this.alleenInstructeurs) return false;
                 if (lid.LID_ID == this.LID_ID) return true;  // reeds invoerde lid moet ook in de lijst
                 return (!this.excludeLidTypes.includes(lid.LIDTYPE_ID!.toString()))
             });

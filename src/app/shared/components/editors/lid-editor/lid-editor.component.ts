@@ -35,9 +35,9 @@ export class LidEditorComponent implements OnInit {
 
     wachtwoordVerborgen: boolean = true;
     oogIcon: IconDefinition = faEye;
-    informatieIcon: IconDefinition = faInfo;
-    infoIcon: IconDefinition = faInfoCircle;
-    persoonIcon: IconDefinition = faUser;
+    readonly informatieIcon: IconDefinition = faInfo;
+    readonly infoIcon: IconDefinition = faInfoCircle;
+    readonly persoonIcon: IconDefinition = faUser;
 
     controleWachtwoord: string = '';
     wachtwoord: string = '';
