@@ -3,10 +3,6 @@ import {fas} from '@fortawesome/free-solid-svg-icons';
 import {far, IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {FlipProp} from '@fortawesome/fontawesome-svg-core';
 import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
-import {VliegtuigenService} from "../../../services/apiservice/vliegtuigen.service";
-import {StartlijstService} from "../../../services/apiservice/startlijst.service";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-icon-button',
@@ -43,6 +39,7 @@ export class IconButtonComponent implements OnInit {
                     this.faIcon = far['fa' + parts[1]];
                 }
 
+                // als een verkeerde naam is opgegeven tonen we een uitroepteken en printen alle mogelijkheden in console
                 if (!this.faIcon) {
                     console.log('fa' + parts[1]);
                     console.log('fas', fas);
@@ -53,12 +50,14 @@ export class IconButtonComponent implements OnInit {
         }
     }
 
-    buttonClicked() {
-        this.btnClicked.emit();
-    }
-
+    // Voor kleine schermen, tonen we alleen icoontje en geen tekst
     @HostListener('window:resize', ['$event'])
     onWindowResize() {
         this.toonTekst = (this.sharedService.getSchermSize() > SchermGrootte.md)
+    }
+
+    // Voor de actie uit die gekoppeld is aan deze knop
+    buttonClicked() {
+        this.btnClicked.emit();
     }
 }

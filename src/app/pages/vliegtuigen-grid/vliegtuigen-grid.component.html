@@ -28,9 +28,10 @@
 
                 <div *ngIf="this.deleteMode">
                     <app-status-button
+                            class="toolbarBtn"
                             tekst="Prullenbak"
                             [actief]="trashMode"
-                            (btnClicked)="trashModeJaNee()"
+                            (btnClicked)="trashModeJaNee($event)"
                             iconNaam="fas Recycle">
                     </app-status-button>
                 </div>

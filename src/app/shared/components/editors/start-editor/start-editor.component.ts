@@ -12,21 +12,16 @@ import {ModalComponent} from '../../modal/modal.component';
 import {StartlijstService} from '../../../../services/apiservice/startlijst.service';
 import {VliegtuigenService} from '../../../../services/apiservice/vliegtuigen.service';
 import {AanwezigVliegtuigService} from '../../../../services/apiservice/aanwezig-vliegtuig.service';
-
 import {Observable, of, Subscription} from 'rxjs';
-
 import {DateTime} from 'luxon';
 import {LedenService} from '../../../../services/apiservice/leden.service';
 import {AanwezigLedenService} from '../../../../services/apiservice/aanwezig-leden.service';
 import {SharedService} from '../../../../services/shared/shared.service';
 import {DaginfoService} from '../../../../services/apiservice/daginfo.service';
 import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {NgSelectComponent} from "@ng-select/ng-select";
 import {VliegtuigInvoerComponent} from "./vliegtuig-invoer/vliegtuig-invoer.component";
 import {ProgressieService} from "../../../../services/apiservice/progressie.service";
 import {LoginService} from "../../../../services/apiservice/login.service";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
     selector: 'app-start-editor',
@@ -62,7 +57,7 @@ export class StartEditorComponent implements OnInit {
     // 612 = penningmeester
     // 613 = systeem gebruiker
     // 625 = DDWV'er
-    exclLidtypeAlsInzittende: string = "607,610,612,613,625"
+    exclLidtypeAlsInzittende: string = "607,610,612,613"
     exclLidtypeAlsVlieger: string = "613"
 
     private ledenAbonnement: Subscription;
@@ -240,6 +235,7 @@ export class StartEditorComponent implements OnInit {
         this.popup.close();
     }
 
+    // Ophalen van de start uit de database (via API)
     haalStartOp(id: number): void {
         this.isLoading = true;
 
@@ -292,10 +288,13 @@ export class StartEditorComponent implements OnInit {
                 this.toonStartMethode = false;
             }
 
+            // Als het vliegtuig een DBO trainer is, dan zetten we meteen dat het een instructievlucht is
+            // Maar dat doen we alleen bij nieuwe invoer
             if ((this.gekozenVliegtuig.ZITPLAATSEN == 2) && (this.gekozenVliegtuig.TRAINER) && (this.start.ID == undefined)) {
                 this.start.INSTRUCTIEVLUCHT = true;
             }
 
+            // Voor eenzitters is het natuurlijk nooit een instructie start
             if (this.gekozenVliegtuig.ZITPLAATSEN == 1) {
                 this.start.INSTRUCTIEVLUCHT = false;
             }
@@ -385,6 +384,7 @@ export class StartEditorComponent implements OnInit {
         }
     }
 
+    // toon popup om vlucht te verwijderen
     openVerwijderPopup(id: number) {
         this.haalStartOp(id);
         this.formTitel = 'Start verwijderen';
@@ -395,6 +395,7 @@ export class StartEditorComponent implements OnInit {
         this.popup.open();
     }
 
+    // toon popup om eerder verwijderde vlucht weer terug ui de prullenbak te halen
     openRestorePopup(id: number) {
         this.haalStartOp(id);
         this.formTitel = 'Start herstellen';
@@ -405,6 +406,7 @@ export class StartEditorComponent implements OnInit {
         this.popup.open();
     }
 
+    // Opslaan van de informatie
     uitvoeren() {
         // extra vraag om instructie vlucht, indien nodig
         let doorgaan = true;
@@ -428,6 +430,13 @@ export class StartEditorComponent implements OnInit {
             }
 
             if (!this.isVerwijderMode && !this.isRestoreMode) {
+                if (!this.toonVliegerNaam) {
+                    this.start.VLIEGERNAAM = undefined;
+                }
+                if (this.toonInzittendeNaam == 0 && !this.start.PAX) {
+                    this.start.INZITTENDENAAM = undefined;
+                }
+
                 if (this.start.ID) {
                     this.Aanpassen(this.start);
                 } else {
@@ -500,7 +509,7 @@ export class StartEditorComponent implements OnInit {
         const gekozenVlieger = this.leden.find(lid => lid.ID == checkID) as HeliosLedenDataset;
 
         if (!gekozenVlieger) {
-            this.medicalWaarschuwing = false;
+            this.medicalWaarschuwing = false;   // er is nog geen vlieger geselecteerd
         } else {
             switch (gekozenVlieger.LIDTYPE_ID) {
                 case 609:   // nieuw lid
@@ -538,6 +547,7 @@ export class StartEditorComponent implements OnInit {
 
         // alleen controle op clubvliegtuigen
         if (this.gekozenVliegtuig.CLUBKIST == false) {
+            this.toonWaarschuwing = false;
             return;
         }
         const checkID = this.start.INSTRUCTIEVLUCHT ? this.start.INZITTENDE_ID : this.start.VLIEGER_ID
@@ -639,6 +649,7 @@ export class StartEditorComponent implements OnInit {
         return inzittende.INSTRUCTEUR;  // Is inzittende een instructeur
     }
 
+    // Is de start methode ingevoerd
     StartMethodeIngevuld(): string {
         if (this.start.STARTMETHODE_ID) {
             return ""
@@ -648,6 +659,7 @@ export class StartEditorComponent implements OnInit {
         }
     }
 
+    // Er mag alleen opgeslagen worden als aan de minimale voorwaarden zijn voldaan
     opslaanDisabled() {
         if (!this.start.VLIEGTUIG_ID || !this.start.STARTMETHODE_ID || !this.start.VELD_ID) {
             return true;
@@ -659,6 +671,7 @@ export class StartEditorComponent implements OnInit {
         return false;
     }
 
+    // Mag de vlieger pax vliegen? Staat in zijn profiel (dus niet in progressiekaart)
     magPaxVliegen() {
         const gekozenVlieger = this.leden.find(lid => lid.ID == this.start.VLIEGER_ID) as HeliosLedenDataset;
         if (!gekozenVlieger) {
@@ -667,6 +680,7 @@ export class StartEditorComponent implements OnInit {
         return gekozenVlieger.PAX;  // Mag vlieger PAX vliegen
     }
 
+    // Mogen de vlieger voorin / achterin omgewisseld worden?
     magOmwisselen() {
         if (this.gekozenVliegtuig?.ZITPLAATSEN !== 2)     return false;
         if (this.start.INSTRUCTIEVLUCHT == true)          return false;
@@ -675,6 +689,7 @@ export class StartEditorComponent implements OnInit {
         return true;
     }
 
+    // De knop omwissellen is gebruikt, dus nu vlieger en inzittende omwisselen. Soms alleen de ingevoerde namen, anders de ID's
     omwisselen() {
         let alleenNamenOmwisselen = false;
 
@@ -690,6 +705,7 @@ export class StartEditorComponent implements OnInit {
             }
         }
 
+        // tijdelijke variablen
         const tmpID: number | undefined = this.start.VLIEGER_ID;
         const tmpNaam: string | undefined = this.start.VLIEGERNAAM;
 

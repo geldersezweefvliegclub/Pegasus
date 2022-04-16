@@ -2,7 +2,7 @@
 <app-success [success]="success"></app-success>
 
 <app-pegasus-card titel="Vluchten"
-               subtitel="Een overzicht van de starts {{datum.day}}-{{datum.month}}-{{datum.year}} {{toonStartlijstKlein|json}}"
+               subtitel="Een overzicht van de starts {{datum.day}}-{{datum.month}}-{{datum.year}}"
                [icon]="iconCardIcon"
                [exportEnabled]="this.magExporteren"
                (excelExport)="expoteerStartlijst()">
@@ -28,9 +28,10 @@
             <div class="col-4 col-xl-3">
                 <div class="d-flex flex-row">
                         <app-status-button
+                                class="toolbarBtn"
                                 tekst="Filter"
                                 [actief]="filterOn"
-                                (btnClicked)="filter()"
+                                (btnClicked)="filter($event)"
                                 iconNaam="fas Filter">
                         </app-status-button>
                     <div>
@@ -41,9 +42,10 @@
 
                         <div *ngIf="this.deleteMode">
                             <app-status-button
+                                    class="toolbarBtn"
                                     tekst="Prullenbak"
                                     [actief]="trashMode"
-                                    (btnClicked)="trashModeJaNee()"
+                                    (btnClicked)="trashModeJaNee($event)"
                                     iconNaam="fas Recycle">
                             </app-status-button>
                         </div>

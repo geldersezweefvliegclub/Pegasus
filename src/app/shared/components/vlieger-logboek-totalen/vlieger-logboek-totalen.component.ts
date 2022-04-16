@@ -15,8 +15,8 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDest
     @Input() VliegerID: number;
 
     private dbEventAbonnement: Subscription;
-    private datumAbonnement: Subscription;         // volg de keuze van de kalender
-    datum: DateTime;                       // de gekozen dag
+    private datumAbonnement: Subscription;          // volg de keuze van de kalender
+    datum: DateTime;                                // de gekozen dag
     data: HeliosLogboekTotalen;
     isLoading: boolean = false;
 
@@ -83,5 +83,4 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDest
             });
         }
     }
-
 }

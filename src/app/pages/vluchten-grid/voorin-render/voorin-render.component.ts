@@ -17,7 +17,6 @@ export class VoorinRenderComponent implements AgRendererComponent {
     grid_vliegernaam: string;
     naarDashboard: boolean = false;
 
-    warning: boolean = false;        // nog niet gestart, PIC is onbekend
     error: boolean = false;          // er is gestart, maar PIC is onbekend
 
     constructor(private readonly loginService: LoginService) { }
@@ -41,8 +40,6 @@ export class VoorinRenderComponent implements AgRendererComponent {
         } else {
             if (params.data.STARTTIJD) {
                 this.error = true;    // Wel starttijd, geen vlieger bekend. PROBLEEM !!!
-            } else {
-                this.warning = true;  // Vlieger is nog niet beked, maar gelukkig is er nog niet gestart
             }
         }
     }

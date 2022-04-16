@@ -495,6 +495,8 @@ export interface components {
       INZITTENDENAAM_LID?: string;
       /** Vliegtuig type */
       VLIEGTUIGTYPE?: string;
+      /** Vliegtuig type ID */
+      VLIEGTUIG_TYPE_ID?: number;
       /** Het lidtype van het lid zoals dat in ref_leden staat */
       VLIEGER_LIDTYPE_ID?: number;
       /** Het lidtype van de inzittende zoals dat in ref_leden staat */

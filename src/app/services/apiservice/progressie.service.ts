@@ -27,11 +27,6 @@ export class ProgressieService {
     async getProgressie(lidID:number, comptentiesIDs?: string): Promise<HeliosBehaaldeProgressieDataset[]> {
         let progressie: HeliosBehaaldeProgressie | null = null;
 
-        // starttoren heeft geen progressie nodig
-        if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
-            return [];
-        }
-
         let getParams: KeyValueArray = {};
         getParams['LID_ID'] = lidID.toString();
 

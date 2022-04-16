@@ -93,6 +93,7 @@ export class LidEditorComponent implements OnInit {
             }
         })
 
+        // als lidID > 0, dan wijzigen we een bestaand lid profiel
         if (this.lidID >= 0) {
             this.isLoading = true;
 
@@ -247,11 +248,13 @@ export class LidEditorComponent implements OnInit {
         });
     }
 
+    // Datum velden moeten in YYYY-MM-DD aan api worden aangeboden
     converteerDatumNaarISO($event: NgbDate): string {
         const unformatted = DateTime.fromObject($event);
         return unformatted.isValid ? unformatted.toISODate().toString() : '';
     }
 
+    // Datum velden komen in ISO formaat van API, conversie naar NgbDate zodat invoer gedaan kan worden
     converteerDatumNaarNgbDate(datum: string | undefined): NgbDate | null {
         if (datum) {
             return NgbDate.from(DateTime.fromSQL(datum));
@@ -259,11 +262,13 @@ export class LidEditorComponent implements OnInit {
             return null;
     }
 
+    // Laat het wachtwoorden wel / niet zien
     verbergWachtwoord() {
         this.wachtwoordVerborgen = !this.wachtwoordVerborgen;
         this.oogIcon = this.wachtwoordVerborgen ? faEye : faEyeSlash;
     }
 
+    // Avatar is aangepast in editor, meteen avatar in het profiel aanpassen
     setAvatar($event: string) {
         this.avatar = $event;
         this.changeDetector.detectChanges();
@@ -283,6 +288,7 @@ export class LidEditorComponent implements OnInit {
         }
     }
 
+    // Voor sommige gebruikers is 2 factor authenticatie verplicht
     isgoogleAuthNodig(): boolean {
         if (this.lid.BEHEERDER || this.lid.DDWV_BEHEERDER || this.lid.INSTRUCTEUR || this.lid.CIMT ||
             this.lid.DDWV_CREW || this.lid.ROOSTER || this.lid.STARTTOREN || this.lid.RAPPORTEUR) {
@@ -403,6 +409,7 @@ export class LidEditorComponent implements OnInit {
         return false;
     }
 
+    // Ben ik mijn eigen profiel aan het aanpassen?
     ikBenHetZelf(): boolean {
         return this.loginService.userInfo?.LidData?.ID == this.lidID
     }
@@ -426,10 +433,10 @@ export class LidEditorComponent implements OnInit {
         if (this.lid.AUTH == false) {
             return false;
         }
-
         return this.lid.SECRET?.startsWith("http");     // heeft url als secret gevuld is
     }
 
+    // Check of medical ingevoerd is, of misschien wel verlopen is.
     medicalVerlopen() {
         if (this.MedicalDatum == null) {
             return false;

@@ -2,7 +2,12 @@ import {Injectable} from '@angular/core';
 import {DateTime} from 'luxon';
 import {HeliosActie, KeyValueArray} from '../../types/Utils';
 import {APIService} from './api.service';
-import {HeliosAanwezigLeden, HeliosAanwezigLedenDataset} from '../../types/Helios';
+import {
+    HeliosAanwezigLeden,
+    HeliosAanwezigLedenDataset,
+    HeliosAanwezigVliegtuigenDataset,
+    HeliosLid
+} from '../../types/Helios';
 import {BehaviorSubject, Subscription} from "rxjs";
 import {SharedService} from "../shared/shared.service";
 import {debounceTime} from "rxjs/operators";
@@ -22,7 +27,7 @@ export class AanwezigLedenService {
     private aanwezigStore = new BehaviorSubject(this.aanwezigCache.dataset);
     public readonly aanwezigChange = this.aanwezigStore.asObservable();      // nieuwe aanwezigheid beschikbaar
 
-    constructor(private readonly APIService: APIService,
+    constructor(private readonly apiService: APIService,
                 private readonly loginService: LoginService,
                 private readonly sharedService: SharedService) {
 
@@ -64,6 +69,12 @@ export class AanwezigLedenService {
                         });
                     }
                 }
+
+                if (ev.tabel == "AanwezigLeden") {
+                    this.ophalenAanwezig(this.datum, this.datum).then((dataset) => {
+                        this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
+                    });
+                }
             });
         });
 
@@ -84,6 +95,12 @@ export class AanwezigLedenService {
         return await this.getAanwezig(startDatum, eindDatum);
     }
 
+    async updateAanwezigCache(startDatum: DateTime, eindDatum: DateTime) {
+        this.ophalenAanwezig(this.datum, this.datum).then((dataset) => {
+            this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
+        });
+    }
+
     async getAanwezig(startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosAanwezigLedenDataset[]> {
         let getParams: KeyValueArray = params;
 
@@ -97,8 +114,10 @@ export class AanwezigLedenService {
             getParams['SELECTIE'] = zoekString;
         }
 
+        getParams['NIET_VERTROKKEN'] = 'true';      // We zijn niet geintresseerd in leden die al vertrokken zijn
+
         try {
-            const response: Response = await this.APIService.get('AanwezigLeden/GetObjects', getParams);
+            const response: Response = await this.apiService.get('AanwezigLeden/GetObjects', getParams);
             this.aanwezigCache = await response.json();
         } catch (e) {
             if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde data als cache
@@ -106,5 +125,29 @@ export class AanwezigLedenService {
             }
         }
         return this.aanwezigCache?.dataset as HeliosAanwezigLedenDataset[];
+    }
+
+    async getAanwezigLid(id: number): Promise<HeliosAanwezigLedenDataset> {
+        const response: Response = await this.apiService.get('AanwezigLeden/GetObject', {'ID': id.toString()});
+        return response.json();
+    }
+
+    async aanmelden(record: HeliosAanwezigVliegtuigenDataset): Promise<any> {
+        const response: Response = await this.apiService.post('AanwezigLeden/Aanmelden', JSON.stringify(record));
+        return response.json();
+    }
+
+    async aanmeldingVerwijderen(id: number) {
+        await this.apiService.delete('AanwezigLeden/DeleteObject', {'ID': id.toString()});
+    }
+
+    async afmelden(lidID: number): Promise<any> {
+        const response: Response = await this.apiService.post('AanwezigLeden/Afmelden', JSON.stringify({ LID_ID: lidID }));
+        return response.json();
+    }
+
+    async updateAanmelding(record: HeliosAanwezigLedenDataset): Promise<any> {
+        const response: Response = await this.apiService.put('AanwezigLeden/SaveObject', JSON.stringify(record));
+        return response.json();
     }
 }

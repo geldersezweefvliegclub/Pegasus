@@ -40,8 +40,14 @@ export class ReserveringService {
     }
 
     async addReservering(reservering: HeliosReservering) {
-        const response: Response = await this.apiService.post('Reservering/SaveObject', JSON.stringify(reservering));
-        return response.json();
+        try {
+            const response: Response = await this.apiService.post('Reservering/SaveObject', JSON.stringify(reservering));
+            return response.json();
+        }
+        catch (e) {
+            throw (e);
+        }
+        return undefined;
     }
 
     async deleteReservering(id: number) {

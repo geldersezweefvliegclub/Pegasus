@@ -40,6 +40,8 @@ export interface paths {
           VLIEGTUIG_ID?: number;
           /** DATUM van de vliegdag. Werkt alleen als ID null is. Bovendien is LID_ID vereist */
           DATUM?: string;
+          /** Toon alleen vliegtuigen die nog niet vertrokken zijn */
+          NIET_VERTROKKEN?: boolean;
         };
       };
       responses: {
@@ -327,8 +329,18 @@ export interface components {
       SLEEPKIST?: boolean;
       /** Link naar vliegtuig type tabel. Alleen nodig voor clubvliegtuigen */
       TYPE_ID?: number;
+      /** Vliegtuigtype omschrijving */
+      VLIEGTUIGTYPE_OMS?: string;
       /** Volgorde van vliegtuiglijst, bedoeld voor club vliegtuigen */
       VOLGORDE?: number;
+      /** Mag het vliegtuig vliegen? */
+      INZETBAAR?: boolean;
+      /** Is het vliegtuig een DBO trainer */
+      TRAINER?: boolean;
+      /** Vliegt het lid op dit moment */
+      VLIEGT?: boolean;
+      /** Opermerkingen over vliegtuig */
+      OPMERKINGEN?: string;
       /** Vliegtuig registratie en callsign van het vliegtuig */
       REG_CALL?: string;
     };

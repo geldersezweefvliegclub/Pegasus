@@ -1,0 +1,16 @@
+.error {
+  animation:blinkingText 1s infinite;
+  font-size: x-large;
+}
+@keyframes blinkingText{
+  0% { color: red;	}
+  49%{	color: transparent;	}
+  50%{	color: transparent;	}
+  99%{	color:transparent;	}
+  100%{	color: #000;	}
+}
+
+.warning {
+  font-size: x-large;
+  color: #edc61d;
+}

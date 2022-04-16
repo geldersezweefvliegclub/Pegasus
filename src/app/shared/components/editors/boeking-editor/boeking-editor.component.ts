@@ -47,19 +47,22 @@ export class BoekingEditorComponent implements OnInit {
         });
     }
 
+    // Openen van popup scherm
     openPopup() {
         this.popup.open();
     }
 
+    // Aan wie wordt het vliegtuig toegekend
     lidGeselecteerd(id: number | undefined) {
         this.lidID = id;
     }
 
+    // Voor welk vliegtuig gaan we de reservering toevoegen
     vliegtuigGeselecteerd(id: number) {
         this.vliegtuigID = id;
     }
 
-    // is eerste datum eerder dan eind datum
+    // is eerste datum eerder dan eind datum?
     vanTotOke(): boolean {
         if (this.eersteDag && this.laatsteDag) {
             const begin = this.eersteDag.year * 10000 + this.eersteDag.month * 100 + this.eersteDag.day;
@@ -70,6 +73,7 @@ export class BoekingEditorComponent implements OnInit {
         return false;
     }
 
+    // als we niet aan de invoer condities voldoen, moet de invoerbutton uitgeschakeld zijn
     opslaanDisabled(): boolean {
         if (this.lidID && this.vliegtuigID && this.eersteDag && this.laatsteDag) {
             return !this.vanTotOke();
@@ -77,6 +81,7 @@ export class BoekingEditorComponent implements OnInit {
         return false;
     }
 
+    // controle & aanmaken van de reserveringen
     async aanmakenReserveringen() {
         if (this.eersteDag && this.laatsteDag) {
             this.isSaving = true;
@@ -84,9 +89,10 @@ export class BoekingEditorComponent implements OnInit {
             const beginDatum: DateTime = DateTime.fromObject({day: this.eersteDag.day, month: this.eersteDag.month, year: this.eersteDag.year});
             const eindDatum: DateTime = DateTime.fromObject({day: this.laatsteDag.day, month: this.laatsteDag.month, year: this.laatsteDag.year});
 
-            const dataset = await this.reserveringenService.getReserveringen(beginDatum, eindDatum);
+            const dataset = await this.reserveringenService.getReserveringen(beginDatum, eindDatum);    // opvragen reserveringen in deze periode
             const kist = this.clubVliegtuigen.find(v => v.ID == this.vliegtuigID)
 
+            //controle of kist al gereseveerd is in deze periode
             for (let i = 0; i < dataset.length; i++) {
                 if (dataset[i].VLIEGTUIG_ID == this.vliegtuigID) {
 
@@ -109,10 +115,17 @@ export class BoekingEditorComponent implements OnInit {
                 OPMERKINGEN: this.opmerkingen
             }
 
+            // Toevoegen van reserveringen door aanroepen API
             while (datum <= eind)
             {
                 reservering.DATUM = datum.toISODate();
-                await this.reserveringenService.addReservering(reservering);
+                try {
+                    await this.reserveringenService.addReservering(reservering);
+                }
+                catch (e) {
+                    e.beschrijving += " " + datum.day + "-" + datum.month + "-" + datum.year;
+                    this.error = e;
+                }
                 datum = datum.plus({days:1});
             }
 

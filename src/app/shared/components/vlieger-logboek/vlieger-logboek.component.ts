@@ -188,7 +188,14 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
         if (this.datumAbonnement)       this.datumAbonnement.unsubscribe();
     }
 
-    // laat groot of klein logvboek zijn, afhankelijk van scherm
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.hasOwnProperty("VliegerID")) {
+            this.opvragen()
+        }
+        this.kolomDefinitie();
+    }
+
+    // toon groot of klein logboek zijn, afhankelijk van scherm breedte
     @HostListener('window:resize', ['$event'])
     onWindowResize() {
         this.kolomDefinitie();
@@ -290,12 +297,5 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
         } else {
             this.columns = this.deleteColumn.concat(this.dataColumns);
         }
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes.hasOwnProperty("VliegerID")) {
-            this.opvragen()
-        }
-        this.kolomDefinitie();
     }
 }

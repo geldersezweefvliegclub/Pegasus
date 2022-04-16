@@ -1,0 +1,45 @@
+.lijst {
+  border: solid 1px #ccc;
+  height: calc(100% - 25px) !important;
+  width: 100%;
+  background: #fafafa;
+  border-radius: 4px;
+  overflow-y: auto;
+  display: block;
+}
+
+.aanmeldkaart {
+  background: #d1d1d1;
+  padding-left: 2px;
+  margin: 5px;
+  min-height: 40px;
+}
+
+.nowrap {
+  white-space: nowrap;
+
+  display: block;
+  text-align: center;
+}
+
+.minColumn {
+  min-width: 90px;
+}
+
+.onTop {
+  position: fixed;
+  z-index: 2;
+  background-color: #d5ac4a;
+  border-radius: 5px;
+  border-color: white;
+  border-style: solid;
+
+  padding-right: 25px;
+  width: initial;
+
+  top: 50%;
+  left: 45%;
+  margin-top: -50px;
+  margin-left: -45px;
+}
+

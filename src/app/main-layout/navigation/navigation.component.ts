@@ -132,6 +132,7 @@ export class NavigationComponent implements OnInit, OnDestroy  {
             const m = this.routes.find(route => route.path == "daginfo") as CustomRoute;
             const ui = this.loginService.userInfo?.Userinfo;
 
+            // als we ingelogd zijn als starttoren en daginfo is niet gevuld, dan markering toevoegen
             if ((ui?.isStarttoren) && ((di.VELD_ID == undefined) || (di.STARTMETHODE_ID == undefined))) {
                 m.batch = "<div class=\"fas fa-exclamation-triangle \"></div>";
             }
@@ -199,6 +200,15 @@ export class NavigationComponent implements OnInit, OnDestroy  {
         }
         else {
             dashboard.excluded = false;
+        }
+
+        // alleen starttoren heeft een startlijst
+        const startlijst = this.routes.find(route => route.path == "startlijst") as CustomRoute;
+        if (verbergen.includes('startlijst') || (!ui?.isStarttoren && !ui?.isBeheerder)) {
+            startlijst.excluded = true;
+        }
+        else {
+            startlijst.excluded = false;
         }
 
         // alleen echte gebruiker hebben profiel, starttoren, zusterclubs, etc dus niet

@@ -217,7 +217,8 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
     }
 
     // schakelen tussen trashMode JA/NEE. In trashMode worden te verwijderde vliegtuigen getoond
-    trashModeJaNee() {
+    trashModeJaNee(actief: boolean) {
+        this.trashMode = actief
         this.kolomDefinitie();
         this.opvragen();
     }

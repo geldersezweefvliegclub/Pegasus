@@ -2,7 +2,7 @@
     <div *ngIf="this.startTijd" class="starttijd" (click)="tijdClicked()">{{startTijd}}</div>
 
     <app-icon-button class="toolbarBtn" iconNaam="fas PlaneDeparture" (btnClicked)="tijdClicked()"
-                     *ngIf="!this.startTijd"
+                     *ngIf="!this.startTijd && params.data.STARTMETHODE"
                      btnColor="startBtn"></app-icon-button>
 </div>
 <div *ngIf="!params.data.inTijdspan">{{startTijd}}</div>

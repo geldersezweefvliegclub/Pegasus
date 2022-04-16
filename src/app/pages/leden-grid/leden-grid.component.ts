@@ -246,7 +246,9 @@ export class LedenGridComponent implements OnInit {
     }
 
     // schakelen tussen trashMode JA/NEE. In trashMode worden te verwijderde leden getoond
-    trashModeJaNee() {
+    trashModeJaNee(actief: boolean) {
+        this.trashMode = actief;
+
         this.kolomDefinitie();
         this.opvragen();
     }
@@ -409,7 +411,6 @@ export class LedenGridComponent implements OnInit {
         this.leden.forEach((lid) => {
             bcc += lid.EMAIL + ","
         })
-        console.log(bcc);
         window.location.href = `mailto:${toEmail}?bcc=${bcc}`;
     }
 

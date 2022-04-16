@@ -44,6 +44,7 @@ export class TrackEditorComponent implements OnInit{
         });
     }
 
+    // Open invoer popup voor de track. Als track ingevuld is, wijzigen we bestaande track
     openPopup(track: TracksLedenDataset | null, LID_ID?: number, START_ID?: number, NAAM?: string, TEKST?:string) {
         this.toonLidSelectie = (track || LID_ID) ? false : true;
 
@@ -79,6 +80,7 @@ export class TrackEditorComponent implements OnInit{
         this.popup.close();
     }
 
+    // ophalen van track uit de database (via API)
     haalTrackOp(id: number): void {
         this.isLoading = true;
 
@@ -92,6 +94,7 @@ export class TrackEditorComponent implements OnInit{
         }
     }
 
+    // Toon popup om track te verwijderen
     openVerwijderPopup(id: number, NAAM: string) {
         this.haalTrackOp(id);
         this.formTitel = 'Track verwijderen van ' + NAAM;
@@ -103,6 +106,7 @@ export class TrackEditorComponent implements OnInit{
         this.popup.open();
     }
 
+    // Toon popup om track uit de prullenbak te halen
     openRestorePopup(id: number, NAAM: string) {
         this.haalTrackOp(id);
         this.formTitel = 'Track herstellen voor ' + NAAM;
@@ -114,6 +118,7 @@ export class TrackEditorComponent implements OnInit{
         this.popup.open();
     }
 
+    // uitvoeren van de actie waar we mee bezig zijn
     uitvoeren() {
         this.isSaving = true;
         if (this.isRestoreMode) {
@@ -132,7 +137,8 @@ export class TrackEditorComponent implements OnInit{
             }
         }
     }
-    // opslaan van de data van een nieuw vliegtuig
+
+    // opslaan van de data van een nieuwe track
     Toevoegen(track: HeliosTrack) {
         this.trackService.addTrack(track).then(() => {
             this.success = {
@@ -188,10 +194,12 @@ export class TrackEditorComponent implements OnInit{
         })
     }
 
+    // Over welke vlieger gaat deze track
     lidGeselecteerd(id: number | undefined) {
         this.track.LID_ID = id;
     }
 
+    // Opslaan knop staat uit als we niet weten over wie het gaat, of er nog geen tekst is ingevoerd
     opslaanDisabled() {
         if (this.toonLidSelectie) {
            return !(this.track.LID_ID && this.track.TEKST) ;

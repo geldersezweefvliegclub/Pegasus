@@ -47,7 +47,7 @@ export class VluchtCardComponent implements OnInit {
     else {
       this.inTijdspan = true; // zitten nog binnen de termijn
     }
-    this.datumDM = this.sharedService.datumDM(this.start.DATUM!)
+    this.datumDM = this.sharedService.datumDM(this.start.DATUM!)    // jaar hoeft niet getoond te worden
   }
 
   // Moeten we link tonen naar dashboard
@@ -66,10 +66,12 @@ export class VluchtCardComponent implements OnInit {
     }
   }
 
+  // bestaande starttijd wijzigen door openen van starttijd popup
   startTijdClicked() {
     this.tijdInvoerEditor.openStarttijdPopup(this.start);
   }
 
+  // bestaande landingstijd wijzigen door openen van de landingstijd popup
   landingsTijdClicked() {
     this.tijdInvoerEditor.openLandingsTijdPopup(this.start);
   }

@@ -106,6 +106,7 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
         return false;
     }
 
+    // De checkbox is soms disabled.
     CheckDisabled(comptentieID: number): boolean {
         const ui = this.loginService.userInfo?.Userinfo;
 
@@ -141,6 +142,7 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
         this.bevestigPopup.open();
     }
 
+    // De compententie is behaald, dus aanpassen progressie kaart
     updateProgressie() {
         try {
             const ui = this.loginService.userInfo?.LidData;
@@ -170,6 +172,7 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
+    // Check of het ID uit de configuratie ook daadwerkelijk bestaat
     competentieBestaat(id: number) {
         if (this.competenties.length == 0)
             return false;

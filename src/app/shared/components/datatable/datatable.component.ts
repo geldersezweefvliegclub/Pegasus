@@ -16,8 +16,6 @@ import {
     RowDoubleClickedEvent,
     RowSelectedEvent
 } from 'ag-grid-community';
-import {StorageService} from '../../../services/storage/storage.service';
-import {LoginService} from "../../../services/apiservice/login.service";
 
 @Component({
     selector: 'app-datatable',
@@ -79,6 +77,26 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+        this.options.pagination = this.pagination;
+        if (this.api) {
+            this.api.setColumnDefs(this.columnDefs);
+            this.api.setRowData(this.rowData);
+
+            if (changes.hasOwnProperty("loading")) {
+                if (changes["loading"].currentValue) {
+                    this.api.showLoadingOverlay()
+                } else {
+                    //  is niet nodig, gaat vanzelf
+                }
+            }
+        }
+        else
+        {
+            console.log("no api", this.id)
+        }
+    }
+
     @HostListener('window:resize', ['$event'])
     onWindowResize() {
         this.sizeColumnsToFit();
@@ -104,26 +122,6 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
 
     sizeColumnsToFit() {
         this.api.sizeColumnsToFit();
-    }
-
-    ngOnChanges(changes: SimpleChanges): void {
-        this.options.pagination = this.pagination;
-        if (this.api) {
-            this.api.setColumnDefs(this.columnDefs);
-            this.api.setRowData(this.rowData);
-
-            if (changes.hasOwnProperty("loading")) {
-                if (changes["loading"].currentValue) {
-                    this.api.showLoadingOverlay()
-                } else {
-                    //  is niet nodig, gaat vanzelf
-                }
-            }
-        }
-        else
-        {
-            console.log("no api", this.id)
-        }
     }
 
     onRowDoubleClicked(event: RowDoubleClickedEvent) {

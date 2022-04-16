@@ -80,7 +80,7 @@
                                 Instructie start
                             </label>
                         </div>
-                        <div *ngIf="start.PAX !== true && start.INSTRUCTIEVLUCHT && magCheckZetten()" >
+                        <div *ngIf="start.PAX !== true && start.INSTRUCTIEVLUCHT && magCheckZetten()">
                             <input name="CHECKSTART" type="checkbox" class="form-check-input" id="CHECKSTART"
                                    [(ngModel)]="start.CHECKSTART">
                             <label class="form-check-label ms-2" for="CHECKSTART">

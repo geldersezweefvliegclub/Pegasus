@@ -1,0 +1,47 @@
+<app-error [error]="error"></app-error>
+<app-success [success]="success"></app-success>
+
+<app-modal [titel]="formTitel">
+    <div body>
+        <fieldset>
+            <label class="form-label">Vliegtuig types</label>
+            <div class="row" *ngIf="aanwezig">
+                <div class="ms-2">
+                    <table>
+                        <tr *ngFor="let t of vliegtuigTypes; let i=index;">
+                            <td class="kolom1">
+                                <input type="checkbox"
+                                       [ngModel]="t.Geselecteerd"
+                                       class="form-check-inline" (change)="zetVoorkeur($event, t.ID)">
+                            </td>
+                            <td class="kolom2">
+                                {{t.OMSCHRIJVING}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <app-vliegtuig-invoer id="VLIEGTUIG"
+                  [VLIEGTUIG_ID]="aanwezig.OVERLAND_VLIEGTUIG_ID"
+                  [vliegtuigen]="vliegtuigen"
+                  (VliegtuigChanged)="aanwezig.OVERLAND_VLIEGTUIG_ID = $event"
+                  label="Overland"
+                ></app-vliegtuig-invoer>
+
+                <div class="mt-2 px-2">
+                    <label class="form-label">Opmerking</label>
+                    <textarea [(ngModel)]="aanwezig.OPMERKINGEN"
+                              class="w-100 text-invoer form-control"
+                              rows="2"></textarea>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div footer>
+        <app-icon-button *ngIf="!isLoading && !isSaving" iconNaam="fas Edit" btnColor="btn-primary"
+                         tekst="Opslaan" (btnClicked)="opslaan()"></app-icon-button>
+        <button class="btn btn-primary" *ngIf="isLoading || isSaving">
+            <span><app-loader></app-loader></span>
+        </button>
+    </div>
+</app-modal>

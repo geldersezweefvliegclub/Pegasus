@@ -84,12 +84,14 @@ export interface paths {
           SELECTIE?: string;
           /** Een of meerdere leden database IDs in CSV formaat. AND conditie als er geen andere parameters zijn, anders OR conditie */
           IN?: string;
-          /** Zoek op een of meerder lid lidTypes. Types als CSV formaat */
+          /** Zoek op een of meerder lid types. Types als CSV formaat */
           TYPES?: string;
           /** Begin datum (inclusief deze dag) */
           BEGIN_DATUM?: string;
           /** Eind datum (inclusief deze dag) */
           EIND_DATUM?: string;
+          /** Toon alleen leden die nog niet vertrokken zijn */
+          NIET_VERTROKKEN?: boolean;
         };
       };
       responses: {
@@ -337,12 +339,18 @@ export interface components {
       LAATSTE_AANPASSING?: string;
     };
     view_aanwezig_leden_dataset: components["schemas"]["oper_aanwezig_leden"] & {
-      /** Korte beschrijving van het vliegtuig lidTypes */
+      /** Korte beschrijving van het vliegtuig types */
       VLIEGTUIGTYPE_CODE?: string;
-      /** Beschrijving van het vliegtuig lidTypes */
+      /** Beschrijving van het vliegtuig types */
       VLIEGTUIGTYPE_OMS?: string;
       /** Vliegtuig registratie en callsign van overland vliegtuig */
       REG_CALL?: string;
+      /** Het aantal starts voor dit lid op deze dag */
+      STARTS?: number;
+      /** Totale vliegtijd */
+      VLIEGTIJD?: string;
+      /** Vliegt het lid op dit moment */
+      VLIEGT?: boolean;
       /** De volledige naam van het lid */
       NAAM?: string;
       /** De voornaam van het lid */

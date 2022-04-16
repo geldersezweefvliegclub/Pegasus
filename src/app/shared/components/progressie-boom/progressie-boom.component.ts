@@ -1,4 +1,14 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    SimpleChanges,
+    ViewChild
+} from '@angular/core';
 import {TreeviewItem, TreeviewConfig} from 'ngx-treeview';
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
 import {HeliosCompetentiesDataset, HeliosProgressie, HeliosProgressieBoom} from "../../../types/Helios";
@@ -21,7 +31,7 @@ export class ProgressieTreeviewItemComponent extends TreeviewItem {
     styleUrls: ['./progressie-boom.component.scss']
 })
 
-export class ProgressieBoomComponent implements OnInit, OnDestroy {
+export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
     @Input() VliegerID: number;
     @ViewChild(ModalComponent) private bevestigPopup: ModalComponent;
 
@@ -66,8 +76,6 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy {
             this.competenties = dataset!;
         });
 
-        const ui = this.loginService.userInfo?.Userinfo;
-        this.isDisabled = !(ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) || (this.VliegerID == this.loginService.userInfo?.LidData?.ID);
         this.ophalen();
     }
 
@@ -76,12 +84,22 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy {
         if (this.competentiesAbonnement)    this.competentiesAbonnement.unsubscribe();
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.hasOwnProperty("VliegerID")) {
+            this.ophalen();
+        }
+    }
+
     ophalen(): void {
+        const ui = this.loginService.userInfo?.Userinfo;
+        this.isDisabled = !(ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) || (this.VliegerID == this.loginService.userInfo?.LidData?.ID);
+
         this.progressieService.getBoom(this.VliegerID).then((b) => {
-            this.boom = [];
+            let tree: ProgressieTreeviewItemComponent[] = [];
             for (let i = 0; i < b.length; i++) {
-                this.boom.push(this.TreeView(b[i]))
+                tree.push(this.TreeView(b[i]))
             }
+            this.boom = tree;
         });
     }
 

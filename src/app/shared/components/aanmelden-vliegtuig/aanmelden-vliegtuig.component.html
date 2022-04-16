@@ -1,0 +1,75 @@
+<app-error [error]="error"></app-error>
+<app-success [success]="success"></app-success>
+
+<app-modal titel="Aanmelden vliegtuig">
+    <div body class="row popupLargeWrapper">
+        <div class="onTop" *ngIf="bezig">
+            <span><img src="assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Even geduld a.u.b. .....</span>
+        </div>
+        <div class="col pe-2 h-100">
+            <h4>Vliegtuigen</h4>
+            <div class="lijst">
+                <div class="card aanmeldkaart row flex-row" *ngFor="let vliegtuig of filteredVliegtuigen">
+                    <div class="col-9">
+                        <div class="fw-bold">
+                            {{vliegtuig.REG_CALL}}
+                        </div>
+                        <div class="smallFont">
+                            <span class="badge bg-danger me-2" *ngIf="vliegtuig.CLUBKIST && !vliegtuig.INZETBAAR">
+                                 <span class="fas fa-exclamation-triangle"></span>
+                            </span>
+                            {{vliegtuig.VLIEGTUIGTYPE}}</div>
+                        <div class="smallFont">{{vliegtuig.OPMERKINGEN}}</div>
+                    </div>
+
+                    <div class="col-3 d-flex flex-column justify-content-center p-0">
+                        <app-icon-button iconNaam="fas ArrowRight" (btnClicked)="aanmelden(vliegtuig)"
+                                         [disabled]="bezig"></app-icon-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col ps-2 h-100">
+            <h4>Aanwezig</h4>
+            <div class="lijst">
+                <div class="card aanmeldkaart row flex-row" *ngFor="let aanwezig of aanwezigVliegtuigen">
+                    <div class="col-3 d-flex flex-column justify-content-center p-0">
+                        <div class="d-flex flex-row justify-content-end">
+                        <app-icon-button iconNaam="fas ArrowLeft" (btnClicked)="afmelden(aanwezig)"
+                                         [disabled]="bezig"></app-icon-button>
+                        </div>
+                    </div>
+
+                    <div class="col-9">
+                        <div class="fw-bold">
+                            {{aanwezig.REG_CALL}}
+                        </div>
+                        <div class="smallFont">
+                            <span class="badge bg-danger me-2" *ngIf="aanwezig.CLUBKIST && !aanwezig.INZETBAAR">
+                                 <span class="fas fa-exclamation-triangle"></span>
+                            </span>
+                            {{aanwezig.VLIEGTUIGTYPE_OMS}}</div>
+                        <div class="smallFont">{{aanwezig.OPMERKINGEN}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div footer class="w-100">
+        <div class="d-flex justify-content-start align-items-start">
+            <div class="d-flex col-12 col-md-8 col-lg-5 text-nowrap">
+                <label id="zoekLabel" for="zoekInput" class="form-label me-2 mt-1">Zoeken : </label>
+                <input id="zoekInput"
+                       type="search"
+                       class="form-control"
+                       [(ngModel)]="zoekString"
+                       name="zoekString"
+                       (keyup)="filterVliegtuigen()"
+                       (search)="filterVliegtuigen()"
+                >
+            </div>
+        </div>
+    </div>
+</app-modal>

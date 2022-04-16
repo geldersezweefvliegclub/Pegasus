@@ -25,6 +25,7 @@ import {DienstenService} from "../../services/apiservice/diensten.service";
 import {PegasusConfigService} from "../../services/shared/pegasus-config.service";
 import {VoorinRenderComponent} from "./voorin-render/voorin-render.component";
 import {AchterinRenderComponent} from "./achterin-render/achterin-render.component";
+import {DagnummerRenderComponent} from "./dagnummer-render/dagnummer-render.component";
 
 type HeliosStartDatasetExtended = HeliosStartDataset & {
     inTijdspan?: boolean
@@ -47,7 +48,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
-        {field: 'DAGNUMMER', headerName: '#', sortable: true,},
+        {field: 'DAGNUMMER', headerName: '#', cellRenderer: 'dagnummerRender', sortable: true,},
         {field: 'REGISTRATIE', headerName: 'Registratie', sortable: true, hide: true, enableRowGroup: true},
         {field: 'CALLSIGN', headerName: 'Callsign', sortable: true, hide: true, enableRowGroup: true},
         {field: 'REG_CALL', headerName: 'RegCall', sortable: true, enableRowGroup: true},
@@ -146,6 +147,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     }];
 
     frameworkComponents = {
+        dagnummerRender: DagnummerRenderComponent,
         voorinRender: VoorinRenderComponent,
         achterinRender: AchterinRenderComponent,
         startTijdRender: StarttijdRenderComponent,
@@ -165,7 +167,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
     zoekString: string;
     zoekTimer: number;                  // kleine vertraging om data ophalen te beperken
-    refreshTimer: number;                  // kleine vertraging om data ophalen te beperken
+    refreshTimer: number;
     deleteMode: boolean = false;        // zitten we in delete mode om starts te kunnen verwijderen
     trashMode: boolean = false;         // zitten in restore mode om starts te kunnen terughalen
 
@@ -325,7 +327,9 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     }
 
     // schakelen tussen trashMode JA/NEE. In trashMode worden te verwijderde starts getoond
-    trashModeJaNee() {
+    trashModeJaNee(actief: boolean) {
+        this.trashMode = actief
+
         this.kolomDefinitie();
         this.opvragen();
     }
@@ -394,7 +398,6 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
         const queryParams: KeyValueArray = {}
         queryParams["SORT"] = "DATUM"
-
 
         let tobeExported: HeliosStartDataset[] = []
         let bestandsnaam: string = datum.toISODate()
@@ -467,8 +470,8 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     }
 
     // Als leden-filter aan staat, dan tonen we alleen de openstaande vluchten
-    filter() {
-        this.filterOn = !this.filterOn;
+    filter(actief: boolean) {
+        this.filterOn = actief;
         this.opvragen();
     }
 }

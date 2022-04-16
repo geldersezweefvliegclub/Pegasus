@@ -61,6 +61,8 @@ export class TijdInvoerComponent {
             )
         );
 
+    // open popup, maar haal eerst de start op. De eerder ingevoerde tijd wordt als default waarde gebruikt
+    // indien niet eerder ingvuld, dan de huidige tijd. Buiten de daglicht periode is het veld leeg
     openStarttijdPopup(record: HeliosStartDataset) {
         this.Invoer = TypeTijdInvoer.Starttijd;                 // dan weten we later dat we een starttijd aan het invoeren zijn
 
@@ -97,6 +99,8 @@ export class TijdInvoerComponent {
         setTimeout(()=> this.tijdInvoerElement.nativeElement.focus(), 200);
     }
 
+    // open popup, maar haal eerst de start op. De eerder ingevoerde tijd wordt als default waarde gebruikt
+    // indien niet eerder ingvuld, dan de huidige tijd. Buiten de daglicht periode is het veld leeg
     openLandingsTijdPopup(record: HeliosStartDataset) {
         this.Invoer = TypeTijdInvoer.Landingstijd;                 // dan weten we later dat we een landingstijd aan het invoeren zijn
 
@@ -208,7 +212,7 @@ export class TijdInvoerComponent {
     }
 
 
-    // De eerste tjd
+    // De eerste tijd, op basis van de daglicht periode
     vanTijd(): Date {
         const airport = this.configService.getAirport();
         const d = new Date(this.start.DATUM as string);
@@ -229,7 +233,7 @@ export class TijdInvoerComponent {
         return begin;
     }
 
-    // wat is de laatste tijd die ingevoerd mag worden
+    // wat is de laatste tijd die ingevoerd mag worden op basis van daglicht periode
     totTijd(): Date {
         const airport = this.configService.getAirport();
         const d = new Date(this.start.DATUM as string);
@@ -320,11 +324,13 @@ export class TijdInvoerComponent {
     timeUp() {
         let TijdParts = this.tijdInvoerElement.nativeElement.value.split(':');
 
+        // conversie hh:mm naar minuten
         let minuten = +TijdParts[0] * 60;
         minuten += (TijdParts.length > 1) ? +TijdParts[1] : 0;
 
-        minuten++;
+        minuten++;  // minuutje meer
 
+        // en nu van minuten naar hh:mm
         let uurStr = Math.floor(minuten / 60).toString().padStart(2, '0');
         let minStr = (minuten % 60).toString().padStart(2, '0');
         const tijd: string = (uurStr + ":" + minStr);
@@ -338,11 +344,13 @@ export class TijdInvoerComponent {
     timeDown() {
         let TijdParts = this.tijdInvoerElement.nativeElement.value.split(':');
 
+        // conversie hh:mm naar minuten
         let minuten = +TijdParts[0] * 60;
         minuten += (TijdParts.length > 1) ? +TijdParts[1] : 0;
 
-        minuten--;
+        minuten--;  // minuutje minder
 
+        // en nu van minuten naar hh:mm
         let uurStr = Math.floor(minuten / 60).toString().padStart(2, '0');
         let minStr = (minuten % 60).toString().padStart(2, '0');
         const tijd: string = (uurStr + ":" + minStr);

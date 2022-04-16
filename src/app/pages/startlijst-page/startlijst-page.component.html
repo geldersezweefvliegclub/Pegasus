@@ -1,10 +1,243 @@
+<app-error [error]="error"></app-error>
+<app-success [success]="success"></app-success>
+
 <app-pegasus-card titel="Startlijst"
                   subtitel="De startlijst van {{datum.day}}-{{datum.month}}-{{datum.year}}"
                   [icon]="startlijstIcon">
     <div cdkDropListGroup class="h-100">
         <div class="box h-100">
-            <div id="data">
+            <div id="data" class="d-flex flex-row">
+
+                <div class="grijzeKolom px-2">
+                    <h4 class="ms-1">Vliegtuigen</h4>
+                    <div id="Vliegtuigen">
+                        <div *ngIf="!aanwezigVliegtuigen || aanwezigVliegtuigen.length == 0" class="d-flex">
+                            Geen resultaten gevonden
+                        </div>
+                        <div id="VLIEGTUIGENLIJST">
+                            <div class="card my-1" *ngFor="let vliegtuig of filteredAanwezigVliegtuigen">
+                                <div class="card-body vliegtuig-body">
+                                    <div class="d-flex">
+                                        <div class="vliegtuig flex-grow-1">
+                                            <b>{{vliegtuig.REG_CALL}}</b>
+                                                <div class="badge bg-danger ms-2"
+                                                   *ngIf="vliegtuig.CLUBKIST && !vliegtuig.INZETBAAR">
+                                                     <div class="fas fa-exclamation-triangle"></div>
+                                                </div>
+                                            <div class="smallFont">{{vliegtuig.VLIEGTUIGTYPE_OMS}}</div>
+                                            <div class="smallFont">{{vliegtuig.OPMERKINGEN}}</div>
+                                        </div>
+
+                                        <div class="d-flex flex-column justify-content-center p-0 ms-2">
+                                            <app-icon-button iconNaam="far PlusSquare" (btnClicked)="nieuweStart(vliegtuig.VLIEGTUIG_ID)"
+                                                             btnColor="btn-primary"></app-icon-button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="flex-grow-1 h-100 px-2">
+                    <h4 class="ms-1">Startlijst</h4>
+                    <div class="card d-flex flex-row">
+                        <div class="data col flex-grow-1" id="STARTLIJST">
+                            <div *ngFor="let start of filteredStarts;let i = index">
+                                <div class="kaart pb-1" [ngClass]="{'highlightCard': geselecteerdeStart && geselecteerdeStart.ID == start.ID }" (click)="startKlik(start)" *ngIf="start">
+                                    <table class="w-100">
+                                        <tr>
+                                            <td class="w-100">#{{start.DAGNUMMER}} {{start.REG_CALL}}</td>
+                                            <td>
+                                                <div class="d-flex flex-row justify-content-end me-2">{{ start.STARTMETHODE }}</div>
+                                            </td>
+                                            <td class="rechts">
+                                                <div class="d-flex flex-row justify-content-end iconGroep">
+                                                    <div class="column">
+                                                        <div *ngIf="!start.INSTRUCTIEVLUCHT" class="geenIcoontje">-</div>
+                                                        <div *ngIf="start.INSTRUCTIEVLUCHT" class="icoontje" data-toggle="tooltip" title="Instructie vlucht">I</div>
+                                                    </div>
+
+                                                    <div class="column">
+                                                        <div *ngIf="!start.CHECKSTART" class="geenIcoontje">-</div>
+                                                        <div *ngIf="start.CHECKSTART" class="icoontje" data-toggle="tooltip" title="Trainingsvlucht">T</div>
+                                                    </div>
+                                                    <div class="column">
+                                                        <div *ngIf="!start.PAX" class="geenIcoontje">-</div>
+                                                        <div *ngIf="start.PAX" class="icoontje" data-toggle="tooltip" title="Passagiers">P</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <div
+                                                    cdkDropList
+                                                    [id]="start.ID"
+                                                    [ngClass]="(!geselecteerdeStart || geselecteerdeStart.ID == start.ID) ? 'drop-container' : 'ms-2'"
+                                                    (cdkDropListDropped)="onDropInStart($event, start, 'vlieger');"
+                                                    [cdkDropListData]="start"
+                                                    [cdkDropListEnterPredicate]="evaluatieVlieger.bind(this, start)">
+
+                                                    <div [ngClass]="(!start.INSTRUCTIEVLUCHT && (!start.MEDICAL || !start.BEVOEGD)) ? 'waarschuwing' : ''">
+                                                        <b>{{start.VLIEGERNAAM_LID}}</b>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <td class="tijd rechts" *ngIf="start.STARTTIJD" (click)="startTijdClicked(start)">{{start.STARTTIJD}}</td>
+                                            <td class="rechts" *ngIf="start.STARTTIJD && start.LANDINGSTIJD">{{start.STARTMETHODE}}</td>
+
+                                            <td class="rechts laag" *ngIf="!start.STARTMETHODE && !start.STARTTIJD && !start.LANDINGSTIJD" rowspan="3">
+                                                <div class="badge bg-danger ms-2" style="font-size: large"
+                                                     *ngIf="!start.STARTMETHODE">
+                                                    <div class="fas fa-exclamation-triangle" data-toggle="tooltip" title="Onvolledig, open editor"></div>
+                                                </div>
+                                            </td>
+                                            <td class="rechts laag" *ngIf="start.STARTMETHODE && !start.STARTTIJD && !start.LANDINGSTIJD" rowspan="3">
+                                                <app-icon-button class="toolbarBtn" iconNaam="fas PlaneDeparture" (btnClicked)="startTijdClicked(start)"
+                                                                 btnColor="startBtn"></app-icon-button>
+                                            </td>
+                                            <td class="rechts laag" *ngIf="start.STARTTIJD && !start.LANDINGSTIJD" rowspan="3">
+                                                <app-icon-button class="toolbarBtn" iconNaam="fas PlaneArrival" (btnClicked)="landingsTijdClicked(start)"
+                                                                 btnColor="landingsBtn"></app-icon-button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <div  *ngIf="start.ZITPLAATSEN == 2"
+                                                    cdkDropList
+                                                    [id]="start.ID"
+                                                    [ngClass]="(!geselecteerdeStart || geselecteerdeStart.ID == start.ID) ? 'drop-container' : 'ms-2'"
+                                                    (cdkDropListDropped)="onDropInStart($event, start, 'inzittende');"
+                                                    [cdkDropListData]="start"
+                                                    [cdkDropListEnterPredicate]="evaluatieInzittende.bind(this, start)">
+
+                                                    <div [ngClass]="(start.INSTRUCTIEVLUCHT && (!start.MEDICAL || !start.BEVOEGD)) ? 'waarschuwing' : ''">
+                                                        <b>{{start.INZITTENDENAAM_LID}}</b>
+                                                    </div>
+                                                    <div *ngIf="start.INSTRUCTIEVLUCHT &&  start.VLIEGER_ID && !start.INZITTENDE_ID" CLASS="warning">
+                                                        <div class="fas fa-exclamation-triangle" data-toggle="tooltip" title="Vul de naam van de instructeur in"></div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="tijd rechts" *ngIf="start.LANDINGSTIJD" (click)="landingsTijdClicked(start)">{{start.LANDINGSTIJD}}</td>
+                                            <td class="rechts" *ngIf="start.STARTTIJD && start.LANDINGSTIJD">{{start.DUUR}}</td>
+                                        </tr>
+                                        <tr *ngIf="start.OPMERKINGEN">
+                                            <td colspan="2">{{start.OPMERKINGEN}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grijzeKolom px-2">
+                    <h4 class="ms-1">Leden</h4>
+                    <div
+                            id="LEDENLIJST"
+                            cdkDropList
+                            cdkDropListSortingDisabled
+                            [cdkDropListData]="aanwezigLeden">
+
+                        <div *ngIf="!filteredAanwezigLeden || filteredAanwezigLeden.length == 0" class="d-flex">
+                            Geen resultaten gevonden
+                        </div>
+                        <div class="card my-1" [ngClass.lt-lg]="'mb-3'"
+                             *ngFor="let lid of filteredAanwezigLeden"
+                             (dblclick)="openLidAanwezigEditor(lid)"
+                             [cdkDragData]="lid" cdkDrag>
+                            <div *cdkDragPreview>
+                                <ng-template *ngTemplateOutlet="previewLid; context: {$implicit: lid}"></ng-template>
+                            </div>
+
+                            <div *cdkDragPlaceholder>
+                                {{lid.NAAM}}
+                            </div>
+                            <div class="card-body" [ngClass]="!toonAvatar ? 'beperkPadding' : ''">
+                                <div class="d-flex">
+                                    <div *ngIf="toonAvatar">
+                                        <div class="opmaakTijdStart showStarts">{{ lid.STARTS }}</div>
+                                        <div class="opmaakTijdStart showTijd" *ngIf="lid.VLIEGTIJD">{{ lid.VLIEGTIJD }}</div>
+
+                                        <div class="avatar">
+                                            <app-avatar [url]="lid.AVATAR"></app-avatar>
+                                        </div>
+                                    </div>
+                                    <div class="naam">
+                                        <div class="d-flex" *ngIf="!toonAvatar">
+                                            <div class="px-1 opmaakTijdStart">{{ lid.STARTS }}</div><div class="mx-1">-</div>
+                                            <div class="px-1 opmaakTijdStart" *ngIf="lid.VLIEGTIJD">{{ lid.VLIEGTIJD }}</div>
+                                            <div class="px-1 opmaakTijdStart" *ngIf="!lid.VLIEGTIJD">00:00</div>
+                                        </div>
+                                        <b>{{lid.NAAM}}</b>
+                                        <div class="smallFont">Aankomst: {{lid.AANKOMST}}</div>
+                                        <div class="smallFont">{{lid.VLIEGTUIGTYPE_OMS}}</div>
+                                        <div class="smallFont">{{lid.REG_CALL}}</div>
+                                        <div class="smallFont">{{lid.OPMERKINGEN}}</div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="d-flex justify-content-between mt-2" id="toolbar">
+                <app-icon-button
+                        class="toolbarBtn ps-2"
+                        tekst="Vliegtuigen aanwezig"
+                        iconNaam="fas Plane" (btnClicked)="aanmeldenVliegtuig()"
+                        btnColor="btn-primary"></app-icon-button>
+
+                <div>
+                    <app-icon-button class="mx-3"
+                                     iconNaam="fas ArrowUp"
+                                     [disabled]="geselecteerdeStart == undefined"
+                                     (btnClicked)="omhoog()"></app-icon-button>
+
+                    <app-icon-button class="me-5"
+                                     iconNaam="fas ArrowDown"
+                                     [disabled]="geselecteerdeStart == undefined"
+                                     (btnClicked)="omlaag()"></app-icon-button>
+
+                    <app-status-button class="ms-5"
+                            class="toolbarBtn"
+                            tekst="Filter"
+                            [actief]="filterAan"
+                            (btnClicked)="filter($event)"
+                            iconNaam="fas Filter">
+                    </app-status-button>
+                    <app-icon-button class="toolbarBtn ps-2" iconNaam="fas Redo" (btnClicked)="opvragen()"
+                                     btnColor="btn-primary"></app-icon-button>
+                </div>
+
+                <app-icon-button
+                        class="toolbarBtn ps-2"
+                        tekst="Leden aanwezig"
+                        iconNaam="far User" (btnClicked)="aanmeldenVliegers()"
+                        btnColor="btn-primary"></app-icon-button>
             </div>
         </div>
     </div>
 </app-pegasus-card>
+
+<ng-template #previewLid let-lid>
+    <div class="card card-body">
+        <h6>{{lid.NAAM}}</h6>
+    </div>
+</ng-template>
+
+
+<app-aanmelden-vliegtuig></app-aanmelden-vliegtuig>
+<app-aanmelden-leden></app-aanmelden-leden>
+<app-lid-aanwezig-editor></app-lid-aanwezig-editor>
+
+<app-tijd-invoer></app-tijd-invoer>
+<app-start-editor></app-start-editor>
+<app-track-editor></app-track-editor>

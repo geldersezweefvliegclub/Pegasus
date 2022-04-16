@@ -10,10 +10,11 @@ import {fas} from "@fortawesome/free-solid-svg-icons";
 })
 export class StatusButtonComponent implements OnInit {
   @Input() tekst: string = '';
+  @Input() disabled: boolean = false;
   @Input() actief: boolean = false;
   @Input() iconNaam: string;
 
-  @Output() btnClicked: EventEmitter<void> = new EventEmitter<void>();
+  @Output() btnClicked: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   faIcon: IconDefinition;
   toonTekst: boolean = true;
@@ -47,7 +48,8 @@ export class StatusButtonComponent implements OnInit {
   }
 
   buttonClicked() {
-    this.btnClicked.emit();
+    this.actief = !this.actief;
+    this.btnClicked.emit(this.actief);
   }
 
   @HostListener('window:resize', ['$event'])

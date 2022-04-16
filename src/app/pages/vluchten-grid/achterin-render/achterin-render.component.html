@@ -1,5 +1,11 @@
-<div *ngIf="!naarDashboard">{{grid_inzittendenaam}}</div>
+<div *ngIf="!this.warning && !this.error">
+    <div *ngIf="!naarDashboard">{{grid_inzittendenaam}}</div>
 
-<div *ngIf="naarDashboard">
-    <a aria-label="Naar dashboard" [routerLink]="['/dashboard']" [queryParams]="{lidID: lidID}">{{grid_inzittendenaam}}</a>
+    <div *ngIf="naarDashboard">
+        <a aria-label="Naar dashboard" [routerLink]="['/dashboard']" [queryParams]="{lidID: lidID}">{{grid_inzittendenaam}}</a>
+    </div>
+</div>
+
+<div *ngIf="this.warning || this.error" [ngClass]="{'warning': this.warning, 'error': this.error }">
+    <div class="fas fa-exclamation-triangle" data-toggle="tooltip" title="Vul de naam van de instructeur in"></div>
 </div>

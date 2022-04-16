@@ -2,10 +2,7 @@ import {Injectable} from '@angular/core';
 import {DateTime} from 'luxon';
 import {HeliosActie, KeyValueArray} from '../../types/Utils';
 import {APIService} from './api.service';
-import {
-    HeliosAanwezigVliegtuigen,
-    HeliosAanwezigVliegtuigenDataset
-} from '../../types/Helios';
+import {HeliosAanwezigVliegtuigen, HeliosAanwezigVliegtuigenDataset} from '../../types/Helios';
 import {BehaviorSubject, Subscription} from "rxjs";
 import {SharedService} from "../shared/shared.service";
 import {debounceTime} from "rxjs/operators";
@@ -26,7 +23,7 @@ export class AanwezigVliegtuigService {
     private aanwezigStore = new BehaviorSubject(this.aanwezigCache.dataset);
     public readonly aanwezigChange = this.aanwezigStore.asObservable();      // nieuwe aanwezigheid beschikbaar
 
-    constructor(private readonly APIService: APIService,
+    constructor(private readonly apiService: APIService,
                 private readonly loginService: LoginService,
                 private readonly sharedService: SharedService) {
 
@@ -68,6 +65,12 @@ export class AanwezigVliegtuigService {
                         });
                     }
                 }
+
+                if (ev.tabel == "AanwezigVliegtuigen") {
+                    this.ophalenAanwezig(this.datum, this.datum).then((dataset) => {
+                        this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
+                    });
+                }
             });
         });
 
@@ -88,6 +91,13 @@ export class AanwezigVliegtuigService {
         return await this.getAanwezig(startDatum, eindDatum);
     }
 
+    async updateAanwezigCache(startDatum: DateTime, eindDatum: DateTime) {
+
+        this.ophalenAanwezig(this.datum, this.datum).then((dataset) => {
+            this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
+        });
+    }
+
     async getAanwezig(startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosAanwezigVliegtuigenDataset[]> {
         let getParams: KeyValueArray = params;
 
@@ -101,14 +111,45 @@ export class AanwezigVliegtuigService {
             getParams['SELECTIE'] = zoekString;
         }
 
+        getParams['NIET_VERTROKKEN'] = 'true';      // We zijn niet geintresseerd in vliegtuigen die al vertrokken zijn
         try {
-            const response: Response = await this.APIService.get('AanwezigVliegtuigen/GetObjects', getParams);
+            const response: Response = await this.apiService.get('AanwezigVliegtuigen/GetObjects', getParams);
             this.aanwezigCache = await response.json();
         } catch (e) {
             if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde data als cache
                 throw(e);
             }
         }
+        if (this.aanwezigCache?.dataset) {
+            this.aanwezigCache?.dataset.sort(function compareFn(a, b) {
+
+                const volgordeA = (a.VOLGORDE) ? a.VOLGORDE : 1000;
+                const volgordeB = (b.VOLGORDE) ? b.VOLGORDE : 1000;
+
+                if ((volgordeA - volgordeB) != 0) {
+                    return volgordeA - volgordeB;
+                }
+                return a.REG_CALL!.localeCompare(b.REG_CALL!);
+            });
+        }
         return this.aanwezigCache?.dataset as HeliosAanwezigVliegtuigenDataset[];
+    }
+
+    async aanmelden(datum: DateTime, vliegtuigID: number): Promise<any> {
+        const record = {
+            VLIEGTUIG_ID: vliegtuigID,
+            DATUM: datum.year + "-" + datum.month + "-" + datum.day
+        }
+        const response: Response = await this.apiService.post('AanwezigVliegtuigen/Aanmelden', JSON.stringify(record));
+        return response.json();
+    }
+
+    async aanmeldingVerwijderen(id: number) {
+        await this.apiService.delete('AanwezigVliegtuigen/DeleteObject', {'ID': id.toString()});
+    }
+
+    async afmelden(vliegtuigID: number): Promise<any> {
+        const response: Response = await this.apiService.post('AanwezigVliegtuigen/Afmelden', JSON.stringify({ VLIEGTUIG_ID: vliegtuigID }));
+        return response.json();
     }
 }
