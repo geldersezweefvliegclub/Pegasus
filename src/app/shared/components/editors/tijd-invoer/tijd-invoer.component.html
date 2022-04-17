@@ -16,7 +16,6 @@
                                    class="form-control"
                                    [(ngModel)]="tijdIngevoerd"
                                    [disabled]="isLoading || isSaving"
-                                   [ngbTypeahead]="search"
                                    (ngModelChange)="veldInvoer($event)"
                                    (keydown)="keyDown($event)"
                             />

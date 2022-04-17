@@ -165,12 +165,17 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
             // een boeking is bijvoorbeeld een NK, Euroglide etc
             // Je mag niet reserveren als er nog een reservering (in de toekomst) open staat
             // maar je mag wel reserveren als er een boeking open staat.
+            // als starttoren mag je sowieso niet een kist reserveren
 
-            const ui = this.loginService.userInfo?.LidData
-            const idx = this.data.findIndex((reservering) => {
-                return ((reservering.LID_ID == ui?.ID) && (reservering.IS_GEBOEKT == false) && (DateTime.fromSQL(reservering.DATUM!) > this.nu))
-            });
-            this.magNogReserveren = (idx < 0);
+            if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
+                this.magNogReserveren = false;
+            } else {
+                const ui = this.loginService.userInfo?.LidData
+                const idx = this.data.findIndex((reservering) => {
+                    return ((reservering.LID_ID == ui?.ID) && (reservering.IS_GEBOEKT == false) && (DateTime.fromSQL(reservering.DATUM!) > this.nu))
+                });
+                this.magNogReserveren = (idx < 0);
+            }
         }).catch(e => {
             this.error = e;
             this.isLoading = false;
@@ -228,7 +233,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
         })
 
         if (reservering) {
-            const d:DateTime = DateTime.fromSQL(datum);
+            const d: DateTime = DateTime.fromSQL(datum);
             const dagInfo = this.dagInfoService.getDagInfo(undefined, d).then((dagInfo) => {
 
                 let start: HeliosStartDataset = {
@@ -299,7 +304,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     }
 
     // Door wie is de kist geboekt
-    ToonOpmerking(datum: string, vliegtuigID: number): string|undefined {
+    ToonOpmerking(datum: string, vliegtuigID: number): string | undefined {
         const reservering = this.data.find((reservering) => {
             return (reservering.DATUM == datum && reservering.VLIEGTUIG_ID == vliegtuigID)
         })
@@ -420,13 +425,13 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
         const toExcel = this.data.filter((r) => {
             const d: DateTime = DateTime.fromSQL(r.DATUM!);
 
-            return (d.year == this.datum.year  && d.month == this.datum.month);
+            return (d.year == this.datum.year && d.month == this.datum.month);
         });
 
         var ws = xlsx.utils.json_to_sheet(toExcel);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
-        xlsx.writeFile(wb, 'reserveringen ' + new Date().toJSON().slice(0,10) +'.xlsx');
+        xlsx.writeFile(wb, 'reserveringen ' + new Date().toJSON().slice(0, 10) + '.xlsx');
     }
 
 }

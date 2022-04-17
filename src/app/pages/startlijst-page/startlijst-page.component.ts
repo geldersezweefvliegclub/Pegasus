@@ -102,8 +102,6 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
       this.data = [];
 
       const ui = this.loginService.userInfo?.Userinfo;
-      const nu: DateTime = DateTime.now()
-
       this.isStarttoren = ui!.isStarttoren as boolean;
 
       // abonneer op wijziging van vliegtuigen
@@ -377,7 +375,7 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
                   p.LID_ID == checkID &&
                   (p.COMPETENTIE_ID == vliegtuig.BEVOEGDHEID_LOKAAL_ID || p.COMPETENTIE_ID == vliegtuig.BEVOEGDHEID_OVERLAND_ID));
 
-              this.filteredStarts[i].BEVOEGD = (progressie) ? true : false;
+              this.filteredStarts[i].BEVOEGD = !!(progressie);
             }
           }
         }

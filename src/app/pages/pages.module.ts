@@ -4,7 +4,7 @@ import {RouterModule} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import {FlexLayoutModule} from '@angular/flex-layout';
 
 import {SharedModule} from '../shared/shared.module';
 import {PegasusCardComponent} from '../shared/components/pegasus-card/pegasus-card.component';
@@ -37,79 +37,81 @@ import {LedenFilterComponent} from '../shared/components/leden-filter/leden-filt
 import {VliegtuigLogboekComponent} from './vliegtuig-logboek/vliegtuig-logboek.component';
 import {ChartsModule} from 'ng2-charts';
 import {NaamRenderComponent} from './leden-grid/naam-render/naam-render.component';
-import { RoosterPageComponent } from './rooster-page/rooster-page.component';
+import {RoosterPageComponent} from './rooster-page/rooster-page.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import { TrackRenderComponent } from './leden-grid/track-render/track-render.component';
-import { TracksGridComponent } from './tracks-grid/tracks-grid.component';
-import { JaarTotalenComponent } from './rooster-page/jaar-totalen/jaar-totalen.component';
-import { ExportStartlijstComponent } from './vluchten-grid/export-startlijst/export-startlijst.component';
-import { AuditPageComponent } from './audit-page/audit-page.component';
-import { ReserveringPageComponent } from './reservering-page/reservering-page.component';
-import { KistSelectieComponent } from './reservering-page/kist-selectie/kist-selectie.component';
-import { HandboekRenderComponent } from './vliegtuigen-grid/handboek-render/handboek-render.component';
-import { StartlijstPageComponent } from './startlijst-page/startlijst-page.component';
+import {TrackRenderComponent} from './leden-grid/track-render/track-render.component';
+import {TracksGridComponent} from './tracks-grid/tracks-grid.component';
+import {JaarTotalenComponent} from './rooster-page/jaar-totalen/jaar-totalen.component';
+import {ExportStartlijstComponent} from './vluchten-grid/export-startlijst/export-startlijst.component';
+import {AuditPageComponent} from './audit-page/audit-page.component';
+import {ReserveringPageComponent} from './reservering-page/reservering-page.component';
+import {KistSelectieComponent} from './reservering-page/kist-selectie/kist-selectie.component';
+import {HandboekRenderComponent} from './vliegtuigen-grid/handboek-render/handboek-render.component';
+import {StartlijstPageComponent} from './startlijst-page/startlijst-page.component';
+import {DagnummerRenderComponent} from "./vluchten-grid/dagnummer-render/dagnummer-render.component";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule,
-    FormsModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    SharedModule,
-    CodeInputModule,
-    FontAwesomeModule,
-    NgbDatepickerModule,
-    NgbTypeaheadModule,
-    CustomFormsModule,
-    NgSelectModule,
-    ChartsModule,
-    LazyLoadImageModule,
-    NgbPopoverModule,
-    DragDropModule,
-    FlexLayoutModule
-  ],
-  declarations: [
-    DashboardPageComponent,
-    ProfielPageComponent,
-    NotFoundComponent,
-    LoginPageComponent,
-    VliegtuigenGridComponent,
-    ZitplaatsRenderComponent,
-    LedenGridComponent,
-    VluchtenGridComponent,
-    VoorinRenderComponent,
-    AchterinRenderComponent,
-    StarttijdRenderComponent,
-    LandingstijdRenderComponent,
-    DaginfoComponent,
-    ComposeMeteoComponent,
-    ComposeBedrijfComponent,
-    AvatarRenderComponent,
-    AdresRenderComponent,
-    TelefoonRenderComponent,
-    EmailRenderComponent,
-    LedenFilterComponent,
-    VliegtuigLogboekComponent,
-    NaamRenderComponent,
-    RoosterPageComponent,
-    TrackRenderComponent,
-    TracksGridComponent,
-    JaarTotalenComponent,
-    ExportStartlijstComponent,
-    AuditPageComponent,
-    ReserveringPageComponent,
-    KistSelectieComponent,
-    HandboekRenderComponent,
-    StartlijstPageComponent,
-  ],
-  exports: [
-    PegasusCardComponent,
-    DashboardPageComponent,
-    CodeInputModule,
-    ChartsModule
-  ],
-  schemas: [NO_ERRORS_SCHEMA]
+    imports: [
+        CommonModule,
+        RouterModule,
+        FormsModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        SharedModule,
+        CodeInputModule,
+        FontAwesomeModule,
+        NgbDatepickerModule,
+        NgbTypeaheadModule,
+        CustomFormsModule,
+        NgSelectModule,
+        ChartsModule,
+        LazyLoadImageModule,
+        NgbPopoverModule,
+        DragDropModule,
+        FlexLayoutModule
+    ],
+    declarations: [
+        DashboardPageComponent,
+        ProfielPageComponent,
+        NotFoundComponent,
+        LoginPageComponent,
+        VliegtuigenGridComponent,
+        ZitplaatsRenderComponent,
+        LedenGridComponent,
+        VluchtenGridComponent,
+        VoorinRenderComponent,
+        AchterinRenderComponent,
+        StarttijdRenderComponent,
+        LandingstijdRenderComponent,
+        DaginfoComponent,
+        ComposeMeteoComponent,
+        ComposeBedrijfComponent,
+        AvatarRenderComponent,
+        AdresRenderComponent,
+        TelefoonRenderComponent,
+        EmailRenderComponent,
+        LedenFilterComponent,
+        VliegtuigLogboekComponent,
+        NaamRenderComponent,
+        RoosterPageComponent,
+        TrackRenderComponent,
+        TracksGridComponent,
+        JaarTotalenComponent,
+        ExportStartlijstComponent,
+        AuditPageComponent,
+        ReserveringPageComponent,
+        KistSelectieComponent,
+        HandboekRenderComponent,
+        StartlijstPageComponent,
+        DagnummerRenderComponent,
+    ],
+    exports: [
+        PegasusCardComponent,
+        DashboardPageComponent,
+        CodeInputModule,
+        ChartsModule
+    ],
+    schemas: [NO_ERRORS_SCHEMA]
 })
 export class PagesModule {
 }

@@ -14,7 +14,7 @@ import {faAvianex} from "@fortawesome/free-brands-svg-icons";
 import {ModalComponent} from "../../shared/components/modal/modal.component";
 import {Subscription} from "rxjs";
 import {DateTime} from "luxon";
-import {SchermGrootte, SharedService} from "../../services/shared/shared.service";
+import {SharedService} from "../../services/shared/shared.service";
 import * as xlsx from "xlsx";
 import {StartlijstService} from "../../services/apiservice/startlijst.service";
 import {ProgressieService} from "../../services/apiservice/progressie.service";

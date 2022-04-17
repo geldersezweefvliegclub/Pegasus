@@ -20,16 +20,17 @@
                                     <div class="d-flex">
                                         <div class="vliegtuig flex-grow-1">
                                             <b>{{vliegtuig.REG_CALL}}</b>
-                                                <div class="badge bg-danger ms-2"
-                                                   *ngIf="vliegtuig.CLUBKIST && !vliegtuig.INZETBAAR">
-                                                     <div class="fas fa-exclamation-triangle"></div>
-                                                </div>
+                                            <div class="badge bg-danger ms-2"
+                                                 *ngIf="vliegtuig.CLUBKIST && !vliegtuig.INZETBAAR">
+                                                <div class="fas fa-exclamation-triangle"></div>
+                                            </div>
                                             <div class="smallFont">{{vliegtuig.VLIEGTUIGTYPE_OMS}}</div>
                                             <div class="smallFont">{{vliegtuig.OPMERKINGEN}}</div>
                                         </div>
 
                                         <div class="d-flex flex-column justify-content-center p-0 ms-2">
-                                            <app-icon-button iconNaam="far PlusSquare" (btnClicked)="nieuweStart(vliegtuig.VLIEGTUIG_ID)"
+                                            <app-icon-button iconNaam="far PlusSquare"
+                                                             (btnClicked)="nieuweStart(vliegtuig.VLIEGTUIG_ID)"
                                                              btnColor="btn-primary"></app-icon-button>
                                         </div>
                                     </div>
@@ -45,7 +46,9 @@
                     <div class="card d-flex flex-row">
                         <div class="data col flex-grow-1" id="STARTLIJST">
                             <div *ngFor="let start of filteredStarts;let i = index">
-                                <div class="kaart pb-1" [ngClass]="{'highlightCard': geselecteerdeStart && geselecteerdeStart.ID == start.ID }" (click)="startKlik(start)" *ngIf="start">
+                                <div class="kaart pb-1"
+                                     [ngClass]="{'highlightCard': geselecteerdeStart && geselecteerdeStart.ID == start.ID }"
+                                     (click)="startKlik(start)" *ngIf="start">
                                     <table class="w-100">
                                         <tr>
                                             <td class="w-100">#{{start.DAGNUMMER}} {{start.REG_CALL}}</td>
@@ -55,17 +58,24 @@
                                             <td class="rechts">
                                                 <div class="d-flex flex-row justify-content-end iconGroep">
                                                     <div class="column">
-                                                        <div *ngIf="!start.INSTRUCTIEVLUCHT" class="geenIcoontje">-</div>
-                                                        <div *ngIf="start.INSTRUCTIEVLUCHT" class="icoontje" data-toggle="tooltip" title="Instructie vlucht">I</div>
+                                                        <div *ngIf="!start.INSTRUCTIEVLUCHT" class="geenIcoontje">-
+                                                        </div>
+                                                        <div *ngIf="start.INSTRUCTIEVLUCHT" class="icoontje"
+                                                             data-toggle="tooltip" title="Instructie vlucht">I
+                                                        </div>
                                                     </div>
 
                                                     <div class="column">
                                                         <div *ngIf="!start.CHECKSTART" class="geenIcoontje">-</div>
-                                                        <div *ngIf="start.CHECKSTART" class="icoontje" data-toggle="tooltip" title="Trainingsvlucht">T</div>
+                                                        <div *ngIf="start.CHECKSTART" class="icoontje"
+                                                             data-toggle="tooltip" title="Trainingsvlucht">T
+                                                        </div>
                                                     </div>
                                                     <div class="column">
                                                         <div *ngIf="!start.PAX" class="geenIcoontje">-</div>
-                                                        <div *ngIf="start.PAX" class="icoontje" data-toggle="tooltip" title="Passagiers">P</div>
+                                                        <div *ngIf="start.PAX" class="icoontje" data-toggle="tooltip"
+                                                             title="Passagiers">P
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -73,12 +83,12 @@
                                         <tr>
                                             <td colspan="2">
                                                 <div
-                                                    cdkDropList
-                                                    [id]="start.ID"
-                                                    [ngClass]="(!geselecteerdeStart || geselecteerdeStart.ID == start.ID) ? 'drop-container' : 'ms-2'"
-                                                    (cdkDropListDropped)="onDropInStart($event, start, 'vlieger');"
-                                                    [cdkDropListData]="start"
-                                                    [cdkDropListEnterPredicate]="evaluatieVlieger.bind(this, start)">
+                                                        cdkDropList
+                                                        [id]="start.ID.toString()"
+                                                        [ngClass]="(!geselecteerdeStart || geselecteerdeStart.ID == start.ID) ? 'drop-container' : 'ms-2'"
+                                                        (cdkDropListDropped)="onDropInStart($event, start, 'vlieger');"
+                                                        [cdkDropListData]="start"
+                                                        [cdkDropListEnterPredicate]="evaluatieVlieger.bind(this, start)">
 
                                                     <div [ngClass]="(!start.INSTRUCTIEVLUCHT && (!start.MEDICAL || !start.BEVOEGD)) ? 'waarschuwing' : ''">
                                                         <b>{{start.VLIEGERNAAM_LID}}</b>
@@ -86,44 +96,58 @@
                                                 </div>
                                             </td>
 
-                                            <td class="tijd rechts" *ngIf="start.STARTTIJD" (click)="startTijdClicked(start)">{{start.STARTTIJD}}</td>
-                                            <td class="rechts" *ngIf="start.STARTTIJD && start.LANDINGSTIJD">{{start.STARTMETHODE}}</td>
+                                            <td class="tijd rechts" *ngIf="start.STARTTIJD"
+                                                (click)="startTijdClicked(start)">{{start.STARTTIJD}}</td>
+                                            <td class="rechts"
+                                                *ngIf="start.STARTTIJD && start.LANDINGSTIJD">{{start.STARTMETHODE}}</td>
 
-                                            <td class="rechts laag" *ngIf="!start.STARTMETHODE && !start.STARTTIJD && !start.LANDINGSTIJD" rowspan="3">
+                                            <td class="rechts laag"
+                                                *ngIf="!start.STARTMETHODE && !start.STARTTIJD && !start.LANDINGSTIJD"
+                                                rowspan="3">
                                                 <div class="badge bg-danger ms-2" style="font-size: large"
                                                      *ngIf="!start.STARTMETHODE">
-                                                    <div class="fas fa-exclamation-triangle" data-toggle="tooltip" title="Onvolledig, open editor"></div>
+                                                    <div class="fas fa-exclamation-triangle" data-toggle="tooltip"
+                                                         title="Onvolledig, open editor"></div>
                                                 </div>
                                             </td>
-                                            <td class="rechts laag" *ngIf="start.STARTMETHODE && !start.STARTTIJD && !start.LANDINGSTIJD" rowspan="3">
-                                                <app-icon-button class="toolbarBtn" iconNaam="fas PlaneDeparture" (btnClicked)="startTijdClicked(start)"
+                                            <td class="rechts laag"
+                                                *ngIf="start.STARTMETHODE && !start.STARTTIJD && !start.LANDINGSTIJD"
+                                                rowspan="3">
+                                                <app-icon-button class="toolbarBtn" iconNaam="fas PlaneDeparture"
+                                                                 (btnClicked)="startTijdClicked(start)"
                                                                  btnColor="startBtn"></app-icon-button>
                                             </td>
-                                            <td class="rechts laag" *ngIf="start.STARTTIJD && !start.LANDINGSTIJD" rowspan="3">
-                                                <app-icon-button class="toolbarBtn" iconNaam="fas PlaneArrival" (btnClicked)="landingsTijdClicked(start)"
+                                            <td class="rechts laag" *ngIf="start.STARTTIJD && !start.LANDINGSTIJD"
+                                                rowspan="3">
+                                                <app-icon-button class="toolbarBtn" iconNaam="fas PlaneArrival"
+                                                                 (btnClicked)="landingsTijdClicked(start)"
                                                                  btnColor="landingsBtn"></app-icon-button>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td colspan="2">
-                                                <div  *ngIf="start.ZITPLAATSEN == 2"
-                                                    cdkDropList
-                                                    [id]="start.ID"
-                                                    [ngClass]="(!geselecteerdeStart || geselecteerdeStart.ID == start.ID) ? 'drop-container' : 'ms-2'"
-                                                    (cdkDropListDropped)="onDropInStart($event, start, 'inzittende');"
-                                                    [cdkDropListData]="start"
-                                                    [cdkDropListEnterPredicate]="evaluatieInzittende.bind(this, start)">
+                                                <div *ngIf="start.ZITPLAATSEN == 2"
+                                                     cdkDropList
+                                                     [id]="start.ID.toString()"
+                                                     [ngClass]="(!geselecteerdeStart || geselecteerdeStart.ID == start.ID) ? 'drop-container' : 'ms-2'"
+                                                     (cdkDropListDropped)="onDropInStart($event, start, 'inzittende');"
+                                                     [cdkDropListData]="start"
+                                                     [cdkDropListEnterPredicate]="evaluatieInzittende.bind(this, start)">
 
                                                     <div [ngClass]="(start.INSTRUCTIEVLUCHT && (!start.MEDICAL || !start.BEVOEGD)) ? 'waarschuwing' : ''">
                                                         <b>{{start.INZITTENDENAAM_LID}}</b>
                                                     </div>
-                                                    <div *ngIf="start.INSTRUCTIEVLUCHT &&  start.VLIEGER_ID && !start.INZITTENDE_ID" CLASS="warning">
-                                                        <div class="fas fa-exclamation-triangle" data-toggle="tooltip" title="Vul de naam van de instructeur in"></div>
+                                                    <div *ngIf="start.INSTRUCTIEVLUCHT &&  start.VLIEGER_ID && !start.INZITTENDE_ID"
+                                                         CLASS="warning">
+                                                        <div class="fas fa-exclamation-triangle" data-toggle="tooltip"
+                                                             title="Vul de naam van de instructeur in"></div>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td class="tijd rechts" *ngIf="start.LANDINGSTIJD" (click)="landingsTijdClicked(start)">{{start.LANDINGSTIJD}}</td>
-                                            <td class="rechts" *ngIf="start.STARTTIJD && start.LANDINGSTIJD">{{start.DUUR}}</td>
+                                            <td class="tijd rechts" *ngIf="start.LANDINGSTIJD"
+                                                (click)="landingsTijdClicked(start)">{{start.LANDINGSTIJD}}</td>
+                                            <td class="rechts"
+                                                *ngIf="start.STARTTIJD && start.LANDINGSTIJD">{{start.DUUR}}</td>
                                         </tr>
                                         <tr *ngIf="start.OPMERKINGEN">
                                             <td colspan="2">{{start.OPMERKINGEN}}</td>
@@ -161,7 +185,8 @@
                                 <div class="d-flex">
                                     <div *ngIf="toonAvatar">
                                         <div class="opmaakTijdStart showStarts">{{ lid.STARTS }}</div>
-                                        <div class="opmaakTijdStart showTijd" *ngIf="lid.VLIEGTIJD">{{ lid.VLIEGTIJD }}</div>
+                                        <div class="opmaakTijdStart showTijd"
+                                             *ngIf="lid.VLIEGTIJD">{{ lid.VLIEGTIJD }}</div>
 
                                         <div class="avatar">
                                             <app-avatar [url]="lid.AVATAR"></app-avatar>
@@ -169,8 +194,10 @@
                                     </div>
                                     <div class="naam">
                                         <div class="d-flex" *ngIf="!toonAvatar">
-                                            <div class="px-1 opmaakTijdStart">{{ lid.STARTS }}</div><div class="mx-1">-</div>
-                                            <div class="px-1 opmaakTijdStart" *ngIf="lid.VLIEGTIJD">{{ lid.VLIEGTIJD }}</div>
+                                            <div class="px-1 opmaakTijdStart">{{ lid.STARTS }}</div>
+                                            <div class="mx-1">-</div>
+                                            <div class="px-1 opmaakTijdStart"
+                                                 *ngIf="lid.VLIEGTIJD">{{ lid.VLIEGTIJD }}</div>
                                             <div class="px-1 opmaakTijdStart" *ngIf="!lid.VLIEGTIJD">00:00</div>
                                         </div>
                                         <b>{{lid.NAAM}}</b>
@@ -206,12 +233,11 @@
                                      [disabled]="geselecteerdeStart == undefined"
                                      (btnClicked)="omlaag()"></app-icon-button>
 
-                    <app-status-button class="ms-5"
-                            class="toolbarBtn"
-                            tekst="Filter"
-                            [actief]="filterAan"
-                            (btnClicked)="filter($event)"
-                            iconNaam="fas Filter">
+                    <app-status-button class="ms-5 toolbarBtn"
+                                       tekst="Filter"
+                                       [actief]="filterAan"
+                                       (btnClicked)="filter($event)"
+                                       iconNaam="fas Filter">
                     </app-status-button>
                     <app-icon-button class="toolbarBtn ps-2" iconNaam="fas Redo" (btnClicked)="opvragen()"
                                      btnColor="btn-primary"></app-icon-button>
