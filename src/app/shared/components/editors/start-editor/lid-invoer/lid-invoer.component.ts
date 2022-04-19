@@ -1,12 +1,4 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    OnChanges,
-    OnInit,
-    Output,
-    SimpleChanges
-} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Observable, of, Subject} from 'rxjs';
 import {HeliosAanwezigLedenDataset, HeliosLedenDataset, HeliosVliegtuigenDataset} from '../../../../../types/Helios';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";

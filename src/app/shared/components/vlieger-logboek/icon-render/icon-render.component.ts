@@ -1,9 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 import {AgRendererComponent} from "ag-grid-angular";
 import {ICellRendererParams} from "ag-grid-community";
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { far } from '@fortawesome/free-regular-svg-icons';
 
 
 @Component({

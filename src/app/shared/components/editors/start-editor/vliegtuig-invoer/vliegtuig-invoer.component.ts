@@ -1,14 +1,4 @@
-import {
-    Component,
-    ElementRef,
-    EventEmitter,
-    Input,
-    OnChanges,
-    OnInit,
-    Output,
-    SimpleChanges,
-    ViewChild
-} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {Observable, of, Subject} from 'rxjs';
 import {HeliosVliegtuigenDataset} from '../../../../../types/Helios';
 import {NgSelectComponent} from "@ng-select/ng-select";

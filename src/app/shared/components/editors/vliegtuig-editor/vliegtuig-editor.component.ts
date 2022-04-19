@@ -1,12 +1,6 @@
 import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ModalComponent} from '../../modal/modal.component';
-import {
-    HeliosCompetenties,
-    HeliosCompetentiesDataset,
-    HeliosType,
-    HeliosVliegtuig,
-    HeliosVliegtuigenDataset
-} from '../../../../types/Helios';
+import {HeliosType, HeliosVliegtuig, HeliosVliegtuigenDataset} from '../../../../types/Helios';
 import {VliegtuigenService} from '../../../../services/apiservice/vliegtuigen.service';
 import {TypesService} from '../../../../services/apiservice/types.service';
 import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";

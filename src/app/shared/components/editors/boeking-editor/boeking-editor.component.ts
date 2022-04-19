@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {HeliosVliegtuigenDatasetExtended} from "../../../../pages/reservering-page/reservering-page.component";
+import {HeliosVliegtuigenDatasetExtended} from "../../../../schermen/reservering/reservering-page/reservering-page.component";
 import {ModalComponent} from "../../modal/modal.component";
 import {Subscription} from "rxjs";
 import {HeliosLedenDataset, HeliosReservering} from "../../../../types/Helios";

@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {APIService} from './api.service';
-import {base64ToFile} from 'ngx-image-cropper';
 
 @Injectable({
   providedIn: 'root'

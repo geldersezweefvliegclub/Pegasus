@@ -1,4 +1,4 @@
-import {EventEmitter, Injectable, OnInit} from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import {APIService} from './api.service';
 import {Base64} from 'js-base64';
 
@@ -6,7 +6,6 @@ import {HeliosUserinfo} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
 import {SharedService} from "../shared/shared.service";
 import {BehaviorSubject, Subscription} from "rxjs";
-import {delay} from "rxjs/operators";
 
 interface BearerToken {
     TOKEN: string;

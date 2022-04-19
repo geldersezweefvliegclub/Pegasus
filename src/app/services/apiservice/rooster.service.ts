@@ -1,18 +1,12 @@
 import {Injectable} from '@angular/core';
 import {DateTime} from 'luxon';
 import {APIService} from './api.service';
-import {HeliosActie, KeyValueArray} from '../../types/Utils';
-import {
-    HeliosAanwezigLeden,
-    HeliosProgressieKaartDataset,
-    HeliosRooster,
-    HeliosRoosterDag,
-    HeliosRoosterDataset
-} from '../../types/Helios';
+import {KeyValueArray} from '../../types/Utils';
+import {HeliosRooster, HeliosRoosterDag, HeliosRoosterDataset} from '../../types/Helios';
 import {BehaviorSubject, Subscription} from "rxjs";
 import {SharedService} from "../shared/shared.service";
 import {getBeginEindDatumVanMaand} from "../../utils/Utils";
-import {debounceTime, delay} from "rxjs/operators";
+import {debounceTime} from "rxjs/operators";
 import {LoginService} from "./login.service";
 
 @Injectable({

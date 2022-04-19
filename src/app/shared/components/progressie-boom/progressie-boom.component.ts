@@ -1,15 +1,5 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Output,
-    SimpleChanges,
-    ViewChild
-} from '@angular/core';
-import {TreeviewItem, TreeviewConfig} from 'ngx-treeview';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {TreeviewConfig, TreeviewItem} from 'ngx-treeview';
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
 import {HeliosCompetentiesDataset, HeliosProgressie, HeliosProgressieBoom} from "../../../types/Helios";
 import {LoginService} from "../../../services/apiservice/login.service";

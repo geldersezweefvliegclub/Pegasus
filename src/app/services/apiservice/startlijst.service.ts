@@ -2,8 +2,12 @@ import {Injectable} from '@angular/core';
 import {APIService} from './api.service';
 
 import {
-    HeliosLogboek, HeliosLogboekDataset, HeliosLogboekTotalen, HeliosRecency,
-    HeliosStart, HeliosStartDataset,
+    HeliosLogboek,
+    HeliosLogboekDataset,
+    HeliosLogboekTotalen,
+    HeliosRecency,
+    HeliosStart,
+    HeliosStartDataset,
     HeliosStarts,
     HeliosVliegdagen,
     HeliosVliegtuigLogboek,

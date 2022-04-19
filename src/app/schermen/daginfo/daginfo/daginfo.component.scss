@@ -1,0 +1,52 @@
+.rowDagInfo1 {
+  padding-top: 10px;
+}
+
+.rowDagInfo2 {
+  padding-top: 20px;
+}
+
+.rowDagInfo3 {
+  padding-top: 20px;
+}
+
+.rowDagInfo4 {
+  padding-top: 20px;
+}
+
+.text-invoer {
+  border-color: #dfdfdf;
+}
+
+textarea {
+  resize: none;
+}
+
+.tekstregels {
+  position: absolute;
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  right: 15px;
+  top: 12px;
+}
+
+#TEKSTREGELS {
+  width: 50px;
+}
+
+.midden {
+  display: flex;           /* establish flex container */
+  flex-direction: column;  /* make main axis vertical */
+  justify-content: center; /* center items vertically, in this case */
+  align-items: center;     /* center items horizontally, in this case */
+  height: calc(100vh - 200px);
+}
+
+ng-select.ng-invalid {
+  border: 1px solid #ffc107;
+}
+
+.svgImage {
+  width: 50%;
+}

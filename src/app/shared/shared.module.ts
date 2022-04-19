@@ -59,6 +59,9 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
 import {AanmeldenLedenComponent} from './components/aanmelden-leden/aanmelden-leden.component';
 import {ExtendedModule} from "@angular/flex-layout";
 import {LidAanwezigEditorComponent} from './components/editors/lid-aanwezig-editor/lid-aanwezig-editor.component';
+import {LedenFilterComponent} from "./components/leden-filter/leden-filter.component";
+import {StarttijdRenderComponent} from "./components/datatable/starttijd-render/starttijd-render.component";
+import {LandingstijdRenderComponent} from "./components/datatable/landingstijd-render/landingstijd-render.component";
 
 @NgModule({
     imports: [
@@ -125,7 +128,10 @@ import {LidAanwezigEditorComponent} from './components/editors/lid-aanwezig-edit
         VluchtCardComponent,
         AanmeldenVliegtuigComponent,
         AanmeldenLedenComponent,
-        LidAanwezigEditorComponent
+        LidAanwezigEditorComponent,
+        LedenFilterComponent,
+        StarttijdRenderComponent,
+        LandingstijdRenderComponent
     ],
     exports: [
         LidEditorComponent,
@@ -158,10 +164,14 @@ import {LidAanwezigEditorComponent} from './components/editors/lid-aanwezig-edit
         VluchtCardComponent,
         AanmeldenVliegtuigComponent,
         AanmeldenLedenComponent,
-        LidAanwezigEditorComponent
+        LidAanwezigEditorComponent,
+        LedenFilterComponent,
+        StarttijdRenderComponent,
+        LandingstijdRenderComponent
     ],
     providers: [],
     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]
 })
+
 export class SharedModule {
 }

@@ -1,10 +1,7 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
-import {
-    HeliosBehaaldeProgressieDataset,
-    HeliosCompetentiesDataset,
-} from "../../../types/Helios";
+import {HeliosBehaaldeProgressieDataset, HeliosCompetentiesDataset,} from "../../../types/Helios";
 import {ErrorMessage, HeliosActie, SuccessMessage} from "../../../types/Utils";
 import {SharedService} from "../../../services/shared/shared.service";
 import {LoginService} from "../../../services/apiservice/login.service";

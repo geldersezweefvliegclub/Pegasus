@@ -2,12 +2,7 @@ import {Injectable} from '@angular/core';
 import {DateTime} from 'luxon';
 import {HeliosActie, KeyValueArray} from '../../types/Utils';
 import {APIService} from './api.service';
-import {
-    HeliosAanwezigLeden,
-    HeliosAanwezigLedenDataset,
-    HeliosAanwezigVliegtuigenDataset,
-    HeliosLid
-} from '../../types/Helios';
+import {HeliosAanwezigLeden, HeliosAanwezigLedenDataset, HeliosAanwezigVliegtuigenDataset} from '../../types/Helios';
 import {BehaviorSubject, Subscription} from "rxjs";
 import {SharedService} from "../shared/shared.service";
 import {debounceTime} from "rxjs/operators";

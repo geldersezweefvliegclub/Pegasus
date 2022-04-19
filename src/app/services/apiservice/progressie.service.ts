@@ -3,9 +3,11 @@ import {APIService} from "./api.service";
 import {StorageService} from "../storage/storage.service";
 import {
     HeliosBehaaldeProgressie,
-    HeliosProgressieBoom,
     HeliosBehaaldeProgressieDataset,
-    HeliosProgressie, HeliosProgressieKaartDataset, HeliosProgressieKaart, HeliosAanwezigLedenDataset
+    HeliosProgressie,
+    HeliosProgressieBoom,
+    HeliosProgressieKaart,
+    HeliosProgressieKaartDataset
 } from "../../types/Helios";
 import {KeyValueArray} from "../../types/Utils";
 import {LoginService} from "./login.service";

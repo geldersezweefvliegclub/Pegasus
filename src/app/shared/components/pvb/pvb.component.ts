@@ -1,14 +1,4 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Output,
-    SimpleChanges,
-    ViewChild
-} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
 import {HeliosBehaaldeProgressieDataset, HeliosCompetentiesDataset} from "../../../types/Helios";

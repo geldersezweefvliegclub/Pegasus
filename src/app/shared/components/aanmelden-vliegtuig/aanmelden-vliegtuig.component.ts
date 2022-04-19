@@ -1,17 +1,10 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
-import {
-  HeliosAanwezigLedenDataset,
-  HeliosAanwezigVliegtuigen, HeliosAanwezigVliegtuigenDataset,
-  HeliosStartDataset,
-  HeliosVliegtuigenDataset
-} from "../../../types/Helios";
+import {HeliosAanwezigVliegtuigenDataset, HeliosVliegtuigenDataset} from "../../../types/Helios";
 import {ModalComponent} from "../modal/modal.component";
 import {Subscription} from "rxjs";
 import {VliegtuigenService} from "../../../services/apiservice/vliegtuigen.service";
 import {AanwezigVliegtuigService} from "../../../services/apiservice/aanwezig-vliegtuig.service";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {DateTime, Duration} from "luxon";
+import {DateTime} from "luxon";
 import {SharedService} from "../../../services/shared/shared.service";
 import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
 

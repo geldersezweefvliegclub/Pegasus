@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {DienstenService} from "../../../services/apiservice/diensten.service";
 import {RoosterService} from "../../../services/apiservice/rooster.service";
 import {HeliosDienst, HeliosDienstenDataset, HeliosRoosterDataset} from "../../../types/Helios";

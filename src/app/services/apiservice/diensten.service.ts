@@ -2,7 +2,8 @@ import {Injectable} from '@angular/core';
 import {
     HeliosDienst,
     HeliosDiensten,
-    HeliosDienstenDataset, HeliosDienstenTotaal,
+    HeliosDienstenDataset,
+    HeliosDienstenTotaal,
     HeliosTracksDataset
 } from "../../types/Helios";
 import {APIService} from "./api.service";

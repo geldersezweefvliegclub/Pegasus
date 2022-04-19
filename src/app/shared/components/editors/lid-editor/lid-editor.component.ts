@@ -1,10 +1,10 @@
-import {ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {NgbDate, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
 import {DateTime} from 'luxon';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {faEye, faEyeSlash, faInfo, faInfoCircle, faUser} from '@fortawesome/free-solid-svg-icons';
 import {TypesService} from '../../../../services/apiservice/types.service';
-import {HeliosAanwezigLedenDataset, HeliosLedenDataset, HeliosLid, HeliosType} from '../../../../types/Helios';
+import {HeliosLedenDataset, HeliosLid, HeliosType} from '../../../../types/Helios';
 import {LedenService} from '../../../../services/apiservice/leden.service';
 import {LoginService} from "../../../../services/apiservice/login.service";
 import {NgbDateFRParserFormatter} from "../../../ngb-date-fr-parser-formatter";

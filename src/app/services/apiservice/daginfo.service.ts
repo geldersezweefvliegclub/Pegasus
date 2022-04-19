@@ -2,12 +2,7 @@ import {Injectable} from '@angular/core';
 import {APIService} from './api.service';
 import {DateTime} from 'luxon';
 import {KeyValueArray} from '../../types/Utils';
-import {
-    HeliosDagInfo,
-    HeliosDagInfoDagen,
-    HeliosDagInfosDataset,
-    HeliosRoosterDataset
-} from '../../types/Helios';
+import {HeliosDagInfo, HeliosDagInfoDagen, HeliosDagInfosDataset, HeliosRoosterDataset} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {SharedService} from '../shared/shared.service';
@@ -129,8 +124,8 @@ export class DaginfoService {
             const rooster: HeliosRoosterDataset[] = await this.roosterService.getRooster(this.datum, this.datum);
             this.dagInfo = {
                 DATUM: this.datum.toISODate(),
-                DDWV: rooster[0].DDWV,
-                CLUB_BEDRIJF: rooster[0].CLUB_BEDRIJF,
+                DDWV: (rooster.length > 0) ? rooster[0].DDWV : false,
+                CLUB_BEDRIJF: (rooster.length > 0) ? rooster[0].CLUB_BEDRIJF : false,
                 VELD_ID: undefined,
                 STARTMETHODE_ID: undefined,
                 VLIEGBEDRIJF: "",

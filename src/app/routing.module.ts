@@ -1,70 +1,149 @@
 import {NgModule} from '@angular/core';
 import {Route, RouterModule} from '@angular/router';
-import {DashboardPageComponent} from './pages/dashboard/dashboard-page.component';
-import {ProfielPageComponent} from './pages/profiel/profiel-page.component';
-import {NotFoundComponent} from './pages/not-found/not-found.component';
-import {LoginPageComponent} from './pages/login-page/login-page.component';
 
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {
-  faAddressCard,
-  faCalendarAlt,
-  faCalendarDay,
-  faChartPie,
-  faKey,
-  faPlane, faPlaneDeparture,
-  faUser,
-  faUsers, faWaveSquare, faMousePointer, faPenFancy, faPen
+    faAddressCard,
+    faCalendarAlt,
+    faCalendarDay,
+    faChartPie,
+    faKey,
+    faPen,
+    faPlane,
+    faPlaneDeparture,
+    faUser,
+    faUsers,
+    faWaveSquare
 } from '@fortawesome/free-solid-svg-icons';
-import {VluchtenGridComponent} from './pages/vluchten-grid/vluchten-grid.component';
-import {VliegtuigenGridComponent} from './pages/vliegtuigen-grid/vliegtuigen-grid.component';
-import {DaginfoComponent} from './pages/daginfo/daginfo.component';
-import {LedenGridComponent} from './pages/leden-grid/leden-grid.component';
-import {VliegtuigLogboekComponent} from './pages/vliegtuig-logboek/vliegtuig-logboek.component';
-import {RoosterPageComponent} from './pages/rooster-page/rooster-page.component';
-import {TracksGridComponent} from "./pages/tracks-grid/tracks-grid.component";
-import {AuditPageComponent} from "./pages/audit-page/audit-page.component";
-import {ReserveringPageComponent} from "./pages/reservering-page/reservering-page.component";
+import {AuditPageComponent} from "./schermen/audit/audit-page/audit-page.component";
 import {faAvianex} from "@fortawesome/free-brands-svg-icons";
-import {StartlijstPageComponent} from "./pages/startlijst-page/startlijst-page.component";
 
 export interface CustomRoute extends Route {
-  excluded: boolean;
-  icon: IconDefinition;
-  text: string;
-  batch?: any;
+    excluded: boolean;
+    icon: IconDefinition;
+    text: string;
+    batch?: any;
 }
 
 export const routes: CustomRoute[] = [
-  {path: '', pathMatch: 'full', redirectTo: 'dashboard', excluded: true, icon: faUser, text: 'EXCLUDED'},
-  {path: 'dashboard', component: DashboardPageComponent, excluded: false, icon: faChartPie, text: 'Dashboard'},
-  {path: 'vluchten', component: VluchtenGridComponent, excluded: false, icon: faPlaneDeparture, text: 'Vluchten'},
-  {path: 'startlijst', component: StartlijstPageComponent, excluded: false, icon: faPen, text: 'Startlijst'},
-  {path: 'daginfo', component: DaginfoComponent, excluded: false, icon: faCalendarAlt, text: 'Dag info'},
-  {path: 'tracks', component: TracksGridComponent, excluded: false, icon: faAddressCard, text: 'Tracks'},
-  {path: 'reserveringen', component: ReserveringPageComponent, excluded: false, icon: faAvianex, text: 'Kist reserveren'},
-  {path: 'leden', component: LedenGridComponent, excluded: false, icon: faUsers, text: 'Ledenlijst'},
-  {path: 'vlogboek', component: VliegtuigLogboekComponent, excluded: true, icon: faPlane, text: 'Vliegtuig logboek'},
-  {path: 'vliegtuigen', component: VliegtuigenGridComponent, excluded: false, icon: faPlane, text: 'Vliegtuigen'},
-  {path: 'login', component: LoginPageComponent, excluded: true, icon: faKey, text: 'Help'},
-  {path: 'profiel', component: ProfielPageComponent, excluded: false, icon: faUser, text: 'Profiel'},
-  {path: 'rooster', component: RoosterPageComponent, excluded: false, icon: faCalendarDay, text: 'Rooster'},
+    {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'dashboard',
+        excluded: true,
+        icon: faUser,
+        text: 'EXCLUDED'
+    },
+    {
+        path: 'dashboard',
+        loadChildren: () => import('./schermen/dashboard/dashboard.module').then(m => m.DashboardModule),
+        excluded: false,
+        icon: faChartPie,
+        text: 'Dashboard'
+    },
+    {
+        path: 'vluchten',
+        loadChildren: () => import('./schermen/vluchten/vluchten.module').then(m => m.VluchtenModule),
+        excluded: false,
+        icon: faPlaneDeparture,
+        text: 'Vluchten'
+    },
+    {
+        path: 'startlijst',
+        loadChildren: () => import('./schermen/startlijst/startlijst.module').then(m => m.StartlijstModule),
+        excluded: false,
+        icon: faPen,
+        text: 'Start indeling'
+    },
+    {
+        path: 'daginfo',
+        loadChildren: () => import('./schermen/daginfo/daginfo.module').then(m => m.DaginfoModule),
+        excluded: false,
+        icon: faCalendarAlt,
+        text: 'Dag info'
+    },
+    {
+        path: 'tracks',
+        loadChildren: () => import('./schermen/tracks/tracks.module').then(m => m.TracksModule),
+        excluded: false,
+        icon: faAddressCard,
+        text: 'Tracks'
+    },
+    {
+        path: 'reserveringen',
+        loadChildren: () => import('./schermen/reservering/reservering.module').then(m => m.ReserveringModule),
+        excluded: false,
+        icon: faAvianex,
+        text: 'Kist reserveren'
+    },
+    {
+        path: 'leden',
+        loadChildren: () => import('./schermen/leden/leden.module').then(m => m.LedenModule),
+        excluded: false,
+        icon: faUsers,
+        text: 'Ledenlijst'
+    },
+    {
+        path: 'vliegtuigen',
+        loadChildren: () => import('./schermen/vliegtuigen/vliegtuigen.module').then(m => m.VliegtuigenModule),
+        excluded: true,
+        icon: faPlane,
+        text: 'Vliegtuig logboek'
+    },
+    {
+        path: 'vliegtuigen',
+        loadChildren: () => import('./schermen/vliegtuigen/vliegtuigen.module').then(m => m.VliegtuigenModule),
+        excluded: false,
+        icon: faPlane,
+        text: 'Vliegtuigen'
+    },
+    {
+        path: 'login',
+        loadChildren: () => import('./schermen/login/login.module').then(m => m.LoginModule),
+        excluded: true,
+        icon: faKey,
+        text: 'Login'
+    },
+    {
+        path: 'profiel',
+        loadChildren: () => import('./schermen/profiel/profiel.module').then(m => m.ProfielModule),
+        excluded: false,
+        icon: faUser,
+        text: 'Profiel'
+    },
+    {
+        path: 'rooster',
+        loadChildren: () => import('./schermen/rooster/rooster.module').then(m => m.RoosterModule),
+        excluded: false,
+        icon: faCalendarDay,
+        text: 'Rooster'
+    },
 
-  {path: 'audit', component: AuditPageComponent, excluded: true, icon: faWaveSquare, text: 'Audit'},
+    {
+        path: 'audit',
+        loadChildren: () => import('./schermen/audit/audit.module').then(m => m.AuditModule),
+        excluded: true,
+        icon: faWaveSquare,
+        text: 'Audit'
+    },
 
-  {path: '**', component: NotFoundComponent, excluded: true, icon: faUser, text: 'EXCLUDED'},
+    {
+        path: '**',
+        loadChildren: () => import('./schermen/not-found/not-found.module').then(m => m.NotFoundModule),
+        excluded: true,
+        icon: faUser,
+        text: 'EXCLUDED'
+    },
 ];
-
 
 export const beheerRoutes: CustomRoute[] = [
-  {path: 'audit', component: AuditPageComponent, excluded: false, icon: faWaveSquare, text: 'Audit'},
+    {path: 'audit', component: AuditPageComponent, excluded: false, icon: faWaveSquare, text: 'Audit'},
 ];
-
 
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule]
 })
 export class RoutingModule {
 }

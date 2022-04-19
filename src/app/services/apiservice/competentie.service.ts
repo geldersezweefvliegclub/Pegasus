@@ -1,8 +1,5 @@
 import {Injectable} from '@angular/core';
-import {
-    HeliosCompetenties,
-    HeliosCompetentiesDataset,
-} from "../../types/Helios";
+import {HeliosCompetenties, HeliosCompetentiesDataset,} from "../../types/Helios";
 import {KeyValueArray} from "../../types/Utils";
 import {APIService} from "./api.service";
 import {StorageService} from "../storage/storage.service";

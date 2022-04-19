@@ -1,4 +1,4 @@
-import {HostListener, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {ErrorMessage, HeliosEvent, KalenderMaand} from '../../types/Utils';

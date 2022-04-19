@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {APIService} from "./api.service";
-import {HeliosLid, HeliosReservering, HeliosReserveringen, HeliosReserveringenDataset} from "../../types/Helios";
+import {HeliosReservering, HeliosReserveringen, HeliosReserveringenDataset} from "../../types/Helios";
 import {KeyValueArray} from "../../types/Utils";
 import {DateTime} from "luxon";
 

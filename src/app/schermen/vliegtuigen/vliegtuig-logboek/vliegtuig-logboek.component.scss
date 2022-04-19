@@ -1,0 +1,82 @@
+@import "../../../../variables";
+
+.headerCards {
+  height: 40%
+}
+.grafiekCard {
+  margin-bottom: 10px;
+}
+
+.inlineGrafiek {
+  height: calc(100% - 90px);
+}
+
+.barchart-wrapper {
+  background-color: #28a745;
+  border-radius: 10px;
+  margin: 10px;
+}
+
+.linechart-wrapper {
+  background-color: rgb(89, 173, 239);
+  border-radius: 10px;
+  margin: 10px;
+}
+
+.clearBarChart {
+  position: absolute;
+  align-self: flex-end;
+  right: 15px;
+  top: 12px;
+  color: white;
+}
+
+.vliegtuiggrid {
+  height: calc(60% + 10px);
+}
+
+.vliegtuiggrid-full {
+  height: calc(100% + 10px);
+}
+
+.GrafiekFooter {
+  margin-top: 10px;
+
+  color: #adadad;
+  font-family: Roboto, sans-serif;
+  font-feature-settings: 'liga';
+  font-weight: 300;
+}
+
+.GrafiekFooterIcon {
+  font-size: 20px;
+
+  margin-left: 25px;
+  margin-right: 10px;
+
+}
+
+.GrafiekFooterTitel {
+  font-size: 16px;
+}
+
+
+.GrafiekFooterSamenvatting {
+  font-size: 12px;
+
+  color: #adadad;
+  font-family: Roboto, sans-serif;
+  font-feature-settings: 'liga';
+  font-weight: 300;
+}
+
+.GrafiekFooterSamenvattingIcon {
+  font-size: 12px;
+
+  margin-left: 25px;
+  margin-right: 10px;
+
+  color: getColor('secondary')
+}
+
+

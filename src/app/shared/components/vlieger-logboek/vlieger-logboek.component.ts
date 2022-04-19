@@ -1,5 +1,5 @@
 import {Component, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {ColDef, RowDoubleClickedEvent} from "ag-grid-community";
+import {ColDef} from "ag-grid-community";
 import {HeliosLogboekDataset, HeliosTrack} from "../../../types/Helios";
 import {DateTime, Interval} from "luxon";
 import {Subscription} from "rxjs";

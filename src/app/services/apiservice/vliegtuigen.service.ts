@@ -1,11 +1,7 @@
 import {Injectable} from '@angular/core';
 import {APIService} from './api.service';
 
-import {
-    HeliosVliegtuig,
-    HeliosVliegtuigen,
-    HeliosVliegtuigenDataset
-} from '../../types/Helios';
+import {HeliosVliegtuig, HeliosVliegtuigen, HeliosVliegtuigenDataset} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
 import {KeyValueArray} from '../../types/Utils';
 import {BehaviorSubject, Subscription} from "rxjs";

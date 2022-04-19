@@ -9,13 +9,7 @@ import {
     Output,
     SimpleChanges
 } from '@angular/core';
-import {
-    ColDef,
-    GridApi,
-    GridOptions,
-    RowDoubleClickedEvent,
-    RowSelectedEvent
-} from 'ag-grid-community';
+import {ColDef, GridApi, GridOptions, RowDoubleClickedEvent, RowSelectedEvent} from 'ag-grid-community';
 
 @Component({
     selector: 'app-datatable',

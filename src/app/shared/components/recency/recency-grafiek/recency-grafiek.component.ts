@@ -6,10 +6,10 @@ import {StartlijstService} from "../../../../services/apiservice/startlijst.serv
 
 import {ChartDataSets, ChartOptions, ChartType} from "chart.js";
 import * as pluginAnnotations from 'chartjs-plugin-annotation';
+import {AnnotationOptions} from 'chartjs-plugin-annotation';
 
 import {ModalComponent} from "../../modal/modal.component";
 import {Label} from "ng2-charts";
-import {AnnotationOptions} from "chartjs-plugin-annotation";
 
 @Component({
     selector: 'app-recency-grafiek',

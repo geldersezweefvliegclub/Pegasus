@@ -1,4 +1,4 @@
-import {Component, HostListener, Input, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {HeliosLedenDataset, HeliosTrack, HeliosTracksDataset} from "../../../types/Helios";
 import {TracksService} from "../../../services/apiservice/tracks.service";
 import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";

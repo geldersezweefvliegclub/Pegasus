@@ -2,10 +2,10 @@ import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {ModalComponent} from "../../modal/modal.component";
 import {Subscription} from "rxjs";
 import {DateTime} from "luxon";
+import * as pluginAnnotations from "chartjs-plugin-annotation";
 import {AnnotationOptions} from "chartjs-plugin-annotation";
 import {ChartDataSets, ChartOptions, ChartType} from "chart.js";
 import {Label} from "ng2-charts";
-import * as pluginAnnotations from "chartjs-plugin-annotation";
 import {StartlijstService} from "../../../../services/apiservice/startlijst.service";
 import {SharedService} from "../../../../services/shared/shared.service";
 
