@@ -206,16 +206,16 @@
     </div>
     <div footer>
         <app-icon-button *ngIf="!isLoading && !isSaving && start.ID !== undefined && !isRestoreMode && !isVerwijderMode"
-                         iconNaam="fas Edit" btnColor="btn-primary"
+                         iconNaam="fas Edit" btnColor="btn-primary" [toonKlein]=false
                          tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
         <app-icon-button *ngIf="!isLoading && !isSaving && start.ID === undefined && !isRestoreMode && !isVerwijderMode"
-                         iconNaam="fas Plus" btnColor="btn-primary"
+                         iconNaam="fas Plus" btnColor="btn-primary" [toonKlein]=false
                          tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
         <app-icon-button *ngIf="!isLoading && !isSaving && isVerwijderMode" iconNaam="fas TrashAlt"
-                         btnColor="btn-primary editorDeleteBtn"
+                         btnColor="btn-primary editorDeleteBtn" [toonKlein]=false
                          tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
         <app-icon-button *ngIf="!isLoading && !isSaving && isRestoreMode" iconNaam="fas Undo"
-                         btnColor="btn-primary editorRestoreBtn"
+                         btnColor="btn-primary editorRestoreBtn" [toonKlein]=false
                          tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
 
         <button class="btn btn-primary" *ngIf="isLoading || isSaving">

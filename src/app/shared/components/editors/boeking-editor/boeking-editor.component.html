@@ -77,7 +77,7 @@
         </form>
     </div>
     <div footer>
-        <app-icon-button *ngIf="!isSaving" iconNaam="fas Edit" btnColor="btn-primary"
+        <app-icon-button *ngIf="!isSaving" iconNaam="fas Edit" btnColor="btn-primary" [toonKlein]=false
                          [disabled]="opslaanDisabled()"
                          tekst="Opslaan" (btnClicked)="aanmakenReserveringen()"></app-icon-button>
 

@@ -8,7 +8,7 @@ import {ICellRendererParams} from "ag-grid-community";
   styleUrls: ['./dagnummer-render.component.scss']
 })
 export class DagnummerRenderComponent implements AgRendererComponent {
-  params: any;
+  params: ICellRendererParams;
   dagnummer: number;
 
   constructor() { }

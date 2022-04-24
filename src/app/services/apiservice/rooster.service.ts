@@ -69,10 +69,13 @@ export class RoosterService {
         }
     }
 
-    async getRooster(startDatum: DateTime, eindDatum: DateTime): Promise<HeliosRoosterDataset[]> {
+    async getRooster(startDatum: DateTime, eindDatum: DateTime, velden?: string): Promise<HeliosRoosterDataset[]> {
         let getParams: KeyValueArray = {};
         getParams['BEGIN_DATUM'] = startDatum.toISODate();
         getParams['EIND_DATUM'] = eindDatum.toISODate();
+        if (velden) {
+            getParams['VELDEN'] = velden;
+        }
 
         if ((this.roosterCache != undefined)  && (this.roosterCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
             getParams['HASH'] = this.roosterCache.hash;

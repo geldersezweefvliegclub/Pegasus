@@ -157,7 +157,8 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     iconCardIcon: IconDefinition = faClipboardList;
     downloadIcon: IconDefinition = faDownload;
 
-    private dbEventAbonnement: Subscription;
+    private resizeSubscription: Subscription;           // Abonneer op aanpassing van window grootte (of draaien mobiel)
+    private dbEventAbonnement: Subscription;            // Abonneer op aanpassingen in de database
     private dienstenAbonnement: Subscription;
     private roosterAbonnement: Subscription;
     rooster: HeliosRoosterDataset[];
@@ -248,6 +249,11 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
             }
         });
 
+        // Roep onWindowResize aan zodra we het event ontvangen hebben
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+            this.onWindowResize()
+        });
+
         const ui = this.loginService.userInfo?.Userinfo;
         this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isDDWV || ui?.isClubVlieger) ? true : false;
         this.magVerwijderen = (!this.beperkteInvoer()) ? true : false;
@@ -260,8 +266,14 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         if (this.roosterAbonnement)     this.roosterAbonnement.unsubscribe();
         if (this.dienstenAbonnement)    this.dienstenAbonnement.unsubscribe();
         if (this.datumAbonnement)       this.datumAbonnement.unsubscribe();
+        if (this.resizeSubscription)    this.resizeSubscription.unsubscribe();
 
         clearTimeout(this.refreshTimer);
+    }
+
+    // aantal kolommen dat we tonen is afhankelijk van scherm grootte
+    onWindowResize() {
+        this.kolomDefinitie();
     }
 
     // mag de ingelogde gebruiker starts voor iedereen invullen of alleen voor zichzelf
@@ -331,12 +343,6 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         this.kolomDefinitie();
         this.opvragen();
     }
-
-    @HostListener('window:resize', ['$event'])
-    onWindowResize() {
-        this.kolomDefinitie();
-    }
-
 
     // Welke kolommen moet worden getoond in het grid
     kolomDefinitie() {

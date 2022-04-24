@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {faRecycle, faUsers} from '@fortawesome/free-solid-svg-icons';
 import {HeliosLedenDataset, HeliosTrack} from '../../../types/Helios';
 import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
@@ -23,6 +23,7 @@ import {TrackEditorComponent} from "../../../shared/components/editors/track-edi
 import {TracksService} from "../../../services/apiservice/tracks.service";
 import {TrackRenderComponent} from "../track-render/track-render.component";
 import {DatumRenderComponent} from "../../../shared/components/datatable/datum-render/datum-render.component";
+import {Subscription} from "rxjs";
 
 
 @Component({
@@ -30,13 +31,15 @@ import {DatumRenderComponent} from "../../../shared/components/datatable/datum-r
     templateUrl: './leden-grid.component.html',
     styleUrls: ['./leden-grid.component.scss']
 })
-export class LedenGridComponent implements OnInit {
+export class LedenGridComponent implements OnInit, OnDestroy {
     @ViewChild(LedenFilterComponent) ledenFilter: LedenFilterComponent;
     @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
 
     leden: HeliosLedenDataset[] = [];
     dataset: HeliosLedenDataset[] = [];
     isLoading: boolean = false;
+
+    private resizeSubscription: Subscription;
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
@@ -164,7 +167,6 @@ export class LedenGridComponent implements OnInit {
         datumRender: DatumRenderComponent
     };
     iconCardIcon: IconDefinition = faUsers;
-    prullenbakIcon: IconDefinition = faRecycle;
 
     zoekString: string;
     zoekTimer: number;                  // kleine vertraging om data ophalen te beperken
@@ -178,6 +180,7 @@ export class LedenGridComponent implements OnInit {
     magExporteren: boolean = false;
     toonBulkEmail: boolean = false;
     toonBladwijzer: boolean = false;
+
     constructor(private readonly ledenService: LedenService,
                 private readonly loginService: LoginService,
                 private readonly trackService: TracksService,
@@ -191,9 +194,20 @@ export class LedenGridComponent implements OnInit {
         this.kolomDefinitie();
         this.opvragen();
         this.zetPermissie();
+
+        // Roep onWindowResize aan zodra we het event ontvangen hebben
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+            this.onWindowResize()
+        });
     }
 
-    @HostListener('window:resize', ['$event'])
+    ngOnDestroy(): void {
+        if (this.resizeSubscription) {
+            this.resizeSubscription.unsubscribe();
+        }
+    }
+
+    // aanpassen wat we op het scherm kwijt kunnen nadat scherm groote gewijzigd is
     onWindowResize() {
         if(this.sharedService.getSchermSize() == SchermGrootte.xs)
         {

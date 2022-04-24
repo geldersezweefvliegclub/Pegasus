@@ -135,7 +135,8 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
-    private dbEventAbonnement: Subscription;
+    private dbEventAbonnement: Subscription;        // Abonneer op aanpassingen in de database
+    private resizeSubscription: Subscription;       // Abonneer op aanpassing van window grootte (of draaien mobiel)
 
     constructor(private readonly vliegtuigenService: VliegtuigenService,
                 private readonly startlijstService: StartlijstService,
@@ -163,13 +164,19 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
                 this.opvragen();
             }
         });
+
+        // Roep onWindowResize aan zodra we het event ontvangen hebben
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+            this.onWindowResize()
+        });
     }
 
     ngOnDestroy(): void {
         if (this.dbEventAbonnement)     this.dbEventAbonnement.unsubscribe();
+        if (this.resizeSubscription)    this.resizeSubscription.unsubscribe();
     }
 
-    @HostListener('window:resize', ['$event'])
+    // aanpassen wat we op het scherm kwijt kunnen nadat scherm groote gewijzigd is
     onWindowResize() {
         if(this.sharedService.getSchermSize() == SchermGrootte.xs)
         {

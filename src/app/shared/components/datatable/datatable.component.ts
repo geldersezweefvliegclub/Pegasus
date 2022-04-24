@@ -10,6 +10,8 @@ import {
     SimpleChanges
 } from '@angular/core';
 import {ColDef, GridApi, GridOptions, RowDoubleClickedEvent, RowSelectedEvent} from 'ag-grid-community';
+import {SharedService} from "../../../services/shared/shared.service";
+import {Subscription} from "rxjs";
 
 @Component({
     selector: 'app-datatable',
@@ -45,13 +47,14 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         autoHeight: this.autoHeight,
         filter: 'agTextColumnFilter', // use 'text' leden-filter by default
     };
-    private api: GridApi;
+    private api: GridApi | undefined;
     private columnStateTimer: number | null = null;
+    private resizeSubscription: Subscription;           // Abonneer op aanpassing van window grootte (of draaien mobiel)
 
     noRowsTemplate;
     loadingTemplate;
 
-    constructor() {
+    constructor(private readonly sharedService: SharedService) {
         this.loadingTemplate = '<span><img src="assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Data wordt geladen .....</span>';
         this.noRowsTemplate = '<span>Geen informatie beschikbaar</span>';
     }
@@ -63,12 +66,23 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         if (this.rowClassRules) {
             this.options.rowClassRules = this.rowClassRules;
         }
+
+        // Roep onWindowResize aan zodra we het event ontvangen hebben
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+            this.onWindowResize()
+        });
     }
 
     ngOnDestroy(): void {
         if (this.columnStateTimer) {
             clearInterval(this.columnStateTimer);
         }
+
+        if (this.resizeSubscription) {
+            this.resizeSubscription.unsubscribe();
+        }
+
+        this.api = undefined;
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -91,7 +105,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    @HostListener('window:resize', ['$event'])
+    // zorg dat alle kolomen weer netjes binnen het scherm passen
     onWindowResize() {
         this.sizeColumnsToFit();
     }
@@ -100,22 +114,26 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         console.log(this.id, "grid ready")
         this.api = ready.api;
 
-        this.api.setColumnDefs(this.columnDefs);
-        this.api.sizeColumnsToFit()
+        this.api!.setColumnDefs(this.columnDefs);
+        this.api!.sizeColumnsToFit()
 
         // automatisch column aanpassen bij wijzigen window size
         if (this.sizeToFit) {
             window.onresize = () => {
-                this.api.sizeColumnsToFit();
+                if (this.api) {
+                    this.api.sizeColumnsToFit();
+                }
             }
         }
         this.columnStateTimer = window.setInterval(() => {
-            this.api.sizeColumnsToFit()
+            this.api!.sizeColumnsToFit()
         }, 5000)
     }
 
     sizeColumnsToFit() {
-        this.api.sizeColumnsToFit();
+        if (this.api) {
+            this.api.sizeColumnsToFit();
+        }
     }
 
     onRowDoubleClicked(event: RowDoubleClickedEvent) {

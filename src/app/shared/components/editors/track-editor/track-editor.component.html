@@ -26,13 +26,13 @@
     </div>
     <div footer>
         <app-icon-button *ngIf="!isLoading && !isSaving && track.ID !== undefined && !isRestoreMode && !isVerwijderMode" iconNaam="fas Edit" btnColor="btn-primary"
-                         tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
+                         [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
         <app-icon-button *ngIf="!isLoading && !isSaving && track.ID === undefined && !isRestoreMode && !isVerwijderMode" iconNaam="fas Plus" btnColor="btn-primary"
-                         tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
+                         [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
         <app-icon-button *ngIf="!isLoading && !isSaving && isVerwijderMode" iconNaam="fas TrashAlt" btnColor="btn-primary editorDeleteBtn"
-                         tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
+                         [toonKlein]=false tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
         <app-icon-button *ngIf="!isLoading && !isSaving && isRestoreMode" iconNaam="fas Undo" btnColor="btn-primary editorRestoreBtn"
-                         tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
+                         [toonKlein]=false tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
 
         <button class="btn btn-primary" *ngIf="isLoading || isSaving">
             <span><app-loader></app-loader></span>

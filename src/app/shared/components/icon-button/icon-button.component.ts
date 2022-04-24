@@ -1,31 +1,32 @@
-import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {fas} from '@fortawesome/free-solid-svg-icons';
 import {far, IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {FlipProp} from '@fortawesome/fontawesome-svg-core';
 import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
+import {Subscription} from "rxjs";
 
 @Component({
     selector: 'app-icon-button',
     templateUrl: './icon-button.component.html',
     styleUrls: ['./icon-button.component.scss']
 })
-export class IconButtonComponent implements OnInit {
+export class IconButtonComponent implements OnInit, OnDestroy {
     @Input() tekst: string = '';
     @Input() iconNaam: string;
     @Input() btnColor: string = 'btn-secondary';
     @Input() disabled: boolean = false;
+    @Input() toonKlein: boolean = true;
     @Input() flip: FlipProp;
     @Input() type: 'button' | 'submit' = 'button';
     @Output() btnClicked: EventEmitter<void> = new EventEmitter<void>();
 
     faIcon: IconDefinition;
-    toonTekst: boolean = true;
+    toonTekst: boolean = false;
 
+    private resizeSubscription: Subscription;                           // Abonneer op aanpassing van window grootte (of draaien mobiel)
     constructor(private readonly sharedService: SharedService) {}
 
     ngOnInit(): void {
-        this.toonTekst = (this.sharedService.getSchermSize() > SchermGrootte.md)
-
         if (this.iconNaam) {
             let parts: string[] = this.iconNaam.split(' ');
 
@@ -48,10 +49,21 @@ export class IconButtonComponent implements OnInit {
                 }
             }
         }
+
+        // Roep onWindowResize aan zodra we het event ontvangen hebben
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+            this.onWindowResize()
+        });
+        this.onWindowResize();
+    }
+
+    ngOnDestroy(): void {
+        if (this.resizeSubscription) {
+            this.resizeSubscription.unsubscribe();
+        }
     }
 
     // Voor kleine schermen, tonen we alleen icoontje en geen tekst
-    @HostListener('window:resize', ['$event'])
     onWindowResize() {
         this.toonTekst = (this.sharedService.getSchermSize() > SchermGrootte.md)
     }

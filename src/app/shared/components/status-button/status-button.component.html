@@ -1,7 +1,8 @@
 <button class="btn" [ngClass]="{'btn-primary':actief, 'btn-outline-primary': !actief}"  type="button" [disabled]="disabled"  (click)="buttonClicked()">
     <div class="d-flex">
-        <fa-icon [icon]="faIcon" [ngClass]="{'me-3': tekst.length > 0 && toonTekst}" *ngIf="faIcon"></fa-icon>
+        <fa-icon [icon]="faIcon" *ngIf="faIcon"></fa-icon>
         <div *ngIf="toonTekst">{{tekst}}</div>
+        <div [ngClass]="{'ms-3': tekst.length > 0}" *ngIf="toonTekst || !toonKlein">{{tekst}}</div>
     </div>
 </button>
 

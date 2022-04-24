@@ -48,8 +48,9 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
 
     data: HeliosLogboekDatasetExtended[] = [];
     private dbEventAbonnement: Subscription;
-    private datumAbonnement: Subscription;  // volg de keuze van de kalender
-    datum: DateTime;                        // de gekozen dag
+    private resizeSubscription: Subscription;   // Abonneer op aanpassing van window grootte (of draaien mobiel)
+    private datumAbonnement: Subscription;      // volg de keuze van de kalender
+    datum: DateTime;                            // de gekozen dag
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -180,12 +181,18 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
             });
         }, 250);
 
+        // Roep onWindowResize aan zodra we het event ontvangen hebben
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+            this.onWindowResize()
+        });
+
         this.kolomDefinitie();
     }
 
     ngOnDestroy(): void {
         if (this.dbEventAbonnement)     this.dbEventAbonnement.unsubscribe();
         if (this.datumAbonnement)       this.datumAbonnement.unsubscribe();
+        if (this.resizeSubscription)    this.resizeSubscription.unsubscribe();
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -196,7 +203,6 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     // toon groot of klein logboek zijn, afhankelijk van scherm breedte
-    @HostListener('window:resize', ['$event'])
     onWindowResize() {
         this.kolomDefinitie();
     }

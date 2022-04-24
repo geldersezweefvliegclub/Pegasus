@@ -38,7 +38,7 @@
         </fieldset>
     </div>
     <div footer>
-        <app-icon-button *ngIf="!isLoading && !isSaving" iconNaam="fas Edit" btnColor="btn-primary"
+        <app-icon-button *ngIf="!isLoading && !isSaving" iconNaam="fas Edit" btnColor="btn-primary" [toonKlein]=false
                          tekst="Opslaan" (btnClicked)="opslaan()"></app-icon-button>
         <button class="btn btn-primary" *ngIf="isLoading || isSaving">
             <span><app-loader></app-loader></span>

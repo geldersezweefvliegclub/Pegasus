@@ -185,10 +185,6 @@ export class StartEditorComponent implements OnInit {
             else
             {
                 this.formTitel = `Start aanmaken ${this.datum.day}-${this.datum.month}-${this.datum.year}`;
-
-                // zet de juiste parameters (doe alsof er invoer heeft plaatsgevonden)
-                this.vliegtuigGeselecteerd(this.start.VLIEGTUIG_ID);
-                this.vliegerGeselecteerd(this.start.VLIEGER_ID);
             }
         } else {
             this.formTitel = `Start aanmaken ${this.datum.day}-${this.datum.month}-${this.datum.year}`;
@@ -215,11 +211,11 @@ export class StartEditorComponent implements OnInit {
                 OPMERKINGEN: undefined,
                 EXTERNAL_ID: undefined
             };
-
-            // zet de juiste parameters (doe alsof er invoer heeft plaatsgevonden)
-            this.vliegtuigGeselecteerd(this.start.VLIEGTUIG_ID);
-            this.vliegerGeselecteerd(this.start.VLIEGER_ID)
         }
+        // Zet de juiste parameters (doe alsof er invoer heeft plaatsgevonden), heeft invloed op het tonen van velden in de editor
+        this.vliegtuigGeselecteerd(this.start.VLIEGTUIG_ID);
+        this.vliegerGeselecteerd(this.start.VLIEGER_ID)
+
         this.isVerwijderMode = false;
         this.isRestoreMode = false;
         this.isSaving = false;

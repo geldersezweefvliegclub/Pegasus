@@ -13,7 +13,7 @@ import {
     HeliosVliegtuigenDataset
 } from "../../../types/Helios";
 import {LedenService} from "../../../services/apiservice/leden.service";
-import {SharedService} from "../../../services/shared/shared.service";
+import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
 import {VliegtuigenService} from "../../../services/apiservice/vliegtuigen.service";
 import {RoosterService} from "../../../services/apiservice/rooster.service";
 import {DagVanDeWeek} from "../../../utils/Utils";
@@ -45,7 +45,6 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     readonly assignIcon: IconDefinition = faCalendarCheck;
     readonly reserveringIcon: IconDefinition = faAvianex;
 
-    private roosterAbonnement: Subscription;
     rooster: HeliosRoosterDataset[];
     filteredRooster: HeliosRoosterDataset[];
 
@@ -53,6 +52,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     alleLeden: HeliosLedenDataset[];
 
     data: HeliosReserveringenDataset[] = [];
+    reserveringView: string = "maand";            // toon rooster voor maand, week of dag
     zoekString: string;
     isLoading: boolean = false;
     magBoeken: boolean = false;
@@ -62,9 +62,12 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     clubVliegtuigen: HeliosVliegtuigenDatasetExtended[];
     clubVliegtuigenFiltered: HeliosVliegtuigenDatasetExtended[];
 
-    private datumAbonnement: Subscription; // volg de keuze van de kalender
-    datum: DateTime;                       // de gekozen dag
-    nu: DateTime                           // vandaag
+    private resizeSubscription: Subscription;       // Abonneer op aanpassing van window grootte (of draaien mobiel)
+    private maandAbonnement: Subscription;          // volg de keuze van de kalender
+    private datumAbonnement: Subscription;          // volg de keuze van de kalender
+    datum: DateTime;                                // de gekozen dag
+    maandag: DateTime                               // de eerste dag van de week
+    nu: DateTime                                    // vandaag
 
     toonClubDDWV: number = 2;              // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
 
@@ -90,18 +93,29 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
         if (ui!.isBeheerder || ui!.isBeheerderDDWV) {
             this.magBoeken = true;
         }
+        this.onWindowResize();
         this.magExporteren = ui!.isClubVlieger!;
 
         // de datum zoals die in de kalender gekozen is
-        this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
+        this.maandAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
             this.datum = DateTime.fromObject({
                 year: jaarMaand.year,
                 month: jaarMaand.month,
-                day: 1
+                day: 1,
             })
-            this.filteredRooster = [];
+            this.maandag = this.datum.startOf('week'); // de eerste dag van de gekozen week
             this.opvragen();
-        })
+        });
+
+        this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
+            this.datum = DateTime.fromObject({
+                year: datum.year,
+                month: datum.month,
+                day: datum.day,
+            })
+            this.maandag = this.datum.startOf('week'); // de eerste dag van de gekozen week
+            this.opvragen();
+        });
 
         // abonneer op wijziging van vliegtuigen
         this.vliegtuigenAbonnement = this.vliegtuigenService.vliegtuigenChange.subscribe(vliegtuigen => {
@@ -134,10 +148,9 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
             this.alleLeden = (leden) ? leden : [];
         });
 
-        // abonneer op wijziging van rooster
-        this.roosterAbonnement = this.roosterService.roosterChange.subscribe(maandRooster => {
-            this.rooster = maandRooster!
-            this.applyRoosterFilter();
+        // Roep onWindowResize aan zodra we het event ontvangen hebben
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+            this.onWindowResize();
         });
     }
 
@@ -145,17 +158,55 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
         if (this.ledenAbonnement) this.ledenAbonnement.unsubscribe();
         if (this.vliegtuigenAbonnement) this.vliegtuigenAbonnement.unsubscribe();
         if (this.datumAbonnement) this.datumAbonnement.unsubscribe();
-        if (this.roosterAbonnement) this.roosterAbonnement.unsubscribe();
+        if (this.resizeSubscription) this.resizeSubscription.unsubscribe();
     }
 
+    onWindowResize() {
+        if (this.sharedService.getSchermSize() <= SchermGrootte.sm) {
+            this.reserveringView = "dag"
+        } else if (this.sharedService.getSchermSize() >= SchermGrootte.xl) {
+            this.reserveringView = "maand"
+        } else {
+            this.reserveringView = "week"
+        }
+
+        if (this.datum) {
+            this.opvragen();        // moeten wel een datum hebben, anders kunnen we niets opvragen
+        }
+    }
     // Opvragen van de data via de api
     opvragen() {
         this.isLoading = true;
 
+        let beginDatum: DateTime = DateTime.fromObject({day: 1, month: this.datum.month, year: this.datum.year});   // begin van de maand
+        if (this.maandag.month != this.datum.month)  { // als maandag in de vorige maand valt, dan meer ophalen ivm week vieuw. Die laat ook vorige maand zien
+            beginDatum = this.maandag
+        }
+
         // We laden veel meer data, dan de gekozen maand, en dat heeft een reden
         // Je mag maar 1 openstaande reservering hebben. In de functie magReserveren() wordt gekeken of er een openstaande reservering is
-        const beginDatum: DateTime = DateTime.fromObject({day: 1, month: this.nu.month, year: this.nu.year});   // begin van de maand
-        const eindDatum: DateTime = this.datum.plus({months: 2}); // datum 2 maanden vanaf nu, dan weten ook toekomstige reserveringen
+        // altijd vanaf vandaag controleren
+        if (beginDatum > this.nu) {
+            beginDatum = this.nu;
+        }
+
+        const eindeMaand = beginDatum.plus({months:1}).plus({days: -1});    // laatste dag van de maand
+        let eindDatum: DateTime = this.datum.plus({months: 2}); // datum 2 maanden vanaf nu, dan weten ook toekomstige reserveringen
+
+        // als einde van de maand in het verleden is, kunnen we sowieso niet meer reserveren, beperk data opvraag
+        if (eindeMaand < this.nu) {
+            eindDatum = eindeMaand;
+
+            if (this.reserveringView == "week") {   // week kan in 2 maanden vallen, dus paar dagen extra opvragen
+                const dagenExtra = 7 - eindDatum.weekday;
+                eindDatum = eindDatum.plus({days: dagenExtra});
+            }
+        }
+
+        this.roosterService.getRooster(beginDatum, eindDatum, "DATUM, DDWV, CLUB_BEDRIJF").then((rooster) => {
+            this.rooster = rooster;
+            this.applyRoosterFilter();
+        })
 
         this.reserveringenService.getReserveringen(beginDatum, eindDatum).then((dataset) => {
             this.data = (dataset) ? dataset : [];
@@ -186,15 +237,25 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
 
     // Laat hele rooster zien, of alleen weekend / DDWV
     applyRoosterFilter() {
-        // toonClubDDWV, 0 = laat alle dagen zien, dus club dagen en DDWV dagen
-        if (this.toonClubDDWV == 0) {
-            this.filteredRooster = this.rooster;
-            return;
-        }
+        if (!this.rooster) return;      // rooster is nog niet geladen, we kunnen niets doen
 
         let tmpRooster: HeliosRoosterDataset[] = [];
+
         for (let i = 0; i < this.rooster.length; i++) {
+            if (this.reserveringView == "week") {
+                const d: DateTime = DateTime.fromSQL(this.rooster[i].DATUM!)
+
+                console.log(this.maandag.toISO(), this.maandag.plus({days: 6}).toISO())
+                if (d < this.maandag)    continue;
+                if (d > this.maandag.plus({days: 6}))    continue;
+            }
+
             switch (this.toonClubDDWV) {
+                case 0: // toonClubDDWV, 0 = laat alle dagen zien, dus club dagen en DDWV dagen
+                {
+                    tmpRooster.push(this.rooster[i]);
+                    continue;
+                }
                 case 1: // toonClubDDWV, 1 = toon clubdagen
                 {
                     if (this.rooster[i].CLUB_BEDRIJF) {
@@ -236,8 +297,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
 
         if (reservering) {
             const d: DateTime = DateTime.fromSQL(datum);
-            const dagInfo = this.dagInfoService.getDagInfo(undefined, d).then((dagInfo) => {
-
+            this.dagInfoService.getDagInfo(undefined, d).then((dagInfo) => {
                 let start: HeliosStartDataset = {
                     DATUM: datum,
                     VLIEGTUIG_ID: vliegtuigID,
@@ -251,7 +311,13 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     }
 
     ToggleWeekendDDWV() {
-        this.toonClubDDWV = ++this.toonClubDDWV % 3;
+        this.toonClubDDWV = ++this.toonClubDDWV % 3; // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
+
+        // in week view laten we niet alleen de clubdagen zien (normaal alleen zaterdag en zondag)
+        // schakel dus tussen ddwv dagen en de volledige week
+        if (this.reserveringView == 'week' && this.toonClubDDWV == 1) {
+            this.toonClubDDWV++;
+        }
         this.applyRoosterFilter();
     }
 
@@ -264,7 +330,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     toekennenReservering(datum: string, vliegtuigID: number) {
         const ui = this.loginService.userInfo;
         const r = {DATUM: datum, LID_ID: ui!.LidData!.ID, VLIEGTUIG_ID: vliegtuigID, NAAM: ui!.LidData?.NAAM}
-        this.reserveringenService.addReservering(r);
+        this.reserveringenService.addReservering(r).then();
 
         this.data.push(r);  // update grid zonder reload
         setTimeout(() => this.opvragen(), 1000);  // we gaan wel laatste reserveringen ophalen, er kan nog iemand bezig zijn
@@ -277,7 +343,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
         })
 
         if (idx >= 0) {
-            this.reserveringenService.deleteReservering(this.data[idx].ID!);
+            this.reserveringenService.deleteReservering(this.data[idx].ID!).then();
             this.data.splice(idx, 1);
 
             setTimeout(() => this.opvragen(), 1000);  // we gaan wel laatste reserveringen ophalen, er kan nog iemand bezig zijn
@@ -322,7 +388,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
         const reservering = this.data.find((reservering) => {
             return (reservering.DATUM == datum && reservering.VLIEGTUIG_ID == vliegtuigID)
         })
-        return (reservering) ? false : true;
+        return (!reservering);
     }
 
     // Is deze dag een club bedrijf
@@ -335,7 +401,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
 
     // is de datum in het verleden
     isVerleden(datum: string): boolean {
-        return (DateTime.fromSQL(datum) < this.nu) ? true : false;
+        return (DateTime.fromSQL(datum) < this.nu);
     }
 
     // is er een reserving die verwijderd mag worden
@@ -430,10 +496,23 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
             return (d.year == this.datum.year && d.month == this.datum.month);
         });
 
-        var ws = xlsx.utils.json_to_sheet(toExcel);
+        const ws = xlsx.utils.json_to_sheet(toExcel);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
         xlsx.writeFile(wb, 'reserveringen ' + new Date().toJSON().slice(0, 10) + '.xlsx');
     }
 
+    zetDatum(nieuweDatum: DateTime) {
+        const opvragen:boolean = this.datum.month != nieuweDatum.month
+
+        this.datum = nieuweDatum;
+        this.maandag = this.datum.startOf('week');     // de eerste dag van de gekozen week
+
+        if (opvragen) {
+            this.opvragen();            // gaan naar nieuwe maand, dus opvragen van database
+        }
+        else {
+            this.applyRoosterFilter();  // zorg dat we de juiste data hebben om weer te geven
+        }
+    }
 }

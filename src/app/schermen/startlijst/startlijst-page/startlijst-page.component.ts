@@ -69,8 +69,9 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
   aanwezigVliegtuigen: HeliosAanwezigVliegtuigenDataset[] = [];
   filteredAanwezigVliegtuigen: HeliosAanwezigVliegtuigenDataset[] = [];
 
-  private datumAbonnement: Subscription; // volg de keuze van de kalender
-  datum: DateTime;                       // de gekozen dag in de kalender
+  private resizeSubscription: Subscription; // Abonneer op aanpassing van window grootte (of draaien mobiel)
+  private datumAbonnement: Subscription;    // volg de keuze van de kalender
+  datum: DateTime;                          // de gekozen dag in de kalender
 
   refreshTimer: number;
   success: SuccessMessage | undefined;
@@ -139,6 +140,11 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
         }
       });
 
+      // Roep onWindowResize aan zodra we het event ontvangen hebben
+      this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+        this.onWindowResize()
+      });
+
       this.opvragen();
       this.onWindowResize();
     });
@@ -151,10 +157,12 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
     if (this.aanwezigLedenAbonnement)       this.aanwezigLedenAbonnement.unsubscribe();
     if (this.aanwezigVliegtuigenAbonnement) this.aanwezigVliegtuigenAbonnement.unsubscribe();
 
+    if (this.resizeSubscription)            this.resizeSubscription.unsubscribe();
+
     clearTimeout(this.refreshTimer);
   }
 
-  @HostListener('window:resize', ['$event'])
+  // Op large schermen tonen we de avatar
   onWindowResize() {
     this.toonAvatar = (this.sharedService.getSchermSize() >= SchermGrootte.lg)
   }

@@ -68,7 +68,7 @@ export class BoekingEditorComponent implements OnInit {
             const begin = this.eersteDag.year * 10000 + this.eersteDag.month * 100 + this.eersteDag.day;
             const eind = this.laatsteDag.year * 10000 + this.laatsteDag.month * 100 + this.laatsteDag.day;
 
-            return (begin < eind) ? true : false;
+            return (begin <= eind) ? true : false;
         }
         return false;
     }

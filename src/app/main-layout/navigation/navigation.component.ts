@@ -60,6 +60,8 @@ export class NavigationComponent implements OnInit, OnDestroy  {
     diensten: string = "";          // daginfos van deze maand in json formaat
     daginfo: string = "";           // daginfos van deze maand in json formaat
 
+    beheerExcluded = false;
+
     private dienstenAbonnement: Subscription;
     private dbEventAbonnement: Subscription;
     private vliegtuigenAbonnement: Subscription;
@@ -275,13 +277,12 @@ export class NavigationComponent implements OnInit, OnDestroy  {
             reserveringen.excluded = false;
         }
 
-        // alleen beheer als we voldoende scherm ter beschkkign hebben
-        const beheer = this.routes.find(route => route.path == "beheer") as CustomRoute;
+        // alleen beheer als we voldoende scherm ter beschikking hebben
         if (verbergen.includes('beheer') || (this.sharedService.getSchermSize() < SchermGrootte.lg) || (window.innerHeight < 600)) {
-            reserveringen.excluded = true;
+            this.beheerExcluded = true;
         }
         else {
-            reserveringen.excluded = false;
+            this.beheerExcluded = false;
         }
     }
 
