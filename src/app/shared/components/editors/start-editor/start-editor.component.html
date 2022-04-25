@@ -55,7 +55,7 @@
             <div class="row my-2" *ngIf="start.VLIEGTUIG_ID && toonStartMethode">
                 <div class="col-6 flex-row">
                     <div class="col-12" *ngFor="let radiobutton of startMethodeTypesFiltered">
-                        <label>
+                        <label ngClass.lt-md="mb-2">
                             <div class="SMinvalid"></div>
                             <input type="radio" name="options"
                                    (click)="start.STARTMETHODE_ID = radiobutton.ID"
@@ -66,21 +66,21 @@
                 </div>
                 <div class="col-6" *ngIf="gekozenVliegtuig?.ZITPLAATSEN == 2">
                     <div class="d-flex flex-column">
-                        <div *ngIf="start.CHECKSTART !== true && start.INSTRUCTIEVLUCHT !== true && magPaxVliegen()">
+                        <div *ngIf="start.CHECKSTART !== true && start.INSTRUCTIEVLUCHT !== true && magPaxVliegen()" ngClass.lt-md="mb-2">
                             <input name="PAX" type="checkbox" class="form-check-input" id="PAX"
                                    [(ngModel)]="start.PAX">
                             <label class="form-check-label ms-2" for="PAX">
                                 Passagiers start
                             </label>
                         </div>
-                        <div *ngIf="start.PAX !== true && kanInstructieVluchtZijn()">
+                        <div *ngIf="start.PAX !== true && kanInstructieVluchtZijn()" ngClass.lt-md="mb-2">
                             <input name="PAX" type="checkbox" class="form-check-input" id="INSTRUCTIEVLUCHT"
                                    [(ngModel)]="start.INSTRUCTIEVLUCHT">
                             <label class="form-check-label ms-2" for="PAX">
                                 Instructie start
                             </label>
                         </div>
-                        <div *ngIf="start.PAX !== true && start.INSTRUCTIEVLUCHT && magCheckZetten()">
+                        <div *ngIf="start.PAX !== true && start.INSTRUCTIEVLUCHT && magCheckZetten()" ngClass.lt-md="mb-2">
                             <input name="CHECKSTART" type="checkbox" class="form-check-input" id="CHECKSTART"
                                    [(ngModel)]="start.CHECKSTART">
                             <label class="form-check-label ms-2" for="CHECKSTART">
