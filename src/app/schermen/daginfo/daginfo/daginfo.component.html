@@ -27,7 +27,7 @@
                                       subtitel="Waar we vliegen"
                                       [icon]="iconVliegveld">
                         <div class="d-flex flex-row">
-                            <div class="col-8">
+                            <div class="col-7 ">
                                 <label for="VELD" class="form-label">Vliegveld</label>
                                 <ng-select id="VELD"
                                            required
@@ -41,7 +41,7 @@
                                 </ng-select>
 
                             </div>
-                            <div class="col-4 ms-2">
+                            <div class="col-5 ms-2">
                                 <label for="Baan" class="form-label">Strip</label>
                                 <ng-select id="BAAN"
                                            [items]="baanTypes$ | async"

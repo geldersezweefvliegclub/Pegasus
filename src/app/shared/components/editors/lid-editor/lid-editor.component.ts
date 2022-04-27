@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {NgbDate, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
 import {DateTime} from 'luxon';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
@@ -13,6 +13,7 @@ import {ImageService} from "../../../../services/apiservice/image.service";
 import {Router} from "@angular/router";
 import {StorageService} from "../../../../services/storage/storage.service";
 import {Subscription} from "rxjs";
+import {SchermGrootte, SharedService} from "../../../../services/shared/shared.service";
 
 @Component({
     selector: 'app-lid-editor',
@@ -20,11 +21,12 @@ import {Subscription} from "rxjs";
     styleUrls: ['./lid-editor.component.scss'],
     providers: [{provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter}]
 })
-export class LidEditorComponent implements OnInit {
+export class LidEditorComponent implements OnInit, OnDestroy {
     @Input() lidID: number;
     @Input() isVerwijderMode: boolean = false;
     @Input() isRestoreMode: boolean = false;
 
+    private resizeSubscription: Subscription;       // Abonneer op aanpassing van window grootte (of draaien mobiel)
     private ledenAbonnement: Subscription;
     instructeurs: HeliosLedenDataset[] = []
 
@@ -48,6 +50,7 @@ export class LidEditorComponent implements OnInit {
 
     isLoading: boolean = false;
     isSaving: boolean = false;
+    isMobiel: boolean = true;
 
     MedicalDatum: NgbDate | null;
     GeboorteDatum: NgbDate | null;
@@ -64,10 +67,12 @@ export class LidEditorComponent implements OnInit {
         private readonly imageService: ImageService,
         private readonly storageService: StorageService,
         private readonly router: Router,
+        private readonly sharedService: SharedService,
         private readonly changeDetector: ChangeDetectorRef) {
     }
 
     ngOnInit(): void {
+        this.onWindowResize();
 
         // abonneer op wijziging van lidTypes
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
@@ -92,6 +97,11 @@ export class LidEditorComponent implements OnInit {
                 });
             }
         })
+
+        // Roep onWindowResize aan zodra we het event ontvangen hebben
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+            this.onWindowResize();
+        });
 
         // als lidID > 0, dan wijzigen we een bestaand lid profiel
         if (this.lidID >= 0) {
@@ -125,6 +135,14 @@ export class LidEditorComponent implements OnInit {
             this.MedicalDatum = null;
             this.GeboorteDatum = null;
         }
+    }
+
+    ngOnDestroy() {
+        if (this.resizeSubscription) this.resizeSubscription.unsubscribe();
+    }
+
+    onWindowResize() {
+        this.isMobiel = (this.sharedService.getSchermSize() <= SchermGrootte.md);
     }
 
     // opslaan van data
@@ -393,6 +411,12 @@ export class LidEditorComponent implements OnInit {
                 break;
             }
 
+            case 'email_daginfo' : {
+                if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) {
+                    return true;
+                }
+                break;
+            }
             case 'BETAALD': {
                 if (ui?.isBeheerder || ui?.isBeheerderDDWV || this.ikBenHetZelf()) {
                     return true;

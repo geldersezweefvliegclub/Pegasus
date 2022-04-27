@@ -307,6 +307,8 @@ export interface components {
       SLEEPVLIEGER?: boolean;
       /** Moet clubblad per post verstuurd worden */
       CLUBBLAD_POST?: boolean;
+      /** Verstuur het dagrapport per email */
+      EMAIL_DAGINFO?: boolean;
       /** Heeft lid toegang tot alle starts / logboeken voor rapportage */
       RAPPORTEUR?: boolean;
       /** Wordt dit lid ingedeeld om gasten te vliegen */

@@ -106,19 +106,118 @@
                                 </div>
                             </div>
                             <div class="col-12 col-md-4">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" name="email" [(ngModel)]="lid.EMAIL" class="form-control"
-                                       id="email" email required>
+                                <div>
+                                    <label class="form-label" for="MEDICAL">Geldigheid medical</label>
+                                    <div class="input-group">
+                                        <input name="MEDICAL" class="form-control" placeholder="dd-mm-yyyy"
+                                               ngbDatepicker #medical="ngbDatepicker"
+                                               id="MEDICAL"
+                                               [minDate]="{year: vandaag.year-5, month: vandaag.month, day: vandaag.day}"
+                                               [maxDate]="{year: vandaag.year+5, month: vandaag.month, day: vandaag.day}"
+                                               [(ngModel)]="MedicalDatum"
+                                               (dateSelect)="MedicalDatum = $event"
+                                        >
+                                        <div class="input-group-append">
+                                            <app-icon-button iconNaam="far Calendar" (btnClicked)="medical.toggle()"
+                                                             btnColor="btn-primary"></app-icon-button>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="lid.LIDTYPE_ID == 601 || lid.LIDTYPE_ID == 602 || lid.LIDTYPE_ID == 603">
+                                        <div class="cssWarning" *ngIf="MedicalDatum == null">
+                                            <div class="fas fa-exclamation-triangle"></div>
+                                            Medical ontbreekt
+                                        </div>
+                                        <div class="cssWarning" *ngIf="medicalVerlopen()">
+                                            <div class="fas fa-exclamation-triangle"></div>
+                                            Medical verlopen
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-12 col-md-4 d-flex align-items-center mt-4">
-                                <div class="row w-100">
+                            <div class="col-12 col-md-4">
+
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" name="email" [(ngModel)]="lid.EMAIL" class="form-control"
+                                           id="email" email required>
+
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12 col-md-4">
+                                <label for="knvvl" class="form-label">KNVvL lidnummer</label>
+                                <input type="text" name="knvvl" class="form-control" id="knvvl"
+                                       [(ngModel)]="lid.KNVVL_LIDNUMMER">
+                            </div>
+                            <div class="col-10 col-md-4">
+                                <label for="brevet" class="form-label">Brevet nummer</label>
+                                <input type="text" name="brevet" class="form-control" id="brevet"
+                                       [(ngModel)]="lid.BREVET_NUMMER">
+
+                            </div>
+
+                            <div class="col-10 col-md-4">
+                                <div class="col-12 col-md-4 d-flex align-items-center mt-4 w-100">
+                                    <div class="row w-100">
+                                        <div class="col-12">
+                                            <input class="form-check-inline" type="checkbox" id="CLUBBLAD_POST"
+                                                   name="CLUBBLAD_POST"
+                                                   [(ngModel)]="lid.CLUBBLAD_POST">
+                                            <label class="form-check-label" for="CLUBBLAD_POST">
+                                                Clubblad per post
+                                            </label>
+
+                                            <div *ngIf="isMobiel">
+                                                <input type="checkbox" name="privacy" class="form-check-inline" id="privacy"
+                                                       [(ngModel)]="lid.PRIVACY">
+                                                <label for="privacy" class="form-check-label">Privacy</label>
+                                            </div>
+                                            <div *ngIf="isMobiel">
+                                                <input class="form-check-inline" type="checkbox" id="googleAuth"
+                                                       name="googleAuth"
+                                                       [disabled]="isDisabled('googleAuth')"
+                                                       [(ngModel)]="lid.AUTH">
+                                                <label class="form-check-label" for="googleAuth"
+                                                       [ngClass]="disabledClass('googleAuth')">
+                                                    Twee-staps verificatie
+
+                                                    <fa-icon class="text-info ms-2 clickable" [icon]="infoIcon"
+                                                             [ngbPopover]="googleAuthPopover"
+                                                             placement="right"></fa-icon>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-12" *ngIf="isVisible('email_daginfo')">
+                                            <input class="form-check-inline" type="checkbox" id="EMAIL_DAGINFO"
+                                                   name="EMAIL_DAGINFO"
+                                                   [(ngModel)]="lid.EMAIL_DAGINFO">
+                                            <label class="form-check-label" for="EMAIL_DAGINFO">
+                                                Daginfo per email
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-10 col-md-4">
+                                <label for="sleutel2" class="form-label">Sleutel Terlet</label>
+                                <input type="text" name="sleutel2" class="form-control" id="sleutel2"
+                                       [(ngModel)]="lid.SLEUTEL2">
+                            </div>
+                            <div class="col-10 col-md-4 ">
+                                <label for="sleutel1" class="form-label">Sleutel GeZC</label>
+                                <input type="text" name="sleutel1" class="form-control" id="sleutel1"
+                                       [(ngModel)]="lid.SLEUTEL1">
+                            </div>
+                            <div class="col-12 col-md-4 d-flex align-items-end mt-2" >
+                                <div class="row w-100" *ngIf="!isMobiel">
                                     <div class="col-12">
-                                        <input type="checkbox" name="privacy" class="form-check-inline" id="privacy"
+                                        <input type="checkbox" name="privacy" class="form-check-inline" id="privacy1"
                                                [(ngModel)]="lid.PRIVACY">
                                         <label for="privacy" class="form-check-label">Privacy</label>
                                     </div>
                                     <div class="col-12">
-                                        <input class="form-check-inline" type="checkbox" id="googleAuth"
+                                        <input class="form-check-inline" type="checkbox" id="googleAuth1"
                                                name="googleAuth"
                                                [disabled]="isDisabled('googleAuth')"
                                                [(ngModel)]="lid.AUTH">
@@ -131,71 +230,7 @@
                                                      placement="right"></fa-icon>
                                         </label>
                                     </div>
-                                    <div class="col-12">
-                                        <input class="form-check-inline" type="checkbox" id="CLUBBLAD_POST"
-                                               name="CLUBBLAD_POST"
-                                               [(ngModel)]="lid.CLUBBLAD_POST">
-                                        <label class="form-check-label" for="CLUBBLAD_POST">
-                                            Clubblad per post
-                                        </label>
-                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-12 col-md-4">
-                                <div class="d-flex flex-row">
-                                    <div>
-                                        <label class="form-label" for="MEDICAL">Geldigheid medical</label>
-                                        <div class="input-group">
-                                            <input name="MEDICAL" class="form-control" placeholder="dd-mm-yyyy"
-                                                   ngbDatepicker #medical="ngbDatepicker"
-                                                   id="MEDICAL"
-                                                   [minDate]="{year: vandaag.year-5, month: vandaag.month, day: vandaag.day}"
-                                                   [maxDate]="{year: vandaag.year+5, month: vandaag.month, day: vandaag.day}"
-                                                   [(ngModel)]="MedicalDatum"
-                                                   (dateSelect)="MedicalDatum = $event"
-                                            >
-                                            <div class="input-group-append">
-                                                <app-icon-button iconNaam="far Calendar" (btnClicked)="medical.toggle()"
-                                                                 btnColor="btn-primary"></app-icon-button>
-                                            </div>
-                                        </div>
-                                        <div *ngIf="lid.LIDTYPE_ID == 601 || lid.LIDTYPE_ID == 602 || lid.LIDTYPE_ID == 603">
-                                            <div class="cssWarning" *ngIf="MedicalDatum == null">
-                                                <div class="fas fa-exclamation-triangle"></div>
-                                                Medical ontbreekt
-                                            </div>
-                                            <div class="cssWarning" *ngIf="medicalVerlopen()">
-                                                <div class="fas fa-exclamation-triangle"></div>
-                                                Medical verlopen
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-10 col-md-4">
-                                <label for="knvvl" class="form-label">KNVvL lidnummer</label>
-                                <input type="text" name="knvvl" class="form-control" id="knvvl"
-                                       [(ngModel)]="lid.KNVVL_LIDNUMMER">
-                            </div>
-                            <div class="col-10 col-md-4">
-                                <label for="brevet" class="form-label">Brevet nummer</label>
-                                <input type="text" name="brevet" class="form-control" id="brevet"
-                                       [(ngModel)]="lid.BREVET_NUMMER">
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-4 d-none d-xs-block d-md-block"></div>
-                            <div class="col-6 col-md-4">
-                                <label for="sleutel1" class="form-label">Sleutel GeZC</label>
-                                <input type="text" name="sleutel1" class="form-control" id="sleutel1"
-                                       [(ngModel)]="lid.SLEUTEL1">
-                            </div>
-                            <div class="col-6 col-md-4">
-                                <label for="sleutel2" class="form-label">Sleutel Terlet</label>
-                                <input type="text" name="sleutel2" class="form-control" id="sleutel2"
-                                       [(ngModel)]="lid.SLEUTEL2">
                             </div>
                         </div>
                         <div class="row mt-2" *ngIf="isVisible('wachtwoorden')">
