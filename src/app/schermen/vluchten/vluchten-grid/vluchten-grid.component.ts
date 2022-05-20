@@ -174,8 +174,8 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     toonRefresh: boolean = true;
     toonStartlijstKlein: boolean = false;     // Klein formaat van de startlijst
 
-    private datumAbonnement: Subscription; // volg de keuze van de kalender
-    datum: DateTime;                       // de gekozen dag in de kalender
+    private datumAbonnement: Subscription;    // volg de keuze van de kalender
+    datum: DateTime = DateTime.now();         // de gekozen dag in de kalender
 
     magToevoegen: boolean = false;
     magVerwijderen: boolean = false;
@@ -237,8 +237,8 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         });
 
         // abonneer op wijziging van rooster
-        this.roosterAbonnement = this.roosterService.roosterChange.subscribe(rooster => {
-            this.rooster = (rooster) ? rooster : [];
+        this.roosterAbonnement = this.roosterService.roosterChange.subscribe(maandRooster => {
+            this.rooster = (maandRooster) ? maandRooster : [];
             this.beperkteInvoer();
         });
 

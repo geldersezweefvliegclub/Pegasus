@@ -1,0 +1,125 @@
+<div class="w-100 h-100">
+    <div class="d-flex flex-row justify-content-between">
+        <div>
+            <app-icon-button
+                    class="toolbarBtn"
+                    iconNaam="fas AngleDoubleLeft" (btnClicked)="zetDatum(datum.plus({days: -7}))"
+                    btnColor="btn-secondary"></app-icon-button>
+            <app-icon-button
+                    class="toolbarBtn mx-2"
+                    iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum.plus({days: -1}))"
+                    btnColor="btn-secondary"></app-icon-button>
+        </div>
+        {{DagVanDeWeek(datum.toISODate())}} <br>{{datum.day}}-{{datum.month}}-{{datum.year}}
+        <div>
+            <app-icon-button
+                    class="toolbarBtn mx-2"
+                    iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum.plus({days: 1}))"
+                    btnColor="btn-secondary"></app-icon-button>
+            <app-icon-button
+                    class="toolbarBtn"
+                    iconNaam="fas AngleDoubleRight" (btnClicked)="zetDatum(datum.plus({days: 7}))"
+                    btnColor="btn-secondary"></app-icon-button>
+        </div>
+    </div>
+    <div class="roosterTabel" *ngIf="tonen.toonDienst && rooster">
+        <table class="table overflow-scroll" style="width: calc(100% - 15px);">
+            <thead>
+            <tr style="vertical-align: top;">
+                <td class="dagInRooster">
+                    <div *ngIf="rooster[0].CLUB_BEDRIJF" class="me-2">Clubbedrijf</div>
+                    <div *ngIf="rooster[0].DDWV">DDWV</div>
+                </td>
+                <td>
+                    <textarea disabled>{{rooster[0].OPMERKINGEN}}</textarea>
+                </td>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_DDI_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_DDI_TYPE_ID]) && tonen.Instructeurs">
+                <td class="dienstType">DDI</td>
+                <td>
+                    <ng-container [ngTemplateOutlet]="roosterDienst"
+                                  [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.OCHTEND_DDI_TYPE_ID, configService.MIDDAG_DDI_TYPE_ID]}"></ng-container>
+                </td>
+            </tr>
+
+            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_INSTRUCTEUR_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) && tonen.Instructeurs">
+                <td class="dienstType">Instructeur</td>
+                <td>
+                    <ng-container [ngTemplateOutlet]="roosterDienst"
+                                  [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.OCHTEND_INSTRUCTEUR_TYPE_ID, configService.MIDDAG_INSTRUCTEUR_TYPE_ID]}"></ng-container>
+                </td>
+            </tr>
+
+            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_STARTLEIDER_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_STARTLEIDER_TYPE_ID]) && (tonen.Startleiders || tonen.DDWV)">
+                <td class="dienstType">Startleider</td>
+                <td>
+                    <ng-container [ngTemplateOutlet]="roosterDienst"
+                                  [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.OCHTEND_STARTLEIDER_TYPE_ID, configService.MIDDAG_STARTLEIDER_TYPE_ID]}"></ng-container>
+                </td>
+            </tr>
+
+            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID] || tonen.toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]) && (tonen.Startleiders)">
+                <td class="dienstType">Startleider 2</td>
+                <td>
+                    <ng-container [ngTemplateOutlet]="roosterDienst"
+                                  [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.OCHTEND_STARTLEIDER_IO_TYPE_ID, configService.MIDDAG_STARTLEIDER_IO_TYPE_ID]}"></ng-container>
+                </td>
+            </tr>
+
+            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_LIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_LIERIST_TYPE_ID]) && (tonen.Lieristen || tonen.DDWV)">
+                <td class="dienstType">Lierist</td>
+                <td>
+                    <ng-container [ngTemplateOutlet]="roosterDienst"
+                                  [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.OCHTEND_LIERIST_TYPE_ID, configService.MIDDAG_LIERIST_TYPE_ID]}"></ng-container>
+                </td>
+            </tr>
+
+            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_HULPLIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_HULPLIERIST_TYPE_ID]) && tonen.Lieristen">
+                <td class="dienstType">Hulplierist</td>
+                <td>
+                    <ng-container [ngTemplateOutlet]="roosterDienst"
+                                  [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.OCHTEND_HULPLIERIST_TYPE_ID, configService.MIDDAG_HULPLIERIST_TYPE_ID]}"></ng-container>
+                </td>
+            </tr>
+
+            <tr *ngIf="(tonen.toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID] || tonen.toonDienst[configService.GASTEN_VLIEGER2_TYPE_ID]) && tonen.GastenVliegers">
+                <td class="dienstType">Gasten vlieger</td>
+                <td>
+                    <ng-container [ngTemplateOutlet]="roosterDienst"
+                                  [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.GASTEN_VLIEGER1_TYPE_ID, configService.GASTEN_VLIEGER2_TYPE_ID]}"></ng-container>
+                </td>
+            </tr>
+
+            <tr *ngIf="tonen.toonDienst[configService.SLEEPVLIEGER_TYPE_ID] && tonen.Sleepvliegers">
+                <td class="dienstType">Sleepvlieger</td>
+                <td>
+                    <ng-container [ngTemplateOutlet]="roosterDienst"
+                                  [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.SLEEPVLIEGER_TYPE_ID]}"></ng-container>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<ng-template #roosterDienst let-dag="dag" let-typeDienst="typeDienst">
+    <div class="d-flex" *ngFor="let dt of typeDienst">
+        <div class="w-100" *ngIf="tonen.toonDienst[dt]">
+            <div class="naam" (click)="openPopup(dag, dt)"
+                 [ngClass]="lidInRoosterClass(dag.Diensten[dt])">
+                {{ (dag.Diensten[dt]) ? dag.Diensten[dt].NAAM : "" }}
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<app-dienst-editor></app-dienst-editor>
+
+
+
+
+

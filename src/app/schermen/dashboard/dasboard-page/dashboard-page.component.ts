@@ -50,10 +50,9 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     lidData: HeliosLid;
 
     private datumAbonnement: Subscription; // volg de keuze van de kalender
-    datum: DateTime;                       // de gekozen dag
+    datum: DateTime = DateTime.now();      // de gekozen dag
 
-    toonLogboekKlein: boolean = false;     // Klein formaat van het vliegerlogboek
-    toonTracks: boolean = false;           // mogen de tracks vertoon worden
+    toonTracks: boolean = false;           // mogen de tracks vertoond worden
     isDDWVer: boolean = false;             // DDWV'ers hebben een aangepast dashboard
 
     success: SuccessMessage | undefined;
@@ -79,11 +78,13 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         // de datum zoals die in de kalender gekozen is
         this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
-            this.datum = DateTime.fromObject({
-                year: jaarMaand.year,
-                month: jaarMaand.month,
-                day: 1
-            })
+            if (jaarMaand.year > 1900) {        // 1900 is bij initialisatie
+                this.datum = DateTime.fromObject({
+                    year: jaarMaand.year,
+                    month: jaarMaand.month,
+                    day: 1
+                })
+            }
         })
 
         // abonneer op wijziging van lidTypes

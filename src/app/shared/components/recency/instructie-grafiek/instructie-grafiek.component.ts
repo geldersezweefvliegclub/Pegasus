@@ -21,7 +21,7 @@ export class InstructieGrafiekComponent implements OnInit {
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
     private datumAbonnement: Subscription;  // volg de keuze van de kalender
-    datum: DateTime;                        // de gekozen dag
+    datum: DateTime = DateTime.now();       // de gekozen dag
 
     starts: number[] = [];
     uren: number[] = [];
@@ -146,11 +146,13 @@ export class InstructieGrafiekComponent implements OnInit {
     ngOnInit(): void {
         // de datum zoals die in de kalender gekozen is
         this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
-            this.datum = DateTime.fromObject({
-                year: jaarMaand.year,
-                month: jaarMaand.month,
-                day: 1
-            })
+            if (jaarMaand.year > 1900) {        // 1900 is bij initialisatie
+                this.datum = DateTime.fromObject({
+                    year: jaarMaand.year,
+                    month: jaarMaand.month,
+                    day: 1
+                })
+            }
         });
     }
 

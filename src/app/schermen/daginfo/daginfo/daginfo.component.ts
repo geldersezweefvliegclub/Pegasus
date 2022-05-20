@@ -50,7 +50,7 @@ export class DaginfoComponent implements OnInit, OnDestroy{
     iconDefault: IconDefinition = faFileImport;
 
     private datumAbonnement: Subscription;         // volg de keuze van de kalender
-    datum: DateTime;                       // de gekozen dag
+    datum: DateTime = DateTime.now();              // de gekozen dag
 
     private dagInfoAbonnement: Subscription;
     dagInfo: HeliosDagInfo;
@@ -121,8 +121,8 @@ export class DaginfoComponent implements OnInit, OnDestroy{
         });
 
         // abonneer op wijziging van rooster
-        this.roosterAbonnement = this.roosterService.roosterChange.subscribe(rooster => {
-            this.rooster = (rooster) ? rooster : [];
+        this.roosterAbonnement = this.roosterService.roosterChange.subscribe(maandRooster => {
+            this.rooster = (maandRooster) ? maandRooster : [];
             this.heeftToegang();
         });
 

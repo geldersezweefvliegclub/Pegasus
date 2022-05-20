@@ -51,7 +51,7 @@ export class TracksComponent implements OnInit, OnDestroy {
     data: TracksLedenDataset[] = [];
 
     private datumAbonnement: Subscription; // volg de keuze van de kalender
-    datum: DateTime;                       // de gekozen dag
+    datum: DateTime = DateTime.now();      // de gekozen dag
 
     zoekString: string;
     zoekTimer: number;                  // kleine vertraging om data ophalen te beperken
@@ -85,11 +85,13 @@ export class TracksComponent implements OnInit, OnDestroy {
         if (ui?.isCIMT || ui?.isInstructeur || ui?.isBeheerder) {
             // de datum zoals die in de kalender gekozen is
             this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
-                this.datum = DateTime.fromObject({
-                    year: jaarMaand.year,
-                    month: jaarMaand.month,
-                    day: 1
-                })
+                if (jaarMaand.year > 1900) {        // 1900 is bij initialisatie
+                    this.datum = DateTime.fromObject({
+                        year: jaarMaand.year,
+                        month: jaarMaand.month,
+                        day: 1
+                    })
+                }
             });
 
             // abonneer op wijziging van leden
@@ -97,16 +99,6 @@ export class TracksComponent implements OnInit, OnDestroy {
                 this.leden = (leden) ? leden : [];
                 this.lidToevoegenAanTrack();
             });
-
-            /* TODO WAAROM IS DIT NODIG ??
-            // Als tracks zijn aangepast, moeten we grid opnieuw laden
-            this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
-                if (ev.tabel == "Startlijst") {
-                    this.opvragen();
-                }
-            });
-
-             */
 
             // Als in de tracks tabel is aangepast, moet we onze dataset ook aanpassen
             this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {

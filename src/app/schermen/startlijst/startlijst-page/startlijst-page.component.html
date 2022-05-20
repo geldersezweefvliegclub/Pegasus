@@ -170,7 +170,7 @@
                         <div *ngIf="!filteredAanwezigLeden || filteredAanwezigLeden.length == 0" class="d-flex">
                             Geen resultaten gevonden
                         </div>
-                        <div class="card my-1" [ngClass.lt-lg]="'mb-3'"
+                        <div class="card my-1" [ngClass.lt-lg]="'me-5'"
                              *ngFor="let lid of filteredAanwezigLeden"
                              (dblclick)="openLidAanwezigEditor(lid)"
                              [cdkDragData]="lid" cdkDrag>

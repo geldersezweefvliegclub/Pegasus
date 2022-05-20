@@ -1,6 +1,6 @@
 
 export interface KeyValueArray {
-  [key: string]: string
+  [key: string]: string | number | boolean
 };
 
 export type ErrorMessage = {

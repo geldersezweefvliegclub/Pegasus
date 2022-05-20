@@ -1,0 +1,31 @@
+<app-error [error]="error"></app-error>
+<app-success [success]="success"></app-success>
+
+<app-modal titel="Dienst {{datumDMY}}">
+    <div body>
+        <form>
+            <h2>
+                {{dienstBeschrijving}}
+            </h2>
+            <div class="row my-2">
+                <app-lid-invoer id="LID"
+                                placeholder="Selecteer lid"
+                                [LID_ID]="lidID"
+                                excludeLidTypes="600,606,607,608,609,610,611,612,613,625"
+                                [required]=false
+                                [leden]="filteredLeden"
+                                (LidChanged)="lidGeselecteerd($event)">
+
+                </app-lid-invoer>
+            </div>
+        </form>
+    </div>
+    <div footer>
+        <app-icon-button *ngIf="!isSaving" iconNaam="fas Edit" btnColor="btn-primary" [toonKlein]=false
+                         tekst="Opslaan" (btnClicked)="opslaan()"></app-icon-button>
+
+        <button class="btn btn-primary" *ngIf="isSaving">
+            <span><app-loader></app-loader></span>
+        </button>
+    </div>
+</app-modal>

@@ -62,6 +62,7 @@ import {LidAanwezigEditorComponent} from './components/editors/lid-aanwezig-edit
 import {LedenFilterComponent} from "./components/leden-filter/leden-filter.component";
 import {StarttijdRenderComponent} from "./components/datatable/starttijd-render/starttijd-render.component";
 import {LandingstijdRenderComponent} from "./components/datatable/landingstijd-render/landingstijd-render.component";
+import { DienstEditorComponent } from './components/editors/dienst-editor/dienst-editor.component';
 
 @NgModule({
     imports: [
@@ -131,7 +132,8 @@ import {LandingstijdRenderComponent} from "./components/datatable/landingstijd-r
         LidAanwezigEditorComponent,
         LedenFilterComponent,
         StarttijdRenderComponent,
-        LandingstijdRenderComponent
+        LandingstijdRenderComponent,
+        DienstEditorComponent
     ],
     exports: [
         LidEditorComponent,
@@ -167,7 +169,8 @@ import {LandingstijdRenderComponent} from "./components/datatable/landingstijd-r
         LidAanwezigEditorComponent,
         LedenFilterComponent,
         StarttijdRenderComponent,
-        LandingstijdRenderComponent
+        LandingstijdRenderComponent,
+        DienstEditorComponent
     ],
     providers: [],
     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

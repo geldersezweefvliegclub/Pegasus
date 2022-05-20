@@ -38,6 +38,35 @@ footer {
   height: $footer-height;
 }
 
+// De dagen van de week
+.Maandag {
+  background-color: #E0E2DB !important;
+}
+
+.Dinsdag {
+  background-color: #D2D4C8 !important;
+}
+
+.Woensdag {
+  background-color: #B8BDB5 !important;
+}
+
+.Donderdag {
+  background-color: #D2D4C8 !important;
+}
+
+.Vrijdag {
+  background-color: #E0E2DB !important;
+}
+
+.Zaterdag {
+  background-color: #e6ca87 !important;
+}
+
+.Zondag {
+  background-color: #d5ac4a !important;
+}
+
 // formaat van google authenticator code bij login scherm
 #cinput :nth-child(3) {
   padding-right: 1.3em;

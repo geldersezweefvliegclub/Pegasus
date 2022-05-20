@@ -15,6 +15,7 @@ import {components as auditComponents} from './Audit';
 import {components as reserveringComponents} from './Reservering';
 
 export type HeliosUserinfo = loginComponents['schemas']['Userinfo'];
+export type HeliosLidData = loginComponents["schemas"]["ref_leden"];
 
 export type HeliosAanwezigVliegtuigen = aanwezigVliegtuigenComponents['schemas']['view_aanwezig_vliegtuigen'];
 export type HeliosAanwezigVliegtuigenDataset = aanwezigVliegtuigenComponents['schemas']['view_aanwezig_vliegtuigen_dataset'];

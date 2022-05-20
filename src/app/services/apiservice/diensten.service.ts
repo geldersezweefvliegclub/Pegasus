@@ -23,8 +23,8 @@ export class DienstenService {
     private dienstenCache: HeliosDiensten = { dataset: []};     // return waarde van API call
     private totalenCache: HeliosDienstenTotaal[] = [];          // return waarde van API call
 
-    private datumAbonnement: Subscription;                  // volg de keuze van de kalender
-    private datum: DateTime;                                // de gekozen dag
+    private datumAbonnement: Subscription;                     // volg de keuze van de kalender
+    private datum: DateTime = DateTime.now();                  // de gekozen dag
 
     private dienstenStore = new BehaviorSubject(this.dienstenCache.dataset);
     public readonly dienstenChange = this.dienstenStore.asObservable();      // nieuw rooster beschikbaar

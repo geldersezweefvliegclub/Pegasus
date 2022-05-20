@@ -31,7 +31,7 @@ export class AanmeldenLedenComponent implements OnInit {
   @ViewChild(LidAanwezigEditorComponent) aanmeldEditor: LidAanwezigEditorComponent;
 
   private datumAbonnement: Subscription; // volg de keuze van de kalender
-  datum: DateTime;                       // de gekozen dag in de kalender
+  datum: DateTime = DateTime.now();      // de gekozen dag in de kalender
 
   private ledenAbonnement: Subscription;
   leden: HeliosLedenDataset[] = [];

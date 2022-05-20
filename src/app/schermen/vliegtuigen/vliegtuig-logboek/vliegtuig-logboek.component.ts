@@ -41,7 +41,7 @@ export class VliegtuigLogboekComponent implements OnInit {
     vliegtuigID = 200;
 
     private datumAbonnement: Subscription; // volg de keuze van de kalender
-    datum: DateTime;                       // de gekozen dag
+    datum: DateTime = DateTime.now();      // de gekozen dag
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
@@ -170,7 +170,7 @@ export class VliegtuigLogboekComponent implements OnInit {
         });
 
         // de datum zoals die in de kalender gekozen is
-        this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
+        this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(jaarMaand => {
             this.datum = DateTime.fromObject({
                 year: jaarMaand.year,
                 month: jaarMaand.month,

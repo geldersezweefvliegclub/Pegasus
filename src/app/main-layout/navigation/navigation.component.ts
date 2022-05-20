@@ -6,7 +6,7 @@ import {faSignOutAlt, faWrench} from '@fortawesome/free-solid-svg-icons';
 import {
     NgbCalendar,
     NgbDate,
-    NgbDateParserFormatter,
+    NgbDateParserFormatter, NgbDatepicker,
     NgbDatepickerNavigateEvent,
     NgbDateStruct
 } from '@ng-bootstrap/ng-bootstrap';
@@ -62,6 +62,8 @@ export class NavigationComponent implements OnInit, OnDestroy  {
 
     beheerExcluded = false;
 
+    private maandAbonnement: Subscription;          // volg de keuze van de kalender
+    private datumAbonnement: Subscription;          // volg de keuze van de kalende
     private dienstenAbonnement: Subscription;
     private dbEventAbonnement: Subscription;
     private vliegtuigenAbonnement: Subscription;
@@ -164,6 +166,22 @@ export class NavigationComponent implements OnInit, OnDestroy  {
         // abonneer op wijziging van profiel via userInfo
         this.userInfoAbonnement = this.loginService.userInfoChange.subscribe(userInfo => {
             this.toonMenuItems();
+        })
+
+        // de datum zoals die in de kalender gekozen is
+        this.maandAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
+            if (jaarMaand.year > 1900) {        // 1900 is bij initialisatie
+                this.kalenderIngave = DateTime.fromObject({
+                    year: jaarMaand.year,
+                    month: jaarMaand.month,
+                    day: 1,
+                })
+            }
+        });
+
+        this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
+            this.kalenderIngave = datum;
+            this.datumDMY = datum.day + "-" + datum.month + "-" + datum.year;
         });
     }
 
@@ -172,6 +190,8 @@ export class NavigationComponent implements OnInit, OnDestroy  {
         if (this.dbEventAbonnement)     this.dbEventAbonnement.unsubscribe();
         if (this.dagInfoAbonnement)     this.dagInfoAbonnement.unsubscribe();
         if (this.userInfoAbonnement)    this.userInfoAbonnement.unsubscribe();
+        if (this.datumAbonnement)       this.datumAbonnement.unsubscribe();
+        if (this.maandAbonnement)       this.maandAbonnement.unsubscribe();
     }
 
     // welke menu items mogen getoond worden
@@ -305,7 +325,10 @@ export class NavigationComponent implements OnInit, OnDestroy  {
         this.kalenderMaand = $event.next;
 
         // laat iedereen weten dat we een ander maand-jaar hebben
-        this.sharedService.zetKalenderMaand(this.kalenderMaand);
+        // niet nodig bij initialiseren. current is dan niet gevuld. We weten wel dat we 'vandaag' als init datum hebben
+        if ($event.current) {
+            this.sharedService.zetKalenderMaand(this.kalenderMaand);
+        }
 
         const beginEindData = getBeginEindDatumVanMaand(this.kalenderMaand.month, this.kalenderMaand.year)
         this.startDatum = beginEindData.begindatum

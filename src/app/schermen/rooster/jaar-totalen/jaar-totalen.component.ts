@@ -43,7 +43,7 @@ export class JaarTotalenComponent implements OnInit {
     jaarTotalen: JaarTotaal[];
 
     private datumAbonnement: Subscription;      // volg de keuze van de kalender
-    datum: DateTime;                            // de gekozen dag
+    datum: DateTime = DateTime.now();           // de gekozen dag
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
@@ -90,11 +90,13 @@ export class JaarTotalenComponent implements OnInit {
     ngOnInit(): void {
         // de datum zoals die in de kalender gekozen is
         this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
-            this.datum = DateTime.fromObject({
-                year: jaarMaand.year,
-                month: jaarMaand.month,
-                day: 1
-            })
+            if (jaarMaand.year > 1900) {        // 1900 is bij initialisatie
+                this.datum = DateTime.fromObject({
+                    year: jaarMaand.year,
+                    month: jaarMaand.month,
+                    day: 1
+                })
+            }
         })
     }
 

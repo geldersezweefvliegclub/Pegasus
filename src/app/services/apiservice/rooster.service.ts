@@ -6,7 +6,6 @@ import {HeliosRooster, HeliosRoosterDag, HeliosRoosterDataset} from '../../types
 import {BehaviorSubject, Subscription} from "rxjs";
 import {SharedService} from "../shared/shared.service";
 import {getBeginEindDatumVanMaand} from "../../utils/Utils";
-import {debounceTime} from "rxjs/operators";
 import {LoginService} from "./login.service";
 
 @Injectable({
@@ -15,7 +14,7 @@ import {LoginService} from "./login.service";
 export class RoosterService {
     private roosterCache: HeliosRooster = {dataset: []};    // return waarde van API call
     private datumAbonnement: Subscription;                  // volg de keuze van de kalender
-    private datum: DateTime;                                // de gekozen dag
+    private datum: DateTime = DateTime.now();               // de gekozen dag
 
     private roosterStore = new BehaviorSubject(this.roosterCache.dataset);
     public readonly roosterChange = this.roosterStore.asObservable();      // nieuw rooster beschikbaar
@@ -24,37 +23,43 @@ export class RoosterService {
                 private readonly loginService: LoginService,
                 private readonly sharedService: SharedService) {
 
-        // de datum zoals die in de kalender gekozen is
-        this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(datum => {
-            this.datum = DateTime.fromObject({
-                year: datum.year,
-                month: datum.month,
-                day: 1
-            });
-
-            // we kunnen alleen data ophalen als we ingelogd zijn, en starttoren heeft niets nodig
-            if (this.loginService.isIngelogd() && (!this.loginService.userInfo?.Userinfo!.isStarttoren)) {
-                const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
-
-                this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
-                    if (!this.vulMissendeDagenAan(dataset))
-                        this.roosterStore.next(this.roosterCache.dataset)    // afvuren event
-                });
-            }
-        });
+        // // de datum zoals die in de kalender gekozen is
+        // this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(datum => {
+        //     this.datum = DateTime.fromObject({
+        //         year: datum.year,
+        //         month: datum.month,
+        //         day: 1
+        //     });
+        //
+        //     // we kunnen alleen data ophalen als we ingelogd zijn, en starttoren heeft niets nodig
+        //     if (this.loginService.isIngelogd() && (!this.loginService.userInfo?.Userinfo!.isStarttoren)) {
+        //         const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
+        //
+        //         let beginDatum: DateTime = beginEindDatum.begindatum;
+        //         let eindDatum: DateTime = beginEindDatum.einddatum;
+        //
+        //         beginDatum = beginDatum.startOf('week');     // maandag in de 1e week vande maand, kan in de vorige maand vallen
+        //         eindDatum = eindDatum.endOf ('week');        // zondag van de laaste week, kan in de volgende maand vallen
+        //
+        //         this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
+        //             if (!this.vulMissendeDagenAan(dataset))
+        //                 this.roosterStore.next(this.roosterCache.dataset)    // afvuren event
+        //         });
+        //     }
+        // });
 
         // Als roosterdagen zijn toegevoegd, dan moeten we overzicht opnieuw ophalen
         // een timeout. roosterdagen worden per maand toegevoegd.
         // Niet voor iedere dag meteen opvragen, maar bundelen en 1 keer opvragen
-        this.sharedService.heliosEventFired.pipe(debounceTime(1500)).subscribe(ev => {
-            if (ev.tabel == "Rooster") {
-                const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
-
-                this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
-                    this.roosterStore.next(this.roosterCache.dataset)    // afvuren event
-                });
-            }
-        });
+        // this.sharedService.heliosEventFired.pipe(debounceTime(1500)).subscribe(ev => {
+        //     if (ev.tabel == "Rooster") {
+        //         const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
+        //
+        //         this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
+        //             this.roosterStore.next(this.roosterCache.dataset)    // afvuren event
+        //         });
+        //     }
+        // });
 
         // nadat we ingelogd zijn kunnen we de rooster ophalen, starttoren heeft niets nodig
         if ((!this.loginService.userInfo?.Userinfo!.isStarttoren)) {

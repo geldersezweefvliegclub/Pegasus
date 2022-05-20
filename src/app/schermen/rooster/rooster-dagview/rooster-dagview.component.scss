@@ -1,0 +1,28 @@
+
+.lidInRooster {
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+.naam {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 0.2px solid #e3e3e3;
+  height: 2em;
+  width: 100%;
+  padding-left: 0.25em;
+  background: #e9ecef;
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  margin-top: 0.25em;
+}
+
+.mijnDienst {
+  background-color: greenyellow;
+  font-weight: bold;
+}
+
+.roosterTabel {
+  height: calc(100% - 40px);
+  overflow: scroll;
+}

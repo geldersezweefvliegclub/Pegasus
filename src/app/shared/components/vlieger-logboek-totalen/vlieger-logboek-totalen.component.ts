@@ -16,7 +16,7 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDest
 
     private dbEventAbonnement: Subscription;
     private datumAbonnement: Subscription;          // volg de keuze van de kalender
-    datum: DateTime;                                // de gekozen dag
+    datum: DateTime = DateTime.now();               // de gekozen dag
     data: HeliosLogboekTotalen;
     isLoading: boolean = false;
 
@@ -29,13 +29,13 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDest
 
     ngOnInit(): void {
         // de datum zoals die in de kalender gekozen is
-        this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
+        this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
             // ophalen is alleen nodig als er een ander jaar gekozen is in de kalendar
-            const ophalen = ((this.datum == undefined) || (this.datum.year != jaarMaand.year))
+            const ophalen = ((this.data == undefined) || (this.datum.year != datum.year))
             this.datum = DateTime.fromObject({
-                year: jaarMaand.year,
-                month: jaarMaand.month,
-                day: 1
+                year: datum.year,
+                month: datum.month,
+                day: datum.day
             })
 
             if (ophalen) {

@@ -17,7 +17,7 @@ export class DaginfoService {
     private dagenCache: HeliosDagInfoDagen = { dataset: []};         // return waarde van API call
 
     private datumAbonnement: Subscription;         // volg de keuze van de kalender
-    private datum: DateTime;                       // de gekozen dag
+    private datum: DateTime = DateTime.now();      // de gekozen dag
 
     public dagInfo: HeliosDagInfo = {};             // hier kunnen de componenten de daginfo ophalen (bijv start invoer)
     private dagInfoStore = new BehaviorSubject(this.dagInfo);

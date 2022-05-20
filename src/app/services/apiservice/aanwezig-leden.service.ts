@@ -15,7 +15,7 @@ import {LoginService} from "./login.service";
 export class AanwezigLedenService {
     private aanwezigCache: HeliosAanwezigLeden = {dataset: []}; // return waarde van API call
     private datumAbonnement: Subscription;                      // volg de keuze van de kalender
-    private datum: DateTime;                                    // de gekozen dag
+    private datum: DateTime = DateTime.now();                   // de gekozen dag
 
     private overslaan: boolean = false;
     private ophaalTimer: number;                                // Iedere 15 min halen we de aanwezige leden op

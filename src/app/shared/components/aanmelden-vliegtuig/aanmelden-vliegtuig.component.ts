@@ -18,7 +18,7 @@ export class AanmeldenVliegtuigComponent implements OnInit, OnDestroy {
   @ViewChild(ModalComponent) private popup: ModalComponent;
 
   private datumAbonnement: Subscription; // volg de keuze van de kalender
-  datum: DateTime;                       // de gekozen dag in de kalender
+  datum: DateTime = DateTime.now();      // de gekozen dag in de kalender
 
   private vliegtuigenAbonnement: Subscription;
   vliegtuigen: HeliosVliegtuigenDataset[] = [];

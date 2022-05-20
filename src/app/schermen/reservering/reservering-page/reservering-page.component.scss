@@ -102,9 +102,15 @@ td {
 }
 
 .nietBeschikbaar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  margin-top: 0.25em;
   height: 2.3em;
   width: 100%;
   padding-left: 0.25em;
+  color: #b0b0b0;
   background-color: #f5f5f5;;
 }
 

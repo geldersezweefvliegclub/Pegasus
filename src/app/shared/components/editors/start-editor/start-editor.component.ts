@@ -68,7 +68,7 @@ export class StartEditorComponent implements OnInit {
     aanwezigLeden: HeliosAanwezigLedenDataset[] = [];
 
     private datumAbonnement: Subscription;      // volg de keuze van de kalender
-    datum: DateTime;                            // de gekozen dag
+    datum: DateTime = DateTime.now();           // de gekozen dag
 
     isLoading: boolean = false;
     isSaving: boolean = false;

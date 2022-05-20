@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {HeliosVliegtuigenDatasetExtended} from "../../../../schermen/reservering/reservering-page/reservering-page.component";
 import {ModalComponent} from "../../modal/modal.component";
 import {Subscription} from "rxjs";
@@ -16,7 +16,7 @@ import {ReserveringService} from "../../../../services/apiservice/reservering.se
     styleUrls: ['./boeking-editor.component.scss'],
     providers: [{provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter}]
 })
-export class BoekingEditorComponent implements OnInit {
+export class BoekingEditorComponent implements OnInit, OnDestroy {
     @Input() clubVliegtuigen: HeliosVliegtuigenDatasetExtended[];
     @Output() boekingToegevoegd: EventEmitter<void> = new EventEmitter<void>();
 
@@ -45,6 +45,10 @@ export class BoekingEditorComponent implements OnInit {
         this.ledenAbonnement = this.ledenService.ledenChange.subscribe(leden => {
             this.leden = (leden) ? leden : [];
         });
+    }
+
+    ngOnDestroy(): void {
+        if (this.ledenAbonnement) this.ledenAbonnement.unsubscribe();
     }
 
     // Openen van popup scherm

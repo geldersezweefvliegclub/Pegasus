@@ -73,28 +73,29 @@ export class LidInvoerComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         // leden komen in ander formaat, dus even goed zetten
         this.ledenFiltered = [];
-        this.leden.forEach(item => {
-            if (this.excludeLidTypes) {
-                if (this.excludeLidTypes.includes(item.LIDTYPE_ID!.toString())) {
-                    return;    // we moeten dit lid niet opnemen omdat lidtype niet voldoet
+        if (this.leden) {
+            this.leden.forEach(item => {
+                if (this.excludeLidTypes) {
+                    if (this.excludeLidTypes.includes(item.LIDTYPE_ID!.toString())) {
+                        return;    // we moeten dit lid niet opnemen omdat lidtype niet voldoet
+                    }
                 }
-            }
-            if ((this.alleenPaxVliegers) && (item.PAX !== true)) {
-                return;    // We zoeken alleen leden die PAX mogenvliegen
-            }
-            if ((this.alleenInstructeurs) && (item.INSTRUCTEUR !== true)) {
-                return;    // We zoeken alleen leden die instructeur zijn
-            }
-            this.ledenFiltered.push(
-                {
-                    LID_ID: item.ID,
-                    NAAM: item.NAAM,
-                    LIDTYPE_ID: item.LIDTYPE_ID,
-                    VOORKEUR_VLIEGTUIG_TYPE: "",
-                    OVERLAND_VLIEGTUIG_ID: -1
-                });
-        });
-
+                if ((this.alleenPaxVliegers) && (item.PAX !== true)) {
+                    return;    // We zoeken alleen leden die PAX mogenvliegen
+                }
+                if ((this.alleenInstructeurs) && (item.INSTRUCTEUR !== true)) {
+                    return;    // We zoeken alleen leden die instructeur zijn
+                }
+                this.ledenFiltered.push(
+                    {
+                        LID_ID: item.ID,
+                        NAAM: item.NAAM,
+                        LIDTYPE_ID: item.LIDTYPE_ID,
+                        VOORKEUR_VLIEGTUIG_TYPE: "",
+                        OVERLAND_VLIEGTUIG_ID: -1
+                    });
+            });
+        }
         if (!this.excludeLidTypes) {
             this.aanwezigFiltered = this.aanwezig;
         } else {

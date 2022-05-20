@@ -3,6 +3,7 @@ import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {ErrorMessage, HeliosEvent, KalenderMaand} from '../../types/Utils';
 import {EventManager} from "@angular/platform-browser";
+import {DateTime} from "luxon";
 
 
 export interface FilterLedenData {
@@ -45,7 +46,7 @@ export class SharedService {
     };
 
     private datum: NgbDateStruct;
-    private kalenderMaand: KalenderMaand = {year: this.vandaag.year, month: this.vandaag.month};
+    private kalenderMaand: KalenderMaand = {year: 1900, month: 1};                          // initieele waarde ver in verleden
 
     private datumStore = new BehaviorSubject(this.vandaag);
     private kalenderMaandStore = new BehaviorSubject(this.kalenderMaand);
@@ -110,6 +111,14 @@ export class SharedService {
     datumDM(ISOdatum: string): string {
         const datePart = ISOdatum.split('-');
         return datePart[2] + '-' + datePart[1];
+    }
+
+    // Hebben we een datum in de toekomst, vandaag is geen toekomst
+    datumInToekomst(datum: string): boolean {
+        const nu: DateTime = DateTime.now();
+        const d: DateTime = DateTime.fromSQL(datum);
+
+        return (d > nu) // datum is in het verleden
     }
 
     get onResize$(): Observable<Window> {

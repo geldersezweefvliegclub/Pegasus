@@ -6,6 +6,7 @@ import {LoginService} from "../../../services/apiservice/login.service";
 import {DateTime} from "luxon";
 import {Subscription} from "rxjs";
 import {
+    HeliosBehaaldeProgressieDataset,
     HeliosLedenDataset,
     HeliosReserveringenDataset,
     HeliosRoosterDataset,
@@ -16,7 +17,7 @@ import {LedenService} from "../../../services/apiservice/leden.service";
 import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
 import {VliegtuigenService} from "../../../services/apiservice/vliegtuigen.service";
 import {RoosterService} from "../../../services/apiservice/rooster.service";
-import {DagVanDeWeek} from "../../../utils/Utils";
+import {DagVanDeWeek, getBeginEindDatumVanMaand} from "../../../utils/Utils";
 
 import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
 import {ReserveringService} from "../../../services/apiservice/reservering.service";
@@ -26,6 +27,7 @@ import {BoekingEditorComponent} from "../../../shared/components/editors/boeking
 import {StartEditorComponent} from "../../../shared/components/editors/start-editor/start-editor.component";
 import {DaginfoService} from "../../../services/apiservice/daginfo.service";
 import * as xlsx from "xlsx";
+import {ProgressieService} from "../../../services/apiservice/progressie.service";
 
 export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
     Tonen?: boolean;
@@ -65,12 +67,12 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     private resizeSubscription: Subscription;       // Abonneer op aanpassing van window grootte (of draaien mobiel)
     private maandAbonnement: Subscription;          // volg de keuze van de kalender
     private datumAbonnement: Subscription;          // volg de keuze van de kalender
-    datum: DateTime;                                // de gekozen dag
+    datum: DateTime = DateTime.now()                // de gekozen dag
     maandag: DateTime                               // de eerste dag van de week
-    nu: DateTime                                    // vandaag
+    nu: DateTime = DateTime.now()                   // vandaag
 
     toonClubDDWV: number = 2;              // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
-
+    overlandCompetenties: string;
     magExporteren: boolean = false;
 
     success: SuccessMessage | undefined;
@@ -80,6 +82,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
                 private readonly ledenService: LedenService,
                 private readonly vliegtuigenService: VliegtuigenService,
                 private readonly reserveringenService: ReserveringService,
+                private readonly progressieService: ProgressieService,
                 private readonly roosterService: RoosterService,
                 private readonly dagInfoService: DaginfoService,
                 private readonly storageService: StorageService,
@@ -88,6 +91,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.nu = DateTime.now();
+        this.onWindowResize();
 
         const ui = this.loginService.userInfo?.Userinfo;
         if (ui!.isBeheerder || ui!.isBeheerderDDWV) {
@@ -98,13 +102,15 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
 
         // de datum zoals die in de kalender gekozen is
         this.maandAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
-            this.datum = DateTime.fromObject({
-                year: jaarMaand.year,
-                month: jaarMaand.month,
-                day: 1,
-            })
-            this.maandag = this.datum.startOf('week'); // de eerste dag van de gekozen week
-            this.opvragen();
+            if (jaarMaand.year > 1900) {        // 1900 is bij initialisatie
+                this.datum = DateTime.fromObject({
+                    year: jaarMaand.year,
+                    month: jaarMaand.month,
+                    day: 1,
+                })
+                this.maandag = this.datum.startOf('week'); // de eerste dag van de gekozen week
+                this.opvragen();
+            }
         });
 
         this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
@@ -123,8 +129,15 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
                 return v.CLUBKIST!;
             });
 
+            let overlandBevoegdheden = "";
             const selectie: HeliosVliegtuigenDatasetExtended[] = this.storageService.ophalen("kistSelectieReservering")
             for (let i = 0; i < this.clubVliegtuigen.length; i++) {
+                // opbouwen benodigde overland bevoegdheden als CSV string
+                if (this.clubVliegtuigen[i].BEVOEGDHEID_OVERLAND_ID) {
+                    overlandBevoegdheden += (overlandBevoegdheden) ? "," : "";
+                    overlandBevoegdheden += this.clubVliegtuigen[i].BEVOEGDHEID_OVERLAND_ID;
+                }
+
                 if (selectie == null) {
                     this.clubVliegtuigen[i].Tonen = true;
                 } else {
@@ -137,6 +150,16 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
                     }
                 }
             }
+
+            // haal op welke vliegtuigen het ingelogde lid overland mag vliegen
+            const ui = this.loginService.userInfo?.LidData!;
+            this.progressieService.getProgressie(ui.ID!, overlandBevoegdheden).then((progressie: HeliosBehaaldeProgressieDataset[]) => {
+                // We hebben nu array met progressie, omzetten naar CSV
+                this.overlandCompetenties = progressie.map(function (elem) {
+                    return elem.COMPETENTIE_ID;
+                }).join(",");
+            });
+
             this.storageService.opslaan("kistSelectieReservering", this.clubVliegtuigen)
             this.clubVliegtuigenFiltered = this.clubVliegtuigen!.filter((v) => {
                 return v.Tonen!;
@@ -158,6 +181,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
         if (this.ledenAbonnement) this.ledenAbonnement.unsubscribe();
         if (this.vliegtuigenAbonnement) this.vliegtuigenAbonnement.unsubscribe();
         if (this.datumAbonnement) this.datumAbonnement.unsubscribe();
+        if (this.maandAbonnement) this.maandAbonnement.unsubscribe();
         if (this.resizeSubscription) this.resizeSubscription.unsubscribe();
     }
 
@@ -174,15 +198,25 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
             this.opvragen();        // moeten wel een datum hebben, anders kunnen we niets opvragen
         }
     }
-    // Opvragen van de data via de api
-    opvragen() {
-        this.isLoading = true;
 
-        let beginDatum: DateTime = DateTime.fromObject({day: 1, month: this.datum.month, year: this.datum.year});   // begin van de maand
-        if (this.maandag.month != this.datum.month)  { // als maandag in de vorige maand valt, dan meer ophalen ivm week vieuw. Die laat ook vorige maand zien
-            beginDatum = this.maandag
+    opvragen(): void {
+        const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
+
+        let beginDatum: DateTime = beginEindDatum.begindatum;
+        let eindDatum: DateTime = beginEindDatum.einddatum.plus({months: 2}); // datum 2 maanden vanaf nu, dan weten ook toekomstige reserveringen
+
+        switch (this.reserveringView) {
+            case "dag" : {
+                beginDatum = this.datum;
+                eindDatum = this.datum;
+                break;
+            }
+            case "week": {
+                beginDatum = this.datum.startOf('week');     // maandag in de 1e week vande maand, kan in de vorige maand vallen
+                eindDatum = this.datum.endOf('week');        // zondag van de laaste week, kan in de volgende maand vallen
+                break;
+            }
         }
-
         // We laden veel meer data, dan de gekozen maand, en dat heeft een reden
         // Je mag maar 1 openstaande reservering hebben. In de functie magReserveren() wordt gekeken of er een openstaande reservering is
         // altijd vanaf vandaag controleren
@@ -190,49 +224,45 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
             beginDatum = this.nu;
         }
 
-        const eindeMaand = beginDatum.plus({months:1}).plus({days: -1});    // laatste dag van de maand
-        let eindDatum: DateTime = this.datum.plus({months: 2}); // datum 2 maanden vanaf nu, dan weten ook toekomstige reserveringen
-
         // als einde van de maand in het verleden is, kunnen we sowieso niet meer reserveren, beperk data opvraag
-        if (eindeMaand < this.nu) {
-            eindDatum = eindeMaand;
+        if (beginEindDatum.einddatum < this.nu) {
+            eindDatum = beginEindDatum.einddatum;
 
             if (this.reserveringView == "week") {   // week kan in 2 maanden vallen, dus paar dagen extra opvragen
                 const dagenExtra = 7 - eindDatum.weekday;
                 eindDatum = eindDatum.plus({days: dagenExtra});
             }
         }
-
-        this.roosterService.getRooster(beginDatum, eindDatum, "DATUM, DDWV, CLUB_BEDRIJF").then((rooster) => {
+        this.roosterService.getRooster(beginDatum, eindDatum).then((rooster) => {
             this.rooster = rooster;
             this.applyRoosterFilter();
+
+            this.reserveringenService.getReserveringen(beginDatum, eindDatum).then((dataset) => {
+                this.data = (dataset) ? dataset : [];
+                this.isLoading = false;
+
+                // staat er nog een reserving open?
+                // een reservering is iets anders dan een boeking
+                // een reservering wordt gedaan door een lid, een boeking wordt gedaan door de beheerder
+                // een boeking is bijvoorbeeld een NK, Euroglide etc
+                // Je mag niet reserveren als er nog een reservering (in de toekomst) open staat
+                // maar je mag wel reserveren als er een boeking open staat.
+                // als starttoren mag je sowieso niet een kist reserveren
+
+                if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
+                    this.magNogReserveren = false;
+                } else {
+                    const ui = this.loginService.userInfo?.LidData
+                    const idx = this.data.findIndex((reservering) => {
+                        return ((reservering.LID_ID == ui?.ID) && (reservering.IS_GEBOEKT == false) && (DateTime.fromSQL(reservering.DATUM!) > this.nu))
+                    });
+                    this.magNogReserveren = (idx < 0);
+                }
+            }).catch(e => {
+                this.error = e;
+                this.isLoading = false;
+            });
         })
-
-        this.reserveringenService.getReserveringen(beginDatum, eindDatum).then((dataset) => {
-            this.data = (dataset) ? dataset : [];
-            this.isLoading = false;
-
-            // staat er nog een reserving open?
-            // een reservering is iets anders dan een boeking
-            // een reservering wordt gedaan door een lid, een boeking wordt gedaan door de beheerder
-            // een boeking is bijvoorbeeld een NK, Euroglide etc
-            // Je mag niet reserveren als er nog een reservering (in de toekomst) open staat
-            // maar je mag wel reserveren als er een boeking open staat.
-            // als starttoren mag je sowieso niet een kist reserveren
-
-            if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
-                this.magNogReserveren = false;
-            } else {
-                const ui = this.loginService.userInfo?.LidData
-                const idx = this.data.findIndex((reservering) => {
-                    return ((reservering.LID_ID == ui?.ID) && (reservering.IS_GEBOEKT == false) && (DateTime.fromSQL(reservering.DATUM!) > this.nu))
-                });
-                this.magNogReserveren = (idx < 0);
-            }
-        }).catch(e => {
-            this.error = e;
-            this.isLoading = false;
-        });
     }
 
     // Laat hele rooster zien, of alleen weekend / DDWV
@@ -241,14 +271,29 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
 
         let tmpRooster: HeliosRoosterDataset[] = [];
 
-        for (let i = 0; i < this.rooster.length; i++) {
-            if (this.reserveringView == "week") {
-                const d: DateTime = DateTime.fromSQL(this.rooster[i].DATUM!)
+        const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
 
-                console.log(this.maandag.toISO(), this.maandag.plus({days: 6}).toISO())
-                if (d < this.maandag)    continue;
-                if (d > this.maandag.plus({days: 6}))    continue;
+        let beginDatum: DateTime = beginEindDatum.begindatum;
+        let eindDatum: DateTime = beginEindDatum.einddatum.plus({months: 2}); // datum 2 maanden vanaf nu, dan weten ook toekomstige reserveringen
+
+        switch (this.reserveringView) {
+            case "dag" : {
+                beginDatum = this.datum;
+                eindDatum = this.datum;
+                break;
             }
+            case "week": {
+                beginDatum = this.datum.startOf('week');     // maandag in de 1e week vande maand, kan in de vorige maand vallen
+                eindDatum = this.datum.endOf('week');        // zondag van de laaste week, kan in de volgende maand vallen
+                break;
+            }
+        }
+
+        for (let i = 0; i < this.rooster.length; i++) {
+
+            const d: DateTime = DateTime.fromSQL(this.rooster[i].DATUM!)
+
+            if ((d < beginDatum) || (d > eindDatum)) continue;      // we hebben data in geheugen, maar tonen het niet
 
             switch (this.toonClubDDWV) {
                 case 0: // toonClubDDWV, 0 = laat alle dagen zien, dus club dagen en DDWV dagen
@@ -436,6 +481,14 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
             return false;
         }
 
+        // Mag de ingelogde gebruiker overland vliegen op dit vliegtuig?
+        const vliegtuig = this.clubVliegtuigen.find(v => v.ID == vliegtuigID);
+        if ((vliegtuig) && (vliegtuig.BEVOEGDHEID_OVERLAND_ID)) {
+            if (!this.overlandCompetenties.includes(vliegtuig.BEVOEGDHEID_OVERLAND_ID.toString())) {
+                return false;
+            }
+        }
+
         if (!this.isBeschikbaar(datum, vliegtuigID)) {
             return false;
         }
@@ -503,15 +556,14 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     }
 
     zetDatum(nieuweDatum: DateTime) {
-        const opvragen:boolean = this.datum.month != nieuweDatum.month
+        const opvragen: boolean = this.datum.month != nieuweDatum.month
 
         this.datum = nieuweDatum;
         this.maandag = this.datum.startOf('week');     // de eerste dag van de gekozen week
 
         if (opvragen) {
             this.opvragen();            // gaan naar nieuwe maand, dus opvragen van database
-        }
-        else {
+        } else {
             this.applyRoosterFilter();  // zorg dat we de juiste data hebben om weer te geven
         }
     }

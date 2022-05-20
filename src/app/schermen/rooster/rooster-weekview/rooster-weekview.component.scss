@@ -1,0 +1,45 @@
+
+.dienstType {
+  white-space: nowrap;
+}
+
+.dataContent {
+  height: 100%;
+  width: 100%;
+}
+
+.roosterTabel {
+  height: calc(100% - 40px);
+  overflow: scroll;
+}
+
+thead {
+  background: white;
+  position: sticky;
+  top: 0;
+  border-bottom: 1px solid #939393 ;
+  z-index: 10;
+}
+
+.lidInRooster {
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+.naam {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 0.2px solid #e3e3e3;
+  height: 2em;
+  width: 100%;
+  padding-left: 0.25em;
+  background: #e9ecef;
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  margin-top: 0.25em;
+}
+
+.mijnDienst {
+  background-color: greenyellow;
+  font-weight: bold;
+}

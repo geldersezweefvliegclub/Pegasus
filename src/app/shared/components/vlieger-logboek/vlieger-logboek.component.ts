@@ -50,7 +50,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
     private dbEventAbonnement: Subscription;
     private resizeSubscription: Subscription;   // Abonneer op aanpassing van window grootte (of draaien mobiel)
     private datumAbonnement: Subscription;      // volg de keuze van de kalender
-    datum: DateTime;                            // de gekozen dag
+    datum: DateTime = DateTime.now();           // de gekozen dag
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -159,13 +159,13 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
         // Op safari hebben we een korte vertraging nodig op te zorgen dat initialisatie gedaan is
         setTimeout(() => {
             // de datum zoals die in de kalender gekozen is
-            this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
+            this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
                 // ophalen is alleen nodig als er een ander jaar gekozen is in de kalendar
-                const ophalen = ((this.datum == undefined) || (this.datum.year != jaarMaand.year))
+                const ophalen = ((this.data == undefined) || (this.datum.year != datum.year))
                 this.datum = DateTime.fromObject({
-                    year: jaarMaand.year,
-                    month: jaarMaand.month,
-                    day: 1
+                    year: datum.year,
+                    month: datum.month,
+                    day: datum.day
                 })
                 if (ophalen) {
                     this.data = [];
