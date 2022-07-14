@@ -219,8 +219,7 @@ export class NavigationComponent implements OnInit, OnDestroy  {
         const dashboard = this.routes.find(route => route.path == "dashboard") as CustomRoute;
         if (verbergen.includes('dashboard') || ui?.isStarttoren) {
             dashboard.excluded = true;
-        }
-        else {
+        } else {
             dashboard.excluded = false;
         }
 
@@ -228,8 +227,7 @@ export class NavigationComponent implements OnInit, OnDestroy  {
         const startlijst = this.routes.find(route => route.path == "startlijst") as CustomRoute;
         if (verbergen.includes('startlijst') || (!ui?.isStarttoren && !ui?.isBeheerder)) {
             startlijst.excluded = true;
-        }
-        else {
+        } else {
             startlijst.excluded = false;
         }
 
@@ -238,18 +236,16 @@ export class NavigationComponent implements OnInit, OnDestroy  {
         profiel.excluded = false;
         if (verbergen.includes('profiel') || (!ui?.isDDWV && !ui?.isClubVlieger)) {
             profiel.excluded = true
-        }
-        else {
+        } else {
             // is profiel compleet ingevuld. Zo nee dan waarschuwing
-            let showBatch= false;
+            let showBatch = false;
 
             if (ui?.isClubVlieger) {
                 const lData = this.loginService.userInfo?.LidData;
 
                 if (lData!.AVATAR == null) {
                     showBatch = true;
-                }
-                else {
+                } else {
                     if (lData!.MEDICAL == null) {
                         showBatch = true;
                     } else {
@@ -264,8 +260,7 @@ export class NavigationComponent implements OnInit, OnDestroy  {
 
             if (showBatch) {
                 profiel.batch = "<div class=\"fas fa-exclamation-triangle \"></div>";
-            }
-            else {
+            } else {
                 profiel.batch = undefined;
             }
         }
@@ -274,8 +269,7 @@ export class NavigationComponent implements OnInit, OnDestroy  {
         const leden = this.routes.find(route => route.path == "leden") as CustomRoute;
         if (verbergen.includes('leden') || (!ui?.isDDWV && !ui?.isClubVlieger && !ui?.isStarttoren)) {
             leden.excluded = true;
-        }
-        else {
+        } else {
             leden.excluded = false;
         }
 
@@ -283,8 +277,7 @@ export class NavigationComponent implements OnInit, OnDestroy  {
         const rooster = this.routes.find(route => route.path == "rooster") as CustomRoute;
         if (verbergen.includes('rooster') || (!ui?.isDDWV && !ui?.isClubVlieger)) {
             rooster.excluded = true;
-        }
-        else {
+        } else {
             rooster.excluded = false;
         }
 
@@ -292,19 +285,24 @@ export class NavigationComponent implements OnInit, OnDestroy  {
         const reserveringen = this.routes.find(route => route.path == "reserveringen") as CustomRoute;
         if (verbergen.includes('reserveringen') || (!ui?.isClubVlieger && !ui?.isStarttoren)) {
             reserveringen.excluded = true;
-        }
-        else {
+        } else {
             reserveringen.excluded = false;
         }
 
         // alleen beheer als we voldoende scherm ter beschikking hebben
         if (verbergen.includes('beheer') || (this.sharedService.getSchermSize() < SchermGrootte.lg) || (window.innerHeight < 600)) {
             this.beheerExcluded = true;
-        }
-        else {
+        } else {
             this.beheerExcluded = false;
         }
+
+        const types = this.beheerRoutes.find(route => route.path == "types") as CustomRoute;
+        types.excluded = !ui?.isBeheerder;
+
+        const competenties = this.beheerRoutes.find(route => route.path == "competenties") as CustomRoute;
+        competenties.excluded = !ui?.isBeheerder;
     }
+
 
     // het is voorbij en we gaan terug naar de login pagina
     Uitloggen(): void {

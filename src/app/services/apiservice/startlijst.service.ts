@@ -57,7 +57,7 @@ export class StartlijstService {
             this.vliegdagenCache = await response.json();
 
         } catch (e) {
-            if (e.responseCode !== 404) { // er is geen data
+            if (e.responseCode !== 404) { // er is geen starts
                 throw(e);
             }
         }
@@ -88,7 +88,7 @@ export class StartlijstService {
             const response: Response = await this.APIService.get('Startlijst/GetLogboek', getParams);
             this.logboekCache = await response.json();
         } catch (e) {
-            if ((e.responseCode !== 304) && (e.responseCode !== 704)  && (e.responseCode !== 404)) { // er is geen data, of data is ongewijzigd
+            if ((e.responseCode !== 304) && (e.responseCode !== 704)  && (e.responseCode !== 404)) { // er is geen starts, of starts is ongewijzigd
                 throw(e);
             }
         }
@@ -135,7 +135,7 @@ export class StartlijstService {
             this.vliegtuigLogboekCache = await response.json();
 
         } catch (e) {
-            if (e.responseCode !== 404) { // er is geen data
+            if (e.responseCode !== 404) { // er is geen starts
                 throw(e);
             }
         }
@@ -182,7 +182,7 @@ export class StartlijstService {
             const response: Response = await this.APIService.get('Startlijst/GetObjects', getParams );
             this.startsCache = await response.json();
         } catch (e) {
-            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde data als cache
+            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde starts als cache
                 throw(e);
             }
         }

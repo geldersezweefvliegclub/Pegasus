@@ -15,6 +15,7 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDest
     @Input() VliegerID: number;
 
     private dbEventAbonnement: Subscription;
+    private maandAbonnement: Subscription;          // volg de keuze van de kalender
     private datumAbonnement: Subscription;          // volg de keuze van de kalender
     datum: DateTime = DateTime.now();               // de gekozen dag
     data: HeliosLogboekTotalen;
@@ -51,6 +52,29 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDest
             }
         })
 
+        // de datum zoals die in de kalender gekozen is
+        this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(datum => {
+            // ophalen is alleen nodig als er een ander jaar gekozen is in de kalendar
+            const ophalen = ((this.data == undefined) || (this.datum.year != datum.year))
+            this.datum = DateTime.fromObject({
+                year: datum.year,
+                month: datum.month,
+                day: 1
+            })
+
+            if (ophalen) {
+                this.data = {
+                    "totaal": 0,
+                    "laatste_aanpassing": "0000-00-00 00:00:00",
+                    "hash": "0",
+                    "starts": [],
+                    "vliegtuigen": [],
+                    "jaar": {"STARTS": 0, "INSTRUCTIE_STARTS": 0, "INSTRUCTIE_UREN": "0:00", "VLIEGTIJD": "0:00"}
+                }
+                this.opvragen();
+            }
+        })
+
         // Als in de startlijst tabel is aangepast, moet we onze dataset ook aanpassen
         this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Startlijst") {
@@ -62,6 +86,7 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDest
     ngOnDestroy(): void {
         if (this.dbEventAbonnement) this.dbEventAbonnement.unsubscribe();
         if (this.datumAbonnement)   this.datumAbonnement.unsubscribe();
+        if (this.maandAbonnement)       this.maandAbonnement.unsubscribe();
     }
 
     ngOnChanges(changes: SimpleChanges) {

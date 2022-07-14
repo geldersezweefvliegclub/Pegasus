@@ -485,6 +485,8 @@ export interface components {
       CALLSIGN?: string;
       /** Is het een club vliegtuig? */
       CLUBKIST?: boolean;
+      /** Combinatie van registratie en callsign van het sleepvliegtuig */
+      SLEEPKIST?: string;
       /** Combinatie van registratie en callsign van het vliegtuig waarop gevlogen is */
       REG_CALL?: string;
       /** Hoe lang is er gevlogen. Indien landingstijd niet is ingevuld, op de dag zelf vliegtijd to nu toe, op alle andere dagen null */

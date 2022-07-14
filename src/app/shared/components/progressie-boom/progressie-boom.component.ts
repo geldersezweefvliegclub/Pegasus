@@ -9,7 +9,7 @@ import {SharedService} from "../../../services/shared/shared.service";
 import {CompetentieService} from "../../../services/apiservice/competentie.service";
 import {Subscription} from "rxjs";
 
-export class ProgressieTreeviewItemComponent extends TreeviewItem {
+export class ProgressieTreeviewItem extends TreeviewItem {
     ProgresssieID: number | undefined;
     Instructeur: string | undefined;
     Behaald: string | undefined;
@@ -27,7 +27,7 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
 
     private dbEventAbonnement: Subscription;
     private competentiesAbonnement: Subscription;
-    boom: ProgressieTreeviewItemComponent[];
+    boom: ProgressieTreeviewItem[];
 
     competenties: HeliosCompetentiesDataset[];
     values: number[];
@@ -42,7 +42,7 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
         maxHeight: 400
     });
 
-    verwijderCompetentie: ProgressieTreeviewItemComponent;
+    verwijderCompetentie: ProgressieTreeviewItem;
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
@@ -85,7 +85,7 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
         this.isDisabled = !(ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) || (this.VliegerID == this.loginService.userInfo?.LidData?.ID);
 
         this.progressieService.getBoom(this.VliegerID).then((b) => {
-            let tree: ProgressieTreeviewItemComponent[] = [];
+            let tree: ProgressieTreeviewItem[] = [];
             for (let i = 0; i < b.length; i++) {
                 tree.push(this.TreeView(b[i]))
             }
@@ -93,7 +93,7 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
         });
     }
 
-    TreeView(boomTak: HeliosProgressieBoom): ProgressieTreeviewItemComponent {
+    TreeView(boomTak: HeliosProgressieBoom): ProgressieTreeviewItem {
         let tekst: string = ''
 
         if (boomTak.BLOK)
@@ -104,7 +104,7 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
         if (boomTak.ONDERWERP)
             tekst += boomTak.ONDERWERP.toString()
 
-        let nieuwetak = new ProgressieTreeviewItemComponent({
+        let nieuwetak = new ProgressieTreeviewItem({
             text: (tekst).trim(),
             value: boomTak.COMPETENTIE_ID,
 
@@ -135,7 +135,7 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
         return nieuwetak;
     }
 
-    onProgressieChange(item: ProgressieTreeviewItemComponent) {
+    onProgressieChange(item: ProgressieTreeviewItem) {
 
         if (this.isDisabled) {
             return;
@@ -179,7 +179,7 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
     }
 
 
-    verwijderenProgressie(item: ProgressieTreeviewItemComponent): void {
+    verwijderenProgressie(item: ProgressieTreeviewItem): void {
         this.bevestigPopup.close();
         this.progressieService.verwijderCompetentie(item.ProgresssieID!);
 

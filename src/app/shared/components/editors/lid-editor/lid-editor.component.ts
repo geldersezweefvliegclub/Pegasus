@@ -28,7 +28,8 @@ export class LidEditorComponent implements OnInit, OnDestroy {
 
     private resizeSubscription: Subscription;       // Abonneer op aanpassing van window grootte (of draaien mobiel)
     private ledenAbonnement: Subscription;
-    instructeurs: HeliosLedenDataset[] = []
+    instructeurs: HeliosLedenDataset[] = [];
+    zusterclubs: HeliosLedenDataset[] = []
 
     private typesAbonnement: Subscription;
     lidTypes: HeliosType[];
@@ -76,16 +77,13 @@ export class LidEditorComponent implements OnInit, OnDestroy {
 
         // abonneer op wijziging van lidTypes
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
-            this.lidTypes = dataset!.filter((t: HeliosType) => {
-                return t.GROEP == 6
-            });          // lidtypes
-            this.statusTypes = dataset!.filter((t: HeliosType) => {
-                return t.GROEP == 19
-            });      // status types (DBO, solo, brevet)```````
+            this.lidTypes = dataset!.filter((t: HeliosType) => { return t.GROEP == 6  });          // lidtypes
+            this.statusTypes = dataset!.filter((t: HeliosType) => { return t.GROEP == 19  });      // status types (DBO, solo, brevet)```````
         });
 
         // abonneer op wijziging van leden, maar hebben alleen instructeurs nodid
         this.ledenAbonnement = this.ledenService.ledenChange.subscribe(leden => {
+            this.zusterclubs = (leden) ? leden.filter((lid) => lid.LIDTYPE_ID == 607) : [];
             this.instructeurs = (leden) ? leden.filter((lid) => lid.INSTRUCTEUR == true) : [];
 
             if (!leden) {
@@ -145,7 +143,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
         this.isMobiel = (this.sharedService.getSchermSize() <= SchermGrootte.md);
     }
 
-    // opslaan van data
+    // opslaan van starts
     uitvoeren() {
         // even kijken of wachtwoorden ingevuld en goed zijn
         if (this.wachtwoord === '' || (this.controleWachtwoord !== this.wachtwoord)) {
@@ -185,7 +183,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
             this.lid.NAAM += this.lid.ACHTERNAAM;
         }
 
-        // nu opslaan van de data
+        // nu opslaan van de starts
         if (this.isRestoreMode) {
             this.restore()
         } else if (this.isVerwijderMode) {
@@ -362,7 +360,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
             case 'ROOSTER':
             case 'BEHEERDER':
             case 'DDWV_BEHEERDER':
-            case 'BETAALD': {
+            case 'STARTVERBOD': {
                 if (ui?.isBeheerder) {
                     return false;
                 }
@@ -417,8 +415,8 @@ export class LidEditorComponent implements OnInit, OnDestroy {
                 }
                 break;
             }
-            case 'BETAALD': {
-                if (ui?.isBeheerder || ui?.isBeheerderDDWV || this.ikBenHetZelf()) {
+            case 'STARTVERBOD': {
+                if (ui?.isBeheerder || this.ikBenHetZelf()) {
                     return true;
                 }
                 break;
@@ -448,8 +446,6 @@ export class LidEditorComponent implements OnInit, OnDestroy {
 
     // Toon de QR code voor Google Authenticator
     toonSecret() {
-        const ui = this.loginService.userInfo?.Userinfo;
-
         if (this.isRestoreMode || this.isVerwijderMode) {
             return false;
         }

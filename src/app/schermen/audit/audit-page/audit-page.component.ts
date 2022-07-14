@@ -28,7 +28,7 @@ export class AuditPageComponent implements OnInit {
         {field: 'TABEL_NAAM', headerName: 'Tabel', sortable: true},
     ];
 
-    // tonen van data velden in rechter kolom
+    // tonen van starts velden in rechter kolom
     voor: any;
     wijziging: any;
     resultaat: any;
@@ -37,7 +37,7 @@ export class AuditPageComponent implements OnInit {
     magExporten: boolean = false;
 
     zoekString: string;
-    zoekTimer: number;                  // kleine vertraging om data ophalen te beperken
+    zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -52,7 +52,7 @@ export class AuditPageComponent implements OnInit {
         this.magExporten = true
     }
 
-    // Opvragen van de data via de api
+    // Opvragen van de starts via de api
     opvragen() {
         clearTimeout(this.zoekTimer);
 

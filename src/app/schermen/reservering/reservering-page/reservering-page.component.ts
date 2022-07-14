@@ -217,14 +217,14 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
                 break;
             }
         }
-        // We laden veel meer data, dan de gekozen maand, en dat heeft een reden
+        // We laden veel meer starts, dan de gekozen maand, en dat heeft een reden
         // Je mag maar 1 openstaande reservering hebben. In de functie magReserveren() wordt gekeken of er een openstaande reservering is
         // altijd vanaf vandaag controleren
         if (beginDatum > this.nu) {
             beginDatum = this.nu;
         }
 
-        // als einde van de maand in het verleden is, kunnen we sowieso niet meer reserveren, beperk data opvraag
+        // als einde van de maand in het verleden is, kunnen we sowieso niet meer reserveren, beperk starts opvraag
         if (beginEindDatum.einddatum < this.nu) {
             eindDatum = beginEindDatum.einddatum;
 
@@ -287,13 +287,17 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
                 eindDatum = this.datum.endOf('week');        // zondag van de laaste week, kan in de volgende maand vallen
                 break;
             }
+            case "maand": {
+                eindDatum = beginEindDatum.einddatum               // alleen deze maand tonen
+                break;
+            }
         }
 
         for (let i = 0; i < this.rooster.length; i++) {
 
             const d: DateTime = DateTime.fromSQL(this.rooster[i].DATUM!)
 
-            if ((d < beginDatum) || (d > eindDatum)) continue;      // we hebben data in geheugen, maar tonen het niet
+            if ((d < beginDatum) || (d > eindDatum)) continue;      // we hebben starts in geheugen, maar tonen het niet
 
             switch (this.toonClubDDWV) {
                 case 0: // toonClubDDWV, 0 = laat alle dagen zien, dus club dagen en DDWV dagen
@@ -564,7 +568,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
         if (opvragen) {
             this.opvragen();            // gaan naar nieuwe maand, dus opvragen van database
         } else {
-            this.applyRoosterFilter();  // zorg dat we de juiste data hebben om weer te geven
+            this.applyRoosterFilter();  // zorg dat we de juiste starts hebben om weer te geven
         }
     }
 }

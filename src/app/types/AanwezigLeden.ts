@@ -405,8 +405,8 @@ export interface components {
       INLOGNAAM?: string;
       /** Readonly, URL om image op te halen. Zetten via UploadAvatar functie */
       AVATAR?: string;
-      /** Heef het lid de factuur van dit jaar betaald? */
-      HEEFT_BETAALD?: boolean;
+      /** Heef het lid deen startverbod? */
+      STARTVERBOD?: boolean;
       /** Staat privacy mode (AVG / GDPR) uit/aan */
       PRIVACY?: boolean;
     };

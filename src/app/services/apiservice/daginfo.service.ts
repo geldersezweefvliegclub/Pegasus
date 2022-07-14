@@ -60,7 +60,7 @@ export class DaginfoService {
             this.dagenCache = await response.json();
 
         } catch (e) {
-            if (e.responseCode !== 404) {       // er is geen data
+            if (e.responseCode !== 404) {       // er is geen starts
                 throw(e);
             }
             return [];
@@ -94,7 +94,7 @@ export class DaginfoService {
             const response: Response = await this.APIService.get('Daginfo/GetObjects', getParams);
             this.dagInfoTotaalCache = await response.json();
         } catch (e) {
-            if ((e.responseCode !== 304) && (e.responseCode !== 704)) {       // server bevat dezelfde data als cache
+            if ((e.responseCode !== 304) && (e.responseCode !== 704)) {       // server bevat dezelfde starts als cache
                 throw(e);
             }
         }
@@ -108,13 +108,13 @@ export class DaginfoService {
         }
 
         try {
-            // we halen de data op met een ID
+            // we halen de starts op met een ID
             if (id) {
                 const response: Response = await this.APIService.get('Daginfo/GetObject', {'ID': id.toString()});
                 this.dagInfo = await response.json();
             }
 
-            // we halen de data op met een datum (hebben geen ID nodig)
+            // we halen de starts op met een datum (hebben geen ID nodig)
             if (datum) {
                 const response: Response = await this.APIService.get('Daginfo/GetObject', {'DATUM': datum.toISODate()});
                 this.dagInfo = await response.json();

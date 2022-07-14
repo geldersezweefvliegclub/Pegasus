@@ -56,7 +56,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
     isDDWVCrew: boolean;
     magWijzigen: boolean = false;
 
-    opslaanTimer: number;                           // kleine vertraging om data opslaan te beperken
+    opslaanTimer: number;                           // kleine vertraging om starts opslaan te beperken
 
     constructor(private readonly loginService: LoginService,
                 private readonly typesService: TypesService,
@@ -285,7 +285,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
 
             this.toekennenDienst(roosterdag, typeDienstID, data.ID, data.NAAM);
         } else {
-            // We hebben van een dag naar een andere dag versleept dus data zit op een andere locatie.
+            // We hebben van een dag naar een andere dag versleept dus starts zit op een andere locatie.
             // dienst aanpassen
             const oudeDienst = this.decodeerID(oudContrainerId)
             const roosterIndex = this.rooster.findIndex((dag => dag.DATUM == oudeDienst.datum));
@@ -295,7 +295,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
                 return;
             }
 
-            // En omdat we data verplaatsen, resetten vervolgens de dag waar we vandaan kwamen
+            // En omdat we starts verplaatsen, resetten vervolgens de dag waar we vandaan kwamen
             this.aanpassenDienst(this.rooster[roosterIndex], oudeDienst.typeDienst, roosterdag, typeDienstID);
         }
     }

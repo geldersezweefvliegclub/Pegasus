@@ -22,7 +22,7 @@ export class LedenFilterComponent {
         this.popup.open();
     }
 
-    // Er is een leden-filter gewijzigd, meteen aan parent melden zodat data opgehaald kan worden
+    // Er is een leden-filter gewijzigd, meteen aan parent melden zodat starts opgehaald kan worden
     filterDataChanged() {
         this.filterChanged.emit();
     }

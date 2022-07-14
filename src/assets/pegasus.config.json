@@ -1,5 +1,6 @@
 {
-  "url": "https://helios.gezc.org/",
+  "url": "https://development.gezc.org/",
+  "privacy_url" : "https://www.gezc.org/contact/privacy-statement-gezc/",
   "passagiersAantekeningID": 271,
   "maxZelfDienstenIndelen": 5,
   "maxZelfEditDagen": 14,

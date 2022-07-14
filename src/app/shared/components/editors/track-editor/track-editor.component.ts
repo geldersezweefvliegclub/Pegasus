@@ -49,7 +49,7 @@ export class TrackEditorComponent implements OnInit{
         this.toonLidSelectie = (track || LID_ID) ? false : true;
 
         if (track) {
-            // vul alvast de editor met data uit het grid
+            // vul alvast de editor met starts uit het grid
             this.track = {
                 LID_ID: track.LID_ID,
                 START_ID: track.START_ID,
@@ -58,7 +58,7 @@ export class TrackEditorComponent implements OnInit{
             };
 
             this.formTitel = 'Track bewerken van ' + NAAM;
-            this.haalTrackOp(track.ID!);    // maar data kan gewijzigd zijn, dus toch even data ophalen van API
+            this.haalTrackOp(track.ID!);    // maar starts kan gewijzigd zijn, dus toch even starts ophalen van API
         } else {
             const ui = this.loginService.userInfo?.LidData;
 
@@ -138,7 +138,7 @@ export class TrackEditorComponent implements OnInit{
         }
     }
 
-    // opslaan van de data van een nieuwe track
+    // opslaan van de starts van een nieuwe track
     Toevoegen(track: HeliosTrack) {
         this.trackService.addTrack(track).then(() => {
             this.success = {
@@ -152,7 +152,7 @@ export class TrackEditorComponent implements OnInit{
         })
     }
 
-    // bestaande track is aangepast. Opslaan van de data
+    // bestaande track is aangepast. Opslaan van de starts
     Aanpassen(track: HeliosTrack) {
         this.trackService.updateTrack(track).then(() => {
             this.success = {

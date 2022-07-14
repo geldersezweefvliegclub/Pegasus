@@ -76,7 +76,7 @@ export interface paths {
           START?: number;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
-          /** Haal alle lidTypes op van een specieke leerfase */
+          /** Haal alle types op van een specieke leerfase */
           LEERFASE_ID?: string;
         };
       };
@@ -85,6 +85,34 @@ export interface paths {
         200: {
           content: {
             "application/json": components["schemas"]["view_competenties"];
+          };
+        };
+        /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
+        304: never;
+        /** Methode niet toegestaan, input validatie error */
+        405: unknown;
+        /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
+        500: unknown;
+      };
+    };
+  };
+  "/Competenties/CompetentiesBoom": {
+    get: {
+      parameters: {
+        query: {
+          /** Laatste aanpassing op basis van records in dataset. Bedoeld om data verbruik te verminderen. Dataset is daarom leeg */
+          LAATSTE_AANPASSING?: boolean;
+          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
+          HASH?: string;
+          /** Welke velden moet opgenomen worden in de dataset */
+          VELDEN?: string;
+        };
+      };
+      responses: {
+        /** OK, data succesvol opgehaald */
+        200: {
+          content: {
+            "application/json": components["schemas"]["progressie_boom"][];
           };
         };
         /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
@@ -239,6 +267,71 @@ export interface components {
       hash?: string;
       /** De dataset met records */
       dataset?: components["schemas"]["view_competenties_dataset"][];
+    };
+    progressie_kaart: {
+      /** Aantal records dat voldoet aan de criteria in de database */
+      totaal?: number;
+      /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
+      laatste_aanpassing?: string;
+      /** hash van de dataset */
+      hash?: string;
+      /** De dataset met records */
+      dataset?: components["schemas"]["progressie_kaart_dataset"][];
+    };
+    progressie_kaart_dataset: {
+      /** Database ID van het record */
+      ID?: number;
+      /** Volgorde van weergave */
+      VOLGORDE?: number;
+      /** In welke leerfase zit deze competentie. Verwijzing naar ref_types */
+      LEERFASE_ID?: number;
+      /** Omschrijving uit de types tabel */
+      LEERFASE?: string;
+      /** Volgnummer */
+      BLOK?: string;
+      /** Verwijzing naar bovenliggend record van boom structuur */
+      BLOK_ID?: number;
+      /** Volledige omschrijving van de compententie */
+      ONDERWERP?: string;
+      /** Verwijzing naar de volledige documentie */
+      DOCUMENTATIE?: string;
+      /** Is dit record gemarkeerd als verwijderd? */
+      VERWIJDERD?: boolean;
+      /** Tijdstempel van laaste aanpassing in de database */
+      LAATSTE_AANPASSING?: string;
+      /** ID van progressie record */
+      PROGRESSIE_ID?: number;
+      /** Tijdstempel wanneer record is toegevoegd */
+      INGEVOERD?: number;
+      /** De volledige naam van de instrcuteur die de competentie heeft toegevoegd */
+      INSTRUCTEUR_NAAM?: string;
+      /** Opmerking over de behaalde competentie */
+      OPMERKINGEN?: string;
+    };
+    progressie_boom: {
+      /** In welke leerfase zit deze competentie. Verwijzing naar ref_types */
+      LEERFASE_ID?: number;
+      /** Comptententie ID */
+      COMPETENTIE_ID?: number;
+      /** Verwijzing naar bovenliggend record van boom structuur */
+      BLOK_ID?: number;
+      /** Volgnummer */
+      BLOK?: string;
+      /** Volledige omschrijving van de compententie */
+      ONDERWERP?: string;
+      /** Verwijzing naar de volledige documentie */
+      DOCUMENTATIE?: string;
+      /** ID van progressie record */
+      PROGRESSIE_ID?: number;
+      /** Is comptententie behaald, 0 = niet behaald, 1 = gedeeltelijk van onderliggende, 2 = gehaald, ook alle onderliggende */
+      IS_BEHAALD?: number;
+      /** Tijdstempel wanneer record is toegevoegd */
+      INGEVOERD?: string;
+      /** De volledige naam van de instrcuteur die de competentie heeft toegevoegd */
+      INSTRUCTEUR_NAAM?: string;
+      /** Opmerking over de behaalde competentie */
+      OPMERKINGEN?: string;
+      children?: components["schemas"]["progressie_boom"][];
     };
   };
 }

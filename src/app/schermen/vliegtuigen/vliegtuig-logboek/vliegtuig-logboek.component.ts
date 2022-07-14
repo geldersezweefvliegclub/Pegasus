@@ -184,7 +184,7 @@ export class VliegtuigLogboekComponent implements OnInit {
         this.toonGrafiek = (!ui?.isStarttoren) ? true : false;
     }
 
-    // Opvragen van de data via de api
+    // Opvragen van de starts via de api
     opvragen() {
         const startDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 1, day: 1});
         const eindDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 12, day: 31});
@@ -198,7 +198,7 @@ export class VliegtuigLogboekComponent implements OnInit {
         this.startlijstService.getVliegtuigLogboekTotalen(this.vliegtuigID, this.datum.year).then((t) => {
             this.totalen = t;
 
-            // de grafiek bevat al data van dit jaar, dus niet nogmaals toevoegen
+            // de grafiek bevat al starts van dit jaar, dus niet nogmaals toevoegen
             const alGedaan = this.barChartData.find(reeks => reeks.label == this.datum.year.toString())
 
             if (!alGedaan) {
@@ -256,7 +256,7 @@ export class VliegtuigLogboekComponent implements OnInit {
             this.error = e;
         });
 
-        // ophalen van vliegtuig data om REG_CALL in titel te zetten
+        // ophalen van vliegtuig starts om REG_CALL in titel te zetten
         this.vliegtuigenService.getVliegtuig(this.vliegtuigID).then((vliegtuig) => {
             this.vliegtuig = vliegtuig;
 
@@ -286,20 +286,20 @@ export class VliegtuigLogboekComponent implements OnInit {
         return 'rgba(255,255,255,' + alpha + ')';       // na 5 kleuren is het altijd wit
     }
 
-    // Wissen van data, gekozen jaar blijft jaar zichtbaar (en wordt kleur 0)
+    // Wissen van starts, gekozen jaar blijft jaar zichtbaar (en wordt kleur 0)
     // aantal items in beide grafiek arrays zijn altijd hetzelfde
     clearGrafiekData(): void {
         // index van het gekozen jaar in de kalender
         const index = this.barChartData.findIndex((reeks => reeks.label == this.datum.year.toString()));
 
         if (this.barChartData.length > 0) {
-            const barReeks = this.barChartData[index]                           // bewaren van grafiek data
+            const barReeks = this.barChartData[index]                           // bewaren van grafiek starts
             barReeks.backgroundColor = this.getColor(0, 0.8)    // zet kleur 0
             this.barChartData = [barReeks];                                     // blijft nu nu 1 element over in array
         }
 
         if (this.lineChartData.length > 0) {
-            const lineReeks = this.lineChartData[index]                         // bewaren van grafiek data
+            const lineReeks = this.lineChartData[index]                         // bewaren van grafiek starts
             lineReeks.backgroundColor = this.getColor(0, 0.4);  // zet kleur 0
             lineReeks.borderColor = this.getColor(0, 1);
             this.lineChartData = [lineReeks];                                   // blijft nu nu 1 element over in array

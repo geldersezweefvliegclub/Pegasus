@@ -39,7 +39,7 @@ export interface paths {
         };
       };
       responses: {
-        /** OK, data succesvol opgehaald */
+        /** OK, starts succesvol opgehaald */
         200: {
           content: {
             "application/json": components["schemas"]["ref_progressie"];
@@ -64,9 +64,9 @@ export interface paths {
           ID?: number;
           /** Toon welke records verwijderd zijn. Default = false */
           VERWIJDERD?: boolean;
-          /** Laatste aanpassing op basis van records in dataset. Bedoeld om data verbruik te verminderen. Dataset is daarom leeg */
+          /** Laatste aanpassing op basis van records in dataset. Bedoeld om starts verbruik te verminderen. Dataset is daarom leeg */
           LAATSTE_AANPASSING?: boolean;
-          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
+          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde starts bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen starts verzonden als het nodig is. */
           HASH?: string;
           /** Sortering van de velden in ORDER BY formaat. Default = CLUBKIST DESC, VOLGORDE, REGISTRATIE */
           SORT?: string;
@@ -85,7 +85,7 @@ export interface paths {
         };
       };
       responses: {
-        /** OK, data succesvol opgehaald */
+        /** OK, starts succesvol opgehaald */
         200: {
           content: {
             "application/json": components["schemas"]["view_progressie"];
@@ -104,9 +104,9 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          /** Laatste aanpassing op basis van records in dataset. Bedoeld om data verbruik te verminderen. Dataset is daarom leeg */
+          /** Laatste aanpassing op basis van records in dataset. Bedoeld om starts verbruik te verminderen. Dataset is daarom leeg */
           LAATSTE_AANPASSING?: boolean;
-          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
+          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde starts bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen starts verzonden als het nodig is. */
           HASH?: string;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
@@ -115,7 +115,7 @@ export interface paths {
         };
       };
       responses: {
-        /** OK, data succesvol opgehaald */
+        /** OK, starts succesvol opgehaald */
         200: {
           content: {
             "application/json": components["schemas"]["progressie_kaart"];
@@ -134,9 +134,9 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          /** Laatste aanpassing op basis van records in dataset. Bedoeld om data verbruik te verminderen. Dataset is daarom leeg */
+          /** Laatste aanpassing op basis van records in dataset. Bedoeld om starts verbruik te verminderen. Dataset is daarom leeg */
           LAATSTE_AANPASSING?: boolean;
-          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
+          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde starts bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen starts verzonden als het nodig is. */
           HASH?: string;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
@@ -145,7 +145,7 @@ export interface paths {
         };
       };
       responses: {
-        /** OK, data succesvol opgehaald */
+        /** OK, starts succesvol opgehaald */
         200: {
           content: {
             "application/json": components["schemas"]["progressie_boom"][];
@@ -213,7 +213,7 @@ export interface paths {
   "/Progressie/SaveObject": {
     put: {
       responses: {
-        /** OK, data succesvol aangepast */
+        /** OK, starts succesvol aangepast */
         200: {
           content: {
             "application/json": components["schemas"]["ref_progressie"];
@@ -230,7 +230,7 @@ export interface paths {
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** type data */
+      /** type starts */
       requestBody: {
         content: {
           "application/json": components["schemas"]["ref_progressie_in"];
@@ -239,7 +239,7 @@ export interface paths {
     };
     post: {
       responses: {
-        /** OK, data succesvol toegevoegd */
+        /** OK, starts succesvol toegevoegd */
         200: {
           content: {
             "application/json": components["schemas"]["ref_progressie"];
@@ -256,7 +256,7 @@ export interface paths {
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** type data */
+      /** type starts */
       requestBody: {
         content: {
           "application/json": components["schemas"]["ref_progressie_in"];
@@ -283,7 +283,7 @@ export interface components {
     ref_progressie: components["schemas"]["ref_progressie_in"] & {
       /** Tijdstempel wanneer record is toegevoegd */
       INGEVOERD?: string;
-      /** Verwijzing naar eerder ingevoerde data */
+      /** Verwijzing naar eerder ingevoerde starts */
       LINK_ID?: number;
       /** Is dit record gemarkeerd als verwijderd? */
       VERWIJDERD?: boolean;

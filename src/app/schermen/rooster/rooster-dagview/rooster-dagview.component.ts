@@ -75,7 +75,7 @@ export class RoosterDagviewComponent implements OnInit, OnDestroy {
         return DagVanDeWeek(DATUM);
     }
 
-    // laat parent weten dat we een nieuwe week willen zien. Parent laadt de data
+    // laat parent weten dat we een nieuwe week willen zien. Parent laadt de starts
     zetDatum(nieuweDatum: DateTime) {
         this.nieuweDatum.emit(nieuweDatum)
     }

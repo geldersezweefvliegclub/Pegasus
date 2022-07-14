@@ -266,6 +266,16 @@
                                             [icon]="oogIcon"></fa-icon></span>
                                 </div>
                             </div>
+                            <div class="col-12 col-md-6 col-xl-5 col-xxl-4">
+                                <app-lid-invoer *ngIf="lid.LIDTYPE_ID == 625"
+                                                id="ZUSTERCLUB_ID"
+                                                placeholder="Zusterclub"
+                                                label="Zusterclub"
+                                                [LID_ID]="lid.ZUSTERCLUB_ID"
+                                                [leden]="zusterclubs"
+                                                (LidChanged)="lid.ZUSTERCLUB_ID=$event"
+                                ></app-lid-invoer>
+                            </div>
                         </div>
                     </div>
                 </fieldset>
@@ -454,12 +464,12 @@
                     </div>
                     <div class="row mt-2">
                         <div class="col-8">
-                            <div *ngIf="isVisible('BETAALD')">
-                                <input class="form-check-inline" type="checkbox" id="betaald" name="betaald"
-                                       [disabled]="isDisabled('BETAALD')"
-                                       [(ngModel)]="lid.HEEFT_BETAALD">
-                                <label class="form-check-label" for="betaald" [ngClass]="disabledClass('BETAALD')">
-                                    Heeft betaald
+                            <div *ngIf="isVisible('STARTVERBOD')">
+                                <input class="form-check-inline" type="checkbox" id="startverbod" name="startverbod"
+                                       [disabled]="isDisabled('STARTVERBOD')"
+                                       [(ngModel)]="lid.STARTVERBOD">
+                                <label class="form-check-label" for="startverbod" [ngClass]="disabledClass('STARTVERBOD')">
+                                    Heeft startverbod
                                 </label>
                             </div>
                         </div>

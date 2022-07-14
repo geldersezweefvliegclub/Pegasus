@@ -52,7 +52,7 @@ export class DienstenComponent implements OnInit, OnChanges {
     }
 
     ophalen(): void {
-        // starttoren heeft geen data nodig
+        // starttoren heeft geen starts nodig
         if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
             return;
         }

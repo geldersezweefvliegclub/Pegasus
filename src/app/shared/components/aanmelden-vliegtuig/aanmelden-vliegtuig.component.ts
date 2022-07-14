@@ -56,7 +56,7 @@ export class AanmeldenVliegtuigComponent implements OnInit, OnDestroy {
 
     // abonneer op wijziging van aanwezige vliegtuigen
     this.aanwezigVliegtuigenAbonnement = this.aanwezigVliegtuigenService.aanwezigChange.subscribe(dataset => {
-      // Als er data is, even in juiste formaat zetten. Aanwezig moet hetzelfde formaat hebben als vliegtuigen
+      // Als er starts is, even in juiste formaat zetten. Aanwezig moet hetzelfde formaat hebben als vliegtuigen
       this.aanwezigVliegtuigen = (dataset) ? dataset : [];
       this.filterVliegtuigen();
 

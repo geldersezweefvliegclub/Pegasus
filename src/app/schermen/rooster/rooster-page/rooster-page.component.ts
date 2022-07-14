@@ -312,7 +312,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
     }
 
     // Er is een aanpassing gemaakt in het leden-filter dialoog. We filteren de volledige dataset tot wat nodig is
-    // We hoeven dus niet terug naar de server om data opnieuw op te halen (minder data verkeer)
+    // We hoeven dus niet terug naar de server om starts opnieuw op te halen (minder starts verkeer)
     applyLedenFilter() {
         let toonAlles: boolean = false;
 
@@ -439,7 +439,6 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         } else {
             this.filteredRooster = this.heleRooster;
         }
-        console.log(this.filteredRooster)
     }
 
     /**
@@ -481,7 +480,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         const nu: DateTime = DateTime.now();
         const d: DateTime = DateTime.fromSQL(datum);
 
-        if (this.sharedService.datumInToekomst(datum)) {
+        if (!this.sharedService.datumInToekomst(datum)) {
             return false;   // datum is in het verleden
         }
 

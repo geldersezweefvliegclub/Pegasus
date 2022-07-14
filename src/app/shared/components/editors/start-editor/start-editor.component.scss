@@ -10,7 +10,6 @@
   padding-bottom: 8px;
 }
 
-
 .SMinvalid {
   color: #cf9d07;
 }
@@ -24,5 +23,19 @@ ng-select.ng-invalid {
   font-size: 15px;
   padding-left: 10px;
   padding-right: 10px;
+}
+
+#datum {
+    border-style: none;
+  box-shadow: 0 0 0 0;
+}
+
+#datum:focus {
+  border-style: none;
+  box-shadow: 0 0 0 0;
+}
+
+.datumInputReadOnly {
+  background-color: white;
 }
 

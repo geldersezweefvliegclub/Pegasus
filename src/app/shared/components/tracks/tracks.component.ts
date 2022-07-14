@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {HeliosLedenDataset, HeliosTrack, HeliosTracksDataset} from "../../../types/Helios";
 import {TracksService} from "../../../services/apiservice/tracks.service";
 import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
@@ -29,7 +29,7 @@ export interface TracksLedenDataset extends HeliosTracksDataset {
     templateUrl: './tracks.component.html',
     styleUrls: ['./tracks.component.scss']
 })
-export class TracksComponent implements OnInit, OnDestroy {
+export class TracksComponent implements OnInit, OnDestroy, OnChanges {
     @Input() VliegerID: number;
     @Input() VliegerNaam: string;
     @Input() toonLid: boolean = false;
@@ -54,7 +54,7 @@ export class TracksComponent implements OnInit, OnDestroy {
     datum: DateTime = DateTime.now();      // de gekozen dag
 
     zoekString: string;
-    zoekTimer: number;                  // kleine vertraging om data ophalen te beperken
+    zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
     deleteMode: boolean = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
     trashMode: boolean = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
     isLoading: boolean = false;
@@ -172,7 +172,7 @@ export class TracksComponent implements OnInit, OnDestroy {
         this.opvragen();
     }
 
-    // Opvragen van de data via de api
+    // Opvragen van de starts via de api
     opvragen(): void {
         clearTimeout(this.zoekTimer);
 

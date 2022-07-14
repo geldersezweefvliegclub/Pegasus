@@ -169,7 +169,7 @@ export class LedenGridComponent implements OnInit, OnDestroy {
     iconCardIcon: IconDefinition = faUsers;
 
     zoekString: string;
-    zoekTimer: number;                  // kleine vertraging om data ophalen te beperken
+    zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
     deleteMode: boolean = false;        // zitten we in delete mode om leden te kunnen verwijderen
     trashMode: boolean = false;         // zitten in restore mode om leden te kunnen terughalen
 
@@ -248,7 +248,7 @@ export class LedenGridComponent implements OnInit, OnDestroy {
             }
         }
     }
-    // openen van popup om lid data van een nieuw lid te kunnen invoeren
+    // openen van popup om lid starts van een nieuw lid te kunnen invoeren
     addLid(): void {
         this.router.navigate(['profiel'], {queryParams: {lidID: -1}}).then();
     }
@@ -327,7 +327,7 @@ export class LedenGridComponent implements OnInit, OnDestroy {
         }
     }
 
-    // Opvragen van de data via de api
+    // Opvragen van de starts via de api
     opvragen() {
         clearTimeout(this.zoekTimer);
 
@@ -351,7 +351,7 @@ export class LedenGridComponent implements OnInit, OnDestroy {
     }
 
     // Er is een aanpassing gemaakt in het leden-filter dialoog. We filteren de volledige dataset tot wat nodig is
-    // We hoeven dus niet terug naar de server om data opnieuw op te halen (minder data verkeer)
+    // We hoeven dus niet terug naar de server om starts opnieuw op te halen (minder starts verkeer)
     applyFilter() {
         // leden-filter de dataset naar de lijst
         this.leden = [];

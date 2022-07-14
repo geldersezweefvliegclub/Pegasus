@@ -41,7 +41,7 @@ export class DienstenService {
                 day: 1
             });
 
-            // we kunnen alleen data ophalen als we ingelogd zijn, en starttoren heeft niets nodig
+            // we kunnen alleen starts ophalen als we ingelogd zijn, en starttoren heeft niets nodig
             if (this.loginService.isIngelogd() && (!this.loginService.userInfo?.Userinfo!.isStarttoren)) {
                 const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
 
@@ -94,7 +94,7 @@ export class DienstenService {
             const response: Response = await this.apiService.get('Diensten/GetObjects', getParams);
             this.dienstenCache = await response.json();
         } catch (e) {
-            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde data als cache
+            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde starts als cache
                 throw(e);
             }
         }
@@ -117,7 +117,7 @@ export class DienstenService {
             return this.totalenCache;
 
         } catch (e) {
-            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde data als cache
+            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde starts als cache
                 throw(e);
             }
         }

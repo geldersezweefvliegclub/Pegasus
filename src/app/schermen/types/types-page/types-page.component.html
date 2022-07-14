@@ -1,0 +1,69 @@
+<app-pegasus-card titel="Types"
+                  subtitel="Items voor invoer"
+                  [icon]="iconCardIcon">
+    <div class="box h-100">
+        <div id="data">
+            <select class="form-select" id="groep" name="groep" required
+                    [ngModel]="toonGroep" (ngModelChange)="filterGroep($event)">
+                <option
+                        *ngFor="let groep of groepen"
+                        [value]="groep.ID">{{groep.OMSCHRIJVING}}</option>
+            </select>
+
+            <ul class="list-group mt-4 typelijst">
+                <li *ngFor="let t of filteredTypes;let i = index" class="list-group-item" (dblclick)="openEditor(t)">
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex">
+                            <fa-icon [icon]="restoreIcon" class="restoreBtn me-2" *ngIf="deleteMode && trashMode"
+                                     (click)="editor.openRestorePopup(t.ID);"></fa-icon>
+                            <fa-icon [icon]="deleteIcon" class="deleteBtn me-2"
+                                     *ngIf="deleteMode && !trashMode && !t.READ_ONLY"
+                                     (click)="editor.openVerwijderPopup(t.ID);"></fa-icon>
+                            <div *ngIf="deleteMode && !trashMode && t.READ_ONLY" style="width: 23px;"></div>
+                            {{t.OMSCHRIJVING}}
+                        </div>
+                        <div class="d-flex" *ngIf="!deleteMode">
+                            <fa-icon class="upBtn mx-3" *ngIf="i != 0" [icon]="upIcon"
+                                     (click)="omhoog(t.ID)"></fa-icon>
+
+                            <fa-icon class="downBtn me-5" *ngIf="i != (filteredTypes.length-1)" [icon]="downIcon"
+                                     (click)="omlaag(t.ID)"></fa-icon>
+                            <div *ngIf="i == (filteredTypes.length-1)" style="width:66px;"></div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="row justify-content-between mt-2" id="toolbar">
+            <div class="col-4 col-xl-2" *ngIf="this.magToevoegen">
+                <app-icon-button class="toolbarBtn"
+                                 tekst="Toevoegen"
+                                 iconNaam="far PlusSquare" (btnClicked)="addType()"
+                                 btnColor="btn-primary" *ngIf="!this.deleteMode"></app-icon-button>
+
+                <div *ngIf="this.deleteMode">
+                    <app-status-button
+                            class="toolbarBtn"
+                            tekst="Prullenbak"
+                            [actief]="trashMode"
+                            (btnClicked)="trashModeJaNee($event)"
+                            iconNaam="fas Recycle">
+                    </app-status-button>
+                </div>
+            </div>
+            <div class="col-4" *ngIf="this.magVerwijderen">
+                <div class="d-flex justify-content-end">
+                    <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
+                                     btnColor="btn-secondary" *ngIf="this.magVerwijderen && !deleteMode"
+                                     (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                    <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
+                                     btnColor="btn btn-outline-primary" *ngIf="deleteMode"
+                                     (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</app-pegasus-card>
+
+<app-type-editor></app-type-editor>

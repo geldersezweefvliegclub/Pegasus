@@ -41,7 +41,7 @@ export interface paths {
         };
       };
       responses: {
-        /** OK, data succesvol opgehaald */
+        /** OK, starts succesvol opgehaald */
         200: {
           content: {
             "application/json": components["schemas"]["oper_daginfo"];
@@ -66,9 +66,9 @@ export interface paths {
           ID?: number;
           /** Toon welke records verwijderd zijn. Default = false */
           VERWIJDERD?: boolean;
-          /** Laatste aanpassing op basis van records in dataset. Bedoeld om data verbruik te verminderen. Dataset is daarom leeg */
+          /** Laatste aanpassing op basis van records in dataset. Bedoeld om starts verbruik te verminderen. Dataset is daarom leeg */
           LAATSTE_AANPASSING?: boolean;
-          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
+          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde starts bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen starts verzonden als het nodig is. */
           HASH?: string;
           /** Sortering van de velden in ORDER BY formaat. Default = DATUM DESC */
           SORT?: string;
@@ -87,7 +87,7 @@ export interface paths {
         };
       };
       responses: {
-        /** OK, data succesvol opgehaald */
+        /** OK, starts succesvol opgehaald */
         200: {
           content: {
             "application/json": components["schemas"]["view_daginfo"];
@@ -157,7 +157,7 @@ export interface paths {
   "/Daginfo/SaveObject": {
     put: {
       responses: {
-        /** OK, data succesvol aangepast */
+        /** OK, starts succesvol aangepast */
         200: {
           content: {
             "application/json": components["schemas"]["oper_daginfo"];
@@ -176,7 +176,7 @@ export interface paths {
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** Daginfo data */
+      /** Daginfo starts */
       requestBody: {
         content: {
           "application/json": components["schemas"]["oper_daginfo_in"];
@@ -185,7 +185,7 @@ export interface paths {
     };
     post: {
       responses: {
-        /** OK, data succesvol toegevoegd */
+        /** OK, starts succesvol toegevoegd */
         200: {
           content: {
             "application/json": components["schemas"]["oper_daginfo"];
@@ -202,7 +202,7 @@ export interface paths {
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** Daginfo data */
+      /** Daginfo starts */
       requestBody: {
         content: {
           "application/json": components["schemas"]["oper_daginfo_in"];

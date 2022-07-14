@@ -6,8 +6,8 @@ import {
     faAddressCard,
     faCalendarAlt,
     faCalendarDay,
-    faChartPie,
-    faKey,
+    faChartPie, faGraduationCap,
+    faKey, faKeyboard,
     faPen,
     faPlane,
     faPlaneDeparture,
@@ -16,6 +16,8 @@ import {
     faWaveSquare
 } from '@fortawesome/free-solid-svg-icons';
 import {AuditPageComponent} from "./schermen/audit/audit-page/audit-page.component";
+import {TypesPageComponent} from "./schermen/types/types-page/types-page.component";
+import {CompetentiesPageComponent} from "./schermen/competenties/competenties-page/competenties-page.component";
 import {faAvianex} from "@fortawesome/free-brands-svg-icons";
 
 export interface CustomRoute extends Route {
@@ -128,6 +130,22 @@ export const routes: CustomRoute[] = [
     },
 
     {
+        path: 'types',
+        loadChildren: () => import('./schermen/types/types.module').then(m => m.TypesModule),
+        excluded: true,
+        icon: faKeyboard,
+        text: 'Types'
+    },
+
+    {
+        path: 'competenties',
+        loadChildren: () => import('./schermen/competenties/competenties.module').then(m => m.CompetentiesModule),
+        excluded: true,
+        icon: faGraduationCap,
+        text: 'Competenties'
+    },
+
+    {
         path: '**',
         loadChildren: () => import('./schermen/not-found/not-found.module').then(m => m.NotFoundModule),
         excluded: true,
@@ -138,6 +156,9 @@ export const routes: CustomRoute[] = [
 
 export const beheerRoutes: CustomRoute[] = [
     {path: 'audit', component: AuditPageComponent, excluded: false, icon: faWaveSquare, text: 'Audit'},
+    {path: 'competenties', component: CompetentiesPageComponent, excluded: false, icon: faGraduationCap, text: 'Competenties'},
+    {path: 'types', component: TypesPageComponent, excluded: false, icon: faKeyboard, text: 'Types'},
+
 ];
 
 

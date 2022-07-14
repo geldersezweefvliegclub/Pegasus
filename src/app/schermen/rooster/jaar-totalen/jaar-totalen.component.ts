@@ -110,7 +110,7 @@ export class JaarTotalenComponent implements OnInit {
     opvragen(): void {
         const totals: JaarTotaal[] = [];
 
-        // alle leden met lege data toevoegen aan het grid
+        // alle leden met lege starts toevoegen aan het grid
         this.leden.forEach(lid => {
             totals.push({
                 ID: lid.ID as number,

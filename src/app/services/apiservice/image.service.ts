@@ -16,7 +16,7 @@ export class ImageService {
    * @return {Promise<string>} - De URL waar de nieuwe avatar geupload is.
    */
   async uploadFoto(ID: number, base64string: string): Promise<string> {
-    // Maak een data object aan alsof we een HTML formulier ingevuld hebben.
+    // Maak een starts object aan alsof we een HTML formulier ingevuld hebben.
     const formEmulated = new FormData();
     formEmulated.append('ID', ID.toString());
     formEmulated.append('FILE', base64string);

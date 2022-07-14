@@ -51,7 +51,7 @@ export class SharedService {
     private datumStore = new BehaviorSubject(this.vandaag);
     private kalenderMaandStore = new BehaviorSubject(this.kalenderMaand);
 
-    private heliosEventSubject: Subject<HeliosEvent> = new Subject<HeliosEvent>();          // data in de database is aangepast
+    private heliosEventSubject: Subject<HeliosEvent> = new Subject<HeliosEvent>();          // starts in de database is aangepast
     private heliosFailedSubject: Subject<ErrorMessage> = new Subject<ErrorMessage>();       // api call heef gefaald
 
     private resizeSubject: Subject<Window>;                                                 // resize window, of draaien mobiel device
@@ -118,7 +118,7 @@ export class SharedService {
         const nu: DateTime = DateTime.now();
         const d: DateTime = DateTime.fromSQL(datum);
 
-        return (d > nu) // datum is in het verleden
+        return (d > nu) // datum is in het toekomst
     }
 
     get onResize$(): Observable<Window> {

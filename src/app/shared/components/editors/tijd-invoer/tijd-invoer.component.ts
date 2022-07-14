@@ -140,7 +140,7 @@ export class TijdInvoerComponent {
         this.popup.close();
     }
 
-    // ophalen van de start, zodat we altijd met de laatste data werken
+    // ophalen van de start, zodat we altijd met de laatste starts werken
     async haalStartOp(id: number): Promise<void> {
         this.isLoading = true;
         this.isSaving = false;

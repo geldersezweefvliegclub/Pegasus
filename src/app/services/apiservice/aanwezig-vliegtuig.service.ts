@@ -35,7 +35,7 @@ export class AanwezigVliegtuigService {
                 day: datum.day
             });
 
-            // we kunnen alleen data ophalen als we ingelogd zijn
+            // we kunnen alleen starts ophalen als we ingelogd zijn
             if (this.loginService.isIngelogd()) {
                 this.overslaan = false;     // bij wijzigen datum nooit overslaan
                 this.ophalenAanwezig(this.datum, this.datum).then((dataset) => {
@@ -43,7 +43,7 @@ export class AanwezigVliegtuigService {
                 });
             }
 
-            // Als we vandaag geselecteerd hebben, halen we iedere 15 min de data van de server
+            // Als we vandaag geselecteerd hebben, halen we iedere 15 min de starts van de server
             // Iemand kan een vliegtuig aangemeld hebben, bijv via de app
             if (this.datum.toISODate() == DateTime.now().toISODate()) {
                 this.ophaalTimer = window.setInterval(() => {
@@ -116,7 +116,7 @@ export class AanwezigVliegtuigService {
             const response: Response = await this.apiService.get('AanwezigVliegtuigen/GetObjects', getParams);
             this.aanwezigCache = await response.json();
         } catch (e) {
-            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde data als cache
+            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde starts als cache
                 throw(e);
             }
         }

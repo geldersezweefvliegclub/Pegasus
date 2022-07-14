@@ -14,7 +14,7 @@ import {StartlijstService} from '../../../../services/apiservice/startlijst.serv
 import {VliegtuigenService} from '../../../../services/apiservice/vliegtuigen.service';
 import {AanwezigVliegtuigService} from '../../../../services/apiservice/aanwezig-vliegtuig.service';
 import {Observable, of, Subscription} from 'rxjs';
-import {DateTime} from 'luxon';
+import {DateTime, Interval} from 'luxon';
 import {LedenService} from '../../../../services/apiservice/leden.service';
 import {AanwezigLedenService} from '../../../../services/apiservice/aanwezig-leden.service';
 import {SharedService} from '../../../../services/shared/shared.service';
@@ -23,11 +23,15 @@ import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
 import {VliegtuigInvoerComponent} from "./vliegtuig-invoer/vliegtuig-invoer.component";
 import {ProgressieService} from "../../../../services/apiservice/progressie.service";
 import {LoginService} from "../../../../services/apiservice/login.service";
+import {PegasusConfigService} from "../../../../services/shared/pegasus-config.service";
+import {NgbDate, NgbDateParserFormatter} from "@ng-bootstrap/ng-bootstrap";
+import {NgbDateFRParserFormatter} from "../../../ngb-date-fr-parser-formatter";
 
 @Component({
     selector: 'app-start-editor',
     templateUrl: './start-editor.component.html',
-    styleUrls: ['./start-editor.component.scss']
+    styleUrls: ['./start-editor.component.scss'],
+    providers: [{provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter}]
 })
 export class StartEditorComponent implements OnInit {
     @Input() VliegerID: number;                                 // wordt gezet bij aanroep vanuit logboek
@@ -73,11 +77,15 @@ export class StartEditorComponent implements OnInit {
     isLoading: boolean = false;
     isSaving: boolean = false;
     magAltijdWijzigen: boolean = false;
+    magDatumAanpassen: boolean = false;
 
     isVerwijderMode: boolean = false;
     isRestoreMode: boolean = false;
     formTitel: string = "";
 
+    vandaag: DateTime = DateTime.now();
+    minDatum: DateTime = DateTime.now();
+    startDatum: DateTime;
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
@@ -88,6 +96,7 @@ export class StartEditorComponent implements OnInit {
         private readonly progressieService: ProgressieService,
         private readonly ledenService: LedenService,
         private readonly loginService: LoginService,
+        private readonly configService: PegasusConfigService,
         private readonly aanwezigLedenService: AanwezigLedenService,
         private readonly typesService: TypesService,
         private readonly daginfoService: DaginfoService,
@@ -97,6 +106,13 @@ export class StartEditorComponent implements OnInit {
     ngOnInit(): void {
         const ui = this.loginService.userInfo?.Userinfo;
         this.magAltijdWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
+
+        if (ui?.isBeheerder || ui?.isBeheerderDDWV) {
+            this.minDatum = DateTime.fromObject({year: this.vandaag.year, month:1, day:1})
+        }
+        else {
+            this.minDatum = this.vandaag.plus({days: -1 * this.configService.maxZelfEditDagen()});
+        }
 
         // de datum zoals die in de kalender gekozen is, we halen dan de dag afhankelijke gegevens op
         this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
@@ -131,7 +147,7 @@ export class StartEditorComponent implements OnInit {
 
         // abonneer op wijziging van aanwezige vliegtuigen
         this.aanwezigVliegtuigenAbonnement = this.aanwezigVliegtuigenService.aanwezigChange.subscribe(dataset => {
-            // Als er data is, even in juiste formaat zetten. Aanwezig moet hetzelfde formaat hebben als vliegtuigen
+            // Als er starts is, even in juiste formaat zetten. Aanwezig moet hetzelfde formaat hebben als vliegtuigen
             this.aanwezigVliegtuigen = [];
 
             for (let i = 0; i < dataset!.length; i++) {
@@ -154,7 +170,7 @@ export class StartEditorComponent implements OnInit {
 
     openPopup(start: HeliosStartDataset | null) {
         if (start) {
-            // vul alvast de editor met data uit het grid
+            // vul alvast de editor met starts uit het grid
             this.start = {
                 ID: start.ID,
                 DATUM: start.DATUM,
@@ -180,14 +196,14 @@ export class StartEditorComponent implements OnInit {
             };
             if (start.ID) {
                 this.formTitel = 'Start bewerken';
-                this.haalStartOp(start.ID as number); // maar data kan gewijzigd zijn, dus toch even data ophalen van API
+                this.haalStartOp(start.ID as number); // maar starts kan gewijzigd zijn, dus toch even starts ophalen van API
             }
             else
             {
-                this.formTitel = `Start aanmaken ${this.datum.day}-${this.datum.month}-${this.datum.year}`;
+                this.formTitel = `Start aanmaken`;
             }
         } else {
-            this.formTitel = `Start aanmaken ${this.datum.day}-${this.datum.month}-${this.datum.year}`;
+            this.formTitel = `Start aanmaken`;
             this.start = {
                 ID: undefined,
                 DATUM: this.datum.toISODate(),
@@ -219,6 +235,13 @@ export class StartEditorComponent implements OnInit {
         this.isVerwijderMode = false;
         this.isRestoreMode = false;
         this.isSaving = false;
+
+        const ui = this.loginService.userInfo?.Userinfo;
+        this.startDatum = DateTime.fromSQL(this.start.DATUM!);
+
+        const nu:  DateTime = DateTime.now()
+        const diff = Interval.fromDateTimes(this.startDatum, nu);
+        this.magDatumAanpassen = ((Math.floor(diff.length("days")) <= this.configService.maxZelfEditDagen()) && (!ui?.isStarttoren) || ui!.isBeheerder! || ui!.isBeheerderDDWV!);
 
         this.popup.open();
 
@@ -665,6 +688,7 @@ export class StartEditorComponent implements OnInit {
         if (this.toonVliegerNaam && !this.start.VLIEGERNAAM) {
             return true;
         }
+
         return false;
     }
 
@@ -713,5 +737,11 @@ export class StartEditorComponent implements OnInit {
 
         this.start.VLIEGERNAAM = this.start.INZITTENDENAAM;
         this.start.INZITTENDENAAM = tmpNaam;
+    }
+
+    // Datum van de start aanpassen
+    datumAanapssen($datum: NgbDate) {
+        this.startDatum = DateTime.fromObject({year: $datum.year, month: $datum.month, day: $datum.day});
+        this.start.DATUM = this.startDatum.toISODate();
     }
 }

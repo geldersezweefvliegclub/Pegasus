@@ -67,7 +67,7 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
         return nweLijst2;
     }
 
-    // De Input datasets zijn gewijzigd, zorg dat combobox goede data krijgt via vliegtuigenSelectie$
+    // De Input datasets zijn gewijzigd, zorg dat combobox goede starts krijgt via vliegtuigenSelectie$
     ngOnChanges(changes: SimpleChanges) {
         // bij update van VLIEGTUIG_ID kijken we alleen of waarde geldig is
         if ((changes.hasOwnProperty("VLIEGTUIG_ID")) &&  this.vliegtuigenSelectie$) {

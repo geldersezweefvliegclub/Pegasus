@@ -1,0 +1,23 @@
+.competentieRegel:hover {
+  background-color: rgb(227, 227, 227);
+}
+
+.addBtn {
+  color: #5a9602;
+  font-size: 20px;
+}
+
+.upBtn {
+  color: #d5ac49;
+  font-size: 20px;
+}
+
+.downBtn {
+  color: #d5ac49;
+  font-size: 20px;
+}
+
+
+:host ::ng-deep .treeview-container {
+  max-height: 100% !important;
+}

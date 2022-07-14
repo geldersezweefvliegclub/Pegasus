@@ -16,7 +16,7 @@ export class VliegtuigenService {
 
     private overslaan: boolean = false;
     private ophaalTimer: number;                                // Iedere 15 min halen we de leden op
-    private fallbackTimer: number;                              // Timer om te zorgen dat data geladen echt is
+    private fallbackTimer: number;                              // Timer om te zorgen dat starts geladen echt is
     private vliegtuigenStore = new BehaviorSubject(this.vliegtuigenCache.dataset);
     private dbEventAbonnement: Subscription;
     public readonly vliegtuigenChange = this.vliegtuigenStore.asObservable();      // nieuwe vliegtuigen beschikbaar
@@ -26,7 +26,7 @@ export class VliegtuigenService {
                 private readonly sharedService: SharedService,
                 private readonly storageService: StorageService) {
 
-        // We hebben misschien eerder de vliegtuigen opgehaald. Die gebruiken we totdat de API data heeft opgehaald
+        // We hebben misschien eerder de vliegtuigen opgehaald. Die gebruiken we totdat de API starts heeft opgehaald
         if (this.storageService.ophalen('vliegtuigen') != null) {
             this.vliegtuigenCache = this.storageService.ophalen('vliegtuigen');
             this.vliegtuigenStore.next(this.vliegtuigenCache.dataset!)    // afvuren event met opgeslagen vliegtuigen dataset
@@ -39,7 +39,7 @@ export class VliegtuigenService {
             });
         });
 
-        // Deze timer kijkt periodiek of de data er is. API call bij inloggen kan mislukt zijn dus dit is de fallback
+        // Deze timer kijkt periodiek of de starts er is. API call bij inloggen kan mislukt zijn dus dit is de fallback
         this.fallbackTimer = window.setInterval(() => {
             if (this.loginService.isIngelogd()) {
                 let ophalen = false;
@@ -100,7 +100,7 @@ export class VliegtuigenService {
             this.vliegtuigenCache = await response.json();
             this.storageService.opslaan('vliegtuigen', this.vliegtuigenCache);
         } catch (e) {
-            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde data als cache
+            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde starts als cache
                 throw(e);
             }
         }

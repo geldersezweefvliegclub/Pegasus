@@ -6,6 +6,9 @@ import {Router} from '@angular/router';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
 import {CodeInputComponent} from "angular-code-input";
+import {StorageService} from "../../../services/storage/storage.service";
+import {SharedService} from "../../../services/shared/shared.service";
+import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
 
 @Component({
     selector: 'app-login-page',
@@ -17,6 +20,9 @@ export class LoginPageComponent implements OnInit {
     @ViewChild(CodeInputComponent) private codeInput: CodeInputComponent;
 
     oogIcon: IconDefinition = faEye;
+
+    privacyUrl : string | undefined;
+    privacyOk: boolean;
 
     gebruikersnaam: string = '';
     wachtwoord: string = '';
@@ -50,13 +56,19 @@ export class LoginPageComponent implements OnInit {
     ];
     toonFoto: string = this.urlFoto();
 
-    constructor(private readonly loginService: LoginService, private readonly router: Router) {
+    constructor(private readonly loginService: LoginService,
+                private readonly configService: PegasusConfigService,
+                private readonly storageService: StorageService,
+                private readonly router: Router) {
     }
 
     ngOnInit() {
         setInterval(() => {
             this.toonFoto = this.urlFoto()
         }, 15000)
+
+        this.privacyOk = this.storageService.ophalen("privacyOk") == "true";
+        this.privacyUrl = this.configService.privacyURL();
     }
 
     // geef de url terug van een willekeurige foto
@@ -75,6 +87,7 @@ export class LoginPageComponent implements OnInit {
         this.isLoading = true;
         this.loginService.login(this.gebruikersnaam, this.wachtwoord, this.secret).then(() => {
             this.isLoading = false;
+            this.storageService.opslaan("privacyOk", "true", 60 * 24 * 90);     // 90 dagen
             this.router.navigate(['/']);
         }).catch(e => {
             this.isLoading = false;

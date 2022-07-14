@@ -15,7 +15,7 @@ export class TracksService {
 
     async getTracks(verwijderd: boolean = false, lidID?:number, max?: number): Promise<HeliosTracksDataset[]> {
 
-        // Alleen als we onderstaande rollen nie hebben, gaan we ook geen data proberen op te halen
+        // Alleen als we onderstaande rollen nie hebben, gaan we ook geen starts proberen op te halen
         const ui = this.loginService.userInfo?.Userinfo;
         if (!ui?.isCIMT && !ui?.isInstructeur && !ui?.isBeheerder) {
             throw {beschrijving: "Niet gemachtigd om tracks te laden"};
@@ -41,7 +41,7 @@ export class TracksService {
             const response: Response = await this.apiService.get('Tracks/GetObjects', getParams);
             this.tracksCache = await response.json();
         } catch (e) {
-            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde data als cache
+            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde starts als cache
                 throw(e);
             }
         }
@@ -50,7 +50,7 @@ export class TracksService {
 
     async getTrack(id: number): Promise<HeliosTrack> {
 
-        // Alleen als we onderstaande rollen nie hebben, gaan we ook geen data proberen op te halen
+        // Alleen als we onderstaande rollen nie hebben, gaan we ook geen starts proberen op te halen
         const ui = this.loginService.userInfo?.Userinfo;
         if (!ui?.isCIMT && !ui?.isInstructeur && !ui?.isBeheerder) {
             throw {beschrijving: "Niet gemachtigd om tracks te laden"};

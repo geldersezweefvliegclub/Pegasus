@@ -185,8 +185,8 @@ export interface components {
       WACHTWOORD_HASH?: string;
       /** 2Factor authenticatie voor deze gebruiker */
       AUTH?: boolean;
-      /** Heef het lid de factuur van dit jaar betaald? */
-      HEEFT_BETAALD?: boolean;
+      /** Heef het lid een startverbod? */
+      STARTVERBOD?: boolean;
       /** Staat privacy mode (AVG / GDPR) uit/aan */
       PRIVACY?: boolean;
       /** Wat zijn de beperkingen (vliegen / diensten) voor dit lid */

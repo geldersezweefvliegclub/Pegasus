@@ -1,0 +1,78 @@
+<app-error [error]="error"></app-error>
+<app-success [success]="success"></app-success>
+
+<app-modal [titel]="formTitel">
+    <div body>
+        <fieldset [disabled]="isVerwijderMode || isRestoreMode || isLoading || isSaving">
+            <div class="row">
+                <div class="col-12">
+                    <label class="form-label">Leerfase</label>
+                    <select class="form-select mb-2" [(ngModel)]="competentie.LEERFASE_ID" (change)="filterBovenliggend()" required
+                            name="LEERFASE_ID">
+                        <option *ngFor="let top of topLevels"
+                                [value]="top.ID">{{top.OMSCHRIJVING}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <label class="form-label">Bovenliggend</label>
+                    <ng-select id="BOVENLIGGENDE" class="mb-2"
+                               [items]="lijst$ | async"
+                               placeholder="Bovenliggende competentie"
+                               bindLabel="label"
+                               bindValue="ID"
+                               closeOnSelect="true"
+                               openOnEnter="true"
+                               name="VliegtuigID"
+                               [ngModel]="competentie.BLOK_ID"
+                               (ngModelChange)="parentChange($event)">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2">
+                    <label for="BLOK" class="form-label">Blok</label>
+                    <input type="text" name="BLOK" class="form-control" id="BLOK"
+                           [(ngModel)]="competentie.BLOK">
+                </div>
+                <div class="col-10">
+                    <label for="OMSCHRIJVING" class="form-label">Omschrijving</label>
+                    <input type="text" name="ONDERWERP" class="form-control" id="OMSCHRIJVING" required
+                           [(ngModel)]="competentie.ONDERWERP">
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-12">
+                    <label for="DOCUMENTATIE" class="form-label">Documentatie</label>
+                    <input type="text" name="DOCUMENTATIE" class="form-control" id="DOCUMENTATIE"
+                           [(ngModel)]="competentie.DOCUMENTATIE">
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div footer>
+        <app-icon-button
+                *ngIf="!isLoading && !isSaving && competentie.ID !== undefined && !isRestoreMode && !isVerwijderMode"
+                iconNaam="fas Edit" btnColor="btn-primary"
+                [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()"
+                (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button
+                *ngIf="!isLoading && !isSaving && competentie.ID === undefined && !isRestoreMode && !isVerwijderMode"
+                iconNaam="fas Plus" btnColor="btn-primary"
+                [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()"
+                (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button *ngIf="!isLoading && !isSaving && isVerwijderMode" iconNaam="fas TrashAlt"
+                         btnColor="btn-primary editorDeleteBtn"
+                         [toonKlein]=false tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button *ngIf="!isLoading && !isSaving && isRestoreMode" iconNaam="fas Undo"
+                         btnColor="btn-primary editorRestoreBtn"
+                         [toonKlein]=false tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
+
+        <button class="btn btn-primary" *ngIf="isLoading || isSaving">
+            <span><app-loader></app-loader></span>
+        </button>
+    </div>
+</app-modal>
+
+

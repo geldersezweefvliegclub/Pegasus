@@ -9,6 +9,7 @@ import {ExportStartlijstComponent} from "./export-startlijst/export-startlijst.c
 import {AchterinRenderComponent} from "./achterin-render/achterin-render.component";
 import {VoorinRenderComponent} from "./voorin-render/voorin-render.component";
 import {DagnummerRenderComponent} from "./dagnummer-render/dagnummer-render.component";
+import {NgSelectModule} from "@ng-select/ng-select";
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import {DagnummerRenderComponent} from "./dagnummer-render/dagnummer-render.comp
                 path: '',
                 component: VluchtenGridComponent
             }
-        ])
+        ]),
+        NgSelectModule
     ],
     exports: [
         VluchtenGridComponent,

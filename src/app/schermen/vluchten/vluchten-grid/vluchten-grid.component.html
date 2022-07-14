@@ -2,15 +2,15 @@
 <app-success [success]="success"></app-success>
 
 <app-pegasus-card titel="Vluchten"
-               subtitel="Een overzicht van de starts {{datum.day}}-{{datum.month}}-{{datum.year}}"
-               [icon]="iconCardIcon"
-               [exportEnabled]="this.magExporteren"
-               (excelExport)="expoteerStartlijst()">
+                  subtitel="Een overzicht van de starts {{datum.day}}-{{datum.month}}-{{datum.year}}"
+                  [icon]="iconCardIcon"
+                  [exportEnabled]="this.magExporteren"
+                  (excelExport)="expoteerStartlijst()">
     <div class="box h-100">
         <div id="data" class="data" *ngIf="!toonStartlijstKlein">
             <app-datatable
                     id="startlijstgrid"
-                    [rowData]="data"
+                    [rowData]="filteredStarts"
                     [columnDefs]="columns"
                     [loading]="isLoading"
                     [rowClassRules]="rowClassRules"
@@ -19,7 +19,7 @@
                     class="h-100 mt-n8"></app-datatable>
         </div>
         <div id="datacard" class="data" *ngIf="toonStartlijstKlein">
-            <div *ngFor="let vlucht of data;let i = index">
+            <div *ngFor="let vlucht of filteredStarts;let i = index">
                 <app-vlucht-card [start]="vlucht"></app-vlucht-card>
             </div>
         </div>
@@ -27,18 +27,19 @@
         <div class="row justify-content-start mt-2" id="toolbar">
             <div class="col-4 col-xl-3">
                 <div class="d-flex flex-row">
-                        <app-status-button
-                                class="toolbarBtn"
-                                tekst="Filter"
-                                [actief]="filterOn"
-                                (btnClicked)="filter($event)"
-                                iconNaam="fas Filter">
-                        </app-status-button>
+                    <app-status-button
+                            class="toolbarBtn"
+                            tekst="Filter"
+                            [actief]="filterOn"
+                            (btnClicked)="filter($event)"
+                            iconNaam="fas Filter">
+                    </app-status-button>
                     <div>
                         <app-icon-button class="toolbarBtn"
                                          tekst="Toevoegen"
                                          iconNaam="far PlusSquare" (btnClicked)="addStart()"
-                                         btnColor="btn-primary" *ngIf="!deleteMode && magToevoegen && inTijdspan"></app-icon-button>
+                                         btnColor="btn-primary"
+                                         *ngIf="!deleteMode && magToevoegen && inTijdspan"></app-icon-button>
 
                         <div *ngIf="this.deleteMode">
                             <app-status-button
@@ -54,9 +55,9 @@
             </div>
             <div class="col-8 col-xl-9">
                 <div class="d-flex flex-row justify-content-between" id="zoekbar">
-                    <div [ngClass]="{'col-12': this.toonStartlijstKlein, 'col-8': !this.toonStartlijstKlein }">
+                    <div [ngClass]="{'col-12': toonStartlijstKlein, 'col-8': !toonStartlijstKlein }">
                         <div class="d-flex justify-content-begin align-items-end text-nowrap">
-                            <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>
+                            <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken: </label>
                             <input id="zoekInput"
                                    type="search"
                                    class="form-control"
@@ -65,14 +66,33 @@
                                    (keyup)="opvragen()"
                                    (search)="opvragen()"
                             >
-                            <app-icon-button class="toolbarBtn" iconNaam="fas Redo" (btnClicked)="opvragen()" *ngIf="toonRefresh"
+                            <app-icon-button class="toolbarBtn" iconNaam="fas Redo" (btnClicked)="opvragen()"
+                                             *ngIf="toonRefresh"
                                              btnColor="btn-primary"></app-icon-button>
+
+                            <div class="ms-2 d-flex justify-content-begin align-items-end text-nowrap"
+                                 *ngIf="!toonStartlijstKlein">
+
+                                <label for="VELD" class="form-label me-2">Vliegveld:</label>
+                                <ng-select id="VELD" style="width: 160px;"
+                                           [items]="veldTypes$ | async"
+                                           placeholder="Filter op vliegveld"
+                                           bindLabel="OMSCHRIJVING"
+                                           bindValue="ID"
+                                           closeOnSelect="true"
+                                           openOnEnter="true"
+                                           [searchable]="false"
+                                           (change)="filterStarts()"
+                                           [(ngModel)]="vliegveld">
+                                </ng-select>
+                            </div>
                         </div>
                     </div>
                     <div class="col-4" *ngIf="!toonStartlijstKlein">
-                        <div class="d-flex justify-content-end" >
+                        <div class="d-flex justify-content-end">
                             <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
-                                             btnColor="btn-secondary" *ngIf="magVerwijderen && !deleteMode && inTijdspan"
+                                             btnColor="btn-secondary"
+                                             *ngIf="magVerwijderen && !deleteMode && inTijdspan"
                                              (btnClicked)="deleteModeJaNee()"></app-icon-button>
                             <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
                                              btnColor="btn btn-outline-primary" *ngIf="deleteMode"

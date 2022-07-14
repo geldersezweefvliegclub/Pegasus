@@ -2,6 +2,10 @@
     <p>Er is een nieuwe versie beschikbaar. Klik <a aria-label="nieuwe software versie" href="#">hier</a> om bij te werken</p>
 </div>
 
+<div *ngIf="heeftStartVerbod" class="startVerbod">
+Je hebt een startverbod. Graag even melden bij het bestuur.
+</div>
+
 <main class="d-flex maxHoogte">
     <div class="ps-0 d-none d-xl-block" *ngIf="isIngelogd">
         <app-navigation class="sticky-top"></app-navigation>

@@ -13,6 +13,7 @@ import {SharedService} from "../../services/shared/shared.service";
 
 export class AppComponent {
     isIngelogd: boolean = this.loginService.isIngelogd();
+    heeftStartVerbod = false;
     updateAvailable: boolean = false;
     private keepAliveTimer: number;
 
@@ -35,6 +36,9 @@ export class AppComponent {
 
         // nadat we ingelogd zijn, blijven we controleren of we ingelogd zijn, zo niet, dan loggen we uit
         loginService.inloggenSucces.subscribe(() => {
+            const ui = this.loginService.userInfo?.LidData;
+            this.heeftStartVerbod =  ui!.STARTVERBOD!;
+
             this.keepAliveTimer = window.setInterval(() => {
                loginService.relogin().then((success) => {
                    if (!success) {                                          // niet meer ingelogd
@@ -63,6 +67,7 @@ export class AppComponent {
     this.isIngelogd = this.loginService.isIngelogd();
 
     if (!this.isIngelogd) {
+        this.heeftStartVerbod = false;
       this.router.navigate(['login']).then();
     }
   }

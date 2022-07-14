@@ -7,7 +7,13 @@ import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {DeleteActionComponent} from '../../../shared/components/datatable/delete-action/delete-action.component';
 import {RestoreActionComponent} from '../../../shared/components/datatable/restore-action/restore-action.component';
-import {HeliosDienstenDataset, HeliosRoosterDataset, HeliosStartDataset} from '../../../types/Helios';
+import {
+    HeliosDienstenDataset,
+    HeliosRoosterDataset,
+    HeliosStartDataset,
+    HeliosType,
+    HeliosVliegtuigenDataset
+} from '../../../types/Helios';
 import {ErrorMessage, KeyValueArray, SuccessMessage} from '../../../types/Utils';
 import * as xlsx from 'xlsx';
 import {LoginService} from '../../../services/apiservice/login.service';
@@ -16,7 +22,7 @@ import {StarttijdRenderComponent} from '../../../shared/components/datatable/sta
 import {LandingstijdRenderComponent} from '../../../shared/components/datatable/landingstijd-render/landingstijd-render.component';
 import {TijdInvoerComponent} from '../../../shared/components/editors/tijd-invoer/tijd-invoer.component';
 import {StartEditorComponent} from '../../../shared/components/editors/start-editor/start-editor.component';
-import {Subscription} from 'rxjs';
+import {Observable, of, Subscription} from 'rxjs';
 import {SchermGrootte, SharedService} from '../../../services/shared/shared.service';
 import {nummerSort, tijdSort} from '../../../utils/Utils';
 import {ExportStartlijstComponent} from "../export-startlijst/export-startlijst.component";
@@ -26,6 +32,7 @@ import {PegasusConfigService} from "../../../services/shared/pegasus-config.serv
 import {VoorinRenderComponent} from "../voorin-render/voorin-render.component";
 import {AchterinRenderComponent} from "../achterin-render/achterin-render.component";
 import {DagnummerRenderComponent} from "../dagnummer-render/dagnummer-render.component";
+import {TypesService} from "../../../services/apiservice/types.service";
 
 type HeliosStartDatasetExtended = HeliosStartDataset & {
     inTijdspan?: boolean
@@ -41,7 +48,8 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
     @ViewChild(ExportStartlijstComponent) exportStartlijstKeuze: ExportStartlijstComponent;
 
-    data: HeliosStartDatasetExtended[] = [];
+    starts: HeliosStartDatasetExtended[] = [];
+    filteredStarts: HeliosStartDatasetExtended[] = [];
     isLoading: boolean = false;
     isStarttoren: boolean = false;
     isExporting: boolean = false;
@@ -157,6 +165,9 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     iconCardIcon: IconDefinition = faClipboardList;
     downloadIcon: IconDefinition = faDownload;
 
+    private typesAbonnement: Subscription;              // Abonneer op aanpassing van vliegvelden
+    veldTypes$: Observable<HeliosType[]>;
+    vliegveld: number | undefined;                      // laat vluchten van een speciek vliegveld zien
     private resizeSubscription: Subscription;           // Abonneer op aanpassing van window grootte (of draaien mobiel)
     private dbEventAbonnement: Subscription;            // Abonneer op aanpassingen in de database
     private dienstenAbonnement: Subscription;
@@ -165,7 +176,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     diensten: HeliosDienstenDataset[];
 
     zoekString: string;
-    zoekTimer: number;                  // kleine vertraging om data ophalen te beperken
+    zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
     refreshTimer: number;
     deleteMode: boolean = false;        // zitten we in delete mode om starts te kunnen verwijderen
     trashMode: boolean = false;         // zitten in restore mode om starts te kunnen terughalen
@@ -190,6 +201,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
     constructor(private readonly startlijstService: StartlijstService,
                 private readonly loginService: LoginService,
+                private readonly typesService: TypesService,
                 private readonly roosterService: RoosterService,
                 private readonly dienstenService: DienstenService,
                 private readonly configService: PegasusConfigService,
@@ -207,7 +219,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
                 month: datum.month,
                 day: datum.day
             })
-            this.data = [];
+            this.starts = [];
 
             const ui = this.loginService.userInfo?.Userinfo;
             const nu:  DateTime = DateTime.now()
@@ -249,6 +261,11 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
             }
         });
 
+        // abonneer op wijziging van lidTypes
+        this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
+            this.veldTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));            // vliegvelden
+        });
+
         // Roep onWindowResize aan zodra we het event ontvangen hebben
         this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
             this.onWindowResize()
@@ -266,6 +283,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         if (this.roosterAbonnement)     this.roosterAbonnement.unsubscribe();
         if (this.dienstenAbonnement)    this.dienstenAbonnement.unsubscribe();
         if (this.datumAbonnement)       this.datumAbonnement.unsubscribe();
+        if (this.typesAbonnement)       this.typesAbonnement.unsubscribe();
         if (this.resizeSubscription)    this.resizeSubscription.unsubscribe();
 
         clearTimeout(this.refreshTimer);
@@ -360,7 +378,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         }
     }
 
-    // Opvragen van de data via de api
+    // Opvragen van de starts via de api
     opvragen() {
         let queryParams: KeyValueArray = {};
         clearTimeout(this.refreshTimer);
@@ -371,9 +389,12 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
         this.isLoading = true;
         this.startlijstService.getStarts(this.trashMode, this.datum, this.datum, this.zoekString, queryParams).then((dataset) => {
-            this.data = (dataset) ? dataset : [];
-            for (let i = 0; i < this.data.length; i++) {
-                this.data[i].inTijdspan = this.inTijdspan;
+            this.starts = (dataset) ? dataset : [];
+
+            this.filterStarts();
+
+            for (let i = 0; i < this.filteredStarts.length; i++) {
+                this.filteredStarts[i].inTijdspan = this.inTijdspan;
             }
             this.isLoading = false;
         }).catch(e => {
@@ -382,6 +403,16 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         });
 
         this.refreshTimer = window.setTimeout(() => this.opvragen(), 1000 * 60 * 5);  // iedere 5 minuten
+    }
+
+    // Filter start op een specifiek vliegveld, nodig tijdens zomerkamp op eigen veld en buitenland
+    filterStarts(): void {
+        if (!this.vliegveld) {
+            this.filteredStarts = this.starts;
+        }
+        else {
+            this.filteredStarts = this.starts.filter((s:HeliosStartDatasetExtended) => { return s.VELD_ID == this.vliegveld})
+        }
     }
 
     // keuze voor startlijst export
@@ -408,7 +439,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         switch (exportDMJ) {
             case "dag": {
                 bestandsnaam = datum.toISODate()
-                tobeExported = this.data; // default is dag
+                tobeExported = this.starts; // default is dag
                 break;
             }
             case "maand": {

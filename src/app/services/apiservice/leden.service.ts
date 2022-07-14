@@ -15,7 +15,7 @@ export class LedenService {
 
     private overslaan: boolean = false;
     private ophaalTimer: number;                                // Iedere 15 min halen we de leden op
-    private fallbackTimer: number;                              // Timer om te zorgen dat data geladen echt is
+    private fallbackTimer: number;                              // Timer om te zorgen dat starts geladen echt is
     private ledenStore = new BehaviorSubject(this.ledenCache.dataset);
     private dbEventAbonnement: Subscription;
     public readonly ledenChange = this.ledenStore.asObservable();      // nieuwe leden beschikbaar
@@ -37,7 +37,7 @@ export class LedenService {
             });
         }, 1000 * 60 * 15);
 
-        // Deze timer kijkt periodiek of de data er is. API call bij inloggen kan mislukt zijn dus dit is de fallback
+        // Deze timer kijkt periodiek of de starts er is. API call bij inloggen kan mislukt zijn dus dit is de fallback
         this.fallbackTimer = window.setInterval(() => {
             if (this.loginService.isIngelogd()) {
                 let ophalen = false;
@@ -91,7 +91,7 @@ export class LedenService {
 
             this.ledenCache = await response.json();
         } catch (e) {
-            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde data als cache
+            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde starts als cache
                 throw(e);
             }
         }

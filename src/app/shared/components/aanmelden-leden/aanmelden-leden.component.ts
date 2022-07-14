@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ModalComponent} from "../modal/modal.component";
 import {Subscription} from "rxjs";
 import {DateTime} from "luxon";
@@ -26,7 +26,7 @@ type HeliosTypeExtended = HeliosType & {
   styleUrls: ['./aanmelden-leden.component.scss']
 })
 
-export class AanmeldenLedenComponent implements OnInit {
+export class AanmeldenLedenComponent implements OnInit, OnDestroy {
   @ViewChild(ModalComponent) private popup: ModalComponent;
   @ViewChild(LidAanwezigEditorComponent) aanmeldEditor: LidAanwezigEditorComponent;
 
@@ -87,7 +87,7 @@ export class AanmeldenLedenComponent implements OnInit {
 
     // abonneer op wijziging van aanwezige vliegtuigen
     this.aanwezigLedenAbonnement = this.aanwezigLedenService.aanwezigChange.subscribe(dataset => {
-      // Als er data is, even in juiste formaat zetten. Aanwezig moet hetzelfde formaat hebben als vliegtuigen
+      // Als er starts is, even in juiste formaat zetten. Aanwezig moet hetzelfde formaat hebben als vliegtuigen
       this.aanwezigLeden = (dataset) ? dataset : [];
       this.filterLeden();
 

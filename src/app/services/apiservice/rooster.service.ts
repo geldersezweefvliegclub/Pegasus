@@ -31,7 +31,7 @@ export class RoosterService {
         //         day: 1
         //     });
         //
-        //     // we kunnen alleen data ophalen als we ingelogd zijn, en starttoren heeft niets nodig
+        //     // we kunnen alleen starts ophalen als we ingelogd zijn, en starttoren heeft niets nodig
         //     if (this.loginService.isIngelogd() && (!this.loginService.userInfo?.Userinfo!.isStarttoren)) {
         //         const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
         //
@@ -92,11 +92,11 @@ export class RoosterService {
 
         } catch (e) {
 
-            if (e.responseCode === 404) { // er is geen data
+            if (e.responseCode === 404) { // er is geen starts
                 return [];
             }
 
-            if ((e.responseCode !== 304) && (e.responseCode !== 704)) {  // er is geen nieuwe data
+            if ((e.responseCode !== 304) && (e.responseCode !== 704)) {  // er is geen nieuwe starts
                 throw(e);
             }
         }
@@ -104,7 +104,7 @@ export class RoosterService {
     }
 
     /**
-     * Het opgehaalde rooster kan dagen in de maand missen. Deze functie vult alle data aan zodat elke dag in de maand getoond wordt.
+     * Het opgehaalde rooster kan dagen in de maand missen. Deze functie vult alle starts aan zodat elke dag in de maand getoond wordt.
      * @private
      * @return {void}
      */

@@ -32,7 +32,7 @@ export class ReserveringService {
             const response: Response = await this.apiService.get('Reservering/GetObjects', getParams);
             this.reserveringenCache = await response.json();
         } catch (e) {
-            if ((e.responseCode !== 304) && (e.responseCode !== 704) && (e.responseCode !== 404)) { // er is geen data, of data is ongewijzigd
+            if ((e.responseCode !== 304) && (e.responseCode !== 704) && (e.responseCode !== 404)) { // er is geen starts, of starts is ongewijzigd
                 throw(e);
             }
         }

@@ -13,3 +13,14 @@
 .card {
     overflow-y: auto;
 }
+
+
+.startVerbod {
+    text-align: center; /* Centered text */
+    border-radius: 4px; /* Rounded borders */
+    padding: 10px; /* Padding */
+    z-index: 1200; /* Add a z-index if needed */
+    background-color: darkorange;
+    font-size: large;
+    right: 50%;
+}

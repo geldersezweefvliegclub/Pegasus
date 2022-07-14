@@ -87,11 +87,16 @@ export class PegasusConfigService {
     public maxZelfEditDagen(): number {
         return (this.pegasusConfig.maxZelfEditDagen) ? this.pegasusConfig.maxZelfEditDagen : 14;
     }
+
+    public privacyURL(): string | undefined {
+        return this.pegasusConfig.privacy_url;
+    }
 }
 
 
 export interface IPegasusConfig {
     url: string;
+    privacy_url: string;
     maxZelfDienstenIndelen: number | undefined;
     maxZelfEditDagen: number | undefined;
 

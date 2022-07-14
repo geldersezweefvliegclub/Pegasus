@@ -182,9 +182,9 @@
     </div>
 </app-modal>
 
-<!--
-<app-start-editor [VliegerID]="lidData.ID"></app-start-editor>
--->
+<-- toevoegen van een start vanuit groot logboek -->
+<app-start-editor [VliegerID]="lidData.ID" *ngIf="lidData"></app-start-editor>
+
 
 <app-modal #dienstenPopup titel="Diensten van {{lidData.NAAM}}" *ngIf="lidData">
     <div body>

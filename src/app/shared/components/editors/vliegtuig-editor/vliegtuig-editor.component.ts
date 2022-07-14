@@ -84,7 +84,7 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
 
     openPopup(vliegtuig: HeliosVliegtuigenDataset | null) {
         if (vliegtuig) {
-            // vul alvast de editor met data uit het grid
+            // vul alvast de editor met starts uit het grid
             this.vliegtuig = {
                 ID: vliegtuig.ID,
                 REGISTRATIE: vliegtuig.REGISTRATIE,
@@ -102,7 +102,7 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
             }
 
             this.formTitel = 'Vliegtuig bewerken';
-            this.haalVliegtuigOp(vliegtuig.ID!); // maar data kan gewijzigd zijn, dus toch even data ophalen van API
+            this.haalVliegtuigOp(vliegtuig.ID!); // maar starts kan gewijzigd zijn, dus toch even starts ophalen van API
 
             // Voor een bestaand vliegtuig, aanpassen van registratie is beperkt
             // Wanneer lid vliegtuig verkoopt en nieuw vliegtuig koopt, dan kan het zijn dat het callsign op
@@ -186,7 +186,7 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
         }
     }
 
-    // opslaan van de data van een nieuw vliegtuig
+    // opslaan van de starts van een nieuw vliegtuig
     Toevoegen(vliegtuig: HeliosVliegtuig) {
         this.vliegtuigenService.addVliegtuig(vliegtuig).then(() => {
             const regCall = (vliegtuig.CALLSIGN) ? `${vliegtuig.REGISTRATIE} (${vliegtuig.CALLSIGN})` : vliegtuig.REGISTRATIE;
@@ -201,7 +201,7 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
         })
     }
 
-    // bestaand vliegtuig is aangepast. Opslaan van de data
+    // bestaand vliegtuig is aangepast. Opslaan van de starts
     Aanpassen(vliegtuig: HeliosVliegtuig) {
         this.vliegtuigenService.updateVliegtuig(vliegtuig).then(() => {
             const regCall = (vliegtuig.CALLSIGN) ? `${vliegtuig.REGISTRATIE} (${vliegtuig.CALLSIGN})` : vliegtuig.REGISTRATIE;

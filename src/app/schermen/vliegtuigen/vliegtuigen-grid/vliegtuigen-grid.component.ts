@@ -122,7 +122,7 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
     prullenbakIcon: IconDefinition = faRecycle;
 
     zoekString: string;
-    zoekTimer: number;                  // kleine vertraging om data ophalen te beperken
+    zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
     deleteMode: boolean = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
     trashMode: boolean = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
 
@@ -190,7 +190,7 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
         }
     }
 
-    // openen van popup om de data van een nieuw vliegtuig te kunnen invoeren
+    // openen van popup om de starts van een nieuw vliegtuig te kunnen invoeren
     addVliegtuig(): void {
         if (this.magToevoegen) {
             this.editor.openPopup(null);
@@ -273,7 +273,7 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
         kolom.hide = this.sharedService.getSchermSize() == SchermGrootte.xs;
     }
 
-    // Opvragen van de data via de api
+    // Opvragen van de starts via de api
     opvragen() {
         clearTimeout(this.zoekTimer);
 

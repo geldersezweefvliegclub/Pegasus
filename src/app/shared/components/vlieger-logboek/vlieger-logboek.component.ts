@@ -50,6 +50,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
     private dbEventAbonnement: Subscription;
     private resizeSubscription: Subscription;   // Abonneer op aanpassing van window grootte (of draaien mobiel)
     private datumAbonnement: Subscription;      // volg de keuze van de kalender
+    private maandAbonnement: Subscription;      // volg de keuze van de kalender
     datum: DateTime = DateTime.now();           // de gekozen dag
 
     success: SuccessMessage | undefined;
@@ -173,6 +174,23 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
                 }
             });
 
+            // de datum zoals die in de kalender gekozen is
+            this.maandAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
+                if (jaarMaand.year > 1900) {        // 1900 is bij initialisatie
+                    // ophalen is alleen nodig als er een ander jaar gekozen is in de kalendar
+                    const ophalen = ((this.data == undefined) || (this.datum.year != jaarMaand.year))
+                    this.datum = DateTime.fromObject({
+                        year: jaarMaand.year,
+                        month: jaarMaand.month,
+                        day: 1
+                    })
+                    if (ophalen) {
+                        this.data = [];
+                        this.opvragen();
+                    }
+                }
+            })
+
             // Als daginfo of startlijst is aangepast, moet we kalender achtergrond ook updaten
             this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
                 if (ev.tabel == "Startlijst") {
@@ -192,6 +210,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
     ngOnDestroy(): void {
         if (this.dbEventAbonnement)     this.dbEventAbonnement.unsubscribe();
         if (this.datumAbonnement)       this.datumAbonnement.unsubscribe();
+        if (this.maandAbonnement)       this.maandAbonnement.unsubscribe();
         if (this.resizeSubscription)    this.resizeSubscription.unsubscribe();
     }
 
@@ -223,7 +242,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
 
                 for (let i = 0; i < data.length; i++) {
                     const diff = Interval.fromDateTimes(DateTime.fromSQL(data[i].DATUM!), nu);
-                    if (diff.length("days") > this.configService.maxZelfEditDagen()) {
+                    if (Math.floor(diff.length("days")) > this.configService.maxZelfEditDagen()) {
                         data[i].inTijdspan = ui!.Userinfo!.isBeheerder!;   // alleen beheerder mag na xx dagen wijzigen. xx is geconfigureerd in pegasus.config
                     }
                     else {

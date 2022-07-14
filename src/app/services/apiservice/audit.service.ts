@@ -30,7 +30,7 @@ export class AuditService {
             const response = await this.apiService.get('Audit/GetObjects', getParams);
             this.auditCache = await response.json();
         } catch (e) {
-            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde data als cache
+            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde starts als cache
                 throw(e);
             }
         }
