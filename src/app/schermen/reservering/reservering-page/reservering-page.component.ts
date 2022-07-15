@@ -72,7 +72,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     nu: DateTime = DateTime.now()                   // vandaag
 
     toonClubDDWV: number = 2;              // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
-    overlandCompetenties: string;
+    behaaldeCompetenties: string;
     magExporteren: boolean = false;
 
     success: SuccessMessage | undefined;
@@ -129,13 +129,17 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
                 return v.CLUBKIST!;
             });
 
-            let overlandBevoegdheden = "";
+            let bevoegdheden = "";
             const selectie: HeliosVliegtuigenDatasetExtended[] = this.storageService.ophalen("kistSelectieReservering")
             for (let i = 0; i < this.clubVliegtuigen.length; i++) {
                 // opbouwen benodigde overland bevoegdheden als CSV string
                 if (this.clubVliegtuigen[i].BEVOEGDHEID_OVERLAND_ID) {
-                    overlandBevoegdheden += (overlandBevoegdheden) ? "," : "";
-                    overlandBevoegdheden += this.clubVliegtuigen[i].BEVOEGDHEID_OVERLAND_ID;
+                    bevoegdheden += (bevoegdheden) ? "," : "";
+                    bevoegdheden += this.clubVliegtuigen[i].BEVOEGDHEID_OVERLAND_ID;
+                }
+                if (this.clubVliegtuigen[i].BEVOEGDHEID_LOKAAL_ID) {
+                    bevoegdheden += (bevoegdheden) ? "," : "";
+                    bevoegdheden += this.clubVliegtuigen[i].BEVOEGDHEID_LOKAAL_ID;
                 }
 
                 if (selectie == null) {
@@ -151,11 +155,11 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
                 }
             }
 
-            // haal op welke vliegtuigen het ingelogde lid overland mag vliegen
+            // haal op welke vliegtuigen het ingelogde lid mag vliegen
             const ui = this.loginService.userInfo?.LidData!;
-            this.progressieService.getProgressie(ui.ID!, overlandBevoegdheden).then((progressie: HeliosBehaaldeProgressieDataset[]) => {
+            this.progressieService.getProgressie(ui.ID!, bevoegdheden).then((progressie: HeliosBehaaldeProgressieDataset[]) => {
                 // We hebben nu array met progressie, omzetten naar CSV
-                this.overlandCompetenties = progressie.map(function (elem) {
+                this.behaaldeCompetenties = progressie.map(function (elem) {
                     return elem.COMPETENTIE_ID;
                 }).join(",");
             });
@@ -485,10 +489,23 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        // Mag de ingelogde gebruiker overland vliegen op dit vliegtuig?
+        // Mag de ingelogde gebruiker vliegen op dit vliegtuig?
         const vliegtuig = this.clubVliegtuigen.find(v => v.ID == vliegtuigID);
-        if ((vliegtuig) && (vliegtuig.BEVOEGDHEID_OVERLAND_ID)) {
-            if (!this.overlandCompetenties.includes(vliegtuig.BEVOEGDHEID_OVERLAND_ID.toString())) {
+        if (vliegtuig) {
+            let magVliegen = false;
+            if (!vliegtuig.BEVOEGDHEID_LOKAAL_ID && !vliegtuig.BEVOEGDHEID_OVERLAND_ID) {
+                magVliegen = true;
+            }
+            else {
+                if ((vliegtuig.BEVOEGDHEID_LOKAAL_ID) && this.behaaldeCompetenties.includes(vliegtuig.BEVOEGDHEID_LOKAAL_ID.toString())) {
+                    magVliegen = true;
+                }
+                if ((vliegtuig.BEVOEGDHEID_OVERLAND_ID) && this.behaaldeCompetenties.includes(vliegtuig.BEVOEGDHEID_OVERLAND_ID.toString())) {
+                    magVliegen = true;
+                }
+            }
+
+            if (!magVliegen) {
                 return false;
             }
         }
