@@ -383,7 +383,6 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
             }
         }
     }
-
     opslaanRooster(datum: string) {
         clearTimeout(this.opslaanTimer);
         const roosterIndex = this.rooster.findIndex((dag => dag.DATUM == datum));

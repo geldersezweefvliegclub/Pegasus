@@ -101,7 +101,7 @@
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
-                        <div *ngIf="lidData.INSTRUCTEUR! && zelfIndelen(configService.OCHTEND_DDI_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID]"
+                        <div *ngIf="zelfIndelen(configService.OCHTEND_DDI_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID]"
                              (click)="toekennenDienst(dagInRooster, configService.OCHTEND_DDI_TYPE_ID, mijnID, mijnNaam)">
                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                         </div>
@@ -124,7 +124,7 @@
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
-                        <div *ngIf="lidData.INSTRUCTEUR! && zelfIndelen(configService.MIDDAG_DDI_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID]"
+                        <div *ngIf="zelfIndelen(configService.MIDDAG_DDI_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID]"
                              (click)="toekennenDienst(dagInRooster, configService.MIDDAG_DDI_TYPE_ID, mijnID, mijnNaam)">
                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                         </div>
@@ -149,7 +149,7 @@
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
-                        <div *ngIf="lidData.INSTRUCTEUR! && zelfIndelen(configService.OCHTEND_INSTRUCTEUR_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID]"
+                        <div *ngIf="zelfIndelen(configService.OCHTEND_INSTRUCTEUR_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID]"
                              (click)="toekennenDienst(dagInRooster, configService.OCHTEND_INSTRUCTEUR_TYPE_ID, mijnID, mijnNaam)">
                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                         </div>
@@ -172,7 +172,7 @@
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
-                        <div *ngIf="lidData.INSTRUCTEUR && zelfIndelen(configService.MIDDAG_INSTRUCTEUR_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]"
+                        <div *ngIf="zelfIndelen(configService.MIDDAG_INSTRUCTEUR_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]"
                              (click)="toekennenDienst(dagInRooster, configService.MIDDAG_INSTRUCTEUR_TYPE_ID, mijnID, mijnNaam)">
                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                         </div>
@@ -196,7 +196,7 @@
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
-                        <div *ngIf="((lidData.STARTLEIDER && zelfIndelen(configService.OCHTEND_STARTLEIDER_TYPE_ID, dagInRooster.DATUM)) || (isDDWVCrew && dagInRooster.DDWV && sharedService.datumInToekomst(dagInRooster.DATUM)))  && !dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID]"
+                        <div *ngIf="((zelfIndelen(configService.OCHTEND_STARTLEIDER_TYPE_ID, dagInRooster.DATUM)) || (isDDWVCrew && dagInRooster.DDWV && sharedService.datumInToekomst(dagInRooster.DATUM)))  && !dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID]"
                              (click)="toekennenDienst(dagInRooster, configService.OCHTEND_STARTLEIDER_TYPE_ID, mijnID, mijnNaam)">
                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                         </div>
@@ -219,7 +219,7 @@
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
-                        <div *ngIf="lidData.STARTLEIDER && zelfIndelen(configService.MIDDAG_STARTLEIDER_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID]"
+                        <div *ngIf="zelfIndelen(configService.MIDDAG_STARTLEIDER_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID]"
                              (click)="toekennenDienst(dagInRooster, configService.MIDDAG_STARTLEIDER_TYPE_ID, mijnID, mijnNaam)">
                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                         </div>
@@ -245,7 +245,7 @@
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
-                        <div *ngIf="(lidData.STARTLEIDER && zelfIndelen(configService.OCHTEND_STARTLEIDER_IO_TYPE_ID, dagInRooster.DATUM))  && !dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]"
+                        <div *ngIf="(zelfIndelen(configService.OCHTEND_STARTLEIDER_IO_TYPE_ID, dagInRooster.DATUM))  && !dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]"
                              (click)="toekennenDienst(dagInRooster, configService.OCHTEND_STARTLEIDER_IO_TYPE_ID, mijnID, mijnNaam)">
                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                         </div>
@@ -268,7 +268,7 @@
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
-                        <div *ngIf="lidData.STARTLEIDER && zelfIndelen(configService.MIDDAG_STARTLEIDER_IO_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID]"
+                        <div *ngIf="zelfIndelen(configService.MIDDAG_STARTLEIDER_IO_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID]"
                              (click)="toekennenDienst(dagInRooster, configService.MIDDAG_STARTLEIDER_IO_TYPE_ID, mijnID, mijnNaam)">
                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                         </div>
@@ -293,7 +293,7 @@
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
-                        <div *ngIf="((lidData.LIERIST && zelfIndelen(configService.OCHTEND_LIERIST_TYPE_ID, dagInRooster.DATUM)) || (isDDWVCrew && dagInRooster.DDWV && sharedService.datumInToekomst(dagInRooster.DATUM))) && !dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID]"
+                        <div *ngIf="((zelfIndelen(configService.OCHTEND_LIERIST_TYPE_ID, dagInRooster.DATUM)) || (isDDWVCrew && dagInRooster.DDWV && sharedService.datumInToekomst(dagInRooster.DATUM))) && !dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID]"
                              (click)="toekennenDienst(dagInRooster, configService.OCHTEND_LIERIST_TYPE_ID, mijnID, mijnNaam)">
                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                         </div>
@@ -316,7 +316,7 @@
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
-                        <div *ngIf="lidData.LIERIST && zelfIndelen(configService.MIDDAG_LIERIST_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID]"
+                        <div *ngIf="zelfIndelen(configService.MIDDAG_LIERIST_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID]"
                              (click)="toekennenDienst(dagInRooster, configService.MIDDAG_LIERIST_TYPE_ID, mijnID, mijnNaam)">
                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                         </div>
@@ -341,7 +341,7 @@
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
-                        <div *ngIf="isLierist && zelfIndelen(configService.OCHTEND_HULPLIERIST_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID]"
+                        <div *ngIf="zelfIndelen(configService.OCHTEND_HULPLIERIST_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID]"
                              (click)="toekennenDienst(dagInRooster, configService.OCHTEND_HULPLIERIST_TYPE_ID, mijnID, mijnNaam)">
                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                         </div>
@@ -364,7 +364,7 @@
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
-                        <div *ngIf="isLierist && zelfIndelen(configService.MIDDAG_HULPLIERIST_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID]"
+                        <div *ngIf="zelfIndelen(configService.MIDDAG_HULPLIERIST_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID]"
                              (click)="toekennenDienst(dagInRooster, configService.MIDDAG_HULPLIERIST_TYPE_ID, mijnID, mijnNaam)">
                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                         </div>
@@ -390,7 +390,7 @@
                                 {{ (dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID]) ? dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
-                        <div *ngIf="lidData.LIERIST && zelfIndelen(configService.GASTEN_VLIEGER1_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID]"
+                        <div *ngIf="zelfIndelen(configService.GASTEN_VLIEGER1_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID]"
                              (click)="toekennenDienst(dagInRooster, configService.GASTEN_VLIEGER1_TYPE_ID, mijnID, mijnNaam)">
                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                         </div>
@@ -413,7 +413,7 @@
                                 {{ (dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID]) ? dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
-                        <div *ngIf="lidData.GASTENVLIEGER && zelfIndelen(configService.GASTEN_VLIEGER2_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID]"
+                        <div *ngIf="zelfIndelen(configService.GASTEN_VLIEGER2_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID]"
                              (click)="toekennenDienst(dagInRooster, configService.GASTEN_VLIEGER2_TYPE_ID, mijnID, mijnNaam)">
                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                         </div>
@@ -438,7 +438,7 @@
                                 {{ (dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID]) ? dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
-                        <div *ngIf="lidData.SLEEPVLIEGER && zelfIndelen(configService.SLEEPVLIEGER_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID]"
+                        <div *ngIf="zelfIndelen(configService.SLEEPVLIEGER_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID]"
                              (click)="toekennenDienst(dagInRooster, configService.SLEEPVLIEGER_TYPE_ID, mijnID, mijnNaam)">
                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                         </div>

@@ -1,6 +1,7 @@
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {LedenService} from '../../../services/apiservice/leden.service';
 import {
+    HeliosDienst,
     HeliosDienstenDataset,
     HeliosLedenDataset, HeliosLidData,
     HeliosRoosterDag,
@@ -471,7 +472,6 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         this.applyRoosterFilter();
     }
 
-
     zelfIndelen = (dienstType: number, datum: string): boolean => {
         if (!this.alleLeden || this.isDDWVer) {
             return false; // Als leden nog niet geladen zijn, kunnen we onzelf ook niet indelen, DDWVs mogen nooit ingedeeld worden
@@ -489,6 +489,58 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
 
         if (!lid) {
             return false;    // Dit mag nooit voorkomen
+        }
+
+        switch (dienstType) {
+            case this.configService.OCHTEND_DDI_TYPE_ID:
+            case this.configService.MIDDAG_DDI_TYPE_ID:
+            case this.configService.OCHTEND_INSTRUCTEUR_TYPE_ID:
+            case this.configService.MIDDAG_INSTRUCTEUR_TYPE_ID:
+            {
+                if (ui!.LidData!.INSTRUCTEUR == false) {
+                    return false;
+                }
+                break;
+            }
+            case this.configService.OCHTEND_STARTLEIDER_TYPE_ID:
+            case this.configService.MIDDAG_STARTLEIDER_TYPE_ID:
+            case this.configService.OCHTEND_STARTLEIDER_IO_TYPE_ID:
+            case this.configService.MIDDAG_STARTLEIDER_IO_TYPE_ID:
+            {
+                if (ui!.LidData!.STARTLEIDER == false) {
+                    return false;
+                }
+                break;
+            }
+            case this.configService.OCHTEND_LIERIST_TYPE_ID:
+            case this.configService.MIDDAG_LIERIST_TYPE_ID:
+            case this.configService.OCHTEND_HULPLIERIST_TYPE_ID:
+            case this.configService.MIDDAG_HULPLIERIST_TYPE_ID:
+            {
+                if (ui!.LidData!.LIERIST == false) {
+                    return false;
+                }
+                break;
+            }
+            case this.configService.GASTEN_VLIEGER1_TYPE_ID:
+            case this.configService.GASTEN_VLIEGER2_TYPE_ID:
+            {
+                if (ui!.LidData!.GASTENVLIEGER == false) {
+                    return false;
+                }
+                break;
+            }
+            case this.configService.SLEEPVLIEGER_TYPE_ID:
+            {
+                if (ui!.LidData!.SLEEPVLIEGER == false) {
+                    return false;
+                }
+                break;
+            }
+            default :
+            {
+                return false;
+            }
         }
 
         // je mag jezelf maar beperkt indelen, geldt niet voor roostermakers en beheerders

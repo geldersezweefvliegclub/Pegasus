@@ -109,12 +109,33 @@
 
 <ng-template #roosterDienst let-dag="dag" let-typeDienst="typeDienst">
     <div class="d-flex" *ngFor="let dt of typeDienst">
-        <div class="w-100" *ngIf="tonen.toonDienst[dt]">
+        <div class="d-flex w-100" *ngIf="tonen.toonDienst[dt]">
             <div class="naam" (click)="openPopup(dag, dt)"
                  [ngClass]="lidInRoosterClass(dag.Diensten[dt])">
                  {{ (dag.Diensten[dt]) ? dag.Diensten[dt].NAAM : "" }}
             </div>
+
+            <div *ngIf="zelfIndelen(dt, dag.DATUM) && !dag.Diensten[dt]"
+                 (click)="toekennenDienst(dag, dt)">
+                <ng-template *ngTemplateOutlet="assign"></ng-template>
+            </div>
+            <div *ngIf="magVerwijderen(dag.Diensten[dt])"
+                 (click)="verwijderDienst(dag, dt)">
+                <ng-template *ngTemplateOutlet="reset"></ng-template>
+            </div>
         </div>
+    </div>
+</ng-template>
+
+<ng-template #reset>
+    <div class="d-flex flex-column justify-content-center h-100 text-black-50 clickable px-1">
+        <fa-icon [icon]="resetIcon"></fa-icon>
+    </div>
+</ng-template>
+
+<ng-template #assign>
+    <div class="d-flex flex-column justify-content-center h-100 text-black-50 clickable px-1">
+        <fa-icon [icon]="assignIcon"></fa-icon>
     </div>
 </ng-template>
 
