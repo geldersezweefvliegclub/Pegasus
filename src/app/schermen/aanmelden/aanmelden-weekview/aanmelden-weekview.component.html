@@ -1,0 +1,70 @@
+
+<div class="dataContent" *ngIf="rooster">
+    <div class="d-flex justify-content-between mb-2">
+        <div>
+            <app-icon-button
+                    class="toolbarBtn mx-2"
+                    iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum.plus({days: -7}))"
+                    btnColor="btn-secondary"></app-icon-button>
+        </div>
+        Aanmeldingen voor de week van {{maandag.day}}-{{maandag.month}}-{{maandag.year}}
+        <div>
+            <app-icon-button
+                    class="toolbarBtn mx-2"
+                    iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum.plus({days: 7}))"
+                    btnColor="btn-secondary"></app-icon-button>
+        </div>
+    </div>
+
+    <div class="roosterTabel">
+        <table class="table" style="width: calc(100% - 15px);">
+            <thead>
+            <tr style="vertical-align: top;">
+                <td></td>
+                <td *ngFor="let dagInRooster of rooster;let r = index" class="dagInRooster" [style]="KolomBreedte()"
+                    [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
+                    {{DagVanDeWeek(dagInRooster.DATUM)}}
+                    <div class="me-2">{{datumDMY(dagInRooster.DATUM)}}</div>
+                    <div *ngIf="dagInRooster.CLUB_BEDRIJF" class="me-2">Clubbedrijf</div>
+                    <div *ngIf="dagInRooster.DDWV">DDWV</div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td *ngFor="let dagInRooster of rooster;let r = index" class="dagInRooster" [style]="KolomBreedte()">
+                    <textarea disabled class="w-100">{{dagInRooster.OPMERKINGEN}}</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td *ngFor="let dagInRooster of rooster;let r = index" class="dagInRooster" [style]="KolomBreedte()">
+                    <app-icon-button *ngIf="!isAangemeld(dagInRooster.DATUM)"
+                                     class="toolbarBtn"
+                                     tekst="Aanmelden"
+                                     iconNaam="fas StreetView" (btnClicked)="ToggleWeekendDDWV()"
+                                     btnColor="btn-primary"></app-icon-button>
+                    <app-icon-button *ngIf="isAangemeld(dagInRooster.DATUM)"
+                                     class="toolbarBtn"
+                                     tekst="Afmelden"
+                                     iconNaam="fas PersonRays" (btnClicked)="ToggleWeekendDDWV()"
+                                     btnColor="btn-secondary"></app-icon-button>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td *ngFor="let dagInRooster of rooster;let r = index" class="aanwezigenLijst">
+                    <table>
+                        <tr *ngFor="let lid of aanwezigen(dagInRooster.DATUM)">
+                            <td>
+                                {{lid.NAAM}}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>

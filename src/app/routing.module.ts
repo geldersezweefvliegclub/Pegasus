@@ -10,7 +10,7 @@ import {
     faKey, faKeyboard,
     faPen,
     faPlane,
-    faPlaneDeparture,
+    faPlaneDeparture, faStreetView,
     faUser,
     faUsers,
     faWaveSquare
@@ -42,6 +42,13 @@ export const routes: CustomRoute[] = [
         excluded: false,
         icon: faChartPie,
         text: 'Dashboard'
+    },
+    {
+        path: 'aanmelden',
+        loadChildren: () => import('./schermen/aanmelden/aanmelden.module').then(m => m.AanmeldenModule),
+        excluded: false,
+        icon: faStreetView,
+        text: 'Aanmelden'
     },
     {
         path: 'vluchten',

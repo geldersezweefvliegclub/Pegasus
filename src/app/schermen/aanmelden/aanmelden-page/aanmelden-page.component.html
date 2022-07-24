@@ -1,0 +1,74 @@
+<app-pegasus-card titel="Aanmelden"
+                  subtitel="Aanmelden voor de vliegdag"
+                  [icon]="aanmeldenIcon">
+    <div cdkDropListGroup class="h-100">
+        <div class="box h-100">
+            <div id="data">
+                <div class="dataContent w-100 h-100" *ngIf="aanmeldenView == 'week'">
+                    <app-aanmelden-weekview class="w-100 h-100"
+                                          [datum]="datum"
+                                          (nieuweDatum)="zetDatum($event)"
+                                          [rooster]="rooster">
+                    </app-aanmelden-weekview>
+                </div>
+                <div class="dataContent w-100 h-100" *ngIf="aanmeldenView == 'dag'">
+                    <!--
+                    <app-rooster-dagview class="w-100 h-100"
+                                         [zelfIndelen]="zelfIndelen"
+                                         [magVerwijderen]="magVerwijderen"
+                                         [lidInRoosterClass]="lidInRoosterClass"
+                                         [tonen]="tonen"
+                                         [datum]="datum"
+                                         (nieuweDatum)="zetDatum($event)"
+                                         [leden]="filteredLeden"
+                                         [rooster]="filteredRooster">
+                    </app-rooster-dagview>
+                    -->
+                </div>
+            </div>
+            <!--
+            <div class="row justify-content-start mt-2" id="toolbar">
+                <div class="d-flex row">
+                    <div class="col-xl-4 col-sm-5">
+
+                        <app-icon-button *ngIf="magWijzigen"
+                                         class="toolbarBtn"
+                                         tekst="Filter"
+                                         iconNaam="fas Filter" (btnClicked)="filterPopup()"
+                                         btnColor="btn-primary"></app-icon-button>
+
+                        <app-icon-button *ngIf="!isDDWVer && roosterView != 'dag'"
+                                         class="toolbarBtn"
+                                         tekst="Club / DDWV"
+                                         iconNaam="fas CalendarWeek" (btnClicked)="ToggleWeekendDDWV()"
+                                         btnColor="btn-primary"></app-icon-button>
+
+                    </div>
+                    <div class="col-xl-8 col-sm-7">
+                        <div class="d-flex align-items-end text-nowrap" id="zoekbar" *ngIf="magWijzigen && roosterView == 'maand'">
+
+                            <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>
+                            <input id="zoekInput"
+                                   type="search"
+                                   class="form-control"
+                                   [(ngModel)]="zoekString"
+                                   name="zoekString"
+                                   (keyup)="applyLedenFilter()"
+                                   (search)="applyLedenFilter()"
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+            -->
+        </div>
+    </div>
+    <app-leden-filter [LedenDDWV]="false" (filterChanged)="applyLedenFilter()"></app-leden-filter>
+</app-pegasus-card>
+
+
+<div class="spinnerOverlay" *ngIf="isLoading > 0">
+    <div class="spinnerPosition">
+        <span><img src="../../../../assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Data wordt geladen .....</span>
+    </div>
+</div>
