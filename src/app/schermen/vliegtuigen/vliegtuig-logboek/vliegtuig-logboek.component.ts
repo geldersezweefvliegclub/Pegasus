@@ -1,22 +1,21 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {HeliosLogboekDataset, HeliosVliegtuig, HeliosVliegtuigLogboekTotalen} from "../../../types/Helios";
-import {ColDef} from "ag-grid-community";
-import {faClock, IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faBookmark, faClipboardList, faPlaneDeparture, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
-import {LoginService} from "../../../services/apiservice/login.service";
-import * as xlsx from "xlsx";
-import {StartlijstService} from "../../../services/apiservice/startlijst.service";
-import {Subscription} from "rxjs";
-import {DateTime} from "luxon";
-import {SharedService} from "../../../services/shared/shared.service";
-import {DatumRenderComponent} from "../../../shared/components/datatable/datum-render/datum-render.component";
-import {VliegtuigenService} from "../../../services/apiservice/vliegtuigen.service";
-import {ChartDataSets, ChartOptions, ChartType} from "chart.js";
-import {Label} from "ng2-charts";
-import {ModalComponent} from "../../../shared/components/modal/modal.component";
-import {ActivatedRoute} from "@angular/router";
+import {HeliosLogboekDataset, HeliosVliegtuig, HeliosVliegtuigLogboekTotalen} from '../../../types/Helios';
+import {ColDef} from 'ag-grid-community';
+import {faClock, IconDefinition} from '@fortawesome/free-regular-svg-icons';
+import {faBookmark, faClipboardList, faPlaneDeparture, faTimesCircle} from '@fortawesome/free-solid-svg-icons';
+import {LoginService} from '../../../services/apiservice/login.service';
+import * as xlsx from 'xlsx';
+import {StartlijstService} from '../../../services/apiservice/startlijst.service';
+import {Subscription} from 'rxjs';
+import {DateTime} from 'luxon';
+import {SharedService} from '../../../services/shared/shared.service';
+import {DatumRenderComponent} from '../../../shared/components/datatable/datum-render/datum-render.component';
+import {VliegtuigenService} from '../../../services/apiservice/vliegtuigen.service';
+import {ChartDataset, ChartOptions, ChartType} from 'chart.js';
+import {ModalComponent} from '../../../shared/components/modal/modal.component';
+import {ActivatedRoute} from '@angular/router';
 import {nummerSort, tijdSort} from '../../../utils/Utils';
-import {ErrorMessage} from "../../../types/Utils";
+import {ErrorMessage} from '../../../types/Utils';
 
 
 @Component({
@@ -72,39 +71,43 @@ export class VliegtuigLogboekComponent implements OnInit {
             },
         },
         scales: {
-            xAxes: [{
-                gridLines: {
+            x: {
+                grid: {
                     drawOnChartArea: false
                 },
                 ticks: {
-                    fontColor: '#e7e7e7',
-                    fontFamily: 'Roboto, sans-serif',
-                    fontSize: 12,
-                    fontStyle: '300'
+                    color: '#e7e7e7',
+                    font: {
+                      family: 'Roboto, sans-serif',
+                      size: 12,
+                      weight: '300'
+                    }
                 }
-            }],
-            yAxes: [{
-                gridLines: {
+            },
+            y: {
+                grid: {
                     borderDash: [6, 4],
                     color: '#478706',
                 },
+                beginAtZero: true,
                 ticks: {
                     stepSize: 10,
-                    fontColor: '#e7e7e7',
-                    fontFamily: 'Roboto, sans-serif',
-                    fontSize: 12,
-                    fontStyle: '300',
-                    beginAtZero: true
+                    color: '#e7e7e7',
+                    font: {
+                        family: 'Roboto, sans-serif',
+                        size: 12,
+                        weight: '300'
+                    },
                 }
-            }]
+            }
         }
     };
-    barChartLabels: Label[] = ['Jan', 'Feb', 'Mrt', 'Apr', 'Mei', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'];
+    barChartLabels: string[] = ['Jan', 'Feb', 'Mrt', 'Apr', 'Mei', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'];
     barChartType: ChartType = 'bar';
     barChartLegend = true;
     barChartPlugins = [];
 
-    barChartData: ChartDataSets[] = [];
+    barChartData: ChartDataset[] = [];
 
     /*-LineChart------------*/
     lineChartOptions: ChartOptions = {
@@ -117,39 +120,43 @@ export class VliegtuigLogboekComponent implements OnInit {
             },
         },
         scales: {
-            xAxes: [{
-                gridLines: {
+            xAxes: {
+                grid: {
                     drawOnChartArea: false
                 },
                 ticks: {
-                    fontColor: '#e7e7e7',
-                    fontFamily: 'Roboto, sans-serif',
-                    fontSize: 12,
-                    fontStyle: '300'
+                    color: '#e7e7e7',
+                    font: {
+                      family: 'Roboto, sans-serif',
+                      size: 12,
+                      weight: '300'
+                    }
                 }
-            }],
-            yAxes: [{
-                gridLines: {
+            },
+            yAxes: {
+                grid: {
                     borderDash: [6, 4],
                     color: '#548bcd',
                 },
+                beginAtZero: true,
                 ticks: {
                     stepSize: 10,
-                    fontColor: '#e7e7e7',
-                    fontFamily: 'Roboto, sans-serif',
-                    fontSize: 12,
-                    fontStyle: '300',
-                    beginAtZero: true
+                    color: '#e7e7e7',
+                    font: {
+                        family: 'Roboto, sans-serif',
+                        size: 12,
+                        weight: '300'
+                    },
                 }
-            }]
+            }
         }
     };
-    lineChartLabels: Label[] = this.barChartLabels
+    lineChartLabels: string[] = this.barChartLabels
     lineChartType: ChartType = 'line';
     lineChartLegend = true;
     lineChartPlugins = [];
 
-    lineChartData: ChartDataSets[] = [];
+    lineChartData: ChartDataset[] = [];
 
     /*--popup voor grafiek--*/
     DetailGrafiekTitel: string;
@@ -202,31 +209,31 @@ export class VliegtuigLogboekComponent implements OnInit {
             const alGedaan = this.barChartData.find(reeks => reeks.label == this.datum.year.toString())
 
             if (!alGedaan) {
-                const barReeks: ChartDataSets = {
+                const barReeks: ChartDataset = {
                     label: this.datum.year.toString(),
                     barThickness: 8,
                     backgroundColor: this.getColor(this.barChartData.length, 0.8),
 
                     data: [
-                        t.dataset![0].VLUCHTEN,
-                        t.dataset![1].VLUCHTEN,
-                        t.dataset![2].VLUCHTEN,
-                        t.dataset![3].VLUCHTEN,
-                        t.dataset![4].VLUCHTEN,
-                        t.dataset![5].VLUCHTEN,
-                        t.dataset![6].VLUCHTEN,
-                        t.dataset![7].VLUCHTEN,
-                        t.dataset![8].VLUCHTEN,
-                        t.dataset![9].VLUCHTEN,
-                        t.dataset![10].VLUCHTEN,
-                        t.dataset![11].VLUCHTEN,
+                        t.dataset![0].VLUCHTEN as number,
+                        t.dataset![1].VLUCHTEN as number,
+                        t.dataset![2].VLUCHTEN as number,
+                        t.dataset![3].VLUCHTEN as number,
+                        t.dataset![4].VLUCHTEN as number,
+                        t.dataset![5].VLUCHTEN as number,
+                        t.dataset![6].VLUCHTEN as number,
+                        t.dataset![7].VLUCHTEN as number,
+                        t.dataset![8].VLUCHTEN as number,
+                        t.dataset![9].VLUCHTEN as number,
+                        t.dataset![10].VLUCHTEN as number,
+                        t.dataset![11].VLUCHTEN as number,
                     ]
                 }
                 this.barChartData.push(barReeks);
 
-                const lineReeks: ChartDataSets = {
+                const lineReeks: ChartDataset = {
                     label: this.datum.year.toString(),
-                    lineTension: 0,
+                    tension: 0,
                     backgroundColor: this.getColor(this.lineChartData.length, 0.4),
                     borderColor: this.getColor(this.lineChartData.length, 1),
                     pointBackgroundColor: 'rgba(148,159,177,1)',

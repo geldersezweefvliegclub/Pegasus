@@ -128,5 +128,7 @@
       }
     }
   },
-  "defaultProject": "pegasus"
+  "cli": {
+    "analytics": false
+  }
 }

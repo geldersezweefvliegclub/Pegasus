@@ -1,13 +1,12 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../modal/modal.component";
-import {Subscription} from "rxjs";
-import {DateTime} from "luxon";
-import * as pluginAnnotations from "chartjs-plugin-annotation";
-import {AnnotationOptions} from "chartjs-plugin-annotation";
-import {ChartDataSets, ChartOptions, ChartType} from "chart.js";
-import {Label} from "ng2-charts";
-import {StartlijstService} from "../../../../services/apiservice/startlijst.service";
-import {SharedService} from "../../../../services/shared/shared.service";
+import {ModalComponent} from '../../modal/modal.component';
+import {Subscription} from 'rxjs';
+import {DateTime} from 'luxon';
+import * as pluginAnnotations from 'chartjs-plugin-annotation';
+import {AnnotationOptions} from 'chartjs-plugin-annotation';
+import {ChartDataset, ChartOptions, ChartType} from 'chart.js';
+import {StartlijstService} from '../../../../services/apiservice/startlijst.service';
+import {SharedService} from '../../../../services/shared/shared.service';
 
 @Component({
     selector: 'app-instructie-grafiek',
@@ -32,7 +31,6 @@ export class InstructieGrafiekComponent implements OnInit {
     JaarGrens1: AnnotationOptions =
         {
             type: 'line',
-            mode: 'vertical',
             scaleID: 'x-axis-0',
             value: '',                       // wordt later gezet
             borderColor: '#bfbebe',
@@ -43,7 +41,6 @@ export class InstructieGrafiekComponent implements OnInit {
     JaarGrens2: AnnotationOptions =
         {
             type: 'line',
-            mode: 'vertical',
             scaleID: 'x-axis-0',
             value: '',                      // wordt later gezet
             borderColor: '#bfbebe',
@@ -54,7 +51,6 @@ export class InstructieGrafiekComponent implements OnInit {
     JaarGrens3: AnnotationOptions =
         {
             type: 'line',
-            mode: 'vertical',
             scaleID: 'x-axis-0',
             value: '',                      // wordt later gezet
             borderColor: '#bfbebe',
@@ -64,7 +60,6 @@ export class InstructieGrafiekComponent implements OnInit {
     MinimaleEisUren: AnnotationOptions =
         {
             type: 'line',
-            mode: 'horizontal',
             scaleID: 'y-axis-0',
             value: '30',
             borderColor: '#2f4a7f',
@@ -75,7 +70,6 @@ export class InstructieGrafiekComponent implements OnInit {
     MinimaleEisStarts: AnnotationOptions =
         {
             type: 'line',
-            mode: 'horizontal',
             scaleID: 'y-axis-0',
             value: '60',
             borderColor: '#d6b052',
@@ -94,51 +88,55 @@ export class InstructieGrafiekComponent implements OnInit {
             },
         },
         scales: {
-            xAxes: [{
-                id: 'x-axis-0',
-                gridLines: {
+            'x-axis-0': {
+                grid: {
                     drawOnChartArea: false
                 },
                 ticks: {
-                    fontColor: '#878787',
-                    fontFamily: 'Roboto, sans-serif',
-                    fontSize: 12,
-                    fontStyle: '300'
+                    color: '#878787',
+                    font: {
+                        family:  'Roboto, sans-serif',
+                        size: 12,
+                        weight: '300'
+                    }
                 }
-            }],
-            yAxes: [{
-                id: 'y-axis-0',
-                gridLines: {
+            },
+            "y-axis-0": {
+                grid: {
                     borderDash: [6, 4],
                     color: '#548bcd',
                 },
                 ticks: {
                     stepSize: 10,
-                    fontColor: '#e7e7e7',
-                    fontFamily: 'Roboto, sans-serif',
-                    fontSize: 12,
-                    fontStyle: '300',
-                    beginAtZero: true
-                }
-            }]
+                    color: '#e7e7e7',
+                    font: {
+                        family: 'Roboto, sans-serif',
+                        size: 12,
+                        weight: '300'
+                    },
+                },
+                beginAtZero: true
+            }
         },
-        annotation: {
-            annotations: [
-                this.MinimaleEisStarts,
-                this.MinimaleEisUren,
-                this.JaarGrens1,
-                this.JaarGrens2,
-                this.JaarGrens3,
-            ]
+        plugins: {
+            annotation: {
+                annotations: [
+                    this.MinimaleEisStarts,
+                    this.MinimaleEisUren,
+                    this.JaarGrens1,
+                    this.JaarGrens2,
+                    this.JaarGrens3,
+                ]
+            }
         }
     }
 
-    lineChartLabels: Label[] = []
+    lineChartLabels: string[] = []
     lineChartType: ChartType = 'line';
     lineChartLegend = true;
 
     lineChartPlugins = [pluginAnnotations];
-    lineChartData: ChartDataSets[] = [];
+    lineChartData: ChartDataset[] = [];
 
     constructor(private readonly startlijstService: StartlijstService,
                 private readonly sharedService: SharedService) {}
@@ -260,7 +258,7 @@ export class InstructieGrafiekComponent implements OnInit {
 
         this.lineChartLabels = lineChartLabels;
 
-        const startsReeks: ChartDataSets = {
+        const startsReeks: ChartDataset = {
             label: "Starts",
             backgroundColor: 'rgb(214,176,82, 0.4)',
             borderColor: 'rgba(213,172,73,0.59)',
@@ -272,7 +270,7 @@ export class InstructieGrafiekComponent implements OnInit {
             data: this.starts,
         }
 
-        const urenReeks: ChartDataSets = {
+        const urenReeks: ChartDataset = {
             label: "Uren",
             backgroundColor: 'rgba(119,151,218,0.4)',
             borderColor: 'rgba(2,49,150,0.59)',

@@ -31,7 +31,7 @@ import {TijdInvoerComponent} from './components/editors/tijd-invoer/tijd-invoer.
 import {NaamRenderComponent} from './components/vlieger-logboek/naam-render/naam-render.component';
 import {WachtwoordSterkteValidatorDirective} from './components/editors/lid-editor/wachtwoord-sterkte-validator.directive';
 import {RecencyGrafiekComponent} from './components/recency/recency-grafiek/recency-grafiek.component';
-import {ChartsModule} from 'ng2-charts';
+import {NgChartsModule} from 'ng2-charts';
 import {NgbDatepickerModule, NgbPopoverModule, NgbProgressbarModule} from '@ng-bootstrap/ng-bootstrap';
 import {ProgressieBoomComponent} from './components/progressie-boom/progressie-boom.component';
 import {TreeviewModule} from 'ngx-treeview';
@@ -69,12 +69,12 @@ import { CompetentieEditorComponent } from './components/editors/competentie-edi
 @NgModule({
     imports: [
         CommonModule,
-        AgGridModule.withComponents([]),
+        AgGridModule,
         FontAwesomeModule,
         FormsModule,
         NgSelectModule,
         LazyLoadImageModule,
-        ChartsModule,
+        NgChartsModule,
         NgbDatepickerModule,
         NgbPopoverModule,
         NgbProgressbarModule,
