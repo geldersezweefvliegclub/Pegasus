@@ -76,7 +76,7 @@
     "@typescript-eslint/parser": "^5.29.0",
     "codelyzer": "^6.0.0",
     "eslint": "^8.18.0",
-    "jasmine-core": "~3.6.0",
+    "jasmine-core": "~3.8.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~6.3.2",
     "karma-chrome-launcher": "~3.1.0",
@@ -88,7 +88,6 @@
     "openapi-typescript-codegen": "^0.9.3",
     "protractor": "~7.0.0",
     "ts-node": "~7.0.0",
-    "tsickle": "^0.39.1",
     "tslint": "~6.1.0",
     "typescript": "~4.6.4"
   }
