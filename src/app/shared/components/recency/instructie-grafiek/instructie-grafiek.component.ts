@@ -4,7 +4,7 @@ import {Subscription} from "rxjs";
 import {DateTime} from "luxon";
 import * as pluginAnnotations from "chartjs-plugin-annotation";
 import {AnnotationOptions} from "chartjs-plugin-annotation";
-import {ChartDataSets, ChartOptions, ChartType} from "chart.js";
+import {ChartDataset, ChartOptions, ChartType} from "chart.js";
 import {Label} from "ng2-charts";
 import {StartlijstService} from "../../../../services/apiservice/startlijst.service";
 import {SharedService} from "../../../../services/shared/shared.service";
@@ -133,12 +133,12 @@ export class InstructieGrafiekComponent implements OnInit {
         }
     }
 
-    lineChartLabels: Label[] = []
+    lineChartLabels: string[] = []
     lineChartType: ChartType = 'line';
     lineChartLegend = true;
 
     lineChartPlugins = [pluginAnnotations];
-    lineChartData: ChartDataSets[] = [];
+    lineChartData: ChartDataset[] = [];
 
     constructor(private readonly startlijstService: StartlijstService,
                 private readonly sharedService: SharedService) {}
@@ -260,7 +260,7 @@ export class InstructieGrafiekComponent implements OnInit {
 
         this.lineChartLabels = lineChartLabels;
 
-        const startsReeks: ChartDataSets = {
+        const startsReeks: ChartDataset = {
             label: "Starts",
             backgroundColor: 'rgb(214,176,82, 0.4)',
             borderColor: 'rgba(213,172,73,0.59)',
@@ -272,7 +272,7 @@ export class InstructieGrafiekComponent implements OnInit {
             data: this.starts,
         }
 
-        const urenReeks: ChartDataSets = {
+        const urenReeks: ChartDataset = {
             label: "Uren",
             backgroundColor: 'rgba(119,151,218,0.4)',
             borderColor: 'rgba(2,49,150,0.59)',

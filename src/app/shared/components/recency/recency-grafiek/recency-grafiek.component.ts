@@ -1,15 +1,14 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {Subscription} from "rxjs";
-import {DateTime} from "luxon";
-import {SharedService} from "../../../../services/shared/shared.service";
-import {StartlijstService} from "../../../../services/apiservice/startlijst.service";
+import {Subscription} from 'rxjs';
+import {DateTime} from 'luxon';
+import {SharedService} from '../../../../services/shared/shared.service';
+import {StartlijstService} from '../../../../services/apiservice/startlijst.service';
 
-import {ChartDataSets, ChartOptions, ChartType} from "chart.js";
+import {ChartDataset, ChartOptions, ChartType} from 'chart.js';
 import * as pluginAnnotations from 'chartjs-plugin-annotation';
 import {AnnotationOptions} from 'chartjs-plugin-annotation';
 
-import {ModalComponent} from "../../modal/modal.component";
-import {Label} from "ng2-charts";
+import {ModalComponent} from '../../modal/modal.component';
 
 @Component({
     selector: 'app-recency-grafiek',
@@ -142,12 +141,12 @@ export class RecencyGrafiekComponent implements  OnInit{
         }
     }
 
-    lineChartLabels: Label[] = []
+    lineChartLabels: string[] = []
     lineChartType: ChartType = 'line';
     lineChartLegend = false;
 
     lineChartPlugins = [pluginAnnotations];
-    lineChartData: ChartDataSets[] = [];
+    lineChartData: ChartDataset[] = [];
 
     constructor(private readonly startlijstService: StartlijstService,
                 private readonly sharedService: SharedService) {}
@@ -257,7 +256,7 @@ export class RecencyGrafiekComponent implements  OnInit{
         this.waardes = waardes;
         this.lineChartLabels = lineChartLabels;
 
-        const lineReeks: ChartDataSets = {
+        const lineReeks: ChartDataset = {
             backgroundColor: 'rgba(255,255,255,0)',                 // geen opvulkleur
             borderColor: 'rgba(42,42,42,0.59)',
             pointBackgroundColor: 'rgba(148,159,177,1)',

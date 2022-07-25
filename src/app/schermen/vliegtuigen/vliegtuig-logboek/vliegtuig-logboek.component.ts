@@ -11,7 +11,7 @@ import {DateTime} from "luxon";
 import {SharedService} from "../../../services/shared/shared.service";
 import {DatumRenderComponent} from "../../../shared/components/datatable/datum-render/datum-render.component";
 import {VliegtuigenService} from "../../../services/apiservice/vliegtuigen.service";
-import {ChartDataSets, ChartOptions, ChartType} from "chart.js";
+import {ChartDataset, ChartOptions, ChartType} from "chart.js";
 import {Label} from "ng2-charts";
 import {ModalComponent} from "../../../shared/components/modal/modal.component";
 import {ActivatedRoute} from "@angular/router";
@@ -99,12 +99,12 @@ export class VliegtuigLogboekComponent implements OnInit {
             }]
         }
     };
-    barChartLabels: Label[] = ['Jan', 'Feb', 'Mrt', 'Apr', 'Mei', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'];
+    barChartLabels: string[] = ['Jan', 'Feb', 'Mrt', 'Apr', 'Mei', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'];
     barChartType: ChartType = 'bar';
     barChartLegend = true;
     barChartPlugins = [];
 
-    barChartData: ChartDataSets[] = [];
+    barChartData: ChartDataset[] = [];
 
     /*-LineChart------------*/
     lineChartOptions: ChartOptions = {
@@ -144,12 +144,12 @@ export class VliegtuigLogboekComponent implements OnInit {
             }]
         }
     };
-    lineChartLabels: Label[] = this.barChartLabels
+    lineChartLabels: string[] = this.barChartLabels
     lineChartType: ChartType = 'line';
     lineChartLegend = true;
     lineChartPlugins = [];
 
-    lineChartData: ChartDataSets[] = [];
+    lineChartData: ChartDataset[] = [];
 
     /*--popup voor grafiek--*/
     DetailGrafiekTitel: string;
@@ -202,7 +202,7 @@ export class VliegtuigLogboekComponent implements OnInit {
             const alGedaan = this.barChartData.find(reeks => reeks.label == this.datum.year.toString())
 
             if (!alGedaan) {
-                const barReeks: ChartDataSets = {
+                const barReeks: ChartDataset = {
                     label: this.datum.year.toString(),
                     barThickness: 8,
                     backgroundColor: this.getColor(this.barChartData.length, 0.8),
@@ -224,7 +224,7 @@ export class VliegtuigLogboekComponent implements OnInit {
                 }
                 this.barChartData.push(barReeks);
 
-                const lineReeks: ChartDataSets = {
+                const lineReeks: ChartDataset = {
                     label: this.datum.year.toString(),
                     lineTension: 0,
                     backgroundColor: this.getColor(this.lineChartData.length, 0.4),
