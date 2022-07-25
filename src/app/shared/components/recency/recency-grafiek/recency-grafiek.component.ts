@@ -6,9 +6,10 @@ import {StartlijstService} from '../../../../services/apiservice/startlijst.serv
 
 import {ChartDataset, ChartOptions, ChartType} from 'chart.js';
 import * as pluginAnnotations from 'chartjs-plugin-annotation';
-import {AnnotationOptions} from 'chartjs-plugin-annotation';
+import {AnnotationOptions, BoxAnnotationOptions, LineAnnotationOptions} from 'chartjs-plugin-annotation';
 
 import {ModalComponent} from '../../modal/modal.component';
+import {CoreAnnotationOptions} from 'chartjs-plugin-annotation/types/options';
 
 @Component({
     selector: 'app-recency-grafiek',
@@ -70,10 +71,8 @@ export class RecencyGrafiekComponent implements  OnInit{
     }
 
     // Teken een verticale lijn op de 1e jaargrens zodat je de jaren goed kunt onderscheiden
-    JaarGrens1: AnnotationOptions =
+    JaarGrens1: CoreAnnotationOptions =
     {
-        type: 'line',
-        mode: 'vertical',
         scaleID: 'x-axis-0',
         value: '',                       // wordt later gezet
         borderColor: '#bfbebe',
@@ -81,10 +80,8 @@ export class RecencyGrafiekComponent implements  OnInit{
     }
 
     // Teken een verticale lijn op de 2e jaargrens zodat je de jaren goed kunt onderscheiden
-    JaarGrens2: AnnotationOptions =
+    JaarGrens2: CoreAnnotationOptions =
     {
-        type: 'line',
-        mode: 'vertical',
         scaleID: 'x-axis-0',
         value: '',                      // wordt later gezet
         borderColor: '#bfbebe',
@@ -102,35 +99,39 @@ export class RecencyGrafiekComponent implements  OnInit{
             },
         },
         scales: {
-            xAxes: [{
-                id: 'x-axis-0',
-                gridLines: {
+            "x-axis-0": {
+                grid: {
                     drawOnChartArea: false
                 },
                 ticks: {
-                    fontColor: '#878787',
-                    fontFamily: 'Roboto, sans-serif',
-                    fontSize: 12,
-                    fontStyle: '300'
+                    color: '#878787',
+                    font: {
+                        family: 'Roboto, sans-serif',
+                        size: 12,
+                        weight: '300'
+                    },
                 }
-            }],
-            yAxes: [{
-                id: 'y-axis-0',
-                gridLines: {
+            },
+            "y-axis-0": {
+                beginAtZero: true,
+                grid: {
                     borderDash: [6, 4],
                     color: '#548bcd',
                 },
                 ticks: {
                     stepSize: 10,
-                    fontColor: '#e7e7e7',
-                    fontFamily: 'Roboto, sans-serif',
-                    fontSize: 12,
-                    fontStyle: '300',
-                    beginAtZero: true
+                    color: '#e7e7e7',
+                    font: {
+                      family: 'Roboto, sans-serif',
+                      size: 12,
+                      weight: '300',
+                    } ,
+
                 }
-            }]
+            }
         },
-        annotation: {
+        plugins: {
+          annotation: {
             annotations: [
                 this.RodeBalk,
                 this.GeleBalk,
@@ -138,6 +139,7 @@ export class RecencyGrafiekComponent implements  OnInit{
                 this.JaarGrens1,
                 this.JaarGrens2,
             ]
+          }
         }
     }
 
@@ -168,13 +170,9 @@ export class RecencyGrafiekComponent implements  OnInit{
         this.opvragen();
 
         // zet de jaargrenzen
-        if (this.JaarGrens1.type === "line") {
-            this.JaarGrens1.value = 'Jan ' + (this.datum.year-1).toString()
-        }
-
-        if (this.JaarGrens2.type === "line") {
-            this.JaarGrens2.value = 'Jan ' + this.datum.year.toString()
-        }
+        this.JaarGrens1.value = 'Jan ' + (this.datum.year-1).toString()
+        this.JaarGrens2.value = 'Jan ' + this.datum.year.toString()
+      
         this.popup.open();
     }
 
