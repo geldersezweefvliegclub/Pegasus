@@ -9,7 +9,7 @@ import {ZitplaatsRenderComponent} from "./zitplaats-render/zitplaats-render.comp
 import {HandboekRenderComponent} from "./handboek-render/handboek-render.component";
 import {ExtendedModule} from "@angular/flex-layout";
 import {VliegtuigLogboekComponent} from "./vliegtuig-logboek/vliegtuig-logboek.component";
-import {ChartsModule} from "ng2-charts";
+import {NgChartsModule} from "ng2-charts";
 
 @NgModule({
     declarations: [
@@ -22,7 +22,7 @@ import {ChartsModule} from "ng2-charts";
         CommonModule,
         FormsModule,
         FontAwesomeModule,
-        ChartsModule,
+        NgChartsModule,
         SharedModule,
 
         RouterModule.forChild([
