@@ -16,7 +16,6 @@ import {TreeviewConfig, TreeviewItem} from "ngx-treeview";
 import {LoginService} from "../../../services/apiservice/login.service";
 import {TypesService} from "../../../services/apiservice/types.service";
 import {CompetentieEditorComponent} from "../../../shared/components/editors/competentie-editor/competentie-editor.component";
-import {nullSafeIsEquivalent} from "@angular/compiler/src/output/output_ast";
 
 export class CompetentieTreeviewItem extends TreeviewItem {
     leerfaseID: number | undefined;
