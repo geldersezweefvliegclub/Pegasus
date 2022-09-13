@@ -4,12 +4,13 @@ import {DateTime} from 'luxon';
 import {SharedService} from '../../../../services/shared/shared.service';
 import {StartlijstService} from '../../../../services/apiservice/startlijst.service';
 
-import {ChartDataset, ChartOptions, ChartType} from 'chart.js';
 import * as pluginAnnotations from 'chartjs-plugin-annotation';
-import {AnnotationOptions, BoxAnnotationOptions, LineAnnotationOptions} from 'chartjs-plugin-annotation';
+import AnnotationPlugin, {AnnotationOptions, LineAnnotationOptions} from 'chartjs-plugin-annotation';
+import {Chart, ChartConfiguration, ChartDataset, ChartOptions, ChartEvent, ChartType} from 'chart.js';
+import {BaseChartDirective} from 'ng2-charts';
 
 import {ModalComponent} from '../../modal/modal.component';
-import {CoreAnnotationOptions} from 'chartjs-plugin-annotation/types/options';
+
 
 @Component({
     selector: 'app-recency-grafiek',
@@ -17,7 +18,7 @@ import {CoreAnnotationOptions} from 'chartjs-plugin-annotation/types/options';
     styleUrls: ['./recency-grafiek.component.scss']
 })
 
-export class RecencyGrafiekComponent implements  OnInit{
+export class RecencyGrafiekComponent implements OnInit {
     @Input() VliegerID: number;
     @Input() naam: string;
 
@@ -32,61 +33,60 @@ export class RecencyGrafiekComponent implements  OnInit{
 
     // De rode zone tekenen in de grafiek
     RodeBalk: AnnotationOptions =
-    {
-        drawTime: "beforeDatasetsDraw",
-        type: 'box',
-        yScaleID: 'y-axis-0',
-        xMin: 0,
-        xMax: 100,
-        yMin: 0,
-        yMax: 10,
-        backgroundColor: 'rgba(220,53,69,0.75)',
-    };
+        {
+            type: 'box',
+            yScaleID: 'y-axis-0',
+            xMin: 0,
+            xMax: 100,
+            yMin: 0,
+            yMax: 10,
+            backgroundColor: 'rgba(220,53,69,0.75)',
+        };
 
     // De gele zone tekenen in de grafiek
     GeleBalk: AnnotationOptions =
-    {
-        drawTime: "beforeDatasetsDraw",
-        type: 'box',
-        yScaleID: 'y-axis-0',
-        xMin: 0,
-        xMax: 100,
-        yMin: 10,
-        yMax: 20,
-        backgroundColor: 'rgba(255,193,7,0.75)',
-    }
+        {
+            type: 'box',
+            yScaleID: 'y-axis-0',
+            xMin: 0,
+            xMax: 100,
+            yMin: 10,
+            yMax: 20,
+            backgroundColor: 'rgba(255,193,7,0.75)',
+        }
 
     // De groene zone tekenen in de grafiek
     GroeneBalk: AnnotationOptions =
-    {
-        drawTime: "beforeDatasetsDraw",
-        type: 'box',
-        yScaleID: 'y-axis-0',
-        xMin: 0,
-        xMax: 100,
-        yMin: 20,
-        yMax: 30,
+        {
+            type: 'box',
+            yScaleID: 'y-axis-0',
+            xMin: 0,
+            xMax: 100,
+            yMin: 20,
+            yMax: 30,
 
-        backgroundColor: 'rgba(40,167,69,0.75)',
-    }
+            backgroundColor: 'rgba(40,167,69,0.75)',
+        }
 
     // Teken een verticale lijn op de 1e jaargrens zodat je de jaren goed kunt onderscheiden
-    JaarGrens1: CoreAnnotationOptions =
-    {
-        scaleID: 'x-axis-0',
-        value: '',                       // wordt later gezet
-        borderColor: '#bfbebe',
-        borderWidth: 1,
-    }
+    JaarGrens1: AnnotationOptions =
+        {
+            type: 'line',
+            scaleID: 'x-axis-0',
+            value: '',                       // wordt later gezet
+            borderColor: '#bfbebe',
+            borderWidth: 1,
+        }
 
-    // Teken een verticale lijn op de 2e jaargrens zodat je de jaren goed kunt onderscheiden
-    JaarGrens2: CoreAnnotationOptions =
-    {
-        scaleID: 'x-axis-0',
-        value: '',                      // wordt later gezet
-        borderColor: '#bfbebe',
-        borderWidth: 1,
-    }
+    // Teken een sverticale lijn op de 2e jaargrens zodat je de jaren goed kunt onderscheiden
+    JaarGrens2: AnnotationOptions =
+        {
+            type: 'line',
+            scaleID: 'x-axis-0',
+            value: '',                      // wordt later gezet
+            borderColor: '#bfbebe',
+            borderWidth: 1,
+        }
 
     // alle opties voor het tekenen van de lijn
     lineChartOptions: ChartOptions = {
@@ -98,8 +98,13 @@ export class RecencyGrafiekComponent implements  OnInit{
                 right: 20,
             },
         },
+        elements: {
+            line: {
+                tension: 0.5
+            }
+        },
         scales: {
-            "x-axis-0": {
+            'x': {
                 grid: {
                     drawOnChartArea: false
                 },
@@ -112,7 +117,7 @@ export class RecencyGrafiekComponent implements  OnInit{
                     },
                 }
             },
-            "y-axis-0": {
+            'y-axis-0': {
                 beginAtZero: true,
                 grid: {
                     borderDash: [6, 4],
@@ -122,36 +127,52 @@ export class RecencyGrafiekComponent implements  OnInit{
                     stepSize: 10,
                     color: '#e7e7e7',
                     font: {
-                      family: 'Roboto, sans-serif',
-                      size: 12,
-                      weight: '300',
-                    } ,
+                        family: 'Roboto, sans-serif',
+                        size: 12,
+                        weight: '300',
+                    },
 
                 }
             }
         },
         plugins: {
-          annotation: {
-            annotations: [
-                this.RodeBalk,
-                this.GeleBalk,
-                this.GroeneBalk,
-                this.JaarGrens1,
-                this.JaarGrens2,
-            ]
-          }
+            legend: {display: false},
+            annotation: {
+                /*
+                common: {
+                    drawTime: "beforeDatasetsDraw"
+                }, */
+                annotations: [
+                    this.RodeBalk,
+                    this.GeleBalk,
+                    this.GroeneBalk,
+                    this.JaarGrens1,
+                    this.JaarGrens2
+                ]
+            }
         }
     }
 
-    lineChartLabels: string[] = []
-    lineChartType: ChartType = 'line';
-    lineChartLegend = false;
-
     lineChartPlugins = [pluginAnnotations];
-    lineChartData: ChartDataset[] = [];
+    lineChartData: ChartConfiguration['data'] = {
+        datasets: [
+            {
+                data: [],                                       // wordt later gevuld
+                backgroundColor: 'rgba(148,159,177,0.2)',
+                borderColor: 'rgb(79,75,75)',
+                pointBackgroundColor: 'rgba(148,159,177,1)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgba(148,159,177,0.8)',
+            },
+        ],
+        labels: []                                              // wordt later gevuld
+    }
 
     constructor(private readonly startlijstService: StartlijstService,
-                private readonly sharedService: SharedService) {}
+                private readonly sharedService: SharedService) {
+        Chart.register(AnnotationPlugin);
+    }
 
     ngOnInit(): void {
         // de datum zoals die in de kalender gekozen is
@@ -170,9 +191,11 @@ export class RecencyGrafiekComponent implements  OnInit{
         this.opvragen();
 
         // zet de jaargrenzen
-        this.JaarGrens1.value = 'Jan ' + (this.datum.year-1).toString()
-        this.JaarGrens2.value = 'Jan ' + this.datum.year.toString()
-      
+        this.JaarGrens1.xMin = 'Jan ' + (this.datum.year - 1).toString()
+        this.JaarGrens1.xMax = this.JaarGrens1.xMin
+        this.JaarGrens2.xMin = 'Jan ' + this.datum.year.toString()
+        this.JaarGrens2.xMax = this.JaarGrens2.xMin
+
         this.popup.open();
     }
 
@@ -227,7 +250,7 @@ export class RecencyGrafiekComponent implements  OnInit{
                     break;
             }
 
-            // toon voor januarie en de allereerste maand, ook het jaartal
+            // toon voor januari en de allereerste maand, ook het jaartal
             if ((this.counter == 0) || (d.month == 1)) {
                 maand += " " + d.year.toString();
             }
@@ -248,14 +271,17 @@ export class RecencyGrafiekComponent implements  OnInit{
         }
         this.bezig = false;                         // klaar met ophalen
         if (this.GroeneBalk.type === "box") {       // aanpassen groene schaal
-            this.GroeneBalk.yMax = Math.ceil(maxWaarde/10) * 10;    // afronden naar boven in tientallen 70 - 80 - 90
+            this.GroeneBalk.yMax = Math.ceil(maxWaarde / 10) * 10;    // afronden naar boven in tientallen 70 - 80 - 90
         }
 
-        this.waardes = waardes;
-        this.lineChartLabels = lineChartLabels;
+        //  this.waardes = waardes;
+        //this.lineChartLabels = lineChartLabels;
+
+        this.lineChartData.datasets[0].data = waardes;
+        this.lineChartData.labels = lineChartLabels;
 
         const lineReeks: ChartDataset = {
-            backgroundColor: 'rgba(255,255,255,0)',                 // geen opvulkleur
+
             borderColor: 'rgba(42,42,42,0.59)',
             pointBackgroundColor: 'rgba(148,159,177,1)',
             pointBorderColor: '#fff',
@@ -263,8 +289,6 @@ export class RecencyGrafiekComponent implements  OnInit{
             pointHoverBorderColor: 'rgba(148,159,177,0.8)',
 
             data: this.waardes,
-
         }
-        this.lineChartData = [lineReeks];
     }
 }

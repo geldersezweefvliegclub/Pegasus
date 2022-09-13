@@ -111,115 +111,276 @@ export interface paths {
 export interface components {
   schemas: {
     token: {
-      /** JSON Web Token - JWT */
+      /** @description JSON Web Token - JWT */
       TOKEN?: string;
     };
     ref_leden: {
-      /** Database ID van het lid record */
+      /**
+       * Format: int32
+       * @description Database ID van het lid record
+       * @example 12871
+       */
       ID?: number;
-      /** De volledige naam van het lid */
+      /**
+       * @description De volledige naam van het lid
+       * @example Meindert het Paard
+       */
       NAAM?: string;
-      /** De voornaam van het lid */
+      /**
+       * @description De voornaam van het lid
+       * @example Meindert
+       */
       VOORNAAM?: string;
-      /** De tussenvoegsel van het lid */
+      /**
+       * @description De tussenvoegsel van het lid
+       * @example het
+       */
       TUSSENVOEGSEL?: string;
-      /** De achternaam van het lid zonder tussenvoegsels */
+      /**
+       * @description De achternaam van het lid zonder tussenvoegsels
+       * @example Paard
+       */
       ACHTERNAAM?: string;
-      /** Het (post) adres waar het lid woont */
+      /**
+       * @description Het (post) adres waar het lid woont
+       * @example Werf 18
+       */
       ADRES?: string;
-      /** De postcode die bij het adres hoort */
+      /**
+       * @description De postcode die bij het adres hoort
+       * @example 7158 PP
+       */
       POSTCODE?: string;
-      /** De plaatsnaam */
+      /**
+       * @description De plaatsnaam
+       * @example Berkum
+       */
       WOONPLAATS?: string;
-      /** Telefoon nummer van het lid */
+      /**
+       * @description Telefoon nummer van het lid
+       * @example 086-1506822
+       */
       TELEFOON?: string;
-      /** Mobiel telefoon nummer van het lid */
+      /**
+       * @description Mobiel telefoon nummer van het lid
+       * @example 06-1025500
+       */
       MOBIEL?: string;
-      /** Het telefoonnummer van een naaste, kan gebruikt worden in noodgevallen */
+      /**
+       * @description Het telefoonnummer van een naaste, kan gebruikt worden in noodgevallen
+       * @example 0112-11801
+       */
       NOODNUMMER?: string;
-      /** email adres van het lid */
+      /**
+       * @description email adres van het lid
+       * @example meindert@fabeltje.com
+       */
       EMAIL?: string;
-      /** url naar avatar */
+      /**
+       * @description url naar avatar
+       * @example https://mijn.vliegclub.org/avatar.gif
+       */
       AVATAR?: string;
-      /** Het lidnummer zoals dat in de leden administratie bekend is */
+      /**
+       * @description Het lidnummer zoals dat in de leden administratie bekend is
+       * @example 11139
+       */
       LIDNR?: string;
-      /** Het soort lid (jeugdlid, lid, donateur). Verwijzing naar type tabel */
+      /**
+       * Format: int32
+       * @description Het soort lid (jeugdlid, lid, donateur). Verwijzing naar type tabel
+       * @example 603
+       */
       LIDTYPE_ID?: number;
-      /** Zusterclub lidmaatschap van lid. Nodig voor DDWV. */
+      /**
+       * Format: int32
+       * @description De vliegstatus van het lid (DBO, solist, brevethouder), NULL indien niet van toepassing
+       * @example 1901
+       */
+      STATUSTYPE_ID?: number;
+      /**
+       * Format: int32
+       * @description Zusterclub lidmaatschap van lid. Nodig voor DDWV.
+       * @example 603
+       */
       ZUSTERCLUB_ID?: number;
-      /** Mag dit lid lieren? */
+      /**
+       * @description Mag dit lid lieren?
+       * @example false
+       */
       LIERIST?: boolean;
-      /** Kan dit lid het startbedrijf leiden? */
+      /**
+       * @description Kan dit lid het startbedrijf leiden?
+       * @example true
+       */
       STARTLEIDER?: boolean;
-      /** Heeft dit lid een instructie bevoegdheid? */
+      /**
+       * @description Heeft dit lid een instructie bevoegdheid?
+       * @example false
+       */
       INSTRUCTEUR?: boolean;
-      /** Heeft dit lid een instructie bevoegdheid? */
+      /**
+       * @description Heeft dit lid een instructie bevoegdheid?
+       * @example false
+       */
       CIMT?: boolean;
-      /** Werkt dit lid mee in het DDWV bedrijf */
+      /**
+       * @description Werkt dit lid mee in het DDWV bedrijf
+       * @example false
+       */
       DDWV_CREW?: boolean;
-      /** Is dit lid de beheerder van het DDWV bedrijf, heeft toegang tot DDWV gerelateede data */
+      /**
+       * @description Is dit lid de beheerder van het DDWV bedrijf, heeft toegang tot DDWV gerelateede data
+       * @example true
+       */
       DDWV_BEHEERDER?: boolean;
-      /** Is dit lid de beheerder van deze omgeving, heeft toegang tot alles */
+      /**
+       * @description Is dit lid de beheerder van deze omgeving, heeft toegang tot alles
+       * @example true
+       */
       BEHEERDER?: boolean;
-      /** Dit account wordt gebruikt om starts in de start toren in te voeren */
+      /**
+       * @description Dit account wordt gebruikt om starts in de start toren in te voeren
+       * @example false
+       */
       STARTTOREN?: boolean;
-      /** Is dit lid  belast met het maken van roosters */
+      /**
+       * @description Is dit lid  belast met het maken van roosters
+       * @example false
+       */
       ROOSTER?: boolean;
-      /** Is dit lid ook een sleepvlieger */
+      /**
+       * @description Is dit lid ook een sleepvlieger
+       * @example false
+       */
       SLEEPVLIEGER?: boolean;
-      /** Moet clubblad per post verstuurd worden */
+      /**
+       * @description Moet clubblad per post verstuurd worden
+       * @example true
+       */
       CLUBBLAD_POST?: boolean;
-      /** Heeft lid toegang tot alle starts / logboeken voor rapportage */
+      /**
+       * @description Heeft lid toegang tot alle starts / logboeken voor rapportage
+       * @example true
+       */
       RAPPORTEUR?: boolean;
-      /** Wordt dit lid ingedeeld om gasten te vliegen */
+      /**
+       * @description Wordt dit lid ingedeeld om gasten te vliegen
+       * @example true
+       */
       GASTENVLIEGER?: boolean;
-      /** Verloopdatum van het medical */
+      /**
+       * Format: date
+       * @description Verloopdatum van het medical
+       * @example 2022-01-16
+       */
       MEDICAL?: string;
-      /** Geboorte datum van het lid */
+      /**
+       * Format: date
+       * @description Geboorte datum van het lid
+       * @example 1932-01-16
+       */
       GEBOORTE_DATUM?: string;
-      /** De inlognaam van het lid */
+      /**
+       * @description De inlognaam van het lid
+       * @example mpaard
+       */
       INLOGNAAM?: string;
-      /** Het geheime password, bij ophalen van data altijd "****". Wachtwoord wordt als hash opgeslagen in de database */
+      /**
+       * @description Het geheime password, bij ophalen van data altijd "****". Wachtwoord wordt als hash opgeslagen in de database
+       * @example 123456
+       */
       WACHTWOORD?: string;
-      /** Wachtwoord in Helios hash formaat. Data wordt direct in database opgeslagen zonder encryptie, dat is namelijk al gebeurd. Alleen van toepassing voor SaveObject, komt dus niet terug in GetObject of GetObjects */
+      /**
+       * @description Wachtwoord in Helios hash formaat. Data wordt direct in database opgeslagen zonder encryptie, dat is namelijk al gebeurd. Alleen van toepassing voor SaveObject, komt dus niet terug in GetObject of GetObjects
+       * @example 123456
+       */
       WACHTWOORD_HASH?: string;
-      /** 2Factor authenticatie voor deze gebruiker */
+      /**
+       * @description 2Factor authenticatie voor deze gebruiker
+       * @example true
+       */
       AUTH?: boolean;
-      /** Heef het lid een startverbod? */
+      /**
+       * @description Heef het lid een startverbod?
+       * @example false
+       */
       STARTVERBOD?: boolean;
-      /** Staat privacy mode (AVG / GDPR) uit/aan */
+      /**
+       * @description Staat privacy mode (AVG / GDPR) uit/aan
+       * @example true
+       */
       PRIVACY?: boolean;
-      /** Wat zijn de beperkingen (vliegen / diensten) voor dit lid */
+      /**
+       * @description Wat zijn de beperkingen (vliegen / diensten) voor dit lid
+       * @example Meindert niet inzetten als startleider, hij gaat gras eten :-)
+       */
       BEPERKINGEN?: string;
-      /** Extra text om opmerkingen toe te voegen */
+      /**
+       * @description Extra text om opmerkingen toe te voegen
+       * @example Voorkeur om 's morgens lierdienst te doen
+       */
       OPMERKINGEN?: string;
     };
     Userinfo: {
-      /** Aantal records dat voldoet aan de criteria in de database */
+      /** @description Aantal records dat voldoet aan de criteria in de database */
       LidData?: components["schemas"]["ref_leden"];
-      /** Gebruik dit object voor applicatie permissies */
+      /** @description Gebruik dit object voor applicatie permissies */
       Userinfo?: {
-        /** Is de ingelogde gebruiker de DDWV beheerder */
+        /**
+         * @description Is de ingelogde gebruiker de DDWV beheerder
+         * @example false
+         */
         isBeheerderDDWV?: boolean;
-        /** Is de ingelogde gebruiker de applicatie beheerder */
+        /**
+         * @description Is de ingelogde gebruiker de applicatie beheerder
+         * @example true
+         */
         isBeheerder?: boolean;
-        /** Is de ingelogde gebruiker de rooster maker */
+        /**
+         * @description Is de ingelogde gebruiker de rooster maker
+         * @example false
+         */
         isRooster?: boolean;
-        /** Is de ingelogde gebruiker een instructeur */
+        /**
+         * @description Is de ingelogde gebruiker een instructeur
+         * @example false
+         */
         isInstructeur?: boolean;
-        /** Is de ingelogde gebruiker chef instructeur */
+        /**
+         * @description Is de ingelogde gebruiker chef instructeur
+         * @example false
+         */
         isCIMT?: boolean;
-        /** Is de ingelogde gebruiker de starttoren? */
+        /**
+         * @description Is de ingelogde gebruiker de starttoren?
+         * @example true
+         */
         isStarttoren?: boolean;
-        /** Is de ingelogde gebruiker verantwoordelijk voor start rapportage & logboeken */
+        /**
+         * @description Is de ingelogde gebruiker verantwoordelijk voor start rapportage & logboeken
+         * @example true
+         */
         isRapporteur?: boolean;
-        /** Maakt de ingelogde gebruiker onderdeel uit van de DDWV crew ? */
+        /**
+         * @description Maakt de ingelogde gebruiker onderdeel uit van de DDWV crew ?
+         * @example true
+         */
         isDDWVCrew?: boolean;
-        /** Is de ingelogde gebruiker aangemeld voor vandaag */
+        /**
+         * @description Is de ingelogde gebruiker aangemeld voor vandaag
+         * @example true
+         */
         isAangemeld?: boolean;
-        /** Is de ingelogde gebruiker een lid van de club */
+        /**
+         * @description Is de ingelogde gebruiker een lid van de club
+         * @example true
+         */
         isClubVlieger?: boolean;
-        /** Is de ingelogde gebruiker een DDWV vlieger (dus geen club lid) */
+        /**
+         * @description Is de ingelogde gebruiker een DDWV vlieger (dus geen club lid)
+         * @example false
+         */
         isDDWV?: boolean;
       };
     };
@@ -227,3 +388,5 @@ export interface components {
 }
 
 export interface operations {}
+
+export interface external {}

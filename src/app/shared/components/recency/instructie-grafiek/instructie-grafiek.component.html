@@ -6,12 +6,13 @@
         <div class="barchart-wrapper popupLargeWrapper" *ngIf="!bezig">
             <div class="linechart-wrapper inlineGrafiek">
                 <canvas class="recencyGrafiek" baseChart *ngIf="uren"
+                        style="width: inherit;height: 65vh;"
+                        [type]="'line'"
                         [datasets]="lineChartData"
                         [labels]="lineChartLabels"
                         [options]="lineChartOptions"
                         [plugins]="lineChartPlugins"
-                        [legend]="lineChartLegend"
-                        [chartType]="lineChartType">
+                        [legend]="lineChartLegend">
                 </canvas>
             </div>
         </div>

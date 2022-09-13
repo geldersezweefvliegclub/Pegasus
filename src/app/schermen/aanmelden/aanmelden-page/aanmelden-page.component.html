@@ -1,17 +1,20 @@
 <app-pegasus-card titel="Aanmelden"
                   subtitel="Aanmelden voor de vliegdag"
                   [icon]="aanmeldenIcon">
-    <div cdkDropListGroup class="h-100">
+    <div class="h-100" >
         <div class="box h-100">
             <div id="data">
-                <div class="dataContent w-100 h-100" *ngIf="aanmeldenView == 'week'">
+                <div class="dataContent w-100 h-100" *ngIf="aanmeldenView === 'week'">
                     <app-aanmelden-weekview class="w-100 h-100"
-                                          [datum]="datum"
-                                          (nieuweDatum)="zetDatum($event)"
-                                          [rooster]="rooster">
+                                            [datum]="datum"
+                                            (nieuweDatum)="zetDatum($event)"
+                                            (aanmelden)="aanmeldenLidScherm($event)"
+                                            (afmelden)="afmeldenPopup($event)"
+                                            [rooster]="rooster"
+                                            [aanmeldingen]="aanmeldingen">
                     </app-aanmelden-weekview>
                 </div>
-                <div class="dataContent w-100 h-100" *ngIf="aanmeldenView == 'dag'">
+                <div class="dataContent w-100 h-100" *ngIf="aanmeldenView === 'dag'">
                     <!--
                     <app-rooster-dagview class="w-100 h-100"
                                          [zelfIndelen]="zelfIndelen"
@@ -63,12 +66,27 @@
             -->
         </div>
     </div>
-    <app-leden-filter [LedenDDWV]="false" (filterChanged)="applyLedenFilter()"></app-leden-filter>
 </app-pegasus-card>
 
 
-<div class="spinnerOverlay" *ngIf="isLoading > 0">
+<div class="spinnerOverlay" *ngIf="isLoading">
     <div class="spinnerPosition">
         <span><img src="../../../../assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Data wordt geladen .....</span>
     </div>
 </div>
+
+<app-modal titel="Bevestig afmelden">
+    <div body>
+        Bevestig de afmelding voor de vliegdag van {{afmeldDatumDMY}}
+    </div>
+
+    <div footer class="row mt-2 justify-content-end">
+        <div class="col-12 d-flex justify-content-end">
+            <app-icon-button type="submit" iconNaam="fas PersonWalkingArrowRight" tekst="Bevestigen"
+                             (click)="afmelden()">
+            </app-icon-button>
+        </div>
+    </div>
+</app-modal>
+
+<app-lid-aanwezig-editor></app-lid-aanwezig-editor>

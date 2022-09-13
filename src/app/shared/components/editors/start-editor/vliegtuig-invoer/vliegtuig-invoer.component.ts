@@ -13,7 +13,8 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
     @Input() aanwezig: HeliosVliegtuigenDataset[] = [];
     @Input() label: string = "";
     @Input() disabled: boolean = false;
-    @Input() Sleep: boolean = false
+    @Input() Sleep: boolean = false;
+    @Input() verplicht: boolean = true;
     @Input() VLIEGTUIG_ID: number | undefined;
 
     @Output() VliegtuigChanged: EventEmitter<number> = new EventEmitter<number>();

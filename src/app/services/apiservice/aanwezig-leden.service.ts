@@ -145,4 +145,8 @@ export class AanwezigLedenService {
         const response: Response = await this.apiService.put('AanwezigLeden/SaveObject', JSON.stringify(record));
         return response.json();
     }
+
+    async deleteAanmelding(id: number) {
+        await this.apiService.delete('AanwezigLeden/DeleteObject', {'ID': id.toString()});
+    }
 }

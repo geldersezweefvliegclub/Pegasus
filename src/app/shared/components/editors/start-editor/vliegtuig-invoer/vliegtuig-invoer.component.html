@@ -9,7 +9,7 @@
            closeOnSelect="true"
            openOnEnter="true"
            name="VliegtuigID"
-           [required]="!Sleep"
+           [required]="verplicht"
            (ngModelChange)="inputChange($event)"
            [typeahead]="vliegtuigInput$"
            [(ngModel)]="VLIEGTUIG_ID">

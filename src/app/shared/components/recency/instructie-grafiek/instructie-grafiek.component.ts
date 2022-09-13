@@ -33,7 +33,7 @@ export class InstructieGrafiekComponent implements OnInit {
             type: 'line',
             scaleID: 'x-axis-0',
             value: '',                       // wordt later gezet
-            borderColor: '#bfbebe',
+            borderColor: '#9b9b9b',
             borderWidth: 1,
         }
 
@@ -43,7 +43,7 @@ export class InstructieGrafiekComponent implements OnInit {
             type: 'line',
             scaleID: 'x-axis-0',
             value: '',                      // wordt later gezet
-            borderColor: '#bfbebe',
+            borderColor: '#9b9b9b',
             borderWidth: 1,
         }
 
@@ -53,7 +53,7 @@ export class InstructieGrafiekComponent implements OnInit {
             type: 'line',
             scaleID: 'x-axis-0',
             value: '',                      // wordt later gezet
-            borderColor: '#bfbebe',
+            borderColor: '#9b9b9b',
             borderWidth: 1,
         }
 
@@ -87,13 +87,18 @@ export class InstructieGrafiekComponent implements OnInit {
                 right: 20,
             },
         },
+        elements : {
+            line: {
+                tension: 0.5
+            }
+        },
         scales: {
-            'x-axis-0': {
+            'x': {
                 grid: {
                     drawOnChartArea: false
                 },
                 ticks: {
-                    color: '#878787',
+                    color: '#9b9b9b',
                     font: {
                         family:  'Roboto, sans-serif',
                         size: 12,
@@ -104,11 +109,11 @@ export class InstructieGrafiekComponent implements OnInit {
             "y-axis-0": {
                 grid: {
                     borderDash: [6, 4],
-                    color: '#548bcd',
+                    color: '#9b9b9b',
                 },
                 ticks: {
                     stepSize: 10,
-                    color: '#e7e7e7',
+                    color: '#9b9b9b',
                     font: {
                         family: 'Roboto, sans-serif',
                         size: 12,
@@ -132,7 +137,6 @@ export class InstructieGrafiekComponent implements OnInit {
     }
 
     lineChartLabels: string[] = []
-    lineChartType: ChartType = 'line';
     lineChartLegend = true;
 
     lineChartPlugins = [pluginAnnotations];
@@ -159,11 +163,18 @@ export class InstructieGrafiekComponent implements OnInit {
 
         // zet de jaargrenzen
         if (this.JaarGrens1.type === "line") {
-            this.JaarGrens1.value = 'Jan ' + (this.datum.year-1).toString()
+            this.JaarGrens1.xMin = 'Jan ' + (this.datum.year-2).toString()
+            this.JaarGrens1.xMax = 'Jan ' + (this.datum.year-2).toString()
         }
 
         if (this.JaarGrens2.type === "line") {
-            this.JaarGrens2.value = 'Jan ' + this.datum.year.toString()
+            this.JaarGrens2.xMin = 'Jan ' + (this.datum.year-1).toString()
+            this.JaarGrens2.xMax = 'Jan ' + (this.datum.year-1).toString()
+        }
+
+        if (this.JaarGrens3.type === "line") {
+            this.JaarGrens3.xMin = 'Jan ' + this.datum.year.toString()
+            this.JaarGrens3.xMax = 'Jan ' + this.datum.year.toString()
         }
         this.popup.open();
     }
@@ -220,7 +231,7 @@ export class InstructieGrafiekComponent implements OnInit {
                     break;
             }
 
-            // toon voor januarie en de allereerste maand, ook het jaartal
+            // toon voor januari en de allereerste maand, ook het jaartal
             if ((this.counter == 0) || (d.month == 1)) {
                 maand += " " + d.year.toString();
             }
@@ -260,6 +271,7 @@ export class InstructieGrafiekComponent implements OnInit {
 
         const startsReeks: ChartDataset = {
             label: "Starts",
+            fill: true,
             backgroundColor: 'rgb(214,176,82, 0.4)',
             borderColor: 'rgba(213,172,73,0.59)',
             pointBackgroundColor: 'rgba(148,159,177,1)',
@@ -272,6 +284,7 @@ export class InstructieGrafiekComponent implements OnInit {
 
         const urenReeks: ChartDataset = {
             label: "Uren",
+            fill: true,
             backgroundColor: 'rgba(119,151,218,0.4)',
             borderColor: 'rgba(2,49,150,0.59)',
             pointBackgroundColor: 'rgba(148,159,177,1)',

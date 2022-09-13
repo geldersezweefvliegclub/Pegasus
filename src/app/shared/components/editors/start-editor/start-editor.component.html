@@ -92,6 +92,7 @@
                     <label for="SLEEPVLIEGTUIG" class="form-label">Sleepkist</label>
                     <app-vliegtuig-invoer id="SLEEPVLIEGTUIG"
                                           Sleep="true"
+                                          verplicht="false"
                                           [disabled]="isVerwijderMode || isRestoreMode"
                                           [aanwezig]="aanwezigVliegtuigen"
                                           [vliegtuigen]="vliegtuigen"
@@ -108,7 +109,7 @@
                 </div>
             </div>
 
-            <div class="row mt-2" *ngIf="start.VLIEGTUIG_ID && toonStartMethode && gekozenVliegtuig?.ZITPLAATSEN == 2">
+            <div class="row mt-2" *ngIf="start.VLIEGTUIG_ID && toonStartMethode && gekozenVliegtuig?.ZITPLAATSEN === 2">
                 <div class="col-6">
                     <div class="d-flex flex-column">
                         <div *ngIf="start.CHECKSTART !== true && start.INSTRUCTIEVLUCHT !== true && magPaxVliegen()"

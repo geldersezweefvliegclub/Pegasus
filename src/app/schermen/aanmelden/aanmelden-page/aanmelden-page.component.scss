@@ -1,0 +1,8 @@
+.spinnerOverlay {
+  position: absolute; /* Sit on top of the page content */
+  top: calc(50% - 70px);
+  left: calc(50% - 150px);
+  font-size: 20px;
+  color: #e6ca87;
+  z-index: 2;
+}

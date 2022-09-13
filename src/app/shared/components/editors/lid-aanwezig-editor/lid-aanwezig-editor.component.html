@@ -2,38 +2,41 @@
 <app-success [success]="success"></app-success>
 
 <app-modal [titel]="formTitel">
-    <div body>
+    <div body *ngIf="aanwezig">
         <fieldset>
-            <label class="form-label">Vliegtuig types</label>
-            <div class="row" *ngIf="aanwezig">
-                <div class="ms-2">
-                    <table>
-                        <tr *ngFor="let t of vliegtuigTypes; let i=index;">
-                            <td class="kolom1">
-                                <input type="checkbox"
-                                       [ngModel]="t.Geselecteerd"
-                                       class="form-check-inline" (change)="zetVoorkeur($event, t.ID)">
-                            </td>
-                            <td class="kolom2">
-                                {{t.OMSCHRIJVING}}
-                            </td>
-                        </tr>
-                    </table>
+            <div *ngIf="!isDDWVer">
+                <label class="form-label">Vliegtuig types</label>
+                <div class="row" *ngIf="aanwezig">
+                    <div class="ms-2">
+                        <table>
+                            <tr *ngFor="let t of vliegtuigTypes; let i=index;">
+                                <td class="kolom1">
+                                    <input type="checkbox"
+                                           [ngModel]="t.Geselecteerd"
+                                           class="form-check-inline" (change)="zetVoorkeur($event, t.ID)">
+                                </td>
+                                <td class="kolom2">
+                                    {{t.OMSCHRIJVING}}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
+            </div>
 
-                <app-vliegtuig-invoer id="VLIEGTUIG"
-                  [VLIEGTUIG_ID]="aanwezig.OVERLAND_VLIEGTUIG_ID"
-                  [vliegtuigen]="vliegtuigen"
-                  (VliegtuigChanged)="aanwezig.OVERLAND_VLIEGTUIG_ID = $event"
-                  label="Overland"
-                ></app-vliegtuig-invoer>
+            <app-vliegtuig-invoer id="VLIEGTUIG"
+                                  [VLIEGTUIG_ID]="aanwezig.OVERLAND_VLIEGTUIG_ID"
+                                  [vliegtuigen]="vliegtuigen"
+                                  (VliegtuigChanged)="aanwezig.OVERLAND_VLIEGTUIG_ID = $event"
+                                  label="Overland"
+                                  verplicht="false"
+            ></app-vliegtuig-invoer>
 
-                <div class="mt-2 px-2">
-                    <label class="form-label">Opmerking</label>
-                    <textarea [(ngModel)]="aanwezig.OPMERKINGEN"
-                              class="w-100 text-invoer form-control"
-                              rows="2"></textarea>
-                </div>
+            <div class="mt-2 px-2">
+                <label class="form-label">Opmerking</label>
+                <textarea [(ngModel)]="aanwezig.OPMERKINGEN"
+                          class="w-100 text-invoer form-control"
+                          rows="2"></textarea>
             </div>
         </fieldset>
     </div>
