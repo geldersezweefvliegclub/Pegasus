@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  "/Rooster/CreateTable": {
+  "/Gasten/CreateTable": {
     post: {
       parameters: {
         query: {
@@ -20,7 +20,7 @@ export interface paths {
       };
     };
   };
-  "/Rooster/CreateViews": {
+  "/Gasten/CreateViews": {
     post: {
       responses: {
         /** Aangemaakt, View toegevoegd */
@@ -30,21 +30,19 @@ export interface paths {
       };
     };
   };
-  "/Rooster/GetObject": {
+  "/Gasten/GetObject": {
     get: {
       parameters: {
         query: {
-          /** Database ID van het rooster record */
-          ID?: number;
-          /** Datum van het rooster */
-          DATUM?: string;
+          /** Database ID van het gast record */
+          ID: number;
         };
       };
       responses: {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_rooster"];
+            "application/json": components["schemas"]["oper_gast"];
           };
         };
         /** Data niet gevonden */
@@ -58,7 +56,7 @@ export interface paths {
       };
     };
   };
-  "/Rooster/GetObjects": {
+  "/Gasten/GetObjects": {
     get: {
       parameters: {
         query: {
@@ -70,7 +68,7 @@ export interface paths {
           LAATSTE_AANPASSING?: boolean;
           /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
           HASH?: string;
-          /** Sortering van de velden in ORDER BY formaat. Default = DATUM DESC */
+          /** Sortering van de velden in ORDER BY formaat. Default = NAAM */
           SORT?: string;
           /** Maximum aantal records in de dataset. Gebruikt in LIMIT query */
           MAX?: number;
@@ -78,8 +76,6 @@ export interface paths {
           START?: number;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
-          /** Zoek op datum */
-          DATUM?: string;
           /** Begin datum (inclusief deze dag) */
           BEGIN_DATUM?: string;
           /** Eind datum (inclusief deze dag) */
@@ -90,7 +86,7 @@ export interface paths {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["view_rooster"];
+            "application/json": components["schemas"]["view_gasten"];
           };
         };
         /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
@@ -102,20 +98,18 @@ export interface paths {
       };
     };
   };
-  "/Rooster/DeleteObject": {
+  "/Gasten/DeleteObject": {
     delete: {
       parameters: {
         query: {
-          /** Database ID van het rooster record. Meerdere ID's in CSV formaat */
-          ID?: string;
-          /** Datum van het rooster */
-          DATUM?: string;
+          /** Database ID van het gast record. Meerdere ID's in CSV formaat */
+          ID: string;
           /** Controleer of record bestaat voordat het verwijderd wordt. Default = true */
           VERIFICATIE?: boolean;
         };
       };
       responses: {
-        /** Rooster verwijderd */
+        /** Gast verwijderd */
         204: never;
         /** Niet geautoriseerd, geen schrijfrechten */
         401: unknown;
@@ -130,7 +124,7 @@ export interface paths {
       };
     };
   };
-  "/Rooster/RestoreObject": {
+  "/Gasten/RestoreObject": {
     patch: {
       parameters: {
         query: {
@@ -154,13 +148,13 @@ export interface paths {
       };
     };
   };
-  "/Rooster/SaveObject": {
+  "/Gasten/SaveObject": {
     put: {
       responses: {
         /** OK, data succesvol aangepast */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_rooster"];
+            "application/json": components["schemas"]["oper_gast"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -171,15 +165,15 @@ export interface paths {
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
         406: unknown;
-        /** Conflict, datum bestaat al */
+        /** Conflict, lidnummer bestaat al */
         409: unknown;
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** Rooster data */
+      /** gast data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["oper_rooster_in"];
+          "application/json": components["schemas"]["oper_gast_in"];
         };
       };
     };
@@ -188,7 +182,7 @@ export interface paths {
         /** OK, data succesvol toegevoegd */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_rooster"];
+            "application/json": components["schemas"]["oper_gast"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -197,15 +191,15 @@ export interface paths {
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
         406: unknown;
-        /** Conflict, datum bestaat al */
+        /** Conflict, lidnummer bestaat al */
         409: unknown;
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** Rooster data */
+      /** gast data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["oper_rooster_in"];
+          "application/json": components["schemas"]["oper_gast_in"];
         };
       };
     };
@@ -214,48 +208,31 @@ export interface paths {
 
 export interface components {
   schemas: {
-    oper_rooster_in: {
+    oper_gast_in: {
       /**
        * Format: int32
-       * @description Database ID van het rooster record
-       * @example 77
+       * @description Database ID van het gast record
+       * @example 12871
        */
       ID?: number;
       /**
        * Format: date
        * @description Datum van de vliegdag
-       * @example 2017-07-21
+       * @example 2022-07-31
        */
       DATUM?: string;
       /**
-       * @description Is het een DDWV dag?
-       * @example 0
+       * @description Naam van de gast
+       * @example Gekko
        */
-      DDWV?: boolean;
+      NAAM?: string;
       /**
-       * @description Is er een clubbedrijf
-       * @example 1
-       */
-      CLUB_BEDRIJF?: boolean;
-      /**
-       * Format: int32
-       * @description Minimaal aantal aanmeldingen voordat we gaan slepen (alleen DDWV)
-       * @example 3
-       */
-      MIN_SLEEPSTART?: number;
-      /**
-       * Format: int32
-       * @description Minimaal aantal aanmeldingen voordat we gaan lieren (alleen DDWV)
-       * @example 10
-       */
-      MIN_LIERSTART?: number;
-      /**
-       * @description De opmerkingen die voor deze dag van toepassing zijn
-       * @example EH-R122 actief ivm oefening gyros
+       * @description Extra text om opmerkingen toe te voegen voor start
+       * @example BR-1234
        */
       OPMERKINGEN?: string;
     };
-    oper_rooster: components["schemas"]["oper_rooster_in"] & {
+    oper_gast: components["schemas"]["oper_gast_in"] & {
       /**
        * @description Is dit record gemarkeerd als verwijderd?
        * @example 0
@@ -264,12 +241,12 @@ export interface components {
       /**
        * Format: date-time
        * @description Tijdstempel van laaste aanpassing in de database
-       * @example 2020-04-17 07:29:01
+       * @example 2020-09-01 20:21:33
        */
       LAATSTE_AANPASSING?: string;
     };
-    view_rooster_dataset: components["schemas"]["oper_rooster"];
-    view_rooster: {
+    view_gasten_dataset: components["schemas"]["oper_gast"];
+    view_gasten: {
       /**
        * Format: int32
        * @description Aantal records dat voldoet aan de criteria in de database
@@ -279,16 +256,16 @@ export interface components {
       /**
        * Format: date-time
        * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
-       * @example 2020-07-022 16:39:25
+       * @example 2016-08-30 17:04:07
        */
       laatste_aanpassing?: string;
       /**
        * @description hash van de dataset
-       * @example 4d00b3f
+       * @example 1190732
        */
       hash?: string;
       /** @description De dataset met records */
-      dataset?: components["schemas"]["view_rooster_dataset"][];
+      dataset?: components["schemas"]["view_gasten_dataset"][];
     };
   };
 }

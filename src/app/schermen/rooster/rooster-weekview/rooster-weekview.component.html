@@ -1,4 +1,3 @@
-
 <div class="dataContent" *ngIf="leden && rooster">
     <div class="d-flex justify-content-between mb-2">
         <div>
@@ -23,22 +22,53 @@
                 <td></td>
                 <td *ngFor="let dagInRooster of rooster;let r = index" class="dagInRooster" [style]="KolomBreedte()"
                     [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
-                    {{DagVanDeWeek(dagInRooster.DATUM)}}
+                    <div>
+                        {{DagVanDeWeek(dagInRooster.DATUM)}}
+                        <div>
+                            {{dagInRooster.DATUM | slice:8:10 }}-{{dagInRooster.DATUM | slice:5:7 }}
+                        </div>
+                    </div>
 
-                    <div *ngIf="dagInRooster.CLUB_BEDRIJF" class="me-2">Clubbedrijf</div>
-                    <div *ngIf="dagInRooster.DDWV">DDWV</div>
+                    <div>
+                        <input type="checkbox" class="form-check-inline" [id]="'DDWV' + i"
+                               [name]="'DDWV' + i"
+                               [(ngModel)]="dagInRooster.DDWV"
+                               (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
+                               [disabled]="!magWijzigen && !isCIMT">
+                        <label [for]="'DDWV' + i" class="form-check-label">DDWV</label>
+                    </div>
+                    <div class="text-nowrap">
+                        <input type="checkbox" class="form-check-inline"
+                               [id]="'Clubbedrijf' + i"
+                               [name]="'Clubbedrijf' + i"
+                               [(ngModel)]="dagInRooster.CLUB_BEDRIJF"
+                               (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
+                               [disabled]="!magWijzigen && !isCIMT!">
+                        <label [for]="'Clubbedrijf' + i"
+                               class="labelClub form-check-label">Club
+                            bedrijf</label>
+                    </div>
+                    <!--
+                    -->
                 </td>
             </tr>
             <tr>
                 <td></td>
-                <td *ngFor="let dagInRooster of rooster;let r = index" class="dagInRooster" [style]="KolomBreedte()">
-                    <textarea disabled class="w-100">{{dagInRooster.OPMERKINGEN}}</textarea>
+                <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
+                    <textarea
+                            [id]="'OPMERKINGEN' + i"
+                            [name]="'OPMERKINGEN' + i"
+                            [(ngModel)]="dagInRooster.OPMERKINGEN"
+                            (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
+                            [disabled]="!magWijzigen && !isCIMT"
+                            class="w-100 text-invoer form-control opmerkingen"
+                            [rows]="2" style="resize: none"></textarea>
                 </td>
             </tr>
             </thead>
             <tbody>
 
-            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_DDI_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_DDI_TYPE_ID]) && tonen.Instructeurs">
+            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_DDI_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_DDI_TYPE_ID]) && tonen.Instructeurs && tonen.toonClubDDWV !==2">
                 <td class="dienstType">DDI</td>
                 <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
                     <ng-container [ngTemplateOutlet]="roosterDienst"
@@ -46,7 +76,7 @@
                 </td>
             </tr>
 
-            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_INSTRUCTEUR_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) && tonen.Instructeurs">
+            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_INSTRUCTEUR_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) && tonen.Instructeurs && tonen.toonClubDDWV !==2">
                 <td class="dienstType">Instructeur</td>
                 <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
                     <ng-container [ngTemplateOutlet]="roosterDienst"
@@ -62,7 +92,7 @@
                 </td>
             </tr>
 
-            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID] || tonen.toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]) && (tonen.Startleiders)">
+            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID] || tonen.toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]) && tonen.Startleiders && tonen.toonClubDDWV !==2">
                 <td class="dienstType">Startleider 2</td>
                 <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
                     <ng-container [ngTemplateOutlet]="roosterDienst"
@@ -78,7 +108,7 @@
                 </td>
             </tr>
 
-            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_HULPLIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_HULPLIERIST_TYPE_ID]) && tonen.Lieristen">
+            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_HULPLIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_HULPLIERIST_TYPE_ID]) && tonen.Lieristen && tonen.toonClubDDWV !==2">
                 <td class="dienstType">Hulplierist</td>
                 <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
                     <ng-container [ngTemplateOutlet]="roosterDienst"
@@ -86,7 +116,7 @@
                 </td>
             </tr>
 
-            <tr *ngIf="(tonen.toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID] || tonen.toonDienst[configService.GASTEN_VLIEGER2_TYPE_ID]) && tonen.GastenVliegers">
+            <tr *ngIf="(tonen.toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID] || tonen.toonDienst[configService.GASTEN_VLIEGER2_TYPE_ID]) && tonen.GastenVliegers && tonen.toonClubDDWV !==2">
                 <td class="dienstType">Gasten vlieger</td>
                 <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
                     <ng-container [ngTemplateOutlet]="roosterDienst"
@@ -102,6 +132,27 @@
                 </td>
             </tr>
 
+            <tr *ngIf="tonen.toonClubDDWV ===2">
+                <td class="dienstType">Slepen</td>
+                <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
+                    <div class="d-flex flex-row" *ngIf="dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF">
+                        <input type="range" class="form-range" min="1" max="15"
+                               [(ngModel)]="dagInRooster.MIN_SLEEPSTART" (change)="opslaanRooster(dagInRooster.DATUM)"
+                               [disabled]="!magWijzigen">
+                        <div class="ms-2 me-1">{{dagInRooster.MIN_SLEEPSTART}}</div>
+                    </div>
+                </td>
+            </tr>
+            <tr *ngIf="tonen.toonClubDDWV ===2">
+                <td class="dienstType">Lieren</td>
+                <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
+                    <div class="d-flex flex-row" *ngIf="dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF">
+                        <input type="range" class="form-range" min="1" max="15" [(ngModel)]="dagInRooster.MIN_LIERSTART"
+                               (change)="opslaanRooster(dagInRooster.DATUM)" [disabled]="!magWijzigen">
+                        <div class="ms-2 me-1">{{dagInRooster.MIN_LIERSTART}}</div>
+                    </div>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
@@ -112,7 +163,7 @@
         <div class="d-flex w-100" *ngIf="tonen.toonDienst[dt]">
             <div class="naam" (click)="openPopup(dag, dt)"
                  [ngClass]="lidInRoosterClass(dag.Diensten[dt])">
-                 {{ (dag.Diensten[dt]) ? dag.Diensten[dt].NAAM : "" }}
+                {{ (dag.Diensten[dt]) ? dag.Diensten[dt].NAAM : "" }}
             </div>
 
             <div *ngIf="zelfIndelen(dt, dag.DATUM) && !dag.Diensten[dt]"

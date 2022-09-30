@@ -65,6 +65,8 @@ import {LandingstijdRenderComponent} from "./components/datatable/landingstijd-r
 import {DienstEditorComponent} from './components/editors/dienst-editor/dienst-editor.component';
 import {TypeEditorComponent} from './components/editors/type-editor/type-editor.component';
 import {CompetentieEditorComponent} from './components/editors/competentie-editor/competentie-editor.component';
+import { GastEditorComponent } from './components/editors/gast-editor/gast-editor.component';
+import { GastInvoerComponent } from './components/editors/start-editor/gast-invoer/gast-invoer.component';
 
 @NgModule({
     imports: [
@@ -137,7 +139,9 @@ import {CompetentieEditorComponent} from './components/editors/competentie-edito
         LandingstijdRenderComponent,
         DienstEditorComponent,
         TypeEditorComponent,
-        CompetentieEditorComponent
+        CompetentieEditorComponent,
+        GastEditorComponent,
+        GastInvoerComponent
     ],
     exports: [
         LidEditorComponent,
@@ -176,7 +180,8 @@ import {CompetentieEditorComponent} from './components/editors/competentie-edito
         LandingstijdRenderComponent,
         DienstEditorComponent,
         TypeEditorComponent,
-        CompetentieEditorComponent
+        CompetentieEditorComponent,
+        GastEditorComponent
     ],
     providers: [],
     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

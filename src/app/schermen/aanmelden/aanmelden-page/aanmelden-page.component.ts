@@ -5,12 +5,21 @@ import {Subscription} from "rxjs";
 import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
 import {getBeginEindDatumVanMaand} from "../../../utils/Utils";
 import {DateTime} from "luxon";
-import {HeliosAanwezigLedenDataset, HeliosRoosterDataset, HeliosType} from "../../../types/Helios";
+import {
+    HeliosAanwezigLedenDataset, HeliosDienstenDataset,
+    HeliosGast,
+    HeliosGastenDataset,
+    HeliosRoosterDataset,
+    HeliosType
+} from "../../../types/Helios";
 import {RoosterService} from "../../../services/apiservice/rooster.service";
 import {ModalComponent} from "../../../shared/components/modal/modal.component";
 import {LidAanwezigEditorComponent} from "../../../shared/components/editors/lid-aanwezig-editor/lid-aanwezig-editor.component";
 import {LoginService} from "../../../services/apiservice/login.service";
 import {AanwezigLedenService} from "../../../services/apiservice/aanwezig-leden.service";
+import {GastenService} from "../../../services/apiservice/gasten.service";
+import {GastEditorComponent} from "../../../shared/components/editors/gast-editor/gast-editor.component";
+import {DienstenService} from "../../../services/apiservice/diensten.service";
 
 @Component({
     selector: 'app-aanmelden-page',
@@ -20,6 +29,7 @@ import {AanwezigLedenService} from "../../../services/apiservice/aanwezig-leden.
 export class AanmeldenPageComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private bevestigAfmeldenPopup: ModalComponent;
     @ViewChild(LidAanwezigEditorComponent) aanmeldEditor: LidAanwezigEditorComponent;
+    @ViewChild(GastEditorComponent) gastEditor: GastEditorComponent;
 
     readonly aanmeldenIcon: IconDefinition = faStreetView;
 
@@ -37,16 +47,19 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     isLoading: boolean = false;
     aanmeldenView: string = "week";
     rooster: HeliosRoosterDataset[];                // rooster voor gekozen periode (dag/week/maand)
+    diensten: HeliosDienstenDataset[];              // Wie hebben er dienst
     aanmeldingen: HeliosAanwezigLedenDataset[];     // De aanmeldingen
+    gasten: HeliosGastenDataset[];                  // De gasten voor de vliegdag
 
     constructor(private readonly sharedService: SharedService,
                 private readonly loginService: LoginService,
+                private readonly gastenService: GastenService,
                 private readonly roosterService: RoosterService,
+                private readonly dienstenService: DienstenService,
                 private readonly aanwezigLedenService: AanwezigLedenService) {
     }
 
     ngOnInit(): void {
-
         // de datum zoals die in de kalender gekozen is
         this.maandAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
             if (jaarMaand.year > 1900) {        // 1900 is bij initialisatie
@@ -94,7 +107,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         }
     }
 
-    private opvragen(): void {
+    opvragen(): void {
         const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
 
         let beginDatum: DateTime = beginEindDatum.begindatum;
@@ -113,7 +126,9 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
                 eindDatum = this.datum;
                 break;
             }
-            case "week": {
+            case "week":
+            default : {
+                this.aanmeldenView = "week";
                 beginDatum = this.datum.startOf('week');     // maandag in de 1e week vande maand, kan in de vorige maand vallen
                 eindDatum = this.datum.endOf('week');        // zondag van de laaste week, kan in de volgende maand vallen
                 break;
@@ -123,7 +138,18 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         this.roosterService.getRooster(beginDatum, eindDatum).then((rooster) => {
             this.rooster = rooster;
-            this.isLoading = false;
+
+            // We hebben startleider diensten nodig.Startleider mag lid status zien op
+            this.dienstenService.getDiensten(beginDatum, eindDatum).then((diensten) => {
+                this.diensten = diensten.filter((d) => {
+                    return (
+                        d.TYPE_DIENST_ID == 1804 ||
+                        d.TYPE_DIENST_ID == 1809 ||
+                        d.TYPE_DIENST_ID == 1811 ||
+                        d.TYPE_DIENST_ID == 1812)
+                });
+                this.isLoading = false;
+            }).catch(() => this.isLoading = false)
         }).catch(() => this.isLoading = false)
 
         this.aanwezigLedenService.getAanwezig(beginDatum, eindDatum).then((aanmeldingen) => {
@@ -131,6 +157,9 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
             this.isLoading = false;
         }).catch(() => this.isLoading = false)
 
+        this.gastenService.getGasten(false, beginDatum, eindDatum).then((gasten) => {
+            this.gasten = gasten;
+        }).catch(() => this.isLoading = false)
     }
 
     // We gaan naar een nieuwe datum
@@ -177,5 +206,23 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
             VOORAANMELDING: true
         }
         this.aanmeldEditor.openPopup(aanmelding);
+    }
+
+    // open van editor voor aanmelden
+    openLidAanwezigEditor(lidAanwezig: HeliosAanwezigLedenDataset) {
+        this.aanmeldEditor.openPopup(lidAanwezig);
+    }
+
+    // openen van windows voor aanmelden gast
+    aanmeldenGastScherm(datum: string) {
+        const aanmelding: HeliosGast = {
+            DATUM: datum
+        }
+        this.gastEditor.openPopup(aanmelding);
+    }
+
+    // open van editor voor aanmelden van een gast
+    openGastAanwezigEditor(gast: HeliosGastenDataset) {
+        this.gastEditor.openPopup(gast);
     }
 }

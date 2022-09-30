@@ -88,7 +88,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
         if (this.typesAbonnement) this.typesAbonnement.unsubscribe();
     }
 
-    KolomBreedte() {
+    KolomBreedte(factor=1) {
         if (this.tonen.DDWV) {
             return 'width: 50%'
         }
@@ -106,7 +106,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
         if (this.tonen.Sleepvliegers) {
             columns += 1;
         }
-        const breedte = 100 / columns;
+        const breedte = factor * 100 / columns;
         return 'width:' + breedte + '%';
     }
 
@@ -383,6 +383,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
             }
         }
     }
+
     opslaanRooster(datum: string) {
         clearTimeout(this.opslaanTimer);
         const roosterIndex = this.rooster.findIndex((dag => dag.DATUM == datum));
@@ -397,6 +398,8 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
             ID: ingevoerd.ID,
             DDWV: ingevoerd.DDWV,
             CLUB_BEDRIJF: ingevoerd.CLUB_BEDRIJF,
+            MIN_SLEEPSTART: ingevoerd.MIN_SLEEPSTART,
+            MIN_LIERSTART: ingevoerd.MIN_LIERSTART,
             OPMERKINGEN: ingevoerd.OPMERKINGEN
         }
 

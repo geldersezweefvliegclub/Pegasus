@@ -134,7 +134,11 @@ export interface paths {
       requestBody: {
         content: {
           "application/json": components["schemas"]["oper_aanwezig_leden_in"] & {
-            /** Tijdstip van de aanmelding. Indien afwezig, huidige tijd. ISO8601 */
+            /**
+             * Format: date-time
+             * @description Tijdstip van de aanmelding. Indien afwezig, huidige tijd. ISO8601
+             * @example 2017-07-21T09:32:28Z
+             */
             TIJDSTIP?: string;
           };
         };
@@ -165,7 +169,11 @@ export interface paths {
       requestBody: {
         content: {
           "application/json": components["schemas"]["oper_aanwezig_leden_in"] & {
-            /** Tijdstip van de afmelding. Indien afwezig, huidige tijd. ISO8601 */
+            /**
+             * Format: date-time
+             * @description Tijdstip van de afmelding. Indien afwezig, huidige tijd. ISO8601
+             * @example 2018-07-21T17:00:32Z
+             */
             TIJDSTIP?: string;
           };
         };
@@ -311,122 +319,317 @@ export interface paths {
 export interface components {
   schemas: {
     oper_aanwezig_leden_in: {
-      /** Database ID van het aanwezig record */
+      /**
+       * Format: int32
+       * @description Database ID van het aanwezig record
+       * @example 12871
+       */
       ID?: number;
-      /** Datum van de vliegdag */
+      /**
+       * Format: date
+       * @description Datum van de vliegdag
+       * @example 2017-07-21
+       */
       DATUM?: string;
-      /** De positie op de startlijst. Nummer 1 is staat hoger op de startlijst als nummer 2 */
+      /**
+       * @description De positie op de startlijst. Nummer 1 is staat hoger op de startlijst als nummer 2
+       * @example 12
+       */
       POSITIE?: number;
-      /** Het lid ID. Verwijzing naar leden tabel */
+      /**
+       * @description Het lid ID. Verwijzing naar leden tabel
+       * @example 10408
+       */
       LID_ID?: number;
-      /** Heeft het lid zich vooraf aangemeld (bijv ingeschreven via DDWV)? */
+      /**
+       * @description Heeft het lid zich vooraf aangemeld (bijv ingeschreven via DDWV)?
+       * @example 0
+       */
       VOORAANMELDING?: boolean;
-      /** Aankomsttijd van het lid. ISO8601 */
+      /**
+       * @description Aankomsttijd van het lid. ISO8601
+       * @example 09:32:28
+       */
       AANKOMST?: string;
-      /** Vertrektijd van het lid. ISO8601 */
+      /**
+       * @description Vertrektijd van het lid. ISO8601
+       * @example 17:32:28
+       */
       VERTREK?: string;
-      /** Lid wil graag overland met dit vliegtuig. Verwijzing naar vliegtuig tabel */
+      /**
+       * Format: int32
+       * @description Lid wil graag overland met dit vliegtuig. Verwijzing naar vliegtuig tabel
+       * @example 200
+       */
       OVERLAND_VLIEGTUIG_ID?: number;
-      /** Op welke type wil dit lid vandaag vliegen? Types als CSV formaat */
+      /**
+       * @description Op welke type wil dit lid vandaag vliegen? Types als CSV formaat
+       * @example 404, 405
+       */
       VOORKEUR_VLIEGTUIG_TYPE?: string;
-      /** Opmerking over de vliegdag */
+      /**
+       * @description Op welk veld is dit lid aangemeld
+       * @example 901
+       */
+      VELD_ID?: number;
+      /**
+       * @description Opmerking over de vliegdag
+       * @example Heeft in de ochtend lierdienst
+       */
       OPMERKINGEN?: string;
     };
     oper_aanwezig_leden: components["schemas"]["oper_aanwezig_leden_in"] & {
-      /** Is dit record gemarkeerd als verwijderd? */
+      /**
+       * @description Is dit record gemarkeerd als verwijderd?
+       * @example 0
+       */
       VERWIJDERD?: boolean;
-      /** Tijdstempel van laaste aanpassing in de database */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database
+       * @example 2015-01-21 11:52:22
+       */
       LAATSTE_AANPASSING?: string;
     };
     view_aanwezig_leden_dataset: components["schemas"]["oper_aanwezig_leden"] & {
-      /** Korte beschrijving van het vliegtuig types */
+      /**
+       * @description Korte beschrijving van het vliegtuig types
+       * @example DCS, Duo
+       */
       VLIEGTUIGTYPE_CODE?: string;
-      /** Beschrijving van het vliegtuig types */
+      /**
+       * @description Beschrijving van het vliegtuig types
+       * @example Discus CS, Duo Discus
+       */
       VLIEGTUIGTYPE_OMS?: string;
-      /** Vliegtuig registratie en callsign van overland vliegtuig */
+      /**
+       * @description Vliegtuig registratie en callsign van overland vliegtuig
+       * @example PH-1076 (E2)
+       */
       REG_CALL?: string;
-      /** Het aantal starts voor dit lid op deze dag */
+      /**
+       * @description Het aantal starts voor dit lid op deze dag
+       * @example 3
+       */
       STARTS?: number;
-      /** Totale vliegtijd */
+      /**
+       * @description Totale vliegtijd
+       * @example 03:17
+       */
       VLIEGTIJD?: string;
-      /** Vliegt het lid op dit moment */
+      /**
+       * @description Vliegt het lid op dit moment
+       * @example true
+       */
       VLIEGT?: boolean;
-      /** De volledige naam van het lid */
+      /**
+       * @description De volledige naam van het lid
+       * @example Meindert het Paard
+       */
       NAAM?: string;
-      /** De voornaam van het lid */
+      /**
+       * @description De voornaam van het lid
+       * @example Meindert
+       */
       VOORNAAM?: string;
-      /** De tussenvoegsel van het lid */
+      /**
+       * @description De tussenvoegsel van het lid
+       * @example het
+       */
       TUSSENVOEGSEL?: string;
-      /** De achternaam van het lid zonder tussenvoegsels */
+      /**
+       * @description De achternaam van het lid zonder tussenvoegsels
+       * @example Paard
+       */
       ACHTERNAAM?: string;
-      /** Het (post) adres waar het lid woont */
+      /**
+       * @description Het (post) adres waar het lid woont
+       * @example Werf 18
+       */
       ADRES?: string;
-      /** De postcode die bij het adres hoort */
+      /**
+       * @description De postcode die bij het adres hoort
+       * @example 7158 PP
+       */
       POSTCODE?: string;
-      /** De plaatsnaam */
+      /**
+       * @description De plaatsnaam
+       * @example Berkum
+       */
       WOONPLAATS?: string;
-      /** Telefoon nummer van het lid */
+      /**
+       * @description Telefoon nummer van het lid
+       * @example 086-1506822
+       */
       TELEFOON?: string;
-      /** Mobiel telefoon nummer van het lid */
+      /**
+       * @description Mobiel telefoon nummer van het lid
+       * @example 06-1025500
+       */
       MOBIEL?: string;
-      /** Het telefoonnummer van een naaste, kan gebruikt worden in noodgevallen */
+      /**
+       * @description Het telefoonnummer van een naaste, kan gebruikt worden in noodgevallen
+       * @example 0112-11801
+       */
       NOODNUMMER?: string;
-      /** email adres van het lid */
+      /**
+       * @description email adres van het lid
+       * @example meindert@fabeltje.com
+       */
       EMAIL?: string;
-      /** Het lidnummer zoals dat in de leden administratie bekend is */
+      /**
+       * @description Het lidnummer zoals dat in de leden administratie bekend is
+       * @example 11139
+       */
       LIDNR?: string;
-      /** Het soort lid (jeugdlid, lid, donateur). Verwijzing naar type tabel */
+      /**
+       * Format: int32
+       * @description Het soort lid (jeugdlid, lid, donateur). Verwijzing naar type tabel
+       * @example 603
+       */
       LIDTYPE_ID?: number;
-      /** Zusterclub lidmaatschap van lid. Nodig voor DDWV. */
+      /**
+       * Format: int32
+       * @description Zusterclub lidmaatschap van lid. Nodig voor DDWV.
+       * @example 603
+       */
       ZUSTERCLUB_ID?: number;
-      /** Mag dit lid lieren? */
+      /**
+       * @description Mag dit lid lieren?
+       * @example 0
+       */
       LIERIST?: boolean;
-      /** Kan dit lid het startbedrijf leiden? */
+      /**
+       * @description Kan dit lid het startbedrijf leiden?
+       * @example 0
+       */
       STARTLEIDER?: boolean;
-      /** Heeft dit lid een instructie bevoegdheid? */
+      /**
+       * @description Heeft dit lid een instructie bevoegdheid?
+       * @example 0
+       */
       INSTRUCTEUR?: boolean;
-      /** Werkt dit lid mee in het DDWV bedrijf */
+      /**
+       * @description Werkt dit lid mee in het DDWV bedrijf
+       * @example 0
+       */
       DDWV_CREW?: boolean;
-      /** Is dit lid de beheerder van het DDWV bedrijf, heeft toegang tot DDWV gerelateede data */
+      /**
+       * @description Is dit lid de beheerder van het DDWV bedrijf, heeft toegang tot DDWV gerelateede data
+       * @example 0
+       */
       DDWV_BEHEERDER?: boolean;
-      /** Is dit lid de beheerder van deze omgeving, heeft toegang tot alles */
+      /**
+       * @description Is dit lid de beheerder van deze omgeving, heeft toegang tot alles
+       * @example 0
+       */
       BEHEERDER?: boolean;
-      /** Dit account wordt gebruikt om starts in de start toren in te voeren */
+      /**
+       * @description Dit account wordt gebruikt om starts in de start toren in te voeren
+       * @example 0
+       */
       STARTTOREN?: boolean;
-      /** Is dit lid  belast met het maken van roosters */
+      /**
+       * @description Is dit lid  belast met het maken van roosters
+       * @example 0
+       */
       ROOSTER?: boolean;
-      /** Moet clubblad per post verstuurd worden */
+      /**
+       * @description Moet clubblad per post verstuurd worden
+       * @example false
+       */
       CLUBBLAD_POST?: boolean;
-      /** Verloopdatum van het medical */
+      /**
+       * Format: date
+       * @description Verloopdatum van het medical
+       * @example 2022-01-16
+       */
       MEDICAL?: string;
-      /** Geboorte datum van het lid */
+      /**
+       * Format: date
+       * @description Geboorte datum van het lid
+       * @example 1932-01-16
+       */
       GEBOORTE_DATUM?: string;
-      /** De inlognaam van het lid */
+      /**
+       * @description De inlognaam van het lid
+       * @example mpaard
+       */
       INLOGNAAM?: string;
-      /** Readonly, URL om image op te halen. Zetten via UploadAvatar functie */
+      /**
+       * @description Readonly, URL om image op te halen. Zetten via UploadAvatar functie
+       * @example 123456
+       */
       AVATAR?: string;
-      /** Heef het lid deen startverbod? */
+      /**
+       * @description Heef het lid deen startverbod?
+       * @example 0
+       */
       STARTVERBOD?: boolean;
-      /** Staat privacy mode (AVG / GDPR) uit/aan */
+      /**
+       * @description Staat privacy mode (AVG / GDPR) uit/aan
+       * @example 0
+       */
       PRIVACY?: boolean;
+      /**
+       * Format: int32
+       * @description De vliegstatus van het lid (DBO, solist, brevethouder), NULL indien niet van toepassing
+       * @example 1901
+       */
+      STATUSTYPE_ID?: number;
+      /**
+       * @description Vliegstatus van aangemeld lid
+       * @example Brevethouder
+       */
+      STATUS?: string;
+      /**
+       * Format: int32
+       * @description Volgorde in de HMI
+       * @example 7
+       */
+      STATUS_SORTEER_VOLGORDE?: number;
+      /**
+       * @description Vliegveld waar lid aangemeld is
+       * @example Brevethouder
+       */
+      VELD?: string;
     };
     view_aanwezig_leden: {
-      /** Aantal records dat voldoet aan de criteria in de database */
+      /**
+       * Format: int32
+       * @description Aantal records dat voldoet aan de criteria in de database
+       * @example 287
+       */
       totaal?: number;
-      /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
+       * @example 2020-05-11 09:38:00
+       */
       laatste_aanpassing?: string;
-      /** hash van de dataset */
+      /**
+       * @description hash van de dataset
+       * @example 6d23bab
+       */
       hash?: string;
-      /** De dataset met records */
+      /** @description De dataset met records */
       dataset?: components["schemas"]["view_aanwezig_leden_dataset"][];
     };
     oper_vliegers: {
-      /** Het lid ID. Verwijzing naar leden tabel */
+      /**
+       * @description Het lid ID. Verwijzing naar leden tabel
+       * @example 10408
+       */
       LID_ID?: number;
-      /** De volledige naam van het lid */
+      /**
+       * @description De volledige naam van het lid
+       * @example Meindert het Paard
+       */
       VLIEGER?: string;
     };
   };
 }
 
 export interface operations {}
+
+export interface external {}

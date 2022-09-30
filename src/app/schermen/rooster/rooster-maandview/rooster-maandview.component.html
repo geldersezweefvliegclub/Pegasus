@@ -8,11 +8,11 @@
                 <th scope="col"></th>
                 <th scope="col" class="DagBreedte">Dag</th>
                 <th scope="col"
-                    *ngIf="(tonen.toonDienst[configService.OCHTEND_DDI_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_DDI_TYPE_ID]) &&  tonen.Instructeurs"
+                    *ngIf="(tonen.toonDienst[configService.OCHTEND_DDI_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_DDI_TYPE_ID]) &&  tonen.Instructeurs && tonen.toonClubDDWV !==2"
                     [style]="KolomBreedte()">DDI
                 </th>
                 <th scope="col"
-                    *ngIf="(tonen.toonDienst[configService.OCHTEND_INSTRUCTEUR_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_INSTRUCTEUR_TYPE_ID])  && tonen.Instructeurs"
+                    *ngIf="(tonen.toonDienst[configService.OCHTEND_INSTRUCTEUR_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_INSTRUCTEUR_TYPE_ID])  && tonen.Instructeurs && tonen.toonClubDDWV !==2"
                     [style]="KolomBreedte()">
                     Instructeur
                 </th>
@@ -21,7 +21,7 @@
                     [style]="KolomBreedte()">Startleider
                 </th>
                 <th scope="col"
-                    *ngIf="(tonen.toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID])  &&  tonen.Startleiders "
+                    *ngIf="(tonen.toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID])  &&  tonen.Startleiders && tonen.toonClubDDWV !==2"
                     [style]="KolomBreedte()">
                     Startleider 2
                 </th>
@@ -31,11 +31,11 @@
                     Lierist
                 </th>
                 <th scope="col"
-                    *ngIf="(tonen.toonDienst[configService.OCHTEND_HULPLIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_HULPLIERIST_TYPE_ID])  && tonen.Lieristen"
+                    *ngIf="(tonen.toonDienst[configService.OCHTEND_HULPLIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_HULPLIERIST_TYPE_ID])  && tonen.Lieristen && tonen.toonClubDDWV !==2"
                     [style]="KolomBreedte()">Hulplierist
                 </th>
                 <th scope="col"
-                    *ngIf="(tonen.toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID] || tonen.toonDienst[configService.GASTEN_VLIEGER2_TYPE_ID])  && tonen.GastenVliegers"
+                    *ngIf="(tonen.toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID] || tonen.toonDienst[configService.GASTEN_VLIEGER2_TYPE_ID])  && tonen.GastenVliegers  && tonen.toonClubDDWV !==2"
                     [style]="KolomBreedte()">
                     Gastenvlieger
                 </th>
@@ -43,6 +43,9 @@
                     *ngIf="(tonen.toonDienst[configService.SLEEPVLIEGER_TYPE_ID])  && tonen.Sleepvliegers"
                     [style]="KolomBreedte()">
                     Sleepvlieger
+                </th>
+                <th *ngIf="tonen.toonClubDDWV ===2" [style]="KolomBreedte(2)">
+                    Aantallen
                 </th>
                 <th scope="col" id="headerOpmerkingen">Opmerkingen</th>
             </tr>
@@ -86,7 +89,7 @@
                     </div>
                 </td>
 
-                <td *ngIf="(tonen.toonDienst[configService.OCHTEND_DDI_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_DDI_TYPE_ID]) && tonen.Instructeurs">
+                <td *ngIf="(tonen.toonDienst[configService.OCHTEND_DDI_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_DDI_TYPE_ID]) && tonen.Instructeurs && tonen.toonClubDDWV !==2">
                     <div class="d-flex"
                          *ngIf="dagInRooster.CLUB_BEDRIJF && tonen.toonDienst[configService.OCHTEND_DDI_TYPE_ID]">
                         <div
@@ -134,7 +137,7 @@
                         </div>
                     </div>
                 </td>
-                <td *ngIf="(tonen.toonDienst[configService.OCHTEND_INSTRUCTEUR_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) && tonen.Instructeurs">
+                <td *ngIf="(tonen.toonDienst[configService.OCHTEND_INSTRUCTEUR_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) && tonen.Instructeurs && tonen.toonClubDDWV !==2">
                     <div class="d-flex"
                          *ngIf="dagInRooster.CLUB_BEDRIJF && tonen.toonDienst[configService.OCHTEND_INSTRUCTEUR_TYPE_ID]">
                         <div
@@ -230,7 +233,7 @@
                     </div>
                 </td>
 
-                <td *ngIf="(tonen.toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID]) && tonen.Startleiders">
+                <td *ngIf="(tonen.toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID]) && tonen.Startleiders && tonen.toonClubDDWV !==2">
                     <div class="d-flex"
                          *ngIf="dagInRooster.CLUB_BEDRIJF &&  tonen.toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]">
                         <div
@@ -326,7 +329,7 @@
                         </div>
                     </div>
                 </td>
-                <td *ngIf="(tonen.toonDienst[configService.OCHTEND_HULPLIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_HULPLIERIST_TYPE_ID]) && tonen.Lieristen">
+                <td *ngIf="(tonen.toonDienst[configService.OCHTEND_HULPLIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_HULPLIERIST_TYPE_ID]) && tonen.Lieristen && tonen.toonClubDDWV !==2">
                     <div class="d-flex"
                          *ngIf="dagInRooster.CLUB_BEDRIJF && tonen.toonDienst[configService.OCHTEND_HULPLIERIST_TYPE_ID]">
                         <div
@@ -375,7 +378,7 @@
                     </div>
                 </td>
 
-                <td *ngIf="(tonen.toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID] || tonen.toonDienst[configService.GASTEN_VLIEGER2_TYPE_ID]) && tonen.GastenVliegers">
+                <td *ngIf="(tonen.toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID] || tonen.toonDienst[configService.GASTEN_VLIEGER2_TYPE_ID]) && tonen.GastenVliegers && tonen.toonClubDDWV !==2">
                     <div class="d-flex"
                          *ngIf="dagInRooster.CLUB_BEDRIJF && tonen.toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID]">
                         <div
@@ -446,6 +449,18 @@
                              (click)="verwijderDienst(dagInRooster, configService.SLEEPVLIEGER_TYPE_ID)">
                             <ng-template *ngTemplateOutlet="reset"></ng-template>
                         </div>
+                    </div>
+                </td>
+                <td *ngIf="tonen.toonClubDDWV ===2">
+                    <div class="d-flex flex-row" *ngIf="dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF">
+                        <label class="form-label me-2">Slepen</label>
+                        <input type="range" class="form-range" min="1" max="15" [(ngModel)]="dagInRooster.MIN_SLEEPSTART" (change)="opslaanRooster(dagInRooster.DATUM)" [disabled]="!magWijzigen">
+                        <div class="ms-2 me-1">{{dagInRooster.MIN_SLEEPSTART}}</div>
+                    </div>
+                    <div class="d-flex flex-row" *ngIf="dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF">
+                        <label class="form-label me-2">Lierstarts</label>
+                        <input type="range" class="form-range" min="1" max="15" [(ngModel)]="dagInRooster.MIN_LIERSTART" (change)="opslaanRooster(dagInRooster.DATUM)" [disabled]="!magWijzigen">
+                        <div class="ms-2 me-1">{{dagInRooster.MIN_LIERSTART}}</div>
                     </div>
                 </td>
                 <td>

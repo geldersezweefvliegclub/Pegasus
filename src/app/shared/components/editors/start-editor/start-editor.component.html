@@ -62,7 +62,7 @@
                     </ng-select>
                 </div>
                 <div class="col-12 col-md-3" *ngIf="start.VLIEGTUIG_ID">
-                    <label for="VELD" class="form-label">Strip</label>
+                    <label for="BAAN" class="form-label">Strip</label>
                     <ng-select id="BAAN"
                                [disabled]="isVerwijderMode || isRestoreMode"
                                [items]="baanTypes$ | async"
@@ -171,14 +171,25 @@
 
                     <div class="namenInvullen" *ngIf="toonVliegerNaam">
                         <label for="VLIEGER_NAAM" class="form-label">Naam van de vlieger</label>
-                        <input required name="vliegernaam" type="text" class="form-control" id="VLIEGER_NAAM"
-                               [(ngModel)]="start.VLIEGERNAAM"
-                               placeholder="Vul de volledige naam in"
-                               min="0">
+                        <div class="d-flex flex-row">
+                            <input required name="vliegernaam" type="text" class="form-control" id="VLIEGER_NAAM"
+                                   [(ngModel)]="start.VLIEGERNAAM"
+                                   placeholder="Vul de volledige naam in"
+                                   min="0" *ngIf="!toonGastCombobox">
+                            <app-gast-invoer *ngIf="toonGastCombobox" class="w-100"
+                                             [DATUM]="startDatum"
+                                             (gast)="start.VLIEGERNAAM = $event"
+                                             (opmerking)="start.OPMERKINGEN = $event">
+                            </app-gast-invoer>
+                            <button class="ms-1 btn btn-noborder gastBtn" (click)="toonGastCombobox = !toonGastCombobox"
+                                    [ngClass]="toonGastCombobox ? 'gastBtnAan': 'gastBtnUit'">
+                                <fa-icon [icon]="gastIcon" class="gastIcon"></fa-icon>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="row my-2"
-                         *ngIf="gekozenVliegtuig?.ZITPLAATSEN == 2 && toonInzittendeNaam < 2 && !start.PAX">
+                         *ngIf="gekozenVliegtuig?.ZITPLAATSEN === 2 && toonInzittendeNaam < 2 && !start.PAX">
                         <div class="col-12 col-md-12">
                             <app-lid-invoer id="INZITTENDE"
                                             placeholder="Wie zit achterin"
@@ -205,11 +216,21 @@
 
                     <div class="namenInvullen" *ngIf="start.PAX || toonInzittendeNaam > 0">
                         <label for="INZITTENDE_NAAM" class="form-label">Naam van de inzittende</label>
-                        <input name="inzittende" type="text" class="form-control" id="INZITTENDE_NAAM"
-                               [(ngModel)]="start.INZITTENDENAAM"
-                               placeholder="Vul de volledige naam in"
-                               min="0"
-                        >
+                        <div class="d-flex flex-row">
+                            <input name="inzittende" type="text" class="form-control" id="INZITTENDE_NAAM"
+                                   [(ngModel)]="start.INZITTENDENAAM"
+                                   placeholder="Vul de volledige naam in"
+                                   min="0" *ngIf="!toonGastCombobox">
+                            <app-gast-invoer *ngIf="toonGastCombobox" class="w-100"
+                                             [DATUM]="startDatum"
+                                             (gast)="start.INZITTENDENAAM = $event"
+                                             (opmerking)="start.OPMERKINGEN = $event">
+                            </app-gast-invoer>
+                            <button class="ms-1 btn btn-noborder" (click)="toonGastCombobox = !toonGastCombobox"
+                                    [ngClass]="toonGastCombobox ? 'gastBtnAan': 'gastBtnUit'">
+                                <fa-icon [icon]="gastIcon" class="gastIcon"></fa-icon>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="col-2 col-md-2 row align-items-center">

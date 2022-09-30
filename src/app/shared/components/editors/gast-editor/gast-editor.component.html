@@ -1,0 +1,31 @@
+<app-error [error]="error"></app-error>
+<app-success [success]="success"></app-success>
+
+<app-modal titel="Aanmelding gast">
+    <div body *ngIf="gast">
+        <fieldset>
+            <div class="col-8">
+                <label for="naam" class="form-label">Naam</label>
+                <input type="text" name="naam" class="form-control" id="naam"
+                       [(ngModel)]="gast.NAAM">
+            </div>
+
+            <div class="col-12">
+                <label for="opmerking" class="form-label">Opmerking</label>
+                <input type="text" name="opmerking" class="form-control" id="opmerking"
+                       [(ngModel)]="gast.OPMERKINGEN">
+            </div>
+        </fieldset>
+    </div>
+    <div footer>
+        <app-icon-button *ngIf="!isLoading && !isSaving" iconNaam="fas Edit" btnColor="btn-primary" [toonKlein]=false
+                         tekst="Opslaan" (btnClicked)="opslaan()"></app-icon-button>
+        <button class="btn btn-primary" *ngIf="isLoading || isSaving">
+            <span><app-loader></app-loader></span>
+        </button>
+
+        <app-icon-button *ngIf="!isLoading && !isSaving && this.gast && this.gast.ID" iconNaam="fas TrashAlt"
+                         btnColor="btn-primary editorDeleteBtn" [toonKlein]=false class="ms-2"
+                         tekst="Verwijderen" (btnClicked)="verwijderen()"></app-icon-button>
+    </div>
+</app-modal>

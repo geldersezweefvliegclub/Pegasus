@@ -183,6 +183,7 @@
                             </div>
                             <div class="card-body" [ngClass]="!toonAvatar ? 'beperkPadding' : ''">
                                 <div class="d-flex">
+                                    <div *ngIf="lid.STATUSTYPE_ID" class="vliegStatus"> ({{lid.STATUS}})</div>
                                     <div *ngIf="toonAvatar">
                                         <div class="opmaakTijdStart showStarts">{{ lid.STARTS }}</div>
                                         <div class="opmaakTijdStart showTijd"
@@ -206,7 +207,6 @@
                                         <div class="smallFont">{{lid.REG_CALL}}</div>
                                         <div class="smallFont">{{lid.OPMERKINGEN}}</div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>

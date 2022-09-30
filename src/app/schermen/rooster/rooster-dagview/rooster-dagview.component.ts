@@ -8,7 +8,14 @@ import {
 } from "../rooster-page/rooster-page.component";
 import {DienstenService} from "../../../services/apiservice/diensten.service";
 import {LoginService} from "../../../services/apiservice/login.service";
-import {HeliosDienst, HeliosDienstenDataset, HeliosLidData, HeliosType, HeliosUserinfo} from "../../../types/Helios";
+import {
+    HeliosDienst,
+    HeliosDienstenDataset,
+    HeliosLidData,
+    HeliosRoosterDag,
+    HeliosType,
+    HeliosUserinfo
+} from "../../../types/Helios";
 import {Subscription} from "rxjs";
 import {TypesService} from "../../../services/apiservice/types.service";
 import {RoosterService} from "../../../services/apiservice/rooster.service";
@@ -43,7 +50,10 @@ export class RoosterDagviewComponent implements OnInit, OnDestroy {
     dienstTypes: HeliosType[] = [];
 
     magWijzigen: boolean = false;
+    isCIMT: boolean;
     dblKlik: boolean = false;
+
+    opslaanTimer: number;                       // kleine vertraging om starts opslaan te beperken
 
     constructor(private readonly loginService: LoginService,
                 private readonly typesService: TypesService,
@@ -55,6 +65,7 @@ export class RoosterDagviewComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo;
+        this.isCIMT = ui!.Userinfo?.isCIMT!;
         this.magWijzigen = (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isBeheerderDDWV || ui?.Userinfo?.isRooster) ? true : false;
 
         // abonneer op wijziging van lidTypes
@@ -87,6 +98,31 @@ export class RoosterDagviewComponent implements OnInit, OnDestroy {
 
         this.dblKlik = true;
         window.setTimeout(() => this.dblKlik = false, 350); // reset boolean na 350 msec
+    }
+
+    opslaanRooster(datum: string) {
+        clearTimeout(this.opslaanTimer);
+        const roosterIndex = this.rooster.findIndex((dag => dag.DATUM == datum));
+
+        if (roosterIndex < 0) {
+            console.error("Datum " + datum + " onbekend");  // dat mag nooit voorkomen
+            return;
+        }
+
+        const ingevoerd = this.rooster[roosterIndex]
+        const rooster: HeliosRoosterDag = {
+            ID: ingevoerd.ID,
+            DDWV: ingevoerd.DDWV,
+            CLUB_BEDRIJF: ingevoerd.CLUB_BEDRIJF,
+            MIN_SLEEPSTART: ingevoerd.MIN_SLEEPSTART,
+            MIN_LIERSTART: ingevoerd.MIN_LIERSTART,
+            OPMERKINGEN: ingevoerd.OPMERKINGEN
+        }
+
+        // Wacht even de gebruiker kan nog aan het typen zijn
+        this.opslaanTimer = window.setTimeout(() => {
+            this.roosterService.updateRoosterdag(rooster);
+        }, 1000);
     }
 
     toekennenDienst(roosterdag: HeliosRoosterDagExtended, typeDienstID: number): void {

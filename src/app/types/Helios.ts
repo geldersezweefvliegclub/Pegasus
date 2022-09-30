@@ -14,6 +14,7 @@ import {components as dienstenComponents} from './Diensten';
 import {components as competentiesComponents} from './Competenties';
 import {components as auditComponents} from './Audit';
 import {components as reserveringComponents} from './Reservering';
+import {components as gastenComponents} from './Gasten';
 
 export type HeliosUserinfo = loginComponents['schemas']['Userinfo'];
 export type HeliosLidData = loginComponents["schemas"]["ref_leden"];
@@ -58,6 +59,10 @@ export type HeliosTypesGroepen = typesGroepenComponents['schemas']['view_types']
 export type HeliosCompetenties = competentiesComponents['schemas']['view_competenties']
 export type HeliosCompetentiesDataset = competentiesComponents['schemas']['view_competenties_dataset'];
 export type HeliosCompetentie = competentiesComponents['schemas']['ref_competenties_in'];
+
+export type HeliosGasten = gastenComponents['schemas']['view_gasten']
+export type HeliosGastenDataset = gastenComponents['schemas']['view_gasten_dataset'];
+export type HeliosGast = gastenComponents['schemas']['oper_gast_in'];
 
 export type HeliosProgressie = progressieComponents['schemas']['ref_progressie_in']
 export type HeliosBehaaldeProgressie = progressieComponents['schemas']['view_progressie']

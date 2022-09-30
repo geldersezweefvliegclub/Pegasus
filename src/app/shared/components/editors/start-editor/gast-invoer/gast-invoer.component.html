@@ -1,0 +1,9 @@
+
+<select class="form-select" id="gast" name="gast"
+        (change)="gastGeselecteerd($event.target.value)">
+    <option value="-1"></option>                               <!-- lege optie -->
+    <option
+            *ngFor="let gast of gasten"
+            [value]="gast.ID"
+    >{{gast.NAAM}}</option>
+</select>

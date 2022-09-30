@@ -10,8 +10,13 @@
                                             (nieuweDatum)="zetDatum($event)"
                                             (aanmelden)="aanmeldenLidScherm($event)"
                                             (afmelden)="afmeldenPopup($event)"
+                                            (edit)="openLidAanwezigEditor($event)"
+                                            (aanmeldenGast)="aanmeldenGastScherm($event)"
+                                            (editGast)="openGastAanwezigEditor($event)"
                                             [rooster]="rooster"
-                                            [aanmeldingen]="aanmeldingen">
+                                            [aanmeldingen]="aanmeldingen"
+                                            [diensten]="diensten"
+                                            [gasten]="gasten">
                     </app-aanmelden-weekview>
                 </div>
                 <div class="dataContent w-100 h-100" *ngIf="aanmeldenView === 'dag'">
@@ -90,3 +95,4 @@
 </app-modal>
 
 <app-lid-aanwezig-editor></app-lid-aanwezig-editor>
+<app-gast-editor (refresh)="opvragen()"></app-gast-editor>

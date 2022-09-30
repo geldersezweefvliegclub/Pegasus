@@ -4,7 +4,19 @@
 <app-modal [titel]="formTitel">
     <div body *ngIf="aanwezig">
         <fieldset>
-            <div *ngIf="!isDDWVer">
+            <label for="VELD" class="form-label">Veld</label>
+            <ng-select id="VELD"
+                       [items]="veldenTypes$ | async"
+                       placeholder="Vliegveld"
+                       bindLabel="OMSCHRIJVING"
+                       bindValue="ID"
+                       closeOnSelect="true"
+                       openOnEnter="true"
+                       required
+                       [(ngModel)]="aanwezig.VELD_ID">
+            </ng-select>
+
+            <div *ngIf="!isDDWVer" class="mt-2">
                 <label class="form-label">Vliegtuig types</label>
                 <div class="row" *ngIf="aanwezig">
                     <div class="ms-2">
@@ -42,7 +54,7 @@
     </div>
     <div footer>
         <app-icon-button *ngIf="!isLoading && !isSaving" iconNaam="fas Edit" btnColor="btn-primary" [toonKlein]=false
-                         tekst="Opslaan" (btnClicked)="opslaan()"></app-icon-button>
+                         tekst="Opslaan" (btnClicked)="opslaan()" [disabled]="knopUit()"></app-icon-button>
         <button class="btn btn-primary" *ngIf="isLoading || isSaving">
             <span><app-loader></app-loader></span>
         </button>

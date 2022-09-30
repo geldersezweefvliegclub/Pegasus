@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ModalComponent} from "../../modal/modal.component";
 import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
 import {HeliosAanwezigLedenDataset, HeliosType, HeliosVliegtuigenDataset} from "../../../../types/Helios";
-import {Subscription} from "rxjs";
+import {Observable, of, Subscription} from "rxjs";
 import {TypesService} from "../../../../services/apiservice/types.service";
 import {AanwezigLedenService} from "../../../../services/apiservice/aanwezig-leden.service";
 import {VliegtuigenService} from "../../../../services/apiservice/vliegtuigen.service";
@@ -30,6 +30,8 @@ export class LidAanwezigEditorComponent implements OnInit {
     isSaving: boolean = false;
     formTitel: string = "";
 
+    veldenTypes$: Observable<HeliosType[]>;
+
     private typesAbonnement: Subscription;
     vliegtuigTypes: HeliosTypeExtended[];
 
@@ -49,8 +51,10 @@ export class LidAanwezigEditorComponent implements OnInit {
             this.vliegtuigen = (vliegtuigen) ? vliegtuigen : [];
         });
 
-        // abonneer op wijziging van vliegtuigTypes
+
+        // abonneer op wijziging van types
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
+            this.veldenTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));
             this.vliegtuigTypes = dataset!.filter((t: HeliosType) => {
                 return t.GROEP == 4
             });
@@ -96,6 +100,7 @@ export class LidAanwezigEditorComponent implements OnInit {
                 if (vID) {
                     this.aanwezig.OVERLAND_VLIEGTUIG_ID = +vID;     // + teken voor conversie van string naar int
                 }
+                this.aanwezig.VELD_ID = this.storageService.ophalen("aanmeldingVeldTypes")
             }
             else {
                 this.vliegtuigType2Vinkjes("");
@@ -139,12 +144,13 @@ export class LidAanwezigEditorComponent implements OnInit {
     }
 
     opslaan() {
-        this.isSaving;
+        this.isSaving = true;
 
         const ui = this.loginService.userInfo?.LidData
 
         // Als we onszelf aanmelden, dan onthouden we welke vliegtuigtypes / voorkeur vliegtuif we ingevoerd hebben
         if (this.aanwezig.LID_ID == ui!.ID) {
+            this.storageService.opslaan("aanmeldingVeldTypes", this.aanwezig.VELD_ID, -1);
             this.storageService.opslaan("aanmeldingVoorkeurVliegtuigsTypes", this.aanwezig.VOORKEUR_VLIEGTUIG_TYPE, -1);
             this.storageService.opslaan("aanmeldingOverlandVliegtuigID", this.aanwezig!.OVERLAND_VLIEGTUIG_ID ? this.aanwezig!.OVERLAND_VLIEGTUIG_ID.toString() : null, -1);
         }
@@ -173,5 +179,12 @@ export class LidAanwezigEditorComponent implements OnInit {
                 this.isSaving = false;
             });
         }
+    }
+
+    knopUit(): boolean {
+        if (this.aanwezig) {
+            return !(this.aanwezig.VELD_ID! > 0)
+        }
+        return true;
     }
 }

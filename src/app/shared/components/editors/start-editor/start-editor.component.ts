@@ -26,6 +26,8 @@ import {LoginService} from "../../../../services/apiservice/login.service";
 import {PegasusConfigService} from "../../../../services/shared/pegasus-config.service";
 import {NgbDate, NgbDateParserFormatter} from "@ng-bootstrap/ng-bootstrap";
 import {NgbDateFRParserFormatter} from "../../../ngb-date-fr-parser-formatter";
+import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import {faStreetView} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
     selector: 'app-start-editor',
@@ -38,7 +40,10 @@ export class StartEditorComponent implements OnInit {
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @ViewChild(VliegtuigInvoerComponent) vliegtuigInvoerComponent: VliegtuigInvoerComponent;
 
+    gastIcon: IconDefinition = faStreetView;
+
     start: HeliosStart = {};
+    toonGastCombobox: boolean = false;
     toonVliegerNaam: boolean = false;
     toonInzittendeNaam: number = 0;
     toonStartMethode: boolean = true;
@@ -235,6 +240,7 @@ export class StartEditorComponent implements OnInit {
         this.isVerwijderMode = false;
         this.isRestoreMode = false;
         this.isSaving = false;
+        this.toonGastCombobox = false;
 
         const ui = this.loginService.userInfo?.Userinfo;
         this.startDatum = DateTime.fromSQL(this.start.DATUM!);
@@ -468,6 +474,12 @@ export class StartEditorComponent implements OnInit {
 
     // nieuwe start is ingevoerd, nu opslaan
     Toevoegen(start: HeliosStart) {
+        if (!this.toonVliegerNaam) {
+            this.start.VLIEGERNAAM = undefined;
+        }
+        if (!this.toonInzittendeNaam) {
+            this.start.INZITTENDENAAM = undefined;
+        }
         this.startlijstService.addStart(start).then((s) => {
             this.success = {
                 titel: "Startlijst",
@@ -482,6 +494,12 @@ export class StartEditorComponent implements OnInit {
 
     // bestaande start is aangepast, nu opslaan
     Aanpassen(start: HeliosStart) {
+        if (!this.toonVliegerNaam) {
+            this.start.VLIEGERNAAM = undefined;
+        }
+        if (!this.toonInzittendeNaam) {
+            this.start.INZITTENDENAAM = undefined;
+        }
         this.startlijstService.updateStart(start).then(() => {
             this.success = {
                 titel: "Startlijst",
@@ -612,7 +630,7 @@ export class StartEditorComponent implements OnInit {
         }
 
         this.progressieService.getProgressie(this.start.VLIEGER_ID, competentieIDs).then((progressie:  HeliosBehaaldeProgressieDataset[]) => {
-            this.toonWaarschuwing = progressie.length > 0 ? false : true;
+            this.toonWaarschuwing = progressie.length <= 0;
         });
     }
 
