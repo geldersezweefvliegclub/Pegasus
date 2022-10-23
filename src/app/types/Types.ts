@@ -39,7 +39,7 @@ export interface paths {
         };
       };
       responses: {
-        /** OK, starts succesvol opgehaald */
+        /** OK, data succesvol opgehaald */
         200: {
           content: {
             "application/json": components["schemas"]["ref_types"];
@@ -64,9 +64,9 @@ export interface paths {
           ID?: number;
           /** Toon welke records verwijderd zijn. Default = false */
           VERWIJDERD?: boolean;
-          /** Laatste aanpassing op basis van records in dataset. Bedoeld om starts verbruik te verminderen. Dataset is daarom leeg */
+          /** Laatste aanpassing op basis van records in dataset. Bedoeld om data verbruik te verminderen. Dataset is daarom leeg */
           LAATSTE_AANPASSING?: boolean;
-          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde starts bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen starts verzonden als het nodig is. */
+          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
           HASH?: string;
           /** Sortering van de velden in ORDER BY formaat. Default = CLUBKIST DESC, VOLGORDE, REGISTRATIE */
           SORT?: string;
@@ -76,12 +76,30 @@ export interface paths {
           START?: number;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
-          /** Haal alle lidTypes op van een specieke groep */
+          /** Haal alle types op van een specieke groep */
           GROEP?: number;
         };
       };
       responses: {
-        /** OK, starts succesvol opgehaald */
+        /** OK, data succesvol opgehaald */
+        200: {
+          content: {
+            "application/json": components["schemas"]["view_types"];
+          };
+        };
+        /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
+        304: never;
+        /** Methode niet toegestaan, input validatie error */
+        405: unknown;
+        /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
+        500: unknown;
+      };
+    };
+  };
+  "/Types/GetClubVliegtuigenTypes": {
+    get: {
+      responses: {
+        /** OK, data succesvol opgehaald */
         200: {
           content: {
             "application/json": components["schemas"]["view_types"];
@@ -149,7 +167,7 @@ export interface paths {
   "/Types/SaveObject": {
     put: {
       responses: {
-        /** OK, starts succesvol aangepast */
+        /** OK, data succesvol aangepast */
         200: {
           content: {
             "application/json": components["schemas"]["ref_types"];
@@ -166,7 +184,7 @@ export interface paths {
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** type starts */
+      /** type data */
       requestBody: {
         content: {
           "application/json": components["schemas"]["ref_types_in"];
@@ -175,7 +193,7 @@ export interface paths {
     };
     post: {
       responses: {
-        /** OK, starts succesvol toegevoegd */
+        /** OK, data succesvol toegevoegd */
         200: {
           content: {
             "application/json": components["schemas"]["ref_types"];
@@ -192,7 +210,7 @@ export interface paths {
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** type starts */
+      /** type data */
       requestBody: {
         content: {
           "application/json": components["schemas"]["ref_types_in"];
@@ -205,38 +223,79 @@ export interface paths {
 export interface components {
   schemas: {
     ref_types_in: {
-      /** Database ID van het record */
+      /**
+       * Format: int32
+       * @description Database ID van het record
+       * @example 12871
+       */
       ID?: number;
-      /** Type groep */
+      /**
+       * Format: int32
+       * @description Type groep
+       * @example 101
+       */
       GROEP?: number;
-      /** Zeer korte beschrijving van de code */
+      /**
+       * @description Zeer korte beschrijving van de code
+       * @example 14R
+       */
       CODE?: string;
-      /** Hoe kennen andere systemen / organisatie deze code */
+      /** @description Hoe kennen andere systemen / organisatie deze code */
       EXT_REF?: string;
-      /** Volledige omschrijving van het type */
+      /**
+       * @description Volledige omschrijving van het type
+       * @example Windkracht 3 (7-10 kn)
+       */
       OMSCHRIJVING?: string;
-      /** Volgorde in de HMI */
+      /**
+       * Format: int32
+       * @description Volgorde in de HMI
+       * @example 7
+       */
       SORTEER_VOLGORDE?: number;
-      /** Is dit record (met ID) hard gecodeerd in de source code. Zo ja, dan niet aanpassen. */
+      /**
+       * @description Is dit record (met ID) hard gecodeerd in de source code. Zo ja, dan niet aanpassen.
+       * @example 0
+       */
       READ_ONLY?: boolean;
     };
     ref_types: components["schemas"]["ref_types_in"] & {
-      /** Is dit record gemarkeerd als verwijderd? */
+      /**
+       * @description Is dit record gemarkeerd als verwijderd?
+       * @example 0
+       */
       VERWIJDERD?: boolean;
-      /** Tijdstempel van laaste aanpassing in de database */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database
+       * @example 2020-09-28 14:12:00
+       */
       LAATSTE_AANPASSING?: string;
     };
     view_types: {
-      /** Aantal records dat voldoet aan de criteria in de database */
+      /**
+       * Format: int32
+       * @description Aantal records dat voldoet aan de criteria in de database
+       * @example 287
+       */
       totaal?: number;
-      /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
+       * @example 2020-07-022 16:39:25
+       */
       laatste_aanpassing?: string;
-      /** hash van de dataset */
+      /**
+       * @description hash van de dataset
+       * @example 4d00b3f
+       */
       hash?: string;
-      /** De dataset met records */
+      /** @description De dataset met records */
       dataset?: components["schemas"]["ref_types"][];
     };
   };
 }
 
 export interface operations {}
+
+export interface external {}

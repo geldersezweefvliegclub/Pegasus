@@ -17,6 +17,7 @@ export class LidInvoerComponent implements OnInit, OnChanges {
     @Input() uitleg: string;
     @Input() disabled: boolean = false;
     @Input() required: boolean = false;
+    @Input() veldID: number | undefined;
     @Input() excludeLidTypes: string = ""
     @Input() alleenPaxVliegers: boolean = false;
     @Input() alleenInstructeurs: boolean = false;
@@ -64,6 +65,7 @@ export class LidInvoerComponent implements OnInit, OnChanges {
         if ((nweLijst.length > 0) && ((nweLijst.length >= 5) || (searchTerm.length <= 2))) {
             return nweLijst
         }
+
         // nee, geen aanwezige leden, dan alle leden
         return this.ledenFiltered.filter((lid: HeliosAanwezigLedenDataset) => {
             return lid.NAAM!.toLowerCase().includes(searchTerm.toLowerCase());
@@ -96,15 +98,24 @@ export class LidInvoerComponent implements OnInit, OnChanges {
                     });
             });
         }
-        if (!this.excludeLidTypes) {
-            this.aanwezigFiltered = this.aanwezig;
-        } else {
-            this.aanwezigFiltered = this.aanwezig.filter((lid: HeliosAanwezigLedenDataset) => {
-                if (!lid.INSTRUCTEUR && this.alleenInstructeurs) return false;
-                if (lid.LID_ID == this.LID_ID) return true;  // reeds invoerde lid moet ook in de lijst
+
+        this.aanwezigFiltered = this.aanwezig.filter((lid: HeliosAanwezigLedenDataset) => {
+            if (!lid.INSTRUCTEUR && this.alleenInstructeurs) return false;
+            if (lid.LID_ID == this.LID_ID) return true;  // reeds invoerde lid moet ook in de lijst
+
+            // We laten alleen vlieger zien die zich voor dit veld hebben aangemeld. Handig voor kampen als er
+            // op twee velden gevlogen wordt.
+            if (this.veldID) {
+                if ((lid.VELD_ID != this.veldID) && (lid.VELD_ID != undefined)) {
+                    return false;       // niet op dit vliegveld, dus niet in de default lijst
+                }
+            }
+
+            if (this.excludeLidTypes) {
                 return (!this.excludeLidTypes.includes(lid.LIDTYPE_ID!.toString()))
-            });
-        }
+            }
+            return true;
+        });
 
         // Als we zojuist input hebben gedaan, dan staat InputChangeEventFired op true. We hoeven dan onderstaande code niet uit te voeren
         // Dat doen we alleen als Input() variable aangepast is
@@ -116,6 +127,7 @@ export class LidInvoerComponent implements OnInit, OnChanges {
         // wordt aangeven via vliegtuig type of vliegtuig id
         const defaultLijst = this.aanwezigFiltered.filter((lid: HeliosAanwezigLedenDataset) => {
             if (lid.LID_ID == this.LID_ID) return true;     // reeds invoerde lid moet ook in de lijst
+
             if ((this.vliegtuig?.TYPE_ID) && (lid.VOORKEUR_VLIEGTUIG_TYPE) &&
                 (lid.VOORKEUR_VLIEGTUIG_TYPE.includes(this.vliegtuig.TYPE_ID.toString())))
                 return true;

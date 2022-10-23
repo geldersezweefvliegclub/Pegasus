@@ -7,6 +7,7 @@ import {RouterModule} from "@angular/router";
 import {StartlijstPageComponent} from "./startlijst-page/startlijst-page.component";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import {ExtendedModule} from "@angular/flex-layout";
+import {NgSelectModule} from "@ng-select/ng-select";
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import {ExtendedModule} from "@angular/flex-layout";
                 component: StartlijstPageComponent
             }
         ]),
-        ExtendedModule
+        ExtendedModule,
+        NgSelectModule
     ],
     exports: []
 })

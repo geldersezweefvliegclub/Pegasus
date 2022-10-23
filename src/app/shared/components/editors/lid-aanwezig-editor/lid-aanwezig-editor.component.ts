@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ModalComponent} from "../../modal/modal.component";
 import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
 import {HeliosAanwezigLedenDataset, HeliosType, HeliosVliegtuigenDataset} from "../../../../types/Helios";
@@ -18,7 +18,7 @@ type HeliosTypeExtended = HeliosType & {
     templateUrl: './lid-aanwezig-editor.component.html',
     styleUrls: ['./lid-aanwezig-editor.component.scss']
 })
-export class LidAanwezigEditorComponent implements OnInit {
+export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
     success: SuccessMessage | undefined;
@@ -51,13 +51,9 @@ export class LidAanwezigEditorComponent implements OnInit {
             this.vliegtuigen = (vliegtuigen) ? vliegtuigen : [];
         });
 
+        this.typesService.getClubVliegtuigTypes().then((records) => {
+            this.vliegtuigTypes = records;
 
-        // abonneer op wijziging van types
-        this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
-            this.veldenTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));
-            this.vliegtuigTypes = dataset!.filter((t: HeliosType) => {
-                return t.GROEP == 4
-            });
             for (let i = 0; i < this.vliegtuigTypes.length; i++) {
                 this.vliegtuigTypes[i].Geselecteerd = false;
             }
@@ -67,7 +63,17 @@ export class LidAanwezigEditorComponent implements OnInit {
 
                 return vA - vB;
             });
+        })
+
+        // abonneer op wijziging van types
+        this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
+            this.veldenTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));
         });
+    }
+
+    ngOnDestroy() : void {
+        if (this.typesAbonnement) this.typesAbonnement.unsubscribe();
+        if (this.vliegtuigenAbonnement) this.vliegtuigenAbonnement.unsubscribe();
     }
 
     // open popup, maar haal eerst de start op. De eerder ingevoerde tijd wordt als default waarde gebruikt

@@ -4,7 +4,19 @@
 <app-modal titel="Aanmelding gast">
     <div body *ngIf="gast">
         <fieldset>
-            <div class="col-8">
+            <label for="VELD" class="form-label">Veld</label>
+            <ng-select id="VELD"
+                       [items]="veldenTypes$ | async"
+                       placeholder="Vliegveld"
+                       bindLabel="OMSCHRIJVING"
+                       bindValue="ID"
+                       closeOnSelect="true"
+                       openOnEnter="true"
+                       required
+                       [(ngModel)]="gast.VELD_ID">
+            </ng-select>
+
+            <div class="mt-2 col-8">
                 <label for="naam" class="form-label">Naam</label>
                 <input type="text" name="naam" class="form-control" id="naam"
                        [(ngModel)]="gast.NAAM">

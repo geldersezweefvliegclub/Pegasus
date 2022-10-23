@@ -231,6 +231,11 @@ export interface components {
        * @example BR-1234
        */
       OPMERKINGEN?: string;
+      /**
+       * @description Op welk veld is deze gast aangemeld
+       * @example 901
+       */
+      VELD_ID?: number;
     };
     oper_gast: components["schemas"]["oper_gast_in"] & {
       /**
@@ -245,7 +250,13 @@ export interface components {
        */
       LAATSTE_AANPASSING?: string;
     };
-    view_gasten_dataset: components["schemas"]["oper_gast"];
+    view_gasten_dataset: components["schemas"]["oper_gast"] & {
+      /**
+       * @description Vliegveld waar gast aangemeld is
+       * @example Terlet
+       */
+      VELD?: string;
+    };
     view_gasten: {
       /**
        * Format: int32

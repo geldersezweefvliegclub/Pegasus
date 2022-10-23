@@ -1,14 +1,14 @@
 import {Component, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {faPen, faSortAmountDownAlt} from "@fortawesome/free-solid-svg-icons";
-import {Subscription} from "rxjs";
+import {Observable, of, Subscription} from "rxjs";
 import {
     HeliosAanwezigLedenDataset,
     HeliosAanwezigVliegtuigenDataset,
     HeliosBehaaldeProgressieDataset,
     HeliosLedenDataset,
     HeliosStart,
-    HeliosStartDataset,
+    HeliosStartDataset, HeliosType,
     HeliosVliegtuigenDataset
 } from "../../../types/Helios";
 import {DateTime} from "luxon";
@@ -27,6 +27,7 @@ import {DaginfoService} from "../../../services/apiservice/daginfo.service";
 import {CdkDrag, CdkDragDrop} from "@angular/cdk/drag-drop";
 import {VliegtuigenService} from "../../../services/apiservice/vliegtuigen.service";
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
+import {TypesService} from "../../../services/apiservice/types.service";
 
 type HeliosStartDatasetExtended = HeliosStartDataset & {
     ZITPLAATSEN?: number,
@@ -49,7 +50,7 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
     readonly startlijstIcon: IconDefinition = faPen;
     readonly iconSort: IconDefinition = faSortAmountDownAlt;
 
-    data: HeliosStartDataset[] = [];
+    starts: HeliosStartDataset[] = [];
     filteredStarts: HeliosStartDatasetExtended[] = [];
     geselecteerdeStart: HeliosStartDataset | undefined;
 
@@ -80,6 +81,10 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
     klikStart: HeliosStartDataset | undefined;
     eersteKlik: boolean = false;
 
+    private typesAbonnement: Subscription;              // Abonneer op aanpassing van vliegvelden
+    veldTypes$: Observable<HeliosType[]>;
+    vliegveld: number | undefined;                      // laat vluchten van een speciek vliegveld zien
+
     competentiesNodig: string;    // competenties die nodig zijn om op clubvliegtuigen te vliegen
     progressieCache: HeliosBehaaldeProgressieDataset[] = [];
 
@@ -89,6 +94,7 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
                 private readonly vliegtuigenService: VliegtuigenService,
                 private readonly progressieService: ProgressieService,
                 private readonly daginfoService: DaginfoService,
+                private readonly typesService: TypesService,
                 private readonly loginService: LoginService,
                 private readonly sharedService: SharedService) {
     }
@@ -101,7 +107,7 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
                 month: datum.month,
                 day: datum.day
             })
-            this.data = [];
+            this.starts = [];
 
             const ui = this.loginService.userInfo?.Userinfo;
             this.isStarttoren = ui!.isStarttoren as boolean;
@@ -141,6 +147,11 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
                 }
             });
 
+            // abonneer op wijziging van types
+            this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
+                this.veldTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));            // vliegvelden
+            });
+
             // Roep onWindowResize aan zodra we het event ontvangen hebben
             this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
                 this.onWindowResize()
@@ -153,6 +164,7 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         if (this.datumAbonnement) this.datumAbonnement.unsubscribe();
+        if (this.typesAbonnement) this.typesAbonnement.unsubscribe();
         if (this.dbEventAbonnement) this.dbEventAbonnement.unsubscribe();
         if (this.vliegtuigenAbonnement) this.vliegtuigenAbonnement.unsubscribe();
         if (this.aanwezigLedenAbonnement) this.aanwezigLedenAbonnement.unsubscribe();
@@ -178,10 +190,10 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
 
         this.isLoading = true;
         this.startlijstService.getStarts(false, this.datum, this.datum, undefined, queryParams).then((dataset) => {
-            this.data = (dataset) ? dataset : [];
+            this.starts = (dataset) ? dataset : [];
 
             // VLIEGT krijgen we uit de aanwezig, maar niet altijd. Heeft the maken dat VLIEGT geen invloed heeft op hash. Dus doen we het maar hier
-            this.data.forEach(vlucht => {
+            this.starts.forEach(vlucht => {
                 if (vlucht.STARTTIJD && !vlucht.LANDINGSTIJD) {
 
                     // vliegtuig
@@ -217,20 +229,31 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
     filter(aan: boolean) {
         this.filterAan = aan;
 
-        if (!aan) {   // filtet staat uit
-            this.filteredStarts = this.data;
+        // eerst filteren op vliegveld
+        let starts = this.starts;
+        let aanwezigLeden = this.aanwezigLeden
+        let aanwezigVliegtuigen = this.aanwezigVliegtuigen;
+
+        if (this.vliegveld) {
+            starts = this.starts.filter((s:HeliosStartDatasetExtended) => { return ((s.VELD_ID == this.vliegveld) || (s.VELD_ID == undefined))})
+            aanwezigLeden = this.aanwezigLeden.filter((s:HeliosAanwezigLedenDataset) => { return ((s.VELD_ID == this.vliegveld) || (s.VELD_ID == undefined))})
+            aanwezigVliegtuigen = this.aanwezigVliegtuigen.filter((s:HeliosAanwezigVliegtuigenDataset) => { return ((s.VELD_ID == this.vliegveld) || (s.VELD_ID == undefined))})
+        }
+
+        if (!this.filterAan) {   // filter staat uit
+            this.filteredStarts = starts;
             this.startExtendedVelden();
-            this.filteredAanwezigLeden = this.aanwezigLeden.filter(a => !a.VERTREK);  // als je naar huis bent, sta je niet meer in lijst
-            this.filteredAanwezigVliegtuigen = this.aanwezigVliegtuigen;
+            this.filteredAanwezigLeden = aanwezigLeden.filter((a) => { return !a.VERTREK});  // als je naar huis bent, sta je niet meer in lijst
+            this.filteredAanwezigVliegtuigen = aanwezigVliegtuigen;
         } else {  // filter op de 3 datasets  Leden, Vliegtuigen & Starts
-            this.filteredStarts = this.data.filter((s: HeliosStartDataset) => {
+            this.filteredStarts = starts.filter((s: HeliosStartDataset) => {
                 return s.STARTTIJD == null
             });
             this.startExtendedVelden();
-            this.filteredAanwezigVliegtuigen = this.aanwezigVliegtuigen.filter((a: HeliosAanwezigVliegtuigenDataset) => {
+            this.filteredAanwezigVliegtuigen = aanwezigVliegtuigen.filter((a: HeliosAanwezigVliegtuigenDataset) => {
                 return !a.VERTREK && a.VLIEGT == false
             });
-            this.filteredAanwezigLeden = this.aanwezigLeden.filter((a: HeliosAanwezigLedenDataset) => {
+            this.filteredAanwezigLeden = aanwezigLeden.filter((a: HeliosAanwezigLedenDataset) => {
                 if (a.VERTREK) {
                     return false;
                 }
@@ -426,33 +449,41 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
 
     // gaat hoger op de startlijst = eerder starten
     omhoog() {
-        const idx = this.data.findIndex(s => s.ID == this.geselecteerdeStart!.ID);
+        const idx = this.starts.findIndex(s => s.ID == this.geselecteerdeStart!.ID);
 
         if (idx > 0) {
-            this.data[idx].DAGNUMMER = this.data[idx].DAGNUMMER! - 1;
-            this.data[idx - 1].DAGNUMMER = this.data[idx - 1].DAGNUMMER! + 1;
+            this.starts[idx].DAGNUMMER = this.starts[idx].DAGNUMMER! - 1;
+            this.starts[idx - 1].DAGNUMMER = this.starts[idx - 1].DAGNUMMER! + 1;
 
-            this.startlijstService.updateStart({ID: this.data[idx].ID, DAGNUMMER: this.data[idx].DAGNUMMER});
-            this.startlijstService.updateStart({ID: this.data[idx - 1].ID, DAGNUMMER: this.data[idx - 1].DAGNUMMER});
+            this.startlijstService.updateStart({ID: this.starts[idx].ID, DAGNUMMER: this.starts[idx].DAGNUMMER});
+            this.startlijstService.updateStart({ID: this.starts[idx - 1].ID, DAGNUMMER: this.starts[idx - 1].DAGNUMMER});
         }
     }
 
     // gaat later starten
     omlaag() {
-        const idx = this.data.findIndex(s => s.ID == this.geselecteerdeStart!.ID);
+        const idx = this.starts.findIndex(s => s.ID == this.geselecteerdeStart!.ID);
 
-        if ((idx >= 0) && (idx < this.data.length - 1)) {
-            this.data[idx].DAGNUMMER = this.data[idx].DAGNUMMER! + 1;
-            this.data[idx + 1].DAGNUMMER = this.data[idx + 1].DAGNUMMER! - 1;
+        if ((idx >= 0) && (idx < this.starts.length - 1)) {
+            this.starts[idx].DAGNUMMER = this.starts[idx].DAGNUMMER! + 1;
+            this.starts[idx + 1].DAGNUMMER = this.starts[idx + 1].DAGNUMMER! - 1;
 
-            this.startlijstService.updateStart({ID: this.data[idx].ID, DAGNUMMER: this.data[idx].DAGNUMMER});
-            this.startlijstService.updateStart({ID: this.data[idx + 1].ID, DAGNUMMER: this.data[idx + 1].DAGNUMMER});
+            this.startlijstService.updateStart({ID: this.starts[idx].ID, DAGNUMMER: this.starts[idx].DAGNUMMER});
+            this.startlijstService.updateStart({ID: this.starts[idx + 1].ID, DAGNUMMER: this.starts[idx + 1].DAGNUMMER});
         }
     }
 
     // maak een nieuwe lege start aan, vul velden met default waarden uit daginfo
     nieuweStart(vliegtuigID: number) {
         const idx = this.aanwezigVliegtuigen.findIndex(v => v.VLIEGTUIG_ID == vliegtuigID);
+
+        // aanmelden op een vliegveld. Via filter of daginfo
+        let vliegveld = this.vliegveld;
+        let baan = undefined;
+        if (!vliegveld) {
+            baan = this.daginfoService.dagInfo.BAAN_ID
+            vliegveld = this.daginfoService.dagInfo.VELD_ID
+        }
 
         const start: HeliosStart = {
             ID: undefined,
@@ -468,8 +499,8 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
             INSTRUCTIEVLUCHT: this.aanwezigVliegtuigen[idx].TRAINER,
 
             STARTMETHODE_ID: this.daginfoService.dagInfo.STARTMETHODE_ID,
-            VELD_ID: this.daginfoService.dagInfo.VELD_ID,
-            BAAN_ID: this.daginfoService.dagInfo.BAAN_ID,
+            VELD_ID: vliegveld,
+            BAAN_ID: baan,
             PAX: false,
             CHECKSTART: false,
             SLEEPKIST_ID: undefined,

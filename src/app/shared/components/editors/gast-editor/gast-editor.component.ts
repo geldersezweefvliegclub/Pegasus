@@ -1,15 +1,17 @@
-import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
 import {ModalComponent} from "../../modal/modal.component";
-import {HeliosAanwezigLedenDataset, HeliosGast} from "../../../../types/Helios";
+import {HeliosAanwezigLedenDataset, HeliosGast, HeliosType} from "../../../../types/Helios";
 import {GastenService} from "../../../../services/apiservice/gasten.service";
+import {Observable, of, Subscription} from "rxjs";
+import {TypesService} from "../../../../services/apiservice/types.service";
 
 @Component({
     selector: 'app-gast-editor',
     templateUrl: './gast-editor.component.html',
     styleUrls: ['./gast-editor.component.scss']
 })
-export class GastEditorComponent implements OnInit {
+export class GastEditorComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @Output() refresh: EventEmitter<void> = new EventEmitter<void>();
 
@@ -21,11 +23,26 @@ export class GastEditorComponent implements OnInit {
 
     gast: HeliosGast;
 
-    constructor(private readonly gastenService: GastenService) {
+    private typesAbonnement: Subscription;
+    veldenTypes$: Observable<HeliosType[]>;         // vliegveld types
+
+    constructor(private readonly gastenService: GastenService,
+                private readonly typesService: TypesService) {
     }
 
     ngOnInit(): void {
+        // abonneer op wijziging van types
+        this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
+            this.veldenTypes$ = of(dataset!.filter((t: HeliosType) => {
+                return t.GROEP == 9
+            }));
+        })
     }
+
+    ngOnDestroy() : void {
+        if (this.typesAbonnement) this.typesAbonnement.unsubscribe();
+    }
+
     // open popup, maar haal eerst de start op. De eerder ingevoerde tijd wordt als default waarde gebruikt
     // indien niet eerder ingvuld, dan de huidige tijd. Buiten de daglicht periode is het veld leeg
     openPopup(record: HeliosGast) {
@@ -87,5 +104,12 @@ export class GastEditorComponent implements OnInit {
                 this.isSaving = false;
             });
         }
+    }
+
+    knopUit(): boolean {
+        if (this.gast) {
+            return !(this.gast.VELD_ID! > 0)
+        }
+        return true;
     }
 }

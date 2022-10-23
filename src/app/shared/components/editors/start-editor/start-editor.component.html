@@ -87,7 +87,7 @@
                 </div>
             </div>
 
-            <div class="row mt-2" *ngIf="start.VLIEGTUIG_ID && start.STARTMETHODE_ID == 501">
+            <div class="row mt-2" *ngIf="start.VLIEGTUIG_ID && start.STARTMETHODE_ID === 501">
                 <div class="col-12 col-md-6">
                     <label for="SLEEPVLIEGTUIG" class="form-label">Sleepkist</label>
                     <app-vliegtuig-invoer id="SLEEPVLIEGTUIG"
@@ -145,15 +145,16 @@
                         <div class="col-12 col-md-12">
                             <div>
                                 <app-lid-invoer id="VLIEGER"
-                                                [placeholder]="gekozenVliegtuig?.ZITPLAATSEN == 2 ? 'Wie zit voorin?' : 'Wie is de vlieger' "
-                                                [label]="gekozenVliegtuig?.ZITPLAATSEN == 2 ? 'Voorin' : 'Vlieger' "
+                                                [placeholder]="gekozenVliegtuig?.ZITPLAATSEN === 2 ? 'Wie zit voorin?' : 'Wie is de vlieger' "
+                                                [label]="gekozenVliegtuig?.ZITPLAATSEN === 2 ? 'Voorin' : 'Vlieger' "
                                                 [LID_ID]="start.VLIEGER_ID"
-                                                [disabled]="isVerwijderMode || isRestoreMode || ((VliegerID == start.VLIEGER_ID && VliegerID >0) && !magAltijdWijzigen)"
+                                                [disabled]="isVerwijderMode || isRestoreMode || ((VliegerID === start.VLIEGER_ID && VliegerID >0) && !magAltijdWijzigen)"
                                                 [aanwezig]="aanwezigLeden"
                                                 [excludeLidTypes]="exclLidtypeAlsVlieger"
                                                 [leden]="leden"
                                                 [alleenPaxVliegers]="start.PAX"
                                                 [vliegtuig]="gekozenVliegtuig"
+                                                [veldID]="start.VELD_ID"
                                                 (LidChanged)="vliegerGeselecteerd($event)"
                                                 [uitleg]="start.PAX ? alleenPAX : undefined"
                                 ></app-lid-invoer>
@@ -195,7 +196,7 @@
                                             placeholder="Wie zit achterin"
                                             label="Achterin"
                                             [LID_ID]="start.INZITTENDE_ID"
-                                            [disabled]="isVerwijderMode || isRestoreMode || ((VliegerID == start.INZITTENDE_ID && VliegerID >0) && !magAltijdWijzigen)"
+                                            [disabled]="isVerwijderMode || isRestoreMode || ((VliegerID === start.INZITTENDE_ID && VliegerID >0) && !magAltijdWijzigen)"
                                             [aanwezig]="aanwezigLeden"
                                             [excludeLidTypes]="exclLidtypeAlsInzittende"
                                             [alleenInstructeurs]="start.INSTRUCTIEVLUCHT"

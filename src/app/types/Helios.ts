@@ -10,6 +10,7 @@ import {components as typesGroepenComponents} from './TypesGroepen';
 import {components as progressieComponents} from './Progressie';
 import {components as roosterComponents} from './Rooster';
 import {components as tracksComponents} from './Tracks';
+import {components as transactiesComponents} from './Transacties';
 import {components as dienstenComponents} from './Diensten';
 import {components as competentiesComponents} from './Competenties';
 import {components as auditComponents} from './Audit';
@@ -81,6 +82,10 @@ export type HeliosAuditDataset = auditComponents['schemas']['view_audit_dataset'
 export type HeliosTrack = tracksComponents['schemas']['oper_tracks'];
 export type HeliosTracks = tracksComponents['schemas']['view_tracks'];
 export type HeliosTracksDataset = tracksComponents['schemas']['view_tracks_dataset'];
+
+export type HeliosTransactie = transactiesComponents['schemas']['oper_transactie'];
+export type HeliosTransacties = transactiesComponents['schemas']['view_transactie'];
+export type HeliosTransactiesDataset = transactiesComponents['schemas']['view_transactie_dataset'];
 
 export type HeliosDienst = dienstenComponents['schemas']['oper_diensten'];
 export type HeliosDiensten = dienstenComponents['schemas']['view_diensten'];

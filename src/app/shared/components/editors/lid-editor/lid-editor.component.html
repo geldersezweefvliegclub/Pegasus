@@ -1,6 +1,5 @@
 <app-error [error]="error"></app-error>
 <app-success [success]="success"></app-success>
-
 <ng-template #wachtwoordPopover>
     Wachtwoorden moeten minimaal bevatten:
     <ul>
@@ -12,7 +11,6 @@
         <li>Een minimale lengte van 4 karakters</li>
     </ul>
 </ng-template>
-
 <ng-template #googleAuthPopover>
     Schakel Google / SMS twee-staps verificatie in/uit.<br>
     Twee-staps verificatie biedt extra beveiliging bij het inloggen.
@@ -27,7 +25,19 @@
                                     *ngIf="!this.isVerwijderMode && !this.isRestoreMode"></app-image-crop>
                 </div>
 
-                <div class="cssWarning cssWarningAvatar" *ngIf="lid.AVATAR == null">
+                <div class="DDVWtegoed d-flex flex-column" (click)="toonTransacties()">
+                    <div style="font-size: x-small">
+                        DDWV tegoed
+                    </div>
+                    <div class="d-flex align-items-end justify-content-end">
+                        {{lid.TEGOED}}&nbsp;
+                        <div style="font-size: x-small;  margin-bottom: 2px;">
+                            strippen
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cssWarning cssWarningAvatar" *ngIf="lid.AVATAR === null">
                     <div class="fas fa-exclamation-triangle"></div>
                     Avatar ontbreekt
                 </div>
@@ -135,9 +145,9 @@
                                 </div>
                             </div>
                             <div class="col-12 col-md-4">
-                                    <label for="email" class="form-label">Email</label>
-                                    <input type="email" name="email" [(ngModel)]="lid.EMAIL" class="form-control"
-                                           id="email" email required>
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" name="email" [(ngModel)]="lid.EMAIL" class="form-control"
+                                       id="email" email required>
                             </div>
                         </div>
                         <div class="row mt-2">
@@ -165,7 +175,8 @@
                                             </label>
 
                                             <div *ngIf="isMobiel">
-                                                <input type="checkbox" name="privacy" class="form-check-inline" id="privacy"
+                                                <input type="checkbox" name="privacy" class="form-check-inline"
+                                                       id="privacy"
                                                        [(ngModel)]="lid.PRIVACY">
                                                 <label for="privacy" class="form-check-label">Privacy</label>
                                             </div>
@@ -207,7 +218,7 @@
                                 <input type="text" name="sleutel1" class="form-control" id="sleutel1"
                                        [(ngModel)]="lid.SLEUTEL1">
                             </div>
-                            <div class="col-12 col-md-4 d-flex align-items-end mt-2" >
+                            <div class="col-12 col-md-4 d-flex align-items-end mt-2">
                                 <div class="row w-100" *ngIf="!isMobiel">
                                     <div class="col-12">
                                         <input type="checkbox" name="privacy" class="form-check-inline" id="privacy1"
@@ -466,7 +477,8 @@
                                 <input class="form-check-inline" type="checkbox" id="startverbod" name="startverbod"
                                        [disabled]="isDisabled('STARTVERBOD')"
                                        [(ngModel)]="lid.STARTVERBOD">
-                                <label class="form-check-label" for="startverbod" [ngClass]="disabledClass('STARTVERBOD')">
+                                <label class="form-check-label" for="startverbod"
+                                       [ngClass]="disabledClass('STARTVERBOD')">
                                     Heeft startverbod
                                 </label>
                             </div>
@@ -535,3 +547,4 @@
     </div>
 </form>
 
+<app-transacties (TransactieGedaan)="opvragen()"></app-transacties>

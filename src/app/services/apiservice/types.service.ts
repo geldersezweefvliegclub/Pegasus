@@ -11,6 +11,7 @@ import {LoginService} from "./login.service";
 })
 export class TypesService {
     private typesCache: HeliosTypes = { dataset: []};        // return waarde van API call
+    private cvTypesCache: HeliosTypes = { dataset: []};      // clubvliegtuigen type
     private fallbackTimer: number;                           // Timer om te zorgen dat starts geladen echt is
 
     private typesStore = new BehaviorSubject(this.typesCache.dataset);
@@ -75,6 +76,25 @@ export class TypesService {
             }
         }
         return this.typesCache?.dataset as HeliosType[];
+    }
+
+    async getClubVliegtuigTypes(): Promise<HeliosType[]> {
+        let getParams: KeyValueArray = {};
+
+        if ((this.cvTypesCache != undefined) && (this.cvTypesCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
+            getParams['HASH'] = this.cvTypesCache.hash;
+        }
+
+        try {
+            const response = await this.apiService.get('Types/GetClubVliegtuigenTypes', getParams);
+            this.cvTypesCache = await response.json();
+            this.storageService.opslaan('cvTypes', this.cvTypesCache);
+        } catch (e) {
+            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde starts als cache
+                throw(e);
+            }
+        }
+        return this.cvTypesCache?.dataset as HeliosType[];
     }
 
     async getType(id: number): Promise<HeliosType> {

@@ -261,7 +261,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
             }
         });
 
-        // abonneer op wijziging van lidTypes
+        // abonneer op wijziging van types
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
             this.veldTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));            // vliegvelden
         });

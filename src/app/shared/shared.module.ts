@@ -67,6 +67,8 @@ import {TypeEditorComponent} from './components/editors/type-editor/type-editor.
 import {CompetentieEditorComponent} from './components/editors/competentie-editor/competentie-editor.component';
 import { GastEditorComponent } from './components/editors/gast-editor/gast-editor.component';
 import { GastInvoerComponent } from './components/editors/start-editor/gast-invoer/gast-invoer.component';
+import { TransactiesComponent } from './components/transacties/transacties.component';
+import { TransactieEditorComponent } from './components/editors/transactie-editor/transactie-editor.component';
 
 @NgModule({
     imports: [
@@ -141,7 +143,9 @@ import { GastInvoerComponent } from './components/editors/start-editor/gast-invo
         TypeEditorComponent,
         CompetentieEditorComponent,
         GastEditorComponent,
-        GastInvoerComponent
+        GastInvoerComponent,
+        TransactiesComponent,
+        TransactieEditorComponent
     ],
     exports: [
         LidEditorComponent,

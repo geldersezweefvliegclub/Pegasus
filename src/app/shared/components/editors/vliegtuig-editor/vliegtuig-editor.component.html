@@ -3,139 +3,151 @@
 
 <app-modal [titel]="formTitel">
     <div body>
-            <fieldset [disabled]="isVerwijderMode || isRestoreMode || isLoading || isSaving">
-                <div class="row">
-                    <div class="col-12 col-md-6">
-                        <label for="REGISTRATIE" class="form-label">Registratie</label>
-                        <input required name="registratie" type="text" class="form-control" id="REGISTRATIE" [disabled]="!magWijzigen"
-                               [(ngModel)]="vliegtuig.REGISTRATIE" appRegistratieDirective>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label for="CALLSIGN" class="form-label">Callsign</label>
-                        <input name="callsign" type="text" class="form-control" id="CALLSIGN"
-                               [(ngModel)]="vliegtuig.CALLSIGN">
-                    </div>
+        <fieldset [disabled]="isVerwijderMode || isRestoreMode || isLoading || isSaving">
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <label for="REGISTRATIE" class="form-label">Registratie</label>
+                    <input required name="registratie" type="text" class="form-control" id="REGISTRATIE"
+                           [disabled]="!magWijzigen"
+                           [(ngModel)]="vliegtuig.REGISTRATIE" appRegistratieDirective>
                 </div>
-                <div class="row my-2">
-                    <div class="col-12 col-md-6">
-                        <label for="FLARMCODE" class="form-label">Flarmcode</label>
-                        <input name="flarmcode" type="text" class="form-control" id="FLARMCODE"
-                               [(ngModel)]="vliegtuig.FLARMCODE"
-                               min="0"
-                        >
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label for="ZITPLAATSEN" class="form-label">Zitplaatsen</label>
-                        <input required name="zitplaatsen" type="number" class="form-control" id="ZITPLAATSEN"
-                               [(ngModel)]="vliegtuig.ZITPLAATSEN"
-                               min="1" max="2"
-                        >
-                    </div>
+                <div class="col-12 col-md-6">
+                    <label for="CALLSIGN" class="form-label">Callsign</label>
+                    <input name="callsign" type="text" class="form-control" id="CALLSIGN"
+                           [(ngModel)]="vliegtuig.CALLSIGN">
                 </div>
-                <div class="row my-2">
-                    <div class="col-6 col-md-3">
-                        <input name="CLUBKIST" type="checkbox" class="form-check-input" id="CLUBKIST" [disabled]="!magClubkistWijzigen"
-                               [(ngModel)]="vliegtuig.CLUBKIST">
-                        <label class="form-check-label ms-2" for="CLUBKIST">
-                            Clubkist
-                        </label>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <input name="ZELFSTART" type="checkbox" class="form-check-input" id="ZELFSTART"
-                               [(ngModel)]="vliegtuig.ZELFSTART">
-                        <label class="form-check-label ms-2" for="ZELFSTART">
-                            Zelfstart
-                        </label>
-                    </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-12 col-md-6">
+                    <label for="FLARMCODE" class="form-label">Flarmcode</label>
+                    <input name="flarmcode" type="text" class="form-control" id="FLARMCODE"
+                           [(ngModel)]="vliegtuig.FLARMCODE"
+                           min="0"
+                    >
+                </div>
+                <div class="col-12 col-md-6">
+                    <label for="ZITPLAATSEN" class="form-label">Zitplaatsen</label>
+                    <input required name="zitplaatsen" type="number" class="form-control" id="ZITPLAATSEN"
+                           [(ngModel)]="vliegtuig.ZITPLAATSEN"
+                           min="1" max="2"
+                    >
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-12 col-md-6">
+                    <label for="TYPE_ID" class="form-label">Type</label>
+                    <select class="form-select" [required]="vliegtuig.CLUBKIST" [(ngModel)]="vliegtuig.TYPE_ID"
+                            name="TYPE_ID">
+                        <option *ngFor="let vliegtuigType of vliegtuigTypes"
+                                [value]="vliegtuigType.ID">{{vliegtuigType.OMSCHRIJVING}}</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-3" *ngIf="vliegtuig.CLUBKIST">
+                    <label for="VOLGORDE" class="form-label">Volgorde</label>
+                    <input [required]="vliegtuig.CLUBKIST" name="zitplaatsen" type="number" class="form-control"
+                           id="VOLGORDE"
+                           [(ngModel)]="vliegtuig.VOLGORDE"
+                           min="1" max="25"
+                    >
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-6 col-md-3">
+                    <input name="CLUBKIST" type="checkbox" class="form-check-input" id="CLUBKIST"
+                           [disabled]="!magClubkistWijzigen"
+                           [(ngModel)]="vliegtuig.CLUBKIST">
+                    <label class="form-check-label ms-2" for="CLUBKIST">
+                        Clubkist
+                    </label>
+                </div>
+                <div class="col-6 col-md-3">
+                    <input name="ZELFSTART" type="checkbox" class="form-check-input" id="ZELFSTART"
+                           [(ngModel)]="vliegtuig.ZELFSTART">
+                    <label class="form-check-label ms-2" for="ZELFSTART">
+                        Zelfstart
+                    </label>
+                </div>
 
-                    <div class="col-6 col-md-3">
-                        <input name="TMG" type="checkbox" class="form-check-input" id="TMG"
-                               [(ngModel)]="vliegtuig.TMG">
-                        <label class="form-check-label ms-2" for="TMG">
-                            TMG
-                        </label>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <input name="SLEEPKIST" type="checkbox" class="form-check-input" id="SLEEPKIST"
-                               [(ngModel)]="vliegtuig.SLEEPKIST">
-                        <label class="form-check-label ms-2" for="SLEEPKIST">
-                            Sleepkist
-                        </label>
-                    </div>
+                <div class="col-6 col-md-3">
+                    <input name="TMG" type="checkbox" class="form-check-input" id="TMG"
+                           [(ngModel)]="vliegtuig.TMG">
+                    <label class="form-check-label ms-2" for="TMG">
+                        TMG
+                    </label>
                 </div>
-                <div class="row my-3 align-items-end" *ngIf="vliegtuig.CLUBKIST">
-                    <div class="col-3 ">
-                        <input name="INZETBAAR" type="checkbox" class="form-check-input" id="INZETBAAR"
-                               [(ngModel)]="vliegtuig.INZETBAAR">
-                        <label class="form-check-label ms-2" for="CLUBKIST">
-                            Inzetbaar
-                        </label>
-                    </div>
-                    <div class="col-6">
-                        <input name="TRAINER" type="checkbox" class="form-check-input" id="TRAINER" [disabled]="vliegtuig.ZITPLAATSEN != 2"
-                               [(ngModel)]="vliegtuig.TRAINER">
-                        <label for="TRAINER" class="form-check-label ms-2">DBO Trainer</label>
-                    </div>
+                <div class="col-6 col-md-3">
+                    <input name="SLEEPKIST" type="checkbox" class="form-check-input" id="SLEEPKIST"
+                           [(ngModel)]="vliegtuig.SLEEPKIST">
+                    <label class="form-check-label ms-2" for="SLEEPKIST">
+                        Sleepkist
+                    </label>
                 </div>
-                <div class="row my-3 align-items-end" *ngIf="vliegtuig.CLUBKIST">
-                    <div class="col-12 col-md-3">
-                        <label for="VOLGORDE" class="form-label">Volgorde</label>
-                        <input [required]="vliegtuig.CLUBKIST" name="zitplaatsen" type="number" class="form-control" id="VOLGORDE"
-                               [(ngModel)]="vliegtuig.VOLGORDE"
-                               min="1" max="25"
-                        >
-                    </div>
-
-                    <div class="col-12 col-md-6" >
-                        <select class="form-select" [required]="vliegtuig.CLUBKIST" [(ngModel)]="vliegtuig.TYPE_ID"
-                                name="TYPE_ID">
-                            <option *ngFor="let vliegtuigType of vliegtuigTypes"
-                                    [value]="vliegtuigType.ID">{{vliegtuigType.OMSCHRIJVING}}</option>
-                        </select>
-                    </div>
+            </div>
+            <div class="row my-3 align-items-end" *ngIf="vliegtuig.CLUBKIST">
+                <div class="col-3 ">
+                    <input name="INZETBAAR" type="checkbox" class="form-check-input" id="INZETBAAR"
+                           [(ngModel)]="vliegtuig.INZETBAAR">
+                    <label class="form-check-label ms-2" for="CLUBKIST">
+                        Inzetbaar
+                    </label>
                 </div>
-                <div class="row my-3 align-items-end" *ngIf="vliegtuig.CLUBKIST">
-                    <div class="col-12 col-md-6" >
-                        <label for="LOKAAL" class="form-label">Bevoegdheid lokaal</label>
-                        <select class="form-select" [(ngModel)]="vliegtuig.BEVOEGDHEID_LOKAAL_ID"
-                                name="BEVOEGDHEID_LOKAAL_ID" id="LOKAAL">
-                            <option *ngFor="let competentie of PVBs"
-                                    [value]="competentie.Lokaal">{{competentie.Type}}</option>
-                        </select>
-                    </div>
-                    <div class="col-12 col-md-6" >
-                        <label for="OVERLAND" class="form-label">Bevoegdheid overland</label>
-                        <select class="form-select" [(ngModel)]="vliegtuig.BEVOEGDHEID_OVERLAND_ID"
-                                name="BEVOEGDHEID_OVERLAND_ID" id="OVERLAND">
-                            <option *ngFor="let competentie of PVBs"
-                                    [value]="competentie.Overland">{{competentie.Type}}</option>
-                        </select>
-                    </div>
+                <div class="col-6">
+                    <input name="TRAINER" type="checkbox" class="form-check-input" id="TRAINER"
+                           [disabled]="vliegtuig.ZITPLAATSEN != 2"
+                           [(ngModel)]="vliegtuig.TRAINER">
+                    <label for="TRAINER" class="form-check-label ms-2">DBO Trainer</label>
                 </div>
-                <div class="row my-3 align-items-end" *ngIf="vliegtuig.CLUBKIST">
-                    <div class="col-12 col-md-12">
-                        <label for="URL" class="form-label">URL naar handboek</label>
-                        <input type="text" class="form-control" id="URL"
-                               [(ngModel)]="vliegtuig.URL">
-                    </div>
+            </div>
+            <div class="row my-3 align-items-end" *ngIf="vliegtuig.CLUBKIST">
+                <div class="col-12 col-md-6">
+                    <label for="LOKAAL" class="form-label">Bevoegdheid lokaal</label>
+                    <select class="form-select" [(ngModel)]="vliegtuig.BEVOEGDHEID_LOKAAL_ID"
+                            name="BEVOEGDHEID_LOKAAL_ID" id="LOKAAL">
+                        <option *ngFor="let competentie of PVBs"
+                                [value]="competentie.Lokaal">{{competentie.Type}}</option>
+                    </select>
                 </div>
-                <div class="row my-3 align-items-end">
-                    <div class="col-12 col-md-12">
-                        <label for="OPMERKINGEN" class="form-label">Opmerkingen</label>
-                        <input type="text" class="form-control" id="OPMERKINGEN"
-                               [(ngModel)]="vliegtuig.OPMERKINGEN">
-                    </div>
+                <div class="col-12 col-md-6">
+                    <label for="OVERLAND" class="form-label">Bevoegdheid overland</label>
+                    <select class="form-select" [(ngModel)]="vliegtuig.BEVOEGDHEID_OVERLAND_ID"
+                            name="BEVOEGDHEID_OVERLAND_ID" id="OVERLAND">
+                        <option *ngFor="let competentie of PVBs"
+                                [value]="competentie.Overland">{{competentie.Type}}</option>
+                    </select>
                 </div>
-            </fieldset>
+            </div>
+            <div class="row my-3 align-items-end" *ngIf="vliegtuig.CLUBKIST">
+                <div class="col-12 col-md-12">
+                    <label for="URL" class="form-label">URL naar handboek</label>
+                    <input type="text" class="form-control" id="URL"
+                           [(ngModel)]="vliegtuig.URL">
+                </div>
+            </div>
+            <div class="row my-3 align-items-end">
+                <div class="col-12 col-md-12">
+                    <label for="OPMERKINGEN" class="form-label">Opmerkingen</label>
+                    <input type="text" class="form-control" id="OPMERKINGEN"
+                           [(ngModel)]="vliegtuig.OPMERKINGEN">
+                </div>
+            </div>
+        </fieldset>
     </div>
     <div footer>
-        <app-icon-button *ngIf="!isLoading && !isSaving && vliegtuig.ID !== undefined && !isRestoreMode && !isVerwijderMode" iconNaam="fas Edit" btnColor="btn-primary"
-                         [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
-        <app-icon-button *ngIf="!isLoading && !isSaving && vliegtuig.ID === undefined && !isRestoreMode && !isVerwijderMode" iconNaam="fas Plus" btnColor="btn-primary"
-                         [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
-        <app-icon-button *ngIf="!isLoading && !isSaving && isVerwijderMode" iconNaam="fas TrashAlt" btnColor="btn-primary editorDeleteBtn"
+        <app-icon-button
+                *ngIf="!isLoading && !isSaving && vliegtuig.ID !== undefined && !isRestoreMode && !isVerwijderMode"
+                iconNaam="fas Edit" btnColor="btn-primary"
+                [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()"
+                (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button
+                *ngIf="!isLoading && !isSaving && vliegtuig.ID === undefined && !isRestoreMode && !isVerwijderMode"
+                iconNaam="fas Plus" btnColor="btn-primary"
+                [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()"
+                (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button *ngIf="!isLoading && !isSaving && isVerwijderMode" iconNaam="fas TrashAlt"
+                         btnColor="btn-primary editorDeleteBtn"
                          [toonKlein]=false tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
-        <app-icon-button *ngIf="!isLoading && !isSaving && isRestoreMode" iconNaam="fas Undo" btnColor="btn-primary editorRestoreBtn"
+        <app-icon-button *ngIf="!isLoading && !isSaving && isRestoreMode" iconNaam="fas Undo"
+                         btnColor="btn-primary editorRestoreBtn"
                          [toonKlein]=false tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
 
         <button class="btn btn-primary" *ngIf="isLoading || isSaving">

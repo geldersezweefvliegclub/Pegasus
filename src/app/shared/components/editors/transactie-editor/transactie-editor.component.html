@@ -1,0 +1,43 @@
+<p>transactie-editor works!</p>
+
+<app-error [error]="error"></app-error>
+<app-success [success]="success"></app-success>
+
+
+<app-modal titel="Transactie editor">
+    <div body>
+        <fieldset>
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <label for="EENHEDEN" class="form-label">Strippen</label>
+                    <input name="callsign" type="number" class="form-control" id="EENHEDEN"
+                           [required]="!EENHEDEN && !BEDRAG"
+                           [(ngModel)]="EENHEDEN">
+                </div>
+                <div class="col-12 col-md-6">
+                    <label for="BEDRAG" class="form-label">Bedrag</label>
+                    <input name="BEDRAG" type="number" class="form-control" id="BEDRAG"
+                           [required]="!EENHEDEN && !BEDRAG"
+                           [(ngModel)]="BEDRAG">
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <label for="OMSCHRIJVING" class="form-label">Omschijving</label>
+                    <input [(ngModel)]="OMSCHRIJVING" name="OMSCHRIJVING" id="OMSCHRIJVING"
+                              class="form-control w-100" required>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <div footer class="w-100">
+        <app-icon-button
+                iconNaam="fas Plus" btnColor="btn-primary"
+                tekst="Opslaan"
+                [disabled]="(!EENHEDEN && !BEDRAG) || !OMSCHRIJVING"
+                [toonKlein]="false"
+                (btnClicked)="opslaan()">
+        </app-icon-button>
+    </div>
+</app-modal>

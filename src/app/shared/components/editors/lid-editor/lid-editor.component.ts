@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {NgbDate, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
 import {DateTime} from 'luxon';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
@@ -14,6 +14,7 @@ import {Router} from "@angular/router";
 import {StorageService} from "../../../../services/storage/storage.service";
 import {Subscription} from "rxjs";
 import {SchermGrootte, SharedService} from "../../../../services/shared/shared.service";
+import {TransactiesComponent} from "../../transacties/transacties.component";
 
 @Component({
     selector: 'app-lid-editor',
@@ -25,6 +26,8 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     @Input() lidID: number;
     @Input() isVerwijderMode: boolean = false;
     @Input() isRestoreMode: boolean = false;
+
+    @ViewChild(TransactiesComponent) transactieScherm: TransactiesComponent;
 
     private resizeSubscription: Subscription;       // Abonneer op aanpassing van window grootte (of draaien mobiel)
     private ledenAbonnement: Subscription;
@@ -81,7 +84,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
             this.statusTypes = dataset!.filter((t: HeliosType) => { return t.GROEP == 19  });      // status types (DBO, solo, brevet)```````
         });
 
-        // abonneer op wijziging van leden, maar hebben alleen instructeurs nodid
+        // abonneer op wijziging van leden, maar hebben alleen instructeurs nodig
         this.ledenAbonnement = this.ledenService.ledenChange.subscribe(leden => {
             this.zusterclubs = (leden) ? leden.filter((lid) => lid.LIDTYPE_ID == 607) : [];
             this.instructeurs = (leden) ? leden.filter((lid) => lid.INSTRUCTEUR == true) : [];
@@ -100,6 +103,20 @@ export class LidEditorComponent implements OnInit, OnDestroy {
         this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
             this.onWindowResize();
         });
+
+        this.opvragen();
+    }
+
+    ngOnDestroy() {
+        if (this.resizeSubscription) this.resizeSubscription.unsubscribe();
+    }
+
+    onWindowResize() {
+        this.isMobiel = (this.sharedService.getSchermSize() <= SchermGrootte.md);
+    }
+
+    // opvragen van lid informatie, of creeer nieuw lid
+    opvragen() {
 
         // als lidID > 0, dan wijzigen we een bestaand lid profiel
         if (this.lidID >= 0) {
@@ -133,14 +150,6 @@ export class LidEditorComponent implements OnInit, OnDestroy {
             this.MedicalDatum = null;
             this.GeboorteDatum = null;
         }
-    }
-
-    ngOnDestroy() {
-        if (this.resizeSubscription) this.resizeSubscription.unsubscribe();
-    }
-
-    onWindowResize() {
-        this.isMobiel = (this.sharedService.getSchermSize() <= SchermGrootte.md);
     }
 
     // opslaan van starts
@@ -467,6 +476,11 @@ export class LidEditorComponent implements OnInit, OnDestroy {
             day: this.MedicalDatum.day
         })
         return (d < DateTime.now());
+    }
+
+    // openen van windows voor het tonen van de transacties
+    toonTransacties() {
+        this.transactieScherm.openPopup(this.lid!.ID!);
     }
 }
 

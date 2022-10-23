@@ -1,0 +1,47 @@
+<app-modal titel="Transacties">
+    <div body>
+        <table class="w-100">
+            <tr class="headerRow">
+                <th class="pe-2">Datum</th>
+                <th class="w-100">Omschrijving</th>
+                <th class="ps-2">Bedrag</th>
+                <th class="ps-2">Eenheden</th>
+            </tr>
+            <tr *ngFor="let transactie of transacties;let i = index">
+                <td style="white-space: nowrap;" class="pe-2">
+                    {{datumDMY(transactie.DATUM)}}
+                </td>
+                <td>
+                    {{transactie.OMSCHRIJVING}}
+                </td>
+                <td style="text-align: right;white-space: nowrap;" class="ps-2">
+                    <div *ngIf="transactie.BEDRAG">
+                        &euro; {{transactie.BEDRAG | number : '1.2-2'}}
+                    </div>
+                </td>
+                <td style="text-align: right;" class="ps-2">
+                    {{transactie.EENHEDEN}}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div footer class="w-100">
+        <div class="d-flex justify-content-between">
+            <app-icon-button
+                    iconNaam="fas EuroSign"
+                    tekst="Bestel strippen"
+                    [toonKlein]="false"
+                    (btnClicked)="nieuweBetaling()"></app-icon-button>
+
+            <app-icon-button *ngIf="magCorrigeren"
+                             iconNaam="fas FilePen"
+                             tekst="Correctie"
+                             btnColor="btn-primary"
+                             (btnClicked)="toonEditor()"></app-icon-button>
+        </div>
+    </div>
+</app-modal>
+
+
+<app-transactie-editor (TransactieGedaan)="reload()"></app-transactie-editor>
