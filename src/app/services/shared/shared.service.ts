@@ -11,6 +11,7 @@ export interface FilterLedenData {
     ddwv: boolean,
     crew: boolean,
     lieristen: boolean,
+    lio: boolean,
     startleiders: boolean,
     instructeurs: boolean,
     sleepvliegers: boolean,
@@ -67,6 +68,7 @@ export class SharedService {
         instructeurs: false,
         startleiders: false,
         lieristen: false,
+        lio: false,
         sleepvliegers: false,
         gastenVliegers: false
     }

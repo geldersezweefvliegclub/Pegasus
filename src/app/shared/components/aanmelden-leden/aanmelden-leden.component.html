@@ -18,7 +18,7 @@
                             </div>
 
                             <div class="d-flex flex-column justify-content-center p-0 me-2">
-                                <app-icon-button iconNaam="fas ArrowRight" (btnClicked)="aanmelden(lid)"
+                                <app-icon-button iconNaam="fas ArrowRight" (btnClicked)="nieuwLidAanwezigEditor(lid)"
                                                  [disabled]="bezig"></app-icon-button>
                             </div>
                         </div>
@@ -48,36 +48,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="d-flex flex-column justify-content-evenly  minColumn">
-                <div>
-                    <div class="mt-2">Vliegtuig types</div>
-                    <div class="d-flex flex-row row">
-                        <div class="col-3" *ngFor="let t of vliegtuigTypes; let i=index;">
-                            <div>
-                                <input type="checkbox"
-                                       [ngModel]="t.Geselecteerd"
-                                       class="form-check-inline ingave" (change)="zetVoorkeur($event, t.ID)"> {{t.OMSCHRIJVING}}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-1 d-flex">
-                        <app-vliegtuig-invoer id="VLIEGTUIG" class="col-4"
-                                              [VLIEGTUIG_ID]="overlandVliegtuig"
-                                              [vliegtuigen]="vliegtuigen"
-                                              (VliegtuigChanged)="overlandVliegtuig = $event"
-                                              label="Overland"
-                        ></app-vliegtuig-invoer>
-
-                        <div class="col-8 ps-2">
-                            <div class="my-1">Opmerking</div>
-                            <textarea [(ngModel)]="opmerking"
-                                      class="w-100 text-invoer form-control"
-                                      rows="1"></textarea>
                         </div>
                     </div>
                 </div>

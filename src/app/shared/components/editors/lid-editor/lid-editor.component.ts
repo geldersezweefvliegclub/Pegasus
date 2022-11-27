@@ -15,6 +15,7 @@ import {StorageService} from "../../../../services/storage/storage.service";
 import {Subscription} from "rxjs";
 import {SchermGrootte, SharedService} from "../../../../services/shared/shared.service";
 import {TransactiesComponent} from "../../transacties/transacties.component";
+import {PegasusConfigService} from "../../../../services/shared/pegasus-config.service";
 
 @Component({
     selector: 'app-lid-editor',
@@ -56,6 +57,8 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     isSaving: boolean = false;
     isMobiel: boolean = true;
 
+    saldoInProfiel: boolean = false;
+
     MedicalDatum: NgbDate | null;
     GeboorteDatum: NgbDate | null;
 
@@ -72,6 +75,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
         private readonly storageService: StorageService,
         private readonly router: Router,
         private readonly sharedService: SharedService,
+        private readonly configService: PegasusConfigService,
         private readonly changeDetector: ChangeDetectorRef) {
     }
 
@@ -104,6 +108,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
             this.onWindowResize();
         });
 
+        this.saldoInProfiel = this.configService.saldoActief();
         this.opvragen();
     }
 

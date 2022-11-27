@@ -91,7 +91,7 @@ export class AanwezigLedenService {
     }
 
     async updateAanwezigCache(startDatum: DateTime, eindDatum: DateTime) {
-        this.ophalenAanwezig(this.datum, this.datum).then((dataset) => {
+        this.ophalenAanwezig(startDatum, eindDatum).then((dataset) => {
             this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
         });
     }

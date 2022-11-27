@@ -1,0 +1,41 @@
+<app-error [error]="error"></app-error>
+
+<app-pegasus-card titel="Transacties"
+                  subtitel="Overzicht transacties in geld en strippen"
+                  [icon]="iconCardIcon"
+                  [exportEnabled]="this.magExporteren"
+                  (excelExport)="exportDataset()">
+    <div class="box h-100">
+        <div id="data">
+            <app-datatable
+                    id="transactiesgrid"
+                    [pagination]="toonBladwijzer"
+                    [rowData]="transacties"
+                    [columnDefs]="columns"
+                    [loading]="isLoading"
+                    [frameworkComponents]="frameworkComponents"
+                    class="h-100 mt-n8"></app-datatable>
+        </div>
+        <div class="row justify-content-start mt-2" id="toolbar">
+            <div class="col-3">
+                <div *ngIf="this.magToevoegen">
+                    <app-icon-button class="toolbarBtn"
+                                     tekst="Toevoegen"
+                                     iconNaam="far PlusSquare" (btnClicked)="addTransactie()"
+                                     btnColor="btn-primary"></app-icon-button>
+                </div>
+            </div>
+            <div class="col-3">
+                <app-lid-invoer id="LID"
+                                placeholder="Selecteer lid"
+                                excludeLidTypes="600,607,609,610,612,613,625"
+                                [required]=true
+                                [leden]="filteredLeden"
+                                (LidChanged)="lidGeselecteerd($event)">
+                </app-lid-invoer>
+            </div>
+        </div>
+    </div>
+</app-pegasus-card>
+
+<app-transactie-editor (TransactieGedaan)="opvragen()"></app-transactie-editor>

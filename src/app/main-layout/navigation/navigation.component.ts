@@ -2,7 +2,11 @@ import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {beheerRoutes, CustomRoute, routes} from '../../routing.module';
 
 import {Router} from '@angular/router';
-import {faSignOutAlt, faWrench} from '@fortawesome/free-solid-svg-icons';
+import {
+    faGaugeSimpleHigh,
+    faSignOutAlt,
+    faWrench
+} from '@fortawesome/free-solid-svg-icons';
 import {
     NgbCalendar,
     NgbDate,
@@ -43,6 +47,7 @@ export class NavigationComponent implements OnInit, OnDestroy  {
     readonly beheerRoutes = beheerRoutes;
     readonly logUitIcon: IconDefinition = faSignOutAlt;
     readonly beheerIcon: IconDefinition = faWrench;
+    readonly rapportageIcon: IconDefinition = faGaugeSimpleHigh;
 
     kalenderMaand: KalenderMaand;
     startDatum: DateTime;
@@ -289,7 +294,7 @@ export class NavigationComponent implements OnInit, OnDestroy  {
             reserveringen.excluded = false;
         }
 
-        // alleen beheer als we voldoende scherm ter beschikking hebben
+
         if (verbergen.includes('beheer') || (this.sharedService.getSchermSize() < SchermGrootte.lg) || (window.innerHeight < 600)) {
             this.beheerExcluded = true;
         } else {
@@ -301,6 +306,17 @@ export class NavigationComponent implements OnInit, OnDestroy  {
 
         const competenties = this.beheerRoutes.find(route => route.path == "competenties") as CustomRoute;
         competenties.excluded = !ui?.isBeheerder;
+
+        const transacties = this.beheerRoutes.find(route => route.path == "transacties") as CustomRoute;
+        transacties.excluded = !ui?.isBeheerder;
+
+        // alleen beheer-rapportage in het menu als we voldoende scherm ter beschikking hebben
+        const rapportage = this.beheerRoutes.find(route => route.path == "rapportage") as CustomRoute;
+        if (verbergen.includes('rapportage') || (this.sharedService.getSchermSize() < SchermGrootte.lg) || (window.innerHeight < 600)) {
+            rapportage.excluded = true;
+        } else {
+            rapportage.excluded = !(ui?.isBeheerder || ui?.isCIMT);
+        }
     }
 
 

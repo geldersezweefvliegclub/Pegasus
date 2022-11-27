@@ -1,0 +1,10 @@
+<div class="d-flex flex-row">
+    <div *ngFor="let rapport of rapporten;let i=index;" class="mx-2">
+        <app-icon-button class="toolbarBtn" btnColor="btn-primary"
+                         tekst="{{rapport.MenuItem}}"
+                         (btnClicked)="toonRapport(i)"></app-icon-button>
+    </div>
+</div>
+
+<iframe width="100%" class="hoogteIframe" [src]="url" allowFullScreen="true">
+</iframe>

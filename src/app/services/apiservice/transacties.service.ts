@@ -1,9 +1,14 @@
 import {Injectable} from '@angular/core';
 import {APIService} from "./api.service";
 import {LoginService} from "./login.service";
-import {HeliosTransactie, HeliosTransacties, HeliosTransactiesDataset} from "../../types/Helios";
+import {HeliosBestelInfo, HeliosTransactie, HeliosTransacties, HeliosTransactiesDataset} from "../../types/Helios";
 import {KeyValueArray} from "../../types/Utils";
 import {DateTime} from "luxon";
+
+export interface BankIDeal {
+    bankID: string,
+    beschrijving: string | null
+};
 
 @Injectable({
     providedIn: 'root'
@@ -46,6 +51,26 @@ export class TransactiesService {
             }
         }
         return this.transactiesCache?.dataset as HeliosTransactiesDataset[];
+    }
+
+    async getBanken(): Promise<BankIDeal[]> {
+        const retVal:BankIDeal[] = [];
+        try {
+            const response: Response = await this.apiService.get('Transacties/GetBanken');
+            const banken = await response.json();
+            Object.keys(banken.response.bank).forEach((key) => {
+                retVal.push({
+                    bankID: key,
+                    beschrijving: banken.response.bank[key]
+                });
+            })
+
+        } catch (e) {
+            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde starts als cache
+                throw(e);
+            }
+        }
+        return retVal;
     }
 
     async addTransactie(transactie: HeliosTransactie) {

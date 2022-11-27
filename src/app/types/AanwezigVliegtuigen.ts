@@ -45,7 +45,7 @@ export interface paths {
         };
       };
       responses: {
-        /** OK, starts succesvol opgehaald */
+        /** OK, data succesvol opgehaald */
         200: {
           content: {
             "application/json": components["schemas"]["oper_aanwezig_vliegtuigen"];
@@ -70,9 +70,9 @@ export interface paths {
           ID?: number;
           /** Toon welke records verwijderd zijn. Default = false */
           VERWIJDERD?: boolean;
-          /** Laatste aanpassing op basis van records in dataset. Bedoeld om starts verbruik te verminderen. Dataset is daarom leeg */
+          /** Laatste aanpassing op basis van records in dataset. Bedoeld om data verbruik te verminderen. Dataset is daarom leeg */
           LAATSTE_AANPASSING?: boolean;
-          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde starts bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen starts verzonden als het nodig is. */
+          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
           HASH?: string;
           /** Sortering van de velden in ORDER BY formaat. Default = NAAM */
           SORT?: string;
@@ -93,7 +93,7 @@ export interface paths {
         };
       };
       responses: {
-        /** OK, starts succesvol opgehaald */
+        /** OK, data succesvol opgehaald */
         200: {
           content: {
             "application/json": components["schemas"]["view_aanwezig_vliegtuigen"];
@@ -111,7 +111,7 @@ export interface paths {
   "/AanwezigVliegtuigen/Aanmelden": {
     post: {
       responses: {
-        /** OK, starts succesvol aangepast */
+        /** OK, data succesvol aangepast */
         200: {
           content: {
             "application/json": components["schemas"]["oper_aanwezig_vliegtuigen"];
@@ -128,11 +128,15 @@ export interface paths {
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** Lid starts */
+      /** Lid data */
       requestBody: {
         content: {
           "application/json": components["schemas"]["oper_aanwezig_vliegtuigen_in"] & {
-            /** Tijdstip van de aanmelding. Indien afwezig, huidige tijd. ISO8601 */
+            /**
+             * Format: date-time
+             * @description Tijdstip van de aanmelding. Indien afwezig, huidige tijd. ISO8601
+             * @example 2018-03-22T10:32:28Z
+             */
             TIJDSTIP?: string;
           };
         };
@@ -142,7 +146,7 @@ export interface paths {
   "/AanwezigVliegtuigen/Afmelden": {
     post: {
       responses: {
-        /** OK, starts succesvol aangepast */
+        /** OK, data succesvol aangepast */
         200: {
           content: {
             "application/json": components["schemas"]["oper_aanwezig_vliegtuigen"];
@@ -159,11 +163,15 @@ export interface paths {
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** Lid starts */
+      /** Lid data */
       requestBody: {
         content: {
           "application/json": components["schemas"]["oper_aanwezig_vliegtuigen_in"] & {
-            /** Tijdstip van de afmelding. Indien afwezig, huidige tijd. ISO8601 */
+            /**
+             * Format: date-time
+             * @description Tijdstip van de afmelding. Indien afwezig, huidige tijd. ISO8601
+             * @example 2017-07-21T09:32:28Z
+             */
             TIJDSTIP?: string;
           };
         };
@@ -227,7 +235,7 @@ export interface paths {
   "/AanwezigVliegtuigen/SaveObject": {
     put: {
       responses: {
-        /** OK, starts succesvol aangepast */
+        /** OK, data succesvol aangepast */
         200: {
           content: {
             "application/json": components["schemas"]["oper_aanwezig_vliegtuigen"];
@@ -246,7 +254,7 @@ export interface paths {
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** Aanmelding starts */
+      /** Aanmelding data */
       requestBody: {
         content: {
           "application/json": components["schemas"]["oper_aanwezig_vliegtuigen_in"];
@@ -255,7 +263,7 @@ export interface paths {
     };
     post: {
       responses: {
-        /** OK, starts succesvol toegevoegd */
+        /** OK, data succesvol toegevoegd */
         200: {
           content: {
             "application/json": components["schemas"]["oper_aanwezig_vliegtuigen"];
@@ -272,7 +280,7 @@ export interface paths {
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** Aanmelding starts */
+      /** Aanmelding data */
       requestBody: {
         content: {
           "application/json": components["schemas"]["oper_aanwezig_vliegtuigen_in"];
@@ -285,76 +293,190 @@ export interface paths {
 export interface components {
   schemas: {
     oper_aanwezig_vliegtuigen_in: {
-      /** Database ID van het aanwezig record */
+      /**
+       * Format: int32
+       * @description Database ID van het aanwezig record
+       * @example 12871
+       */
       ID?: number;
-      /** Datum van de vliegdag */
+      /**
+       * Format: date
+       * @description Datum van de vliegdag
+       * @example 2017-07-21
+       */
       DATUM?: string;
-      /** Het vliegtuig ID. Verwijzing naar vliegtuigen tabel */
+      /**
+       * @description Het vliegtuig ID. Verwijzing naar vliegtuigen tabel
+       * @example 215
+       */
       VLIEGTUIG_ID?: number;
-      /** Aankomsttijd van het vliegtuig. ISO8601 */
+      /**
+       * @description Aankomsttijd van het vliegtuig. ISO8601
+       * @example 09:32:28
+       */
       AANKOMST?: string;
-      /** Vertrektijd van het vliegtuig. ISO8601 */
+      /**
+       * @description Vertrektijd van het vliegtuig. ISO8601
+       * @example 17:32:28
+       */
       VERTREK?: string;
-      /** Positie van het vliegtuig in latitude */
+      /**
+       * Format: double
+       * @description Positie van het vliegtuig in latitude
+       * @example 52.11231
+       */
       LATITUDE?: number;
-      /** Positie van het vliegtuig in longitude */
+      /**
+       * Format: double
+       * @description Positie van het vliegtuig in longitude
+       * @example 4.61754
+       */
       LONGITUDE?: number;
-      /** Hoogte van het vliegtuig in meters */
+      /**
+       * Format: int
+       * @description Hoogte van het vliegtuig in meters
+       * @example 694
+       */
       HOOGTE?: number;
-      /** Snelheid van het vliegtuig in km/h */
+      /**
+       * Format: int
+       * @description Snelheid van het vliegtuig in km/h
+       * @example 95
+       */
       SNELHEID?: number;
+      /**
+       * @description Op welk veld is dit vliegtuig aangemeld
+       * @example 901
+       */
+      VELD_ID?: number;
     };
     oper_aanwezig_vliegtuigen: components["schemas"]["oper_aanwezig_vliegtuigen_in"] & {
-      /** Is dit record gemarkeerd als verwijderd? */
+      /**
+       * @description Is dit record gemarkeerd als verwijderd?
+       * @example 0
+       */
       VERWIJDERD?: boolean;
-      /** Tijdstempel van laaste aanpassing in de database */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database
+       * @example 2020-09-18 09:51:16
+       */
       LAATSTE_AANPASSING?: string;
     };
     view_aanwezig_vliegtuigen_dataset: components["schemas"]["oper_aanwezig_vliegtuigen"] & {
-      /** Het registratie nummer van het vliegtuig */
+      /**
+       * @description Het registratie nummer van het vliegtuig
+       * @example PH-1234
+       */
       REGISTRATIE?: string;
-      /** Optioneel het callsign van het vliegtuig */
+      /**
+       * @description Optioneel het callsign van het vliegtuig
+       * @example AA
+       */
       CALLSIGN?: string;
-      /** De flarmcode zoals deze wordt uitgezonden. Zo kunnen we ontvangen flarm starts herleiden naar een vliegtuig uit de database */
+      /**
+       * @description De flarmcode zoals deze wordt uitgezonden. Zo kunnen we ontvangen flarm data herleiden naar een vliegtuig uit de database
+       * @example 123456
+       */
       FLARMCODE?: string;
-      /** Het aantal zitplaatsen. Is 1 of 2. */
+      /**
+       * Format: int32
+       * @description Het aantal zitplaatsen. Is 1 of 2.
+       * @example 1
+       */
       ZITPLAATSEN?: number;
-      /** Kan het vliegtuig op eigen kracht starten. */
+      /**
+       * @description Kan het vliegtuig op eigen kracht starten.
+       * @example 0
+       */
       ZELFSTART?: boolean;
-      /** Is het een club vliegtuig? */
+      /**
+       * @description Is het een club vliegtuig?
+       * @example 1
+       */
       CLUBKIST?: boolean;
-      /** Is het een TMG? */
+      /**
+       * @description Is het een TMG?
+       * @example 0
+       */
       TMG?: boolean;
-      /** Is het een sleepvliegtuig? */
+      /**
+       * @description Is het een sleepvliegtuig?
+       * @example 0
+       */
       SLEEPKIST?: boolean;
-      /** Link naar vliegtuig type tabel. Alleen nodig voor clubvliegtuigen */
+      /**
+       * Format: int32
+       * @description Link naar vliegtuig type tabel. Alleen nodig voor clubvliegtuigen
+       * @example 12
+       */
       TYPE_ID?: number;
-      /** Vliegtuigtype omschrijving */
+      /**
+       * @description Vliegtuigtype omschrijving
+       * @example ASK21
+       */
       VLIEGTUIGTYPE_OMS?: string;
-      /** Volgorde van vliegtuiglijst, bedoeld voor club vliegtuigen */
+      /**
+       * Format: int32
+       * @description Volgorde van vliegtuiglijst, bedoeld voor club vliegtuigen
+       * @example 12
+       */
       VOLGORDE?: number;
-      /** Mag het vliegtuig vliegen? */
+      /**
+       * @description Mag het vliegtuig vliegen?
+       * @example true
+       */
       INZETBAAR?: boolean;
-      /** Is het vliegtuig een DBO trainer */
+      /**
+       * @description Is het vliegtuig een DBO trainer
+       * @example true
+       */
       TRAINER?: boolean;
-      /** Vliegt het lid op dit moment */
+      /**
+       * @description Vliegt het lid op dit moment
+       * @example true
+       */
       VLIEGT?: boolean;
-      /** Opermerkingen over vliegtuig */
+      /**
+       * @description Opermerkingen over vliegtuig
+       * @example Radio op stand 10 zetten
+       */
       OPMERKINGEN?: string;
-      /** Vliegtuig registratie en callsign van het vliegtuig */
+      /**
+       * @description Vliegveld waar vliegtuig aangemeld is
+       * @example Terlet
+       */
+      VELD?: string;
+      /**
+       * @description Vliegtuig registratie en callsign van het vliegtuig
+       * @example PH-1076 (E2)
+       */
       REG_CALL?: string;
     };
     view_aanwezig_vliegtuigen: {
-      /** Aantal records dat voldoet aan de criteria in de database */
+      /**
+       * Format: int32
+       * @description Aantal records dat voldoet aan de criteria in de database
+       * @example 287
+       */
       totaal?: number;
-      /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
+       * @example 2013-04-20 08:01:00
+       */
       laatste_aanpassing?: string;
-      /** hash van de dataset */
+      /**
+       * @description hash van de dataset
+       * @example 4d00b3f
+       */
       hash?: string;
-      /** De dataset met records */
+      /** @description De dataset met records */
       dataset?: components["schemas"]["view_aanwezig_vliegtuigen_dataset"][];
     };
   };
 }
 
 export interface operations {}
+
+export interface external {}

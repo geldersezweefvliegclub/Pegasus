@@ -2,7 +2,9 @@ import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core'
 import {ModalComponent} from "../../modal/modal.component";
 import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
 import {TransactiesService} from "../../../../services/apiservice/transacties.service";
-import {HeliosTransactie} from "../../../../types/Helios";
+import {HeliosLedenDataset, HeliosTransactie} from "../../../../types/Helios";
+import {Subscription} from "rxjs";
+import {LedenService} from "../../../../services/apiservice/leden.service";
 
 @Component({
     selector: 'app-transactie-editor',
@@ -13,7 +15,11 @@ export class TransactieEditorComponent implements OnInit {
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @Output() TransactieGedaan: EventEmitter<void> = new EventEmitter<void>();
 
-    lidID: number;
+    private ledenAbonnement: Subscription;
+    leden: HeliosLedenDataset[] = [];
+
+    toonLidSelectie: boolean = false;
+    lidID: number | undefined;
 
     OMSCHRIJVING: string;
     BEDRAG: number;
@@ -22,14 +28,25 @@ export class TransactieEditorComponent implements OnInit {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
-    constructor(private readonly transactiesService: TransactiesService) {
+    constructor(private readonly ledenService: LedenService,
+                private readonly transactiesService: TransactiesService) {
     }
 
     ngOnInit(): void {
+        // abonneer op wijziging van leden
+        this.ledenAbonnement = this.ledenService.ledenChange.subscribe(leden => {
+            this.leden = (leden) ? leden : [];
+        });
     }
 
-    openPopup(lidID: number) {
-        this.lidID = lidID;
+    openPopup(lidID: number | undefined) {
+        if (lidID) {
+            this.toonLidSelectie = false;
+            this.lidID = lidID;
+        }
+        else {
+            this.toonLidSelectie = true;
+        }
         this.popup.open();
     }
 
@@ -43,5 +60,10 @@ export class TransactieEditorComponent implements OnInit {
         }
         this.transactiesService.addTransactie(t).then(() => this.TransactieGedaan.emit());
         this.popup.close();
+    }
+
+    // Over welke vlieger gaat deze track
+    lidGeselecteerd(id: number | undefined) {
+        this.lidID = id;
     }
 }

@@ -1,11 +1,19 @@
-<p>transactie-editor works!</p>
-
 <app-error [error]="error"></app-error>
 <app-success [success]="success"></app-success>
 
 
 <app-modal titel="Transactie editor">
     <div body>
+        <app-lid-invoer id="LID" *ngIf="toonLidSelectie"
+                        placeholder="Selecteer lid"
+                        label="Lid"
+                        [LID_ID]="lidID"
+                        excludeLidTypes="600,607,609,610,612,613,625"
+                        [required] = true
+                        [leden]="leden"
+                        (LidChanged)="lidGeselecteerd($event)"
+        ></app-lid-invoer>
+
         <fieldset>
             <div class="row">
                 <div class="col-12 col-md-6">
@@ -35,7 +43,7 @@
         <app-icon-button
                 iconNaam="fas Plus" btnColor="btn-primary"
                 tekst="Opslaan"
-                [disabled]="(!EENHEDEN && !BEDRAG) || !OMSCHRIJVING"
+                [disabled]="(!EENHEDEN && !BEDRAG) || !OMSCHRIJVING || !lidID"
                 [toonKlein]="false"
                 (btnClicked)="opslaan()">
         </app-icon-button>

@@ -29,8 +29,9 @@
                                         </div>
 
                                         <div class="d-flex flex-column justify-content-center p-0 ms-2">
-                                            <app-icon-button iconNaam="far PlusSquare"
+                                            <app-icon-button *ngIf="inTijdspan"
                                                              (btnClicked)="nieuweStart(vliegtuig.VLIEGTUIG_ID)"
+                                                             iconNaam="far PlusSquare"
                                                              btnColor="btn-primary"></app-icon-button>
                                         </div>
                                     </div>
@@ -113,13 +114,15 @@
                                             <td class="rechts laag"
                                                 *ngIf="start.STARTMETHODE && !start.STARTTIJD && !start.LANDINGSTIJD"
                                                 rowspan="3">
-                                                <app-icon-button class="toolbarBtn" iconNaam="fas PlaneDeparture"
+                                                <app-icon-button *ngIf="inTijdspan"
+                                                                 class="toolbarBtn" iconNaam="fas PlaneDeparture"
                                                                  (btnClicked)="startTijdClicked(start)"
                                                                  btnColor="startBtn"></app-icon-button>
                                             </td>
                                             <td class="rechts laag" *ngIf="start.STARTTIJD && !start.LANDINGSTIJD"
                                                 rowspan="3">
-                                                <app-icon-button class="toolbarBtn" iconNaam="fas PlaneArrival"
+                                                <app-icon-button *ngIf="inTijdspan"
+                                                                 class="toolbarBtn" iconNaam="fas PlaneArrival"
                                                                  (btnClicked)="landingsTijdClicked(start)"
                                                                  btnColor="landingsBtn"></app-icon-button>
                                             </td>
@@ -183,7 +186,7 @@
                             </div>
                             <div class="card-body" [ngClass]="!toonAvatar ? 'beperkPadding' : ''">
                                 <div class="d-flex">
-                                    <div *ngIf="lid.STATUSTYPE_ID" class="vliegStatus"> ({{lid.STATUS}})</div>
+                                    <div *ngIf="lid.STATUSTYPE_ID" class="vliegStatus">{{lid.STATUS}}</div>
                                     <div *ngIf="toonAvatar">
                                         <div class="opmaakTijdStart showStarts">{{ lid.STARTS }}</div>
                                         <div class="opmaakTijdStart showTijd"

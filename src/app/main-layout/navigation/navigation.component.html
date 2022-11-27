@@ -11,7 +11,7 @@
 </ng-template>
 
 <nav>
-    <div class="card ps-0 rounded-0" >
+    <div class="card ps-0 rounded-0">
         <div class="linker-menu d-flex flex-column justify-content-between"
              [ngClass]="{'min-vh-100': !topMenu,'bovenop': topMenu, 'linker-menu-smal': kleineDatum()}">
 
@@ -64,27 +64,27 @@
                     </div>
                 </a>
 
-                <div class="w-100 overflow-auto" *ngIf="!kleineDatum()">
+                <div class="w-100 overflow-auto" *ngIf="!kleineDatum() && !showBeheer">
                     <ngb-datepicker
-                        *ngIf="!kleineDatum()"
-                        #d
-                        name="datumIngave"
-                        class="navCalendar w-100"
-                        outsideDays="hidden"
-                        [minDate]="kalenderEersteDatum"
-                        [maxDate]="kalenderLaatsteDatum"
-                        [(ngModel)]="kalenderIngave"
-                        (dateSelect)="NieuweDatum($event)"
-                        (navigate)="KalenderAndereMaand($event)"
+                            *ngIf="!kleineDatum()"
+                            #d
+                            name="datumIngave"
+                            class="navCalendar w-100"
+                            outsideDays="hidden"
+                            [minDate]="kalenderEersteDatum"
+                            [maxDate]="kalenderLaatsteDatum"
+                            [(ngModel)]="kalenderIngave"
+                            (dateSelect)="NieuweDatum($event)"
+                            (navigate)="KalenderAndereMaand($event)"
 
-                        [dayTemplate]="t">
+                            [dayTemplate]="t">
                     </ngb-datepicker>
                 </div>
 
-                <div *ngIf="kleineDatum()" class="list-group-item d-flex" >
+                <div *ngIf="kleineDatum()" class="list-group-item d-flex">
                     <div class="datumVeld">{{datumDMY}}</div>
                     <app-icon-button iconNaam="far Calendar" (btnClicked)="popupKalender.openPopup()"
-                                             btnColor="btn-primary"></app-icon-button>
+                                     btnColor="btn-primary"></app-icon-button>
                 </div>
             </div>
 
@@ -100,12 +100,12 @@
 </nav>
 
 <app-popup-kalender
-    [daginfo]="daginfo"
-    [diensten]="diensten"
-    [vliegdagen]="vliegdagen"
-    [kalenderEersteDatum]="kalenderEersteDatum"
-    [kalenderLaatsteDatum]="kalenderLaatsteDatum"
-    [kalenderIngave]="kalenderIngave"
-    (dateSelect)="NieuweDatum($event)"
-    (navigate)="KalenderAndereMaand($event)"
+        [daginfo]="daginfo"
+        [diensten]="diensten"
+        [vliegdagen]="vliegdagen"
+        [kalenderEersteDatum]="kalenderEersteDatum"
+        [kalenderLaatsteDatum]="kalenderLaatsteDatum"
+        [kalenderIngave]="kalenderIngave"
+        (dateSelect)="NieuweDatum($event)"
+        (navigate)="KalenderAndereMaand($event)"
 ></app-popup-kalender>

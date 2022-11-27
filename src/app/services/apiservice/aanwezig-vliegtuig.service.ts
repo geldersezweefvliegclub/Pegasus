@@ -92,7 +92,6 @@ export class AanwezigVliegtuigService {
     }
 
     async updateAanwezigCache(startDatum: DateTime, eindDatum: DateTime) {
-
         this.ophalenAanwezig(this.datum, this.datum).then((dataset) => {
             this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
         });
@@ -135,9 +134,10 @@ export class AanwezigVliegtuigService {
         return this.aanwezigCache?.dataset as HeliosAanwezigVliegtuigenDataset[];
     }
 
-    async aanmelden(datum: DateTime, vliegtuigID: number): Promise<any> {
+    async aanmelden(datum: DateTime, vliegtuigID: number, vliegveld: number|undefined): Promise<any> {
         const record = {
             VLIEGTUIG_ID: vliegtuigID,
+            VELD_ID: vliegveld,
             DATUM: datum.year + "-" + datum.month + "-" + datum.day
         }
         const response: Response = await this.apiService.post('AanwezigVliegtuigen/Aanmelden', JSON.stringify(record));

@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faStreetView} from "@fortawesome/free-solid-svg-icons";
+import {faChevronDown, faChevronUp, faStreetView} from "@fortawesome/free-solid-svg-icons";
 import {Subscription} from "rxjs";
 import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
 import {getBeginEindDatumVanMaand} from "../../../utils/Utils";
@@ -9,8 +9,7 @@ import {
     HeliosAanwezigLedenDataset, HeliosDienstenDataset,
     HeliosGast,
     HeliosGastenDataset,
-    HeliosRoosterDataset,
-    HeliosType
+    HeliosRoosterDataset
 } from "../../../types/Helios";
 import {RoosterService} from "../../../services/apiservice/rooster.service";
 import {ModalComponent} from "../../../shared/components/modal/modal.component";
@@ -20,6 +19,8 @@ import {AanwezigLedenService} from "../../../services/apiservice/aanwezig-leden.
 import {GastenService} from "../../../services/apiservice/gasten.service";
 import {GastEditorComponent} from "../../../shared/components/editors/gast-editor/gast-editor.component";
 import {DienstenService} from "../../../services/apiservice/diensten.service";
+import {StorageService} from "../../../services/storage/storage.service";
+import {DagVanDeWeek} from "../../../utils/Utils";
 
 @Component({
     selector: 'app-aanmelden-page',
@@ -51,15 +52,24 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     aanmeldingen: HeliosAanwezigLedenDataset[];     // De aanmeldingen
     gasten: HeliosGastenDataset[];                  // De gasten voor de vliegdag
 
+    iconDown: IconDefinition = faChevronDown;
+    iconUp: IconDefinition = faChevronUp;
+
+    toonGasten: boolean = false;
+    isDDWVer: boolean = false;                      // DDWV'ers mogen geen club dagen zien
+
     constructor(private readonly sharedService: SharedService,
                 private readonly loginService: LoginService,
                 private readonly gastenService: GastenService,
                 private readonly roosterService: RoosterService,
+                private readonly storageService: StorageService,
                 private readonly dienstenService: DienstenService,
                 private readonly aanwezigLedenService: AanwezigLedenService) {
     }
 
     ngOnInit(): void {
+        this.onWindowResize();          // bepaal wat we moeten tonen dag/week/maand
+
         // de datum zoals die in de kalender gekozen is
         this.maandAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
             if (jaarMaand.year > 1900) {        // 1900 is bij initialisatie
@@ -91,6 +101,13 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
             this.onWindowResize();
             this.opvragen();
         });
+
+        const toonGasten = this.storageService.ophalen("toonGasten")
+        if (toonGasten != null) {
+            this.toonGasten = toonGasten;
+        }
+
+        this.isDDWVer = this.loginService.userInfo?.Userinfo?.isDDWV!;
     }
 
     ngOnDestroy(): void {
@@ -169,6 +186,23 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         this.opvragen();
     }
 
+    // Is de datum in het verleden
+    verleden(datum: string) {
+        const d = DateTime.fromSQL(datum).plus({days: 1});
+        return d < DateTime.now()
+    }
+
+    // Dit is al geimplementeerd in util.ts
+    DagVanDeWeek(Datum: string) {
+        return DagVanDeWeek(Datum);
+    }
+
+    // Toon datum als dd-mm-yyyy
+    datumDMY(dagDatum: string): string {
+        const d = dagDatum.split('-');
+        return d[2] + '-' + d[1] + '-' + d[0];
+    }
+
     // toon popup dat de gebruiker zich wil afmelden voor de vliegdag
     afmeldenPopup(datum: string) {
         const d = datum.split('-');
@@ -224,5 +258,164 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     // open van editor voor aanmelden van een gast
     openGastAanwezigEditor(gast: HeliosGastenDataset) {
         this.gastEditor.openPopup(gast);
+    }
+
+    // hoe breed moeten de kolommen zijn in week view
+    KolomBreedte(): string {
+        return `width: calc(100%/${this.rooster.length});`;
+    }
+
+    // staf lid voor deze dag
+    staf(dagDatum: string): boolean {
+        const ui = this.loginService.userInfo;
+        if (ui!.Userinfo!.isBeheerder || ui?.Userinfo!.isCIMT || ui!.Userinfo!.isInstructeur)
+            return true;
+
+        if (!this.diensten) {
+            return false;
+        }
+        // als de ingelode gebruiker, startleider is. Is hij/zij staf lid.
+        const idx = this.diensten.findIndex((d) => { return (d.DATUM == dagDatum && d.LID_ID == ui!.LidData!.ID) });
+        return idx >= 0;
+    }
+
+    aanwezigen(dagDatum: string): HeliosAanwezigLedenDataset[] {
+        if (!this.aanmeldingen) {
+            return [];
+        }
+
+        const aanwezig = this.aanmeldingen.filter((a: HeliosAanwezigLedenDataset) => {
+            return a.DATUM == dagDatum;
+        });
+
+        // Voor staf sorteren we op vlieg status
+        if (this.staf(dagDatum)) {
+            aanwezig.sort(function (a, b) {
+                const posA = (a.STATUS_SORTEER_VOLGORDE) ? a.STATUS_SORTEER_VOLGORDE : 10000;
+                const posB = (b.STATUS_SORTEER_VOLGORDE) ? b.STATUS_SORTEER_VOLGORDE : 10000;
+
+                if (posA != posB) {
+                    return posB - posA;
+                }
+                return a.ID! - b.ID!;
+            })
+        }
+
+        return aanwezig ? aanwezig : []
+    }
+
+    gastenAanwezig(dagDatum: string): HeliosGastenDataset[] {
+        if (!this.gasten) {
+            return [];
+        }
+
+        const gasten = this.gasten.filter((a: HeliosGastenDataset) => {
+            return a.DATUM == dagDatum;
+        });
+
+        return gasten ? gasten : []
+    }
+
+    isAangemeld(dagDatum: string): boolean {
+        const ui = this.loginService.userInfo?.LidData!;
+
+        if (!this.aanmeldingen) {
+            return false;
+        }
+
+        const aanwezig = this.aanmeldingen.findIndex((a: HeliosAanwezigLedenDataset) => {
+            return (a.DATUM == dagDatum && a.LID_ID == ui.ID);
+        });
+
+        return aanwezig < 0 ? false : true;
+    }
+
+    magAanmelden(dagDatum: string): boolean {
+        if (this.isAangemeld(dagDatum)) {
+            return false;
+        }
+
+        if (!this.rooster) {
+            return false;
+        }
+
+        const ui = this.loginService.userInfo;
+        const idx = this.rooster.findIndex((r: HeliosRoosterDataset) => {
+            return r.DATUM == dagDatum
+        });
+
+        if (ui!.LidData!.STARTVERBOD) { // tja ....
+            return false;
+        }
+        if (!this.rooster[idx].DDWV && !this.rooster[idx].CLUB_BEDRIJF) {   // geen vliegdag
+            return false;
+        }
+        if (!this.rooster[idx].DDWV && ui!.LidData!.LIDTYPE_ID == 625) {    // 625 = DDWV vlieger
+            return false;
+        }
+        if (!this.rooster[idx].CLUB_BEDRIJF)    // welke lidtypes mogen aanmelden als we geen club bedrijf hebben
+        {
+            switch (ui!.LidData!.LIDTYPE_ID) {
+                case 601: // ere lid
+                case 602: // lid
+                case 603: // jeugdlid
+                {
+                    if (!this.rooster[idx].CLUB_BEDRIJF && ui!.LidData!.STATUSTYPE_ID !== 1903) {  // 1903 = Brevethouder
+                        return false;
+                    }
+                    break;
+                }
+                case 625: // DDWV'er
+                {
+                    break;
+                }
+                default:
+                    return false;          // andere lidtypes dus niet
+            }
+        }
+        return true;
+    }
+
+    // Mogen we de dag tonen
+    magTonen(dagDatum: string): boolean {
+        if (!this.rooster) {
+            return false;
+        }
+
+        const ui = this.loginService.userInfo;
+        const idx = this.rooster.findIndex((r: HeliosRoosterDataset) => {
+            return r.DATUM == dagDatum
+        });
+
+        if (!this.rooster[idx].DDWV && ui!.LidData!.LIDTYPE_ID == 625) {    // 625 = DDWV vlieger
+            return false;
+        }
+        return true;
+    }
+
+    // Moeten we de gastenlijst tonen
+    toonGastenWelNiet() {
+        this.toonGasten = !this.toonGasten;
+        this.storageService.opslaan("toonGasten", this.toonGasten, 24 * 7);   // 7 dagen
+    }
+
+    naarDashboard(lidAanwezig: HeliosAanwezigLedenDataset): boolean {
+        if (lidAanwezig.LIDTYPE_ID == 625) {   //  Geen dashboard link voor DDWV'ers
+            return false;
+        }
+        if (lidAanwezig.LID_ID == this.loginService.userInfo?.LidData?.ID) {   //  Geen dashboard link voor ingelode gebruiker
+            return false;
+        }
+        const ui = this.loginService.userInfo?.Userinfo;
+        return (ui?.isBeheerder || ui?.isCIMT || ui?.isInstructeur) as boolean;
+    }
+
+    kleurBarometer(lid: HeliosAanwezigLedenDataset) {
+        switch (lid.STATUS_BAROMETER) {
+            case 'rood' : return 'barometer-rood';
+            case 'geel' : return 'barometer-geel';
+            case 'groen' : return 'barometer-groen';
+        }
+
     }
 }

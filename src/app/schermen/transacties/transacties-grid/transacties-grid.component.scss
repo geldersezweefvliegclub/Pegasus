@@ -1,0 +1,28 @@
+.box {
+  display: flex;
+  flex-flow: column;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: stretch;
+}
+
+.row {
+  --bs-gutter-x: 0;
+}
+
+.toolbarBtn {
+  margin-left: 0.4em;
+  margin-right: 0.4em;
+}
+
+#data {
+  flex-grow: 100;
+}
+
+#toolbar {
+  flex-grow: 1;
+}
+
+#LID {
+  max-width: 200px;
+}

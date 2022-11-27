@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ModalComponent} from "../modal/modal.component";
 import {Subscription} from "rxjs";
 import {DateTime} from "luxon";
@@ -15,6 +15,7 @@ import {TypesService} from "../../../services/apiservice/types.service";
 import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
 import {VliegtuigenService} from "../../../services/apiservice/vliegtuigen.service";
 import {LidAanwezigEditorComponent} from "../editors/lid-aanwezig-editor/lid-aanwezig-editor.component";
+import {DaginfoService} from "../../../services/apiservice/daginfo.service";
 
 type HeliosTypeExtended = HeliosType & {
     Geselecteerd?: boolean;
@@ -30,6 +31,8 @@ export class AanmeldenLedenComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @ViewChild(LidAanwezigEditorComponent) aanmeldEditor: LidAanwezigEditorComponent;
 
+    @Input() vliegveld: number | undefined;
+
     private datumAbonnement: Subscription; // volg de keuze van de kalender
     datum: DateTime = DateTime.now();      // de gekozen dag in de kalender
 
@@ -40,9 +43,6 @@ export class AanmeldenLedenComponent implements OnInit, OnDestroy {
     private aanwezigLedenAbonnement: Subscription;
     aanwezigLeden: HeliosAanwezigLedenDataset[] = [];
     filteredAanwezigLeden: HeliosAanwezigLedenDataset[] = [];
-
-    private typesAbonnement: Subscription;
-    vliegtuigTypes: HeliosTypeExtended[];
 
     private vliegtuigenAbonnement: Subscription;
     vliegtuigen: HeliosVliegtuigenDataset[] = [];
@@ -56,14 +56,12 @@ export class AanmeldenLedenComponent implements OnInit, OnDestroy {
 
     geselecteerdLid: HeliosAanwezigLedenDataset | undefined;
 
-    opmerking: string;
-    overlandVliegtuig: number | undefined;
-
     constructor(private readonly ledenService: LedenService,
-                private readonly aanwezigLedenService: AanwezigLedenService,
-                private readonly vliegtuigenService: VliegtuigenService,
                 private readonly typesService: TypesService,
-                private readonly sharedService: SharedService) {
+                private readonly sharedService: SharedService,
+                private readonly daginfoService: DaginfoService,
+                private readonly vliegtuigenService: VliegtuigenService,
+                private readonly aanwezigLedenService: AanwezigLedenService) {
     }
 
     ngOnInit(): void {
@@ -95,27 +93,10 @@ export class AanmeldenLedenComponent implements OnInit, OnDestroy {
             this.bezig = false;
             clearTimeout(this.bezigTimer);
         });
-
-        // abonneer op wijziging van vliegtuigTypes
-        this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
-            this.vliegtuigTypes = dataset!.filter((t: HeliosType) => {
-                return t.GROEP == 4
-            });
-            for (let i = 0; i < this.vliegtuigTypes.length; i++) {
-                this.vliegtuigTypes[i].Geselecteerd = false;
-            }
-            this.vliegtuigTypes.sort(function compareFn(a, b) {
-                const vA = (a.SORTEER_VOLGORDE) ? a.SORTEER_VOLGORDE : 100;
-                const vB = (b.SORTEER_VOLGORDE) ? b.SORTEER_VOLGORDE : 100;
-
-                return vA - vB;
-            });
-        });
     }
 
     ngOnDestroy() {
         if (this.datumAbonnement) this.datumAbonnement.unsubscribe();
-        if (this.typesAbonnement) this.typesAbonnement.unsubscribe();
         if (this.ledenAbonnement) this.ledenAbonnement.unsubscribe();
         if (this.vliegtuigenAbonnement) this.vliegtuigenAbonnement.unsubscribe();
         if (this.aanwezigLedenAbonnement) this.aanwezigLedenAbonnement.unsubscribe();
@@ -125,8 +106,24 @@ export class AanmeldenLedenComponent implements OnInit, OnDestroy {
         this.popup.open();
     }
 
-    openLidAanwezigEditor(lidAanwzig: HeliosAanwezigLedenDataset) {
-        this.aanmeldEditor.openPopup(lidAanwzig);
+    openLidAanwezigEditor(lidAanwezig: HeliosAanwezigLedenDataset) {
+        this.aanmeldEditor.openPopup(lidAanwezig);
+    }
+
+    nieuwLidAanwezigEditor(lid: HeliosLedenDataset) {
+
+        // aanmelden op een vliegveld. Via filter of daginfo
+        let vliegveld = this.vliegveld;
+        if (!vliegveld) {
+            vliegveld = this.daginfoService.dagInfo.VELD_ID
+        }
+
+        const lidAanwezig: HeliosAanwezigLedenDataset = {
+            LID_ID: lid.ID,
+            VELD_ID: vliegveld,
+            NAAM: lid.NAAM
+        }
+        this.aanmeldEditor.openPopup(lidAanwezig);
     }
 
     // toon geen vliegtuigen die al aangemeld zijn
@@ -167,39 +164,6 @@ export class AanmeldenLedenComponent implements OnInit, OnDestroy {
         }
     }
 
-    aanmelden(geslecteerdLid: HeliosLedenDataset) {
-        this.bezig = true;
-
-        let voorkeur: string = '';
-        for (let i = 0; i < this.vliegtuigTypes.length; i++) {
-            if (this.vliegtuigTypes[i].Geselecteerd) {
-                voorkeur += (voorkeur == '') ? '' : ',';
-                voorkeur += this.vliegtuigTypes[i].ID!.toString();
-            }
-        }
-
-        const record: HeliosAanwezigLedenDataset = {
-            DATUM: this.datum.year + "-" + this.datum.month + "-" + this.datum.day,
-
-            LID_ID: geslecteerdLid?.ID,
-            OPMERKINGEN: this.opmerking,
-            VOORKEUR_VLIEGTUIG_TYPE: (voorkeur != "") ? voorkeur : undefined,
-            OVERLAND_VLIEGTUIG_ID: this.overlandVliegtuig
-        }
-
-        this.aanwezigLedenService.aanmelden(record).then((a) => {
-            if (a.LID_ID == geslecteerdLid?.ID) {
-                this.success = {titel: "Aanmelden", beschrijving: "Lid is aangemeld"}
-                this.aanwezigLedenService.updateAanwezigCache(this.datum, this.datum);
-            }
-        }).catch(e => {
-            this.error = e;
-        });
-
-        // na 5 seconden bezit boolean uitzetten. Als getObjects event eerder is, wordt het via het abbonement uitgezet
-        this.bezigTimer = window.setTimeout(() => this.bezig = false, 5000);
-    }
-
     afmelden(geselecteerdAanwezig: HeliosAanwezigLedenDataset) {
         this.bezig = true;
 
@@ -226,13 +190,6 @@ export class AanmeldenLedenComponent implements OnInit, OnDestroy {
             // na 5 seconden bezit boolean uitzetten. Als getObjects event eerder is, wordt het via het abbonement uitgezet
             this.bezigTimer = window.setTimeout(() => this.bezig = false, 5000);
         }
-    }
-
-    // zet vinkje geselecteerd in de vliegtuig types. Wordt later gebruikt om toe te voegen bij aanmelden
-    zetVoorkeur(event: Event, id: number) {
-        const idx = this.vliegtuigTypes.findIndex(t => t.ID == id)
-
-        this.vliegtuigTypes[idx].Geselecteerd = (<HTMLInputElement>event.target).checked;
     }
 
     // Iemand gaat een plaatsje omhoog in de lijst

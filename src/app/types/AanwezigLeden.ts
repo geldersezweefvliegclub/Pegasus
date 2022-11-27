@@ -583,6 +583,11 @@ export interface components {
        */
       STATUS?: string;
       /**
+       * @description Kleur van de barometer rood / geel / groen
+       * @example rood
+       */
+      STATUS_BAROMETER?: string;
+      /**
        * Format: int32
        * @description Volgorde in de HMI
        * @example 7
@@ -590,7 +595,7 @@ export interface components {
       STATUS_SORTEER_VOLGORDE?: number;
       /**
        * @description Vliegveld waar lid aangemeld is
-       * @example Brevethouder
+       * @example Terlet
        */
       VELD?: string;
     };

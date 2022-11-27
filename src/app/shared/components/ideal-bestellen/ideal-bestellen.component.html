@@ -1,0 +1,42 @@
+<app-modal titel="Bestel strippen">
+    <div body>
+        <fieldset>
+            <div class="row">
+                <div class="col-12">
+                    <label for="BESTELLING" class="form-label">Bedrag</label>
+                    <select class="form-select" [(ngModel)]="bestelling"
+                            name="BESTELLING" id="BESTELLING">
+                        <option value="-1" >Maak keuze</option>
+                        <option *ngFor="let bi of bestelInfo;let r = index"
+                                [value]="r">{{bi.OMSCHRIJVING}}</option>
+                    </select>
+
+                    <label for="BANK" class="form-label">Bank</label>
+                    <select class="form-select" [(ngModel)]="bank"
+                            name="BANK" id="BANK">
+                        <option value="-1" >Maak keuze</option>
+                        <option *ngFor="let bank of banken;let r = index"
+                                [value]=r>{{bank.beschrijving}}</option>
+                    </select>
+                </div>
+            </div>
+        </fieldset>
+
+        <p class="pt-3">
+            <b>Noot 1:</b> Voor een succesvolle bestelling is het noodzakelijk dat u het hele iDEAL proces doorloopt en uiteindelijk naar deze website terugkeert.
+        </p>
+        <p>
+            <b>Noot 2:</b> Voor iDEAL maken wij gebruik van een tussenpersoon. "Derdengelden Digiwallet" zal u vermeld zien op uw bank afschrift met rekeningnummer 6156.84.386.
+        </p>
+    </div>
+
+    <div footer class="w-100 d-flex justify-content-end">
+        <app-icon-button
+                iconNaam="fas CircleRight" btnColor="btn-primary"
+                tekst="Doorgaan"
+                [toonKlein]="false"
+                [disabled]="bank === -1  || bestelling === -1"
+                (btnClicked)="opslaan()">
+        </app-icon-button>
+    </div>
+</app-modal>

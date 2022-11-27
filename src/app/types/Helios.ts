@@ -16,9 +16,13 @@ import {components as competentiesComponents} from './Competenties';
 import {components as auditComponents} from './Audit';
 import {components as reserveringComponents} from './Reservering';
 import {components as gastenComponents} from './Gasten';
+import {components as ddwvComponents} from './DDWV';
 
 export type HeliosUserinfo = loginComponents['schemas']['Userinfo'];
 export type HeliosLidData = loginComponents["schemas"]["ref_leden"];
+
+export type HeliosConfigDDWV = ddwvComponents['schemas']['ddwv_config'];
+export type HeliosBestelInfo = ddwvComponents['schemas']['ddwv_bestelInfo'];
 
 export type HeliosAanwezigVliegtuigen = aanwezigVliegtuigenComponents['schemas']['view_aanwezig_vliegtuigen'];
 export type HeliosAanwezigVliegtuigenDataset = aanwezigVliegtuigenComponents['schemas']['view_aanwezig_vliegtuigen_dataset'];

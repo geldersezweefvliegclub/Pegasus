@@ -350,6 +350,11 @@ export interface components {
        */
       LIERIST?: boolean;
       /**
+       * @description Lierist in opleiding
+       * @example false
+       */
+      LIERIST_IO?: boolean;
+      /**
        * @description Kan dit lid het startbedrijf leiden?
        * @example true
        */
@@ -482,8 +487,8 @@ export interface components {
        */
       OPMERKINGEN?: string;
       /**
-       * @description Extra text om opmerkingen toe te voegen
-       * @example DDWV tegoed
+       * @description DDWV tegoed
+       * @example 22.05
        */
       TEGOED?: number;
     };

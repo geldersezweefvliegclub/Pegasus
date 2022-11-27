@@ -6,19 +6,22 @@ import {
     faAddressCard,
     faCalendarAlt,
     faCalendarDay,
-    faChartPie, faGraduationCap,
+    faChartPie, faFilm, faGraduationCap,
     faKey, faKeyboard,
     faPen,
     faPlane,
     faPlaneDeparture, faStreetView,
     faUser,
     faUsers,
-    faWaveSquare
+    faWaveSquare,
+    faEuroSign
 } from '@fortawesome/free-solid-svg-icons';
 import {AuditPageComponent} from "./schermen/audit/audit-page/audit-page.component";
 import {TypesPageComponent} from "./schermen/types/types-page/types-page.component";
 import {CompetentiesPageComponent} from "./schermen/competenties/competenties-page/competenties-page.component";
 import {faAvianex} from "@fortawesome/free-brands-svg-icons";
+import {RapportSchermComponent} from "./schermen/rapportage/rapport-scherm/rapport-scherm.component";
+import {TransactiesGridComponent} from "./schermen/transacties/transacties-grid/transacties-grid.component";
 
 export interface CustomRoute extends Route {
     excluded: boolean;
@@ -153,6 +156,22 @@ export const routes: CustomRoute[] = [
     },
 
     {
+        path: 'rapportage',
+        loadChildren: () => import('./schermen/rapportage/rapportage.module').then(m => m.RapportageModule),
+        excluded: true,
+        icon: faFilm,
+        text: 'Rapportage'
+    },
+
+    {
+        path: 'transacties',
+        loadChildren: () => import('./schermen/transacties/transacties.module').then(m => m.TransactiesModule),
+        excluded: true,
+        icon: faEuroSign,
+        text: 'Transacties'
+    },
+
+    {
         path: '**',
         loadChildren: () => import('./schermen/not-found/not-found.module').then(m => m.NotFoundModule),
         excluded: true,
@@ -165,6 +184,8 @@ export const beheerRoutes: CustomRoute[] = [
     {path: 'audit', component: AuditPageComponent, excluded: false, icon: faWaveSquare, text: 'Audit'},
     {path: 'competenties', component: CompetentiesPageComponent, excluded: false, icon: faGraduationCap, text: 'Competenties'},
     {path: 'types', component: TypesPageComponent, excluded: false, icon: faKeyboard, text: 'Types'},
+    {path: 'transacties', component: TransactiesGridComponent, excluded: false, icon: faEuroSign, text: 'Transacties'},
+    {path: 'rapportage', component: RapportSchermComponent, excluded: false, icon: faFilm, text: 'Rapportage'},
 
 ];
 

@@ -17,7 +17,7 @@
                     Instructeur
                 </th>
                 <th scope="col"
-                    *ngIf="(tonen.toonDienst[configService.OCHTEND_STARTLEIDER_TYPE_ID] || tonen.toonDienst[configService.OCHTEND_LIERIST_TYPE_ID])  && (tonen.Instructeurs || tonen.DDWV)"
+                    *ngIf="(tonen.toonDienst[configService.OCHTEND_STARTLEIDER_TYPE_ID] || tonen.toonDienst[configService.OCHTEND_LIERIST_TYPE_ID])  && (tonen.Startleiders || tonen.DDWV)"
                     [style]="KolomBreedte()">Startleider
                 </th>
                 <th scope="col"
@@ -89,7 +89,8 @@
                     </div>
                 </td>
 
-                <td *ngIf="(tonen.toonDienst[configService.OCHTEND_DDI_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_DDI_TYPE_ID]) && tonen.Instructeurs && tonen.toonClubDDWV !==2">
+                <td *ngIf="(tonen.toonDienst[configService.OCHTEND_DDI_TYPE_ID] ||
+                            tonen.toonDienst[configService.MIDDAG_DDI_TYPE_ID]) && tonen.Instructeurs && tonen.toonClubDDWV !==2">
                     <div class="d-flex"
                          *ngIf="dagInRooster.CLUB_BEDRIJF && tonen.toonDienst[configService.OCHTEND_DDI_TYPE_ID]">
                         <div
@@ -137,7 +138,8 @@
                         </div>
                     </div>
                 </td>
-                <td *ngIf="(tonen.toonDienst[configService.OCHTEND_INSTRUCTEUR_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) && tonen.Instructeurs && tonen.toonClubDDWV !==2">
+                <td *ngIf="(tonen.toonDienst[configService.OCHTEND_INSTRUCTEUR_TYPE_ID] ||
+                            tonen.toonDienst[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) && tonen.Instructeurs && tonen.toonClubDDWV !==2">
                     <div class="d-flex"
                          *ngIf="dagInRooster.CLUB_BEDRIJF && tonen.toonDienst[configService.OCHTEND_INSTRUCTEUR_TYPE_ID]">
                         <div
@@ -185,8 +187,9 @@
                         </div>
                     </div>
                 </td>
-                <td *ngIf="(tonen.toonDienst[configService.OCHTEND_STARTLEIDER_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_STARTLEIDER_TYPE_ID]) && (tonen.Startleiders || tonen.DDWV) && tonen.toonDienst[configService.OCHTEND_STARTLEIDER_TYPE_ID]">
-                    <div class="d-flex">
+                <td *ngIf="(tonen.toonDienst[configService.OCHTEND_STARTLEIDER_TYPE_ID] ||
+                            tonen.toonDienst[configService.MIDDAG_STARTLEIDER_TYPE_ID]) && (tonen.Startleiders || tonen.DDWV) && tonen.toonDienst[configService.OCHTEND_STARTLEIDER_TYPE_ID]">
+                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF || dagInRooster.DDWV">
                         <div
                                 class="drop-container"
                                 cdkDropList
@@ -233,7 +236,8 @@
                     </div>
                 </td>
 
-                <td *ngIf="(tonen.toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID]) && tonen.Startleiders && tonen.toonClubDDWV !==2">
+                <td *ngIf="(tonen.toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID] ||
+                            tonen.toonDienst[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID]) && tonen.Startleiders && tonen.toonClubDDWV !==2">
                     <div class="d-flex"
                          *ngIf="dagInRooster.CLUB_BEDRIJF &&  tonen.toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]">
                         <div
@@ -282,8 +286,9 @@
                     </div>
                 </td>
 
-                <td *ngIf="(tonen.toonDienst[configService.OCHTEND_LIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_LIERIST_TYPE_ID]) && (tonen.Lieristen || tonen.DDWV)">
-                    <div class="d-flex" *ngIf="tonen.toonDienst[configService.OCHTEND_LIERIST_TYPE_ID]">
+                <td *ngIf="(tonen.toonDienst[configService.OCHTEND_LIERIST_TYPE_ID] ||
+                            tonen.toonDienst[configService.MIDDAG_LIERIST_TYPE_ID]) && (tonen.Lieristen || tonen.DDWV)">
+                    <div class="d-flex" *ngIf="(dagInRooster.CLUB_BEDRIJF || dagInRooster.DDWV) &&  tonen.toonDienst[configService.OCHTEND_LIERIST_TYPE_ID]">
                         <div
                                 class="drop-container"
                                 cdkDropList
@@ -329,7 +334,8 @@
                         </div>
                     </div>
                 </td>
-                <td *ngIf="(tonen.toonDienst[configService.OCHTEND_HULPLIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_HULPLIERIST_TYPE_ID]) && tonen.Lieristen && tonen.toonClubDDWV !==2">
+                <td *ngIf="(tonen.toonDienst[configService.OCHTEND_HULPLIERIST_TYPE_ID] ||
+                            tonen.toonDienst[configService.MIDDAG_HULPLIERIST_TYPE_ID]) && tonen.Lieristen && tonen.toonClubDDWV !==2">
                     <div class="d-flex"
                          *ngIf="dagInRooster.CLUB_BEDRIJF && tonen.toonDienst[configService.OCHTEND_HULPLIERIST_TYPE_ID]">
                         <div
@@ -378,7 +384,8 @@
                     </div>
                 </td>
 
-                <td *ngIf="(tonen.toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID] || tonen.toonDienst[configService.GASTEN_VLIEGER2_TYPE_ID]) && tonen.GastenVliegers && tonen.toonClubDDWV !==2">
+                <td *ngIf="(tonen.toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID] ||
+                            tonen.toonDienst[configService.GASTEN_VLIEGER2_TYPE_ID]) && tonen.GastenVliegers && tonen.toonClubDDWV !==2">
                     <div class="d-flex"
                          *ngIf="dagInRooster.CLUB_BEDRIJF && tonen.toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID]">
                         <div
@@ -428,7 +435,7 @@
                 </td>
 
                 <td *ngIf="tonen.toonDienst[configService.SLEEPVLIEGER_TYPE_ID]  && tonen.Sleepvliegers">
-                    <div class="d-flex">
+                    <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF || dagInRooster.DDWV">
                         <div
                                 class="drop-container"
                                 cdkDropList

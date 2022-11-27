@@ -1,4 +1,4 @@
-<label for="LID" class="form-label">{{label}}</label>
+<label for="LID" class="form-label" *ngIf="label">{{label}}</label>
 
 <fa-icon class="text-info ms-2 clickable" *ngIf="uitleg" [icon]="infoIcon"
          [ngbPopover]="uitleg"

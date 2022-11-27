@@ -1,5 +1,3 @@
-
-
 // Verberg de preview in de ledenlijst want daar kan je niet naartoe slepen.
 // De preview doet denken dat je leden erin sleept, maar je sleept eigenlijk terug naar een al bestaand lid
 #LEDENLIJST .cdk-drag-placeholder {
@@ -33,8 +31,20 @@
 
 .vliegStatus {
   position: absolute;
-  top: 0px;
+  top: 4px;
   right: 5px;
+
+  margin-left: 5px;
+  padding-left: 2.5px;
+  padding-right: 2px;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  border: 1px solid #626161FF;
+  color: black;
+  text-align: center;
+  font: 13px "Courier New"
+
 }
 
 .vliegtuig-body {
@@ -88,8 +98,7 @@
   min-width: 50px;
 }
 
-.rechts
-{
+.rechts {
   text-align: right;
 }
 
@@ -154,3 +163,4 @@
   font-size: x-large;
   color: #edc61d;
 }
+

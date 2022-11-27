@@ -37,7 +37,6 @@ export function initializeApp(appConfigService: PegasusConfigService) {
         RoutingModule,
         FormsModule,
         SharedModule,
-    //    PagesModule,
         FormsModule,
         ReactiveFormsModule,
         FontAwesomeModule,

@@ -4,7 +4,7 @@
   "passagiersAantekeningID": 271,
   "maxZelfDienstenIndelen": 5,
   "maxZelfEditDagen": 14,
-
+  "saldo_actief": true,
   "menuItemsNietTonen" : [
     ""
   ],
@@ -124,6 +124,26 @@
       "Overland": 267
     }
   ],
+
+  "rapporten": [
+    {
+      "MenuItem": "Status leden",
+      "Url": "https://app.powerbi.com/reportEmbed?reportId=f8805a25-d2e2-4f4f-a92b-ef9a77075f75&autoAuth=true&ctid=a72790d5-9374-42af-a56d-c87c60435876"
+    },
+    {
+      "MenuItem": "DDWV",
+      "Url": "https://app.powerbi.com/reportEmbed?reportId=bf37624a-234c-4a57-8083-40b2daa460d7&autoAuth=true&ctid=a72790d5-9374-42af-a56d-c87c60435876"
+    },
+    {
+      "MenuItem": "Vliegtuigen",
+      "Url": "https://app.powerbi.com/reportEmbed?reportId=da95e6d8-093c-4379-be82-d664e0d007b3&autoAuth=true&ctid=a72790d5-9374-42af-a56d-c87c60435876"
+    },
+    {
+      "MenuItem": "Starts",
+      "Url": "https://app.powerbi.com/reportEmbed?reportId=dc0906dc-3b34-406b-b4b6-9857ed6aed40&autoAuth=true&ctid=a72790d5-9374-42af-a56d-c87c60435876"
+    }
+  ],
+
   "checks": {
     "Jaren": [
       2022,

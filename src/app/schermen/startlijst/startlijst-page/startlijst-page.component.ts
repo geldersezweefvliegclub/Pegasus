@@ -11,7 +11,7 @@ import {
     HeliosStartDataset, HeliosType,
     HeliosVliegtuigenDataset
 } from "../../../types/Helios";
-import {DateTime} from "luxon";
+import {DateTime, Interval} from "luxon";
 import {StartlijstService} from "../../../services/apiservice/startlijst.service";
 import {LoginService} from "../../../services/apiservice/login.service";
 import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
@@ -28,6 +28,7 @@ import {CdkDrag, CdkDragDrop} from "@angular/cdk/drag-drop";
 import {VliegtuigenService} from "../../../services/apiservice/vliegtuigen.service";
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
 import {TypesService} from "../../../services/apiservice/types.service";
+import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
 
 type HeliosStartDatasetExtended = HeliosStartDataset & {
     ZITPLAATSEN?: number,
@@ -74,6 +75,8 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
     private datumAbonnement: Subscription;    // volg de keuze van de kalender
     datum: DateTime = DateTime.now();         // de gekozen dag in de kalender
 
+    inTijdspan: boolean = false;          //  Mogen we starts aanpassen. Mag niet in de toekomst en ook niet meer dan xx dagen geleden.  xx is geconfigureerd in pegasus.config
+
     refreshTimer: number;
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -93,6 +96,7 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
                 private readonly aanwezigLedenService: AanwezigLedenService,
                 private readonly vliegtuigenService: VliegtuigenService,
                 private readonly progressieService: ProgressieService,
+                private readonly configService: PegasusConfigService,
                 private readonly daginfoService: DaginfoService,
                 private readonly typesService: TypesService,
                 private readonly loginService: LoginService,
@@ -112,54 +116,66 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
             const ui = this.loginService.userInfo?.Userinfo;
             this.isStarttoren = ui!.isStarttoren as boolean;
 
-            // abonneer op wijziging van vliegtuigen
-            this.vliegtuigenAbonnement = this.vliegtuigenService.vliegtuigenChange.subscribe(vliegtuigen => {
-                this.clubVliegtuigen = (vliegtuigen) ? vliegtuigen.filter((v) => v.CLUBKIST) : [];
-
-                this.competentiesNodig = "";
-                this.clubVliegtuigen.forEach((cv) => {
-                    if (cv.BEVOEGDHEID_LOKAAL_ID) {
-                        this.competentiesNodig += (this.competentiesNodig == '') ? cv.BEVOEGDHEID_LOKAAL_ID : ',' + cv.BEVOEGDHEID_LOKAAL_ID;
-                    }
-                    if (cv.BEVOEGDHEID_OVERLAND_ID) {
-                        this.competentiesNodig += (this.competentiesNodig == '') ? cv.BEVOEGDHEID_OVERLAND_ID : ',' + cv.BEVOEGDHEID_OVERLAND_ID;
-                    }
-                })
-            });
-
-            // abonneer op wijziging van aanwezige leden
-            this.aanwezigLedenAbonnement = this.aanwezigLedenService.aanwezigChange.subscribe(dataset => {
-                this.aanwezigLeden = JSON.parse(JSON.stringify(dataset!));                // maak een copy
-                this.filter(this.filterAan);
-            });
-
-            // abonneer op wijziging van aanwezige vliegtuigen
-            this.aanwezigVliegtuigenAbonnement = this.aanwezigVliegtuigenService.aanwezigChange.subscribe(dataset => {
-                // Als er starts is, even in juiste formaat zetten. Aanwezig moet hetzelfde formaat hebben als vliegtuigen
-                this.aanwezigVliegtuigen = JSON.parse(JSON.stringify(dataset!)); // maak een copy
-                this.filter(this.filterAan);
-            });
-
-            // Als startlijst is aangepast, moeten we grid opnieuw laden
-            this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
-                if (ev.tabel == "Startlijst") {
-                    this.opvragen();
+            const nu:  DateTime = DateTime.now()
+            if (datum.year * 10000 + datum.month * 100 + datum.day > nu.year * 10000 + nu.month * 100 + nu.day) {
+                this.inTijdspan = false;    // datum is in de toekomst
+            } else {
+                const diff = Interval.fromDateTimes(datum, nu);
+                if (diff.length("days") > this.configService.maxZelfEditDagen()) {
+                    this.inTijdspan = ui?.isBeheerder!;     // alleen beheerder mag na xx dagen wijzigen. xx is geconfigureerd in pegasus.config
+                } else {
+                    this.inTijdspan = true;                 // zitten nog binnen de termijn
                 }
-            });
-
-            // abonneer op wijziging van types
-            this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
-                this.veldTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));            // vliegvelden
-            });
-
-            // Roep onWindowResize aan zodra we het event ontvangen hebben
-            this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
-                this.onWindowResize()
-            });
-
-            this.opvragen();
-            this.onWindowResize();
+            }
         });
+
+        // abonneer op wijziging van vliegtuigen
+        this.vliegtuigenAbonnement = this.vliegtuigenService.vliegtuigenChange.subscribe(vliegtuigen => {
+            this.clubVliegtuigen = (vliegtuigen) ? vliegtuigen.filter((v) => v.CLUBKIST) : [];
+
+            this.competentiesNodig = "";
+            this.clubVliegtuigen.forEach((cv) => {
+                if (cv.BEVOEGDHEID_LOKAAL_ID) {
+                    this.competentiesNodig += (this.competentiesNodig == '') ? cv.BEVOEGDHEID_LOKAAL_ID : ',' + cv.BEVOEGDHEID_LOKAAL_ID;
+                }
+                if (cv.BEVOEGDHEID_OVERLAND_ID) {
+                    this.competentiesNodig += (this.competentiesNodig == '') ? cv.BEVOEGDHEID_OVERLAND_ID : ',' + cv.BEVOEGDHEID_OVERLAND_ID;
+                }
+            })
+        });
+
+        // abonneer op wijziging van aanwezige leden
+        this.aanwezigLedenAbonnement = this.aanwezigLedenService.aanwezigChange.subscribe(dataset => {
+            this.aanwezigLeden = JSON.parse(JSON.stringify(dataset!));                // maak een copy
+            this.filter(this.filterAan);
+        });
+
+        // abonneer op wijziging van aanwezige vliegtuigen
+        this.aanwezigVliegtuigenAbonnement = this.aanwezigVliegtuigenService.aanwezigChange.subscribe(dataset => {
+            // Als er starts is, even in juiste formaat zetten. Aanwezig moet hetzelfde formaat hebben als vliegtuigen
+            this.aanwezigVliegtuigen = JSON.parse(JSON.stringify(dataset!)); // maak een copy
+            this.filter(this.filterAan);
+        });
+
+        // Als startlijst is aangepast, moeten we grid opnieuw laden
+        this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
+            if (ev.tabel == "Startlijst") {
+                this.opvragen();
+            }
+        });
+
+        // abonneer op wijziging van types
+        this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
+            this.veldTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));            // vliegvelden
+        });
+
+        // Roep onWindowResize aan zodra we het event ontvangen hebben
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+            this.onWindowResize()
+        });
+
+        this.opvragen();
+        this.onWindowResize();
     }
 
     ngOnDestroy(): void {
@@ -576,6 +592,8 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
 
     // open van editor voor aanmelden
     openLidAanwezigEditor(lidAanwzig: HeliosAanwezigLedenDataset) {
-        this.aanmeldEditor.openPopup(lidAanwzig);
+        if (this.inTijdspan) {
+            this.aanmeldEditor.openPopup(lidAanwzig);
+        }
     }
 }

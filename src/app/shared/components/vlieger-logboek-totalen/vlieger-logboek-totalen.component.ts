@@ -29,64 +29,80 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDest
     }
 
     ngOnInit(): void {
-        // de datum zoals die in de kalender gekozen is
-        this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
-            // ophalen is alleen nodig als er een ander jaar gekozen is in de kalendar
-            const ophalen = ((this.data == undefined) || (this.datum.year != datum.year))
-            this.datum = DateTime.fromObject({
-                year: datum.year,
-                month: datum.month,
-                day: datum.day
+        setTimeout(() => {
+            // de datum zoals die in de kalender gekozen is
+            this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
+                if (datum.year != 1900) {
+                    // ophalen is alleen nodig als er een ander jaar gekozen is in de kalendar
+                    const ophalen = ((this.data == undefined) || (this.datum.year != datum.year))
+                    this.datum = DateTime.fromObject({
+                        year: datum.year,
+                        month: datum.month,
+                        day: datum.day
+                    })
+
+                    if (ophalen) {
+                        this.data = {
+                            "totaal": 0,
+                            "laatste_aanpassing": "0000-00-00 00:00:00",
+                            "hash": "0",
+                            "starts": [],
+                            "vliegtuigen": [],
+                            "jaar": {
+                                "STARTS": 0,
+                                "INSTRUCTIE_STARTS": 0,
+                                "INSTRUCTIE_UREN": "0:00",
+                                "VLIEGTIJD": "0:00"
+                            }
+                        }
+                        this.opvragen();
+                    }
+                }
             })
 
-            if (ophalen) {
-                this.data = {
-                    "totaal": 0,
-                    "laatste_aanpassing": "0000-00-00 00:00:00",
-                    "hash": "0",
-                    "starts": [],
-                    "vliegtuigen": [],
-                    "jaar": {"STARTS": 0, "INSTRUCTIE_STARTS": 0, "INSTRUCTIE_UREN": "0:00", "VLIEGTIJD": "0:00"}
-                }
-                this.opvragen();
-            }
-        })
+            // de datum zoals die in de kalender gekozen is
+            this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(datum => {
+                if (datum.year != 1900) {
+                    // ophalen is alleen nodig als er een ander jaar gekozen is in de kalendar
+                    const ophalen = ((this.data == undefined) || (this.datum.year != datum.year))
+                    this.datum = DateTime.fromObject({
+                        year: datum.year,
+                        month: datum.month,
+                        day: 1
+                    })
 
-        // de datum zoals die in de kalender gekozen is
-        this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(datum => {
-            // ophalen is alleen nodig als er een ander jaar gekozen is in de kalendar
-            const ophalen = ((this.data == undefined) || (this.datum.year != datum.year))
-            this.datum = DateTime.fromObject({
-                year: datum.year,
-                month: datum.month,
-                day: 1
+                    if (ophalen) {
+                        this.data = {
+                            "totaal": 0,
+                            "laatste_aanpassing": "0000-00-00 00:00:00",
+                            "hash": "0",
+                            "starts": [],
+                            "vliegtuigen": [],
+                            "jaar": {
+                                "STARTS": 0,
+                                "INSTRUCTIE_STARTS": 0,
+                                "INSTRUCTIE_UREN": "0:00",
+                                "VLIEGTIJD": "0:00"
+                            }
+                        }
+                        this.opvragen();
+                    }
+                }
             })
 
-            if (ophalen) {
-                this.data = {
-                    "totaal": 0,
-                    "laatste_aanpassing": "0000-00-00 00:00:00",
-                    "hash": "0",
-                    "starts": [],
-                    "vliegtuigen": [],
-                    "jaar": {"STARTS": 0, "INSTRUCTIE_STARTS": 0, "INSTRUCTIE_UREN": "0:00", "VLIEGTIJD": "0:00"}
-                }
-                this.opvragen();
-            }
-        })
-
-        // Als in de startlijst tabel is aangepast, moet we onze dataset ook aanpassen
-        this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
-            if (ev.tabel == "Startlijst") {
+            // Als in de startlijst tabel is aangepast, moet we onze dataset ook aanpassen
+            this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
+                if (ev.tabel == "Startlijst") {
                     this.opvragen();
                 }
-        });
+            });
+        }, 250);
     }
 
     ngOnDestroy(): void {
         if (this.dbEventAbonnement) this.dbEventAbonnement.unsubscribe();
-        if (this.datumAbonnement)   this.datumAbonnement.unsubscribe();
-        if (this.maandAbonnement)       this.maandAbonnement.unsubscribe();
+        if (this.datumAbonnement) this.datumAbonnement.unsubscribe();
+        if (this.maandAbonnement) this.maandAbonnement.unsubscribe();
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -98,6 +114,10 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDest
     // opvragen van de totalen uit het vlieger logboek
     opvragen(): void {
         if (this.datum) {
+            if (this.datum.year == 1900) {        // 1900 is initialisatie
+                return;
+            }
+
             this.isLoading = true;
             this.startlijstService.getLogboekTotalen(this.VliegerID, this.datum.year).then((dataset) => {
                 this.isLoading = false;

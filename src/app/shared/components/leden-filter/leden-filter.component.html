@@ -23,6 +23,12 @@
                                [(ngModel)]="this.sharedService.ledenlijstFilter.lieristen"
                                (ngModelChange)="filterDataChanged()">
                         <label for="Lieristen" class="form-check-label">Lieristen</label>
+
+                        <input type="checkbox"
+                               id="LIO" class="ms-4 form-check-inline"
+                               [(ngModel)]="this.sharedService.ledenlijstFilter.lio"
+                               (ngModelChange)="filterDataChanged()">
+                        <label for="Lieristen" class="form-check-label">Lieristen i.o.</label>
                     </div>
                     <div>
                         <input type="checkbox"

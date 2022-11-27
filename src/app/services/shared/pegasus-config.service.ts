@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+import {HeliosConfigDDWV, HeliosLedenDataset} from "../../types/Helios";
+
 
 @Injectable({
     providedIn: 'root'
 })
-
-
 export class PegasusConfigService {
     private configURL = '/assets/pegasus.config.json';
     private pegasusConfig: IPegasusConfig;
@@ -26,11 +26,11 @@ export class PegasusConfigService {
     public readonly GASTEN_VLIEGER1_TYPE_ID = 1813;
     public readonly GASTEN_VLIEGER2_TYPE_ID = 1814;
 
+
     constructor(private http: HttpClient) {
     }
 
     public load() {
-
         return new Promise<IPegasusConfig>((resolve, reject) => {
             /*
             fetch(this.configURL).then((response) => {
@@ -43,13 +43,10 @@ export class PegasusConfigService {
                 this.pegasusConfig = <IPegasusConfig>response;
 
                 resolve(this.pegasusConfig);
-
             }).catch((response: any) => {
                 reject(`Could not load the config file`);
             });
         });
-
-
     }
 
     public getURL(): string {
@@ -91,12 +88,21 @@ export class PegasusConfigService {
     public privacyURL(): string | undefined {
         return this.pegasusConfig.privacy_url;
     }
+
+    public saldoActief() {
+        return (this.pegasusConfig.saldo_actief) ? this.pegasusConfig.saldo_actief : false;
+    }
+
+    public getRapporten(): any[] {
+        return this.pegasusConfig.rapporten;
+    }
 }
 
 
 export interface IPegasusConfig {
     url: string;
     privacy_url: string;
+    saldo_actief: boolean | undefined;
     maxZelfDienstenIndelen: number | undefined;
     maxZelfEditDagen: number | undefined;
 
@@ -127,6 +133,11 @@ export interface IPegasusConfig {
     overig: [{
         Omschrijving: string,
         CompetentieID: number
+    }]
+
+    rapporten: [{
+        MenuItem: string,
+        Url: string
     }]
 
     airport: {

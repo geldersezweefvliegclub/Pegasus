@@ -381,6 +381,9 @@ export class LedenGridComponent implements OnInit, OnDestroy {
             if (this.sharedService.ledenlijstFilter.lieristen && this.dataset[i].LIERIST == false) {
                 continue;
             }
+            if (this.sharedService.ledenlijstFilter.lio && this.dataset[i].LIERIST_IO == false) {
+                continue;
+            }
             if (this.sharedService.ledenlijstFilter.instructeurs && this.dataset[i].INSTRUCTEUR == false) {
                 continue;
             }

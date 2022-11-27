@@ -1,3 +1,14 @@
+
+.volSchermWeekView {
+  height: calc(100vh - 220px);
+  overflow-y: auto;
+}
+
+.volSchermDagView {
+  height: calc(100vh - 220px);
+  overflow: auto;
+}
+
 .spinnerOverlay {
   position: absolute; /* Sit on top of the page content */
   top: calc(50% - 70px);
@@ -8,3 +19,65 @@
 }
 
 
+.aanwezigenLijst {
+  vertical-align: top;
+}
+
+.aanmeldingen {
+  font-size: smaller;
+  color: #9a9a9a;
+  font-style: italic;
+}
+
+.onvoldoendeAanmeldingen {
+  font-weight: bold;
+  font-size: smaller;
+  color: red;
+
+}
+
+.gastenHeader {
+  background-color: #f8f8f8;
+  margin: 0;
+  padding: 0 9px;
+  color: #989797;
+}
+
+.nowrap {
+  display: flex;
+}
+
+.icoontje {
+  margin-left: 5px;
+  padding-left: 2.5px;
+  padding-right: 2px;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  border: 1px solid #626161FF;
+  color: black;
+  text-align: center;
+  font: 13px "Courier New"
+}
+
+.barometer {
+  height: 15px;
+
+  border-radius: 9px;
+  min-width: 15px;
+  margin-right: 5px;
+  margin-top: 4px;
+}
+
+.barometer-rood
+{
+  background-color: #dc3545;
+}
+
+.barometer-geel {
+  background-color: #ffc107;
+}
+
+.barometer-groen {
+  background-color: #28a745;
+}

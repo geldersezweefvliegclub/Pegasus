@@ -103,7 +103,7 @@ export class CompetentieEditorComponent implements OnInit, OnDestroy {
         this.popup.open();
     }
 
-    // Toon popup om type uit de prullenbak te halen
+    // Toon popup om type uit de archief te halen
     openRestorePopup(id: number) {
         this.haalCompetentieOp(id);
         this.formTitel = 'Herstellen';

@@ -74,6 +74,24 @@ export interface paths {
       };
     };
   };
+  "/Transacties/GetBanken": {
+    get: {
+      responses: {
+        /** OK, data succesvol opgehaald */
+        200: {
+          content: {
+            "application/json": {
+              /**
+               * @description HTML options for select
+               * @example <option value='0721'>ING</option><option value='0031'>ABN Amro</option>
+               */
+              OMSCHRIJVING?: string;
+            };
+          };
+        };
+      };
+    };
+  };
 }
 
 export interface components {

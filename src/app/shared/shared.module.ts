@@ -69,6 +69,8 @@ import { GastEditorComponent } from './components/editors/gast-editor/gast-edito
 import { GastInvoerComponent } from './components/editors/start-editor/gast-invoer/gast-invoer.component';
 import { TransactiesComponent } from './components/transacties/transacties.component';
 import { TransactieEditorComponent } from './components/editors/transactie-editor/transactie-editor.component';
+import { IdealBestellenComponent } from './components/ideal-bestellen/ideal-bestellen.component';
+import { DatumtijdRenderComponent } from './components/datatable/datumtijd-render/datumtijd-render.component';
 
 @NgModule({
     imports: [
@@ -145,7 +147,9 @@ import { TransactieEditorComponent } from './components/editors/transactie-edito
         GastEditorComponent,
         GastInvoerComponent,
         TransactiesComponent,
-        TransactieEditorComponent
+        TransactieEditorComponent,
+        IdealBestellenComponent,
+        DatumtijdRenderComponent
     ],
     exports: [
         LidEditorComponent,
@@ -185,7 +189,9 @@ import { TransactieEditorComponent } from './components/editors/transactie-edito
         DienstEditorComponent,
         TypeEditorComponent,
         CompetentieEditorComponent,
-        GastEditorComponent
+        GastEditorComponent,
+        TransactieEditorComponent,
+        LidInvoerComponent
     ],
     providers: [],
     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

@@ -38,6 +38,7 @@
                     <label for="TYPE_ID" class="form-label">Type</label>
                     <select class="form-select" [required]="vliegtuig.CLUBKIST" [(ngModel)]="vliegtuig.TYPE_ID"
                             name="TYPE_ID">
+                        <option value=-1>onbekend</option>
                         <option *ngFor="let vliegtuigType of vliegtuigTypes"
                                 [value]="vliegtuigType.ID">{{vliegtuigType.OMSCHRIJVING}}</option>
                     </select>
@@ -103,6 +104,7 @@
                     <label for="LOKAAL" class="form-label">Bevoegdheid lokaal</label>
                     <select class="form-select" [(ngModel)]="vliegtuig.BEVOEGDHEID_LOKAAL_ID"
                             name="BEVOEGDHEID_LOKAAL_ID" id="LOKAAL">
+                        <option value=-1>n.v.t.</option>
                         <option *ngFor="let competentie of PVBs"
                                 [value]="competentie.Lokaal">{{competentie.Type}}</option>
                     </select>
@@ -111,6 +113,7 @@
                     <label for="OVERLAND" class="form-label">Bevoegdheid overland</label>
                     <select class="form-select" [(ngModel)]="vliegtuig.BEVOEGDHEID_OVERLAND_ID"
                             name="BEVOEGDHEID_OVERLAND_ID" id="OVERLAND">
+                        <option value=-1>n.v.t.</option>
                         <option *ngFor="let competentie of PVBs"
                                 [value]="competentie.Overland">{{competentie.Type}}</option>
                     </select>

@@ -172,6 +172,10 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
             this.Verwijderen(this.vliegtuig);
         }
 
+        this.vliegtuig.TYPE_ID = this.vliegtuig.TYPE_ID == -1 ? undefined : this.vliegtuig.TYPE_ID
+        this.vliegtuig.BEVOEGDHEID_LOKAAL_ID = this.vliegtuig.BEVOEGDHEID_LOKAAL_ID == -1 ? undefined : this.vliegtuig.BEVOEGDHEID_LOKAAL_ID
+        this.vliegtuig.BEVOEGDHEID_OVERLAND_ID = this.vliegtuig.BEVOEGDHEID_OVERLAND_ID == -1 ? undefined : this.vliegtuig.BEVOEGDHEID_OVERLAND_ID
+
         if (!this.isVerwijderMode && !this.isRestoreMode) {
             // Alleen tweezitters van de club kunnen een DBO vliegtuig zijn
             if (!this.vliegtuig.CLUBKIST || this.vliegtuig.ZITPLAATSEN != 2) {

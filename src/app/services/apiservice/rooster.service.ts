@@ -7,6 +7,7 @@ import {BehaviorSubject, Subscription} from "rxjs";
 import {SharedService} from "../shared/shared.service";
 import {getBeginEindDatumVanMaand} from "../../utils/Utils";
 import {LoginService} from "./login.service";
+import {debounceTime} from "rxjs/operators";
 
 @Injectable({
     providedIn: 'root'
@@ -23,43 +24,43 @@ export class RoosterService {
                 private readonly loginService: LoginService,
                 private readonly sharedService: SharedService) {
 
-        // // de datum zoals die in de kalender gekozen is
-        // this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(datum => {
-        //     this.datum = DateTime.fromObject({
-        //         year: datum.year,
-        //         month: datum.month,
-        //         day: 1
-        //     });
-        //
-        //     // we kunnen alleen starts ophalen als we ingelogd zijn, en starttoren heeft niets nodig
-        //     if (this.loginService.isIngelogd() && (!this.loginService.userInfo?.Userinfo!.isStarttoren)) {
-        //         const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
-        //
-        //         let beginDatum: DateTime = beginEindDatum.begindatum;
-        //         let eindDatum: DateTime = beginEindDatum.einddatum;
-        //
-        //         beginDatum = beginDatum.startOf('week');     // maandag in de 1e week vande maand, kan in de vorige maand vallen
-        //         eindDatum = eindDatum.endOf ('week');        // zondag van de laaste week, kan in de volgende maand vallen
-        //
-        //         this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
-        //             if (!this.vulMissendeDagenAan(dataset))
-        //                 this.roosterStore.next(this.roosterCache.dataset)    // afvuren event
-        //         });
-        //     }
-        // });
+        // de datum zoals die in de kalender gekozen is
+        this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(datum => {
+            this.datum = DateTime.fromObject({
+                year: datum.year,
+                month: datum.month,
+                day: 1
+            });
+
+            // we kunnen alleen rooster ophalen als we ingelogd zijn, en starttoren heeft niets nodig
+            if (this.loginService.isIngelogd()) {
+                const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
+
+                let beginDatum: DateTime = beginEindDatum.begindatum;
+                let eindDatum: DateTime = beginEindDatum.einddatum;
+
+                beginDatum = beginDatum.startOf('week');     // maandag in de 1e week vande maand, kan in de vorige maand vallen
+                eindDatum = eindDatum.endOf ('week');        // zondag van de laaste week, kan in de volgende maand vallen
+
+                this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
+                    if (!this.vulMissendeDagenAan(dataset))
+                        this.roosterStore.next(this.roosterCache.dataset)    // afvuren event
+                });
+            }
+        });
 
         // Als roosterdagen zijn toegevoegd, dan moeten we overzicht opnieuw ophalen
         // een timeout. roosterdagen worden per maand toegevoegd.
         // Niet voor iedere dag meteen opvragen, maar bundelen en 1 keer opvragen
-        // this.sharedService.heliosEventFired.pipe(debounceTime(1500)).subscribe(ev => {
-        //     if (ev.tabel == "Rooster") {
-        //         const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
-        //
-        //         this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
-        //             this.roosterStore.next(this.roosterCache.dataset)    // afvuren event
-        //         });
-        //     }
-        // });
+        this.sharedService.heliosEventFired.pipe(debounceTime(1500)).subscribe(ev => {
+            if (ev.tabel == "Rooster") {
+                const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
+
+                this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
+                    this.roosterStore.next(this.roosterCache.dataset)    // afvuren event
+                });
+            }
+        });
 
         // nadat we ingelogd zijn kunnen we de rooster ophalen, starttoren heeft niets nodig
         if ((!this.loginService.userInfo?.Userinfo!.isStarttoren)) {
@@ -126,8 +127,6 @@ export class RoosterService {
             if (!inRooster) {       // datum staat nog niet in de database, gaan we aanmaken
                 const roosterRecord: HeliosRoosterDag = {
                     DATUM: d.toISODate(),
-                    DDWV: (d.weekday <= 5 && d.month >= 4 && d.month <= 9),         // DDWV van april t/m sept
-                    CLUB_BEDRIJF: (d.weekday > 5 && d.month >= 3 && d.month <= 10)  // Clubdagen van maart t/m oktober
                 }
                 this.addRoosterdag(roosterRecord);
                 retValue = true;

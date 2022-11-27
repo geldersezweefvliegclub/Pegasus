@@ -7,6 +7,7 @@ import {DateTime} from "luxon";
 import {SharedService} from "../../../services/shared/shared.service";
 import {LoginService} from "../../../services/apiservice/login.service";
 import {TransactieEditorComponent} from "../editors/transactie-editor/transactie-editor.component";
+import {IdealBestellenComponent} from "../ideal-bestellen/ideal-bestellen.component";
 
 @Component({
     selector: 'app-transacties',
@@ -16,8 +17,9 @@ import {TransactieEditorComponent} from "../editors/transactie-editor/transactie
 export class TransactiesComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @ViewChild(TransactieEditorComponent) private editor: TransactieEditorComponent;
+    @ViewChild(IdealBestellenComponent) private bestellen: IdealBestellenComponent;
 
-    @Output() TransactieGedaan: EventEmitter<void> = new EventEmitter<void>();
+//    @Output() TransactieGedaan: EventEmitter<void> = new EventEmitter<void>();
 
     private maandAbonnement: Subscription;          // volg de keuze van de kalender
     private datumAbonnement: Subscription;          // volg de keuze van de kalender
@@ -70,7 +72,7 @@ export class TransactiesComponent implements OnInit, OnDestroy {
     }
 
     nieuweBetaling() {
-
+        this.bestellen.openPopup(this.lidID)
     }
 
     toonEditor() {
@@ -105,6 +107,6 @@ export class TransactiesComponent implements OnInit, OnDestroy {
     // er is een transactie gedaan, opnieuw ophalen alle transactie en geef trigger aan parent om profiel opnieuw te laden
     reload() {
         this.opvragen(this.lidID);
-        this.TransactieGedaan.emit();
+//        this.TransactieGedaan.emit();
     }
 }
