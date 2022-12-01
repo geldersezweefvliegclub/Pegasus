@@ -16,6 +16,18 @@
                            [(ngModel)]="type.EXT_REF">
                 </div>
             </div>
+            <div class="row mb-2">
+                <div class="col-8">
+                    <label for="EENHEDEN" class="form-label">Eenheden</label>
+                    <input type="text" name="EENHEDEN" class="form-control" id="EENHEDEN" [disabled]="type.READ_ONLY"
+                           [(ngModel)]="type.EENHEDEN">
+                </div>
+                <div class="col-4">
+                    <label for="BEDRAG" class="form-label">Bedrag</label>
+                    <input type="text" name="BEDRAG" class="form-control" id="BEDRAG"  [disabled]="type.READ_ONLY"
+                           [(ngModel)]="type.BEDRAG">
+                </div>
+            </div>
             <div class="row">
                 <div class="col-12">
                     <label for="OMSCHRIJVING" class="form-label">Omschrijving</label>

@@ -258,6 +258,18 @@ export interface components {
        * @example 0
        */
       READ_ONLY?: boolean;
+      /**
+       * Format: double
+       * @description Het bedrag in Euro's
+       * @example 0
+       */
+      BEDRAG?: number;
+      /**
+       * Format: numeric
+       * @description Bij bestellen van strippen, of afschrijven strippen
+       * @example 10115
+       */
+      EENHEDEN?: number;
     };
     ref_types: components["schemas"]["ref_types_in"] & {
       /**

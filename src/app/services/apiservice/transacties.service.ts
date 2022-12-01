@@ -1,14 +1,14 @@
 import {Injectable} from '@angular/core';
 import {APIService} from "./api.service";
 import {LoginService} from "./login.service";
-import {HeliosBestelInfo, HeliosTransactie, HeliosTransacties, HeliosTransactiesDataset} from "../../types/Helios";
+import {
+    HeliosTransactie,
+    HeliosTransacties,
+    HeliosTransactiesBanken,
+    HeliosTransactiesDataset
+} from "../../types/Helios";
 import {KeyValueArray} from "../../types/Utils";
 import {DateTime} from "luxon";
-
-export interface BankIDeal {
-    bankID: string,
-    beschrijving: string | null
-};
 
 @Injectable({
     providedIn: 'root'
@@ -53,25 +53,28 @@ export class TransactiesService {
         return this.transactiesCache?.dataset as HeliosTransactiesDataset[];
     }
 
-    async getBanken(): Promise<BankIDeal[]> {
-        const retVal:BankIDeal[] = [];
+    async getBanken(): Promise<HeliosTransactiesBanken[]> {
+        let banken:HeliosTransactiesBanken[] = [];
         try {
             const response: Response = await this.apiService.get('Transacties/GetBanken');
-            const banken = await response.json();
-            Object.keys(banken.response.bank).forEach((key) => {
-                retVal.push({
-                    bankID: key,
-                    beschrijving: banken.response.bank[key]
-                });
-            })
-
+            banken = await response.json();
         } catch (e) {
             if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde starts als cache
                 throw(e);
             }
         }
-        return retVal;
+        return banken;
     }
+
+    async StartIDealTransactie(lidID: number, bestellingID: number, bankID: string): Promise<string> {
+        const response: Response = await this.apiService.post('Transacties/StartIDealTransactie', JSON.stringify({
+            LID_ID: lidID,
+            BESTELLING_ID: bestellingID,
+            BANK_ID: bankID
+        }));
+        return response.json();
+    }
+
 
     async addTransactie(transactie: HeliosTransactie) {
         const response: Response = await this.apiService.post('Transacties/SaveObject', JSON.stringify(transactie));

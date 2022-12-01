@@ -80,13 +80,7 @@ export interface paths {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": {
-              /**
-               * @description HTML options for select
-               * @example <option value='0721'>ING</option><option value='0031'>ABN Amro</option>
-               */
-              OMSCHRIJVING?: string;
-            };
+            "application/json": components["schemas"]["banken"];
           };
         };
       };
@@ -96,6 +90,18 @@ export interface paths {
 
 export interface components {
   schemas: {
+    banken: {
+      /**
+       * @description ID van de bank
+       * @example ABNANL2A
+       */
+      ID?: string;
+      /**
+       * @description Naam van de bank
+       * @example ABN AMRO
+       */
+      NAAM?: string;
+    };
     oper_transactie_in: {
       /**
        * Format: int32

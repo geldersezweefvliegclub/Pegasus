@@ -296,8 +296,13 @@ body > .popupLarge > div {
 }
 
 .popupLargeWrapper {
-  height: calc(100vh * 0.66);
+  height: calc(100vh - 215px);
 }
+
+body > .popupMedium > div {
+  max-width: 70%;
+}
+
 
 // recency grafiek, progress bar
 .bg-info {

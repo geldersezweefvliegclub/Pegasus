@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {SharedService} from "../shared/shared.service";
 import {APIService} from "./api.service";
-import {HeliosBestelInfo, HeliosConfigDDWV} from "../../types/Helios";
+import {HeliosConfigDDWV} from "../../types/Helios";
+import {StorageService} from "../storage/storage.service";
 
 @Injectable({
     providedIn: 'root'
@@ -11,13 +12,17 @@ export class DdwvService {
     private configDDWV: HeliosConfigDDWV;
 
     constructor(private readonly apiService: APIService,
-                private readonly sharedService: SharedService) {
+                private readonly storageService: StorageService) {
+        // We hebben misschien eerder de lidTypes opgehaald. Die gebruiken we totdat de API starts heeft opgehaald
+        if (this.storageService.ophalen('configDDWV') != null) {
+            this.configDDWV = this.storageService.ophalen('configDDWV');
+        }
     }
 
-    public loadConfigDDWV() {
-        this.apiService.get('DDWV/GetConfiguratie').then((response: Response) => {
-            response.json().then((c) => this.configDDWV = c);
-        });
+    public async loadConfigDDWV() {
+        const response = await this.apiService.get('DDWV/GetConfiguratie');
+        this.configDDWV = await response.json();
+        this.storageService.opslaan('configDDWV', this.configDDWV, -1);
     }
 
     public actief(): boolean {
@@ -25,15 +30,10 @@ export class DdwvService {
         return this.configDDWV.DDWV!;
     }
 
-    public getBestelInfo(): HeliosBestelInfo[] {
-        console.log(this.configDDWV);
+    public magBestellen(strippen: number | undefined): boolean {
+        if (!this.configDDWV)  return false;
+        if (!this.configDDWV.MAX_STRIPPEN)  return false;
 
-        if (!this.configDDWV)
-            return [];
-
-        if (!this.configDDWV.AANSCHAF)
-            return [];
-
-        return this.configDDWV.AANSCHAF!;
+        return ((!strippen) || (strippen < this.configDDWV.MAX_STRIPPEN)) ? true : false;
     }
 }

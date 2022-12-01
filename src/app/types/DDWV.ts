@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  "/DDWV/Configuratie": {
+  "/DDWV/GetConfiguratie": {
     get: {
       responses: {
         /** OK, data succesvol opgehaald */
@@ -32,8 +32,6 @@ export interface components {
       STRIPPEN_RETOUR_OP_VLIEGDAG?: number;
       /** @description De dataset met records */
       TARIEVEN?: components["schemas"]["ddwv_tarieven"][];
-      /** @description De dataset met records */
-      AANSCHAF?: components["schemas"]["ddwv_bestelInfo"][];
     };
     ddwv_tarieven: {
       /**
@@ -46,28 +44,6 @@ export interface components {
        * @example 8
        */
       EENHEDEN?: number;
-    };
-    ddwv_bestelInfo: {
-      /**
-       * @description Aantal strippen dat aangeschaft wordt
-       * @example 3
-       */
-      EENHEDEN?: number;
-      /**
-       * @description Aantal Euro die van de bank afgeschreven worden
-       * @example 8
-       */
-      BEDRAG?: number;
-      /**
-       * @description Kosten van de bank transactie
-       * @example 1.1
-       */
-      KOSTEN?: number;
-      /**
-       * @description Omschrijving in tekst
-       * @example 12 strippen, € 48.00 plus € 1.00 transactiekosten
-       */
-      OMSCHRIJVING?: string;
     };
   };
 }

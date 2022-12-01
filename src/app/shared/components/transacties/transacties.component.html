@@ -1,34 +1,52 @@
-<app-modal titel="Transacties">
+<app-modal titel="Transacties" popupClass="popupMedium">
     <div body>
-        <table class="w-100">
-            <tr class="headerRow">
-                <th class="pe-2">Datum</th>
-                <th class="w-100">Omschrijving</th>
-                <th class="ps-2">Bedrag</th>
-                <th class="ps-2">Eenheden</th>
-            </tr>
-            <tr *ngFor="let transactie of transacties;let i = index">
-                <td style="white-space: nowrap;" class="pe-2">
-                    {{datumDMY(transactie.DATUM)}}
-                </td>
-                <td>
-                    {{transactie.OMSCHRIJVING}}
-                </td>
-                <td style="text-align: right;white-space: nowrap;" class="ps-2">
-                    <div *ngIf="transactie.BEDRAG">
-                        &euro; {{transactie.BEDRAG | number : '1.2-2'}}
-                    </div>
-                </td>
-                <td style="text-align: right;" class="ps-2">
-                    {{transactie.EENHEDEN}}
-                </td>
-            </tr>
-        </table>
+        <div class="popupLargeWrapper" style="overflow: auto">
+            <table class="w-100">
+                <tr class="headerRow">
+                    <th class="text-nowrap pe-2">Datum</th>
+                    <th class="text-nowrap w-100">Omschrijving</th>
+                    <th class="text-nowrap ps-2">Bedrag</th>
+                    <th class="text-nowrap ps-2">Saldo voor</th>
+                    <th class="text-nowrap ps-2">Mutatie</th>
+                    <th class="text-nowrap ps-2 pe-1">Saldo na</th>
+                </tr>
+                <tr *ngFor="let transactie of transacties;let i = index" style="vertical-align: top;" [ngClass]="{'nietBetaaldRow': !transactie.BETAALD && transactie.BEDRAG}">
+                    <td style="white-space: nowrap;" class="pe-2">
+                        {{datumDMY(transactie.DATUM)}}
+                    </td>
+                    <td>
+                       {{transactie.OMSCHRIJVING}}
+                    </td>
+                    <td style="text-align: right;white-space: nowrap;" class="ps-2">
+                        <div *ngIf="transactie.BEDRAG && transactie.BETAALD ">
+                            &euro; {{transactie.BEDRAG | number : '1.2-2'}}
+                        </div>
+                        <div *ngIf="transactie.BEDRAG && !transactie.BETAALD " class="nietBetaald">
+                            niet betaald
+                        </div>
+                    </td>
+                    <td style="text-align: right;" class="ps-2">
+                        <div *ngIf="transactie.BETAALD || !transactie.BEDRAG">
+                            {{transactie.SALDO_VOOR}}
+                        </div>
+                    </td>
+                    <td style="text-align: right;" class="ps-2">
+                        <div *ngIf="transactie.BETAALD || !transactie.BEDRAG">
+                            {{transactie.EENHEDEN}}
+                        </div>
+                    </td>
+                    <td style="text-align: right;" class="ps-2">
+                        {{transactie.SALDO_NA}}
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
 
     <div footer class="w-100">
         <div class="d-flex justify-content-between">
-            <app-icon-button
+            <div *ngIf="!magBestellen">&nbsp;</div>
+            <app-icon-button *ngIf="magBestellen"
                     iconNaam="fas EuroSign"
                     tekst="Bestel strippen"
                     [toonKlein]="false"

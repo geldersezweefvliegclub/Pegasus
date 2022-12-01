@@ -8,6 +8,7 @@ import {SharedService} from "../../../services/shared/shared.service";
 import {LoginService} from "../../../services/apiservice/login.service";
 import {TransactieEditorComponent} from "../editors/transactie-editor/transactie-editor.component";
 import {IdealBestellenComponent} from "../ideal-bestellen/ideal-bestellen.component";
+import {ErrorMessage} from "../../../types/Utils";
 
 @Component({
     selector: 'app-transacties',
@@ -19,13 +20,14 @@ export class TransactiesComponent implements OnInit, OnDestroy {
     @ViewChild(TransactieEditorComponent) private editor: TransactieEditorComponent;
     @ViewChild(IdealBestellenComponent) private bestellen: IdealBestellenComponent;
 
-//    @Output() TransactieGedaan: EventEmitter<void> = new EventEmitter<void>();
+    @Output() TransactieGedaan: EventEmitter<void> = new EventEmitter<void>();
 
     private maandAbonnement: Subscription;          // volg de keuze van de kalender
     private datumAbonnement: Subscription;          // volg de keuze van de kalender
     datum: DateTime = DateTime.now();               // de gekozen dag
 
     magCorrigeren: boolean = false;
+    magBestellen: boolean = false;
     lidID: number;
 
     transacties: HeliosTransactiesDataset[];
@@ -65,8 +67,9 @@ export class TransactiesComponent implements OnInit, OnDestroy {
         if (this.maandAbonnement)       this.maandAbonnement.unsubscribe();
     }
 
-    openPopup(lidID: number) {
+    openPopup(lidID: number, magBestellen: boolean) {
         this.lidID = lidID;
+        this.magBestellen = magBestellen;
         this.opvragen(lidID);
         this.popup.open();
     }
@@ -107,6 +110,6 @@ export class TransactiesComponent implements OnInit, OnDestroy {
     // er is een transactie gedaan, opnieuw ophalen alle transactie en geef trigger aan parent om profiel opnieuw te laden
     reload() {
         this.opvragen(this.lidID);
-//        this.TransactieGedaan.emit();
+        this.TransactieGedaan.emit();
     }
 }

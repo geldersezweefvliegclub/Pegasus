@@ -1,3 +1,4 @@
+<app-error [error]="error"></app-error>
 <app-modal titel="Bestel strippen">
     <div body>
         <fieldset>
@@ -7,8 +8,8 @@
                     <select class="form-select" [(ngModel)]="bestelling"
                             name="BESTELLING" id="BESTELLING">
                         <option value="-1" >Maak keuze</option>
-                        <option *ngFor="let bi of bestelInfo;let r = index"
-                                [value]="r">{{bi.OMSCHRIJVING}}</option>
+                        <option *ngFor="let bi of bestelInfo"
+                                [value]="bi.ID">{{bi.OMSCHRIJVING}}</option>
                     </select>
 
                     <label for="BANK" class="form-label">Bank</label>
@@ -16,7 +17,7 @@
                             name="BANK" id="BANK">
                         <option value="-1" >Maak keuze</option>
                         <option *ngFor="let bank of banken;let r = index"
-                                [value]=r>{{bank.beschrijving}}</option>
+                                [value]=r>{{bank.NAAM}}</option>
                     </select>
                 </div>
             </div>
@@ -36,7 +37,7 @@
                 tekst="Doorgaan"
                 [toonKlein]="false"
                 [disabled]="bank === -1  || bestelling === -1"
-                (btnClicked)="opslaan()">
+                (btnClicked)="bestellen()">
         </app-icon-button>
     </div>
 </app-modal>

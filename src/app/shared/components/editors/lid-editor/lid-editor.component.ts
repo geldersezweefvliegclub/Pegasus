@@ -16,6 +16,7 @@ import {Subscription} from "rxjs";
 import {SchermGrootte, SharedService} from "../../../../services/shared/shared.service";
 import {TransactiesComponent} from "../../transacties/transacties.component";
 import {PegasusConfigService} from "../../../../services/shared/pegasus-config.service";
+import {DdwvService} from "../../../../services/apiservice/ddwv.service";
 
 @Component({
     selector: 'app-lid-editor',
@@ -68,13 +69,14 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     error: ErrorMessage | undefined;
 
     constructor(
+        private readonly router: Router,
+        private readonly ddwvService: DdwvService,
         private readonly typesService: TypesService,
         private readonly ledenService: LedenService,
         private readonly loginService: LoginService,
         private readonly imageService: ImageService,
-        private readonly storageService: StorageService,
-        private readonly router: Router,
         private readonly sharedService: SharedService,
+        private readonly storageService: StorageService,
         private readonly configService: PegasusConfigService,
         private readonly changeDetector: ChangeDetectorRef) {
     }
@@ -485,7 +487,6 @@ export class LidEditorComponent implements OnInit, OnDestroy {
 
     // openen van windows voor het tonen van de transacties
     toonTransacties() {
-        this.transactieScherm.openPopup(this.lid!.ID!);
+        this.transactieScherm.openPopup(this.lid!.ID!, this.ddwvService.magBestellen(this.lid.TEGOED));
     }
 }
-

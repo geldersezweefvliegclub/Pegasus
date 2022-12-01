@@ -22,7 +22,6 @@ export type HeliosUserinfo = loginComponents['schemas']['Userinfo'];
 export type HeliosLidData = loginComponents["schemas"]["ref_leden"];
 
 export type HeliosConfigDDWV = ddwvComponents['schemas']['ddwv_config'];
-export type HeliosBestelInfo = ddwvComponents['schemas']['ddwv_bestelInfo'];
 
 export type HeliosAanwezigVliegtuigen = aanwezigVliegtuigenComponents['schemas']['view_aanwezig_vliegtuigen'];
 export type HeliosAanwezigVliegtuigenDataset = aanwezigVliegtuigenComponents['schemas']['view_aanwezig_vliegtuigen_dataset'];
@@ -90,6 +89,7 @@ export type HeliosTracksDataset = tracksComponents['schemas']['view_tracks_datas
 export type HeliosTransactie = transactiesComponents['schemas']['oper_transactie'];
 export type HeliosTransacties = transactiesComponents['schemas']['view_transactie'];
 export type HeliosTransactiesDataset = transactiesComponents['schemas']['view_transactie_dataset'];
+export type HeliosTransactiesBanken = transactiesComponents['schemas']['banken'];
 
 export type HeliosDienst = dienstenComponents['schemas']['oper_diensten'];
 export type HeliosDiensten = dienstenComponents['schemas']['view_diensten'];
