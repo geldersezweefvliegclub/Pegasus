@@ -12,20 +12,20 @@
                 </div>
                 <div class="col-4">
                     <label for="EXT" class="form-label">Referentie</label>
-                    <input type="text" name="EXT_REF" class="form-control" id="EXT"  [disabled]="type.READ_ONLY"
+                    <input type="text" name="EXT_REF" class="form-control" id="EXT"
                            [(ngModel)]="type.EXT_REF">
                 </div>
             </div>
-            <div class="row mb-2">
+            <div class="row mb-2" *ngIf="toonBedragEenheid">
                 <div class="col-8">
                     <label for="EENHEDEN" class="form-label">Eenheden</label>
-                    <input type="text" name="EENHEDEN" class="form-control" id="EENHEDEN" [disabled]="type.READ_ONLY"
-                           [(ngModel)]="type.EENHEDEN">
+                    <input type="number" name="EENHEDEN" class="form-control" id="EENHEDEN"
+                           [(ngModel)]="type.EENHEDEN" step="0.01">
                 </div>
                 <div class="col-4">
                     <label for="BEDRAG" class="form-label">Bedrag</label>
-                    <input type="text" name="BEDRAG" class="form-control" id="BEDRAG"  [disabled]="type.READ_ONLY"
-                           [(ngModel)]="type.BEDRAG">
+                    <input type="number" name="BEDRAG" class="form-control" id="BEDRAG"
+                           [(ngModel)]="type.BEDRAG" step="0.01">
                 </div>
             </div>
             <div class="row">
@@ -38,7 +38,7 @@
 
         </fieldset>
     </div>
-    <div footer *ngIf="!type.READ_ONLY">
+    <div footer>
         <app-icon-button *ngIf="!isLoading && !isSaving && type.ID !== undefined && !isRestoreMode && !isVerwijderMode" iconNaam="fas Edit" btnColor="btn-primary"
                          [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
         <app-icon-button *ngIf="!isLoading && !isSaving && type.ID === undefined && !isRestoreMode && !isVerwijderMode" iconNaam="fas Plus" btnColor="btn-primary"

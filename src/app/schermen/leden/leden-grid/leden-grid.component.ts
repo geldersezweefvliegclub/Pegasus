@@ -24,6 +24,7 @@ import {TracksService} from "../../../services/apiservice/tracks.service";
 import {TrackRenderComponent} from "../track-render/track-render.component";
 import {DatumRenderComponent} from "../../../shared/components/datatable/datum-render/datum-render.component";
 import {Subscription} from "rxjs";
+import {DdwvService} from "../../../services/apiservice/ddwv.service";
 
 
 @Component({
@@ -75,9 +76,12 @@ export class LedenGridComponent implements OnInit, OnDestroy {
         {field: 'LIDNR', headerName: 'Lid nummer', sortable: true, hide: true},
         {field: 'STATUS', headerName: 'Status', sortable: true, hide: !this.toonStatus()},
         {field: 'ZUSTERCLUB', headerName: 'Club', sortable: true, hide: !this.toonZusterClub()},
-        {field: 'BUDDY', headerName: 'Buddy', sortable: true, hide: true},
-        {field: 'INLOGNAAM', headerName: 'Loginnaam', sortable: true, hide: true},
+        {field: 'TEGOED', headerName: 'Tegoed', sortable: true, hide: !this.toonTegoed()},
 
+        {field: 'BUDDY', headerName: 'Buddy', sortable: true, hide: true},
+        {field: 'BUDDY2', headerName: 'Buddy', sortable: true, hide: true},
+
+        {field: 'INLOGNAAM', headerName: 'Loginnaam', sortable: true, hide: true},
         {field: 'CIMT', headerName: 'CIMT', sortable: true, cellRenderer: 'checkboxRender'},
         {field: 'INSTRUCTEUR', headerName: 'Instructeur', sortable: true, cellRenderer: 'checkboxRender'},
         {field: 'LIERIST', headerName: 'Lierist', sortable: true, cellRenderer: 'checkboxRender'},
@@ -181,7 +185,8 @@ export class LedenGridComponent implements OnInit, OnDestroy {
     toonBulkEmail: boolean = false;
     toonBladwijzer: boolean = false;
 
-    constructor(private readonly ledenService: LedenService,
+    constructor(private readonly ddwvService: DdwvService,
+                private readonly ledenService: LedenService,
                 private readonly loginService: LoginService,
                 private readonly trackService: TracksService,
                 private readonly sharedService: SharedService,
@@ -450,7 +455,16 @@ export class LedenGridComponent implements OnInit, OnDestroy {
     }
 
     private toonZusterClub() {
+        if (!this.ddwvService.actief()) return false;               // DDWV is niet van toepassing
+
         const ui = this.loginService.userInfo?.Userinfo;
         return (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
+    }
+
+    private toonTegoed() {
+        if (!this.ddwvService.actief()) return false;               // DDWV is niet van toepassing
+
+        const ui = this.loginService.userInfo?.Userinfo;
+        return (ui?.isBeheerder || ui?.isBeheerderDDWV) ? true : false;
     }
 }

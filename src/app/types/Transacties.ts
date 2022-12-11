@@ -36,6 +36,8 @@ export interface paths {
         query: {
           /** Database ID van het aanwezig record */
           ID?: number;
+          /** External ID */
+          EXT_ID?: number;
           /** Laatste aanpassing op basis van records in dataset. Bedoeld om data verbruik te verminderen. Dataset is daarom leeg */
           LAATSTE_AANPASSING?: boolean;
           /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
@@ -86,6 +88,29 @@ export interface paths {
       };
     };
   };
+  "/Transacties/StartIDealTransactie": {
+    get: {
+      parameters: {
+        query: {
+          /** Database ID van het lid die betaalt */
+          LID_ID: number;
+          /** Bestelling ID */
+          BESTEL_ID: number;
+          /** Code van de bank */
+          BANK_ID: string;
+        };
+      };
+      responses: {
+        /** OK, transactie goed gestart */
+        200: {
+          content: {
+            "application/json": unknown;
+          };
+        };
+      };
+    };
+  };
+  "/Tranacties/Validatie": {};
 }
 
 export interface components {
@@ -128,6 +153,12 @@ export interface components {
        */
       INGEVOERD_ID?: number;
       /**
+       * Format: int32
+       * @description Type voor transactie, verwijzing naar type tabel
+       * @example 2004
+       */
+      TYPE_ID?: number;
+      /**
        * @description Een bijschrijving van eenheden (betaald via bank)
        * @example 0
        */
@@ -167,8 +198,8 @@ export interface components {
        */
       REFERENTIE?: string;
       /**
-       * @description Een externe referentie van bank transactie
-       * @example RABO 0648 904881
+       * @description Een externe referentie van de ideal transactie
+       * @example 0112 8854 9854488
        */
       EXT_REF?: string;
       /**
@@ -178,7 +209,7 @@ export interface components {
       OMSCHRIJVING?: string;
       /**
        * @description Verwijzing naar extern url van de bank
-       * @example https://www.xyz.com/url
+       * @example https://pay.digiwallet.nl/test-transaction?transactionID=190210863&paymethod=IDE&hash=9c416bdd18cb1"
        */
       BETAALD_URL?: string;
     };
@@ -201,6 +232,16 @@ export interface components {
        * @example Momfer de Mol
        */
       NAAM?: string;
+      /**
+       * @description De naam van het lid voor deze transactie
+       * @example Momfer de Mol
+       */
+      INGEVOERD?: string;
+      /**
+       * @description Omschrijving van het type transactie
+       * @example Cancelen vliegdag
+       */
+      TYPE?: string;
     };
     view_transactie: {
       /**

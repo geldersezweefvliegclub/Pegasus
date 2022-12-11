@@ -21,10 +21,8 @@ import {LoginService} from "../../../services/apiservice/login.service";
 import {
     HeliosDienst,
     HeliosDienstenDataset,
-    HeliosLidData,
     HeliosRoosterDag,
     HeliosType,
-    HeliosUserinfo
 } from "../../../types/Helios";
 import {Subscription} from "rxjs";
 import {TypesService} from "../../../services/apiservice/types.service";
@@ -34,8 +32,8 @@ import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {faCalendarCheck, faSortAmountDownAlt, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
 import {SharedService} from "../../../services/shared/shared.service";
 import {DateTime} from "luxon";
-import {StartEditorComponent} from "../../../shared/components/editors/start-editor/start-editor.component";
 import {DienstEditorComponent} from "../../../shared/components/editors/dienst-editor/dienst-editor.component";
+import {DdwvService} from "../../../services/apiservice/ddwv.service";
 
 @Component({
     selector: 'app-rooster-weekview',
@@ -60,6 +58,7 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
     private typesAbonnement: Subscription;
     dienstTypes: HeliosType[] = [];
 
+    ddwvActief: boolean = true;
     magWijzigen: boolean = false;
     isCIMT: boolean;
     dblKlik: boolean = false;
@@ -67,7 +66,8 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
     maandag: DateTime;                          // De maandag van de gekozen week
     opslaanTimer: number;                       // kleine vertraging om starts opslaan te beperken
 
-    constructor(private readonly loginService: LoginService,
+    constructor(private readonly ddwvService: DdwvService,
+                private readonly loginService: LoginService,
                 private readonly typesService: TypesService,
                 private readonly sharedService: SharedService,
                 private readonly roosterService: RoosterService,
@@ -86,6 +86,8 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
                 return t.GROEP == 18
             });    // type diensten
         });
+
+        this.ddwvActief = this.ddwvService.actief();
     }
 
     ngOnDestroy(): void {

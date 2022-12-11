@@ -22,6 +22,7 @@ import {TypesService} from "../../../services/apiservice/types.service";
 import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
 import {getBeginEindDatumVanMaand} from "../../../utils/Utils";
 import {HeliosActie, KeyValueArray} from "../../../types/Utils";
+import {DdwvService} from "../../../services/apiservice/ddwv.service";
 
 export type HeliosLedenDatasetExtended = HeliosLedenDataset & {
     INGEDEELD_MAAND?: number
@@ -77,6 +78,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
     private datumAbonnement: Subscription;          // volg de keuze van de kalender
     datum: DateTime = DateTime.now();               // de gekozen dag
     maandag: DateTime                               // de eerste dag van de week
+    ddwvActief: boolean = true;
 
     private tonen: WeergaveData = {                    // Welke diensten worden wel/niet getoond
         Startleiders: true,
@@ -100,7 +102,8 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
     isLoading: number = 0;
     zoekString: string;
 
-    constructor(private readonly loginService: LoginService,
+    constructor(private readonly ddwvService: DdwvService,
+                private readonly loginService: LoginService,
                 private readonly ledenService: LedenService,
                 private readonly typesService: TypesService,
                 private readonly sharedService: SharedService,
@@ -201,6 +204,8 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             this.onWindowResize();
             this.opvragen();
         });
+
+        this.ddwvActief = this.ddwvService.actief();
     }
 
     ngOnDestroy(): void {
@@ -468,7 +473,12 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
 
     // welke dagen willen we laten zien, DDWV'ers kunnen alleen DDWV dagen zien
     ToggleWeekendDDWV() {
-        this.tonen.toonClubDDWV = ++this.tonen.toonClubDDWV % 3;
+        if (this.ddwvActief) {
+            this.tonen.toonClubDDWV = ++this.tonen.toonClubDDWV % 3;
+        }
+        else {
+            this.tonen.toonClubDDWV = ++this.tonen.toonClubDDWV % 2;    // DDWV is niet actief, dus niet tonen
+        }
         this.applyRoosterFilter();
     }
 

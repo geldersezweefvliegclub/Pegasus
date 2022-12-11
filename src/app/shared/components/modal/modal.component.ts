@@ -2,6 +2,7 @@ import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {faTimes} from '@fortawesome/free-solid-svg-icons';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
 
 
 @Component({

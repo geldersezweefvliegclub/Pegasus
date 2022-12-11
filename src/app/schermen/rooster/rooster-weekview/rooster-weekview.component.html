@@ -29,7 +29,7 @@
                         </div>
                     </div>
 
-                    <div>
+                    <div *ngIf="ddwvActief">
                         <input type="checkbox" class="form-check-inline" [id]="'DDWV' + i"
                                [name]="'DDWV' + i"
                                [(ngModel)]="dagInRooster.DDWV"

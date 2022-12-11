@@ -1,45 +1,12 @@
-<app-modal titel="Transacties" popupClass="popupMedium">
+<app-modal titel="Transacties" [popupClass]="popupClass()">
     <div body>
         <div class="popupLargeWrapper" style="overflow: auto">
-            <table class="w-100">
-                <tr class="headerRow">
-                    <th class="text-nowrap pe-2">Datum</th>
-                    <th class="text-nowrap w-100">Omschrijving</th>
-                    <th class="text-nowrap ps-2">Bedrag</th>
-                    <th class="text-nowrap ps-2">Saldo voor</th>
-                    <th class="text-nowrap ps-2">Mutatie</th>
-                    <th class="text-nowrap ps-2 pe-1">Saldo na</th>
-                </tr>
-                <tr *ngFor="let transactie of transacties;let i = index" style="vertical-align: top;" [ngClass]="{'nietBetaaldRow': !transactie.BETAALD && transactie.BEDRAG}">
-                    <td style="white-space: nowrap;" class="pe-2">
-                        {{datumDMY(transactie.DATUM)}}
-                    </td>
-                    <td>
-                       {{transactie.OMSCHRIJVING}}
-                    </td>
-                    <td style="text-align: right;white-space: nowrap;" class="ps-2">
-                        <div *ngIf="transactie.BEDRAG && transactie.BETAALD ">
-                            &euro; {{transactie.BEDRAG | number : '1.2-2'}}
-                        </div>
-                        <div *ngIf="transactie.BEDRAG && !transactie.BETAALD " class="nietBetaald">
-                            niet betaald
-                        </div>
-                    </td>
-                    <td style="text-align: right;" class="ps-2">
-                        <div *ngIf="transactie.BETAALD || !transactie.BEDRAG">
-                            {{transactie.SALDO_VOOR}}
-                        </div>
-                    </td>
-                    <td style="text-align: right;" class="ps-2">
-                        <div *ngIf="transactie.BETAALD || !transactie.BEDRAG">
-                            {{transactie.EENHEDEN}}
-                        </div>
-                    </td>
-                    <td style="text-align: right;" class="ps-2">
-                        {{transactie.SALDO_NA}}
-                    </td>
-                </tr>
-            </table>
+            <div *ngIf="transactiesView === 'grid'">
+                <ng-template *ngTemplateOutlet="grid"></ng-template>
+            </div>
+            <div *ngIf="transactiesView === 'card'">
+                <ng-template *ngTemplateOutlet="card"></ng-template>
+            </div>
         </div>
     </div>
 
@@ -49,18 +16,92 @@
             <app-icon-button *ngIf="magBestellen"
                     iconNaam="fas EuroSign"
                     tekst="Bestel strippen"
+                    btnColor="btn-primary"
                     [toonKlein]="false"
                     (btnClicked)="nieuweBetaling()"></app-icon-button>
 
             <app-icon-button *ngIf="magCorrigeren"
                              iconNaam="fas FilePen"
                              tekst="Correctie"
-                             btnColor="btn-primary"
+                             btnColor="btn-secondary"
                              (btnClicked)="toonEditor()"></app-icon-button>
         </div>
     </div>
 </app-modal>
 
+<!-- template voor grid view -->
+<ng-template #grid>
+    <table class="w-100">
+        <tr class="headerRow">
+            <th class="text-nowrap pe-2">Datum</th>
+            <th class="text-nowrap w-100">Omschrijving</th>
+            <th class="text-nowrap ps-2">Bedrag</th>
+            <th class="text-nowrap ps-2">Saldo voor</th>
+            <th class="text-nowrap ps-2">Mutatie</th>
+            <th class="text-nowrap ps-2 pe-1">Saldo na</th>
+        </tr>
+        <tr *ngFor="let transactie of transacties;let i = index" style="vertical-align: top;" [ngClass]="{'nietBetaaldRow': !transactie.BETAALD && transactie.BEDRAG}">
+            <td style="white-space: nowrap;" class="pe-2">
+                {{datumDMY(transactie.DATUM)}}
+            </td>
+            <td>
+                {{transactie.TYPE}} {{transactie.OMSCHRIJVING}}
+            </td>
+            <td style="text-align: right;white-space: nowrap;" class="ps-2">
+                <div *ngIf="transactie.BEDRAG && transactie.BETAALD ">
+                    &euro; {{transactie.BEDRAG | number : '1.2-2'}}
+                </div>
+                <div *ngIf="transactie.BEDRAG && !transactie.BETAALD " class="nietBetaald">
+                    Niet betaald
+                </div>
+            </td>
+            <td style="text-align: right;" class="ps-2">
+                <div *ngIf="transactie.BETAALD || !transactie.BEDRAG">
+                    {{transactie.SALDO_VOOR}}
+                </div>
+            </td>
+            <td style="text-align: right;" class="ps-2">
+                <div *ngIf="transactie.BETAALD || !transactie.BEDRAG">
+                    {{transactie.EENHEDEN}}
+                </div>
+            </td>
+            <td style="text-align: right;" class="ps-2">
+                {{transactie.SALDO_NA}}
+            </td>
+        </tr>
+    </table>
+</ng-template>
 
-<app-transactie-editor (TransactieGedaan)="reload()"></app-transactie-editor>
+<!-- template voor grid view -->
+<ng-template #card>
+    <div *ngFor="let transactie of transacties;let i = index" class="transactieCard"
+            [ngClass]="{'nietBetaaldRow': !transactie.BETAALD && transactie.BEDRAG}" (click)="expandedView = !expandedView">
+        <table>
+            <tr>
+                <td><b>Datum:</b> {{transactie.DATUM}}</td>
+            </tr>
+            <tr>
+                <td>{{transactie.TYPE}} {{transactie.OMSCHRIJVING}}</td>
+            </tr>
+            <tr *ngIf="transactie.BEDRAG && expandedView">
+                <td>
+                    <b>Bedrag:</b> {{transactie.BEDRAG}}
+                    <div *ngIf="transactie.BETAALD"> Betaald</div>
+                    <div *ngIf="!transactie.BETAALD" class="nietBetaald"> Niet betaald</div>
+                </td>
+            </tr>
+            <tr *ngIf="expandedView">
+                <td><b>Saldo voor:</b> {{transactie.SALDO_VOOR}}</td>
+            </tr>
+            <tr *ngIf="expandedView">
+                <td><b>Strippen:</b> {{transactie.EENHEDEN}}</td>
+            </tr>
+            <tr *ngIf="expandedView">
+                <td><b>Saldo na:</b> {{transactie.SALDO_NA}}</td>
+            </tr>
+        </table>
+    </div>
+</ng-template>
+
+<app-transactie-editor [toonLidSelectie]="false" (TransactieGedaan)="reload()"></app-transactie-editor>
 <app-ideal-bestellen></app-ideal-bestellen>

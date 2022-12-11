@@ -1,1 +1,1 @@
-<div>&euro; {{bedrag | number : '1.2-2'}}</div>
+<div *ngIf="bedrag" [ngClass]="{'betaald': betaald, 'niet_betaald': !betaald}">&euro; {{bedrag | number : '1.2-2'}}</div>

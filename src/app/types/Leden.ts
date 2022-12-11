@@ -90,6 +90,8 @@ export interface paths {
           DDWV_CREW?: boolean;
           /** Wanneer 'true', toon alleen de lieristen */
           LIERISTEN?: boolean;
+          /** Wanneer 'true', toon alleen de lieristen in opleiding */
+          LIO?: boolean;
           /** Wanneer 'true', toon alleen de startleiders */
           STARTLEIDERS?: boolean;
         };
@@ -345,6 +347,12 @@ export interface components {
        */
       BUDDY_ID?: number;
       /**
+       * Format: int32
+       * @description Buddy van de vlieger, leeftijdsbeleid
+       * @example 1233
+       */
+      BUDDY_ID2?: number;
+      /**
        * @description Mag dit lid lieren?
        * @example false
        */
@@ -536,6 +544,11 @@ export interface components {
        * @example Mr Broekhuis
        */
       BUDDY?: string;
+      /**
+       * @description Naam van de buddy
+       * @example Mevr Bonensteek
+       */
+      BUDDY2?: string;
     };
     view_leden: {
       /**

@@ -24,6 +24,7 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
     aanwezig: HeliosAanwezigLedenDataset;
+    eenheden: number | undefined;
 
     isDDWVer: boolean = false;
     isLoading: boolean = false;
@@ -37,6 +38,7 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
 
     private vliegtuigenAbonnement: Subscription;
     vliegtuigen: HeliosVliegtuigenDataset[] = [];
+    vliegtuigenFiltered: HeliosVliegtuigenDataset[] = [];
 
     constructor(private readonly aanwezigLedenService: AanwezigLedenService,
                 private readonly vliegtuigenService: VliegtuigenService,
@@ -76,13 +78,20 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
         if (this.vliegtuigenAbonnement) this.vliegtuigenAbonnement.unsubscribe();
     }
 
-    // open popup, maar haal eerst de start op. De eerder ingevoerde tijd wordt als default waarde gebruikt
-    // indien niet eerder ingvuld, dan de huidige tijd. Buiten de daglicht periode is het veld leeg
-    openPopup(record: HeliosAanwezigLedenDataset) {
+    // open popup, maar haal eerst de aanwezigheid op.
+    openPopup(record: HeliosAanwezigLedenDataset, strippen: number | undefined = undefined) {
         const ui = this.loginService.userInfo;
         this.isDDWVer = ui!.Userinfo!.isDDWV!;
 
         this.aanwezig = record;
+        this.eenheden = strippen;
+
+        if (this.isDDWVer) {
+            this.vliegtuigenFiltered = this.vliegtuigen.filter((v) => v.CLUBKIST == false);
+        }
+        else {
+            this.vliegtuigenFiltered = this.vliegtuigen;
+        }
 
         // Ophalen uit de database, er kan iets veranderd zijn. Alleen als we bestaand record aanpassen
         if (record.ID) {

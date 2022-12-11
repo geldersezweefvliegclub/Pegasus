@@ -18,6 +18,28 @@
   z-index: 2;
 }
 
+.dagInRooster {
+  position: relative;
+
+  .stripDagview {
+    top: -50px !important;
+    right: 90px !important;
+  }
+
+  .strip {
+    position: absolute;
+    top: -8px;
+
+    .stripTxt {
+      z-index: 3;
+      top: 3px;
+      position: absolute;
+      width: 30px;
+      text-align: center;
+      color: white;
+    }
+  }
+}
 
 .aanwezigenLijst {
   vertical-align: top;
@@ -34,6 +56,10 @@
   font-size: smaller;
   color: red;
 
+}
+
+.dagHeader {
+  background-color: #ececec;
 }
 
 .gastenHeader {
@@ -69,8 +95,7 @@
   margin-top: 4px;
 }
 
-.barometer-rood
-{
+.barometer-rood {
   background-color: #dc3545;
 }
 
@@ -80,4 +105,22 @@
 
 .barometer-groen {
   background-color: #28a745;
+}
+
+.stripImg {
+  position: relative;
+  width: 30px;
+}
+
+.DDWVtegoed {
+  cursor: pointer;
+  position: relative;
+  float: right;
+  margin-top: -70px;
+  padding: 10px 10px 10px 10px;
+
+  background-color: #28a745;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
 }

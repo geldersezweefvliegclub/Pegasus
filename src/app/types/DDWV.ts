@@ -31,7 +31,7 @@ export interface components {
       /** Format: int32 */
       STRIPPEN_RETOUR_OP_VLIEGDAG?: number;
       /** @description De dataset met records */
-      TARIEVEN?: components["schemas"]["ddwv_tarieven"][];
+      TARIEVEN?: { [key: string]: components["schemas"]["ddwv_tarieven"] };
     };
     ddwv_tarieven: {
       /**
@@ -40,7 +40,7 @@ export interface components {
        */
       TIJDSTIP?: string;
       /**
-       * @description Aantal strippen die afgeschrev worden
+       * @description Aantal strippen die afgeschreven worden
        * @example 8
        */
       EENHEDEN?: number;
