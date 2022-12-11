@@ -15,6 +15,8 @@ import {TransactieEditorComponent} from "../../../shared/components/editors/tran
 import * as xlsx from "xlsx";
 import {LoginService} from "../../../services/apiservice/login.service";
 import {LedenService} from "../../../services/apiservice/leden.service";
+import {OmschrijvingRenderComponent} from "./omschrijving-render/omschrijving-render.component";
+import {CheckboxRenderComponent} from "../../../shared/components/datatable/checkbox-render/checkbox-render.component";
 
 @Component({
     selector: 'app-transacties-grid',
@@ -36,18 +38,63 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
 
     columns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
-        {field: 'NAAM', headerName: 'Naam', sortable: true},
-        {field: 'DATUM', headerName: 'Datum', sortable: true, cellRenderer: 'datumtijdRender'},
-        {field: 'OMSCHRIJVING', headerName: 'Omschrijving', sortable: true},
-        {field: 'BEDRAG', headerName: 'Bedrag', sortable: false, cellRenderer: 'bedragRender', comparator: nummerSort},
-        {field: 'SALDO_VOOR', headerName: 'Saldo voor', sortable: true, comparator: nummerSort},
-        {field: 'EENHEDEN', headerName: 'Strippen', sortable: true, comparator: nummerSort},
-        {field: 'SALDO_NA', headerName: 'Saldo na', sortable: true, comparator: nummerSort},
-        {field: 'INGEVOERD', headerName: 'Ingevoerd door', sortable: true},
+        {
+            field: 'NAAM',
+            headerName: 'Naam',
+            width: 150,
+            sortable: true},
+        {
+            field: 'DATUM',
+            headerName: 'Datum',
+            sortable: true,
+            width: 150,
+            cellRenderer: 'datumtijdRender'},
+        {field: 'OMSCHRIJVING', headerName: 'Omschrijving', sortable: true,  flex:10, cellRenderer: 'omschrijvingRender'},
+        {
+            field: 'BEDRAG',
+            headerName: 'Bedrag',
+            width: 100,
+            resizable: false,
+            sortable: false,
+            cellRenderer: 'bedragRender',
+            comparator: nummerSort},
+        {
+            field: 'EXT_REF',
+            headerName: 'Referentie',
+            width: 120,
+            sortable: false},
+        {
+            field: 'SALDO_VOOR',
+            headerName: 'Saldo voor',
+            width: 100,
+            resizable: false,
+            sortable: true,
+            comparator: nummerSort},
+        {
+            field: 'EENHEDEN',
+            headerName: 'Strippen',
+            width: 100,
+            resizable: false,
+            sortable: true,
+            comparator: nummerSort},
+        {
+            field: 'SALDO_NA',
+            headerName: 'Saldo na',
+            width: 100,
+            resizable: false,
+            sortable: true,
+            comparator: nummerSort},
+        {
+            field: 'INGEVOERD',
+            headerName: 'Ingevoerd door',
+            width: 150,
+            sortable: true},
     ];
 
     frameworkComponents = {
+        checkboxRender: CheckboxRenderComponent,
         bedragRender: BedragRenderComponent,
+        omschrijvingRender: OmschrijvingRenderComponent,
         datumtijdRender: DatumtijdRenderComponent
     };
 
@@ -189,7 +236,7 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
 
     // Openen van editor
     addTransactie() {
-        this.editor.openPopup(undefined)
+        this.editor.openPopup(this.lidID)
     }
 
     // export de huidige dataset naar excel

@@ -1,9 +1,10 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
 import {ModalComponent} from "../../modal/modal.component";
 import {TracksLedenDataset} from "../../tracks/tracks.component";
 import {HeliosTrack, HeliosType} from "../../../../types/Helios";
 import {TypesService} from "../../../../services/apiservice/types.service";
+import {ExpressionType} from "@angular/compiler";
 
 @Component({
     selector: 'app-type-editor',
@@ -11,6 +12,8 @@ import {TypesService} from "../../../../services/apiservice/types.service";
     styleUrls: ['./type-editor.component.scss']
 })
 export class TypeEditorComponent  {
+    @Input() toonBedragEenheid: boolean = false;
+
     @ViewChild(ModalComponent) private popup: ModalComponent;
     formTitel: string;
 
@@ -118,7 +121,21 @@ export class TypeEditorComponent  {
 
     // bestaande type is aangepast. Opslaan van het type
     Aanpassen(type: HeliosType) {
-        this.typesService.updateType(type).then(() => {
+        let t:HeliosType;
+
+        if (!this.type.READ_ONLY) {
+            t = type;
+        }
+        else {
+            t = {
+                ID: type.ID,
+                EXT_REF: type.EXT_REF,
+                BEDRAG: type.BEDRAG,
+                EENHEDEN: type.EENHEDEN,
+
+            }
+        }
+        this.typesService.updateType(t).then(() => {
             this.success = {
                 titel: "Type",
                 beschrijving: "Item is gewijzigd"

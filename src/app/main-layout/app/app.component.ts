@@ -22,7 +22,7 @@ export class AppComponent {
                 private readonly sharedService: SharedService,
                 private readonly updates: SwUpdate) {
 
-        updates.available.subscribe(() => this.updateAvailable = true);
+        updates.versionUpdates.subscribe(() => this.updateAvailable = true);
         router.events.subscribe((val) => {
             if (val instanceof NavigationEnd) {
                 this.navigeerNaarLogin();

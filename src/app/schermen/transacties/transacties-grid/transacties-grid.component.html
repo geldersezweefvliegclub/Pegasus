@@ -13,6 +13,7 @@
                     [rowData]="transacties"
                     [columnDefs]="columns"
                     [loading]="isLoading"
+                    [sizeToFit]="false"
                     [frameworkComponents]="frameworkComponents"
                     class="h-100 mt-n8"></app-datatable>
         </div>
@@ -26,13 +27,16 @@
                 </div>
             </div>
             <div class="col-3">
-                <app-lid-invoer id="LID"
+                <app-lid-invoer id="LID" class="w-100"
                                 placeholder="Selecteer lid"
                                 excludeLidTypes="600,607,609,610,612,613,625"
-                                [required]=true
                                 [leden]="filteredLeden"
                                 (LidChanged)="lidGeselecteerd($event)">
                 </app-lid-invoer>
+            </div>
+            <div class="col-1">
+                <app-icon-button class="toolbarBtn" iconNaam="fas Redo" (btnClicked)="opvragen()"
+                                 btnColor="btn-primary"></app-icon-button>
             </div>
         </div>
     </div>

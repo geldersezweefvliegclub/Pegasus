@@ -38,7 +38,7 @@
 
             <app-vliegtuig-invoer id="VLIEGTUIG"
                                   [VLIEGTUIG_ID]="aanwezig.OVERLAND_VLIEGTUIG_ID"
-                                  [vliegtuigen]="vliegtuigen"
+                                  [vliegtuigen]="vliegtuigenFiltered"
                                   (VliegtuigChanged)="aanwezig.OVERLAND_VLIEGTUIG_ID = $event"
                                   label="Overland"
                                   verplicht="false"
@@ -52,11 +52,15 @@
             </div>
         </fieldset>
     </div>
-    <div footer>
-        <app-icon-button *ngIf="!isLoading && !isSaving" iconNaam="fas Edit" btnColor="btn-primary" [toonKlein]=false
-                         tekst="Opslaan" (btnClicked)="opslaan()" [disabled]="knopUit()"></app-icon-button>
-        <button class="btn btn-primary" *ngIf="isLoading || isSaving">
-            <span><app-loader></app-loader></span>
-        </button>
+    <div footer class="w-100">
+        <div class="d-flex justify-content-between">
+            <div *ngIf="eenheden">Er worden {{eenheden}} strippen afgeschreven</div>
+            <div *ngIf="!eenheden">&nbsp;</div> <!-- zet de opslaan knop op rechts -->
+            <app-icon-button *ngIf="!isLoading && !isSaving" iconNaam="fas Edit" btnColor="btn-primary" [toonKlein]=false
+                             tekst="Opslaan" (btnClicked)="opslaan()" [disabled]="knopUit()"></app-icon-button>
+            <button class="btn btn-primary" *ngIf="isLoading || isSaving">
+                <span><app-loader></app-loader></span>
+            </button>
+        </div>
     </div>
 </app-modal>

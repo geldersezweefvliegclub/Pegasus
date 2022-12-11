@@ -25,6 +25,7 @@ import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {faCalendarCheck, faSortAmountDownAlt, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
 import {DateTime} from "luxon";
 import {SharedService} from "../../../services/shared/shared.service";
+import {DdwvService} from "../../../services/apiservice/ddwv.service";
 
 
 @Component({
@@ -55,10 +56,12 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
     isCIMT: boolean;
     isDDWVCrew: boolean;
     magWijzigen: boolean = false;
+    ddwvActief: boolean = true;
 
     opslaanTimer: number;                           // kleine vertraging om starts opslaan te beperken
 
-    constructor(private readonly loginService: LoginService,
+    constructor(private readonly ddwvService: DdwvService,
+                private readonly loginService: LoginService,
                 private readonly typesService: TypesService,
                 private readonly sharedService: SharedService,
                 private readonly roosterService: RoosterService,
@@ -82,6 +85,8 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
                 return t.GROEP == 18
             });    // type diensten
         });
+
+        this.ddwvActief = this.ddwvService.actief();
     }
 
     ngOnDestroy(): void {

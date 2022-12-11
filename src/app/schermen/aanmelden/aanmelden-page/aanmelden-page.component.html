@@ -2,7 +2,21 @@
                   subtitel="Aanmelden voor de vliegdag"
                   [icon]="aanmeldenIcon">
     <div class="h-100">
-        <div class="box">
+        <div class="DDWVtegoed d-flex flex-column" (click)="toonTransacties()" *ngIf="saldoTonen && lid">
+            <div style="font-size: x-small">
+                Tegoed
+            </div>
+            <div class="d-flex align-items-end justify-content-end">
+                {{lid.TEGOED}}&nbsp;
+                <div style="font-size: x-small;  margin-bottom: 2px;">
+                    strippen
+                </div>
+            </div>
+        </div>
+        <div class="box" *ngIf="!isLoadingAanwezig &&
+                                !isLoadingRooster &&
+                                !isLoadingGasten &&
+                                !isLoadingDiensten">
             <div id="data" class="data">
                 <div class="dataContent w-100 h-100" *ngIf="aanmeldenView === 'week'">
                     <ng-template *ngTemplateOutlet="week"></ng-template>
@@ -16,7 +30,7 @@
 </app-pegasus-card>
 
 
-<div class="spinnerOverlay" *ngIf="isLoading">
+<div class="spinnerOverlay" *ngIf="isLoadingAanwezig || isLoadingRooster || isLoadingGasten || isLoadingDiensten">
     <div class="spinnerPosition">
         <span><img src="../../../../assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Data wordt geladen .....</span>
     </div>
@@ -65,6 +79,11 @@
                              [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
                             {{DagVanDeWeek(dagInRooster.DATUM)}}
                             <div class="me-2" style="white-space: nowrap;">{{datumDMY(dagInRooster.DATUM)}}</div>
+
+                            <div *ngIf="dagInRooster.EENHEDEN > 0" class="strip d-flex justify-content-end w-100">
+                                <img src="assets/img/strip.png" class="stripImg"/>
+                                <div class="stripTxt">{{dagInRooster.EENHEDEN}}</div>
+                            </div>
                         </div>
                         <div *ngIf="magTonen(dagInRooster.DATUM)">
                             <div *ngIf="dagInRooster.CLUB_BEDRIJF" class="me-2">Clubbedrijf</div>
@@ -155,6 +174,7 @@
                         </div>
                     </td>
                 </tr>
+
                 <!-- sectie met gasten lijst -->
                 <tr *ngIf="toonGasten && !isDDWVer" class="gastenHeader">
                     <td *ngFor="let dagInRooster of rooster;let r = index">
@@ -192,8 +212,8 @@
 <!-- template voor dag view -->
 <ng-template #dag>
     <div class="dataContent" *ngIf="rooster">
-        <div class="d-flex flex-row justify-content-between">
-            <div>
+        <div class="d-flex flex-row justify-content-between dagHeader ps-1 pe-1">
+            <div class="d-flex align-items-center">
                 <app-icon-button
                         class="toolbarBtn"
                         iconNaam="fas AngleDoubleLeft" (btnClicked)="zetDatum(datum.plus({days: -7}))"
@@ -204,15 +224,22 @@
                         btnColor="btn-secondary"></app-icon-button>
             </div>
             {{DagVanDeWeek(datum.toISODate())}} <br>{{datum.day}}-{{datum.month}}-{{datum.year}}
-            <div>
+            <div class="d-flex align-items-center">
                 <app-icon-button
-                        class="toolbarBtn mx-2"
+                        class="toolbarBtn"
                         iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum.plus({days: 1}))"
                         btnColor="btn-secondary"></app-icon-button>
                 <app-icon-button
-                        class="toolbarBtn"
+                        class="toolbarBtn ms-2"
                         iconNaam="fas AngleDoubleRight" (btnClicked)="zetDatum(datum.plus({days: 7}))"
                         btnColor="btn-secondary"></app-icon-button>
+            </div>
+        </div>
+
+        <div class="dagInRooster d-flex w-100 justify-content-end" *ngIf="rooster.length > 0 && rooster[0].EENHEDEN > 0">
+            <div class="strip stripDagview">
+                <img src="assets/img/strip.png" class="stripImg"/>
+                <div class="stripTxt">{{rooster[0].EENHEDEN}}</div>
             </div>
         </div>
 
@@ -342,3 +369,5 @@
 
 <app-lid-aanwezig-editor></app-lid-aanwezig-editor>
 <app-gast-editor (refresh)="opvragen()"></app-gast-editor>
+
+<app-transacties (TransactieGedaan)="opvragenLid()"></app-transacties>

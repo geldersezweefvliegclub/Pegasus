@@ -340,14 +340,24 @@
                             </select>
                         </div>
                         <div class="col-7 mt-7">
-                            <app-lid-invoer id="BUDDY"
-                                            placeholder="Selecteer buddy"
-                                            label="Buddy"
-                                            [LID_ID]="lid.BUDDY_ID"
-                                            [disabled]="isDisabled('BUDDY')"
-                                            [leden]="instructeurs"
-                                            (LidChanged)="lid.BUDDY_ID = $event"
-                            ></app-lid-invoer>
+                            <div>
+                                <app-lid-invoer id="BUDDY"
+                                                placeholder="Selecteer buddy"
+                                                label="Buddy"
+                                                [LID_ID]="lid.BUDDY_ID"
+                                                [disabled]="isDisabled('BUDDY')"
+                                                [leden]="instructeurs"
+                                                (LidChanged)="lid.BUDDY_ID = $event"
+                                ></app-lid-invoer>
+                                <div class="mt-2"></div>
+                                <app-lid-invoer id="BUDDY2"
+                                                placeholder="Selecteer buddy"
+                                                [LID_ID]="lid.BUDDY_ID2"
+                                                [disabled]="isDisabled('BUDDY')"
+                                                [leden]="instructeurs"
+                                                (LidChanged)="lid.BUDDY_ID2 = $event"
+                                ></app-lid-invoer>
+                            </div>
                         </div>
                     </div>
                     <hr>

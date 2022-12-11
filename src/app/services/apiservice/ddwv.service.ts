@@ -3,6 +3,7 @@ import {SharedService} from "../shared/shared.service";
 import {APIService} from "./api.service";
 import {HeliosConfigDDWV} from "../../types/Helios";
 import {StorageService} from "../storage/storage.service";
+import {DateTime, Interval} from "luxon";
 
 @Injectable({
     providedIn: 'root'
@@ -35,5 +36,26 @@ export class DdwvService {
         if (!this.configDDWV.MAX_STRIPPEN)  return false;
 
         return ((!strippen) || (strippen < this.configDDWV.MAX_STRIPPEN)) ? true : false;
+    }
+
+    public getTransactieTypeID(datum: DateTime): number {
+        const nu:  DateTime = DateTime.now();
+
+        if (nu.startOf('day') > datum.startOf('day')) {
+
+            return -1;
+        }
+        const diff = Interval.fromDateTimes(nu.startOf('day'), datum.startOf('day'));
+
+        let dagen = diff.length("days");
+        if ((dagen == 1) && (nu.hour > 21)) {
+            dagen--;
+        }
+
+        if (!this.configDDWV)  return -1;
+        if (!this.configDDWV.TARIEVEN)  return -1;
+
+        const typeID = (this.configDDWV.TARIEVEN[dagen]) ? this.configDDWV.TARIEVEN[dagen] : this.configDDWV.TARIEVEN['default']
+        return +typeID;
     }
 }

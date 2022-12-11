@@ -25,6 +25,7 @@ export class TypesPageComponent implements OnInit, OnDestroy {
     types: HeliosType[];
     filteredTypes: HeliosType[];
     groepen: HeliosTypesGroep[];
+    bedragEenheidActief: boolean = false;
 
     toonGroep: number;
 
@@ -69,6 +70,12 @@ export class TypesPageComponent implements OnInit, OnDestroy {
 
     filterGroep(toongroep: Number) {
         this.toonGroep = toongroep as number;
+
+        if (this.groepen) {
+            const groep = this.groepen.find((g) => g.ID == toongroep);
+            this.bedragEenheidActief = groep!.BEDRAG_EENHEDEN!;
+        }
+
         this.filteredTypes = this.types.filter((t: HeliosType) => { return t.GROEP == this.toonGroep  });
         this.filteredTypes.sort(function(a, b) {
             return a.SORTEER_VOLGORDE! - b.SORTEER_VOLGORDE!;

@@ -24,11 +24,12 @@
                                 {{t.OMSCHRIJVING}}
                             </div>
                             <div class="d-flex">
-                                <div class="ms-2">
-                                    {{t.EENHEDEN}}
+                                <div class="ms-2 justify-content-end" >
+                                    {{t.EENHEDEN | number : '1.2-2'}}
                                 </div>
-                                <div  class="ms-2" *ngIf="t.BEDRAG">
-                                    &euro; {{t.BEDRAG}}
+                                <div  class="ms-3 d-flex justify-content-between" *ngIf="t.BEDRAG" style="min-width: 60px; max-width: 60px">
+                                    <div>&euro;</div>
+                                    <div>{{t.BEDRAG | number : '1.2-2'}}</div>
                                 </div>
                             </div>
                         </div>
@@ -77,4 +78,4 @@
 
 </app-pegasus-card>
 
-<app-type-editor></app-type-editor>
+<app-type-editor [toonBedragEenheid]="bedragEenheidActief"></app-type-editor>

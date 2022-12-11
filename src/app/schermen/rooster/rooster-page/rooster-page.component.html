@@ -44,7 +44,6 @@
             <div class="row justify-content-start mt-2" id="toolbar">
                 <div class="d-flex row">
                     <div class="col-xl-4 col-sm-5">
-
                         <app-icon-button *ngIf="magWijzigen"
                                          class="toolbarBtn"
                                          tekst="Filter"
@@ -53,10 +52,9 @@
 
                         <app-icon-button *ngIf="!isDDWVer && roosterView != 'dag'"
                                          class="toolbarBtn"
-                                         tekst="Club / DDWV"
+                                         [tekst]="ddwvActief ? 'Club / DDWV' : 'Club / Alles'"
                                          iconNaam="fas CalendarWeek" (btnClicked)="ToggleWeekendDDWV()"
                                          btnColor="btn-primary"></app-icon-button>
-
                     </div>
                     <div class="col-xl-8 col-sm-7">
                         <div class="d-flex align-items-end text-nowrap" id="zoekbar" *ngIf="magWijzigen && roosterView == 'maand'">

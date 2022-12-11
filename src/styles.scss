@@ -11,7 +11,9 @@
 @import "~bootstrap-icons/font/bootstrap-icons.css";
 
 html {
+  height: 100%;
   min-height: 100%;
+  max-height: 100%;
   width: 100%;
 }
 
@@ -302,6 +304,8 @@ body > .popupLarge > div {
 body > .popupMedium > div {
   max-width: 70%;
 }
+
+
 
 
 // recency grafiek, progress bar

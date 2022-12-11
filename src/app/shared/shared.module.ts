@@ -191,7 +191,8 @@ import { DatumtijdRenderComponent } from './components/datatable/datumtijd-rende
         CompetentieEditorComponent,
         GastEditorComponent,
         TransactieEditorComponent,
-        LidInvoerComponent
+        LidInvoerComponent,
+        TransactiesComponent
     ],
     providers: [],
     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

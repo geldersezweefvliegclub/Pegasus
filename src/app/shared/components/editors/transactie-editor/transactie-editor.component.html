@@ -7,7 +7,7 @@
         <app-lid-invoer id="LID" *ngIf="toonLidSelectie"
                         placeholder="Selecteer lid"
                         label="Lid"
-                        [LID_ID]="lidID"
+                        [LID_ID]="nieuweTransactie.LID_ID"
                         excludeLidTypes="600,607,609,610,612,613,625"
                         [required] = true
                         [leden]="leden"
@@ -16,34 +16,55 @@
 
         <fieldset>
             <div class="row">
+                <div class="col-12">
+                    <label for="TYPE_ID" class="form-label">Type</label>
+                    <select class="form-select" required name="TYPE_ID" id="TYPE_ID"
+                            [(ngModel)]="nieuweTransactie.TYPE_ID" (change)="typeAangepast()"
+                            >
+                        <option *ngFor="let tType of transactieTypes"
+                                [value]="tType.ID">{{tType.OMSCHRIJVING}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mt-3">
                 <div class="col-12 col-md-6">
                     <label for="EENHEDEN" class="form-label">Strippen</label>
                     <input name="callsign" type="number" class="form-control" id="EENHEDEN"
-                           [required]="!EENHEDEN && !BEDRAG"
-                           [(ngModel)]="EENHEDEN">
+                           [required]="!nieuweTransactie.EENHEDEN && !nieuweTransactie.BEDRAG"
+                           [(ngModel)]="nieuweTransactie.EENHEDEN">
                 </div>
                 <div class="col-12 col-md-6">
                     <label for="BEDRAG" class="form-label">Bedrag</label>
                     <input name="BEDRAG" type="number" class="form-control" id="BEDRAG"
-                           [required]="!EENHEDEN && !BEDRAG"
-                           [(ngModel)]="BEDRAG">
+                           [required]="!nieuweTransactie.EENHEDEN && !nieuweTransactie.BEDRAG"
+                           [(ngModel)]="nieuweTransactie.BEDRAG">
                 </div>
             </div>
             <div class="row mt-3">
                 <div class="col-12">
                     <label for="OMSCHRIJVING" class="form-label">Omschijving</label>
-                    <input [(ngModel)]="OMSCHRIJVING" name="OMSCHRIJVING" id="OMSCHRIJVING"
+                    <input [(ngModel)]="nieuweTransactie.OMSCHRIJVING" name="OMSCHRIJVING" id="OMSCHRIJVING"
                               class="form-control w-100" required>
                 </div>
             </div>
         </fieldset>
     </div>
 
-    <div footer class="w-100">
+    <div footer class="w-100 d-flex justify-content-between">
+        <app-icon-button
+                iconNaam="fas SquareXmark" btnColor="btn-secondary"
+                tekst="Leeg"
+                (btnClicked)="nieuweTransactie = {}">
+        </app-icon-button>
+
         <app-icon-button
                 iconNaam="fas Plus" btnColor="btn-primary"
                 tekst="Opslaan"
-                [disabled]="(!EENHEDEN && !BEDRAG) || !OMSCHRIJVING || !lidID"
+                [disabled]="(!nieuweTransactie.EENHEDEN && !nieuweTransactie.BEDRAG) ||
+                                    !nieuweTransactie.OMSCHRIJVING ||
+                                    !nieuweTransactie.LID_ID ||
+                                    !nieuweTransactie.TYPE_ID"
                 [toonKlein]="false"
                 (btnClicked)="opslaan()">
         </app-icon-button>

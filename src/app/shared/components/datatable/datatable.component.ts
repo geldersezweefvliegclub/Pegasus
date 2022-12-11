@@ -25,12 +25,14 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     @Input() id: string;
     @Input() loading: boolean = false;
     @Input() sizeToFit: boolean = true;
+    @Input() autoSizeColumns: boolean = false;
     @Input() autoHeight: boolean = false;
     @Input() rowHeight: number = 40;
     @Input() pagination: boolean = true;
     @Input() rowClassRules: any = null;
     @Output() rowDoubleClicked: EventEmitter<RowDoubleClickedEvent> = new EventEmitter<RowDoubleClickedEvent>();
     @Output() rowSelected: EventEmitter<RowSelectedEvent> = new EventEmitter<RowSelectedEvent>();
+
 
     options: GridOptions = {
         rowHeight: 40,
@@ -39,7 +41,11 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         rowSelection: 'single',
         pagination: true,
         onRowDoubleClicked: this.onRowDoubleClicked.bind(this),
-        onRowClicked: this.onRowSelected.bind(this)
+        onRowClicked: this.onRowSelected.bind(this),
+        defaultColDef: {
+            resizable: true,
+            flex: 1
+        }
     };
 
     defaultColDef: ColDef = {
@@ -117,22 +123,19 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         this.api!.setColumnDefs(this.columnDefs);
         this.api!.sizeColumnsToFit()
 
-        // automatisch column aanpassen bij wijzigen window size
-        if (this.sizeToFit) {
-            window.onresize = () => {
-                if (this.api) {
-                    this.api.sizeColumnsToFit();
-                }
-            }
-        }
         this.columnStateTimer = window.setInterval(() => {
-            this.api!.sizeColumnsToFit()
+            this.sizeColumnsToFit()
         }, 5000)
     }
 
     sizeColumnsToFit() {
         if (this.api) {
-            this.api.sizeColumnsToFit();
+            if (this.sizeToFit) {
+                this.api.sizeColumnsToFit();
+            }
+            if (this.autoSizeColumns) {
+                this.options!.columnApi!.autoSizeAllColumns(false);
+            }
         }
     }
 
