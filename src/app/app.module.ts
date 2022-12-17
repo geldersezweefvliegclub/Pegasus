@@ -35,6 +35,7 @@ export function initializeApp(appConfigService: PegasusConfigService) {
         BrowserModule,
         BrowserAnimationsModule,
         RoutingModule,
+
         FormsModule,
         SharedModule,
         ReactiveFormsModule,
@@ -42,7 +43,6 @@ export function initializeApp(appConfigService: PegasusConfigService) {
         LazyLoadImageModule,
         NgbModule,
         HttpClientModule,
-        TreeviewModule.forRoot(),
         ExtendedModule,
         ServiceWorkerModule.register('ngsw-worker.js', {
           enabled: environment.production,

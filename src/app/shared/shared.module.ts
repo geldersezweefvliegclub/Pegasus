@@ -85,6 +85,7 @@ import { DatumtijdRenderComponent } from './components/datatable/datumtijd-rende
         NgbPopoverModule,
         NgbProgressbarModule,
         TreeviewModule,
+        TreeviewModule.forRoot(),
         ImageCropperModule,
         RouterModule,
         DragDropModule,
