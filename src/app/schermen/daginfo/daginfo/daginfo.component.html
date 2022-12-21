@@ -4,226 +4,241 @@
 <app-pegasus-card titel="Dag info"
                   subtitel="Informatie over de vliegdag {{datum.day}}-{{datum.month}}-{{datum.year}}"
                   [icon]="iconCardIcon">
-    <div class="tekstregels">
-        <label for="TEKSTREGELS" class="form-label">Aantal tekstregels</label>
-        <input name="tekstregels" class="form-control" id="TEKSTREGELS" type="number"
-               [(ngModel)]="tekstRegels"
-               (ngModelChange)="storeTextRegels()"
-               min="1" max="15"
-        >
-    </div>
 
-    <div class="midden" *ngIf="geenToegang">
-        <object data="/src/assets/img/geen_toegang.svg" type="image/svg+xml" class="svgImage"></object>
-    </div>
+    <div class="d-flex flex-column justify-content-between box h-100">
+        <div class="content">
+            <div class="mb-2">
+                <div class="row mt-n8 rowDagInfo1">
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <app-pegasus-card id="veldCard"
+                                          class="kleineKaart"
+                                          titel="Vliegveld 1"
+                                          subtitel="Onze thuis basis"
+                                          [icon]="iconVliegveld">
+                            <div class="d-flex flex-row mb-2">
+                                <div class="col-7 ">
+                                    <label for="VELD" class="form-label">Vliegveld</label>
+                                    <ng-select id="VELD"
+                                               required
+                                               [items]="veldTypes$ | async"
+                                               placeholder="Vliegveld waar we starten"
+                                               bindLabel="OMSCHRIJVING"
+                                               bindValue="ID"
+                                               closeOnSelect="true"
+                                               openOnEnter="true"
+                                               [(ngModel)]="dagInfo.VELD_ID">
+                                    </ng-select>
 
-    <div class="d-flex flex-column justify-content-between box h-100" *ngIf="!geenToegang">
-        <div class="mb-2">
-            <div class="row mt-n8 rowDagInfo1">
-                <div class="col-12 col-sm-6 col-md-3">
-                    <app-pegasus-card id="veldCard"
-                                      class="kleineKaart"
-                                      titel="Vliegveld"
-                                      subtitel="Waar we vliegen"
-                                      [icon]="iconVliegveld">
-                        <div class="d-flex flex-row">
-                            <div class="col-7 ">
-                                <label for="VELD" class="form-label">Vliegveld</label>
-                                <ng-select id="VELD"
-                                           required
-                                           [items]="veldTypes$ | async"
-                                           placeholder="Vliegveld waar we starten"
-                                           bindLabel="OMSCHRIJVING"
-                                           bindValue="ID"
-                                           closeOnSelect="true"
-                                           openOnEnter="true"
-                                           [(ngModel)]="dagInfo.VELD_ID">
-                                </ng-select>
-
+                                </div>
+                                <div class="col-5 ms-2">
+                                    <label for="Baan" class="form-label">Strip</label>
+                                    <ng-select id="BAAN"
+                                               [items]="baanTypes$ | async"
+                                               placeholder="Strip"
+                                               bindLabel="OMSCHRIJVING"
+                                               bindValue="ID"
+                                               closeOnSelect="true"
+                                               openOnEnter="true"
+                                               [(ngModel)]="dagInfo.BAAN_ID">
+                                    </ng-select>
+                                </div>
                             </div>
-                            <div class="col-5 ms-2">
-                                <label for="Baan" class="form-label">Strip</label>
-                                <ng-select id="BAAN"
-                                           [items]="baanTypes$ | async"
-                                           placeholder="Strip"
-                                           bindLabel="OMSCHRIJVING"
-                                           bindValue="ID"
-                                           closeOnSelect="true"
-                                           openOnEnter="true"
-                                           [(ngModel)]="dagInfo.BAAN_ID">
-                                </ng-select>
-                            </div>
-                        </div>
-                    </app-pegasus-card>
-                </div>
-                <div class="col-12 col-sm-6 col-md-3 mt-4 mt-sm-0">
-                    <app-pegasus-card id="defaultCard"
-                                      class="kleineKaart"
-                                      titel="Standaard"
-                                      subtitel="Start gegevens"
-                                      [icon]="iconDefault">
+                            <label for="STARTMETHODE" class="form-label">Start methode</label>
+                            <ng-select id="STARTMETHODE"
+                                       required
+                                       [items]="startMethodeTypes$ | async"
+                                       placeholder="Standaard start methode"
+                                       bindLabel="OMSCHRIJVING"
+                                       bindValue="ID"
+                                       closeOnSelect="true"
+                                       openOnEnter="true"
+                                       [(ngModel)]="dagInfo.STARTMETHODE_ID">
+                            </ng-select>
+                            <div class="mt-2 d-flex flex-row justify-content-between">
+                                <div>
+                                    <input type="checkbox" id="DDWV" class="form-check-inline"
+                                           [(ngModel)]="dagInfo.DDWV">
+                                    <label for="DDWV" class="form-check-label">DDWV</label>
+                                </div>
 
-                        <label for="STARTMETHODE" class="form-label">Start methode</label>
-                        <ng-select id="STARTMETHODE"
-                                   required
-                                   [items]="startMethodeTypes$ | async"
-                                   placeholder="Standaard start methode"
-                                   bindLabel="OMSCHRIJVING"
-                                   bindValue="ID"
-                                   closeOnSelect="true"
-                                   openOnEnter="true"
-                                   [(ngModel)]="dagInfo.STARTMETHODE_ID">
-                        </ng-select>
-                        <div class="mt-2 d-flex flex-row justify-content-between">
-                            <div>
-                                <input type="checkbox" id="DDWV" class="form-check-inline"
-                                       [(ngModel)]="dagInfo.DDWV">
-                                <label for="DDWV" class="form-check-label">DDWV</label>
+                                <div>
+                                    <input type="checkbox" id="CLUBBEDRIJF" class="form-check-inline"
+                                           [(ngModel)]="dagInfo.CLUB_BEDRIJF">
+                                    <label for="CLUBBEDRIJF" class="form-check-label">Club bedrijf</label>
+                                </div>
                             </div>
+                        </app-pegasus-card>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3 mt-4 mt-sm-0">
+                        <app-pegasus-card id="veldCard2"
+                                          class="kleineKaart"
+                                          titel="Vliegveld 2"
+                                          subtitel="Bedoeld voor buitenland kamp"
+                                          [icon]="iconVliegveld">
+                            <div class="d-flex flex-row mb-2">
+                                <div class="col-7 ">
+                                    <label for="VELD2" class="form-label">Vliegveld</label>
+                                    <ng-select id="VELD2"
+                                               [items]="veldTypes$ | async"
+                                               placeholder="Vliegveld waar we starten"
+                                               bindLabel="OMSCHRIJVING"
+                                               bindValue="ID"
+                                               closeOnSelect="true"
+                                               openOnEnter="true"
+                                               [(ngModel)]="dagInfo.VELD_ID2">
+                                    </ng-select>
 
-                            <div>
-                                <input type="checkbox" id="CLUBBEDRIJF" class="form-check-inline"
-                                       [(ngModel)]="dagInfo.CLUB_BEDRIJF">
-                                <label for="CLUBBEDRIJF" class="form-check-label">Club bedrijf</label>
+                                </div>
+                                <div class="col-5 ms-2">
+                                    <label for="Baan" class="form-label">Strip</label>
+                                    <ng-select id="BAAN2"
+                                               [items]="baanTypes$ | async"
+                                               placeholder="Strip"
+                                               bindLabel="OMSCHRIJVING"
+                                               bindValue="ID"
+                                               closeOnSelect="true"
+                                               openOnEnter="true"
+                                               [(ngModel)]="dagInfo.BAAN_ID2">
+                                    </ng-select>
+                                </div>
                             </div>
-                        </div>
-                    </app-pegasus-card>
-                </div>
-                <div class="col-12 col-md-6 mt-4 mt-md-0">
-                    <app-pegasus-card id="dienstenCard"
-                                      class="kleineKaart"
-                                      titel="Diensten"
-                                      subtitel="Wie zijn aanwezig en wie niet"
-                                      [icon]="iconDiensten">
-                        <div class="d-flex align-items-end">
+                            <label for="STARTMETHODE" class="form-label">Start methode</label>
+                            <ng-select id="STARTMETHODE2"
+                                       [items]="startMethodeTypes$ | async"
+                                       placeholder="Standaard start methode"
+                                       bindLabel="OMSCHRIJVING"
+                                       bindValue="ID"
+                                       closeOnSelect="true"
+                                       openOnEnter="true"
+                                       [(ngModel)]="dagInfo.STARTMETHODE_ID2">
+                            </ng-select>
+                        </app-pegasus-card>
+                    </div>
+                    <div class="col-12 col-md-6 mt-4 mt-md-0">
+                        <app-pegasus-card id="dienstenCard"
+                                          class="kleineKaart"
+                                          titel="Diensten"
+                                          subtitel="Wie zijn aanwezig en wie niet"
+                                          [icon]="iconDiensten">
+                            <div class="d-flex align-items-end">
                         <textarea [(ngModel)]="dagInfo.DIENSTEN" name="DIENSTEN"
                                   class="w-100 text-invoer form-control"
-                                  [rows]="tekstRegels"></textarea>
+                                  rows=4></textarea>
 
-                            <app-icon-button class="ms-2" iconNaam="fas PencilAlt" (btnClicked)="invullenDiensten()"
-                                             btnColor="btn-primary"></app-icon-button>
-                        </div>
-                    </app-pegasus-card>
+                                <app-icon-button class="ms-2" iconNaam="fas PencilAlt" (btnClicked)="invullenDiensten()"
+                                                 btnColor="btn-primary"></app-icon-button>
+                            </div>
+                        </app-pegasus-card>
+                    </div>
                 </div>
             </div>
+            <app-pegasus-card id="rapportenCard"
+                              class="kleineKaart mb-2"
+                              titel="Dag rapporten"
+                              subtitel="Samenvatting van de dag"
+                              [minimum]="true"
+                              [icon]="iconDiensten">
 
-            <div class="row rowDagInfo2" *ngIf="toonUitgebreid">
-                <div class="col-12 col-md-6">
-                    <app-pegasus-card id="meteoCard"
-                                      class="kleineKaart"
-                                      titel="Meteo"
-                                      subtitel="Weersomstandigheden op de vliegdag"
-                                      [icon]="iconMeteo">
+                <table class="w-100">
+                    <tr *ngFor="let dr of dagRapporten" class="drRow" (dblclick)="openEditor(dr)">
+                        <td *ngIf="deleteMode && !trashMode">
+                            <button class="btn btn-noborder" (click)="openVerwijderPopup(dr)"
+                                    *ngIf="magDagRapportVerwijderen(dr)">
+                                <fa-icon [icon]="deleteIcon" class="deleteBtn"></fa-icon>
+                            </button>
+                        </td>
+                        <td *ngIf="deleteMode && trashMode">
+                            <button class="btn btn-noborder" (click)="openRestorePopup(dr)"
+                                    *ngIf="magDagRapportHerstellen(dr)">
+                                <fa-icon [icon]="restoreIcon" class="restoreBtn"></fa-icon>
+                            </button>
+                        </td>
 
-                        <div class="d-flex align-items-end">
-                        <textarea [(ngModel)]="dagInfo.METEO" name="METEO"
-                                  class="w-100 text-invoer form-control"
-                                  [rows]="tekstRegels"></textarea>
+                        <td style="width: 100%;">
+                            <div class="rapportHeader">
+                                Op {{datumString(dr.LAATSTE_AANPASSING)}} om {{tijdString(dr.LAATSTE_AANPASSING)}}
+                                schreef {{dr.INGEVOERD}}
+                            </div>
+                            <div class="tekstbox">
+                                <div *ngIf="dr.VLIEGBEDRIJF && dr.VLIEGBEDRIJF.length > 0">
+                                    <h3>Vliegbedrijf</h3>
+                                    <p>{{dr.VLIEGBEDRIJF}}
+                                    </p>
+                                </div>
+                                <div *ngIf="dr.VERSLAG && dr.VERSLAG.length > 0">
+                                    <h3>Verslag</h3>
+                                    <p>{{dr.VERSLAG}}
+                                    </p>
+                                </div>
+                                <div *ngIf="dr.METEO && dr.METEO.length > 0">
+                                    <h3>Meteo</h3>
+                                    <p>{{dr.METEO}}
+                                    </p>
+                                </div>
+                                <div *ngIf="dr.VLIEGENDMATERIEEL && dr.VLIEGENDMATERIEEL.length > 0">
+                                    <h3>Vliegend materieel</h3>
+                                    <p>{{dr.VLIEGENDMATERIEEL}}
+                                    </p>
+                                </div>
 
-                            <app-icon-button class="ms-2" iconNaam="fas PencilAlt" (btnClicked)="invullenMeteo()"
-                                             btnColor="btn-primary"></app-icon-button>
-                        </div>
-                    </app-pegasus-card>
-                </div>
-                <div class="col-12 col-md-6 mt-4 mt-md-0">
-                    <app-pegasus-card id="bedrijfCard"
-                                      class="kleineKaart"
-                                      titel="Vliegbedrijf"
-                                      subtitel="Operationele starts"
-                                      [icon]="iconBedrijf">
-                        <div class="d-flex align-items-end mb-2">
-                        <textarea [(ngModel)]="dagInfo.VLIEGBEDRIJF" name="VLIEGBEDRIJF"
-                                  class="w-100 text-invoer form-control"
-                                  [rows]="tekstRegels"></textarea>
+                                <div *ngIf="dr.ROLLENDMATERIEEL && dr.ROLLENDMATERIEEL.length > 0">
+                                    <h3>Rollend materieel</h3>
+                                    <p>{{dr.ROLLENDMATERIEEL}}
+                                    </p>
+                                </div>
 
-                            <app-icon-button class="ms-2" iconNaam="fas PencilAlt"
-                                             (btnClicked)="invullenVliegbedrijf()"
-                                             btnColor="btn-primary"></app-icon-button>
-                        </div>
-                    </app-pegasus-card>
-                </div>
-            </div>
-
-            <div class="row rowDagInfo3" *ngIf="toonUitgebreid">
-                <div class="col-12 col-md-6">
-                    <app-pegasus-card id="vliegendCard"
-                                      class="kleineKaart"
-                                      titel="Vliegend"
-                                      subtitel="Bijzonderheden over de vliegtuigen"
-                                      [icon]="iconVliegend">
-
-                        <textarea [(ngModel)]="dagInfo.VLIEGENDMATERIEEL" name="VLIEGENDMATERIEEL"
-                                  class="w-100 text-invoer form-control"
-                                  [rows]="tekstRegels"></textarea>
-                    </app-pegasus-card>
-                </div>
-                <div class="col-12 col-md-6 mt-4 mt-sm-0">
-                    <app-pegasus-card id="rollendCard"
-                                      class="kleineKaart"
-                                      titel="Rollend"
-                                      subtitel="Bijzonderheden over het rollende materieel"
-                                      [icon]="iconRollend">
-
-                        <textarea [(ngModel)]="dagInfo.ROLLENDMATERIEEL" name="ROLLENDMATERIEEL"
-                                  class="w-100 text-invoer form-control"
-                                  [rows]="tekstRegels"></textarea>
-                    </app-pegasus-card>
-                </div>
-            </div>
-
-            <div class="row rowDagInfo4" *ngIf="toonUitgebreid">
-                <div class="col-12 col-sm-6">
-                    <app-pegasus-card id="verslagCard"
-                                      class="kleineKaart"
-                                      titel="Verslag"
-                                      subtitel="Toelichting en bijzonderheden over de vliegdag"
-                                      [icon]="iconVerslag">
-
-                        <textarea [(ngModel)]="dagInfo.VERSLAG" name="VERSLAG"
-                                  class="w-100 text-invoer form-control"
-                                  [rows]="tekstRegels"></textarea>
-                    </app-pegasus-card>
-                </div>
-                <div class="col-12 col-sm-6 mt-4 mt-sm-0">
-                    <app-pegasus-card id="incidentCard"
-                                      class="kleineKaart"
-                                      titel="Incidenten"
-                                      subtitel="Gevaarlijke situaties waar we van kunnen leren"
-                                      [icon]="iconIncident">
-
-                        <textarea [(ngModel)]="dagInfo.INCIDENTEN" name="INCIDENTEN"
-                                  class="w-100 text-invoer form-control"
-                                  [rows]="tekstRegels"></textarea>
-                    </app-pegasus-card>
-                </div>
-            </div>
-
+                                <div *ngIf="dr.INCIDENTEN && dr.INCIDENTEN.length > 0">
+                                    <h3>Incidenten</h3>
+                                    <p>{{dr.INCIDENTEN}}
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </app-pegasus-card>
         </div>
         <div class="row" id="toolbar">
-            <div class="col-6" *ngIf="magToevoegen || toonUitgebreid">
-                <div class="d-flex">
-                    <app-icon-button [disabled]="!magOpslaan()"
-                                     class="toolbarBtn"
-                                     tekst="Opslaan"
-                                     iconNaam="far PlusSquare" (btnClicked)="opslaanDagInfo()"
-                                     btnColor="btn-primary"></app-icon-button>
-                </div>
-            </div>
+            <div class="col-12">
+                <div class="d-flex justify-content-between">
+                    <div *ngIf="!deleteMode">
+                        <app-icon-button [disabled]="opslaanDisabled()"
+                                         class="toolbarBtn"
+                                         tekst="Opslaan"
+                                         iconNaam="far PlusSquare" (btnClicked)="opslaanDagInfo()"
+                                         btnColor="btn-primary"></app-icon-button>
+                    </div>
+                    <div *ngIf="deleteMode">
+                        <app-status-button
+                                class="toolbarBtn"
+                                tekst="Archief"
+                                [actief]="trashMode"
+                                (btnClicked)="trashModeJaNee($event)"
+                                iconNaam="fas Inbox">
+                        </app-status-button>
+                    </div>
+                    <div class="d-flex">
+                        <app-icon-button class="toolbarBtn me-3"
+                                         tekst="Toevoegen"
+                                         iconNaam="far PlusSquare" (btnClicked)="addDagRapport()"
+                                         btnColor="btn-primary"
+                                         *ngIf="!deleteMode && toonDagRapport"></app-icon-button>
 
-
-            <div class="col-6">
-                <div class="d-flex justify-content-end">
-                    <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
-                                     btnColor="btn-secondary"
-                                     *ngIf="magVerwijderen && dagInfo.ID != undefined"
-                                     (btnClicked)="bevestigVerwijderen()"></app-icon-button>
+                        <div class="d-flex justify-content-end">
+                            <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
+                                             btnColor="btn-secondary"
+                                             *ngIf="toonDagRapport && !deleteMode && dagRapporten && dagRapporten.length > 0"
+                                             (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                            <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
+                                             btnColor="btn btn-outline-primary" *ngIf="deleteMode"
+                                             (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </app-pegasus-card>
 
-
-<app-compose-meteo (opslaan)="dagInfo.METEO = $event"></app-compose-meteo>
-<app-compose-bedrijf (opslaan)="dagInfo.VLIEGBEDRIJF = $event" [datum]="datum"></app-compose-bedrijf>
 <app-dag-rooster (opslaan)="dagInfo.DIENSTEN = $event" [Datum]="datum" [magWijzigen]="true"></app-dag-rooster>
+<app-dag-rapport-editor (aangepast)="opvragen()"></app-dag-rapport-editor>

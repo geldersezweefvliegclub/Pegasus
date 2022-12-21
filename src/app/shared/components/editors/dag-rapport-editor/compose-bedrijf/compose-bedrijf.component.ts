@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {ModalComponent} from '../../../shared/components/modal/modal.component';
+import {ModalComponent} from '../../../modal/modal.component';
 import {Observable, of, Subscription} from 'rxjs';
-import {HeliosType} from '../../../types/Helios';
-import {TypesService} from '../../../services/apiservice/types.service';
+import {HeliosType} from '../../../../../types/Helios';
+import {TypesService} from '../../../../../services/apiservice/types.service';
 import {DateTime} from 'luxon';
 
 @Component({

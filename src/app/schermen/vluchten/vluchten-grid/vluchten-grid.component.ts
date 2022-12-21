@@ -11,8 +11,7 @@ import {
     HeliosDienstenDataset,
     HeliosRoosterDataset,
     HeliosStartDataset,
-    HeliosType,
-    HeliosVliegtuigenDataset
+    HeliosType
 } from '../../../types/Helios';
 import {ErrorMessage, KeyValueArray, SuccessMessage} from '../../../types/Utils';
 import * as xlsx from 'xlsx';

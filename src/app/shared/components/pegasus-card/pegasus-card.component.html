@@ -1,22 +1,22 @@
 <div class="card" [ngClass]="hoogte()" >
-    <div class="admin-up">
+    <div id="ZowLpM" class="admin-up" >
         <div class="d-flex">
-            <div class="icon" [class.bg-primary]="!img">
+            <div id="pREyAD" class="icon" [class.bg-primary]="!img">
                 <fa-icon *ngIf="!img" [icon]="icon"></fa-icon>
                 <app-avatar *ngIf="img" [url]="img" vorm="vierkant">
                     <ng-content select="[avatar]"></ng-content>
                 </app-avatar>
             </div>
-            <div class="data h-100">
+            <div id="DXaDWM" class="data h-100">
                 <h4 class="text-primary"><strong>{{titel}}</strong></h4>
                 <p class="my-0">{{subtitel}}</p>
             </div>
         </div>
-        <div class="excel" *ngIf="hasExportListener && exportEnabled">
+        <div id="nnDsKv" class="excel" *ngIf="hasExportListener && exportEnabled">
             <img class="logo" src="/assets/img/excel-logo.png" alt="excel logo" (click)="this.export()"/>
         </div>
     </div>
-    <div class="card-body h-100">
+    <div id="qCjqJL" class="card-body h-100">
         <ng-content></ng-content>
     </div>
 </div>

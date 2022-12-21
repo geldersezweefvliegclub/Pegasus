@@ -6,27 +6,24 @@ import {SharedService} from '../../../services/shared/shared.service';
 import {DateTime} from 'luxon';
 import {Observable, of, Subscription} from 'rxjs';
 import {ErrorMessage, SuccessMessage} from '../../../types/Utils';
-import {HeliosDagInfo, HeliosDienstenDataset, HeliosRoosterDataset, HeliosType} from '../../../types/Helios';
+import {
+    HeliosDagInfo,
+    HeliosDagRapport,
+    HeliosDagRapportenDataset,
+    HeliosDienstenDataset,
+    HeliosRoosterDataset,
+    HeliosType
+} from '../../../types/Helios';
 import {TypesService} from '../../../services/apiservice/types.service';
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
-import {
-    faCloudSunRain,
-    faFileImport,
-    faFlagCheckered,
-    faFrown,
-    faInfo,
-    faPlane,
-    faTruck,
-    faUsers
-} from '@fortawesome/free-solid-svg-icons';
-import {faArtstation} from '@fortawesome/free-brands-svg-icons';
-import {faPaperPlane} from '@fortawesome/free-solid-svg-icons/faPaperPlane';
-import {ComposeMeteoComponent} from '../compose-meteo/compose-meteo.component';
-import {ComposeBedrijfComponent} from '../compose-bedrijf/compose-bedrijf.component';
+import {faFileImport, faInfo, faMinusCircle, faPlane, faUndo, faUsers} from '@fortawesome/free-solid-svg-icons';
 import {StorageService} from '../../../services/storage/storage.service';
 import {DagRoosterComponent} from "../../../shared/components/dag-rooster/dag-rooster.component";
 import {RoosterService} from "../../../services/apiservice/rooster.service";
 import {DienstenService} from "../../../services/apiservice/diensten.service";
+import {DagRapportenService} from "../../../services/apiservice/dag-rapporten.service";
+import {DagRapportEditorComponent} from "../../../shared/components/editors/dag-rapport-editor/dag-rapport-editor.component";
+import {TracksLedenDataset} from "../../../shared/components/tracks/tracks.component";
 
 @Component({
     selector: 'app-daginfo',
@@ -34,20 +31,15 @@ import {DienstenService} from "../../../services/apiservice/diensten.service";
     styleUrls: ['./daginfo.component.scss']
 })
 export class DaginfoComponent implements OnInit, OnDestroy{
-    @ViewChild(ComposeMeteoComponent) meteoWizard: ComposeMeteoComponent;
-    @ViewChild(ComposeBedrijfComponent) bedrijfWizard: ComposeBedrijfComponent;
     @ViewChild(DagRoosterComponent) dienstenWizard: DagRoosterComponent;
+    @ViewChild(DagRapportEditorComponent) editor: DagRapportEditorComponent;
 
     iconCardIcon: IconDefinition = faInfo;
-    iconBedrijf: IconDefinition = faArtstation;
     iconVliegveld: IconDefinition = faPlane;
     iconDiensten: IconDefinition = faUsers;
-    iconMeteo: IconDefinition = faCloudSunRain;
-    iconVliegend: IconDefinition = faPaperPlane;
-    iconRollend: IconDefinition = faTruck;
-    iconVerslag: IconDefinition = faFlagCheckered;
-    iconIncident: IconDefinition = faFrown;
     iconDefault: IconDefinition = faFileImport;
+    deleteIcon: IconDefinition = faMinusCircle;
+    restoreIcon: IconDefinition = faUndo;
 
     private datumAbonnement: Subscription;         // volg de keuze van de kalender
     datum: DateTime = DateTime.now();              // de gekozen dag
@@ -59,38 +51,34 @@ export class DaginfoComponent implements OnInit, OnDestroy{
     private roosterAbonnement: Subscription;
     rooster: HeliosRoosterDataset[];
     diensten: HeliosDienstenDataset[];
+    dagRapporten: HeliosDagRapportenDataset[];
 
     private typesAbonnement: Subscription;
     veldTypes$: Observable<HeliosType[]>;
     baanTypes$: Observable<HeliosType[]>;
     startMethodeTypes$: Observable<HeliosType[]>;
 
-    magToevoegen: boolean = false;
-    magVerwijderen: boolean = false;
-    magWijzigen: boolean = false;
-    magExporten: boolean = false;
-    toonUitgebreid: boolean = false;
-    geenToegang: boolean = false;
+    magOpslaan: boolean = false;
+    toonDagRapport: boolean = false;
+    deleteMode: boolean = false;
+    trashMode: boolean = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
-    tekstRegels: number = 4;
 
-    constructor(private readonly daginfoService: DaginfoService,
-                private readonly sharedService: SharedService,
-                private readonly storageService: StorageService,
+    constructor(private readonly loginService: LoginService,
                 private readonly typesService: TypesService,
+                private readonly sharedService: SharedService,
+                private readonly daginfoService: DaginfoService,
+                private readonly storageService: StorageService,
                 private readonly roosterService: RoosterService,
                 private readonly dienstenService: DienstenService,
-                private readonly loginService: LoginService) {
+                private readonly dagRapportenService: DagRapportenService) {
     }
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo?.Userinfo;
-        this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
-        this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
-        this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
-        this.toonUitgebreid = !ui?.isStarttoren;
+        this.magOpslaan = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
 
         // abonneer op wijziging van lidTypes
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
@@ -106,31 +94,26 @@ export class DaginfoComponent implements OnInit, OnDestroy{
                 month: datum.month,
                 day: datum.day
             })
+            this.opvragen();
         })
 
         // abonneer op wijziging van kalender datum
         this.dagInfoAbonnement = this.daginfoService.dagInfoChange.subscribe(di => {
             this.dagInfo = di;
-            this.heeftToegang();
+            this.heeftToegangDagRapport();
         });
 
         // abonneer op wijziging van diensten
         this.dienstenAbonnement = this.dienstenService.dienstenChange.subscribe(diensten => {
             this.diensten = (diensten) ? diensten : [];
-            this.heeftToegang();
+            this.heeftToegangDagRapport();
         });
 
         // abonneer op wijziging van rooster
         this.roosterAbonnement = this.roosterService.roosterChange.subscribe(maandRooster => {
             this.rooster = (maandRooster) ? maandRooster : [];
-            this.heeftToegang();
+            this.heeftToegangDagRapport();
         });
-
-        // aantal regels dat we tonen in de tekst invoer. Kan ingesteld worden te verkoming van scrollbars
-        const dagInfoTekstRegels = this.storageService.ophalen('dagInfoTekstRegels');
-        if (dagInfoTekstRegels) {
-            this.tekstRegels = +dagInfoTekstRegels;    // conversie van string naar number
-        }
     }
 
     ngOnDestroy(): void {
@@ -141,13 +124,17 @@ export class DaginfoComponent implements OnInit, OnDestroy{
         if (this.roosterAbonnement)     this.roosterAbonnement.unsubscribe();
     }
 
-    // mag de gebruiker de dag info zien?
-    async heeftToegang() {
-        const ui = this.loginService.userInfo?.Userinfo;
-        let geenToegang = true;
+    opvragen(): void {
+        this.dagRapportenService.getDagRapporten(this.trashMode, this.datum.toISODate()).then((dr) => this.dagRapporten = dr);
+    }
 
-        if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT || ui?.isStarttoren) {
-            geenToegang = false;
+    // mag de gebruiker de dag info zien?
+    heeftToegangDagRapport(): void {
+        const ui = this.loginService.userInfo?.Userinfo;
+        let tonen = false;
+
+        if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) {
+            tonen = true;
         } else if (this.rooster) {
             const d = this.datum.toISODate();
             let rooster: HeliosRoosterDataset | undefined = this.rooster.find((dag) => d == dag.DATUM!)
@@ -156,14 +143,14 @@ export class DaginfoComponent implements OnInit, OnDestroy{
                 if (rooster.DDWV)               // het is een DWWV dag, misschien toch alles tonen
                 {
                     if (ui?.isBeheerderDDWV) {  // Beheerder DDWV mag op DDWV dag alles inzien
-                        geenToegang = false;
+                        tonen = true;
                     } else {
                         const diensten: HeliosDienstenDataset[] | undefined = this.diensten.filter((dag) => d == dag.DATUM!)
 
                         if (diensten) {
                             diensten.forEach(dienst => {
                                 if (dienst.LID_ID == this.loginService.userInfo?.LidData?.ID) { // de ingelode gebruiker had dienst, toon alles
-                                    geenToegang = false;
+                                    tonen = true;
                                 }
                             });
                         }
@@ -171,12 +158,12 @@ export class DaginfoComponent implements OnInit, OnDestroy{
                 }
             }
         }
-        this.geenToegang = geenToegang;
+        this.toonDagRapport = tonen;
     }
 
     // Mogen we uberhaupt de daginfo opslaan
-    magOpslaan() {
-        return (this.dagInfo.VELD_ID && this.dagInfo.STARTMETHODE_ID && this.dagInfo.STARTMETHODE_ID > 0);
+    opslaanDisabled() {
+        return !(this.dagInfo.VELD_ID && this.dagInfo.STARTMETHODE_ID && this.dagInfo.STARTMETHODE_ID > 0);
     }
 
     // opslaan van de ingevoerde dag rapport
@@ -221,23 +208,59 @@ export class DaginfoComponent implements OnInit, OnDestroy{
         }
     }
 
-    // Wizard om tekst te genereren voor meteo input. Tekst kan daarna aangepast worden
-    invullenMeteo() {
-        this.meteoWizard.openPopup();
+    deleteModeJaNee() {
+        this.deleteMode = !this.deleteMode;
+
+        if (this.trashMode) {
+            this.trashModeJaNee(false);
+        }
     }
 
-    // Wizard om tekst te genereren voor vliegbedrijf. Tekst kan daarna aangepast worden
-    invullenVliegbedrijf() {
-        this.bedrijfWizard.openPopup();
+    trashModeJaNee(actief: boolean) {
+        this.trashMode = actief;
+        this.opvragen();
     }
+
+
+    magDagRapportVerwijderen(dr: HeliosDagRapportenDataset) {
+        const ui = this.loginService.userInfo;
+        return (ui?.Userinfo?.isCIMT || ui?.Userinfo?.isBeheerder || ui?.LidData?.ID == dr.INGEVOERD_ID);
+    }
+
+    magDagRapportHerstellen(dr: HeliosDagRapportenDataset) {
+        const ui = this.loginService.userInfo;
+        return  (ui?.Userinfo?.isCIMT || ui?.Userinfo?.isBeheerder || ui?.LidData?.ID == dr.INGEVOERD_ID);
+    }
+
 
     // Wizard om tekst te genereren voor aanwezige leden. Tekst kan daarna aangepast worden
     invullenDiensten() {
         this.dienstenWizard.openPopup();
     }
 
-    // als we meer tekst op scherm kunnen tonen, dan is dat de volgende keer ook zo, dus opslaan
-    storeTextRegels() {
-        this.storageService.opslaan('dagInfoTekstRegels', this.tekstRegels, -1);
+    tijdString(dt: string): string {
+        const datumtijd = DateTime.fromSQL(dt);
+        return datumtijd.toFormat("HH:mm")
+    }
+
+    datumString(dt: string): string {
+        const datumtijd = DateTime.fromSQL(dt);
+        return datumtijd.day + "-" + datumtijd.month + "-" + datumtijd.year;
+    }
+
+    addDagRapport() {
+        this.editor.openPopup()
+    }
+
+    openEditor(dagRapport: HeliosDagRapportenDataset) {
+        this.editor.openPopup(dagRapport)
+    }
+
+    openVerwijderPopup(dagRapport: HeliosDagRapportenDataset) {
+        this.editor.openVerwijderPopup(dagRapport)
+    }
+
+    openRestorePopup(dagRapport: HeliosDagRapportenDataset) {
+        this.editor.openRestorePopup(dagRapport)
     }
 }

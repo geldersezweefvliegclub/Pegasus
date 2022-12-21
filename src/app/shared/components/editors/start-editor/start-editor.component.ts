@@ -36,7 +36,8 @@ import {faStreetView} from "@fortawesome/free-solid-svg-icons";
     providers: [{provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter}]
 })
 export class StartEditorComponent implements OnInit {
-    @Input() VliegerID: number;                                 // wordt gezet bij aanroep vanuit logboek
+    @Input() VliegerID: number;                     // wordt gezet bij aanroep vanuit logboek
+    @Input() VliegveldID: number | undefined;       // wordt gezet als we van start / vluchten een start aanmaken
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @ViewChild(VliegtuigInvoerComponent) vliegtuigInvoerComponent: VliegtuigInvoerComponent;
 
@@ -209,6 +210,18 @@ export class StartEditorComponent implements OnInit {
             }
         } else {
             this.formTitel = `Start aanmaken`;
+
+            let veld_id = this.VliegveldID;
+            let baan_id = undefined;
+            let startmethode_id = undefined;
+
+            if ((this.VliegveldID == this.daginfoService.dagInfo.VELD_ID) ||
+                (this.VliegveldID == this.daginfoService.dagInfo.VELD_ID2)) {
+                veld_id = (this.VliegveldID == this.daginfoService.dagInfo.VELD_ID2) ? this.daginfoService.dagInfo.VELD_ID2 : this.daginfoService.dagInfo.VELD_ID;
+                baan_id = (this.VliegveldID == this.daginfoService.dagInfo.VELD_ID2) ? this.daginfoService.dagInfo.BAAN_ID2 : this.daginfoService.dagInfo.BAAN_ID;
+                startmethode_id = (this.VliegveldID == this.daginfoService.dagInfo.VELD_ID2) ? this.daginfoService.dagInfo.STARTMETHODE_ID2 : this.daginfoService.dagInfo.STARTMETHODE_ID;
+            }
+
             this.start = {
                 ID: undefined,
                 DATUM: this.datum.toISODate(),
@@ -221,9 +234,9 @@ export class StartEditorComponent implements OnInit {
                 STARTTIJD: undefined,
                 LANDINGSTIJD: undefined,
 
-                STARTMETHODE_ID: this.daginfoService.dagInfo.STARTMETHODE_ID,
-                VELD_ID: this.daginfoService.dagInfo.VELD_ID,
-                BAAN_ID: this.daginfoService.dagInfo.BAAN_ID,
+                STARTMETHODE_ID: startmethode_id,
+                VELD_ID: veld_id,
+                BAAN_ID: baan_id,
                 PAX: false,
                 CHECKSTART: false,
                 SLEEPKIST_ID: undefined,

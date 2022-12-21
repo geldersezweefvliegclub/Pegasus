@@ -5,6 +5,7 @@ import {components as startlijstComponents} from './Startlijst';
 import {components as aanwezigVliegtuigenComponents} from './aanwezigVliegtuigen';
 import {components as aanwezigLedenComponents} from './aanwezigLeden';
 import {components as DaginfoComponents} from './daginfo';
+import {components as DagRapportenComponents} from './dagRapporten';
 import {components as typesComponents} from './Types';
 import {components as typesGroepenComponents} from './TypesGroepen';
 import {components as progressieComponents} from './Progressie';
@@ -53,6 +54,10 @@ export type HeliosLid = ledenComponents['schemas']['ref_leden'];
 export type HeliosDagInfoDagen = DaginfoComponents['schemas']['view_daginfo'];
 export type HeliosDagInfosDataset = DaginfoComponents['schemas']['view_daginfo_dataset'];
 export type HeliosDagInfo = DaginfoComponents['schemas']['oper_daginfo'];
+
+export type HeliosDagRapporten = DagRapportenComponents['schemas']['view_dagrapporten'];
+export type HeliosDagRapportenDataset = DagRapportenComponents['schemas']['view_dagrapporten_dataset'];
+export type HeliosDagRapport = DagRapportenComponents['schemas']['oper_dagrapport_in'];
 
 export type HeliosType = typesComponents['schemas']['ref_types_in']
 export type HeliosTypes = typesComponents['schemas']['view_types']

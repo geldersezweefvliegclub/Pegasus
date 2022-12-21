@@ -1,0 +1,115 @@
+<app-error [error]="error"></app-error>
+<app-success [success]="success"></app-success>
+
+<app-modal titel="{{formTitel}}" [popupClass]="popupClass()">
+    <div body>
+        <div class="d-flex flex-column justify-content-between box h-100" *ngIf="dagRapport">
+            <div class="row rowDagInfo2">
+                <div class="col-12 col-md-6">
+                    <app-pegasus-card id="meteoCard"
+                                      class="kleineKaart"
+                                      titel="Meteo"
+                                      subtitel="Weersomstandigheden op de vliegdag"
+                                      [icon]="iconMeteo">
+
+                        <div class="d-flex align-items-end">
+                            <textarea [(ngModel)]="dagRapport.METEO" name="METEO" [disabled]="isRestoreMode || isVerwijderMode"
+                                      class="w-100 text-invoer form-control"
+                                      rows=4></textarea>
+
+                            <app-icon-button class="ms-2" iconNaam="fas PencilAlt" *ngIf ="!isRestoreMode && !isVerwijderMode"
+                                             (btnClicked)="invullenMeteo()"
+                                             btnColor="btn-primary"></app-icon-button>
+                        </div>
+                    </app-pegasus-card>
+                </div>
+                <div class="col-12 col-md-6 mt-4 mt-md-0">
+                    <app-pegasus-card id="bedrijfCard"
+                                      class="kleineKaart"
+                                      titel="Vliegbedrijf"
+                                      subtitel="Operationele starts"
+                                      [icon]="iconBedrijf">
+                        <div class="d-flex align-items-end mb-2">
+                            <textarea [(ngModel)]="dagRapport.VLIEGBEDRIJF" name="VLIEGBEDRIJF" [disabled]="isRestoreMode || isVerwijderMode"
+                                      class="w-100 text-invoer form-control"
+                                      rows=4></textarea>
+
+                            <app-icon-button class="ms-2" iconNaam="fas PencilAlt" *ngIf ="!isRestoreMode && !isVerwijderMode"
+                                             (btnClicked)="invullenVliegbedrijf()"
+                                             btnColor="btn-primary"></app-icon-button>
+                        </div>
+                    </app-pegasus-card>
+                </div>
+            </div>
+
+            <div class="row rowDagInfo3">
+                <div class="col-12 col-md-6">
+                    <app-pegasus-card id="vliegendCard"
+                                      class="kleineKaart"
+                                      titel="Vliegend"
+                                      subtitel="Bijzonderheden over de vliegtuigen"
+                                      [icon]="iconVliegend">
+
+                            <textarea [(ngModel)]="dagRapport.VLIEGENDMATERIEEL" name="VLIEGENDMATERIEEL" [disabled]="isRestoreMode || isVerwijderMode"
+                                      class="w-100 text-invoer form-control"
+                                      rows=4></textarea>
+                    </app-pegasus-card>
+                </div>
+                <div class="col-12 col-md-6 mt-4 mt-md-0">
+                    <app-pegasus-card id="rollendCard"
+                                      class="kleineKaart"
+                                      titel="Rollend"
+                                      subtitel="Bijzonderheden over het rollende materieel"
+                                      [icon]="iconRollend">
+
+                            <textarea [(ngModel)]="dagRapport.ROLLENDMATERIEEL" name="ROLLENDMATERIEEL" [disabled]="isRestoreMode || isVerwijderMode"
+                                      class="w-100 text-invoer form-control"
+                                      rows=4></textarea>
+                    </app-pegasus-card>
+                </div>
+            </div>
+
+            <div class="row rowDagInfo4">
+                <div class="col-12 col-md-6">
+                    <app-pegasus-card id="verslagCard"
+                                      class="kleineKaart"
+                                      titel="Verslag"
+                                      subtitel="Toelichting en bijzonderheden over de vliegdag"
+                                      [icon]="iconVerslag">
+
+                            <textarea [(ngModel)]="dagRapport.VERSLAG" name="VERSLAG" [disabled]="isRestoreMode || isVerwijderMode"
+                                      class="w-100 text-invoer form-control"
+                                      rows=4></textarea>
+                    </app-pegasus-card>
+                </div>
+                <div class="col-12 col-md-6 mt-4 mt-md-0">
+                    <app-pegasus-card id="incidentCard"
+                                      class="kleineKaart"
+                                      titel="Incidenten"
+                                      subtitel="Gevaarlijke situaties waar we van kunnen leren"
+                                      [icon]="iconIncident">
+
+                            <textarea [(ngModel)]="dagRapport.INCIDENTEN" name="INCIDENTEN" [disabled]="isRestoreMode || isVerwijderMode"
+                                      class="w-100 text-invoer form-control"
+                                      rows=4></textarea>
+                    </app-pegasus-card>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div footer>
+        <app-icon-button *ngIf="!isSaving && !isVerwijderMode && !isRestoreMode" iconNaam="fas Edit" btnColor="btn-primary" [toonKlein]=false
+                         tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button *ngIf="!isLoading && !isSaving && isVerwijderMode" iconNaam="fas TrashAlt" btnColor="btn-primary editorDeleteBtn"
+                         [toonKlein]=false tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button *ngIf="!isLoading && !isSaving && isRestoreMode" iconNaam="fas Undo" btnColor="btn-primary editorRestoreBtn"
+                         [toonKlein]=false tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
+
+        <button class="btn btn-primary" *ngIf="isSaving">
+            <span><app-loader></app-loader></span>
+        </button>
+    </div>
+
+    <app-compose-meteo (opslaan)="dagRapport.METEO = $event"></app-compose-meteo>
+    <app-compose-bedrijf (opslaan)="dagRapport.VLIEGBEDRIJF = $event" [datum]="datum"></app-compose-bedrijf>
+</app-modal>

@@ -88,7 +88,9 @@ export class LoginPageComponent implements OnInit {
         this.loginService.login(this.gebruikersnaam, this.wachtwoord, this.secret).then(() => {
             this.isLoading = false;
             this.storageService.opslaan("privacyOk", "true", 60 * 24 * 90);     // 90 dagen
-            this.router.navigate(['/']);
+
+            const url = (this.storageService.ophalen("url")) ? this.storageService.ophalen("url") : "/";
+            this.router.navigate([url]);
         }).catch(e => {
             this.isLoading = false;
 

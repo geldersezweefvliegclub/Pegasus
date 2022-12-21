@@ -5,15 +5,11 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {SharedModule} from "../../shared/shared.module";
 import {RouterModule} from "@angular/router";
 import {DaginfoComponent} from "./daginfo/daginfo.component";
-import {ComposeMeteoComponent} from "./compose-meteo/compose-meteo.component";
-import {ComposeBedrijfComponent} from "./compose-bedrijf/compose-bedrijf.component";
 import {NgSelectModule} from "@ng-select/ng-select";
 
 @NgModule({
   declarations: [
-    DaginfoComponent,
-    ComposeMeteoComponent,
-    ComposeBedrijfComponent,
+    DaginfoComponent
   ],
   imports: [
     CommonModule,
