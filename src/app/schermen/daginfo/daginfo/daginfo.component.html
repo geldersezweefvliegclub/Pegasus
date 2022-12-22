@@ -132,9 +132,9 @@
                     </div>
                 </div>
             </div>
-            <app-pegasus-card id="rapportenCard"
+            <app-pegasus-card id="rapportenCard" *ngIf="toonDagRapport"
                               class="kleineKaart mb-2"
-                              titel="Dag rapporten"
+                              titel="Dagrapporten"
                               subtitel="Samenvatting van de dag"
                               [minimum]="true"
                               [icon]="iconDiensten">
@@ -157,7 +157,7 @@
                         <td style="width: 100%;">
                             <div class="rapportHeader">
                                 Op {{datumString(dr.LAATSTE_AANPASSING)}} om {{tijdString(dr.LAATSTE_AANPASSING)}}
-                                schreef {{dr.INGEVOERD}}
+                                schreef {{dr.INGEVOERD}} dagrapport voor vliegveld {{dr.VELD_OMS}}
                             </div>
                             <div class="tekstbox">
                                 <div *ngIf="dr.VLIEGBEDRIJF && dr.VLIEGBEDRIJF.length > 0">
@@ -241,4 +241,4 @@
 </app-pegasus-card>
 
 <app-dag-rooster (opslaan)="dagInfo.DIENSTEN = $event" [Datum]="datum" [magWijzigen]="true"></app-dag-rooster>
-<app-dag-rapport-editor (aangepast)="opvragen()"></app-dag-rapport-editor>
+<app-dag-rapport-editor [veld_id]="veld_id" (aangepast)="opvragen()"></app-dag-rapport-editor>

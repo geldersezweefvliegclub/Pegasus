@@ -27,7 +27,7 @@ export class LoginService  {
 
 
 
-    constructor(private readonly APIService: APIService,
+    constructor(private readonly apiService: APIService,
                 private readonly ddwwService: DdwvService,
                 private readonly sharedService: SharedService,
                 private readonly storageService: StorageService) {
@@ -62,12 +62,12 @@ export class LoginService  {
             params = {'token': token as string}
         }
 
-        const response: Response = await this.APIService.get('Login/Login', params, headers);
+        const response: Response = await this.apiService.get('Login/Login', params, headers);
 
         if (response.ok) {
             const login: BearerToken = await response.json();
             this.storageService.opslaan("bearer", login.TOKEN);
-            this.APIService.setBearerToken(login.TOKEN);
+            this.apiService.setBearerToken(login.TOKEN);
 
             await this.getUserInfo();
             this.ddwwService.loadConfigDDWV();
@@ -78,16 +78,16 @@ export class LoginService  {
     // Haal nieuw token op zodat de sessie alive blijft
     async relogin(): Promise<boolean> {
         try {
-            const response: Response = await this.APIService.get('Login/Relogin');
+            const response: Response = await this.apiService.get('Login/Relogin');
             if (response.ok) {
                 const login: BearerToken = await response.json();
 
                 this.storageService.opslaan("bearer", login.TOKEN);
-                this.APIService.setBearerToken(login.TOKEN);
+                this.apiService.setBearerToken(login.TOKEN);
             }
         }
         catch (e) {
-            this.APIService.setBearerToken();
+            this.apiService.setBearerToken();
             return false;
         }
         return true;
@@ -99,7 +99,7 @@ export class LoginService  {
         const base64encoded = Base64.encode(`${gebruikersnaam}:""`);
         headers.append('Authorization', `Basic ${base64encoded}`);
 
-        await this.APIService.get('Login/ResetWachtwoord', undefined, headers);
+        await this.apiService.get('Login/ResetWachtwoord', undefined, headers);
     }
 
     // laat iedereen weten dat we ingelogd zijn, we wachten even zodat alle componenten geladen zijn
@@ -113,13 +113,13 @@ export class LoginService  {
         const base64encoded = Base64.encode(`${gebruikersnaam}:${wachtwoord}`);
         headers.append('Authorization', `Basic ${base64encoded}`);
 
-        await this.APIService.get('Login/SendSMS', undefined, headers);
+        await this.apiService.get('Login/SendSMS', undefined, headers);
     }
 
     async getUserInfo(): Promise<void> {
         let urlParams: string = "";
 
-        const response: Response = await this.APIService.get('Login/GetUserInfo' + urlParams);
+        const response: Response = await this.apiService.get('Login/GetUserInfo' + urlParams);
         if (response.ok) {
             this.userInfo = await response.json();
             this.storageService.opslaan("userInfo", this.userInfo);

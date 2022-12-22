@@ -20,7 +20,7 @@ export class RoosterService {
     private roosterStore = new BehaviorSubject(this.roosterCache.dataset);
     public readonly roosterChange = this.roosterStore.asObservable();      // nieuw rooster beschikbaar
 
-    constructor(private readonly APIService: APIService,
+    constructor(private readonly apiService: APIService,
                 private readonly loginService: LoginService,
                 private readonly sharedService: SharedService) {
 
@@ -35,12 +35,6 @@ export class RoosterService {
             // we kunnen alleen rooster ophalen als we ingelogd zijn, en starttoren heeft niets nodig
             if (this.loginService.isIngelogd()) {
                 const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
-
-                let beginDatum: DateTime = beginEindDatum.begindatum;
-                let eindDatum: DateTime = beginEindDatum.einddatum;
-
-                beginDatum = beginDatum.startOf('week');     // maandag in de 1e week vande maand, kan in de vorige maand vallen
-                eindDatum = eindDatum.endOf ('week');        // zondag van de laaste week, kan in de volgende maand vallen
 
                 this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
                     if (!this.vulMissendeDagenAan(dataset))
@@ -88,7 +82,7 @@ export class RoosterService {
         }
 
         try {
-            const response: Response = await this.APIService.get('Rooster/GetObjects', getParams);
+            const response: Response = await this.apiService.get('Rooster/GetObjects', getParams);
             this.roosterCache = await response.json();
 
         } catch (e) {
@@ -136,7 +130,7 @@ export class RoosterService {
     }
 
     async addRoosterdag(roosterDag: HeliosRoosterDag) {
-        const response: Response = await this.APIService.post('Rooster/SaveObject', JSON.stringify(roosterDag));
+        const response: Response = await this.apiService.post('Rooster/SaveObject', JSON.stringify(roosterDag));
         return response.json();
     }
 
@@ -144,7 +138,7 @@ export class RoosterService {
         const replacer = (key:string, value:any) =>
             typeof value === 'undefined' ? null : value;
 
-        const response: Response = await this.APIService.put('Rooster/SaveObject', JSON.stringify(roosterDag, replacer));
+        const response: Response = await this.apiService.put('Rooster/SaveObject', JSON.stringify(roosterDag, replacer));
 
         return response.json();
     }

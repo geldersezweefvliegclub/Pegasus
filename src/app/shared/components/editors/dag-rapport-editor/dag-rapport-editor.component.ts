@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ModalComponent} from "../../modal/modal.component";
 import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
@@ -23,6 +23,7 @@ import {DagRapportenService} from "../../../../services/apiservice/dag-rapporten
     styleUrls: ['./dag-rapport-editor.component.scss']
 })
 export class DagRapportEditorComponent implements OnInit, OnDestroy {
+    @Input() veld_id: number;
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @ViewChild(ComposeMeteoComponent) private meteoWizard: ComposeMeteoComponent;
     @ViewChild(ComposeBedrijfComponent) private bedrijfWizard: ComposeBedrijfComponent;
@@ -102,7 +103,8 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
         }
         else {
             this.dagRapport = {
-                DATUM: this.datum.toISODate()
+                DATUM: this.datum.toISODate(),
+                VELD_ID: this.veld_id
             }
             this.formTitel = "Nieuw dag rapport voor " + this.sharedService.datumDMJ(this.datum.toISODate())
         }

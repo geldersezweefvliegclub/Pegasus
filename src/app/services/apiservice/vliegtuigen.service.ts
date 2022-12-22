@@ -21,7 +21,7 @@ export class VliegtuigenService {
     private dbEventAbonnement: Subscription;
     public readonly vliegtuigenChange = this.vliegtuigenStore.asObservable();      // nieuwe vliegtuigen beschikbaar
 
-    constructor(private readonly APIService: APIService,
+    constructor(private readonly apiService: APIService,
                 private readonly loginService: LoginService,
                 private readonly sharedService: SharedService,
                 private readonly storageService: StorageService) {
@@ -96,7 +96,7 @@ export class VliegtuigenService {
         }
 
         try {
-            const response: Response = await this.APIService.get('Vliegtuigen/GetObjects', getParams);
+            const response: Response = await this.apiService.get('Vliegtuigen/GetObjects', getParams);
             this.vliegtuigenCache = await response.json();
             this.storageService.opslaan('vliegtuigen', this.vliegtuigenCache);
         } catch (e) {
@@ -108,12 +108,12 @@ export class VliegtuigenService {
     }
 
     async getVliegtuig(id: number): Promise<HeliosVliegtuig> {
-        const response: Response = await this.APIService.get('Vliegtuigen/GetObject', {'ID': id.toString()});
+        const response: Response = await this.apiService.get('Vliegtuigen/GetObject', {'ID': id.toString()});
         return response.json();
     }
 
     async addVliegtuig(vliegtuig: HeliosVliegtuig) {
-        const response: Response = await this.APIService.post('Vliegtuigen/SaveObject', JSON.stringify(vliegtuig));
+        const response: Response = await this.apiService.post('Vliegtuigen/SaveObject', JSON.stringify(vliegtuig));
         return response.json();
     }
 
@@ -121,13 +121,13 @@ export class VliegtuigenService {
         const replacer = (key:string, value:any) =>
             typeof value === 'undefined' ? null : value;
 
-        const response: Response = await this.APIService.put('Vliegtuigen/SaveObject', JSON.stringify(vliegtuig, replacer));
+        const response: Response = await this.apiService.put('Vliegtuigen/SaveObject', JSON.stringify(vliegtuig, replacer));
         return response.json();
     }
 
     async deleteVliegtuig(id: number) {
         try {
-            await this.APIService.delete('Vliegtuigen/DeleteObject', {'ID': id.toString()});
+            await this.apiService.delete('Vliegtuigen/DeleteObject', {'ID': id.toString()});
         } catch (e) {
             throw(e);
         }
@@ -135,7 +135,7 @@ export class VliegtuigenService {
 
     async restoreVliegtuig(id: number) {
         try {
-            await this.APIService.patch('Vliegtuigen/RestoreObject', {'ID': id.toString()});
+            await this.apiService.patch('Vliegtuigen/RestoreObject', {'ID': id.toString()});
         } catch (e) {
             throw(e);
         }

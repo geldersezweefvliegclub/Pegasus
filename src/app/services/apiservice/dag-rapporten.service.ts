@@ -1,12 +1,15 @@
 import {Injectable} from '@angular/core';
 import {APIService} from "./api.service";
 import {
+    HeliosDagInfoDagen,
+    HeliosDagInfosDataset,
     HeliosDagRapport,
     HeliosDagRapporten,
     HeliosDagRapportenDataset
 } from "../../types/Helios";
 import {KeyValueArray} from "../../types/Utils";
 import {LoginService} from "./login.service";
+import {DateTime} from "luxon";
 
 
 @Injectable({
@@ -14,6 +17,7 @@ import {LoginService} from "./login.service";
 })
 export class DagRapportenService {
     private rapportenCache: HeliosDagRapporten = {dataset: []};      // return waarde van API call
+    private dagenCache: HeliosDagRapporten = { dataset: []};         // return waarde van API call
 
     constructor(private readonly apiService: APIService,
                 private readonly loginService: LoginService) {
@@ -79,5 +83,36 @@ export class DagRapportenService {
 
     async restoreRapport(id: number) {
         await this.apiService.patch('DagRapporten/RestoreObject', {'ID': id.toString()});
+    }
+
+    // haal op, op welke dag er daginfo ingevoerd is
+    async getDagen(startDatum: DateTime, eindDatum: DateTime): Promise<HeliosDagInfosDataset[]> {
+        if (!this.magDagInfoOphalen()) {
+            return [];
+        }
+
+        let getParams: KeyValueArray = {};
+        getParams['BEGIN_DATUM'] = startDatum.toISODate();
+        getParams['EIND_DATUM'] = eindDatum.toISODate();
+        getParams['VELDEN'] = "ID,DATUM";
+
+        try {
+            const response: Response = await this.apiService.get('DagRapporten/GetObjects', getParams);
+
+            this.dagenCache = await response.json();
+
+        } catch (e) {
+            if (e.responseCode !== 404) {       // er is geen starts
+                throw(e);
+            }
+            return [];
+        }
+        return this.dagenCache?.dataset as [];
+    }
+
+    // als we weten dat gebruiker geen toegang heeft, hoeven we ook niets op te vragen
+    magDagInfoOphalen(): boolean {
+        const ui = this.loginService.userInfo?.Userinfo;
+        return (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isInstructeur || ui?.isCIMT || ui?.isDDWVCrew) ? true : false;
     }
 }

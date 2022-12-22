@@ -40,7 +40,7 @@ export class PopupKalenderComponent {
     }
 
     if (this.daginfo.includes(datum.toISODate())) {
-      classes += " daginfo";
+      classes += " dagrapport";
     }
 
     if (this.diensten.includes('"DATUM":"' + datum.toISODate())) {

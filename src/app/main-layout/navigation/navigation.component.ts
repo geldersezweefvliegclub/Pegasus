@@ -32,6 +32,7 @@ import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {PegasusConfigService} from "../../services/shared/pegasus-config.service";
 import {PopupKalenderComponent} from "./popup-kalender/popup-kalender.component";
 import {NgbDateFRParserFormatter} from "../../shared/ngb-date-fr-parser-formatter";
+import {DagRapportenService} from "../../services/apiservice/dag-rapporten.service";
 
 @Component({
     selector: 'app-navigation',
@@ -49,7 +50,6 @@ export class NavigationComponent implements OnInit, OnDestroy  {
     readonly beheerIcon: IconDefinition = faWrench;
     readonly rapportageIcon: IconDefinition = faGaugeSimpleHigh;
 
-
     kalenderMaand: KalenderMaand;
     startDatum: DateTime;
     eindDatum: DateTime;
@@ -64,7 +64,7 @@ export class NavigationComponent implements OnInit, OnDestroy  {
 
     vliegdagen: string = "";        // vliegdagen van deze maand in json formaat
     diensten: string = "";          // daginfos van deze maand in json formaat
-    daginfo: string = "";           // daginfos van deze maand in json formaat
+    dagRapporten: string = "";           // daginfos van deze maand in json formaat
 
     beheerExcluded = false;
 
@@ -79,6 +79,7 @@ export class NavigationComponent implements OnInit, OnDestroy  {
     constructor(readonly loginService: LoginService,
                 private readonly startlijstService: StartlijstService,
                 private readonly daginfoService: DaginfoService,
+                private readonly dagRapportenService: DagRapportenService,
                 private readonly roosterService: RoosterService,
                 private readonly dienstenService: DienstenService,
                 private readonly vliegtuigenService: VliegtuigenService,
@@ -104,18 +105,18 @@ export class NavigationComponent implements OnInit, OnDestroy  {
         // Als daginfo of startlijst is aangepast, moet we kalender achtergrond ook updaten
         // Omdat dit minder belangrijk is dan andere API calls, een kleine vertraging
         this.dbEventAbonnement = this.sharedService.heliosEventFired.pipe(delay(500)).subscribe(ev => {
-            if (ev.tabel == "Daginfo") {
+            if (ev.tabel == "DagRapporten") {
                 if (ev.actie == HeliosActie.Delete || ev.actie == HeliosActie.Restore) {
 
                     // bij verwijderen-restore, gaan we altijd dagen opvragen
-                    this.daginfoService.getDagen(this.startDatum, this.eindDatum).then((dataset) => {
-                        this.daginfo = JSON.stringify(dataset);
+                    this.dagRapportenService.getDagen(this.startDatum, this.eindDatum).then((dataset) => {
+                        this.dagRapporten = JSON.stringify(dataset);
                     });
-                } else if (!this.daginfo.includes(ev.data.DATUM)) {
+                } else if (!this.dagRapporten.includes(ev.data.DATUM)) {
 
                     // nieuwe daginfo ophalen als we deze dag nog niet hebben (include faalt)
-                    this.daginfoService.getDagen(this.startDatum, this.eindDatum).then((dataset) => {
-                        this.daginfo = JSON.stringify(dataset);
+                    this.dagRapportenService.getDagen(this.startDatum, this.eindDatum).then((dataset) => {
+                        this.dagRapporten = JSON.stringify(dataset);
                     });
                 }
             }
@@ -353,8 +354,8 @@ export class NavigationComponent implements OnInit, OnDestroy  {
             this.vliegdagen = JSON.stringify(dataset);
         });
 
-        this.daginfoService.getDagen(this.startDatum, this.eindDatum).then((dataset) => {
-            this.daginfo = JSON.stringify(dataset);
+        this.dagRapportenService.getDagen(this.startDatum, this.eindDatum).then((dataset) => {
+            this.dagRapporten = JSON.stringify(dataset);
         });
 
         const ui = this.loginService.userInfo?.LidData;
@@ -372,8 +373,8 @@ export class NavigationComponent implements OnInit, OnDestroy  {
             classes += " vliegdag";
         }
 
-        if (this.daginfo.includes(datum.toISODate())) {
-            classes += " daginfo";
+        if (this.dagRapporten.includes(datum.toISODate())) {
+            classes += " dagrapport";
         }
 
         if (this.diensten.includes('"DATUM":"' + datum.toISODate())) {

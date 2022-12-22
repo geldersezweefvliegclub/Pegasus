@@ -66,6 +66,8 @@ export class DaginfoComponent implements OnInit, OnDestroy{
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
+    veld_id: number| undefined;     // Default waarde voor dagrapport
+
     constructor(private readonly loginService: LoginService,
                 private readonly typesService: TypesService,
                 private readonly sharedService: SharedService,
@@ -95,11 +97,15 @@ export class DaginfoComponent implements OnInit, OnDestroy{
                 day: datum.day
             })
             this.opvragen();
+            this.heeftToegangDagRapport();
+
+
         })
 
         // abonneer op wijziging van kalender datum
         this.dagInfoAbonnement = this.daginfoService.dagInfoChange.subscribe(di => {
             this.dagInfo = di;
+            this.veld_id = (di.VELD_ID && !di.VELD_ID2) ? this.veld_id = di.VELD_ID : undefined;
             this.heeftToegangDagRapport();
         });
 
@@ -133,7 +139,10 @@ export class DaginfoComponent implements OnInit, OnDestroy{
         const ui = this.loginService.userInfo?.Userinfo;
         let tonen = false;
 
-        if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) {
+        if (this.datumInToekomst(this.datum.toISODate())) {
+            tonen = false;
+        }
+        else if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) {
             tonen = true;
         } else if (this.rooster) {
             const d = this.datum.toISODate();
@@ -246,6 +255,14 @@ export class DaginfoComponent implements OnInit, OnDestroy{
     datumString(dt: string): string {
         const datumtijd = DateTime.fromSQL(dt);
         return datumtijd.day + "-" + datumtijd.month + "-" + datumtijd.year;
+    }
+
+    // Hebben we een datum in de toekomst, vandaag is geen toekomst
+    datumInToekomst(datum: string): boolean {
+        const nu: DateTime = DateTime.now();
+        const d: DateTime = DateTime.fromSQL(datum);
+
+        return (d > nu) // datum is in het toekomst
     }
 
     addDagRapport() {

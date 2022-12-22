@@ -34,7 +34,7 @@ export class StartlijstService {
     private logboekTotalen: HeliosLogboekTotalen | null = null;         // totalen logboek voor vlieger
     private vliegtuigLogboekTotalen: HeliosVliegtuigLogboekTotalen;
 
-    constructor(private readonly APIService: APIService,
+    constructor(private readonly apiService: APIService,
                 private readonly loginService: LoginService,
                 private readonly storageService: StorageService) {
     }
@@ -50,7 +50,7 @@ export class StartlijstService {
         }
 
         try {
-            const response: Response = await this.APIService.get('Startlijst/GetVliegDagen',
+            const response: Response = await this.apiService.get('Startlijst/GetVliegDagen',
                 getParams
             );
 
@@ -85,7 +85,7 @@ export class StartlijstService {
         }
 
         try {
-            const response: Response = await this.APIService.get('Startlijst/GetLogboek', getParams);
+            const response: Response = await this.apiService.get('Startlijst/GetLogboek', getParams);
             this.logboekCache = await response.json();
         } catch (e) {
             if ((e.responseCode !== 304) && (e.responseCode !== 704)  && (e.responseCode !== 404)) { // er is geen starts, of starts is ongewijzigd
@@ -111,7 +111,7 @@ export class StartlijstService {
         getParams['JAAR'] = jaar.toString();
 
         try {
-            const response: Response = await this.APIService.get('Startlijst/GetLogboekTotalen', getParams);
+            const response: Response = await this.apiService.get('Startlijst/GetLogboekTotalen', getParams);
 
             this.logboekTotalen = await response.json();
         } catch (e) {
@@ -128,7 +128,7 @@ export class StartlijstService {
         getParams['EIND_DATUM'] = eindDatum.toISODate();
 
         try {
-            const response: Response = await this.APIService.get('Startlijst/GetVliegtuigLogboek',
+            const response: Response = await this.apiService.get('Startlijst/GetVliegtuigLogboek',
                 getParams
             );
 
@@ -148,7 +148,7 @@ export class StartlijstService {
         getParams['JAAR'] = jaar.toString();
 
         try {
-            const response: Response = await this.APIService.get('Startlijst/GetVliegtuigLogboekTotalen',
+            const response: Response = await this.apiService.get('Startlijst/GetVliegtuigLogboekTotalen',
                 getParams
             );
 
@@ -179,7 +179,7 @@ export class StartlijstService {
         }
 
         try {
-            const response: Response = await this.APIService.get('Startlijst/GetObjects', getParams );
+            const response: Response = await this.apiService.get('Startlijst/GetObjects', getParams );
             this.startsCache = await response.json();
         } catch (e) {
             if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde starts als cache
@@ -190,7 +190,7 @@ export class StartlijstService {
     }
 
     async getStart(id: number): Promise<HeliosStart> {
-        const response: Response = await this.APIService.get('Startlijst/GetObject', {'ID': id.toString()});
+        const response: Response = await this.apiService.get('Startlijst/GetObject', {'ID': id.toString()});
 
         return response.json();
     }
@@ -209,12 +209,12 @@ export class StartlijstService {
             getParams['DATUM'] = datum.toISODate();
         }
 
-        const response: Response = await this.APIService.get('Startlijst/GetRecency', getParams);
+        const response: Response = await this.apiService.get('Startlijst/GetRecency', getParams);
         return response.json();
     }
 
     async addStart(start: HeliosStart) {
-        const response: Response = await this.APIService.post('Startlijst/SaveObject', JSON.stringify(start));
+        const response: Response = await this.apiService.post('Startlijst/SaveObject', JSON.stringify(start));
         return response.json();
     }
 
@@ -222,14 +222,14 @@ export class StartlijstService {
         const replacer = (key:string, value:any) =>
             typeof value === 'undefined' ? null : value;
 
-        const response: Response = await this.APIService.put('Startlijst/SaveObject', JSON.stringify(start, replacer));
+        const response: Response = await this.apiService.put('Startlijst/SaveObject', JSON.stringify(start, replacer));
 
         return response.json();
     }
 
     async deleteStart(id: number) {
         try {
-            await this.APIService.delete('Startlijst/DeleteObject', {'ID': id.toString()});
+            await this.apiService.delete('Startlijst/DeleteObject', {'ID': id.toString()});
         } catch (e) {
             // todo nutteloze catch?
             throw(e);
@@ -238,20 +238,20 @@ export class StartlijstService {
 
     async restoreStart(id: number) {
         try {
-            await this.APIService.patch('Startlijst/RestoreObject', {'ID': id.toString()});
+            await this.apiService.patch('Startlijst/RestoreObject', {'ID': id.toString()});
         } catch (e) {
             throw(e);
         }
     }
 
     async startTijd(id: number, tijd: string) {
-        const response: Response = await this.APIService.put('Startlijst/SaveObject', JSON.stringify({ID: id,STARTTIJD: (tijd) ? tijd : null }));
+        const response: Response = await this.apiService.put('Startlijst/SaveObject', JSON.stringify({ID: id,STARTTIJD: (tijd) ? tijd : null }));
 
         return response.json();
     }
 
     async landingsTijd(id: number, tijd: string) {
-        const response: Response = await this.APIService.put('Startlijst/SaveObject', JSON.stringify({ID: id,LANDINGSTIJD: (tijd) ? tijd : null }));
+        const response: Response = await this.apiService.put('Startlijst/SaveObject', JSON.stringify({ID: id,LANDINGSTIJD: (tijd) ? tijd : null }));
 
         return response.json();
     }

@@ -23,7 +23,7 @@ export class DaginfoService {
     private dagInfoStore = new BehaviorSubject(this.dagInfo);
     public readonly dagInfoChange = this.dagInfoStore.asObservable();      // nieuwe dagInfo beschikbaar
 
-    constructor(private readonly APIService: APIService,
+    constructor(private readonly apiService: APIService,
                 private readonly loginService: LoginService,
                 private readonly sharedService: SharedService,
                 private readonly storageService: StorageService,
@@ -45,17 +45,13 @@ export class DaginfoService {
 
     // haal op, op welke dag er daginfo ingevoerd is
     async getDagen(startDatum: DateTime, eindDatum: DateTime): Promise<HeliosDagInfosDataset[]> {
-        if (!this.magDagInfoOphalen()) {
-            return [];
-        }
-
         let getParams: KeyValueArray = {};
         getParams['BEGIN_DATUM'] = startDatum.toISODate();
         getParams['EIND_DATUM'] = eindDatum.toISODate();
         getParams['VELDEN'] = "ID,DATUM";
 
         try {
-            const response: Response = await this.APIService.get('Daginfo/GetObjects', getParams);
+            const response: Response = await this.apiService.get('Daginfo/GetObjects', getParams);
 
             this.dagenCache = await response.json();
 
@@ -70,10 +66,6 @@ export class DaginfoService {
 
 
     async getDagInfoDagen(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<[]> {
-        if (!this.magDagInfoOphalen()) {
-            return [];
-        }
-
         let getParams: KeyValueArray = params;
 
         if ((this.dagInfoTotaalCache != undefined)  && (this.dagInfoTotaalCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
@@ -91,7 +83,7 @@ export class DaginfoService {
         }
 
         try {
-            const response: Response = await this.APIService.get('Daginfo/GetObjects', getParams);
+            const response: Response = await this.apiService.get('Daginfo/GetObjects', getParams);
             this.dagInfoTotaalCache = await response.json();
         } catch (e) {
             if ((e.responseCode !== 304) && (e.responseCode !== 704)) {       // server bevat dezelfde starts als cache
@@ -103,20 +95,16 @@ export class DaginfoService {
 
     // haal de daginfo op van een enkele dag
     async getDagInfo(id: number | undefined, datum: DateTime | undefined): Promise<HeliosDagInfo> {
-        if (!this.magDagInfoOphalen()) {
-            return {DATUM: this.datum.toISODate()};
-        }
-
         try {
             // we halen de starts op met een ID
             if (id) {
-                const response: Response = await this.APIService.get('Daginfo/GetObject', {'ID': id.toString()});
+                const response: Response = await this.apiService.get('Daginfo/GetObject', {'ID': id.toString()});
                 this.dagInfo = await response.json();
             }
 
             // we halen de starts op met een datum (hebben geen ID nodig)
             if (datum) {
-                const response: Response = await this.APIService.get('Daginfo/GetObject', {'DATUM': datum.toISODate()});
+                const response: Response = await this.apiService.get('Daginfo/GetObject', {'DATUM': datum.toISODate()});
                 this.dagInfo = await response.json();
             }
             return this.dagInfo;
@@ -142,7 +130,7 @@ export class DaginfoService {
 
     // opslaan van een nieuw daginfo record
     async addDagInfo(daginfo: HeliosDagInfo) {
-        const response: Response = await this.APIService.post('Daginfo/SaveObject', JSON.stringify(daginfo));
+        const response: Response = await this.apiService.post('Daginfo/SaveObject', JSON.stringify(daginfo));
 
         // opslaan als class variable en fire event
         response.clone().json().then((di) => {
@@ -157,7 +145,7 @@ export class DaginfoService {
         const replacer = (key:string, value:any) =>
             typeof value === 'undefined' ? null : value;
 
-        const response: Response = await this.APIService.put('Daginfo/SaveObject', JSON.stringify(daginfo, replacer));
+        const response: Response = await this.apiService.put('Daginfo/SaveObject', JSON.stringify(daginfo, replacer));
 
         // opslaan als class variable en fire event
         response.clone().json().then((di) => {
@@ -169,17 +157,11 @@ export class DaginfoService {
 
     // deze dag kan verwijderd worden
     async deleteDagInfo(id: number) {
-        await this.APIService.delete('Daginfo/DeleteObject', {'ID': id.toString()});
+        await this.apiService.delete('Daginfo/DeleteObject', {'ID': id.toString()});
     }
 
     // haal een verwijderd record terug
     async restoreDagInfo(id: number) {
-        await this.APIService.patch('Daginfo/RestoreObject', {'ID': id.toString()});
-    }
-
-    // als we weten dat gebruiker geen toegang heeft, hoeven we ook niets op te vragen
-    magDagInfoOphalen(): boolean {
-        const ui = this.loginService.userInfo?.Userinfo;
-        return (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isInstructeur || ui?.isCIMT || ui?.isStarttoren || ui?.isDDWVCrew) ? true : false;
+        await this.apiService.patch('Daginfo/RestoreObject', {'ID': id.toString()});
     }
 }

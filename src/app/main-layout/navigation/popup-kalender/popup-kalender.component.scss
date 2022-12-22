@@ -18,15 +18,24 @@
 
 .gekozenDatum {
   border-radius: .25rem;
-  border: 2px solid #202021;
+  border: 2px solid #202021 !important;
   height: 1.9rem;
   line-height: 1.8rem;
   text-align: center;
   width: 1.9rem;
 }
 
-.daginfo {
-  font-size: 20px;
+.dagrapport {
+  border-radius: .25rem;
+  border: 1px solid #c7c7c7;
+  height: 1.9rem;
+  line-height: 1.8rem;
+  text-align: center;
+  width: 1.9rem;
+
+  background-image: url("/assets/img/cj34ak1.png");
+  background-position: right bottom;
+  background-repeat: no-repeat;
 }
 
 .diensten {
