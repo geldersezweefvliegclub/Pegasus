@@ -49,6 +49,22 @@
                            [(ngModel)]="competentie.DOCUMENTATIE">
                 </div>
             </div>
+            <div class="row mt-2">
+                <div class="col-6">
+                    <input name="CHECKSTART" type="checkbox" class="form-check-input" id="GELDIGHEID"
+                           [(ngModel)]="competentie.GELDIGHEID">
+                    <label class="form-check-label ms-2" for="GELDIGHEID">
+                        Beperkt geldig
+                    </label>
+                </div>
+                <div class="col-6">
+                    <input name="CHECKSTART" type="checkbox" class="form-check-input" id="SCORE"
+                           [(ngModel)]="competentie.SCORE">
+                    <label class="form-check-label ms-2" for="SCORE">
+                        Heeft score 1 t/m 5
+                    </label>
+                </div>
+            </div>
         </fieldset>
     </div>
     <div footer>

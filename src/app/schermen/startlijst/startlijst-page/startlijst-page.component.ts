@@ -393,7 +393,7 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
 
                     if (idxP < 0) { // nee, we gaan ophalen
                         try {
-                            const p: HeliosBehaaldeProgressieDataset[] = await this.progressieService.getProgressie(checkID, this.competentiesNodig);
+                            const p: HeliosBehaaldeProgressieDataset[] = await this.progressieService.getProgressiesLid(checkID, this.competentiesNodig);
 
                             if (p.length == 0) {  // er zijn behaald competenties
                                 this.progressieCache.push({LID_ID: checkID});     // stop dummy item in cache. Voorkomt nog meer opvragen

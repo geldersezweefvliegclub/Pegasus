@@ -157,7 +157,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
 
             // haal op welke vliegtuigen het ingelogde lid mag vliegen
             const ui = this.loginService.userInfo?.LidData!;
-            this.progressieService.getProgressie(ui.ID!, bevoegdheden).then((progressie: HeliosBehaaldeProgressieDataset[]) => {
+            this.progressieService.getProgressiesLid(ui.ID!, bevoegdheden).then((progressie: HeliosBehaaldeProgressieDataset[]) => {
                 // We hebben nu array met progressie, omzetten naar CSV
                 this.behaaldeCompetenties = progressie.map(function (elem) {
                     return elem.COMPETENTIE_ID;

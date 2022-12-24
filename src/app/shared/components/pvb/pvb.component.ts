@@ -8,6 +8,7 @@ import {LoginService} from "../../../services/apiservice/login.service";
 import {CompetentieService} from "../../../services/apiservice/competentie.service";
 import {Subscription} from "rxjs";
 import {ModalComponent} from "../modal/modal.component";
+import {ProgressieEditorComponent} from "../editors/progressie-editor/progressie-editor.component";
 
 @Component({
     selector: 'app-pvb',
@@ -16,7 +17,7 @@ import {ModalComponent} from "../modal/modal.component";
 })
 export class PvbComponent implements OnInit, OnChanges, OnDestroy {
     @Input() VliegerID: number;
-    @ViewChild(ModalComponent) private bevestigPopup: ModalComponent;
+    @ViewChild(ProgressieEditorComponent) private editor: ProgressieEditorComponent;
 
     PVBs: any[];
     gehaaldeProgressie: HeliosBehaaldeProgressieDataset[];
@@ -77,7 +78,7 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
         }).join(',');
 
         this.isLoading = true;
-        this.progressieService.getProgressie(this.VliegerID, comptentieIDs).then((p) => {
+        this.progressieService.getProgressiesLid(this.VliegerID, comptentieIDs).then((p) => {
             this.gehaaldeProgressie = p;
             this.isLoading = false;
         }).catch(e => {
@@ -124,42 +125,7 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
 
     // Progressie kan gezet worden via snelkeuze in deze component, lange weg kan via progressie boom
     zetProgressie(e:any, id:number) {
-        e.currentTarget.checked = false;    // vinkje niet zetten, pas als we een update gedaan hebben
-
-        this.bevestigCompetentie = this.competenties.find((c) => c.ID == id);
-        this.checkboxSelected = e;
-
-        this.bevestigPopup.open();
-    }
-
-    // De compententie is behaald, dus aanpassen progressie kaart
-    updateProgressie() {
-        try {
-            const ui = this.loginService.userInfo?.LidData;
-            this.progressieService.behaaldeCompetentie({
-                LID_ID: this.VliegerID,
-                INSTRUCTEUR_ID: ui?.ID,
-                COMPETENTIE_ID: this.bevestigCompetentie?.ID,
-            }).then((p) => {
-                this.checkboxSelected.target.checked = true;        // nu mogen we afvinken
-                this.checkboxSelected.target.disabled = true;       // mogen check niet weghalen, dus disable de checkbox
-                const c = this.competenties.find((c) => c.ID == p.COMPETENTIE_ID);
-
-                this.success =
-                {
-                    titel: "Progressie",
-                    beschrijving: "Competentie '" + c!.ONDERWERP  +"' behaald"
-                }
-                this.bevestigCompetentie = undefined;
-                this.bevestigPopup.close();
-            });
-
-
-            this.uitstellen();      // we hebben het vinkje in deze component gezet, we hoeven niet te laden
-        }
-        catch (e) {
-            this.error = e;
-        }
+        this.editor.openNieuwPopup(id);
     }
 
     // Check of het ID uit de configuratie ook daadwerkelijk bestaat

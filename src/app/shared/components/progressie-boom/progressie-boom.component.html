@@ -17,7 +17,7 @@
                         d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
             </svg>
         </i>
-        <div class="form-check" >
+        <div class="form-check w-100">
             <input type="checkbox" class="form-check-input" [(ngModel)]="item.checked"
                    (ngModelChange)="onProgressieChange(item)"
                    [disabled]="item.children || isDisabled" [indeterminate]="item.indeterminate"/>
@@ -26,7 +26,17 @@
             </label>
 
             <label class="form-check-label ml-4 behaaldDetails" *ngIf="item.Behaald">
-                Behaald op {{item.Behaald}}, afgetekend door {{item.Instructeur}}
+                <div class="d-flex">
+                    Afgetekend door {{item.Instructeur}} op {{item.Behaald}}
+
+                    <div *ngIf="item.GeldigTot">
+                        , geldig tot {{item.GeldigTot}}
+                    </div>
+
+                    <div *ngIf="item.Score" class="ms-2">
+                        <app-voortgang [status]="item.Score"></app-voortgang>
+                    </div>
+                </div>
             </label>
         </div>
     </div>
@@ -38,15 +48,5 @@
 >
 </ngx-treeview>
 
-<app-modal titel="Verwijder behaalde competentie">
-    <div body *ngIf="verwijderCompetentie">
-        Weet je zeker dat de competentie <b>{{verwijderCompetentie.text}}</b> verwijderd moet worden?
-    </div>
 
-    <div footer class="row mt-2 justify-content-end">
-        <div class="col-12 d-flex justify-content-end">
-            <app-icon-button type="submit" iconNaam="fas Trash" tekst="Verwijderen" (click)="verwijderenProgressie(verwijderCompetentie)">
-            </app-icon-button>
-        </div>
-    </div>
-</app-modal>
+<app-progressie-editor [competenties]="competenties" [vliegerID]="VliegerID" (aangepast)="ophalen()"></app-progressie-editor>

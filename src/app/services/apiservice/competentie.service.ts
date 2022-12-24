@@ -34,7 +34,7 @@ export class CompetentieService {
             this.competentiesStore.next(this.competentiesCache.dataset!)    // afvuren event met opgeslagen vliegtuigen dataset
         }
 
-        // Deze timer kijkt periodiek of de starts er is. API call bij inloggen kan mislukt zijn dus dit is de fallback
+        // Deze timer kijkt periodiek of de competenties er is. API call bij inloggen kan mislukt zijn dus dit is de fallback
         this.fallbackTimer = window.setInterval(() => {
             if (this.loginService.isIngelogd()) {
                 let ophalen = false;

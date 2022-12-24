@@ -29,7 +29,7 @@
                                [minDate]="{year: minDatum.year, month: minDatum.month, day: minDatum.day}"
                                [maxDate]="{year: vandaag.year, month: vandaag.month, day: vandaag.day}"
                                [(ngModel)]="startDatum"
-                               (dateSelect)="datumAanapssen($event)"
+                               (dateSelect)="datumAanpassen($event)"
                         >
 
                     </div>
@@ -43,69 +43,6 @@
                                           (VliegtuigChanged)="vliegtuigGeselecteerd($event)"
                                           label="Vliegtuig"
                     ></app-vliegtuig-invoer>
-                </div>
-            </div>
-            <div class="row">
-
-                <div class="col-12 col-md-5" *ngIf="start.VLIEGTUIG_ID">
-                    <label for="VELD" class="form-label">Veld</label>
-                    <ng-select id="VELD"
-                               [disabled]="isVerwijderMode || isRestoreMode"
-                               [items]="veldenTypes$ | async"
-                               placeholder="Start veld"
-                               bindLabel="OMSCHRIJVING"
-                               bindValue="ID"
-                               closeOnSelect="true"
-                               openOnEnter="true"
-                               required
-                               [(ngModel)]="start.VELD_ID">
-                    </ng-select>
-                </div>
-                <div class="col-12 col-md-3" *ngIf="start.VLIEGTUIG_ID">
-                    <label for="BAAN" class="form-label">Strip</label>
-                    <ng-select id="BAAN"
-                               [disabled]="isVerwijderMode || isRestoreMode"
-                               [items]="baanTypes$ | async"
-                               placeholder="Strip"
-                               bindLabel="OMSCHRIJVING"
-                               bindValue="ID"
-                               closeOnSelect="true"
-                               openOnEnter="true"
-                               [(ngModel)]="start.BAAN_ID">
-                    </ng-select>
-                </div>
-                <div class="col-4 flex-row align-self-end">
-                    <div class="col-12" *ngFor="let radiobutton of startMethodeTypesFiltered">
-                        <label ngClass.lt-md="mb-2">
-                            <div class="SMinvalid"></div>
-                            <input type="radio" name="options"
-                                   (click)="start.STARTMETHODE_ID = radiobutton.ID"
-                                   [checked]="start.STARTMETHODE_ID === radiobutton.ID">
-                            <span class="ms-3" [ngClass]="StartMethodeIngevuld()">{{radiobutton.OMSCHRIJVING}}</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mt-2" *ngIf="start.VLIEGTUIG_ID && start.STARTMETHODE_ID === 501">
-                <div class="col-12 col-md-6">
-                    <label for="SLEEPVLIEGTUIG" class="form-label">Sleepkist</label>
-                    <app-vliegtuig-invoer id="SLEEPVLIEGTUIG"
-                                          Sleep="true"
-                                          verplicht="false"
-                                          [disabled]="isVerwijderMode || isRestoreMode"
-                                          [aanwezig]="aanwezigVliegtuigen"
-                                          [vliegtuigen]="vliegtuigen"
-                                          (VliegtuigChanged)="start.SLEEPKIST_ID = $event"
-                    ></app-vliegtuig-invoer>
-                </div>
-                <div class="col-12 col-md-6">
-                    <label for="SLEEPHOOGTE" class="form-label">Sleep hoogte</label>
-                    <input name="sleephoogte" type="number" class="form-control" id="SLEEPHOOGTE"
-                           [(ngModel)]="start.SLEEP_HOOGTE"
-                           placeholder="Invullen indien bekend"
-                           min="300" max="1500" step="50"
-                    >
                 </div>
             </div>
 
@@ -239,6 +176,68 @@
                                      (btnClicked)="omwisselen()"
                                      *ngIf="magOmwisselen()"
                                      btnColor="btn-secondary"></app-icon-button>
+                </div>
+            </div>
+            <div class="row secondaryFields pb-2" *ngIf="start.VLIEGTUIG_ID">
+                <div class="col-12 col-md-5" >
+                    <label for="VELD" class="form-label">Veld</label>
+                    <ng-select id="VELD"
+                               [disabled]="isVerwijderMode || isRestoreMode"
+                               [items]="veldenTypes$ | async"
+                               placeholder="Start veld"
+                               bindLabel="OMSCHRIJVING"
+                               bindValue="ID"
+                               closeOnSelect="true"
+                               openOnEnter="true"
+                               required
+                               [(ngModel)]="start.VELD_ID">
+                    </ng-select>
+                </div>
+                <div class="col-12 col-md-3" *ngIf="start.VLIEGTUIG_ID">
+                    <label for="BAAN" class="form-label">Strip</label>
+                    <ng-select id="BAAN"
+                               [disabled]="isVerwijderMode || isRestoreMode"
+                               [items]="baanTypes$ | async"
+                               placeholder="Strip"
+                               bindLabel="OMSCHRIJVING"
+                               bindValue="ID"
+                               closeOnSelect="true"
+                               openOnEnter="true"
+                               [(ngModel)]="start.BAAN_ID">
+                    </ng-select>
+                </div>
+                <div class="col-4 flex-row align-self-end">
+                    <div class="col-12" *ngFor="let radiobutton of startMethodeTypesFiltered">
+                        <label ngClass.lt-md="mb-2">
+                            <div class="SMinvalid"></div>
+                            <input type="radio" name="options"
+                                   (click)="start.STARTMETHODE_ID = radiobutton.ID"
+                                   [checked]="start.STARTMETHODE_ID === radiobutton.ID">
+                            <span class="ms-3" [ngClass]="StartMethodeIngevuld()">{{radiobutton.OMSCHRIJVING}}</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row secondaryFields pb-2" *ngIf="start.VLIEGTUIG_ID && start.STARTMETHODE_ID === 501">
+                <div class="col-12 col-md-6">
+                    <label for="SLEEPVLIEGTUIG" class="form-label">Sleepkist</label>
+                    <app-vliegtuig-invoer id="SLEEPVLIEGTUIG"
+                                          Sleep="true"
+                                          verplicht="false"
+                                          [disabled]="isVerwijderMode || isRestoreMode"
+                                          [aanwezig]="aanwezigVliegtuigen"
+                                          [vliegtuigen]="vliegtuigen"
+                                          (VliegtuigChanged)="start.SLEEPKIST_ID = $event"
+                    ></app-vliegtuig-invoer>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label for="SLEEPHOOGTE" class="form-label">Sleep hoogte</label>
+                    <input name="sleephoogte" type="number" class="form-control" id="SLEEPHOOGTE"
+                           [(ngModel)]="start.SLEEP_HOOGTE"
+                           placeholder="Invullen indien bekend"
+                           min="300" max="1500" step="50"
+                    >
                 </div>
             </div>
 

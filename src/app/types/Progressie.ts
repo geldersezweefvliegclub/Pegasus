@@ -36,10 +36,12 @@ export interface paths {
         query: {
           /** Database ID van het type record */
           ID: number;
+          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
+          HASH?: string;
         };
       };
       responses: {
-        /** OK, starts succesvol opgehaald */
+        /** OK, data succesvol opgehaald */
         200: {
           content: {
             "application/json": components["schemas"]["ref_progressie"];
@@ -64,9 +66,9 @@ export interface paths {
           ID?: number;
           /** Toon welke records verwijderd zijn. Default = false */
           VERWIJDERD?: boolean;
-          /** Laatste aanpassing op basis van records in dataset. Bedoeld om starts verbruik te verminderen. Dataset is daarom leeg */
+          /** Laatste aanpassing op basis van records in dataset. Bedoeld om data verbruik te verminderen. Dataset is daarom leeg */
           LAATSTE_AANPASSING?: boolean;
-          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde starts bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen starts verzonden als het nodig is. */
+          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
           HASH?: string;
           /** Sortering van de velden in ORDER BY formaat. Default = CLUBKIST DESC, VOLGORDE, REGISTRATIE */
           SORT?: string;
@@ -85,7 +87,7 @@ export interface paths {
         };
       };
       responses: {
-        /** OK, starts succesvol opgehaald */
+        /** OK, data succesvol opgehaald */
         200: {
           content: {
             "application/json": components["schemas"]["view_progressie"];
@@ -104,9 +106,9 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          /** Laatste aanpassing op basis van records in dataset. Bedoeld om starts verbruik te verminderen. Dataset is daarom leeg */
+          /** Laatste aanpassing op basis van records in dataset. Bedoeld om data verbruik te verminderen. Dataset is daarom leeg */
           LAATSTE_AANPASSING?: boolean;
-          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde starts bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen starts verzonden als het nodig is. */
+          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
           HASH?: string;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
@@ -115,7 +117,7 @@ export interface paths {
         };
       };
       responses: {
-        /** OK, starts succesvol opgehaald */
+        /** OK, data succesvol opgehaald */
         200: {
           content: {
             "application/json": components["schemas"]["progressie_kaart"];
@@ -134,9 +136,9 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          /** Laatste aanpassing op basis van records in dataset. Bedoeld om starts verbruik te verminderen. Dataset is daarom leeg */
+          /** Laatste aanpassing op basis van records in dataset. Bedoeld om data verbruik te verminderen. Dataset is daarom leeg */
           LAATSTE_AANPASSING?: boolean;
-          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde starts bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen starts verzonden als het nodig is. */
+          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
           HASH?: string;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
@@ -145,7 +147,7 @@ export interface paths {
         };
       };
       responses: {
-        /** OK, starts succesvol opgehaald */
+        /** OK, data succesvol opgehaald */
         200: {
           content: {
             "application/json": components["schemas"]["progressie_boom"][];
@@ -213,7 +215,7 @@ export interface paths {
   "/Progressie/SaveObject": {
     put: {
       responses: {
-        /** OK, starts succesvol aangepast */
+        /** OK, data succesvol aangepast */
         200: {
           content: {
             "application/json": components["schemas"]["ref_progressie"];
@@ -230,7 +232,7 @@ export interface paths {
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** type starts */
+      /** type data */
       requestBody: {
         content: {
           "application/json": components["schemas"]["ref_progressie_in"];
@@ -239,7 +241,7 @@ export interface paths {
     };
     post: {
       responses: {
-        /** OK, starts succesvol toegevoegd */
+        /** OK, data succesvol toegevoegd */
         200: {
           content: {
             "application/json": components["schemas"]["ref_progressie"];
@@ -256,7 +258,7 @@ export interface paths {
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** type starts */
+      /** type data */
       requestBody: {
         content: {
           "application/json": components["schemas"]["ref_progressie_in"];
@@ -269,53 +271,133 @@ export interface paths {
 export interface components {
   schemas: {
     ref_progressie_in: {
-      /** Database ID van het record */
+      /**
+       * Format: int32
+       * @description Database ID van het record
+       * @example 92113
+       */
       ID?: number;
-      /** Lid ID (ID uit ref_leden) */
+      /**
+       * Format: int32
+       * @description Lid ID (ID uit ref_leden)
+       * @example 1
+       */
       LID_ID?: number;
-      /** Welke comptententie heeft dit lid zich eigen gemaakt. Verwijzing naar ref_competenties */
+      /**
+       * Format: int32
+       * @description Welke comptententie heeft dit lid zich eigen gemaakt. Verwijzing naar ref_competenties
+       * @example 54
+       */
       COMPETENTIE_ID?: number;
-      /** Door wie is de competentie toegevoegd voor de lid */
+      /**
+       * Format: int32
+       * @description Door wie is de competentie toegevoegd voor de lid
+       * @example 10001
+       */
       INSTRUCTEUR_ID?: number;
-      /** Opmerking over de behaalde competentie */
+      /**
+       * @description Opmerking over de behaalde competentie
+       * @example Heeft aangetoond dat de vaardigheden volledig beheerst
+       */
       OPMERKINGEN?: string;
+      /**
+       * Format: date
+       * @description Progressie geldig tot datum (bijv theorie)
+       * @example 2026-01-31
+       */
+      GELDIG_TOT?: string;
+      /**
+       * Format: int32
+       * @description Score van voortgang 1 t/m 5
+       * @example 4
+       */
+      SCORE?: number;
     };
     ref_progressie: components["schemas"]["ref_progressie_in"] & {
-      /** Tijdstempel wanneer record is toegevoegd */
+      /**
+       * Format: date-time
+       * @description Tijdstempel wanneer record is toegevoegd
+       * @example 2018-02-28T15:04:40Z
+       */
       INGEVOERD?: string;
-      /** Verwijzing naar eerder ingevoerde starts */
+      /**
+       * Format: int32
+       * @description Verwijzing naar eerder ingevoerde data
+       * @example 1655
+       */
       LINK_ID?: number;
-      /** Is dit record gemarkeerd als verwijderd? */
+      /**
+       * @description Is dit record gemarkeerd als verwijderd?
+       * @example 0
+       */
       VERWIJDERD?: boolean;
-      /** Tijdstempel van laaste aanpassing in de database */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database
+       * @example 2000-11-30T09:23:59Z
+       */
       LAATSTE_AANPASSING?: string;
     };
     view_progressie_dataset: components["schemas"]["ref_progressie"] & {
-      /** Fase van de vliegopleiding */
+      /**
+       * @description Fase van de vliegopleiding
+       * @example Voortgezette vliegopleiding 1
+       */
       LEERFASE?: string;
-      /** Volledige omschrijving van de compententie */
+      /**
+       * @description Volledige omschrijving van de compententie
+       * @example Uitstap procedure
+       */
       COMPETENTIE?: string;
-      /** De volledige naam van het lid */
+      /**
+       * @description De volledige naam van het lid
+       * @example Meindert het Paard
+       */
       LID_NAAM?: string;
-      /** De volledige naam van de instrcuteur die de competentie heeft toegevoegd */
+      /**
+       * @description De volledige naam van de instrcuteur die de competentie heeft toegevoegd
+       * @example Lowieke de Vos
+       */
       INSTRUCTEUR_NAAM?: string;
     };
     view_progressie: {
-      /** Aantal records dat voldoet aan de criteria in de database */
+      /**
+       * Format: int32
+       * @description Aantal records dat voldoet aan de criteria in de database
+       * @example 287
+       */
       totaal?: number;
-      /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
+       * @example 2021-05-29T13:44:05Z
+       */
       laatste_aanpassing?: string;
-      /** hash van de dataset */
+      /**
+       * @description hash van de dataset
+       * @example 4440baa
+       */
       hash?: string;
-      /** De dataset met records */
+      /** @description De dataset met records */
       dataset?: components["schemas"]["view_progressie_dataset"][];
     };
     competenties_kaart: {
-      /** Aantal records van de comptentie kaart */
+      /**
+       * Format: int32
+       * @description Aantal records van de comptentie kaart
+       * @example 103
+       */
       totaal?: number;
-      /** Tijdstempel van laaste aanpassing in de database op de progressei tabel */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database op de progressei tabel
+       * @example 2019-01-04 22:34:18
+       */
       laatste_aanpassing?: string;
-      /** hash van de dataset */
+      /**
+       * @description hash van de dataset
+       * @example bdabbcf
+       */
       hash?: string;
       /** De dataset met records */
       dataset?: (any & {
@@ -324,71 +406,673 @@ export interface components {
       })[];
     };
     progressie_kaart: {
-      /** Aantal records dat voldoet aan de criteria in de database */
+      /**
+       * Format: int32
+       * @description Aantal records dat voldoet aan de criteria in de database
+       * @example 287
+       */
       totaal?: number;
-      /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
+       * @example 2021-05-29T13:44:05Z
+       */
       laatste_aanpassing?: string;
-      /** hash van de dataset */
+      /**
+       * @description hash van de dataset
+       * @example 4440baa
+       */
       hash?: string;
-      /** De dataset met records */
+      /** @description De dataset met records */
       dataset?: components["schemas"]["progressie_kaart_dataset"][];
     };
     progressie_kaart_dataset: {
-      /** Database ID van het record */
+      /**
+       * Format: int32
+       * @description Database ID van het record
+       * @example 12871
+       */
       ID?: number;
-      /** Volgorde van weergave */
+      /**
+       * Format: int16
+       * @description Volgorde van weergave
+       * @example 1
+       */
       VOLGORDE?: number;
-      /** In welke leerfase zit deze competentie. Verwijzing naar ref_types */
+      /**
+       * Format: int32
+       * @description In welke leerfase zit deze competentie. Verwijzing naar ref_types
+       * @example 1
+       */
       LEERFASE_ID?: number;
-      /** Omschrijving uit de lidTypes tabel */
+      /**
+       * @description Omschrijving uit de types tabel
+       * @example VVO
+       */
       LEERFASE?: string;
-      /** Volgnummer */
+      /**
+       * @description Volgnummer
+       * @example 3.4
+       */
       BLOK?: string;
-      /** Verwijzing naar bovenliggend record van boom structuur */
+      /**
+       * Format: int32
+       * @description Verwijzing naar bovenliggend record van boom structuur
+       * @example 300
+       */
       BLOK_ID?: number;
-      /** Volledige omschrijving van de compententie */
+      /**
+       * @description Volledige omschrijving van de compententie
+       * @example Uitstap procedure
+       */
       ONDERWERP?: string;
-      /** Verwijzing naar de volledige documentie */
+      /**
+       * @description Verwijzing naar de volledige documentie
+       * @example VVO1.14
+       */
       DOCUMENTATIE?: string;
-      /** Is dit record gemarkeerd als verwijderd? */
+      /**
+       * @description Is dit record gemarkeerd als verwijderd?
+       * @example 0
+       */
       VERWIJDERD?: boolean;
-      /** Tijdstempel van laaste aanpassing in de database */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database
+       * @example 2019-05-01 16:42:00
+       */
       LAATSTE_AANPASSING?: string;
-      /** ID van progressie record */
+      /**
+       * Format: int32
+       * @description ID van progressie record
+       * @example 12871
+       */
       PROGRESSIE_ID?: number;
-      /** Tijdstempel wanneer record is toegevoegd */
+      /**
+       * Format: date-time
+       * @description Tijdstempel wanneer record is toegevoegd
+       * @example 2018-02-28T15:04:40Z
+       */
       INGEVOERD?: number;
-      /** De volledige naam van de instrcuteur die de competentie heeft toegevoegd */
+      /**
+       * @description De volledige naam van de instrcuteur die de competentie heeft toegevoegd
+       * @example Lowieke de Vos
+       */
       INSTRUCTEUR_NAAM?: string;
-      /** Opmerking over de behaalde competentie */
+      /**
+       * @description Opmerking over de behaalde competentie
+       * @example Heeft aangetoond dat de vaardigheden volledig beheerst
+       */
       OPMERKINGEN?: string;
     };
     progressie_boom: {
-      /** In welke leerfase zit deze competentie. Verwijzing naar ref_types */
+      /**
+       * Format: int32
+       * @description In welke leerfase zit deze competentie. Verwijzing naar ref_types
+       * @example 1
+       */
       LEERFASE_ID?: number;
-      /** Comptententie ID */
+      /**
+       * Format: int32
+       * @description Comptententie ID
+       * @example 12871
+       */
       COMPETENTIE_ID?: number;
-      /** Verwijzing naar bovenliggend record van boom structuur */
+      /**
+       * Format: int32
+       * @description Verwijzing naar bovenliggend record van boom structuur
+       * @example 300
+       */
       BLOK_ID?: number;
-      /** Volgnummer */
+      /**
+       * @description Volgnummer
+       * @example 3.4
+       */
       BLOK?: string;
-      /** Volledige omschrijving van de compententie */
+      /**
+       * @description Volledige omschrijving van de compententie
+       * @example Uitstap procedure
+       */
       ONDERWERP?: string;
-      /** Verwijzing naar de volledige documentie */
+      /**
+       * @description Verwijzing naar de volledige documentie
+       * @example VVO1.14
+       */
       DOCUMENTATIE?: string;
-      /** ID van progressie record */
+      /**
+       * Format: int32
+       * @description ID van progressie record
+       * @example 12871
+       */
       PROGRESSIE_ID?: number;
-      /** Is comptententie behaald, 0 = niet behaald, 1 = gedeeltelijk van onderliggende, 2 = gehaald, ook alle onderliggende */
+      /**
+       * Format: int32
+       * @description Is comptententie behaald, 0 = niet behaald, 1 = gedeeltelijk van onderliggende, 2 = gehaald, ook alle onderliggende
+       * @example 1
+       */
       IS_BEHAALD?: number;
-      /** Tijdstempel wanneer record is toegevoegd */
+      /**
+       * Format: date-time
+       * @description Tijdstempel wanneer record is toegevoegd
+       * @example 2018-02-28T15:04:40Z
+       */
       INGEVOERD?: string;
-      /** De volledige naam van de instrcuteur die de competentie heeft toegevoegd */
+      /**
+       * @description De volledige naam van de instrcuteur die de competentie heeft toegevoegd
+       * @example Lowieke de Vos
+       */
       INSTRUCTEUR_NAAM?: string;
-      /** Opmerking over de behaalde competentie */
+      /**
+       * @description Opmerking over de behaalde competentie
+       * @example Heeft aangetoond dat de vaardigheden volledig beheerst
+       */
       OPMERKINGEN?: string;
+      /**
+       * @description De geldigheidsdatum van de behaalde compententie
+       * @example 2024-10-14
+       */
+      GELDIG_TOT?: string;
+      /**
+       * Format: int32
+       * @description Score van de behaalde competentie 1 t/m 5
+       * @example 2
+       */
+      SCORE?: number;
       children?: components["schemas"]["progressie_boom"][];
     };
   };
 }
 
 export interface operations {}
+
+export interface external {
+  "Competenties.yml": {
+    paths: {
+      "/Competenties/CreateTable": {
+        post: {
+          parameters: {
+            query: {
+              /** Dummy records aanmaken */
+              FILLDATA: boolean;
+            };
+          };
+          responses: {
+            /** Aangemaakt, Tabel toegevoegd */
+            201: unknown;
+            /** Data verwerkingsfout, bijv omdat de tabel al bestaat */
+            500: unknown;
+          };
+        };
+      };
+      "/Competenties/CreateViews": {
+        post: {
+          responses: {
+            /** Aangemaakt, View toegevoegd */
+            201: unknown;
+            /** Data verwerkingsfout, view niet aangemaak */
+            500: unknown;
+          };
+        };
+      };
+      "/Competenties/GetObject": {
+        get: {
+          parameters: {
+            query: {
+              /** Database ID van het type record */
+              ID: number;
+            };
+          };
+          responses: {
+            /** OK, data succesvol opgehaald */
+            200: {
+              content: {
+                "application/json": external["Competenties.yml"]["components"]["schemas"]["ref_competenties"];
+              };
+            };
+            /** Data niet gevonden */
+            404: unknown;
+            /** Methode niet toegestaan, input validatie error */
+            405: unknown;
+            /** Niet aanvaardbaar, input ontbreekt */
+            406: unknown;
+            /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
+            500: unknown;
+          };
+        };
+      };
+      "/Competenties/GetObjects": {
+        get: {
+          parameters: {
+            query: {
+              /** Database ID van het aanwezig record */
+              ID?: number;
+              /** Toon welke records verwijderd zijn. Default = false */
+              VERWIJDERD?: boolean;
+              /** Laatste aanpassing op basis van records in dataset. Bedoeld om data verbruik te verminderen. Dataset is daarom leeg */
+              LAATSTE_AANPASSING?: boolean;
+              /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
+              HASH?: string;
+              /** Sortering van de velden in ORDER BY formaat. Default = CLUBKIST DESC, VOLGORDE, REGISTRATIE */
+              SORT?: string;
+              /** Maximum aantal records in de dataset. Gebruikt in LIMIT query */
+              MAX?: number;
+              /** Eerste record in de dataset. Gebruikt in LIMIT query */
+              START?: number;
+              /** Welke velden moet opgenomen worden in de dataset */
+              VELDEN?: string;
+              /** Haal alle types op van een specieke leerfase */
+              LEERFASE_ID?: string;
+            };
+          };
+          responses: {
+            /** OK, data succesvol opgehaald */
+            200: {
+              content: {
+                "application/json": external["Competenties.yml"]["components"]["schemas"]["view_competenties"];
+              };
+            };
+            /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
+            304: never;
+            /** Methode niet toegestaan, input validatie error */
+            405: unknown;
+            /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
+            500: unknown;
+          };
+        };
+      };
+      "/Competenties/CompetentiesBoom": {
+        get: {
+          parameters: {
+            query: {
+              /** Laatste aanpassing op basis van records in dataset. Bedoeld om data verbruik te verminderen. Dataset is daarom leeg */
+              LAATSTE_AANPASSING?: boolean;
+              /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
+              HASH?: string;
+              /** Welke velden moet opgenomen worden in de dataset */
+              VELDEN?: string;
+            };
+          };
+          responses: {
+            /** OK, data succesvol opgehaald */
+            200: {
+              content: {
+                "application/json": external["Competenties.yml"]["components"]["schemas"]["progressie_boom"][];
+              };
+            };
+            /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
+            304: never;
+            /** Methode niet toegestaan, input validatie error */
+            405: unknown;
+            /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
+            500: unknown;
+          };
+        };
+      };
+      "/Competenties/DeleteObject": {
+        delete: {
+          parameters: {
+            query: {
+              /** Database ID van het record. Meerdere ID's in CSV formaat */
+              ID: string;
+              /** Controleer of record bestaat voordat het verwijderd wordt. Default = true */
+              VERIFICATIE?: boolean;
+            };
+          };
+          responses: {
+            /** Type verwijderd */
+            204: never;
+            /** Niet geautoriseerd, geen schrijfrechten */
+            401: unknown;
+            /** Data niet gevonden */
+            404: unknown;
+            /** Methode niet toegestaan, input validatie error */
+            405: unknown;
+            /** Niet aanvaardbaar, input ontbreekt */
+            406: unknown;
+            /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
+            500: unknown;
+          };
+        };
+      };
+      "/Competenties/RestoreObject": {
+        patch: {
+          parameters: {
+            query: {
+              /** Database ID van het record. Meerdere ID's in CSV formaat */
+              ID: string;
+            };
+          };
+          responses: {
+            /** Record(s) hersteld */
+            202: unknown;
+            /** Niet geautoriseerd, geen schrijfrechten */
+            401: unknown;
+            /** Data niet gevonden */
+            404: unknown;
+            /** Methode niet toegestaan, input validatie error */
+            405: unknown;
+            /** Niet aanvaardbaar, input ontbreekt */
+            406: unknown;
+            /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
+            500: unknown;
+          };
+        };
+      };
+      "/Competenties/SaveObject": {
+        put: {
+          responses: {
+            /** OK, data succesvol aangepast */
+            200: {
+              content: {
+                "application/json": external["Competenties.yml"]["components"]["schemas"]["ref_competenties"];
+              };
+            };
+            /** Niet geautoriseerd, geen schrijfrechten */
+            401: unknown;
+            /** Data niet gevonden */
+            404: unknown;
+            /** Methode niet toegestaan, input validatie error */
+            405: unknown;
+            /** Niet aanvaardbaar, input ontbreekt */
+            406: unknown;
+            /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
+            500: unknown;
+          };
+          /** type data */
+          requestBody: {
+            content: {
+              "application/json": external["Competenties.yml"]["components"]["schemas"]["ref_competenties_in"];
+            };
+          };
+        };
+        post: {
+          responses: {
+            /** OK, data succesvol toegevoegd */
+            200: {
+              content: {
+                "application/json": external["Competenties.yml"]["components"]["schemas"]["ref_competenties"];
+              };
+            };
+            /** Niet geautoriseerd, geen schrijfrechten */
+            401: unknown;
+            /** Methode niet toegestaan, input validatie error */
+            405: unknown;
+            /** Niet aanvaardbaar, input ontbreekt */
+            406: unknown;
+            /** Conflict, record bestaat al */
+            409: unknown;
+            /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
+            500: unknown;
+          };
+          /** type data */
+          requestBody: {
+            content: {
+              "application/json": external["Competenties.yml"]["components"]["schemas"]["ref_competenties_in"];
+            };
+          };
+        };
+      };
+    };
+    components: {
+      schemas: {
+        ref_competenties_in: {
+          /**
+           * Format: int32
+           * @description Database ID van het record
+           * @example 12871
+           */
+          ID?: number;
+          /**
+           * Format: int16
+           * @description Volgorde van weergave
+           * @example 1
+           */
+          VOLGORDE?: number;
+          /**
+           * Format: int32
+           * @description In welke leerfase zit deze competentie. Verwijzing naar ref_types
+           * @example 1
+           */
+          LEERFASE_ID?: number;
+          /**
+           * @description Volgnummer
+           * @example 3.4
+           */
+          BLOK?: string;
+          /**
+           * Format: int32
+           * @description Verwijzing naar bovenliggend record van boom structuur
+           * @example 300
+           */
+          BLOK_ID?: number;
+          /**
+           * @description Volledige omschrijving van de compententie
+           * @example Uitstap procedure
+           */
+          ONDERWERP?: string;
+          /**
+           * @description Verwijzing naar de volledige documentie
+           * @example VVO1.14
+           */
+          DOCUMENTATIE?: string;
+          /**
+           * @description Is er een einde aan de geldigheid van deze comptentie (bijv theorie)
+           * @example 0
+           */
+          GELDIGHEID?: boolean;
+          /**
+           * @description Hebben we een score 1/5 voor deze comptentie? Zo nee, dan alleen wel/niet
+           * @example 0
+           */
+          SCORE?: boolean;
+        };
+        ref_competenties: external["Competenties.yml"]["components"]["schemas"]["ref_competenties_in"] & {
+          /**
+           * @description Is dit record gemarkeerd als verwijderd?
+           * @example 0
+           */
+          VERWIJDERD?: boolean;
+          /**
+           * Format: date-time
+           * @description Tijdstempel van laaste aanpassing in de database
+           * @example 2019-05-01 16:42:00
+           */
+          LAATSTE_AANPASSING?: string;
+        };
+        view_competenties_dataset: external["Competenties.yml"]["components"]["schemas"]["ref_competenties"] & {
+          /**
+           * @description Fase van de vliegopleiding
+           * @example Voortgezette vliegopleiding 1
+           */
+          LEERFASE?: string;
+        };
+        view_competenties: {
+          /**
+           * Format: int32
+           * @description Aantal records dat voldoet aan de criteria in de database
+           * @example 287
+           */
+          totaal?: number;
+          /**
+           * Format: date-time
+           * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
+           * @example 2020-06-06 13:02:02
+           */
+          laatste_aanpassing?: string;
+          /**
+           * @description hash van de dataset
+           * @example ada0b20
+           */
+          hash?: string;
+          /** @description De dataset met records */
+          dataset?: external["Competenties.yml"]["components"]["schemas"]["view_competenties_dataset"][];
+        };
+        progressie_kaart: {
+          /**
+           * Format: int32
+           * @description Aantal records dat voldoet aan de criteria in de database
+           * @example 287
+           */
+          totaal?: number;
+          /**
+           * Format: date-time
+           * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
+           * @example 2021-05-29T13:44:05Z
+           */
+          laatste_aanpassing?: string;
+          /**
+           * @description hash van de dataset
+           * @example 4440baa
+           */
+          hash?: string;
+          /** @description De dataset met records */
+          dataset?: external["Competenties.yml"]["components"]["schemas"]["progressie_kaart_dataset"][];
+        };
+        progressie_kaart_dataset: {
+          /**
+           * Format: int32
+           * @description Database ID van het record
+           * @example 12871
+           */
+          ID?: number;
+          /**
+           * Format: int16
+           * @description Volgorde van weergave
+           * @example 1
+           */
+          VOLGORDE?: number;
+          /**
+           * Format: int32
+           * @description In welke leerfase zit deze competentie. Verwijzing naar ref_types
+           * @example 1
+           */
+          LEERFASE_ID?: number;
+          /**
+           * @description Omschrijving uit de types tabel
+           * @example VVO
+           */
+          LEERFASE?: string;
+          /**
+           * @description Volgnummer
+           * @example 3.4
+           */
+          BLOK?: string;
+          /**
+           * Format: int32
+           * @description Verwijzing naar bovenliggend record van boom structuur
+           * @example 300
+           */
+          BLOK_ID?: number;
+          /**
+           * @description Volledige omschrijving van de compententie
+           * @example Uitstap procedure
+           */
+          ONDERWERP?: string;
+          /**
+           * @description Verwijzing naar de volledige documentie
+           * @example VVO1.14
+           */
+          DOCUMENTATIE?: string;
+          /**
+           * @description Is dit record gemarkeerd als verwijderd?
+           * @example 0
+           */
+          VERWIJDERD?: boolean;
+          /**
+           * Format: date-time
+           * @description Tijdstempel van laaste aanpassing in de database
+           * @example 2019-05-01 16:42:00
+           */
+          LAATSTE_AANPASSING?: string;
+          /**
+           * Format: int32
+           * @description ID van progressie record
+           * @example 12871
+           */
+          PROGRESSIE_ID?: number;
+          /**
+           * Format: date-time
+           * @description Tijdstempel wanneer record is toegevoegd
+           * @example 2018-02-28T15:04:40Z
+           */
+          INGEVOERD?: number;
+          /**
+           * @description De volledige naam van de instrcuteur die de competentie heeft toegevoegd
+           * @example Lowieke de Vos
+           */
+          INSTRUCTEUR_NAAM?: string;
+          /**
+           * @description Opmerking over de behaalde competentie
+           * @example Heeft aangetoond dat de vaardigheden volledig beheerst
+           */
+          OPMERKINGEN?: string;
+        };
+        progressie_boom: {
+          /**
+           * Format: int32
+           * @description In welke leerfase zit deze competentie. Verwijzing naar ref_types
+           * @example 1
+           */
+          LEERFASE_ID?: number;
+          /**
+           * Format: int32
+           * @description Comptententie ID
+           * @example 12871
+           */
+          COMPETENTIE_ID?: number;
+          /**
+           * Format: int32
+           * @description Verwijzing naar bovenliggend record van boom structuur
+           * @example 300
+           */
+          BLOK_ID?: number;
+          /**
+           * @description Volgnummer
+           * @example 3.4
+           */
+          BLOK?: string;
+          /**
+           * @description Volledige omschrijving van de compententie
+           * @example Uitstap procedure
+           */
+          ONDERWERP?: string;
+          /**
+           * @description Verwijzing naar de volledige documentie
+           * @example VVO1.14
+           */
+          DOCUMENTATIE?: string;
+          /**
+           * Format: int32
+           * @description ID van progressie record
+           * @example 12871
+           */
+          PROGRESSIE_ID?: number;
+          /**
+           * Format: int32
+           * @description Is comptententie behaald, 0 = niet behaald, 1 = gedeeltelijk van onderliggende, 2 = gehaald, ook alle onderliggende
+           * @example 1
+           */
+          IS_BEHAALD?: number;
+          /**
+           * Format: date-time
+           * @description Tijdstempel wanneer record is toegevoegd
+           * @example 2018-02-28T15:04:40Z
+           */
+          INGEVOERD?: string;
+          /**
+           * @description De volledige naam van de instrcuteur die de competentie heeft toegevoegd
+           * @example Lowieke de Vos
+           */
+          INSTRUCTEUR_NAAM?: string;
+          /**
+           * @description Opmerking over de behaalde competentie
+           * @example Heeft aangetoond dat de vaardigheden volledig beheerst
+           */
+          OPMERKINGEN?: string;
+          children?: external["Competenties.yml"]["components"]["schemas"]["progressie_boom"][];
+        };
+      };
+    };
+    operations: {};
+  };
+}

@@ -3,7 +3,7 @@ import {APIService} from "./api.service";
 import {StorageService} from "../storage/storage.service";
 import {
     HeliosBehaaldeProgressie,
-    HeliosBehaaldeProgressieDataset,
+    HeliosBehaaldeProgressieDataset, HeliosDagRapport, HeliosLid,
     HeliosProgressie,
     HeliosProgressieBoom,
     HeliosProgressieKaart,
@@ -26,7 +26,7 @@ export class ProgressieService {
                 private readonly storageService: StorageService) {
     }
 
-    async getProgressie(lidID:number, comptentiesIDs?: string): Promise<HeliosBehaaldeProgressieDataset[]> {
+    async getProgressiesLid(lidID:number, comptentiesIDs?: string): Promise<HeliosBehaaldeProgressieDataset[]> {
         let progressie: HeliosBehaaldeProgressie | null = null;
 
         let getParams: KeyValueArray = {};
@@ -50,19 +50,28 @@ export class ProgressieService {
         return this.progressieCache?.dataset as [];
     }
 
-    async behaaldeCompetentie(progressie: HeliosProgressie):Promise<HeliosProgressie> {
+    async getProgressie(id: number): Promise<HeliosBehaaldeProgressieDataset> {
+        const response: Response = await this.apiService.get('Progressie/GetObject', {'ID': id.toString()});
+        return await response.json();
+    }
+
+    async addProgressie(progressie: HeliosProgressie):Promise<HeliosProgressie> {
         const response: Response = await this.apiService.post('Progressie/SaveObject', JSON.stringify(progressie));
-        return response.json();
+        return await response.json();
     }
 
-    async verwijderCompetentie(id: number) {
-        try {
-            await this.apiService.delete('Progressie/DeleteObject', {'ID': id.toString()});
-        } catch (e) {
-            throw(e);
-        }
+    async updateProgressie(dr: HeliosDagRapport) {
+        const response: Response = await this.apiService.put('Progressie/SaveObject', JSON.stringify(dr));
+        return await response.json();
     }
 
+    async deleteProgressie(id: number) {
+        await this.apiService.delete('Progressie/DeleteObject', {'ID': id.toString()});
+    }
+
+    async restoreProgressie(id: number) {
+        await this.apiService.patch('Progressie/RestoreObject', {'ID': id.toString()});
+    }
 
     async getBoom(lidID:number): Promise<HeliosProgressieBoom[]> {
         let getParams: KeyValueArray = {};

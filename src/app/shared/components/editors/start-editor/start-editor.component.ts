@@ -35,12 +35,12 @@ import {faStreetView} from "@fortawesome/free-solid-svg-icons";
     styleUrls: ['./start-editor.component.scss'],
     providers: [{provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter}]
 })
+
 export class StartEditorComponent implements OnInit {
     @Input() VliegerID: number;                     // wordt gezet bij aanroep vanuit logboek
     @Input() VliegveldID: number | undefined;       // wordt gezet als we van start / vluchten een start aanmaken
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @ViewChild(VliegtuigInvoerComponent) vliegtuigInvoerComponent: VliegtuigInvoerComponent;
-
     gastIcon: IconDefinition = faStreetView;
 
     start: HeliosStart = {};
@@ -215,7 +215,12 @@ export class StartEditorComponent implements OnInit {
             let baan_id = undefined;
             let startmethode_id = undefined;
 
-            if ((this.VliegveldID == this.daginfoService.dagInfo.VELD_ID) ||
+            if (!this.VliegveldID) {
+                veld_id = this.daginfoService.dagInfo.VELD_ID;
+                baan_id = this.daginfoService.dagInfo.BAAN_ID;
+                startmethode_id = this.daginfoService.dagInfo.STARTMETHODE_ID;
+            }
+            else if ((this.VliegveldID == this.daginfoService.dagInfo.VELD_ID) ||
                 (this.VliegveldID == this.daginfoService.dagInfo.VELD_ID2)) {
                 veld_id = (this.VliegveldID == this.daginfoService.dagInfo.VELD_ID2) ? this.daginfoService.dagInfo.VELD_ID2 : this.daginfoService.dagInfo.VELD_ID;
                 baan_id = (this.VliegveldID == this.daginfoService.dagInfo.VELD_ID2) ? this.daginfoService.dagInfo.BAAN_ID2 : this.daginfoService.dagInfo.BAAN_ID;
@@ -642,7 +647,7 @@ export class StartEditorComponent implements OnInit {
             return;
         }
 
-        this.progressieService.getProgressie(this.start.VLIEGER_ID, competentieIDs).then((progressie:  HeliosBehaaldeProgressieDataset[]) => {
+        this.progressieService.getProgressiesLid(this.start.VLIEGER_ID, competentieIDs).then((progressie:  HeliosBehaaldeProgressieDataset[]) => {
             this.toonWaarschuwing = progressie.length <= 0;
         });
     }
@@ -771,7 +776,7 @@ export class StartEditorComponent implements OnInit {
     }
 
     // Datum van de start aanpassen
-    datumAanapssen($datum: NgbDate) {
+    datumAanpassen($datum: NgbDate) {
         this.startDatum = DateTime.fromObject({year: $datum.year, month: $datum.month, day: $datum.day});
         this.start.DATUM = this.startDatum.toISODate();
     }

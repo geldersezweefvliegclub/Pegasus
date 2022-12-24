@@ -74,6 +74,8 @@ import { DatumtijdRenderComponent } from './components/datatable/datumtijd-rende
 import { DagRapportEditorComponent } from './components/editors/dag-rapport-editor/dag-rapport-editor.component';
 import {ComposeMeteoComponent} from "./components/editors/dag-rapport-editor/compose-meteo/compose-meteo.component";
 import {ComposeBedrijfComponent} from "./components/editors/dag-rapport-editor/compose-bedrijf/compose-bedrijf.component";
+import { ProgressieEditorComponent } from './components/editors/progressie-editor/progressie-editor.component';
+import { VoortgangComponent } from './components/voortgang/voortgang.component';
 
 @NgModule({
     imports: [
@@ -157,6 +159,8 @@ import {ComposeBedrijfComponent} from "./components/editors/dag-rapport-editor/c
         DagRapportEditorComponent,
         ComposeMeteoComponent,
         ComposeBedrijfComponent,
+        ProgressieEditorComponent,
+        VoortgangComponent,
     ],
     exports: [
         LidEditorComponent,

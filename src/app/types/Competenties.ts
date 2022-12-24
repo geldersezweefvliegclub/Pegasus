@@ -233,103 +233,258 @@ export interface paths {
 export interface components {
   schemas: {
     ref_competenties_in: {
-      /** Database ID van het record */
+      /**
+       * Format: int32
+       * @description Database ID van het record
+       * @example 12871
+       */
       ID?: number;
-      /** Volgorde van weergave */
+      /**
+       * Format: int16
+       * @description Volgorde van weergave
+       * @example 1
+       */
       VOLGORDE?: number;
-      /** In welke leerfase zit deze competentie. Verwijzing naar ref_types */
+      /**
+       * Format: int32
+       * @description In welke leerfase zit deze competentie. Verwijzing naar ref_types
+       * @example 1
+       */
       LEERFASE_ID?: number;
-      /** Volgnummer */
+      /**
+       * @description Volgnummer
+       * @example 3.4
+       */
       BLOK?: string;
-      /** Verwijzing naar bovenliggend record van boom structuur */
+      /**
+       * Format: int32
+       * @description Verwijzing naar bovenliggend record van boom structuur
+       * @example 300
+       */
       BLOK_ID?: number;
-      /** Volledige omschrijving van de compententie */
+      /**
+       * @description Volledige omschrijving van de compententie
+       * @example Uitstap procedure
+       */
       ONDERWERP?: string;
-      /** Verwijzing naar de volledige documentie */
+      /**
+       * @description Verwijzing naar de volledige documentie
+       * @example VVO1.14
+       */
       DOCUMENTATIE?: string;
+      /**
+       * @description Is er een einde aan de geldigheid van deze comptentie (bijv theorie)
+       * @example 0
+       */
+      GELDIGHEID?: boolean;
+      /**
+       * @description Hebben we een score 1/5 voor deze comptentie? Zo nee, dan alleen wel/niet
+       * @example 0
+       */
+      SCORE?: boolean;
     };
     ref_competenties: components["schemas"]["ref_competenties_in"] & {
-      /** Is dit record gemarkeerd als verwijderd? */
+      /**
+       * @description Is dit record gemarkeerd als verwijderd?
+       * @example 0
+       */
       VERWIJDERD?: boolean;
-      /** Tijdstempel van laaste aanpassing in de database */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database
+       * @example 2019-05-01 16:42:00
+       */
       LAATSTE_AANPASSING?: string;
     };
     view_competenties_dataset: components["schemas"]["ref_competenties"] & {
-      /** Fase van de vliegopleiding */
+      /**
+       * @description Fase van de vliegopleiding
+       * @example Voortgezette vliegopleiding 1
+       */
       LEERFASE?: string;
     };
     view_competenties: {
-      /** Aantal records dat voldoet aan de criteria in de database */
+      /**
+       * Format: int32
+       * @description Aantal records dat voldoet aan de criteria in de database
+       * @example 287
+       */
       totaal?: number;
-      /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
+       * @example 2020-06-06 13:02:02
+       */
       laatste_aanpassing?: string;
-      /** hash van de dataset */
+      /**
+       * @description hash van de dataset
+       * @example ada0b20
+       */
       hash?: string;
-      /** De dataset met records */
+      /** @description De dataset met records */
       dataset?: components["schemas"]["view_competenties_dataset"][];
     };
     progressie_kaart: {
-      /** Aantal records dat voldoet aan de criteria in de database */
+      /**
+       * Format: int32
+       * @description Aantal records dat voldoet aan de criteria in de database
+       * @example 287
+       */
       totaal?: number;
-      /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
+       * @example 2021-05-29T13:44:05Z
+       */
       laatste_aanpassing?: string;
-      /** hash van de dataset */
+      /**
+       * @description hash van de dataset
+       * @example 4440baa
+       */
       hash?: string;
-      /** De dataset met records */
+      /** @description De dataset met records */
       dataset?: components["schemas"]["progressie_kaart_dataset"][];
     };
     progressie_kaart_dataset: {
-      /** Database ID van het record */
+      /**
+       * Format: int32
+       * @description Database ID van het record
+       * @example 12871
+       */
       ID?: number;
-      /** Volgorde van weergave */
+      /**
+       * Format: int16
+       * @description Volgorde van weergave
+       * @example 1
+       */
       VOLGORDE?: number;
-      /** In welke leerfase zit deze competentie. Verwijzing naar ref_types */
+      /**
+       * Format: int32
+       * @description In welke leerfase zit deze competentie. Verwijzing naar ref_types
+       * @example 1
+       */
       LEERFASE_ID?: number;
-      /** Omschrijving uit de types tabel */
+      /**
+       * @description Omschrijving uit de types tabel
+       * @example VVO
+       */
       LEERFASE?: string;
-      /** Volgnummer */
+      /**
+       * @description Volgnummer
+       * @example 3.4
+       */
       BLOK?: string;
-      /** Verwijzing naar bovenliggend record van boom structuur */
+      /**
+       * Format: int32
+       * @description Verwijzing naar bovenliggend record van boom structuur
+       * @example 300
+       */
       BLOK_ID?: number;
-      /** Volledige omschrijving van de compententie */
+      /**
+       * @description Volledige omschrijving van de compententie
+       * @example Uitstap procedure
+       */
       ONDERWERP?: string;
-      /** Verwijzing naar de volledige documentie */
+      /**
+       * @description Verwijzing naar de volledige documentie
+       * @example VVO1.14
+       */
       DOCUMENTATIE?: string;
-      /** Is dit record gemarkeerd als verwijderd? */
+      /**
+       * @description Is dit record gemarkeerd als verwijderd?
+       * @example 0
+       */
       VERWIJDERD?: boolean;
-      /** Tijdstempel van laaste aanpassing in de database */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database
+       * @example 2019-05-01 16:42:00
+       */
       LAATSTE_AANPASSING?: string;
-      /** ID van progressie record */
+      /**
+       * Format: int32
+       * @description ID van progressie record
+       * @example 12871
+       */
       PROGRESSIE_ID?: number;
-      /** Tijdstempel wanneer record is toegevoegd */
+      /**
+       * Format: date-time
+       * @description Tijdstempel wanneer record is toegevoegd
+       * @example 2018-02-28T15:04:40Z
+       */
       INGEVOERD?: number;
-      /** De volledige naam van de instrcuteur die de competentie heeft toegevoegd */
+      /**
+       * @description De volledige naam van de instrcuteur die de competentie heeft toegevoegd
+       * @example Lowieke de Vos
+       */
       INSTRUCTEUR_NAAM?: string;
-      /** Opmerking over de behaalde competentie */
+      /**
+       * @description Opmerking over de behaalde competentie
+       * @example Heeft aangetoond dat de vaardigheden volledig beheerst
+       */
       OPMERKINGEN?: string;
     };
     progressie_boom: {
-      /** In welke leerfase zit deze competentie. Verwijzing naar ref_types */
+      /**
+       * Format: int32
+       * @description In welke leerfase zit deze competentie. Verwijzing naar ref_types
+       * @example 1
+       */
       LEERFASE_ID?: number;
-      /** Comptententie ID */
+      /**
+       * Format: int32
+       * @description Comptententie ID
+       * @example 12871
+       */
       COMPETENTIE_ID?: number;
-      /** Verwijzing naar bovenliggend record van boom structuur */
+      /**
+       * Format: int32
+       * @description Verwijzing naar bovenliggend record van boom structuur
+       * @example 300
+       */
       BLOK_ID?: number;
-      /** Volgnummer */
+      /**
+       * @description Volgnummer
+       * @example 3.4
+       */
       BLOK?: string;
-      /** Volledige omschrijving van de compententie */
+      /**
+       * @description Volledige omschrijving van de compententie
+       * @example Uitstap procedure
+       */
       ONDERWERP?: string;
-      /** Verwijzing naar de volledige documentie */
+      /**
+       * @description Verwijzing naar de volledige documentie
+       * @example VVO1.14
+       */
       DOCUMENTATIE?: string;
-      /** ID van progressie record */
+      /**
+       * Format: int32
+       * @description ID van progressie record
+       * @example 12871
+       */
       PROGRESSIE_ID?: number;
-      /** Is comptententie behaald, 0 = niet behaald, 1 = gedeeltelijk van onderliggende, 2 = gehaald, ook alle onderliggende */
+      /**
+       * Format: int32
+       * @description Is comptententie behaald, 0 = niet behaald, 1 = gedeeltelijk van onderliggende, 2 = gehaald, ook alle onderliggende
+       * @example 1
+       */
       IS_BEHAALD?: number;
-      /** Tijdstempel wanneer record is toegevoegd */
+      /**
+       * Format: date-time
+       * @description Tijdstempel wanneer record is toegevoegd
+       * @example 2018-02-28T15:04:40Z
+       */
       INGEVOERD?: string;
-      /** De volledige naam van de instrcuteur die de competentie heeft toegevoegd */
+      /**
+       * @description De volledige naam van de instrcuteur die de competentie heeft toegevoegd
+       * @example Lowieke de Vos
+       */
       INSTRUCTEUR_NAAM?: string;
-      /** Opmerking over de behaalde competentie */
+      /**
+       * @description Opmerking over de behaalde competentie
+       * @example Heeft aangetoond dat de vaardigheden volledig beheerst
+       */
       OPMERKINGEN?: string;
       children?: components["schemas"]["progressie_boom"][];
     };
@@ -337,3 +492,5 @@ export interface components {
 }
 
 export interface operations {}
+
+export interface external {}

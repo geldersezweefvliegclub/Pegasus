@@ -8,11 +8,14 @@ import {ErrorMessage, HeliosActie, SuccessMessage} from "../../../types/Utils";
 import {SharedService} from "../../../services/shared/shared.service";
 import {CompetentieService} from "../../../services/apiservice/competentie.service";
 import {Subscription} from "rxjs";
+import {ProgressieEditorComponent} from "../editors/progressie-editor/progressie-editor.component";
 
 export class ProgressieTreeviewItem extends TreeviewItem {
     ProgresssieID: number | undefined;
     Instructeur: string | undefined;
     Behaald: string | undefined;
+    Score: number | undefined;
+    GeldigTot: string | undefined;
 }
 
 @Component({
@@ -23,7 +26,7 @@ export class ProgressieTreeviewItem extends TreeviewItem {
 
 export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
     @Input() VliegerID: number;
-    @ViewChild(ModalComponent) private bevestigPopup: ModalComponent;
+    @ViewChild(ProgressieEditorComponent) private editor: ProgressieEditorComponent;
 
     private dbEventAbonnement: Subscription;
     private competentiesAbonnement: Subscription;
@@ -49,7 +52,8 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
     constructor(private readonly loginService: LoginService,
                 private readonly sharedService: SharedService,
                 private readonly competentieService: CompetentieService,
-                private readonly progressieService: ProgressieService) {  }
+                private readonly progressieService: ProgressieService) {
+    }
 
     ngOnInit(): void {
         // Als in de progressie tabel is aangepast, moet we onze dataset ook aanpassen
@@ -70,8 +74,8 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     ngOnDestroy(): void {
-        if (this.dbEventAbonnement)         this.dbEventAbonnement.unsubscribe();
-        if (this.competentiesAbonnement)    this.competentiesAbonnement.unsubscribe();
+        if (this.dbEventAbonnement) this.dbEventAbonnement.unsubscribe();
+        if (this.competentiesAbonnement) this.competentiesAbonnement.unsubscribe();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -114,11 +118,13 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
         if (!boomTak.children) {
             nieuwetak.checked = boomTak.IS_BEHAALD == 2
             if (nieuwetak.checked) {
-                const datum = this.sharedService.datumDMJ(boomTak.INGEVOERD!.substr(0, 10))
+                const datum = this.sharedService.datumDMJ(boomTak.INGEVOERD!.substring(0, 10))
 
                 nieuwetak.Instructeur = boomTak.INSTRUCTEUR_NAAM!;
                 nieuwetak.ProgresssieID = boomTak.PROGRESSIE_ID!;
                 nieuwetak.Behaald = datum;
+                nieuwetak.Score = boomTak.SCORE;
+                nieuwetak.GeldigTot = (boomTak.GELDIG_TOT) ? this.sharedService.datumDMJ(boomTak.GELDIG_TOT) : undefined;
             }
         } else {
             for (let i = 0; i < boomTak.children.length; i++) {
@@ -136,59 +142,17 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     onProgressieChange(item: ProgressieTreeviewItem) {
-
         if (this.isDisabled) {
             return;
         }
 
-        try {
-            const ui = this.loginService.userInfo?.LidData;
+        if (item.ProgresssieID) {
+            this.verwijderCompetentie = item
 
-            if (item.ProgresssieID) {
-                this.verwijderCompetentie = item
-
-                this.bevestigPopup.open();
-            } else {
-                this.uitstellen();
-                this.progressieService.behaaldeCompetentie({
-                    LID_ID: this.VliegerID,
-                    INSTRUCTEUR_ID: ui?.ID,
-                    COMPETENTIE_ID: item.value,
-                }).then((h: HeliosProgressie) => {
-                    item.ProgresssieID = h.ID
-
-                    const c = this.competenties.find((c) => c.ID == h.COMPETENTIE_ID);
-
-                    this.success =
-                    {
-                        titel: "Progressie",
-                        beschrijving: "Competentie '" + c!.ONDERWERP  +"' behaald"
-                    }
-                });
-
-                const now = new Date()
-
-                item.checked = true;
-                item.Behaald = now.getDate() + "-" + now.getMonth() + '-' + now.getFullYear();
-                item.Instructeur = ui?.NAAM!;
-                item.ProgresssieID = -1;
-            }
-        } catch (e) {
-            this.error = e;
+            this.editor.openVerwijderWijzigPopup(item.ProgresssieID);
+        } else {
+            this.editor.openNieuwPopup(item.value);
         }
-    }
-
-
-    verwijderenProgressie(item: ProgressieTreeviewItem): void {
-        this.bevestigPopup.close();
-        this.progressieService.verwijderCompetentie(item.ProgresssieID!);
-
-        item.checked = false;
-        item.Behaald = undefined;
-        item.Instructeur = undefined;
-        item.ProgresssieID = undefined;
-
-        this.uitstellen();
     }
 
     // Zorg ervoor dat we niet gaan laden

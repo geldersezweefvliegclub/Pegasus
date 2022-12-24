@@ -8,6 +8,7 @@ import {LoginService} from "../../../services/apiservice/login.service";
 import {CompetentieService} from "../../../services/apiservice/competentie.service";
 import {Subscription} from "rxjs";
 import {ModalComponent} from "../modal/modal.component";
+import {ProgressieEditorComponent} from "../editors/progressie-editor/progressie-editor.component";
 
 @Component({
     selector: 'app-status',
@@ -17,7 +18,7 @@ import {ModalComponent} from "../modal/modal.component";
 
 export class StatusComponent implements OnInit, OnChanges, OnDestroy {
     @Input() VliegerID: number;
-    @ViewChild(ModalComponent) private bevestigPopup: ModalComponent;
+    @ViewChild(ProgressieEditorComponent) private editor: ProgressieEditorComponent;
 
     cheks: any;
     overig: any;
@@ -82,7 +83,7 @@ export class StatusComponent implements OnInit, OnChanges, OnDestroy {
         }).join(',');
 
         this.isLoading = true;
-        this.progressieService.getProgressie(this.VliegerID, comptentieIDs).then((p) => {
+        this.progressieService.getProgressiesLid(this.VliegerID, comptentieIDs).then((p) => {
             this.isLoading = false;
             this.gehaaldeProgressie = p
         }).catch(e => {
@@ -131,18 +132,14 @@ export class StatusComponent implements OnInit, OnChanges, OnDestroy {
         setTimeout(() => this.suspend = false, 1000);
     }
 
-
     // Progressie kan gezet worden via snelkeuze in deze component, lange weg kan via progressie boom
     zetProgressie(e:any, id:number) {
-        e.currentTarget.checked = false;    // vinkje niet zetten, pas als we een update gedaan hebben
-
-        this.bevestigCompetentie = this.competenties.find((c) => c.ID == id);
-        this.checkboxSelected = e;
-        this.bevestigPopup.open();
+        this.editor.openNieuwPopup(id);
     }
 
     updateProgressie()
     {
+        /*
         try {
             const ui = this.loginService.userInfo?.LidData;
             this.progressieService.behaaldeCompetentie({
@@ -166,6 +163,8 @@ export class StatusComponent implements OnInit, OnChanges, OnDestroy {
         catch (e) {
             this.error = e;
         }
+
+         */
     }
 
     competentieBestaat(id: number) {

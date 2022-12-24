@@ -49,7 +49,7 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
 
     isSaving: boolean = false;
     isLoading: boolean = false;
-    isVerwijderMode: boolean = true;
+    isVerwijderMode: boolean = false;
     isRestoreMode: boolean = false;
 
     formTitel: string = "";
