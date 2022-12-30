@@ -22,7 +22,7 @@ export class AchterinRenderComponent implements AgRendererComponent {
   // Als de inzittende geen clublid is, dan is de naam handmatig ingevoerd
   agInit(params: ICellRendererParams): void {
     if (params.data.INZITTENDENAAM) {
-      this.grid_inzittendenaam = params.data.INZITTENDENAAM
+      this.grid_inzittendenaam = params.data.INZITTENDENAAM_LID + "(" + params.data.INZITTENDENAAM + ")"
     } else if (params.data.INZITTENDENAAM_LID) {
       const ui = this.loginService.userInfo;
       if (params.data.INZITTENDE_ID != ui?.LidData?.ID)

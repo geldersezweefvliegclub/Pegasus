@@ -26,6 +26,22 @@ import {StartlijstService} from "../../../services/apiservice/startlijst.service
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
 import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
 import {StartEditorComponent} from "../../../shared/components/editors/start-editor/start-editor.component";
+import {TracksService} from "../../../services/apiservice/tracks.service";
+import {
+    AlignmentType,
+    Document,
+    Footer,
+    Header,
+    HeadingLevel, ImageRun,
+    NumberFormat,
+    Packer,
+    PageNumber,
+    Paragraph,
+    TextRun,
+    UnderlineType
+} from 'docx';
+import {saveAs} from "file-saver";
+import imageSize from 'image-size';
 
 @Component({
     selector: 'app-dashboard',
@@ -68,6 +84,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     constructor(private readonly ledenService: LedenService,
                 private readonly loginService: LoginService,
                 private readonly typesService: TypesService,
+                private readonly trackService: TracksService,
                 private readonly sharedService: SharedService,
                 private readonly startlijstService: StartlijstService,
                 private readonly progressieService: ProgressieService,
@@ -89,8 +106,12 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
         // abonneer op wijziging van lidTypes
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
-            this.lidTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 6});          // lidtypes
-            this.statusTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 19});      // status types (DBO, solo, brevet)```````
+            this.lidTypes = dataset!.filter((t: HeliosType) => {
+                return t.GROEP == 6
+            });          // lidtypes
+            this.statusTypes = dataset!.filter((t: HeliosType) => {
+                return t.GROEP == 19
+            });      // status types (DBO, solo, brevet)```````
         });
 
         // Als lidID is meegegeven in URL, moeten we de lidData ophalen
@@ -118,8 +139,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if (this.datumAbonnement)  this.datumAbonnement.unsubscribe();
-        if (this.typesAbonnement)  this.typesAbonnement.unsubscribe();
+        if (this.datumAbonnement) this.datumAbonnement.unsubscribe();
+        if (this.typesAbonnement) this.typesAbonnement.unsubscribe();
     }
 
     // Met welk lidmaatschap hebben te maken, geef de omschrijving
@@ -163,8 +184,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     // export het vlieger logboek naar excel
     exportLogboek() {
         if (this.lidData.ID) {
-            const startDatum: DateTime = DateTime.fromObject( {year: this.datum.year, month: 1, day: 1});
-            const eindDatum: DateTime = DateTime.fromObject( {year: this.datum.year, month: 12, day: 31});
+            const startDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 1, day: 1});
+            const eindDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 12, day: 31});
 
             this.startlijstService.getLogboek(this.lidData.ID, startDatum, eindDatum).then((dataset) => {
 
@@ -190,7 +211,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
             this.progressieService.getProgressieKaart(this.lidData.ID).then((dataset) => {
 
                 // velden die voor de gebruiker nutteloos zijn, halen we weg
-                for (let i=0; i< dataset.length ; i++) {
+                for (let i = 0; i < dataset.length; i++) {
                     dataset[i].ID = undefined;
                     dataset[i].LEERFASE_ID = undefined;
                     dataset[i].BLOK_ID = undefined;
@@ -214,13 +235,155 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
             const ui = this.loginService.userInfo?.LidData
             if (l.ID == ui!.ID) {
                 this.success = {titel: "Profiel", beschrijving: "Uw vliegstatus is aangepast"}
-            }
-            else {
+            } else {
                 this.success = {titel: "Profiel", beschrijving: "Vliegstatus van " + l.NAAM + " is aangepast"}
             }
         }).catch(e => {
             this.success = undefined;
             this.error = e;
         });
+    }
+
+    getMeta(url:string) {
+        return new Promise((resolve, reject) => {
+            let img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = () => reject();
+            img.src = url;
+        });
+    }
+
+    async exportTracks(ID: number) {
+
+        // bereken hoogte / breedte
+        const img = new Image()
+        img.src = "/assets/img/logo.png";
+        await img.decode();
+        const imgHoogte = 100;
+        const imgBreedte = imgHoogte * img.naturalHeight / img.naturalWidth;
+
+        // ophalen van img tbv document
+        const imgResponse = await fetch ("/assets/img/logo.png");
+        const image = await imgResponse.arrayBuffer();
+
+        this.trackService.getTracks(false, ID).then((dataset) => {
+            const docInhoud = [];
+
+            docInhoud.push(
+                new Paragraph({
+                    text: "Track van " + this.lidData.NAAM,
+                    heading: HeadingLevel.HEADING_1,
+                    thematicBreak: true,
+                }))
+
+            docInhoud.push(
+                new Paragraph({
+                    children: [
+                        new TextRun({
+                            text: "",
+                            break: 1,
+                        })
+                    ]
+                })
+            )
+            for (let i = 0; i < dataset.length; i++) {
+                const trk = dataset[i];
+                docInhoud.push(
+                    new Paragraph({
+                        children: [
+                            new TextRun({
+                                    text: "Op " + this.datumString(trk.INGEVOERD!) + " om " + this.tijdString(trk.INGEVOERD!) + " schreef " + trk.INSTRUCTEUR_NAAM + ":",
+                                    font: "Calibri",
+                                    underline: {
+                                        type: UnderlineType.SINGLE,
+                                        color: "990011",
+                                    },
+                                }
+                            ),
+                            new TextRun({
+                                text: "",
+                                break: 1,
+                            }),
+                            new TextRun({
+                                text: trk.TEKST,
+                                font: "Calibri",
+                            }),
+                            new TextRun({
+                                text: "",
+                                break: 1,
+                            })
+                        ]
+                    })
+                )
+            }
+
+            const doc = new Document({
+                sections: [
+                    {
+                        properties: {
+                            page: {
+                                pageNumbers: {
+                                    start: 1,
+                                    formatType: NumberFormat.DECIMAL,
+                                },
+                            },
+                        },
+                        headers: {
+                            default: new Header({
+                                children: [
+                                    new Paragraph({
+                                        alignment: AlignmentType.RIGHT,
+                                        children: [
+                                            new ImageRun({
+                                                data: image,
+                                                transformation: {
+                                                    width: imgHoogte,
+                                                    height: imgBreedte,
+                                                },
+                                            })
+                                        ]
+                                    })
+                                ]
+                            })
+                        },
+                        footers: {
+                            default: new Footer({
+                                children: [
+                                    new Paragraph ({
+                                        alignment: AlignmentType.LEFT,
+                                        children: [
+                                            new TextRun(this.datumString() + " " + this.tijdString())
+                                        ],
+                                    }),
+                                    new Paragraph ({
+                                        alignment: AlignmentType.RIGHT,
+                                        children: [
+                                            new TextRun({
+                                                children: ["Pagina ", PageNumber.CURRENT, " van ", PageNumber.TOTAL_PAGES],
+                                            }),
+                                        ],
+                                    }),
+                                ]
+                            }),
+                        },
+                        children: docInhoud
+                    }
+                ]
+            });
+
+            Packer.toBlob(doc).then((blob) => {
+                saveAs(blob, 'tracks ' + this.lidData.NAAM + '-' + new Date().toJSON().slice(0, 10) + '.docx');
+            });
+        })
+    }
+
+    tijdString(dt: string|undefined = undefined): string {
+        const datumtijd = dt ? DateTime.fromSQL(dt) : DateTime.now();
+        return datumtijd.toFormat("HH:mm")
+    }
+
+    datumString(dt: string|undefined = undefined): string {
+        const datumtijd = dt ? DateTime.fromSQL(dt) : DateTime.now();
+        return datumtijd.day + "-" + datumtijd.month + "-" + datumtijd.year;
     }
 }

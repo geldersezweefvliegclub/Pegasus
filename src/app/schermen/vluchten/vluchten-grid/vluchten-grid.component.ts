@@ -32,6 +32,7 @@ import {VoorinRenderComponent} from "../voorin-render/voorin-render.component";
 import {AchterinRenderComponent} from "../achterin-render/achterin-render.component";
 import {DagnummerRenderComponent} from "../dagnummer-render/dagnummer-render.component";
 import {TypesService} from "../../../services/apiservice/types.service";
+import {DatatableComponent} from "../../../shared/components/datatable/datatable.component";
 
 type HeliosStartDatasetExtended = HeliosStartDataset & {
     inTijdspan?: boolean
@@ -415,7 +416,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     }
 
     // keuze voor startlijst export
-    expoteerStartlijst() {
+    exporteerStartlijst() {
         this.exportStartlijstKeuze.openPopup();
     }
 

@@ -514,10 +514,10 @@
                 </div>
                 <div class="card-body">
                     <div class="d-flex">
-                        <div class="maandTotaal" *ngIf="tonen.toonTotalen">
+                        <div class="maandTotaal" data-toggle="tooltip" title="Aantal diensten deze maand" *ngIf="tonen.toonTotalen">
                             {{ lid.INGEDEELD_MAAND }}
                         </div>
-                        <div class="jaarTotaal" *ngIf="tonen.toonTotalen">
+                        <div class="jaarTotaal"  data-toggle="tooltip" title="Aantal diensten dit jaar"  *ngIf="tonen.toonTotalen">
                             {{ lid.INGEDEELD_JAAR | number:'2.0' }}
                         </div>
 

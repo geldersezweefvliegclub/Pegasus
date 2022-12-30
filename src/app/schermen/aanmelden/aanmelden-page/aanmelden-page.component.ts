@@ -78,6 +78,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
 
     toonGasten: boolean = false;
     isDDWVer: boolean = false;                      // DDWV'ers mogen geen club dagen zien
+    ddwvActief: boolean = true;                     // Doen we aan een DDWV bedrijf
 
     constructor(private readonly ddwvService: DdwvService,
                 private readonly typesService: TypesService,
@@ -137,6 +138,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
             this.toonGasten = toonGasten;
         }
 
+        this.ddwvActief = this.ddwvService.actief();
         this.isDDWVer = this.loginService.userInfo?.Userinfo?.isDDWV!;
         this.saldoTonen = this.configService.saldoActief();
     }
@@ -454,6 +456,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
                 case 601: // ere lid
                 case 602: // lid
                 case 603: // jeugdlid
+                case 604: // private owner
                 {
                     if (!this.rooster[idx].CLUB_BEDRIJF && ui!.LidData!.STATUSTYPE_ID !== 1903) {  // 1903 = Brevethouder
                         return false;

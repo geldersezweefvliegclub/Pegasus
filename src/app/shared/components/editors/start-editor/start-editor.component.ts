@@ -674,6 +674,9 @@ export class StartEditorComponent implements OnInit {
                 case 601:  break;  // Erelid
                 case 602:  break;  // Lid
                 case 603:  break;  // Jeugdlid
+                case 604:  break;  // Private owner
+                case 608:  break;  // 5 Rittenkaart
+                case 611:  break;  // Cursist
                 default: {
                     return false;
                 }

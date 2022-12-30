@@ -1,5 +1,5 @@
 <div class="alert alert-info" *ngIf="updateAvailable">
-    <p>Er is een nieuwe versie beschikbaar. Klik <a aria-label="nieuwe software versie" href="#">hier</a> om bij te werken</p>
+    <p>Er is een nieuwe versie beschikbaar. Klik <a aria-label="nieuwe software versie" (click)="applyUpdate()">hier</a> om bij te werken</p>
 </div>
 
 <div *ngIf="heeftStartVerbod" class="startVerbod">

@@ -219,13 +219,13 @@
                     </div>
                     <div class="d-flex">
                         <app-icon-button class="toolbarBtn me-3"
-                                         tekst="Toevoegen"
+                                         tekst="Dagrapport toevoegen"
                                          iconNaam="far PlusSquare" (btnClicked)="addDagRapport()"
                                          btnColor="btn-primary"
                                          *ngIf="!deleteMode && toonDagRapport"></app-icon-button>
 
                         <div class="d-flex justify-content-end">
-                            <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
+                            <app-icon-button class="toolbarBtn" tekst="Dagrapport verwijderen" iconNaam="far TrashAlt"
                                              btnColor="btn-secondary"
                                              *ngIf="toonDagRapport && !deleteMode && dagRapporten && dagRapporten.length > 0"
                                              (btnClicked)="deleteModeJaNee()"></app-icon-button>

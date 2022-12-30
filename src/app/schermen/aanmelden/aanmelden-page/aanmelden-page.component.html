@@ -87,15 +87,15 @@
                         </div>
                         <div *ngIf="magTonen(dagInRooster.DATUM)">
                             <div *ngIf="dagInRooster.CLUB_BEDRIJF" class="me-2">Clubbedrijf</div>
-                            <div *ngIf="dagInRooster.DDWV">DDWV</div>
-                            <div *ngIf="!dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF">Geen vliegbedrijf</div>
+                            <div *ngIf="dagInRooster.DDWV && ddwvActief">DDWV</div>
+                            <div *ngIf="(!dagInRooster.DDWV || !ddwvActief) && !dagInRooster.CLUB_BEDRIJF">Geen vliegbedrijf</div>
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td *ngFor="let dagInRooster of rooster;let r = index">
                         <div *ngIf="magTonen(dagInRooster.DATUM)">
-                            <div *ngIf="!dagInRooster.CLUB_BEDRIJF && dagInRooster.DDWV">
+                            <div *ngIf="!dagInRooster.CLUB_BEDRIJF && dagInRooster.DDWV && ddwvActief">
                                 <div *ngIf="aanwezigen(dagInRooster.DATUM).length < dagInRooster.MIN_SLEEPSTART && aanwezigen(dagInRooster.DATUM).length < dagInRooster.MIN_LIERSTART"
                                      class="onvoldoendeAanmeldingen">
                                     Onvoldoende aanmeldingen
@@ -251,12 +251,12 @@
                         <div class="d-flex flex-row justify-content-center w-100">
                             <div *ngIf="rooster[0].CLUB_BEDRIJF" class="me-2">Clubbedrijf</div>
                             <div *ngIf="rooster[0].CLUB_BEDRIJF && rooster[0].DDWV" class="me-2">&</div>
-                            <div *ngIf="rooster[0].DDWV">DDWV</div>
-                            <div *ngIf="!rooster[0].DDWV && !rooster[0].CLUB_BEDRIJF">Geen vliegbedrijf</div>
+                            <div *ngIf="rooster[0].DDWV && ddwvActief ">DDWV</div>
+                            <div *ngIf="(!rooster[0].DDWV || !ddwvActief) && !rooster[0].CLUB_BEDRIJF">Geen vliegbedrijf</div>
                         </div>
                     </td>
                 </tr>
-                <tr *ngIf="magTonen(rooster[0].DATUM) && rooster[0].DDWV && !rooster[0].CLUB_BEDRIJF">
+                <tr *ngIf="ddwvActief && magTonen(rooster[0].DATUM) && rooster[0].DDWV && !rooster[0].CLUB_BEDRIJF">
                     <td>
                         <div *ngIf="aanwezigen(rooster[0].DATUM).length < rooster[0].MIN_SLEEPSTART && aanwezigen(rooster[0].DATUM).length < rooster[0].MIN_LIERSTART"
                              class="onvoldoendeAanmeldingen">

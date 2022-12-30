@@ -7,27 +7,27 @@ import {SharedModule} from "../../shared/shared.module";
 import {RouterModule} from "@angular/router";
 import {FlexLayoutModule} from "@angular/flex-layout";
 
-
 @NgModule({
-  declarations: [
-    DashboardPageComponent,
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    FontAwesomeModule,
-    FlexLayoutModule,
-    SharedModule,
+    declarations: [
+        DashboardPageComponent,
+    ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        FontAwesomeModule,
+        FlexLayoutModule,
+        SharedModule,
 
-    RouterModule.forChild([
-      {
-        path: '',
-        component: DashboardPageComponent
-      }
-    ])
-  ],
-  exports: [
-    DashboardPageComponent
-  ]
+        RouterModule.forChild([
+            {
+                path: '',
+                component: DashboardPageComponent
+            }
+        ])
+    ],
+    exports: [
+        DashboardPageComponent
+    ]
 })
-export class DashboardModule { }
+export class DashboardModule {
+}

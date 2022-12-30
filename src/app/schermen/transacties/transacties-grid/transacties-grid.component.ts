@@ -17,6 +17,7 @@ import {LoginService} from "../../../services/apiservice/login.service";
 import {LedenService} from "../../../services/apiservice/leden.service";
 import {OmschrijvingRenderComponent} from "./omschrijving-render/omschrijving-render.component";
 import {CheckboxRenderComponent} from "../../../shared/components/datatable/checkbox-render/checkbox-render.component";
+import {DatatableComponent} from "../../../shared/components/datatable/datatable.component";
 
 @Component({
     selector: 'app-transacties-grid',

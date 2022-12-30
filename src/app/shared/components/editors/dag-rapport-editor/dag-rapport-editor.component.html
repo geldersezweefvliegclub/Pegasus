@@ -20,6 +20,7 @@
                 </div>
             </div>
 
+            <!--
             <div class="row rowDagInfo2">
                 <div class="col-12 col-md-6">
                     <app-pegasus-card id="meteoCard"
@@ -61,6 +62,7 @@
                     </app-pegasus-card>
                 </div>
             </div>
+            -->
 
             <div class="row rowDagInfo3">
                 <div class="col-12 col-md-6">
@@ -123,7 +125,7 @@
     </div>
     <div footer>
         <app-icon-button *ngIf="!isSaving && !isVerwijderMode && !isRestoreMode" iconNaam="fas Edit"
-                         btnColor="btn-primary" [toonKlein]=false [disabled]="!dagRapport.VELD_ID"
+                         btnColor="btn-primary" [toonKlein]=false [disabled]="!dagRapport || !dagRapport.VELD_ID"
                          tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
         <app-icon-button *ngIf="!isLoading && !isSaving && isVerwijderMode" iconNaam="fas TrashAlt"
                          btnColor="btn-primary editorDeleteBtn"

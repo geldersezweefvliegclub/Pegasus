@@ -23,7 +23,7 @@ import {DagRapportenService} from "../../../../services/apiservice/dag-rapporten
     styleUrls: ['./dag-rapport-editor.component.scss']
 })
 export class DagRapportEditorComponent implements OnInit, OnDestroy {
-    @Input() veld_id: number;
+    @Input() veld_id: number | undefined;
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @ViewChild(ComposeMeteoComponent) private meteoWizard: ComposeMeteoComponent;
     @ViewChild(ComposeBedrijfComponent) private bedrijfWizard: ComposeBedrijfComponent;

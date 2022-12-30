@@ -310,7 +310,11 @@ export class NavigationComponent implements OnInit, OnDestroy  {
         competenties.excluded = !ui?.isBeheerder;
 
         const transacties = this.beheerRoutes.find(route => route.path == "transacties") as CustomRoute;
-        transacties.excluded = !ui?.isBeheerder && !ui?.isBeheerderDDWV;
+        if (verbergen.includes('transacties')) {
+            transacties.excluded = true;
+        } else {
+            transacties.excluded = !ui?.isBeheerder && !ui?.isBeheerderDDWV;
+        }
 
         // alleen beheer-rapportage in het menu als we voldoende scherm ter beschikking hebben
         const rapportage = this.beheerRoutes.find(route => route.path == "rapportage") as CustomRoute;

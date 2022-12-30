@@ -14,16 +14,17 @@ export class PegasusCardComponent implements OnInit{
     @Input() titel: string;
     @Input() subtitel: string;
     @Input() exportEnabled: boolean = true;
-    @Output() excelExport: EventEmitter<void> = new EventEmitter<void>();
+    @Input() exportImg: string = "/assets/img/excel-logo.png";
+    @Output() Exporting: EventEmitter<void> = new EventEmitter<void>();
 
     hasExportListener: boolean;
 
     ngOnInit(): void {
-        this.hasExportListener = this.excelExport.observers.length > 0
+        this.hasExportListener = this.Exporting.observers.length > 0
     }
 
     export() {
-        this.excelExport.emit();
+        this.Exporting.emit();
     }
 
     hoogte() {

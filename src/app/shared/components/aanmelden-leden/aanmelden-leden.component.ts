@@ -126,7 +126,7 @@ export class AanmeldenLedenComponent implements OnInit, OnDestroy {
         this.aanmeldEditor.openPopup(lidAanwezig);
     }
 
-    // toon geen vliegtuigen die al aangemeld zijn
+    // toon geen leden die al aangemeld zijn
     filterLeden() {
         if (!this.leden) {                       // er is niets te filteren
             this.filteredLeden = [];
@@ -147,6 +147,12 @@ export class AanmeldenLedenComponent implements OnInit, OnDestroy {
                     break;  // Lid
                 case 603:
                     break;  // Jeugdlid
+                case 604:
+                    break;  // Private owner
+                case 608:
+                    break;  // 5 rittenkaart houder
+                case 611:
+                    break;  // Cursist
                 default: {
                     return false;
                 }

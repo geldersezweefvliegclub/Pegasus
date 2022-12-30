@@ -24,7 +24,13 @@ export class AppComponent {
                 private readonly sharedService: SharedService,
                 private readonly storageService: StorageService) {
 
-        updates.versionUpdates.subscribe(() => this.updateAvailable = true);
+        // Service worker update, but only in production. During development, the service worker is disabled which results in an error.
+        // Enabling the service worker would result in a lot of caching, which is not desired during development because it would be hard to test changes.
+        if (this.updates.isEnabled) {
+            this.updates.checkForUpdate().then((hasUpdate) => {
+                this.updateAvailable = hasUpdate;
+            });
+        }
         router.events.subscribe((val) => {
             if (router.url != "/login") {
                 this.storageService.opslaan("url", router.url, 5)
@@ -76,5 +82,9 @@ export class AppComponent {
             this.heeftStartVerbod = false;
             this.router.navigate(['login']).then();
         }
+    }
+
+    applyUpdate() {
+        this.updates.activateUpdate().then(() => document.location.reload());
     }
 }

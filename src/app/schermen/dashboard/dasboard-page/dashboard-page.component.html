@@ -129,7 +129,7 @@
                                   titel="Progressiekaart"
                                   subtitel="Behaalde competenties"
                                   exportEnabled=" true"
-                                  (excelExport)="exportProgressieKaart()"
+                                  (Exporting)="exportProgressieKaart()"
                                   [icon]="iconProgressie">
                     <app-progressie-boom
                             [VliegerID]="lidData.ID" *ngIf="lidData">
@@ -144,6 +144,9 @@
                                   class="kleineKaart"
                                   titel="Tracks"
                                   subtitel="Ingevoerde observaties"
+                                  exportEnabled=true
+                                  exportImg="/assets/img/word-logo.png"
+                                  (Exporting)="exportTracks(lidData.ID)"
                                   [icon]="iconTracks">
                     <app-tracks [VliegerID]="lidData.ID" [VliegerNaam]="lidData.NAAM" *ngIf="lidData"></app-tracks>
                 </app-pegasus-card>
@@ -157,7 +160,7 @@
     <div body>
         <div class="popupLargeWrapper">
             <div class="excel">
-                <img class="logo" src="/src/assets/img/excel-logo.png" alt="excel logo" (click)="this.exportLogboek()"/>
+                <img class="logo" src="/assets/img/excel-logo.png" alt="excel logo" (click)="this.exportLogboek()"/>
             </div>
             <div class="d-flex flex-column justify-content-between h-100">
                 <app-vlieger-logboek

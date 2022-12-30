@@ -373,10 +373,12 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             // 601 = Erelid
             // 602 = Lid
             // 603 = Jeugdlid
+            // 604 = private owner
             let isLid = false;
             if ((this.alleLeden[i].LIDTYPE_ID == 601) ||
                 (this.alleLeden[i].LIDTYPE_ID == 602) ||
-                (this.alleLeden[i].LIDTYPE_ID == 603)) {
+                (this.alleLeden[i].LIDTYPE_ID == 603) ||
+                (this.alleLeden[i].LIDTYPE_ID == 604)) {
                 isLid = true;
             }
 

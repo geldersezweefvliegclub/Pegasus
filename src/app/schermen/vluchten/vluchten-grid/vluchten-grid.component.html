@@ -5,7 +5,7 @@
                   subtitel="Een overzicht van de starts {{datum.day}}-{{datum.month}}-{{datum.year}}"
                   [icon]="iconCardIcon"
                   [exportEnabled]="this.magExporteren"
-                  (excelExport)="expoteerStartlijst()">
+                  (Exporting)="exporteerStartlijst()">
     <div class="box h-100">
         <div id="data" class="data" *ngIf="!toonStartlijstKlein">
             <app-datatable

@@ -92,7 +92,7 @@
                                                         [cdkDropListEnterPredicate]="evaluatieVlieger.bind(this, start)">
 
                                                     <div [ngClass]="(!start.INSTRUCTIEVLUCHT && (!start.MEDICAL || !start.BEVOEGD)) ? 'waarschuwing' : ''">
-                                                        <b>{{start.VLIEGERNAAM_LID}}</b>
+                                                        <div class="d-flex w-100" style="font-weight: bold">{{start.VLIEGERNAAM_LID}}<div *ngIf="start.VLIEGERNAAM">({{start.VLIEGERNAAM}})</div></div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -138,7 +138,7 @@
                                                      [cdkDropListEnterPredicate]="evaluatieInzittende.bind(this, start)">
 
                                                     <div [ngClass]="(start.INSTRUCTIEVLUCHT && (!start.MEDICAL || !start.BEVOEGD)) ? 'waarschuwing' : ''">
-                                                        <b>{{start.INZITTENDENAAM_LID}}</b>
+                                                        <div class="d-flex w-100" style="font-weight: bold">{{start.INZITTENDENAAM_LID}}<div *ngIf="start.INZITTENDENAAM">({{start.INZITTENDENAAM}})</div></div>
                                                     </div>
                                                     <div *ngIf="start.INSTRUCTIEVLUCHT &&  start.VLIEGER_ID && !start.INZITTENDE_ID"
                                                          CLASS="warning">

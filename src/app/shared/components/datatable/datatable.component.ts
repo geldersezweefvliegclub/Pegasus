@@ -146,4 +146,14 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     onRowSelected(event: RowSelectedEvent) {
         this.rowSelected.emit(event);
     }
+
+    filteredRecords(): any[] {
+        let rowData:any = [];
+        if (this.api) {
+            this.api.forEachNodeAfterFilter(node => {
+                rowData.push(node.data);
+            });
+        }
+        return rowData;
+    }
 }

@@ -25,6 +25,7 @@ import {TrackRenderComponent} from "../track-render/track-render.component";
 import {DatumRenderComponent} from "../../../shared/components/datatable/datum-render/datum-render.component";
 import {Subscription} from "rxjs";
 import {DdwvService} from "../../../services/apiservice/ddwv.service";
+import {DatatableComponent} from "../../../shared/components/datatable/datatable.component";
 
 
 @Component({
@@ -35,6 +36,7 @@ import {DdwvService} from "../../../services/apiservice/ddwv.service";
 export class LedenGridComponent implements OnInit, OnDestroy {
     @ViewChild(LedenFilterComponent) ledenFilter: LedenFilterComponent;
     @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
+    @ViewChild(DatatableComponent) grid: DatatableComponent;
 
     leden: HeliosLedenDataset[] = [];
     dataset: HeliosLedenDataset[] = [];
@@ -356,20 +358,21 @@ export class LedenGridComponent implements OnInit, OnDestroy {
     }
 
     // Er is een aanpassing gemaakt in het leden-filter dialoog. We filteren de volledige dataset tot wat nodig is
-    // We hoeven dus niet terug naar de server om starts opnieuw op te halen (minder starts verkeer)
+    // We hoeven dus niet terug naar de server om leden opnieuw op te halen (minder starts verkeer)
     applyFilter() {
         // leden-filter de dataset naar de lijst
         this.leden = [];
         for (let i = 0; i < this.dataset.length; i++) {
-
             // 601 = Erelid
             // 602 = Lid
             // 603 = Jeugdlid
+            // 604 = Private owner
             // 606 = Donateur
             let isLid = false;
             if ((this.dataset[i].LIDTYPE_ID == 601) ||
                 (this.dataset[i].LIDTYPE_ID == 602) ||
                 (this.dataset[i].LIDTYPE_ID == 603) ||
+                (this.dataset[i].LIDTYPE_ID == 604) ||
                 (this.dataset[i].LIDTYPE_ID == 606)) {
                 isLid = true;
             }
@@ -430,9 +433,10 @@ export class LedenGridComponent implements OnInit, OnDestroy {
         const toEmail: String  = ui!.EMAIL as String;
         let bcc: String="";
 
-        this.leden.forEach((lid) => {
+        this.grid.filteredRecords().forEach((lid: HeliosLedenDataset) => {
             bcc += lid.EMAIL + ","
         })
+
         window.location.href = `mailto:${toEmail}?bcc=${bcc}`;
     }
 
