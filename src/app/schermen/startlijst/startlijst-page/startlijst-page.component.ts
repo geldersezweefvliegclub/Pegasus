@@ -197,10 +197,9 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
     }
 
     opvragen() {
-        this.aanwezigVliegtuigenService.updateAanwezigCache(this.datum, this.datum);
-        this.aanwezigLedenService.updateAanwezigCache(this.datum, this.datum);
+        this.aanwezigVliegtuigenService.updateAanwezigCache();
+        this.aanwezigLedenService.updateAanwezigCache();
 
-        clearTimeout(this.refreshTimer);
         let queryParams: KeyValueArray = {};
         queryParams["OPEN_STARTS"] = "true"
 
@@ -239,6 +238,7 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
             this.isLoading = false;
         });
 
+        clearTimeout(this.refreshTimer);
         this.refreshTimer = window.setTimeout(() => this.opvragen(), 1000 * 60 * 5);  // iedere 5 minuten
     }
 
@@ -430,7 +430,6 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
     // De start is aangeklikt. 1x klikken is selecteer of deselecteer start, 2x klikken is openen van de editor
     // Dat moeten we zelf detecteren. DblClick werkt niet uit de html template
     startKlik(start: HeliosStartDataset) {
-        console.log(start, this.eersteKlik)
         this.klikStart = start;
 
         if (this.eersteKlik) {

@@ -2,7 +2,11 @@ import {Injectable} from '@angular/core';
 import {DateTime} from 'luxon';
 import {HeliosActie, KeyValueArray} from '../../types/Utils';
 import {APIService} from './api.service';
-import {HeliosAanwezigVliegtuigen, HeliosAanwezigVliegtuigenDataset} from '../../types/Helios';
+import {
+    HeliosAanwezigVliegtuigen,
+    HeliosAanwezigVliegtuigenDataset,
+    HeliosVliegtuigenDataset
+} from '../../types/Helios';
 import {BehaviorSubject, Subscription} from "rxjs";
 import {SharedService} from "../shared/shared.service";
 import {debounceTime} from "rxjs/operators";
@@ -14,6 +18,7 @@ import {LoginService} from "./login.service";
 })
 export class AanwezigVliegtuigService {
     private aanwezigCache: HeliosAanwezigVliegtuigen = { dataset: []};   // return waarde van API call
+    private aanwezigDagCache: HeliosVliegtuigenDataset[] = [];       // vliegtuigen aanwezig op de geselecteerde dag
 
     private datumAbonnement: Subscription;                      // volg de keuze van de kalender
     private datum: DateTime = DateTime.now();                   // de gekozen dag
@@ -38,62 +43,47 @@ export class AanwezigVliegtuigService {
             // we kunnen alleen starts ophalen als we ingelogd zijn
             if (this.loginService.isIngelogd()) {
                 this.overslaan = false;     // bij wijzigen datum nooit overslaan
-                this.ophalenAanwezig(this.datum, this.datum).then((dataset) => {
-                    this.aanwezigStore.next(this.aanwezigCache.dataset!)    // afvuren event
-                });
+                this.updateAanwezigCache();
             }
 
             // Als we vandaag geselecteerd hebben, halen we iedere 15 min de starts van de server
             // Iemand kan een vliegtuig aangemeld hebben, bijv via de app
             if (this.datum.toISODate() == DateTime.now().toISODate()) {
                 this.ophaalTimer = window.setInterval(() => {
-                    this.ophalenAanwezig(this.datum,this.datum).then((dataset) => {
-                        this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
-                    });
+                    this.updateAanwezigCache();
                 }, 1000 * 60 * 15);
             }
             else {
                 clearInterval(this.ophaalTimer);
             }
+        });
 
-            // Als start is toegevoegd, dan kan vliegtuig aanwezig gemeld worden
-            this.sharedService.heliosEventFired.pipe(debounceTime(1000)).subscribe(ev => {
-                if (ev.tabel == "Startlijst") {
-                    if (ev.actie == HeliosActie.Add) {
-                        this.ophalenAanwezig(this.datum, this.datum).then((dataset) => {
-                            this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
-                        });
-                    }
-                }
+        // Als start is toegevoegd, dan kan vliegtuig aanwezig gemeld worden
+        this.sharedService.heliosEventFired.pipe(debounceTime(1000)).subscribe(ev => {
+            if (ev.tabel == "Startlijst") {
+                this.updateAanwezigCache();
+            }
 
-                if (ev.tabel == "AanwezigVliegtuigen") {
-                    this.ophalenAanwezig(this.datum, this.datum).then((dataset) => {
-                        this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
-                    });
-                }
-            });
+            if (ev.tabel == "AanwezigVliegtuigen") {
+                this.updateAanwezigCache();
+            }
         });
 
         // nadat we ingelogd zijn kunnen we de aanwezige vliegtuigen ophalen
         loginService.inloggenSucces.subscribe(() => {
-            this.ophalenAanwezig(this.datum, this.datum).then((dataset) => {
-                this.aanwezigStore.next(this.aanwezigCache.dataset!)    // afvuren event
-            });
+            this.updateAanwezigCache();
         });
     }
 
-    private async ophalenAanwezig(startDatum: DateTime, eindDatum: DateTime): Promise<HeliosAanwezigVliegtuigenDataset[]> {
+    async updateAanwezigCache() {
         if (this.overslaan) {
-            return this.aanwezigCache?.dataset as HeliosAanwezigVliegtuigenDataset[];
+            return this.aanwezigDagCache;
         }
         this.overslaan = true;
         setTimeout(() => this.overslaan = false, 1000 * 5)
-        return await this.getAanwezig(startDatum, eindDatum);
-    }
-
-    async updateAanwezigCache(startDatum: DateTime, eindDatum: DateTime) {
-        this.ophalenAanwezig(this.datum, this.datum).then((dataset) => {
-            this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
+        this.getAanwezig(this.datum, this.datum).then((dataset) => {
+            this.aanwezigDagCache = dataset;
+            this.aanwezigStore.next(this.aanwezigDagCache)    // afvuren event
         });
     }
 

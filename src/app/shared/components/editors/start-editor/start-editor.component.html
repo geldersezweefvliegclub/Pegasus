@@ -104,6 +104,10 @@
                                 <div class="fas fa-exclamation-triangle "></div>
                                 Controleer medical
                             </div>
+                            <div *ngIf="startVerbod" class="flex-row cssWarning">
+                                <div class="fas fa-exclamation-triangle "></div>
+                                Vlieger heeft startverbod
+                            </div>
                         </div>
                     </div>
 
@@ -119,7 +123,7 @@
                                              (gast)="start.VLIEGERNAAM = $event"
                                              (opmerking)="start.OPMERKINGEN = $event">
                             </app-gast-invoer>
-                            <button class="ms-1 btn btn-noborder gastBtn" (click)="toonGastCombobox = !toonGastCombobox"
+                            <button class="ms-1 btn btn-noborder gastBtn" (click)="toonGastenCombo()"
                                     [ngClass]="toonGastCombobox ? 'gastBtnAan': 'gastBtnUit'">
                                 <fa-icon [icon]="gastIcon" class="gastIcon"></fa-icon>
                             </button>
@@ -164,7 +168,7 @@
                                              (gast)="start.INZITTENDENAAM = $event"
                                              (opmerking)="start.OPMERKINGEN = $event">
                             </app-gast-invoer>
-                            <button class="ms-1 btn btn-noborder" (click)="toonGastCombobox = !toonGastCombobox"
+                            <button class="ms-1 btn btn-noborder" (click)="toonGastenCombo()"
                                     [ngClass]="toonGastCombobox ? 'gastBtnAan': 'gastBtnUit'">
                                 <fa-icon [icon]="gastIcon" class="gastIcon"></fa-icon>
                             </button>

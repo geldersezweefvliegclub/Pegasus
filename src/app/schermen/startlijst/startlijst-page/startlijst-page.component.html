@@ -188,8 +188,8 @@
                                 <div class="d-flex">
                                     <div *ngIf="lid.STATUSTYPE_ID" class="vliegStatus">{{lid.STATUS}}</div>
                                     <div *ngIf="toonAvatar">
-                                        <div class="opmaakTijdStart showStarts">{{ lid.STARTS }}</div>
-                                        <div class="opmaakTijdStart showTijd"
+                                        <div class="opmaakTijdStart showStarts" data-toggle="tooltip" title="Starts vandaag">{{ lid.STARTS }}</div>
+                                        <div class="opmaakTijdStart showTijd" data-toggle="tooltip" title="Vliegtijd vandaag"
                                              *ngIf="lid.VLIEGTIJD">{{ lid.VLIEGTIJD }}</div>
 
                                         <div class="avatar">
@@ -205,7 +205,6 @@
                                             <div class="px-1 opmaakTijdStart" *ngIf="!lid.VLIEGTIJD">00:00</div>
                                         </div>
                                         <b>{{lid.NAAM}}</b>
-                                        <div class="smallFont">Aankomst: {{lid.AANKOMST}}</div>
                                         <div class="smallFont">{{lid.VLIEGTUIGTYPE_OMS}}</div>
                                         <div class="smallFont">{{lid.REG_CALL}}</div>
                                         <div class="smallFont">{{lid.OPMERKINGEN}}</div>

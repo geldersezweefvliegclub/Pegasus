@@ -65,7 +65,7 @@ export class DaginfoService {
     }
 
 
-    async getDagInfoDagen(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<[]> {
+    async getDagInfoDagen(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosDagInfosDataset[]> {
         let getParams: KeyValueArray = params;
 
         if ((this.dagInfoTotaalCache != undefined)  && (this.dagInfoTotaalCache.hash != undefined)) { // we hebben eerder de lijst opgehaald

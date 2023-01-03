@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ModalComponent} from "../../modal/modal.component";
 import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
 import {HeliosAanwezigLedenDataset, HeliosType, HeliosVliegtuigenDataset} from "../../../../types/Helios";
@@ -21,6 +21,7 @@ type HeliosTypeExtended = HeliosType & {
 })
 export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private popup: ModalComponent;
+    @Output() opgeslagen: EventEmitter<number> = new EventEmitter<number>();
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -175,6 +176,8 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
         if (this.aanwezig.ID) {
             this.aanwezigLedenService.updateAanmelding(this.aanwezig).then(a => {
                 this.success = {titel: "Aanmelden", beschrijving: "Aanmelden bijgewerkt"}
+                this.aanwezigLedenService.updateAanwezigCache();
+                this.opgeslagen.emit(a.ID);
 
                 this.aanwezig = a;
                 this.isSaving = false;
@@ -186,7 +189,8 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
         } else {
             this.aanwezigLedenService.aanmelden(this.aanwezig).then((a) => {
                 this.success = {titel: "Aanmelden", beschrijving: "Aanmelding is geslaagd"}
-                this.aanwezigLedenService.updateAanwezigCache(DateTime.fromSQL(a.DATUM), DateTime.fromSQL(a.DATUM));
+                this.aanwezigLedenService.updateAanwezigCache();
+                this.opgeslagen.emit(a.ID);
 
                 this.isSaving = false;
                 this.popup.close();

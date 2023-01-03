@@ -13,9 +13,10 @@ import {LoginService} from "./login.service";
     providedIn: 'root'
 })
 export class AanwezigLedenService {
-    private aanwezigCache: HeliosAanwezigLeden = {dataset: []}; // return waarde van API call
-    private datumAbonnement: Subscription;                      // volg de keuze van de kalender
-    private datum: DateTime = DateTime.now();                   // de gekozen dag
+    private aanwezigCache: HeliosAanwezigLeden = {dataset: []};     // return waarde van API call
+    private aanwezigDagCache: HeliosAanwezigLedenDataset[] = [];    // cache van de gekozen dag
+    private datumAbonnement: Subscription;                          // volg de keuze van de kalender
+    private datum: DateTime = DateTime.now();                       // de gekozen dag
 
     private overslaan: boolean = false;
     private ophaalTimer: number;                                // Iedere 15 min halen we de aanwezige leden op
@@ -37,62 +38,47 @@ export class AanwezigLedenService {
             // we kunnen alleen starts ophalen als we ingelogd zijn
             if (this.loginService.isIngelogd()) {
                 this.overslaan = false;     // bij wijzigen datum nooit overslaan
-                this.ophalenAanwezig(this.datum, this.datum).then((dataset) => {
-                    this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
-                });
+                this.updateAanwezigCache()
             }
 
             // Als we vandaag geselecteerd hebben, halen we iedere 15 min de starts van de server
             // Iemand kan zich aangemeld hebben, bijv via de app
             if (this.datum.toISODate() == DateTime.now().toISODate()) {
                 this.ophaalTimer = window.setInterval(() => {
-                    this.ophalenAanwezig(this.datum,this.datum).then((dataset) => {
-                        this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
-                    });
+                    this.updateAanwezigCache()
                 }, 1000 * 60 * 15);
             }
             else {
                 clearInterval(this.ophaalTimer);
             }
+        });
 
-            // Als start is toegevoegd, dan kan lid aanwezig gemeld worden
-            this.sharedService.heliosEventFired.pipe(debounceTime(1000)).subscribe(ev => {
-                if (ev.tabel == "Startlijst") {
-                    if (ev.actie == HeliosActie.Add) {
-                        this.ophalenAanwezig(this.datum, this.datum).then((dataset) => {
-                            this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
-                        });
-                    }
-                }
+        // Als start is toegevoegd, dan kan lid aanwezig gemeld worden
+        this.sharedService.heliosEventFired.pipe(debounceTime(1000)).subscribe(ev => {
+            if (ev.tabel == "Startlijst") {
+                this.updateAanwezigCache();
+            }
 
-                if (ev.tabel == "AanwezigLeden") {
-                    this.ophalenAanwezig(this.datum, this.datum).then((dataset) => {
-                        this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
-                    });
-                }
-            });
+            if (ev.tabel == "AanwezigLeden") {
+                this.updateAanwezigCache()
+            }
         });
 
         // nadat we ingelogd zijn kunnen we de aanwezige leden ophalen
         loginService.inloggenSucces.subscribe(() => {
-            this.ophalenAanwezig(this.datum, this.datum).then((dataset) => {
-                this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
-            });
+            this.updateAanwezigCache();
         });
     }
 
-    private async ophalenAanwezig(startDatum: DateTime, eindDatum: DateTime): Promise<HeliosAanwezigLedenDataset[]> {
+    async updateAanwezigCache() {
         if (this.overslaan) {
-            return this.aanwezigCache?.dataset as HeliosAanwezigLedenDataset[];
+            return this.aanwezigDagCache;
         }
         this.overslaan = true;
         setTimeout(() => this.overslaan = false, 1000 * 5)
-        return await this.getAanwezig(startDatum, eindDatum);
-    }
-
-    async updateAanwezigCache(startDatum: DateTime, eindDatum: DateTime) {
-        this.ophalenAanwezig(startDatum, eindDatum).then((dataset) => {
-            this.aanwezigStore.next(this.aanwezigCache.dataset)    // afvuren event
+        this.getAanwezig(this.datum, this.datum).then((dataset) => {
+            this.aanwezigDagCache = dataset;
+            this.aanwezigStore.next(this.aanwezigDagCache)    // afvuren event
         });
     }
 

@@ -98,8 +98,6 @@ export class DaginfoComponent implements OnInit, OnDestroy{
             })
             this.opvragen();
             this.heeftToegangDagRapport();
-
-
         })
 
         // abonneer op wijziging van kalender datum
@@ -139,7 +137,7 @@ export class DaginfoComponent implements OnInit, OnDestroy{
         const ui = this.loginService.userInfo?.Userinfo;
         let tonen = false;
 
-        if (this.datumInToekomst(this.datum.toISODate())) {
+        if (this.datumInToekomst()) {
             tonen = false;
         }
         else if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) {
@@ -258,7 +256,9 @@ export class DaginfoComponent implements OnInit, OnDestroy{
     }
 
     // Hebben we een datum in de toekomst, vandaag is geen toekomst
-    datumInToekomst(datum: string): boolean {
+    datumInToekomst(): boolean {
+        const datum = this.datum.toISODate();
+
         const nu: DateTime = DateTime.now();
         const d: DateTime = DateTime.fromSQL(datum);
 

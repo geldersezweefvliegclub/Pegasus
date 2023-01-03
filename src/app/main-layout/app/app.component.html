@@ -6,6 +6,13 @@
 Je hebt een startverbod. Graag even melden bij het bestuur.
 </div>
 
+<div *ngIf="zusterclubOntbreekDDWV && !contactBeheerderDDWV" class="contactBeheerderDDWV">
+Als DDWV deelnemen moet je vliegend lid zijn bij een aangesloten club. Neem contact op met de DDWV beheerder
+</div>
+<div *ngIf="contactBeheerderDDWV" class="contactBeheerderDDWV">
+Je kunt geen gebruik maken van DDWV, neem contact op met de DDWV beheerder
+</div>
+
 <main class="d-flex maxHoogte">
     <div class="ps-0 d-none d-xl-block" *ngIf="isIngelogd">
         <app-navigation class="sticky-top"></app-navigation>

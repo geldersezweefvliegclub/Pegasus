@@ -56,7 +56,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
-        {field: 'DAGNUMMER', headerName: '#', cellRenderer: 'dagnummerRender', sortable: true},
+        {field: 'DAGNUMMER', headerName: '#', cellRenderer: 'dagnummerRender', maxWidth:50, sortable: true},
         {field: 'REGISTRATIE', headerName: 'Registratie', sortable: true, hide: true},
         {field: 'CALLSIGN', headerName: 'Callsign', sortable: true, hide: true},
         {field: 'REG_CALL', headerName: 'RegCall', sortable: true},

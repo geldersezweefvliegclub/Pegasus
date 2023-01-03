@@ -28,6 +28,7 @@ import {NgbDate, NgbDateParserFormatter} from "@ng-bootstrap/ng-bootstrap";
 import {NgbDateFRParserFormatter} from "../../../ngb-date-fr-parser-formatter";
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {faStreetView} from "@fortawesome/free-solid-svg-icons";
+import {StorageService} from "../../../../services/storage/storage.service";
 
 @Component({
     selector: 'app-start-editor',
@@ -50,6 +51,7 @@ export class StartEditorComponent implements OnInit {
     toonStartMethode: boolean = true;
     toonWaarschuwing: boolean = false;          // mag het lid op die vliegtuig vliegen volgens kruisjeslijst?
     medicalWaarschuwing: boolean = false;       // Controleer op geldigheid medical
+    startVerbod: boolean = false;               // Vlieger heeft een startverbod
 
     private typesAbonnement: Subscription;
     startMethodeTypes: HeliosType[];
@@ -96,17 +98,18 @@ export class StartEditorComponent implements OnInit {
     error: ErrorMessage | undefined;
 
     constructor(
-        private readonly startlijstService: StartlijstService,
-        private readonly vliegtuigenService: VliegtuigenService,
-        private readonly aanwezigVliegtuigenService: AanwezigVliegtuigService,
-        private readonly progressieService: ProgressieService,
+        private readonly typesService: TypesService,
         private readonly ledenService: LedenService,
         private readonly loginService: LoginService,
-        private readonly configService: PegasusConfigService,
-        private readonly aanwezigLedenService: AanwezigLedenService,
-        private readonly typesService: TypesService,
+        private readonly sharedService: SharedService,
         private readonly daginfoService: DaginfoService,
-        private readonly sharedService: SharedService) {
+        private readonly storageService: StorageService,
+        private readonly configService: PegasusConfigService,
+        private readonly startlijstService: StartlijstService,
+        private readonly progressieService: ProgressieService,
+        private readonly vliegtuigenService: VliegtuigenService,
+        private readonly aanwezigLedenService: AanwezigLedenService,
+        private readonly aanwezigVliegtuigenService: AanwezigVliegtuigService) {
     }
 
     ngOnInit(): void {
@@ -258,7 +261,7 @@ export class StartEditorComponent implements OnInit {
         this.isVerwijderMode = false;
         this.isRestoreMode = false;
         this.isSaving = false;
-        this.toonGastCombobox = false;
+        this.toonGastCombobox = this.storageService.ophalen("toonGastenCombo") ? this.storageService.ophalen("toonGastenCombo") : false;
 
         const ui = this.loginService.userInfo?.Userinfo;
         this.startDatum = DateTime.fromSQL(this.start.DATUM!);
@@ -384,6 +387,7 @@ export class StartEditorComponent implements OnInit {
         this.tonenInzittendeNaam();
         this.vliegtuigTypeBevoegd();
         this.medicalCheck();
+        this.startVerbodCheck();
     }
 
     // De inzittende is nu ook bekend
@@ -559,6 +563,14 @@ export class StartEditorComponent implements OnInit {
         });
     }
 
+    // Heeft de vlieger een startverbod
+    startVerbodCheck()
+    {
+        const gekozenVlieger = this.leden.find(lid => lid.ID == this.start.VLIEGER_ID) as HeliosLedenDataset;
+        this.startVerbod = (gekozenVlieger) ? gekozenVlieger.STARTVERBOD == true: false;
+    }
+
+
     // check of medical op orde is. Check inzittende wanneer het een instructie vlucht is
     medicalCheck() {
         const checkID = this.start.INSTRUCTIEVLUCHT ? this.start.INZITTENDE_ID : this.start.VLIEGER_ID
@@ -720,7 +732,7 @@ export class StartEditorComponent implements OnInit {
 
     // Er mag alleen opgeslagen worden als aan de minimale voorwaarden zijn voldaan
     opslaanDisabled() {
-        if (!this.start.VLIEGTUIG_ID || !this.start.STARTMETHODE_ID || !this.start.VELD_ID) {
+        if (!this.start.VLIEGTUIG_ID || !this.start.STARTMETHODE_ID || !this.start.VELD_ID || this.startVerbod) {
             return true;
         }
 
@@ -782,5 +794,11 @@ export class StartEditorComponent implements OnInit {
     datumAanpassen($datum: NgbDate) {
         this.startDatum = DateTime.fromObject({year: $datum.year, month: $datum.month, day: $datum.day});
         this.start.DATUM = this.startDatum.toISODate();
+    }
+
+    // laten we de combobox zien of standaard invoerveld
+    toonGastenCombo() {
+        this.toonGastCombobox = !this.toonGastCombobox;
+        this.storageService.opslaan("toonGastenCombo", this.toonGastCombobox, -1);
     }
 }

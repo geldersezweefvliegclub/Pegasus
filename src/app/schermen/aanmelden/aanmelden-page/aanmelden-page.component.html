@@ -95,7 +95,10 @@
                 <tr>
                     <td *ngFor="let dagInRooster of rooster;let r = index">
                         <div *ngIf="magTonen(dagInRooster.DATUM)">
-                            <div *ngIf="!dagInRooster.CLUB_BEDRIJF && dagInRooster.DDWV && ddwvActief">
+                            <div *ngIf="!dagInRooster.CLUB_BEDRIJF && dagInRooster.DDWV && ddwvActief && dagInfoDefaultStartMetode(dagInRooster.DATUM)" class="aanmeldingen">
+                                {{dagInfoDefaultStartMetode(dagInRooster.DATUM)}}
+                            </div>
+                            <div *ngIf="!dagInRooster.CLUB_BEDRIJF && dagInRooster.DDWV && ddwvActief && !dagInfoDefaultStartMetode(dagInRooster.DATUM)">
                                 <div *ngIf="aanwezigen(dagInRooster.DATUM).length < dagInRooster.MIN_SLEEPSTART && aanwezigen(dagInRooster.DATUM).length < dagInRooster.MIN_LIERSTART"
                                      class="onvoldoendeAanmeldingen">
                                     Onvoldoende aanmeldingen
@@ -367,7 +370,7 @@
     </div>
 </ng-template>
 
-<app-lid-aanwezig-editor></app-lid-aanwezig-editor>
+<app-lid-aanwezig-editor (opgeslagen)="opvragen()"></app-lid-aanwezig-editor>
 <app-gast-editor (refresh)="opvragen()"></app-gast-editor>
 
 <app-transacties (TransactieGedaan)="opvragenLid()"></app-transacties>

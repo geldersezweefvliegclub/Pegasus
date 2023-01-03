@@ -24,3 +24,14 @@
     font-size: large;
     right: 50%;
 }
+
+.contactBeheerderDDWV {
+    text-align: center; /* Centered text */
+    border-radius: 4px; /* Rounded borders */
+    padding: 5px; /* Padding */
+    z-index: 1200; /* Add a z-index if needed */
+    background-color: #3a6780;
+    font-size: small;
+    color:white;
+    right: 50%;
+}

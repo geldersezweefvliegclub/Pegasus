@@ -6,7 +6,7 @@ import {SchermGrootte, SharedService} from "../../../services/shared/shared.serv
 import {getBeginEindDatumVanMaand} from "../../../utils/Utils";
 import {DateTime} from "luxon";
 import {
-    HeliosAanwezigLedenDataset, HeliosDienstenDataset,
+    HeliosAanwezigLedenDataset, HeliosDagInfosDataset, HeliosDienstenDataset,
     HeliosGast,
     HeliosGastenDataset, HeliosLid,
     HeliosRoosterDataset, HeliosType
@@ -26,6 +26,8 @@ import {DdwvService} from "../../../services/apiservice/ddwv.service";
 import {LedenService} from "../../../services/apiservice/leden.service";
 import {TransactiesComponent} from "../../../shared/components/transacties/transacties.component";
 import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
+import {DaginfoService} from "../../../services/apiservice/daginfo.service";
+import {KeyValueArray} from "../../../types/Utils";
 
 export type HeliosRoosterDatasetExtended = HeliosRoosterDataset & {
     EENHEDEN?: number
@@ -72,6 +74,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     diensten: HeliosDienstenDataset[];              // Wie hebben er dienst
     aanmeldingen: HeliosAanwezigLedenDataset[];     // De aanmeldingen
     gasten: HeliosGastenDataset[];                  // De gasten voor de vliegdag
+    dagInfo: HeliosDagInfosDataset[];               // De bijhoorende dag info
 
     iconDown: IconDefinition = faChevronDown;
     iconUp: IconDefinition = faChevronUp;
@@ -88,6 +91,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
                 private readonly gastenService: GastenService,
                 private readonly roosterService: RoosterService,
                 private readonly storageService: StorageService,
+                private readonly daginfoService: DaginfoService,
                 private readonly dienstenService: DienstenService,
                 private readonly configService: PegasusConfigService,
                 private readonly aanwezigLedenService: AanwezigLedenService) {
@@ -130,7 +134,9 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
 
         // abonneer op wijziging van transactie types
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
-            this.ddwvTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 20});
+            this.ddwvTypes = dataset!.filter((t: HeliosType) => {
+                return t.GROEP == 20
+            });
         });
 
         const toonGasten = this.storageService.ophalen("toonGasten")
@@ -186,6 +192,12 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
             }
         }
 
+        let params: KeyValueArray = {};
+        params['VELDEN'] = "DATUM,DDWV,STARTMETHODE_OMS";
+        this.daginfoService.getDagInfoDagen(false, beginDatum, eindDatum, undefined, params).then((di) => {
+            this.dagInfo = di;
+        })
+
         this.isLoadingRooster = true;
         this.isLoadingDiensten = true;
         this.roosterService.getRooster(beginDatum, eindDatum).then((rooster) => {
@@ -221,7 +233,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
 
         // lid informatie hebben we alleen nodig als we ddwv kunnen aanmelden
         // Het tegoed moet dan beschikbaar zijn
-        if (this.ddwvService.actief()){
+        if (this.ddwvService.actief()) {
             this.opvragenLid();
         }
     }
@@ -259,12 +271,11 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
 
     berekenStrippen() {
         if (this.isLoadingRooster || this.isLoadingAanwezig) {
-            for (let i=0 ; i<this.rooster.length ; i++) {
+            for (let i = 0; i < this.rooster.length; i++) {
                 this.rooster[i].EENHEDEN = -1;
             }
-        }
-        else {
-            for (let i=0 ; i<this.rooster.length ; i++) {
+        } else {
+            for (let i = 0; i < this.rooster.length; i++) {
                 this.rooster[i].EENHEDEN = this.dagStrip(this.rooster[i].DATUM!);
             }
         }
@@ -283,7 +294,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
             return r.DATUM == datum
         });
 
-        if (!roosterDag)  return -1;
+        if (!roosterDag) return -1;
         if (!roosterDag.DDWV) return -1;
         if (roosterDag.CLUB_BEDRIJF && clubVlieger) return -1;
 
@@ -309,13 +320,14 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     afmelden() {
         this.isLoadingAanwezig = true;
         this.aanwezigLedenService.getAanwezig(this.afmeldDatum, this.afmeldDatum).then((a) => {
-            const aanmeldingen = a!.filter((al:HeliosAanwezigLedenDataset) => { return al.LID_ID == this.loginService.userInfo!.LidData!.ID})
+            const aanmeldingen = a!.filter((al: HeliosAanwezigLedenDataset) => {
+                return al.LID_ID == this.loginService.userInfo!.LidData!.ID
+            })
 
-            for (let i=0 ; i < aanmeldingen.length ; i++)  {
+            for (let i = 0; i < aanmeldingen.length; i++) {
                 if (aanmeldingen[i].DATUM == DateTime.now().toISODate() && aanmeldingen[i].AANKOMST) {
                     this.aanwezigLedenService.afmelden(aanmeldingen[i].LID_ID!).then(() => this.opvragen());
-                }
-                else {
+                } else {
                     this.aanwezigLedenService.aanmeldingVerwijderen(aanmeldingen[i].ID!).then(() => this.opvragen());
                 }
             }
@@ -372,7 +384,9 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
             return false;
         }
         // als de ingelode gebruiker, startleider is. Is hij/zij staf lid.
-        const idx = this.diensten.findIndex((d) => { return (d.DATUM == dagDatum && d.LID_ID == ui!.LidData!.ID) });
+        const idx = this.diensten.findIndex((d) => {
+            return (d.DATUM == dagDatum && d.LID_ID == ui!.LidData!.ID)
+        });
         return idx >= 0;
     }
 
@@ -450,6 +464,9 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         if (!this.rooster[idx].DDWV && ui!.LidData!.LIDTYPE_ID == 625) {    // 625 = DDWV vlieger
             return false;
         }
+        if (ui!.LidData!.ZUSTERCLUB_ID == undefined) {      // alleen aanmelden als je lid bent bij een zusterclub
+            return false;
+        }
         if (!this.rooster[idx].CLUB_BEDRIJF)    // welke lidtypes mogen aanmelden als we geen club bedrijf hebben
         {
             switch (ui!.LidData!.LIDTYPE_ID) {
@@ -521,14 +538,26 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
 
     kleurBarometer(lid: HeliosAanwezigLedenDataset) {
         switch (lid.STATUS_BAROMETER) {
-            case 'rood' : return 'barometer-rood';
-            case 'geel' : return 'barometer-geel';
-            case 'groen' : return 'barometer-groen';
+            case 'rood' :
+                return 'barometer-rood';
+            case 'geel' :
+                return 'barometer-geel';
+            case 'groen' :
+                return 'barometer-groen';
         }
     }
 
     // openen van windows voor het tonen van de transacties
     toonTransacties() {
         this.transactieScherm.openPopup(this.lid!.ID!, this.ddwvService.magBestellen(this.lid.TEGOED));
+    }
+
+    // als we daginfo hebben, hoeven we niet meer te berekenen welke startmethode we gebruiken
+    dagInfoDefaultStartMetode(datum: string) {
+        const dagInfo = this.dagInfo.find((di: HeliosDagInfosDataset) => {
+            return di.DATUM == datum && di.DDWV
+        });
+
+        return (dagInfo) ? dagInfo.STARTMETHODE_OMS : undefined
     }
 }

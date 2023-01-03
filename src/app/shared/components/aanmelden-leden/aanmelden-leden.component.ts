@@ -179,7 +179,7 @@ export class AanmeldenLedenComponent implements OnInit, OnDestroy {
             if (d.diffNow("minute").minutes > -10) {
                 this.aanwezigLedenService.aanmeldingVerwijderen(geselecteerdAanwezig!.ID!).then(() => {
                     this.success = {titel: "Afmelden", beschrijving: "Lid aanmelding is verwijderd"}
-                    this.aanwezigLedenService.updateAanwezigCache(this.datum, this.datum);
+                    this.aanwezigLedenService.updateAanwezigCache();
                 }).catch(e => {
                     this.error = e;
                 });
@@ -221,7 +221,7 @@ export class AanmeldenLedenComponent implements OnInit, OnDestroy {
                 this.aanwezigLedenService.updateAanmelding({
                     ID: this.aanwezigLeden[idx - 1].ID,
                     POSITIE: this.aanwezigLeden[idx - 1].POSITIE
-                }).then(() => this.aanwezigLedenService.updateAanwezigCache(this.datum, this.datum));
+                }).then(() => this.aanwezigLedenService.updateAanwezigCache());
             });
         }
     }
@@ -250,7 +250,7 @@ export class AanmeldenLedenComponent implements OnInit, OnDestroy {
                 this.aanwezigLedenService.updateAanmelding({
                     ID: this.aanwezigLeden[idx + 1].ID,
                     POSITIE: this.aanwezigLeden[idx + 1].POSITIE
-                }).then(() => this.aanwezigLedenService.updateAanwezigCache(this.datum, this.datum));
+                }).then(() => this.aanwezigLedenService.updateAanwezigCache());
             });
         }
     }

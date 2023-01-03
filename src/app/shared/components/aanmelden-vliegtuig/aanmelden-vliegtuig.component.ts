@@ -17,7 +17,6 @@ import {DaginfoService} from "../../../services/apiservice/daginfo.service";
 })
 export class AanmeldenVliegtuigComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private popup: ModalComponent;
-
     @Input() vliegveld: number | undefined;
 
     private datumAbonnement: Subscription; // volg de keuze van de kalender
@@ -118,7 +117,7 @@ export class AanmeldenVliegtuigComponent implements OnInit, OnDestroy {
         this.aanwezigVliegtuigenService.aanmelden(this.datum, geslecteerdVliegtuig!.ID!, vliegveld).then((a) => {
             if (a.VLIEGTUIG_ID == geslecteerdVliegtuig?.ID) {
                 this.success = {titel: "Aanmelden", beschrijving: "Vliegtuig is aangemeld"}
-                this.aanwezigVliegtuigenService.updateAanwezigCache(this.datum, this.datum);
+                this.aanwezigVliegtuigenService.updateAanwezigCache();
             }
         }).catch(e => {
             this.error = e;
@@ -144,7 +143,7 @@ export class AanmeldenVliegtuigComponent implements OnInit, OnDestroy {
                 this.aanwezigVliegtuigenService.afmelden(geselecteerdAanwezig!.VLIEGTUIG_ID!).then((a) => {
                     if (a.VLIEGTUIG_ID == geselecteerdAanwezig?.VLIEGTUIG_ID) {
                         this.success = {titel: "Afmelden", beschrijving: "vliegtuig is afgemeld"}
-                        this.aanwezigVliegtuigenService.updateAanwezigCache(this.datum, this.datum);
+                        this.aanwezigVliegtuigenService.updateAanwezigCache();
                     }
                 }).catch(e => {
                     this.error = e;

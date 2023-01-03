@@ -201,7 +201,7 @@
         <div class="row" id="toolbar">
             <div class="col-12">
                 <div class="d-flex justify-content-between">
-                    <div *ngIf="!deleteMode">
+                    <div *ngIf="!deleteMode && !datumInToekomst()">
                         <app-icon-button [disabled]="opslaanDisabled()"
                                          class="toolbarBtn"
                                          tekst="Opslaan"
