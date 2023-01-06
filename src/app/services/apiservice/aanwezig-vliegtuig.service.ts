@@ -75,8 +75,8 @@ export class AanwezigVliegtuigService {
         });
     }
 
-    async updateAanwezigCache() {
-        if (this.overslaan) {
+    async updateAanwezigCache(force: boolean = false) {
+        if (this.overslaan && force === false) {
             return this.aanwezigDagCache;
         }
         this.overslaan = true;

@@ -49,6 +49,7 @@
         </div>
     </div>
 </app-modal>
+<app-samenvatting></app-samenvatting>
 
 <!-- template voor week view -->
 <ng-template #week>
@@ -78,7 +79,10 @@
                              class="w-100 dagInRooster" [style]="KolomBreedte()"
                              [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
                             {{DagVanDeWeek(dagInRooster.DATUM)}}
-                            <div class="me-2" style="white-space: nowrap;">{{datumDMY(dagInRooster.DATUM)}}</div>
+                            <div class="d-flex justify-content-between">
+                                <div class="me-2" style="white-space: nowrap;">{{datumDMY(dagInRooster.DATUM)}}</div>
+                                <fa-icon class="infoIcon clickable" [icon]="infoIcon" placement="right" (click)="samenvatting(dagInRooster.DATUM)"></fa-icon>
+                            </div>
 
                             <div *ngIf="dagInRooster.EENHEDEN > 0" class="strip d-flex justify-content-end w-100">
                                 <img src="assets/img/strip.png" class="stripImg"/>
@@ -226,7 +230,13 @@
                         iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum.plus({days: -1}))"
                         btnColor="btn-secondary"></app-icon-button>
             </div>
-            {{DagVanDeWeek(datum.toISODate())}} <br>{{datum.day}}-{{datum.month}}-{{datum.year}}
+
+            <div class="d-flex justify-content-between">
+                {{DagVanDeWeek(datum.toISODate())}} <br>{{datum.day}}-{{datum.month}}-{{datum.year}}
+                <fa-icon class="infoIcon clickable" [icon]="infoIcon" placement="right" (click)="samenvatting(datum.toISODate())"></fa-icon>
+            </div>
+
+
             <div class="d-flex align-items-center">
                 <app-icon-button
                         class="toolbarBtn"

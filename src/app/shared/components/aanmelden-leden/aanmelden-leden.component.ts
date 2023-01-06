@@ -103,6 +103,7 @@ export class AanmeldenLedenComponent implements OnInit, OnDestroy {
     }
 
     openPopup() {
+        this.filterLeden();
         this.popup.open();
     }
 
@@ -168,6 +169,10 @@ export class AanmeldenLedenComponent implements OnInit, OnDestroy {
         } else {
             this.filteredAanwezigLeden = this.aanwezigLeden;
         }
+
+        if (this.vliegveld) {
+            this.filteredAanwezigLeden = this.filteredAanwezigLeden.filter((al) => (al.VELD_ID == this.vliegveld))
+        }
     }
 
     afmelden(geselecteerdAanwezig: HeliosAanwezigLedenDataset) {
@@ -179,7 +184,7 @@ export class AanmeldenLedenComponent implements OnInit, OnDestroy {
             if (d.diffNow("minute").minutes > -10) {
                 this.aanwezigLedenService.aanmeldingVerwijderen(geselecteerdAanwezig!.ID!).then(() => {
                     this.success = {titel: "Afmelden", beschrijving: "Lid aanmelding is verwijderd"}
-                    this.aanwezigLedenService.updateAanwezigCache();
+                    this.aanwezigLedenService.updateAanwezigCache(true);
                 }).catch(e => {
                     this.error = e;
                 });
@@ -221,7 +226,7 @@ export class AanmeldenLedenComponent implements OnInit, OnDestroy {
                 this.aanwezigLedenService.updateAanmelding({
                     ID: this.aanwezigLeden[idx - 1].ID,
                     POSITIE: this.aanwezigLeden[idx - 1].POSITIE
-                }).then(() => this.aanwezigLedenService.updateAanwezigCache());
+                }).then(() => this.aanwezigLedenService.updateAanwezigCache(true));
             });
         }
     }
@@ -250,7 +255,7 @@ export class AanmeldenLedenComponent implements OnInit, OnDestroy {
                 this.aanwezigLedenService.updateAanmelding({
                     ID: this.aanwezigLeden[idx + 1].ID,
                     POSITIE: this.aanwezigLeden[idx + 1].POSITIE
-                }).then(() => this.aanwezigLedenService.updateAanwezigCache());
+                }).then(() => this.aanwezigLedenService.updateAanwezigCache(true));
             });
         }
     }

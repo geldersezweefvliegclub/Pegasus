@@ -132,7 +132,7 @@
                                                 <div *ngIf="start.ZITPLAATSEN == 2"
                                                      cdkDropList
                                                      [id]="start.ID.toString()"
-                                                     [ngClass]="(!geselecteerdeStart || geselecteerdeStart.ID == start.ID) ? 'drop-container' : 'ms-2'"
+                                                     [ngClass]="(!geselecteerdeStart || geselecteerdeStart.ID === start.ID) ? 'drop-container' : 'ms-2'"
                                                      (cdkDropListDropped)="onDropInStart($event, start, 'inzittende');"
                                                      [cdkDropListData]="start"
                                                      [cdkDropListEnterPredicate]="evaluatieInzittende.bind(this, start)">
@@ -170,7 +170,7 @@
                             cdkDropListSortingDisabled
                             [cdkDropListData]="aanwezigLeden">
 
-                        <div *ngIf="!filteredAanwezigLeden || filteredAanwezigLeden.length == 0" class="d-flex">
+                        <div *ngIf="!filteredAanwezigLeden || filteredAanwezigLeden.length === 0" class="d-flex">
                             Geen resultaten gevonden
                         </div>
                         <div class="card my-1" [ngClass.lt-lg]="'me-5'"
@@ -227,12 +227,12 @@
                 <div class="d-flex justify-content-between">
                     <app-icon-button class="mx-3"
                                      iconNaam="fas ArrowUp"
-                                     [disabled]="geselecteerdeStart == undefined"
+                                     [disabled]="geselecteerdeStart === undefined"
                                      (btnClicked)="omhoog()"></app-icon-button>
 
                     <app-icon-button class="me-5"
                                      iconNaam="fas ArrowDown"
-                                     [disabled]="geselecteerdeStart == undefined"
+                                     [disabled]="geselecteerdeStart === undefined"
                                      (btnClicked)="omlaag()"></app-icon-button>
 
                     <div class="ms-2 d-flex justify-content-begin align-items-end text-nowrap">
@@ -245,7 +245,7 @@
                                    closeOnSelect="true"
                                    openOnEnter="true"
                                    [searchable]="false"
-                                   (change)="filter(filterAan)"
+                                   (change)="geselecteerdeStart = undefined; filter(filterAan)"
                                    [(ngModel)]="vliegveld">
                         </ng-select>
                     </div>
@@ -253,7 +253,7 @@
                     <app-status-button class="ms-5 toolbarBtn"
                                        tekst="Filter"
                                        [actief]="filterAan"
-                                       (btnClicked)="filter($event)"
+                                       (btnClicked)="geselecteerdeStart = undefined; filter($event)"
                                        iconNaam="fas Filter">
                     </app-status-button>
                     <app-icon-button class="toolbarBtn ps-2" iconNaam="fas Redo" (btnClicked)="opvragen()"

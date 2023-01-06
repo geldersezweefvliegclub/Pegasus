@@ -33,7 +33,7 @@
         <div class="col ps-2 h-100">
             <h4>Aanwezig</h4>
             <div class="lijst">
-                <div class="card aanmeldkaart row flex-row" *ngFor="let aanwezig of aanwezigVliegtuigen">
+                <div class="card aanmeldkaart row flex-row" *ngFor="let aanwezig of filteredAanwezigVliegtuigen">
                     <div class="col-3 d-flex flex-column justify-content-center p-0">
                         <div class="d-flex flex-row justify-content-end">
                         <app-icon-button iconNaam="fas ArrowLeft" (btnClicked)="afmelden(aanwezig)"

@@ -6,10 +6,12 @@ import {FormsModule} from "@angular/forms";
 import {ExtendedModule} from "@angular/flex-layout";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {SharedModule} from "../../shared/shared.module";
+import { SamenvattingComponent } from './samenvatting/samenvatting.component';
 
 @NgModule({
     declarations: [
         AanmeldenPageComponent,
+        SamenvattingComponent,
     ],
     imports: [
         CommonModule,

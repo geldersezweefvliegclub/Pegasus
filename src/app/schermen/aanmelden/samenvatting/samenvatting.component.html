@@ -1,0 +1,57 @@
+<app-modal [titel]="formTitel">
+<div body>
+    <div *ngIf="samenvatting">
+        <h4>Aanmeldingen</h4>
+        <table class="w-100">
+            <tr class="headerRow">
+                <td class="cel" ngClass.gt-sm="w-25">Totaal</td>
+                <td class="cel" ngClass.gt-sm="w-25">Brevethouders</td>
+                <td class="cel" ngClass.gt-sm="w-25">Solisten</td>
+                <td class="cel" ngClass.gt-sm="w-25">DBO'ers</td>
+            </tr>
+            <tr>
+                <td class="cel"><b>{{samenvatting.aanmeldingen}}</b></td>
+                <td class="cel"><b>{{samenvatting.brevethouders}}</b></td>
+                <td class="cel"><b>{{samenvatting.solisten}}</b></td>
+                <td class="cel"><b>{{samenvatting.dbo}}</b></td>
+            </tr>
+        </table>
+        <table class="w-100">
+            <tr class="headerRow">
+                <td class="cel">Intructeurs</td>
+                <td class="cel">Lieristen</td>
+                <td class="cel">Startleiders</td>
+            </tr>
+            <tr>
+                <td class="cel"><b>{{samenvatting.instructeurs}}</b></td>
+                <td class="cel"><b>{{samenvatting.lieristen}}</b></td>
+                <td class="cel"><b>{{samenvatting.startleiders}}</b></td>
+            </tr>
+        </table>
+
+        <h4>Vliegtuig types</h4>
+        <table>
+            <tr *ngFor="let type of samenvatting.types">
+                <td class="vtype">
+                    {{type.type}}
+                </td>
+                <td>
+                    <b>{{type.aantal}}</b>
+                </td>
+            </tr>
+        </table>
+
+        <h4>Overland aanvragen</h4>
+        <table>
+            <tr *ngFor="let ovl of samenvatting.overland">
+                <td>
+                    {{ovl.reg_call}}
+                </td>
+                <td>
+                    {{ovl.naam}}
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+</app-modal>

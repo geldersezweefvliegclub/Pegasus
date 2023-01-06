@@ -29,6 +29,7 @@ export type HeliosAanwezigVliegtuigenDataset = aanwezigVliegtuigenComponents['sc
 
 export type HeliosAanwezigLeden = aanwezigLedenComponents['schemas']['view_aanwezig_leden'];
 export type HeliosAanwezigLedenDataset = aanwezigLedenComponents['schemas']['view_aanwezig_leden_dataset'];
+export type HeliosAanwezigSamenvatting = aanwezigLedenComponents['schemas']['samenvatting'];
 
 export type HeliosVliegtuigen = vliegtuigenComponents['schemas']['view_vliegtuigen'];
 export type HeliosVliegtuigenDataset = vliegtuigenComponents['schemas']['view_vliegtuigen_dataset'];

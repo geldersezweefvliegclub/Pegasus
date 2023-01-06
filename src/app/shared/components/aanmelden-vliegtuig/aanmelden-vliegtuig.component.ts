@@ -76,6 +76,7 @@ export class AanmeldenVliegtuigComponent implements OnInit, OnDestroy {
     }
 
     openPopup() {
+        this.filterVliegtuigen();
         this.popup.open();
     }
 
@@ -103,6 +104,10 @@ export class AanmeldenVliegtuigComponent implements OnInit, OnDestroy {
         } else {
             this.filteredAanwezigVliegtuigen = this.aanwezigVliegtuigen;
         }
+
+        if (this.vliegveld) {
+            this.filteredAanwezigVliegtuigen = this.filteredAanwezigVliegtuigen.filter((av) => (av.VELD_ID == this.vliegveld))
+        }
     }
 
     aanmelden(geslecteerdVliegtuig: HeliosVliegtuigenDataset) {
@@ -117,7 +122,7 @@ export class AanmeldenVliegtuigComponent implements OnInit, OnDestroy {
         this.aanwezigVliegtuigenService.aanmelden(this.datum, geslecteerdVliegtuig!.ID!, vliegveld).then((a) => {
             if (a.VLIEGTUIG_ID == geslecteerdVliegtuig?.ID) {
                 this.success = {titel: "Aanmelden", beschrijving: "Vliegtuig is aangemeld"}
-                this.aanwezigVliegtuigenService.updateAanwezigCache();
+                this.aanwezigVliegtuigenService.updateAanwezigCache(true);
             }
         }).catch(e => {
             this.error = e;
@@ -143,7 +148,7 @@ export class AanmeldenVliegtuigComponent implements OnInit, OnDestroy {
                 this.aanwezigVliegtuigenService.afmelden(geselecteerdAanwezig!.VLIEGTUIG_ID!).then((a) => {
                     if (a.VLIEGTUIG_ID == geselecteerdAanwezig?.VLIEGTUIG_ID) {
                         this.success = {titel: "Afmelden", beschrijving: "vliegtuig is afgemeld"}
-                        this.aanwezigVliegtuigenService.updateAanwezigCache();
+                        this.aanwezigVliegtuigenService.updateAanwezigCache(true);
                     }
                 }).catch(e => {
                     this.error = e;

@@ -69,7 +69,8 @@ export class IconButtonComponent implements OnInit, OnDestroy {
     }
 
     // Voor de actie uit die gekoppeld is aan deze knop
-    buttonClicked() {
+    buttonClicked($event: Event) {
+        $event.stopPropagation();           // zorg dat onderliggende element geen click event krijgen
         this.btnClicked.emit();
     }
 }

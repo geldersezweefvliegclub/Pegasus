@@ -571,11 +571,13 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
 
     // open window om starttijd in te voeren
     startTijdClicked(start: HeliosStartDataset) {
+        this.geselecteerdeStart = undefined;
         this.tijdInvoerEditor.openStarttijdPopup(start);
     }
 
     // open popup voor landingstijd invoer
     landingsTijdClicked(start: HeliosStartDataset) {
+        this.geselecteerdeStart = undefined;
         this.tijdInvoerEditor.openLandingsTijdPopup(start);
     }
 

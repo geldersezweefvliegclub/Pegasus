@@ -28,7 +28,7 @@
                     <h4>Aanwezig</h4>
                     <div class="d-flex flex-row aanwezig">
                         <div class="aanweziglijst">
-                            <div class="card aanmeldkaart row flex-row" *ngFor="let aanwezig of aanwezigLeden"
+                            <div class="card aanmeldkaart row flex-row" *ngFor="let aanwezig of filteredAanwezigLeden"
                                  [ngClass]="{'highlight' : geselecteerdLid &&  aanwezig.ID === geselecteerdLid.ID}"
                                  (click)="selecteerLid(aanwezig)">
                                 <div class="d-flex flex-row justify-content-between p-0">

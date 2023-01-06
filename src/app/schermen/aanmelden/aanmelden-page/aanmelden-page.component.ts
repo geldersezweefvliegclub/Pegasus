@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faChevronDown, faChevronUp, faStreetView} from "@fortawesome/free-solid-svg-icons";
+import {faChevronDown, faChevronUp, faInfoCircle, faStreetView} from "@fortawesome/free-solid-svg-icons";
 import {Subscription} from "rxjs";
 import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
 import {getBeginEindDatumVanMaand} from "../../../utils/Utils";
@@ -28,6 +28,7 @@ import {TransactiesComponent} from "../../../shared/components/transacties/trans
 import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
 import {DaginfoService} from "../../../services/apiservice/daginfo.service";
 import {KeyValueArray} from "../../../types/Utils";
+import {SamenvattingComponent} from "../samenvatting/samenvatting.component";
 
 export type HeliosRoosterDatasetExtended = HeliosRoosterDataset & {
     EENHEDEN?: number
@@ -42,10 +43,14 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private bevestigAfmeldenPopup: ModalComponent;
     @ViewChild(LidAanwezigEditorComponent) aanmeldEditor: LidAanwezigEditorComponent;
     @ViewChild(GastEditorComponent) gastEditor: GastEditorComponent;
+    @ViewChild(SamenvattingComponent) samenvattingPopup: SamenvattingComponent;
 
     @ViewChild(TransactiesComponent) transactieScherm: TransactiesComponent;
 
     readonly aanmeldenIcon: IconDefinition = faStreetView;
+    readonly infoIcon: IconDefinition = faInfoCircle;
+    readonly iconDown: IconDefinition = faChevronDown;
+    readonly iconUp: IconDefinition = faChevronUp;
 
     private aanwezigLedenAbonnement: Subscription;  // Wie zijn er op welke dag aanwezig
     private resizeSubscription: Subscription;       // Abonneer op aanpassing van window grootte (of draaien mobiel)
@@ -76,8 +81,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     gasten: HeliosGastenDataset[];                  // De gasten voor de vliegdag
     dagInfo: HeliosDagInfosDataset[];               // De bijhoorende dag info
 
-    iconDown: IconDefinition = faChevronDown;
-    iconUp: IconDefinition = faChevronUp;
+
 
     toonGasten: boolean = false;
     isDDWVer: boolean = false;                      // DDWV'ers mogen geen club dagen zien
@@ -550,6 +554,11 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     // openen van windows voor het tonen van de transacties
     toonTransacties() {
         this.transactieScherm.openPopup(this.lid!.ID!, this.ddwvService.magBestellen(this.lid.TEGOED));
+    }
+
+    // toon de samenvatting van de dag
+    samenvatting(datum: string) {
+        this.samenvattingPopup.openPopup(datum)
     }
 
     // als we daginfo hebben, hoeven we niet meer te berekenen welke startmethode we gebruiken

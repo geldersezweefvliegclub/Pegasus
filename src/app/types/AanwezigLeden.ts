@@ -180,6 +180,32 @@ export interface paths {
       };
     };
   };
+  "/AanwezigLeden/Samenvattting": {
+    get: {
+      parameters: {
+        query: {
+          /** DATUM van de vliegdag. */
+          DATUM?: string;
+        };
+      };
+      responses: {
+        /** OK, data succesvol opgehaald */
+        200: {
+          content: {
+            "application/json": components["schemas"]["samenvatting"];
+          };
+        };
+        /** Data niet gevonden */
+        404: unknown;
+        /** Methode niet toegestaan, input validatie error */
+        405: unknown;
+        /** Niet aanvaardbaar, input ontbreekt */
+        406: unknown;
+        /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
+        500: unknown;
+      };
+    };
+  };
   "/AanwezigLeden/PotentieelVliegers": {
     get: {
       parameters: {
@@ -373,6 +399,12 @@ export interface components {
        */
       VELD_ID?: number;
       /**
+       * Format: int32
+       * @description Transactie voor betaling DDWV
+       * @example 2001
+       */
+      TRANSACTIE_ID?: number;
+      /**
        * @description Opmerking over de vliegdag
        * @example Heeft in de ochtend lierdienst
        */
@@ -488,6 +520,11 @@ export interface components {
        * @example 603
        */
       LIDTYPE_ID?: number;
+      /**
+       * @description Lid type omschrijving uit type tabel
+       * @example Erlelid
+       */
+      LIDTYPE?: string;
       /**
        * Format: int32
        * @description Zusterclub lidmaatschap van lid. Nodig voor DDWV.
@@ -631,6 +668,77 @@ export interface components {
        * @example Meindert het Paard
        */
       VLIEGER?: string;
+    };
+    samenvatting: {
+      /**
+       * Format: int32
+       * @description Aantal aanmeldingen voor de dag
+       * @example 24
+       */
+      aanmeldingen?: number;
+      /**
+       * Format: int32
+       * @description Aanwezige leden die mogen lieren
+       * @example 8
+       */
+      lieristen?: number;
+      /**
+       * Format: int32
+       * @description Instructeurs die zich aangemeld hebben voor de vliegdag
+       * @example 5
+       */
+      instructeurs?: number;
+      /**
+       * Format: int32
+       * @description Aanwezige leden die ook startleider zijn
+       * @example 0
+       */
+      startleiders?: number;
+      /**
+       * Format: int32
+       * @description Aantal DBO'ers
+       * @example 4
+       */
+      dbo?: number;
+      /**
+       * Format: int32
+       * @description Aantal solisten
+       * @example 6
+       */
+      solisten?: number;
+      /**
+       * Format: int32
+       * @description Aantal vliegers met een brevet
+       * @example 18
+       */
+      brevethouders?: number;
+      types?: {
+        /**
+         * Format: int32
+         * @description ID uit van vliegtuig type uit types tabel
+         * @example 406
+         */
+        id?: number;
+        /**
+         * @description Omschrijving van het type
+         * @example ASK 21
+         */
+        type?: string;
+        /**
+         * Format: int32
+         * @example 0
+         */
+        aantal?: number;
+      }[];
+      overland?: {
+        /**
+         * @description Registratie & callsign van het vliegtuig waar het lid mee overland wil
+         * @example PH-1126 (TV)
+         */
+        reg_call?: string;
+        /** @example Dirk van Loon */
+        naam?: string;
+      }[];
     };
   };
 }

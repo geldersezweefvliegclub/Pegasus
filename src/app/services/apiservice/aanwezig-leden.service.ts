@@ -2,7 +2,12 @@ import {Injectable} from '@angular/core';
 import {DateTime} from 'luxon';
 import {HeliosActie, KeyValueArray} from '../../types/Utils';
 import {APIService} from './api.service';
-import {HeliosAanwezigLeden, HeliosAanwezigLedenDataset, HeliosAanwezigVliegtuigenDataset} from '../../types/Helios';
+import {
+    HeliosAanwezigLeden,
+    HeliosAanwezigLedenDataset,
+    HeliosAanwezigSamenvatting,
+    HeliosAanwezigVliegtuigenDataset
+} from '../../types/Helios';
 import {BehaviorSubject, Subscription} from "rxjs";
 import {SharedService} from "../shared/shared.service";
 import {debounceTime} from "rxjs/operators";
@@ -70,8 +75,8 @@ export class AanwezigLedenService {
         });
     }
 
-    async updateAanwezigCache() {
-        if (this.overslaan) {
+    async updateAanwezigCache(force: boolean = false) {
+        if (this.overslaan && force === false) {
             return this.aanwezigDagCache;
         }
         this.overslaan = true;
@@ -106,6 +111,11 @@ export class AanwezigLedenService {
             }
         }
         return this.aanwezigCache?.dataset as HeliosAanwezigLedenDataset[];
+    }
+
+    async getSamenvatting(datum: DateTime): Promise<HeliosAanwezigSamenvatting> {
+        const response: Response = await this.apiService.get('AanwezigLeden/Samenvatting', {'DATUM': datum.toISODate()});
+        return response.json();
     }
 
     async getAanwezigLid(id: number): Promise<HeliosAanwezigLedenDataset> {
