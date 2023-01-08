@@ -114,14 +114,14 @@
                                             <td class="rechts laag"
                                                 *ngIf="start.STARTMETHODE && !start.STARTTIJD && !start.LANDINGSTIJD"
                                                 rowspan="3">
-                                                <app-icon-button *ngIf="inTijdspan"
+                                                <app-icon-button *ngIf="inTijdspan" [stopPropagation]="true"
                                                                  class="toolbarBtn" iconNaam="fas PlaneDeparture"
                                                                  (btnClicked)="startTijdClicked(start)"
                                                                  btnColor="startBtn"></app-icon-button>
                                             </td>
                                             <td class="rechts laag" *ngIf="start.STARTTIJD && !start.LANDINGSTIJD"
                                                 rowspan="3">
-                                                <app-icon-button *ngIf="inTijdspan"
+                                                <app-icon-button *ngIf="inTijdspan" [stopPropagation]="true"
                                                                  class="toolbarBtn" iconNaam="fas PlaneArrival"
                                                                  (btnClicked)="landingsTijdClicked(start)"
                                                                  btnColor="landingsBtn"></app-icon-button>
@@ -138,7 +138,10 @@
                                                      [cdkDropListEnterPredicate]="evaluatieInzittende.bind(this, start)">
 
                                                     <div [ngClass]="(start.INSTRUCTIEVLUCHT && (!start.MEDICAL || !start.BEVOEGD)) ? 'waarschuwing' : ''">
-                                                        <div class="d-flex w-100" style="font-weight: bold">{{start.INZITTENDENAAM_LID}}<div *ngIf="start.INZITTENDENAAM">({{start.INZITTENDENAAM}})</div></div>
+                                                        <div class="d-flex w-100" style="font-weight: bold">{{start.INZITTENDENAAM_LID}}
+                                                            <div *ngIf="start.PAX">{{start.INZITTENDENAAM}}</div>
+                                                            <div *ngIf="start.INZITTENDENAAM && !start.PAX">({{start.INZITTENDENAAM}})</div>
+                                                        </div>
                                                     </div>
                                                     <div *ngIf="start.INSTRUCTIEVLUCHT &&  start.VLIEGER_ID && !start.INZITTENDE_ID"
                                                          CLASS="warning">

@@ -322,6 +322,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
 
     // afmelding doorvoeren bij Helios
     afmelden() {
+        console.log("eeee")
         this.isLoadingAanwezig = true;
         this.aanwezigLedenService.getAanwezig(this.afmeldDatum, this.afmeldDatum).then((a) => {
             const aanmeldingen = a!.filter((al: HeliosAanwezigLedenDataset) => {
@@ -455,20 +456,22 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         }
 
         const ui = this.loginService.userInfo;
-        const idx = this.rooster.findIndex((r: HeliosRoosterDataset) => {
-            return r.DATUM == dagDatum
-        });
+        const idx = this.rooster.findIndex((r: HeliosRoosterDataset) => r.DATUM == dagDatum);
 
         if (ui!.LidData!.STARTVERBOD) { // tja ....
+            console.log(dagDatum, "start verbod");
             return false;
         }
         if (!this.rooster[idx].DDWV && !this.rooster[idx].CLUB_BEDRIJF) {   // geen vliegdag
+            console.log(dagDatum, "geen vliegdag");
             return false;
         }
         if (!this.rooster[idx].DDWV && ui!.LidData!.LIDTYPE_ID == 625) {    // 625 = DDWV vlieger
+            console.log(dagDatum, "DDWV'er en geen DDWV dag");
             return false;
         }
-        if (ui!.LidData!.ZUSTERCLUB_ID == undefined) {      // alleen aanmelden als je lid bent bij een zusterclub
+        if (ui!.LidData!.LIDTYPE_ID == 625 && ui!.LidData!.ZUSTERCLUB_ID == undefined) {      // alleen aanmelden als je lid bent bij een zusterclub
+            console.log(dagDatum, "DDWV'er en geen zusterclub");
             return false;
         }
         if (!this.rooster[idx].CLUB_BEDRIJF)    // welke lidtypes mogen aanmelden als we geen club bedrijf hebben
@@ -480,6 +483,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
                 case 604: // private owner
                 {
                     if (!this.rooster[idx].CLUB_BEDRIJF && ui!.LidData!.STATUSTYPE_ID !== 1903) {  // 1903 = Brevethouder
+                        console.log(dagDatum, "Geen clubdag, geen brevethouder");
                         return false;
                     }
                     break;
@@ -489,6 +493,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
                     break;
                 }
                 default:
+                    console.log(dagDatum, "Lidtype mag niet aanmelden");
                     return false;          // andere lidtypes dus niet
             }
         }
@@ -496,11 +501,15 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         // Bij een DDWV bedrijf moeten we ook naar het tegoed van de vlieger kijken
         if (this.ddwvService.actief()) {
             if (!this.lid) { // we weten niet hoeveel saldo het lid heeft om dat lid data onbekend is
+                console.log(dagDatum, "lid onbekend");
                 return false;
             }
 
-            if ((this.rooster[idx].EENHEDEN! > 0) && (this.rooster[idx].EENHEDEN! > this.lid.TEGOED!)) {
-                return false;
+            if (!this.rooster[idx].CLUB_BEDRIJF) {
+                if ((this.rooster[idx].EENHEDEN! > 0) && (this.rooster[idx].EENHEDEN! > this.lid.TEGOED!)) {
+                    console.log(dagDatum, "onvoldoende saldo");
+                    return false;
+                }
             }
         }
         return true;
@@ -563,6 +572,10 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
 
     // als we daginfo hebben, hoeven we niet meer te berekenen welke startmethode we gebruiken
     dagInfoDefaultStartMetode(datum: string) {
+        if (!this.dagInfo) {
+            return undefined;
+        }
+
         const dagInfo = this.dagInfo.find((di: HeliosDagInfosDataset) => {
             return di.DATUM == datum && di.DDWV
         });

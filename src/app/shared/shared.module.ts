@@ -65,17 +65,17 @@ import {LandingstijdRenderComponent} from "./components/datatable/landingstijd-r
 import {DienstEditorComponent} from './components/editors/dienst-editor/dienst-editor.component';
 import {TypeEditorComponent} from './components/editors/type-editor/type-editor.component';
 import {CompetentieEditorComponent} from './components/editors/competentie-editor/competentie-editor.component';
-import { GastEditorComponent } from './components/editors/gast-editor/gast-editor.component';
-import { GastInvoerComponent } from './components/editors/start-editor/gast-invoer/gast-invoer.component';
-import { TransactiesComponent } from './components/transacties/transacties.component';
-import { TransactieEditorComponent } from './components/editors/transactie-editor/transactie-editor.component';
-import { IdealBestellenComponent } from './components/ideal-bestellen/ideal-bestellen.component';
-import { DatumtijdRenderComponent } from './components/datatable/datumtijd-render/datumtijd-render.component';
-import { DagRapportEditorComponent } from './components/editors/dag-rapport-editor/dag-rapport-editor.component';
+import {GastEditorComponent} from './components/editors/gast-editor/gast-editor.component';
+import {GastInvoerComponent} from './components/editors/start-editor/gast-invoer/gast-invoer.component';
+import {TransactiesComponent} from './components/transacties/transacties.component';
+import {TransactieEditorComponent} from './components/editors/transactie-editor/transactie-editor.component';
+import {IdealBestellenComponent} from './components/ideal-bestellen/ideal-bestellen.component';
+import {DatumtijdRenderComponent} from './components/datatable/datumtijd-render/datumtijd-render.component';
+import {DagRapportEditorComponent} from './components/editors/dag-rapport-editor/dag-rapport-editor.component';
 import {ComposeMeteoComponent} from "./components/editors/dag-rapport-editor/compose-meteo/compose-meteo.component";
 import {ComposeBedrijfComponent} from "./components/editors/dag-rapport-editor/compose-bedrijf/compose-bedrijf.component";
-import { ProgressieEditorComponent } from './components/editors/progressie-editor/progressie-editor.component';
-import { VoortgangComponent } from './components/voortgang/voortgang.component';
+import {ProgressieEditorComponent} from './components/editors/progressie-editor/progressie-editor.component';
+import {VoortgangComponent} from './components/voortgang/voortgang.component';
 
 @NgModule({
     imports: [

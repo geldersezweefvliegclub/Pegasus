@@ -46,7 +46,13 @@
             </td>
         </tr>
         <tr>
-            <td *ngIf="!naarDashboard(false)"><div class="d-flex">{{start.INZITTENDENAAM_LID}}<div *ngIf="start.INZITTENDENAAM">({{start.INZITTENDENAAM}})</div></div></td>
+            <td *ngIf="!naarDashboard(false)">
+                <div class="d-flex">
+                    {{start.INZITTENDENAAM_LID}}
+                    <div *ngIf="start.PAX">{{start.INZITTENDENAAM}}</div>
+                    <div *ngIf="start.INZITTENDENAAM && !start.PAX">({{start.INZITTENDENAAM}})</div>
+                </div>
+            </td>
             <td *ngIf="naarDashboard(false)"><a aria-label="Naar dashboard" [routerLink]="['/dashboard']"
                                                               [queryParams]="{lidID: start.INZITTENDE_ID}">{{start.INZITTENDENAAM_LID}}</a>
             </td>

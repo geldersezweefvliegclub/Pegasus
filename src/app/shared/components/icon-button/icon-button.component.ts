@@ -17,6 +17,7 @@ export class IconButtonComponent implements OnInit, OnDestroy {
     @Input() disabled: boolean = false;
     @Input() toonKlein: boolean = true;
     @Input() flip: FlipProp;
+    @Input() stopPropagation: boolean = false;
     @Input() type: 'button' | 'submit' = 'button';
     @Output() btnClicked: EventEmitter<void> = new EventEmitter<void>();
 
@@ -70,7 +71,9 @@ export class IconButtonComponent implements OnInit, OnDestroy {
 
     // Voor de actie uit die gekoppeld is aan deze knop
     buttonClicked($event: Event) {
-        $event.stopPropagation();           // zorg dat onderliggende element geen click event krijgen
+        if (this.stopPropagation) {
+            $event.stopPropagation();           // zorg dat onderliggende element geen click event krijgen
+        }
         this.btnClicked.emit();
     }
 }

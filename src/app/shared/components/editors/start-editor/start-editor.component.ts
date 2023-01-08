@@ -47,7 +47,9 @@ export class StartEditorComponent implements OnInit {
     start: HeliosStart = {};
     toonGastCombobox: boolean = false;
     toonVliegerNaam: boolean = false;
-    toonInzittendeNaam: number = 0;
+    toonInzittendeNaam: number = 0;             // 0, naam hoeft niet ingevoerd te worden
+                                                // 1, naam mag ingevoerd worden, maar ook inzittende combobox tonen
+                                                // 2, toon alleen de naam invoer
     toonStartMethode: boolean = true;
     toonWaarschuwing: boolean = false;          // mag het lid op die vliegtuig vliegen volgens kruisjeslijst?
     medicalWaarschuwing: boolean = false;       // Controleer op geldigheid medical
@@ -470,11 +472,11 @@ export class StartEditorComponent implements OnInit {
         if (doorgaan) {
             this.isSaving = true;
             if (this.isRestoreMode) {
-                this.Herstellen(this.start);
+                this.Herstellen();
             }
 
             if (this.isVerwijderMode) {
-                this.Verwijderen(this.start);
+                this.Verwijderen();
             }
 
             if (!this.isVerwijderMode && !this.isRestoreMode) {
@@ -486,23 +488,24 @@ export class StartEditorComponent implements OnInit {
                 }
 
                 if (this.start.ID) {
-                    this.Aanpassen(this.start);
+                    this.Aanpassen();
                 } else {
-                    this.Toevoegen(this.start);
+                    this.Toevoegen();
                 }
             }
         }
     }
 
     // nieuwe start is ingevoerd, nu opslaan
-    Toevoegen(start: HeliosStart) {
+    Toevoegen() {
         if (!this.toonVliegerNaam) {
             this.start.VLIEGERNAAM = undefined;
         }
-        if (!this.toonInzittendeNaam) {
+
+        if (this.toonInzittendeNaam == 0 && !this.start.PAX) {
             this.start.INZITTENDENAAM = undefined;
         }
-        this.startlijstService.addStart(start).then((s) => {
+        this.startlijstService.addStart(this.start).then((s) => {
             this.success = {
                 titel: "Startlijst",
                 beschrijving: `Vlucht #${s.DAGNUMMER} is toegevoegd`
@@ -515,17 +518,17 @@ export class StartEditorComponent implements OnInit {
     }
 
     // bestaande start is aangepast, nu opslaan
-    Aanpassen(start: HeliosStart) {
+    Aanpassen() {
         if (!this.toonVliegerNaam) {
             this.start.VLIEGERNAAM = undefined;
         }
         if (!this.toonInzittendeNaam) {
             this.start.INZITTENDENAAM = undefined;
         }
-        this.startlijstService.updateStart(start).then(() => {
+        this.startlijstService.updateStart(this.start).then(() => {
             this.success = {
                 titel: "Startlijst",
-                beschrijving: `Vlucht #${start.DAGNUMMER} is aangepast`
+                beschrijving: `Vlucht #${this.start.DAGNUMMER} is aangepast`
             }
 
             this.closePopup();
@@ -536,11 +539,11 @@ export class StartEditorComponent implements OnInit {
     }
 
     // markeer een start als verwijderd
-    Verwijderen(start: HeliosStart) {
-        this.startlijstService.deleteStart(start.ID!).then(() => {
+    Verwijderen() {
+        this.startlijstService.deleteStart(this.start.ID!).then(() => {
             this.success = {
                 titel: "Startlijst",
-                beschrijving: `Vlucht #${start.DAGNUMMER} is verwijderd`
+                beschrijving: `Vlucht #${this.start.DAGNUMMER} is verwijderd`
             }
             this.closePopup();
         }).catch(e => {
@@ -550,11 +553,11 @@ export class StartEditorComponent implements OnInit {
     }
 
     // de start moet hersteld worden, haal de markering 'verwijderd' weg
-    Herstellen(start: HeliosStart) {
-        this.startlijstService.restoreStart(start.ID!).then(() => {
+    Herstellen() {
+        this.startlijstService.restoreStart(this.start.ID!).then(() => {
             this.success = {
                 titel: "Startlijst",
-                beschrijving: `Vlucht #${start.DAGNUMMER} is hersteld`
+                beschrijving: `Vlucht #${this.start.DAGNUMMER} is hersteld`
             }
             this.closePopup();
         }).catch(e => {

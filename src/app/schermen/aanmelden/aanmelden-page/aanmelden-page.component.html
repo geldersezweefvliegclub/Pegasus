@@ -81,7 +81,7 @@
                             {{DagVanDeWeek(dagInRooster.DATUM)}}
                             <div class="d-flex justify-content-between">
                                 <div class="me-2" style="white-space: nowrap;">{{datumDMY(dagInRooster.DATUM)}}</div>
-                                <fa-icon class="infoIcon clickable" [icon]="infoIcon" placement="right" (click)="samenvatting(dagInRooster.DATUM)"></fa-icon>
+                                <fa-icon class="infoIcon clickable" [icon]="infoIcon" placement="right" (click)="samenvatting(dagInRooster.DATUM)" *ngIf="dagInRooster.CLUB_BEDRIJF"></fa-icon>
                             </div>
 
                             <div *ngIf="dagInRooster.EENHEDEN > 0" class="strip d-flex justify-content-end w-100">
@@ -233,7 +233,7 @@
 
             <div class="d-flex justify-content-between">
                 {{DagVanDeWeek(datum.toISODate())}} <br>{{datum.day}}-{{datum.month}}-{{datum.year}}
-                <fa-icon class="infoIcon clickable" [icon]="infoIcon" placement="right" (click)="samenvatting(datum.toISODate())"></fa-icon>
+                <fa-icon class="infoIcon clickable" [icon]="infoIcon" placement="right" (click)="samenvatting(datum.toISODate())" *ngIf="rooster[0].CLUB_BEDRIJF"></fa-icon>
             </div>
 
 
