@@ -1,0 +1,59 @@
+.docContent {
+  padding-left: 10px;
+}
+
+.groepHeader {
+  font-size: 0.9rem;
+  font-weight: bold;
+
+  border-bottom: 1px solid #aaa;
+  background-color: #ddbd6d;
+}
+
+.toolbarBtn {
+  margin-left: 0.4em;
+  margin-right: 0.4em;
+}
+
+.addBtn {
+  color: #5a9602;
+  font-size: 20px;
+}
+
+.upBtn {
+  color: #d5ac49;
+  font-size: 20px;
+}
+
+.downBtn {
+  color: #d5ac49;
+  font-size: 20px;
+}
+
+.deleteBtn {
+  color: #dc3545;
+}
+
+.restoreBtn {
+  color: #ffc107;
+}
+
+.btn-noborder {
+  outline: none !important;
+  box-shadow: none;
+}
+
+.paragraafHeader {
+  font-size: 0.9rem;
+  color: white;
+
+  background-color: #bdc3d1;
+}
+
+.bovenlijn {
+  border-top: 1px solid #aaa;
+}
+
+.onderlijn {
+  border-bottom: 1px solid #aaa;
+}

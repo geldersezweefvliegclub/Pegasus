@@ -31,11 +31,11 @@
                             <div class="badge bg-secondary ms-2" [innerHTML]="item.value" *ngIf="item.value >= 0"></div>
                         </div>
                         <div>
-                            <fa-icon [icon]="upIcon" class="upBtn me-2" (click)="omhoog(item);"
+                            <fa-icon [icon]="upIcon" class="upBtn me-2 clickable" (click)="omhoog(item);"
                                      *ngIf="item.value >= 0 && item.blokID != -1"></fa-icon>
-                            <fa-icon [icon]="downIcon" class="downBtn me-2" (click)="omlaag(item);"
+                            <fa-icon [icon]="downIcon" class="downBtn me-2 clickable" (click)="omlaag(item);"
                                      *ngIf="item.value >= 0 && item.blokID != -1"></fa-icon>
-                            <fa-icon [icon]="toevoegenIcon" class="addBtn me-2" (click)="toevoegen(item);"
+                            <fa-icon [icon]="toevoegenIcon" class="addBtn me-2 clickable" (click)="toevoegen(item);"
                                      *ngIf="item.value >= 0"></fa-icon>
                         </div>
 

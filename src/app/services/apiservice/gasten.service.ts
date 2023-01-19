@@ -11,8 +11,7 @@ import {DateTime} from "luxon";
 export class GastenService {
     private gastenCache: HeliosGasten = {dataset: []};      // return waarde van API call
 
-    constructor(private readonly apiService: APIService,
-                private readonly loginService: LoginService) {
+    constructor(private readonly apiService: APIService) {
     }
 
     async getGasten(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime): Promise<HeliosGastenDataset[]> {

@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {AgRendererComponent} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 import {faUndo} from '@fortawesome/free-solid-svg-icons';
+import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 
 @Component({
   selector: 'app-restore-action',
@@ -10,7 +11,7 @@ import {faUndo} from '@fortawesome/free-solid-svg-icons';
 })
 export class RestoreActionComponent implements AgRendererComponent {
   private params: any;
-  restoreIcon = faUndo;
+  restoreIcon:IconDefinition = faUndo;
 
   constructor() {
   }

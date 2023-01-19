@@ -81,8 +81,6 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     gasten: HeliosGastenDataset[];                  // De gasten voor de vliegdag
     dagInfo: HeliosDagInfosDataset[];               // De bijhoorende dag info
 
-
-
     toonGasten: boolean = false;
     isDDWVer: boolean = false;                      // DDWV'ers mogen geen club dagen zien
     ddwvActief: boolean = true;                     // Doen we aan een DDWV bedrijf
@@ -169,10 +167,9 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     }
 
     opvragen(): void {
-        const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
 
-        let beginDatum: DateTime = beginEindDatum.begindatum;
-        let eindDatum: DateTime = beginEindDatum.einddatum;
+        let beginDatum: DateTime;
+        let eindDatum: DateTime;
 
         if (this.ophalenOverslaan) {    // tweede verzoek om data op te vragen binnen 2 seconden
             return;
@@ -190,8 +187,8 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
             case "week":
             default : {
                 this.aanmeldenView = "week";
-                beginDatum = this.datum.startOf('week');     // maandag in de 1e week vande maand, kan in de vorige maand vallen
-                eindDatum = this.datum.endOf('week');        // zondag van de laaste week, kan in de volgende maand vallen
+                beginDatum = this.maandag;                              // maandag in de 1e week vande maand, kan in de vorige maand vallen
+                eindDatum = this.maandag.plus({days: 6});       // 6 dagen later is zondag
                 break;
             }
         }

@@ -76,6 +76,7 @@ import {ComposeMeteoComponent} from "./components/editors/dag-rapport-editor/com
 import {ComposeBedrijfComponent} from "./components/editors/dag-rapport-editor/compose-bedrijf/compose-bedrijf.component";
 import {ProgressieEditorComponent} from './components/editors/progressie-editor/progressie-editor.component';
 import {VoortgangComponent} from './components/voortgang/voortgang.component';
+import { DocumentEditorComponent } from './components/editors/document-editor/document-editor.component';
 
 @NgModule({
     imports: [
@@ -161,6 +162,7 @@ import {VoortgangComponent} from './components/voortgang/voortgang.component';
         ComposeBedrijfComponent,
         ProgressieEditorComponent,
         VoortgangComponent,
+        DocumentEditorComponent,
     ],
     exports: [
         LidEditorComponent,
@@ -204,7 +206,8 @@ import {VoortgangComponent} from './components/voortgang/voortgang.component';
         TransactieEditorComponent,
         LidInvoerComponent,
         TransactiesComponent,
-        DagRapportEditorComponent
+        DagRapportEditorComponent,
+        DocumentEditorComponent
     ],
     providers: [],
     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

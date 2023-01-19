@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {Route, RouterModule} from '@angular/router';
 
-import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
+import {faFile, IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {
     faAddressCard,
     faCalendarAlt,
@@ -129,6 +129,13 @@ export const routes: CustomRoute[] = [
         excluded: false,
         icon: faCalendarDay,
         text: 'Rooster'
+    },
+    {
+        path: 'documenten',
+        loadChildren: () => import('./schermen/documenten/documenten.module').then(m => m.DocumentenModule),
+        excluded: false,
+        icon: faFile,
+        text: 'Documenten'
     },
 
     {

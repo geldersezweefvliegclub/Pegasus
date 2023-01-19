@@ -1,0 +1,85 @@
+<app-error [error]="error"></app-error>
+<app-success [success]="success"></app-success>
+
+<app-modal [titel]="formTitel">
+    <div body>
+        <div *ngIf="document">
+            <fieldset [disabled]="isVerwijderMode || isRestoreMode || isLoading || isSaving">
+                <div class="row my-2">
+                    <div class="col-12">
+                        <input name="LEGE_REGEL" type="checkbox" class="form-check-input" id="LEGE_REGEL"
+                               [(ngModel)]="document.LEGE_REGEL">
+                        <label class="form-check-label ms-2" for="LEGE_REGEL">
+                            Lege regel
+                        </label>
+                    </div>
+                </div>
+
+                <div class="row my-2">
+                    <div class="col-8">
+                        <label class="form-label">Tekst</label>
+                        <input name="test" type="text" class="form-control" id="TEKST"
+                               [(ngModel)]="document.TEKST" [disabled]="document.LEGE_REGEL">
+                    </div>
+
+                    <div class="col-4">
+                        <label class="form-label">Volgorde</label>
+                        <input name="volgorde" type="number" class="form-control" id="VOLGORDE"
+                               [(ngModel)]="document.VOLGORDE"
+                               min="1" max="25">
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <div class="col-12">
+                        <label class="form-label">URL</label>
+                        <input name="test" type="text" class="form-control" id="URL"
+                               [(ngModel)]="document.URL" [disabled]="document.LEGE_REGEL">
+                    </div>
+                </div>
+
+                <div class="row my-2">
+                    <div class="col-6">
+                        <input name="ONDERSTREEP" type="checkbox" class="form-check-input" id="ONDERSTREEP"
+                               [(ngModel)]="document.ONDERSTREEP">
+                        <label class="form-check-label ms-2" for="ONDERSTREEP">
+                            Scheidingslijn
+                        </label>
+                    </div>
+
+                    <div class="col-6 d-flex" *ngIf="document.ONDERSTREEP">
+                        <label for="POSITIE" class="form-label me-3">Positie </label>
+                        <select class="form-select" [(ngModel)]="document.BOVEN"
+                                name="POSITIE" id="POSITIE">
+                            <option value=true>Boven</option>
+                            <option value=false>Onder</option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+    <div footer *ngIf="document">
+        <app-icon-button
+                *ngIf="!isLoading && !isSaving && document.ID !== undefined && !isRestoreMode && !isVerwijderMode"
+                iconNaam="fas Edit" btnColor="btn-primary"
+                [toonKlein]=false tekst="Opslaan" [disabled]="!(document.TEKST || document.LEGE_REGEL)"
+                (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button
+                *ngIf="!isLoading && !isSaving && document.ID === undefined && !isRestoreMode && !isVerwijderMode"
+                iconNaam="fas Plus" btnColor="btn-primary"
+                [toonKlein]=false tekst="Opslaan" [disabled]="!(document.TEKST || document.LEGE_REGEL)"
+                (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button *ngIf="!isLoading && !isSaving && isVerwijderMode" iconNaam="fas TrashAlt"
+                         btnColor="btn-primary editorDeleteBtn"
+                         [toonKlein]=false tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button *ngIf="!isLoading && !isSaving && isRestoreMode" iconNaam="fas Undo"
+                         btnColor="btn-primary editorRestoreBtn"
+                         [toonKlein]=false tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
+
+        <button class="btn btn-primary" *ngIf="isLoading || isSaving">
+            <span><app-loader></app-loader></span>
+        </button>
+    </div>
+</app-modal>
+
+
