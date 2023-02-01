@@ -93,9 +93,12 @@ export class DienstEditorComponent implements OnInit, OnDestroy {
                     }
                     case this.configService.OCHTEND_LIERIST_TYPE_ID:
                     case this.configService.MIDDAG_LIERIST_TYPE_ID:
+                    {
+                        return lid.LIERIST;
+                    }
                     case this.configService.OCHTEND_HULPLIERIST_TYPE_ID:
                     case this.configService.MIDDAG_HULPLIERIST_TYPE_ID: {
-                        return lid.LIERIST;
+                        return lid.LIERIST_IO;
                     }
                     case this.configService.OCHTEND_STARTLEIDER_TYPE_ID:
                     case this.configService.MIDDAG_STARTLEIDER_TYPE_ID:

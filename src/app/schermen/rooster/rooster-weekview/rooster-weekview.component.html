@@ -1,3 +1,5 @@
+<app-uitbetalen-ddwv-crew-editor></app-uitbetalen-ddwv-crew-editor>
+
 <div class="dataContent" *ngIf="leden && rooster">
     <div class="d-flex justify-content-between mb-2">
         <div>
@@ -34,7 +36,7 @@
                                [name]="'DDWV' + i"
                                [(ngModel)]="dagInRooster.DDWV"
                                (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
-                               [disabled]="!magWijzigen && !isCIMT">
+                               [disabled]="!magWijzigen && !isCIMT && !isBeheerderDDWV">
                         <label [for]="'DDWV' + i" class="form-check-label">DDWV</label>
                     </div>
                     <div class="text-nowrap">
@@ -43,7 +45,7 @@
                                [name]="'Clubbedrijf' + i"
                                [(ngModel)]="dagInRooster.CLUB_BEDRIJF"
                                (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
-                               [disabled]="!magWijzigen && !isCIMT!">
+                               [disabled]="!magWijzigen && !isCIMT && !isBeheerderDDWV">
                         <label [for]="'Clubbedrijf' + i"
                                class="labelClub form-check-label">Club
                             bedrijf</label>
@@ -60,7 +62,7 @@
                             [name]="'OPMERKINGEN' + i"
                             [(ngModel)]="dagInRooster.OPMERKINGEN"
                             (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
-                            [disabled]="!magWijzigen && !isCIMT"
+                            [disabled]="!magWijzigen && !isCIMT && !isBeheerderDDWV"
                             class="w-100 text-invoer form-control opmerkingen"
                             [rows]="2" style="resize: none"></textarea>
                 </td>
@@ -108,7 +110,7 @@
                 </td>
             </tr>
 
-            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_HULPLIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_HULPLIERIST_TYPE_ID]) && tonen.Lieristen && tonen.toonClubDDWV !==2">
+            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_HULPLIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_HULPLIERIST_TYPE_ID]) && tonen.LIO && tonen.toonClubDDWV !==2">
                 <td class="dienstType">Hulplierist</td>
                 <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
                     <ng-container [ngTemplateOutlet]="roosterDienst"
@@ -153,6 +155,17 @@
                     </div>
                 </td>
             </tr>
+            <tr *ngIf="tonen.toonClubDDWV ===2">
+                <td></td>
+                <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
+                    <div *ngIf="!datumInToekomst(dagInRooster.DATUM) && dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF && (isBeheerderDDWV || isBeheerder)" class="w-100">
+                        <app-icon-button class="toolbarBtn"
+                                         tekst="Uitbetalen crew"
+                                         iconNaam="fas EuroSign" (btnClicked)="uitbetalen.openPopup(dagInRooster)"
+                                         btnColor="btn-secondary"></app-icon-button>
+                    </div>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
@@ -162,7 +175,7 @@
     <div class="d-flex" *ngFor="let dt of typeDienst">
         <div class="d-flex w-100" *ngIf="tonen.toonDienst[dt]">
             <div class="naam" (click)="openPopup(dag, dt)"
-                 [ngClass]="lidInRoosterClass(dag.Diensten[dt])">
+                 [ngClass]="lidInRoosterDagClass(dag.Diensten[dt], dag)">
                 {{ (dag.Diensten[dt]) ? dag.Diensten[dt].NAAM : "" }}
             </div>
 

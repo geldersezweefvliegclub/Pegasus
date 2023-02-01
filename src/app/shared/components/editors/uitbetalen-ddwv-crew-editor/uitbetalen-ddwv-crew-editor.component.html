@@ -1,0 +1,23 @@
+<app-error [error]="error"></app-error>
+<app-success [success]="success"></app-success>
+
+<app-modal titel="Uitbetaling crew">
+    <div body *ngIf="diensten">
+        <table>
+            <tr *ngFor="let dienst of diensten;let i = index">
+                <td>
+                    <input type="checkbox" class="form-check-inline"
+                           [id]="'dienst_' + dienst.ID"
+                           [name]="'dienst_' + dienst.ID"
+                           (change)="selectieChanged($event, dienst.ID)">
+                </td>
+                <td>{{dienst.NAAM}}</td>
+                <td class="ps-3">{{dienst.TYPE_DIENST}}</td>
+            </tr>
+        </table>
+    </div>
+    <div footer>
+        <app-icon-button iconNaam="fas EuroSign" btnColor="btn-primary" [toonKlein]=false
+                         tekst="Uitbetalen" (btnClicked)="uitbetalen()"></app-icon-button>
+    </div>
+</app-modal>

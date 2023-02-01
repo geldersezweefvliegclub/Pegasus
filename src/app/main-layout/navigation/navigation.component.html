@@ -41,8 +41,9 @@
                 </a>
             </div>
 
-
+            <!-- onderste sectie -->
             <div class="list-group list-group-flush p-3" *ngIf="!this.loginService.userInfo?.Userinfo.isStarttoren">
+                <!-- Beheer -->
                 <a class="list-group-item list-group-item-action waves-effect beheer" *ngIf="!beheerExcluded"
                    (click)="showBeheer = !showBeheer">
                     <fa-icon [icon]="beheerIcon" class="me-3"></fa-icon>
@@ -87,8 +88,6 @@
                                      btnColor="btn-primary"></app-icon-button>
                 </div>
             </div>
-
-
         </div>
     </div>
 

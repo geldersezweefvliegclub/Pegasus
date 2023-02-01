@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
 import {SharedService} from "../shared/shared.service";
 import {APIService} from "./api.service";
-import {HeliosConfigDDWV} from "../../types/Helios";
+import {HeliosConfigDDWV, HeliosLedenDataset} from "../../types/Helios";
 import {StorageService} from "../storage/storage.service";
 import {DateTime, Interval} from "luxon";
+import {KeyValueArray} from "../../types/Utils";
 
 @Injectable({
     providedIn: 'root'
@@ -27,19 +28,19 @@ export class DdwvService {
     }
 
     public actief(): boolean {
-        if (!this.configDDWV)  return false;
+        if (!this.configDDWV) return false;
         return this.configDDWV.DDWV!;
     }
 
     public magBestellen(strippen: number | undefined): boolean {
-        if (!this.configDDWV)  return false;
-        if (!this.configDDWV.MAX_STRIPPEN)  return false;
+        if (!this.configDDWV) return false;
+        if (!this.configDDWV.MAX_STRIPPEN) return false;
 
         return ((!strippen) || (strippen < this.configDDWV.MAX_STRIPPEN)) ? true : false;
     }
 
     public getTransactieTypeID(datum: DateTime): number {
-        const nu:  DateTime = DateTime.now();
+        const nu: DateTime = DateTime.now();
 
         if (nu.startOf('day') > datum.startOf('day')) {
 
@@ -52,10 +53,28 @@ export class DdwvService {
             dagen--;
         }
 
-        if (!this.configDDWV)  return -1;
-        if (!this.configDDWV.TARIEVEN)  return -1;
+        if (!this.configDDWV) return -1;
+        if (!this.configDDWV.TARIEVEN) return -1;
 
         const typeID = (this.configDDWV.TARIEVEN[dagen]) ? this.configDDWV.TARIEVEN[dagen] : this.configDDWV.TARIEVEN['default']
         return +typeID;
+    }
+
+    async betaalCrew(datum: string, IDs: string): Promise<void> {
+        let getParams: KeyValueArray = {};
+
+        getParams['DATUM'] = datum;
+        getParams['DIENSTEN'] = IDs;
+
+        const obj = {
+            "DATUM": datum,
+            "DIENSTEN": IDs
+        }
+
+        try {
+            const response: Response = await this.apiService.post('DDWV/UitbetalenCrew', JSON.stringify(obj));
+        } catch (e) {
+            throw(e);
+        }
     }
 }

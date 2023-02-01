@@ -1,4 +1,5 @@
 <app-jaar-totalen [leden]="this.leden"></app-jaar-totalen>
+<app-uitbetalen-ddwv-crew-editor></app-uitbetalen-ddwv-crew-editor>
 
 <div class="dataContent" *ngIf="leden && rooster">
     <div class="roosterTabel">
@@ -31,7 +32,7 @@
                     Lierist
                 </th>
                 <th scope="col"
-                    *ngIf="(tonen.toonDienst[configService.OCHTEND_HULPLIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_HULPLIERIST_TYPE_ID])  && tonen.Lieristen && tonen.toonClubDDWV !==2"
+                    *ngIf="(tonen.toonDienst[configService.OCHTEND_HULPLIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_HULPLIERIST_TYPE_ID])  && tonen.LIO && tonen.toonClubDDWV !==2"
                     [style]="KolomBreedte()">Hulplierist
                 </th>
                 <th scope="col"
@@ -71,7 +72,7 @@
                                        [name]="'DDWV' + i"
                                        [(ngModel)]="dagInRooster.DDWV"
                                        (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
-                                       [disabled]="!magWijzigen && !isCIMT">
+                                       [disabled]="!magWijzigen && !isCIMT && !isBeheerderDDWV">
                                 <label [for]="'DDWV' + i" class="form-check-label">DDWV</label>
                             </div>
                             <div class="text-nowrap">
@@ -80,7 +81,7 @@
                                        [name]="'Clubbedrijf' + i"
                                        [(ngModel)]="dagInRooster.CLUB_BEDRIJF"
                                        (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
-                                       [disabled]="!magWijzigen && !isCIMT!">
+                                       [disabled]="!magWijzigen && !isCIMT! && !isBeheerderDDWV">
                                 <label [for]="'Clubbedrijf' + i"
                                        class="labelClub form-check-label">Club
                                     bedrijf</label>
@@ -94,14 +95,14 @@
                     <div class="d-flex"
                          *ngIf="dagInRooster.CLUB_BEDRIJF && tonen.toonDienst[configService.OCHTEND_DDI_TYPE_ID]">
                         <div
-                                class="drop-container"
+                                class="drop-container" [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID])"
+
                                 cdkDropList
                                 [id]="dagInRooster.DATUM + ',' + configService.OCHTEND_DDI_TYPE_ID"
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.OCHTEND_DDI_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this, dagInRooster.DATUM, configService.OCHTEND_DDI_TYPE_ID)">
-                            <div cdkDrag
-                                 [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID])">
+                            <div cdkDrag>
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -117,14 +118,14 @@
                     <div class="d-flex"
                          *ngIf="dagInRooster.CLUB_BEDRIJF && tonen.toonDienst[configService.MIDDAG_DDI_TYPE_ID]">
                         <div
-                                class="drop-container"
+                                class="drop-container" [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID])"
+
                                 cdkDropList
                                 [id]="dagInRooster.DATUM + ',' + configService.MIDDAG_DDI_TYPE_ID"
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.MIDDAG_DDI_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this, dagInRooster.DATUM, configService.MIDDAG_DDI_TYPE_ID)">
-                            <div cdkDrag
-                                 [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID])">
+                            <div cdkDrag>
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -143,14 +144,14 @@
                     <div class="d-flex"
                          *ngIf="dagInRooster.CLUB_BEDRIJF && tonen.toonDienst[configService.OCHTEND_INSTRUCTEUR_TYPE_ID]">
                         <div
-                                class="drop-container"
+                                class="drop-container" [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID])"
+
                                 cdkDropList
                                 [id]="dagInRooster.DATUM + ',' + configService.OCHTEND_INSTRUCTEUR_TYPE_ID"
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.OCHTEND_INSTRUCTEUR_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this, dagInRooster.DATUM, configService.OCHTEND_INSTRUCTEUR_TYPE_ID)">
-                            <div cdkDrag
-                                 [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID])">
+                            <div cdkDrag>
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -166,14 +167,14 @@
                     <div class="d-flex"
                          *ngIf="dagInRooster.CLUB_BEDRIJF && tonen.toonDienst[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]">
                         <div
-                                class="drop-container"
+                                class="drop-container" [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID])"
+
                                 cdkDropList
                                 [id]="dagInRooster.DATUM + ',' + configService.MIDDAG_INSTRUCTEUR_TYPE_ID"
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.MIDDAG_INSTRUCTEUR_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this, dagInRooster.DATUM, configService.MIDDAG_INSTRUCTEUR_TYPE_ID)">
-                            <div cdkDrag
-                                 [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID])">
+                            <div cdkDrag>
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -191,14 +192,14 @@
                             tonen.toonDienst[configService.MIDDAG_STARTLEIDER_TYPE_ID]) && (tonen.Startleiders || tonen.DDWV) && tonen.toonDienst[configService.OCHTEND_STARTLEIDER_TYPE_ID]">
                     <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF || dagInRooster.DDWV">
                         <div
-                                class="drop-container"
+                                class="drop-container" [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID])"
+
                                 cdkDropList
                                 [id]="dagInRooster.DATUM + ',' + configService.OCHTEND_STARTLEIDER_TYPE_ID"
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.OCHTEND_STARTLEIDER_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this, dagInRooster.DATUM, configService.OCHTEND_STARTLEIDER_TYPE_ID)">
-                            <div cdkDrag
-                                 [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID])">
+                            <div cdkDrag>
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -214,14 +215,14 @@
                     <div class="d-flex"
                          *ngIf="dagInRooster.CLUB_BEDRIJF  && tonen.toonDienst[configService.MIDDAG_STARTLEIDER_TYPE_ID]">
                         <div
-                                class="drop-container"
+                                class="drop-container" [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID])"
+
                                 cdkDropList
                                 [id]="dagInRooster.DATUM + ',' + configService.MIDDAG_STARTLEIDER_TYPE_ID"
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.MIDDAG_STARTLEIDER_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this, dagInRooster.DATUM, configService.MIDDAG_STARTLEIDER_TYPE_ID)">
-                            <div cdkDrag
-                                 [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID])">
+                            <div cdkDrag>
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -241,14 +242,14 @@
                     <div class="d-flex"
                          *ngIf="dagInRooster.CLUB_BEDRIJF &&  tonen.toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]">
                         <div
-                                class="drop-container"
+                                class="drop-container" [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID])"
+
                                 cdkDropList
                                 [id]="dagInRooster.DATUM + ',' + configService.OCHTEND_STARTLEIDER_IO_TYPE_ID"
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.OCHTEND_STARTLEIDER_IO_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this, dagInRooster.DATUM, configService.OCHTEND_STARTLEIDER_IO_TYPE_ID)">
-                            <div cdkDrag
-                                 [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID])">
+                            <div cdkDrag>
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -264,14 +265,14 @@
                     <div class="d-flex"
                          *ngIf="dagInRooster.CLUB_BEDRIJF && tonen.toonDienst[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID]">
                         <div
-                                class="drop-container"
+                                class="drop-container" [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID])"
+
                                 cdkDropList
                                 [id]="dagInRooster.DATUM + ',' + configService.MIDDAG_STARTLEIDER_IO_TYPE_ID"
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.MIDDAG_STARTLEIDER_IO_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this, dagInRooster.DATUM, configService.MIDDAG_STARTLEIDER_IO_TYPE_ID)">
-                            <div cdkDrag
-                                 [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID])">
+                            <div cdkDrag>
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -290,14 +291,15 @@
                             tonen.toonDienst[configService.MIDDAG_LIERIST_TYPE_ID]) && (tonen.Lieristen || tonen.DDWV)">
                     <div class="d-flex" *ngIf="(dagInRooster.CLUB_BEDRIJF || dagInRooster.DDWV) &&  tonen.toonDienst[configService.OCHTEND_LIERIST_TYPE_ID]">
                         <div
-                                class="drop-container"
+                                class="drop-container" [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID])"
+
                                 cdkDropList
                                 [id]="dagInRooster.DATUM + ',' + configService.OCHTEND_LIERIST_TYPE_ID"
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.OCHTEND_LIERIST_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this, dagInRooster.DATUM, configService.OCHTEND_LIERIST_TYPE_ID)">
                             <div cdkDrag
-                                 [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID])">
+                                 >
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -313,14 +315,14 @@
                     <div class="d-flex"
                          *ngIf="dagInRooster.CLUB_BEDRIJF  && tonen.toonDienst[configService.MIDDAG_LIERIST_TYPE_ID]">
                         <div
-                                class="drop-container"
+                                class="drop-container" [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID])"
+
                                 cdkDropList
                                 [id]="dagInRooster.DATUM + ',' + configService.MIDDAG_LIERIST_TYPE_ID"
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.MIDDAG_LIERIST_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this, dagInRooster.DATUM, configService.MIDDAG_LIERIST_TYPE_ID)">
-                            <div cdkDrag
-                                 [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID])">
+                            <div cdkDrag>
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -335,18 +337,18 @@
                     </div>
                 </td>
                 <td *ngIf="(tonen.toonDienst[configService.OCHTEND_HULPLIERIST_TYPE_ID] ||
-                            tonen.toonDienst[configService.MIDDAG_HULPLIERIST_TYPE_ID]) && tonen.Lieristen && tonen.toonClubDDWV !==2">
+                            tonen.toonDienst[configService.MIDDAG_HULPLIERIST_TYPE_ID]) && tonen.LIO && tonen.toonClubDDWV !==2">
                     <div class="d-flex"
                          *ngIf="dagInRooster.CLUB_BEDRIJF && tonen.toonDienst[configService.OCHTEND_HULPLIERIST_TYPE_ID]">
                         <div
-                                class="drop-container"
+                                class="drop-container" [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID])"
+
                                 cdkDropList
                                 [id]="dagInRooster.DATUM + ',' + configService.OCHTEND_HULPLIERIST_TYPE_ID"
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.OCHTEND_HULPLIERIST_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
-                                [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this, dagInRooster.DATUM, configService.OCHTEND_HULPLIERIST_TYPE_ID)">
-                            <div cdkDrag
-                                 [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID])">
+                                [cdkDropListEnterPredicate]="lioEvaluatie.bind(this, dagInRooster.DATUM, configService.OCHTEND_HULPLIERIST_TYPE_ID)">
+                            <div cdkDrag>
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -362,14 +364,14 @@
                     <div class="d-flex"
                          *ngIf="dagInRooster.CLUB_BEDRIJF && tonen.toonDienst[configService.MIDDAG_HULPLIERIST_TYPE_ID]">
                         <div
-                                class="drop-container"
+                                class="drop-container" [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID])"
+
                                 cdkDropList
                                 [id]="dagInRooster.DATUM + ',' + configService.MIDDAG_HULPLIERIST_TYPE_ID"
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.MIDDAG_HULPLIERIST_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
-                                [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this, dagInRooster.DATUM, configService.MIDDAG_HULPLIERIST_TYPE_ID)">
-                            <div cdkDrag
-                                 [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID])">
+                                [cdkDropListEnterPredicate]="lioEvaluatie.bind(this, dagInRooster.DATUM, configService.MIDDAG_HULPLIERIST_TYPE_ID)">
+                            <div cdkDrag>
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -389,14 +391,14 @@
                     <div class="d-flex"
                          *ngIf="dagInRooster.CLUB_BEDRIJF && tonen.toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID]">
                         <div
-                                class="drop-container"
+                                class="drop-container" [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID])"
+
                                 cdkDropList
                                 [id]="dagInRooster.DATUM + ',' + configService.GASTEN_VLIEGER1_TYPE_ID"
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.GASTEN_VLIEGER1_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="gastVliegerEvaluatie.bind(this, dagInRooster.DATUM, configService.GASTEN_VLIEGER1_TYPE_ID)">
-                            <div cdkDrag
-                                 [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID])">
+                            <div cdkDrag>
                                 {{ (dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID]) ? dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -412,14 +414,14 @@
                     <div class="d-flex"
                          *ngIf="dagInRooster.CLUB_BEDRIJF && tonen.toonDienst[configService.GASTEN_VLIEGER2_TYPE_ID]">
                         <div
-                                class="drop-container"
+                                class="drop-container" [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID])"
+
                                 cdkDropList
                                 [id]="dagInRooster.DATUM + ',' + configService.GASTEN_VLIEGER2_TYPE_ID"
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.GASTEN_VLIEGER2_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="gastVliegerEvaluatie.bind(this, dagInRooster.DATUM, configService.GASTEN_VLIEGER2_TYPE_ID)">
-                            <div cdkDrag
-                                 [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID])">
+                            <div cdkDrag>
                                 {{ (dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID]) ? dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -437,14 +439,14 @@
                 <td *ngIf="tonen.toonDienst[configService.SLEEPVLIEGER_TYPE_ID]  && tonen.Sleepvliegers">
                     <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF || dagInRooster.DDWV">
                         <div
-                                class="drop-container"
+                                class="drop-container" [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID])"
+
                                 cdkDropList
                                 [id]="dagInRooster.DATUM + ',' + configService.SLEEPVLIEGER_TYPE_ID"
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.SLEEPVLIEGER_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="sleepvliegerEvaluatie.bind(this, dagInRooster.DATUM, configService.SLEEPVLIEGER_TYPE_ID)">
-                            <div cdkDrag
-                                 [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID])">
+                            <div cdkDrag>
                                 {{ (dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID]) ? dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -459,15 +461,23 @@
                     </div>
                 </td>
                 <td *ngIf="tonen.toonClubDDWV ===2">
-                    <div class="d-flex flex-row" *ngIf="dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF">
-                        <label class="form-label me-2">Slepen</label>
-                        <input type="range" class="form-range" min="1" max="15" [(ngModel)]="dagInRooster.MIN_SLEEPSTART" (change)="opslaanRooster(dagInRooster.DATUM)" [disabled]="!magWijzigen">
-                        <div class="ms-2 me-1">{{dagInRooster.MIN_SLEEPSTART}}</div>
+                    <div *ngIf="!datumInToekomst(dagInRooster.DATUM) && dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF && (isBeheerderDDWV || isBeheerder)" class="w-100 ms-2">
+                        <app-icon-button class="toolbarBtn"
+                                         tekst="Uitbetalen crew"
+                                         iconNaam="fas EuroSign" (btnClicked)="uitbetalen.openPopup(dagInRooster)"
+                                         btnColor="btn-secondary"></app-icon-button>
                     </div>
-                    <div class="d-flex flex-row" *ngIf="dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF">
-                        <label class="form-label me-2">Lierstarts</label>
-                        <input type="range" class="form-range" min="1" max="15" [(ngModel)]="dagInRooster.MIN_LIERSTART" (change)="opslaanRooster(dagInRooster.DATUM)" [disabled]="!magWijzigen">
-                        <div class="ms-2 me-1">{{dagInRooster.MIN_LIERSTART}}</div>
+                    <div *ngIf="datumInToekomst(dagInRooster.DATUM) && dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF" class="w-100">
+                        <div class="d-flex flex-row">
+                            <label class="form-label me-2">Slepen</label>
+                            <input type="range" class="form-range" min="1" max="15" [(ngModel)]="dagInRooster.MIN_SLEEPSTART" (change)="opslaanRooster(dagInRooster.DATUM)" [disabled]="!magWijzigen">
+                            <div class="ms-2 me-1">{{dagInRooster.MIN_SLEEPSTART}}</div>
+                        </div>
+                        <div class="d-flex flex-row">
+                            <label class="form-label me-2">Lierstarts</label>
+                            <input type="range" class="form-range" min="1" max="15" [(ngModel)]="dagInRooster.MIN_LIERSTART" (change)="opslaanRooster(dagInRooster.DATUM)" [disabled]="!magWijzigen">
+                            <div class="ms-2 me-1">{{dagInRooster.MIN_LIERSTART}}</div>
+                        </div>
                     </div>
                 </td>
                 <td>
@@ -476,7 +486,7 @@
                                 [name]="'OPMERKINGEN' + i"
                                 [(ngModel)]="dagInRooster.OPMERKINGEN"
                                 (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
-                                [disabled]="!magWijzigen && !isCIMT"
+                                [disabled]="!magWijzigen && !isCIMT && !isBeheerderDDWV"
                                 class="w-100 text-invoer form-control opmerkingen"
                                 [rows]="2" style="resize: none"></textarea>
                 </td>

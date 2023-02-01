@@ -478,6 +478,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
                 case 602: // lid
                 case 603: // jeugdlid
                 case 604: // private owner
+                case 605: // veteraan
                 {
                     if (!this.rooster[idx].CLUB_BEDRIJF && ui!.LidData!.STATUSTYPE_ID !== 1903) {  // 1903 = Brevethouder
                         console.log(dagDatum, "Geen clubdag, geen brevethouder");

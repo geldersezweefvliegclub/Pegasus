@@ -77,6 +77,7 @@ import {ComposeBedrijfComponent} from "./components/editors/dag-rapport-editor/c
 import {ProgressieEditorComponent} from './components/editors/progressie-editor/progressie-editor.component';
 import {VoortgangComponent} from './components/voortgang/voortgang.component';
 import { DocumentEditorComponent } from './components/editors/document-editor/document-editor.component';
+import { UitbetalenDdwvCrewEditorComponent } from './components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component';
 
 @NgModule({
     imports: [
@@ -163,6 +164,7 @@ import { DocumentEditorComponent } from './components/editors/document-editor/do
         ProgressieEditorComponent,
         VoortgangComponent,
         DocumentEditorComponent,
+        UitbetalenDdwvCrewEditorComponent,
     ],
     exports: [
         LidEditorComponent,
@@ -207,7 +209,8 @@ import { DocumentEditorComponent } from './components/editors/document-editor/do
         LidInvoerComponent,
         TransactiesComponent,
         DagRapportEditorComponent,
-        DocumentEditorComponent
+        DocumentEditorComponent,
+        UitbetalenDdwvCrewEditorComponent
     ],
     providers: [],
     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

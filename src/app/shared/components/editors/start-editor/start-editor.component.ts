@@ -71,9 +71,10 @@ export class StartEditorComponent implements OnInit {
     // 610 = oprotkabel
     // 612 = penningmeester
     // 613 = systeem gebruiker
+    // 620 = Wachtlijst
     // 625 = DDWV'er
-    exclLidtypeAlsInzittende: string = "607,610,612,613"
-    exclLidtypeAlsVlieger: string = "613"
+    exclLidtypeAlsInzittende: string = "607,610,612,613,620"
+    exclLidtypeAlsVlieger: string = "613,620"
 
     private ledenAbonnement: Subscription;
     leden: HeliosLedenDataset[] = [];
@@ -180,6 +181,8 @@ export class StartEditorComponent implements OnInit {
     }
 
     openPopup(start: HeliosStartDataset | null) {
+        this.toonGastCombobox = false;
+
         if (start) {
             // vul alvast de editor met starts uit het grid
             this.start = {
@@ -212,9 +215,12 @@ export class StartEditorComponent implements OnInit {
             else
             {
                 this.formTitel = `Start aanmaken`;
+                this.toonGastCombobox = this.storageService.ophalen("toonGastenCombo") ? this.storageService.ophalen("toonGastenCombo") : false;
+
             }
         } else {
             this.formTitel = `Start aanmaken`;
+            this.toonGastCombobox = this.storageService.ophalen("toonGastenCombo") ? this.storageService.ophalen("toonGastenCombo") : false;
 
             let veld_id = this.VliegveldID;
             let baan_id = undefined;
@@ -263,7 +269,6 @@ export class StartEditorComponent implements OnInit {
         this.isVerwijderMode = false;
         this.isRestoreMode = false;
         this.isSaving = false;
-        this.toonGastCombobox = this.storageService.ophalen("toonGastenCombo") ? this.storageService.ophalen("toonGastenCombo") : false;
 
         const ui = this.loginService.userInfo?.Userinfo;
         this.startDatum = DateTime.fromSQL(this.start.DATUM!);
@@ -690,6 +695,7 @@ export class StartEditorComponent implements OnInit {
                 case 602:  break;  // Lid
                 case 603:  break;  // Jeugdlid
                 case 604:  break;  // Private owner
+                case 605:  break;  // Veteraan
                 case 608:  break;  // 5 Rittenkaart
                 case 611:  break;  // Cursist
                 default: {
@@ -802,6 +808,10 @@ export class StartEditorComponent implements OnInit {
     // laten we de combobox zien of standaard invoerveld
     toonGastenCombo() {
         this.toonGastCombobox = !this.toonGastCombobox;
-        this.storageService.opslaan("toonGastenCombo", this.toonGastCombobox, -1);
+
+        // alleen opslaan van status combobox als we een nieuwe invoer doen
+        if (!this.start.ID) {
+            this.storageService.opslaan("toonGastenCombo", this.toonGastCombobox, -1);
+        }
     }
 }

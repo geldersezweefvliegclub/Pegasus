@@ -29,7 +29,7 @@
                                         </button>
 
                                         <div *ngIf="!doc.LEGE_REGEL && !editMode" class="w-100">
-                                            <div *ngIf="doc.URL" class="docContent"><a href="{{doc.URL}}" target="_blank">{{doc.TEKST}}</a></div>
+                                            <div *ngIf="doc.URL" class="docContent linkButton" (click)="openUrl(doc.URL)">{{doc.TEKST}}</div>
                                             <div *ngIf="!doc.URL" class="docContent paragraafHeader w-100">{{doc.TEKST}}</div>
                                         </div>
                                         <div *ngIf="editMode" class="docContent w-100" [ngClass]="{'paragraafHeader': !doc.URL && !doc.LEGE_REGEL}"> {{doc.TEKST}}</div>

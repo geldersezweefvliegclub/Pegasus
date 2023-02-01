@@ -37,6 +37,7 @@ export type WeergaveData = {
     Startleiders: boolean;
     Instructeurs: boolean;
     Lieristen: boolean;
+    LIO: boolean;
     Sleepvliegers: boolean;
     GastenVliegers: boolean;
     DDWV: boolean;
@@ -84,6 +85,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         Startleiders: true,
         Instructeurs: true,
         Lieristen: true,
+        LIO: true,
         Sleepvliegers: true,
         GastenVliegers: true,
         DDWV: true,
@@ -194,7 +196,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
 
         // Als in de progressie tabel is aangepast, moet we onze dataset ook aanpassen
         this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
-            if (ev.tabel == "Diensten") {
+            if ((ev.tabel == "Diensten") || (ev.tabel == "DDWV")) {
                 this.opvragen();
             }
         });
@@ -325,6 +327,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         this.tonen.Startleiders = false;
         this.tonen.Instructeurs = false;
         this.tonen.Lieristen = false;
+        this.tonen.LIO = false;
         this.tonen.Sleepvliegers = false;
         this.tonen.GastenVliegers = false;
         this.tonen.DDWV = false;
@@ -332,6 +335,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         // als er geen filters zijn, dan tonen we alles
         if (!this.sharedService.ledenlijstFilter.startleiders &&
             !this.sharedService.ledenlijstFilter.lieristen &&
+            !this.sharedService.ledenlijstFilter.lio &&
             !this.sharedService.ledenlijstFilter.instructeurs &&
             !this.sharedService.ledenlijstFilter.sleepvliegers &&
             !this.sharedService.ledenlijstFilter.gastenVliegers &&
@@ -343,6 +347,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             this.tonen.Startleiders = true;
             this.tonen.Instructeurs = true;
             this.tonen.Lieristen = true;
+            this.tonen.LIO = true;
             this.tonen.Sleepvliegers = true;
             this.tonen.GastenVliegers = true;
         } else {      // aha, er zijn wel filters gezet
@@ -354,6 +359,9 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             }
             if (this.sharedService.ledenlijstFilter.lieristen) {
                 this.tonen.Lieristen = true;
+            }
+            if (this.sharedService.ledenlijstFilter.lio) {
+                this.tonen.LIO = true;
             }
             if (this.sharedService.ledenlijstFilter.sleepvliegers) {
                 this.tonen.Sleepvliegers = true;
@@ -374,22 +382,26 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             // 602 = Lid
             // 603 = Jeugdlid
             // 604 = private owner
+            // 605 = veteraan
             let isLid = false;
             if ((this.alleLeden[i].LIDTYPE_ID == 601) ||
                 (this.alleLeden[i].LIDTYPE_ID == 602) ||
                 (this.alleLeden[i].LIDTYPE_ID == 603) ||
-                (this.alleLeden[i].LIDTYPE_ID == 604)) {
+                (this.alleLeden[i].LIDTYPE_ID == 604) ||
+                (this.alleLeden[i].LIDTYPE_ID == 605)) {
                 isLid = true;
             }
 
             let tonen = false;
             if (isLid && toonAlles) {
-                if (this.alleLeden[i].INSTRUCTEUR == true || this.alleLeden[i].STARTLEIDER == true || this.alleLeden[i].LIERIST == true) {
+                if (this.alleLeden[i].INSTRUCTEUR == true || this.alleLeden[i].STARTLEIDER == true || this.alleLeden[i].LIERIST == true || this.alleLeden[i].LIERIST_IO == true) {
                     tonen = true;
                 }
             } else if (this.sharedService.ledenlijstFilter.startleiders && this.alleLeden[i].STARTLEIDER == true) {
                 tonen = true;
             } else if (this.sharedService.ledenlijstFilter.lieristen && this.alleLeden[i].LIERIST == true) {
+                tonen = true;
+            } else if (this.sharedService.ledenlijstFilter.lio && this.alleLeden[i].LIERIST_IO == true) {
                 tonen = true;
             } else if (this.sharedService.ledenlijstFilter.instructeurs && this.alleLeden[i].INSTRUCTEUR == true) {
                 tonen = true;
@@ -498,9 +510,26 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
 
         const ui = this.loginService.userInfo;
         const lid = this.alleLeden.find((l) => (l.ID! == ui!.LidData!.ID!));
+        const rooster = this.heleRooster.find((r) => (r.DATUM == datum));
 
         if (!lid) {
             return false;    // Dit mag nooit voorkomen
+        }
+
+        if (!rooster) {
+            return false;    // Dit mag nooit voorkomen
+        }
+
+        // Als er geen vliegdag is, is er ook niets in te delen
+        if (!rooster.DDWV && !rooster.CLUB_BEDRIJF) {
+            return false;
+        }
+
+        // op DDWV dagen mag de DDWV crew zichzelf indelen
+        if (this.ddwvService.actief()) {
+            if (rooster.DDWV && !rooster.CLUB_BEDRIJF) {
+                return lid.DDWV_CREW!;
+            }
         }
 
         switch (dienstType) {
@@ -526,10 +555,16 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             }
             case this.configService.OCHTEND_LIERIST_TYPE_ID:
             case this.configService.MIDDAG_LIERIST_TYPE_ID:
+            {
+                if (ui!.LidData!.LIERIST == false) {
+                    return false;
+                }
+                break;
+            }
             case this.configService.OCHTEND_HULPLIERIST_TYPE_ID:
             case this.configService.MIDDAG_HULPLIERIST_TYPE_ID:
             {
-                if (ui!.LidData!.LIERIST == false) {
+                if (ui!.LidData!.LIERIST_IO == false) {
                     return false;
                 }
                 break;
@@ -581,6 +616,10 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         const nu: DateTime = DateTime.now();
         const la: DateTime = DateTime.fromSQL(dienstData.LAATSTE_AANPASSING as string);
 
+        if (dienstData.UITBETAALD) {    // Als er uitbetaald is, dan geen wijzigingen meer maken
+            return false;
+        }
+
         if (this.magWijzigen) {
             return true;    // roostermakers en beheerders mogen altijd aanpassingen maken
         }
@@ -621,7 +660,12 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             if (dienst.LID_ID == ui?.ID) {
                 classes += "mijnDienst"
             }
+
+            if (dienst.UITBETAALD) {
+                classes += "uitbetaald"
+            }
         }
+
         return classes;
     }
 

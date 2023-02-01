@@ -3,6 +3,7 @@ import {ModalComponent} from '../modal/modal.component';
 import {SharedService} from '../../../services/shared/shared.service';
 import {StartEditorComponent} from "../editors/start-editor/start-editor.component";
 import {TransactiesComponent} from "../transacties/transacties.component";
+import {LoginService} from "../../../services/apiservice/login.service";
 
 
 @Component({
@@ -17,11 +18,16 @@ export class LedenFilterComponent {
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
-    constructor(readonly sharedService: SharedService) {
+    isBeheerder: boolean;
+
+    constructor(private readonly loginService: LoginService, readonly sharedService: SharedService) {
     }
 
     // Open leden-filter dialoog met de leden-filter opties
     openPopup() {
+        const ui = this.loginService.userInfo;
+        this.isBeheerder = ui!.Userinfo?.isBeheerder!;
+
         this.popup.open();
     }
 
@@ -32,16 +38,27 @@ export class LedenFilterComponent {
 
     // DDWV en leden mogen niet tegelijk 'aan' staan, dan is dataset altijd leeg
     filterLedenChanged(checked: any) {
-        if ((checked) && (this.sharedService.ledenlijstFilter.ddwv)) {
+        if ((checked) && ((this.sharedService.ledenlijstFilter.ddwv) || this.sharedService.ledenlijstFilter.wachtlijst)) {
             this.sharedService.ledenlijstFilter.ddwv = false;
+            this.sharedService.ledenlijstFilter.wachtlijst = false;
         }
         this.filterChanged.emit();
     }
 
     // DDWV en leden mogen niet tegelijk 'aan' staan, dan is dataset altijd leeg
     filterDDWVChanged(checked: any) {
-        if ((checked) && (this.sharedService.ledenlijstFilter.leden)) {
+        if ((checked) && ((this.sharedService.ledenlijstFilter.leden) || this.sharedService.ledenlijstFilter.wachtlijst)) {
             this.sharedService.ledenlijstFilter.leden = false;
+            this.sharedService.ledenlijstFilter.wachtlijst = false;
+        }
+        this.filterChanged.emit();
+    }
+
+    // DDWV en leden en wachtlijst mogen niet tegelijk 'aan' staan, dan is dataset altijd leeg
+    filterWachtlijstChanged(checked: any) {
+        if ((checked) && ((this.sharedService.ledenlijstFilter.leden) || this.sharedService.ledenlijstFilter.ddwv)) {
+            this.sharedService.ledenlijstFilter.leden = false;
+            this.sharedService.ledenlijstFilter.ddwv = false;
         }
         this.filterChanged.emit();
     }

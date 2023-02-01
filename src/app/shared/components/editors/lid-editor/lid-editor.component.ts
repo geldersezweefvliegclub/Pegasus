@@ -365,7 +365,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
             case 'STARTLEIDER':
             case 'SLEEPVLIEGER':
             case 'GASTENVLIEGER': {
-                if (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isRooster) {
+                if (ui?.isBeheerder || ui?.isRooster) {
                     return false;
                 }
                 break;

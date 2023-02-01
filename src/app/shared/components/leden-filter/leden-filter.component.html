@@ -69,6 +69,13 @@
                                (ngModelChange)="filterDDWVChanged($event)">
                         <label for="DDWV" class="form-check-label">Alleen DDWV</label>
                     </div>
+                    <div *ngIf="isBeheerder">
+                        <input type="checkbox"
+                               id="WACHTLIJST" class="form-check-inline"
+                               [(ngModel)]="sharedService.ledenlijstFilter.wachtlijst"
+                               (ngModelChange)="filterWachtlijstChanged($event)">
+                        <label for="DDWV" class="form-check-label">Alleen wachtlijst</label>
+                    </div>
                 </div>
             </div>
         </div>

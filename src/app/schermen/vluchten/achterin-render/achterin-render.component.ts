@@ -27,8 +27,16 @@ export class AchterinRenderComponent implements AgRendererComponent {
             this.grid_inzittendenaam = params.data.INZITTENDENAAM
         }
         else if (params.data.INZITTENDENAAM) {
-            this.grid_inzittendenaam = params.data.INZITTENDENAAM_LID + "(" + params.data.INZITTENDENAAM + ")"
-        } else if (params.data.INZITTENDENAAM_LID) {
+            if (params.data.VLIEGER_LIDTYPE_ID == 607) {
+                this.grid_inzittendenaam = params.data.VLIEGERNAAM_LID + "(" + params.data.INZITTENDENAAM + ")"
+            } else if (params.data.INZITTENDENAAM_LID) {
+                this.grid_inzittendenaam = params.data.INZITTENDENAAM_LID + "(" + params.data.INZITTENDENAAM + ")"
+            }
+            else {
+                this.grid_inzittendenaam = params.data.INZITTENDENAAM;
+            }
+        }
+        else if (params.data.INZITTENDENAAM_LID) {
             const ui = this.loginService.userInfo;
             if (params.data.INZITTENDE_ID != ui?.LidData?.ID) {
                 const ui = this.loginService.userInfo?.Userinfo;
@@ -37,7 +45,8 @@ export class AchterinRenderComponent implements AgRendererComponent {
                 this.naarDashboard = (this.lidID && (ui?.isBeheerder || ui?.isCIMT || ui?.isInstructeur)) as boolean;
             }
             this.grid_inzittendenaam = params.data.INZITTENDENAAM_LID;
-        } else if (params.data.INSTRUCTIEVLUCHT) {
+        }
+        else if (params.data.INSTRUCTIEVLUCHT) {
             if (params.data.STARTTIJD) {
                 this.error = true;    // Wel starttijd, geen instructeur bekend. PROBLEEM !!!
             } else if (params.data.VLIEGER_ID) {

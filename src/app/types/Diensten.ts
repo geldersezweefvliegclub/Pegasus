@@ -39,7 +39,7 @@ export interface paths {
         };
       };
       responses: {
-        /** OK, starts succesvol opgehaald */
+        /** OK, data succesvol opgehaald */
         200: {
           content: {
             "application/json": components["schemas"]["oper_diensten"];
@@ -64,9 +64,9 @@ export interface paths {
           ID?: number;
           /** Toon welke records verwijderd zijn. Default = false */
           VERWIJDERD?: boolean;
-          /** Laatste aanpassing op basis van records in dataset. Bedoeld om starts verbruik te verminderen. Dataset is daarom leeg */
+          /** Laatste aanpassing op basis van records in dataset. Bedoeld om data verbruik te verminderen. Dataset is daarom leeg */
           LAATSTE_AANPASSING?: boolean;
-          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde starts bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen starts verzonden als het nodig is. */
+          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
           HASH?: string;
           /** Sortering van de velden in ORDER BY formaat. Default = DATUM */
           SORT?: string;
@@ -93,7 +93,7 @@ export interface paths {
         };
       };
       responses: {
-        /** OK, starts succesvol opgehaald */
+        /** OK, data succesvol opgehaald */
         200: {
           content: {
             "application/json": components["schemas"]["view_diensten"];
@@ -112,14 +112,14 @@ export interface paths {
     get: {
       parameters: {
         query: {
-          /** Voor welk jaar wordt de starts opgevraagd */
+          /** Voor welk jaar wordt de data opgevraagd */
           JAAR: number;
-          /** Voor welk lid wordt de starts opgevraagd */
+          /** Voor welk lid wordt de data opgevraagd */
           LID_ID: number;
         };
       };
       responses: {
-        /** OK, starts succesvol opgehaald */
+        /** OK, data succesvol opgehaald */
         200: {
           content: {
             "application/json": components["schemas"]["diensten_totaal"];
@@ -187,7 +187,7 @@ export interface paths {
   "/Diensten/SaveObject": {
     put: {
       responses: {
-        /** OK, starts succesvol aangepast */
+        /** OK, data succesvol aangepast */
         200: {
           content: {
             "application/json": components["schemas"]["oper_diensten"];
@@ -206,7 +206,7 @@ export interface paths {
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** Dienst starts */
+      /** Dienst data */
       requestBody: {
         content: {
           "application/json": components["schemas"]["oper_diensten_in"];
@@ -215,7 +215,7 @@ export interface paths {
     };
     post: {
       responses: {
-        /** OK, starts succesvol toegevoegd */
+        /** OK, data succesvol toegevoegd */
         200: {
           content: {
             "application/json": components["schemas"]["oper_diensten"];
@@ -232,7 +232,7 @@ export interface paths {
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** Dienst starts */
+      /** Dienst data */
       requestBody: {
         content: {
           "application/json": components["schemas"]["oper_diensten_in"];
@@ -245,60 +245,136 @@ export interface paths {
 export interface components {
   schemas: {
     oper_diensten_in: {
-      /** Database ID van het dienten record */
+      /**
+       * Format: int32
+       * @description Database ID van het dienten record
+       * @example 12871
+       */
       ID?: number;
-      /** Datum van de rooster */
+      /**
+       * Format: date
+       * @description Datum van de rooster
+       * @example 2017-07-21
+       */
       DATUM?: string;
-      /** Voor wie is deze dienst. Verwijzing naar leden tabel */
+      /**
+       * @description Voor wie is deze dienst. Verwijzing naar leden tabel
+       * @example 10412
+       */
       LID_ID?: number;
-      /** Link naar type tabel. Geeft aan wat voor type dienst */
+      /**
+       * Format: int32
+       * @description Link naar type tabel. Geeft aan wat voor type dienst
+       * @example 12
+       */
       TYPE_DIENST_ID?: number;
-      /** Is lid aanwezig geweest */
+      /**
+       * @description Is lid aanwezig geweest
+       * @example 1
+       */
       AANWEZIG?: boolean;
-      /** Lid is niet komen opdagen */
+      /**
+       * @description Lid is niet komen opdagen
+       * @example 0
+       */
       AFWEZIG?: boolean;
+      /**
+       * @description Is de DDWV crew uitbetaald?
+       * @example 1
+       */
+      UITBETAALD?: boolean;
     };
     oper_diensten: components["schemas"]["oper_diensten_in"] & {
-      /** Verwijzing naar rooster tabel */
+      /**
+       * @description Verwijzing naar rooster tabel
+       * @example 10900
+       */
       ROOSTER_ID?: number;
-      /** Diegene die de dienst heeft ingevoerd. Verwijzing naar leden tabel */
+      /**
+       * @description Diegene die de dienst heeft ingevoerd. Verwijzing naar leden tabel
+       * @example 10900
+       */
       INGEVOERD_DOOR_ID?: number;
-      /** Is dit record gemarkeerd als verwijderd? */
+      /**
+       * @description Is dit record gemarkeerd als verwijderd?
+       * @example 0
+       */
       VERWIJDERD?: boolean;
-      /** Tijdstempel van laaste aanpassing in de database */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database
+       * @example 2020-03-03 17:14:50Z
+       */
       LAATSTE_AANPASSING?: string;
     };
     view_diensten_dataset: components["schemas"]["oper_diensten"] & {
-      /** Naam van het lid */
+      /**
+       * @description Naam van het lid
+       * @example Juffrouw Ooievaar
+       */
       NAAM?: string;
-      /** Naam van diegene die de dienst heeft ingevoerd */
+      /**
+       * @description Naam van diegene die de dienst heeft ingevoerd
+       * @example Meneer Ooievaar
+       */
       INGEVOERD_DOOR?: string;
-      /** Beschrijving van de dienst */
+      /**
+       * @description Beschrijving van de dienst
+       * @example Ochtend lierist
+       */
       TYPE_DIENST?: string;
     };
     view_diensten: {
-      /** Aantal records dat voldoet aan de criteria in de database */
+      /**
+       * Format: int32
+       * @description Aantal records dat voldoet aan de criteria in de database
+       * @example 51
+       */
       totaal?: number;
-      /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
+       * @example 2016-12-07 09:10:19
+       */
       laatste_aanpassing?: string;
-      /** hash van de dataset */
+      /**
+       * @description hash van de dataset
+       * @example 40ab00b
+       */
       hash?: string;
-      /** De dataset met records */
+      /** @description De dataset met records */
       dataset?: components["schemas"]["view_diensten_dataset"][];
     };
     diensten_totaal: {
-      /** Verwijzing naar leden tabel */
+      /**
+       * @description Verwijzing naar leden tabel
+       * @example 10900
+       */
       LID_ID?: number;
-      /** Naam van het lid */
+      /**
+       * @description Naam van het lid
+       * @example Juffrouw Ooievaar
+       */
       NAAM?: string;
-      /** Jaar */
+      /**
+       * @description Jaar
+       * @example 2021
+       */
       JAAR?: number;
-      /** Maand 1..12, null voor jaar totaal */
+      /**
+       * @description Maand 1..12, null voor jaar totaal
+       * @example 12
+       */
       MAAND?: number;
-      /** Aantal diensten */
+      /**
+       * @description Aantal diensten
+       * @example 39
+       */
       AANTAL?: number;
     };
   };
 }
 
 export interface operations {}
+
+export interface external {}

@@ -34,6 +34,7 @@ import {SharedService} from "../../../services/shared/shared.service";
 import {DateTime} from "luxon";
 import {DienstEditorComponent} from "../../../shared/components/editors/dienst-editor/dienst-editor.component";
 import {DdwvService} from "../../../services/apiservice/ddwv.service";
+import {UitbetalenDdwvCrewEditorComponent} from "../../../shared/components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component";
 
 @Component({
     selector: 'app-rooster-weekview',
@@ -51,6 +52,7 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
     @Output() nieuweDatum: EventEmitter<DateTime> = new EventEmitter<DateTime>();
 
     @ViewChild(DienstEditorComponent) dienstEditor: DienstEditorComponent;
+    @ViewChild(UitbetalenDdwvCrewEditorComponent) private uitbetalen: UitbetalenDdwvCrewEditorComponent;
 
     readonly resetIcon: IconDefinition = faTimesCircle;
     readonly assignIcon: IconDefinition = faCalendarCheck;
@@ -59,6 +61,8 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
     dienstTypes: HeliosType[] = [];
 
     ddwvActief: boolean = true;
+    isBeheerderDDWV: boolean;
+    isBeheerder: boolean;
     magWijzigen: boolean = false;
     isCIMT: boolean;
     dblKlik: boolean = false;
@@ -78,7 +82,9 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
     ngOnInit(): void {
         const ui = this.loginService.userInfo;
         this.isCIMT = ui!.Userinfo?.isCIMT!;
-        this.magWijzigen = (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isBeheerderDDWV || ui?.Userinfo?.isRooster) ? true : false;
+        this.isBeheerder = ui!.LidData?.BEHEERDER!;
+        this.isBeheerderDDWV = ui?.Userinfo?.isBeheerderDDWV!;
+        this.magWijzigen = (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isRooster) ? true : false;
 
         // abonneer op wijziging van lidTypes
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
@@ -116,6 +122,12 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
 
     // Double klik werkt niet, maar enkel klik wel. Dan is de workarround een boolean en een timer
     openPopup(dag: HeliosRoosterDagExtended, typeDienstID: number) {
+        if (!dag.DDWV && !dag.CLUB_BEDRIJF) { return}  // geen vliegdag
+        if (!this.magWijzigen && !this.isBeheerderDDWV) { return }  // gebruiker mag niet wijzigen
+        if (!this.magWijzigen && this.isBeheerderDDWV && dag.CLUB_BEDRIJF ) {   // DDWV beheer maakt geen rooster voor clubdag
+            return
+        }
+
         if (this.dblKlik) { // er was al een keer geklikt
             this.dienstEditor.openPopup(dag, typeDienstID)
         }
@@ -175,5 +187,17 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
             return false;
         }
         this.dienstenService.deleteDienst(roosterdag.Diensten[typeDienstID].ID!).then(() => delete this.rooster[roosterIndex].Diensten[typeDienstID]);
+    }
+
+    lidInRoosterDagClass(dienst: HeliosDienstenDataset, dag: any) {
+        return (dag.CLUB_BEDRIJF || dag.DDWV) ? this.lidInRoosterClass(dienst) : "blanco";
+    }
+
+    // Hebben we een datum in de toekomst, vandaag is geen toekomst
+    datumInToekomst(datum: string): boolean {
+        const nu: DateTime = DateTime.now();
+        const d: DateTime = DateTime.fromSQL(datum);
+
+        return (d > nu) // datum is in het toekomst
     }
 }

@@ -29,7 +29,7 @@ export interface paths {
       parameters: {
         query: {
           /** token van SMS of Google Authenticator */
-          token: string;
+          token?: string;
         };
       };
       responses: {
@@ -51,7 +51,7 @@ export interface paths {
       parameters: {
         query: {
           /** bearer token */
-          token: string;
+          token?: string;
         };
       };
       responses: {
@@ -209,6 +209,11 @@ export interface components {
        * @example false
        */
       LIERIST?: boolean;
+      /**
+       * @description Lierist in opleiding
+       * @example false
+       */
+      LIERIST_IO?: boolean;
       /**
        * @description Kan dit lid het startbedrijf leiden?
        * @example true

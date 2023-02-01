@@ -296,6 +296,13 @@ export class NavigationComponent implements OnInit, OnDestroy  {
             reserveringen.excluded = false;
         }
 
+        // document voor clubvliegers
+        const documenten = this.routes.find(route => route.path == "documenten") as CustomRoute;
+        if (verbergen.includes('documenten') || (!ui?.isClubVlieger && !ui?.isStarttoren)) {
+            documenten.excluded = true;
+        } else {
+            documenten.excluded = false;
+        }
 
         if (verbergen.includes('beheer') || (this.sharedService.getSchermSize() < SchermGrootte.lg) || (window.innerHeight < 600)) {
             this.beheerExcluded = true;
@@ -398,10 +405,10 @@ export class NavigationComponent implements OnInit, OnDestroy  {
     }
 
     toonLogo() {
-        return (((window.innerHeight > 800) && (!this.showBeheer)) || (window.innerHeight > 900))
+        return (window.innerHeight > 1000)
     }
 
     kleineDatum() {
-        return (window.innerHeight < 700 || this.sharedService.getSchermSize() < SchermGrootte.xxl)
+        return (window.innerHeight < 850 || this.sharedService.getSchermSize() < SchermGrootte.xxl)
     }
 }

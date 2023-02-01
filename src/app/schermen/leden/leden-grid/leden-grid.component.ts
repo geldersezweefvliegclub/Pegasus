@@ -75,7 +75,7 @@ export class LedenGridComponent implements OnInit, OnDestroy {
         {field: 'MEDICAL', headerName: 'Medical', sortable: true, hide: true, cellRenderer: 'datumRender'},
         {field: 'GEBOORTE_DATUM', headerName: 'Geb datum', sortable: true, hide: true, cellRenderer: 'datumRender'},
         {field: 'LIDTYPE', headerName: 'Lidmaatschap', sortable: true, hide: !this.toonLidType()},
-        {field: 'LIDNR', headerName: 'Lid nummer', sortable: true, hide: true},
+        {field: 'LIDNR', headerName: 'Lid nummer', sortable: true, hide: !this.toonLidNr()},
         {field: 'STATUS', headerName: 'Status', sortable: true, hide: !this.toonStatus()},
         {field: 'ZUSTERCLUB', headerName: 'Club', sortable: true, hide: !this.toonZusterClub()},
         {field: 'TEGOED', headerName: 'Tegoed', sortable: true, hide: !this.toonTegoed()},
@@ -367,12 +367,14 @@ export class LedenGridComponent implements OnInit, OnDestroy {
             // 602 = Lid
             // 603 = Jeugdlid
             // 604 = Private owner
+            // 605 = Veteraan
             // 606 = Donateur
             let isLid = false;
             if ((this.dataset[i].LIDTYPE_ID == 601) ||
                 (this.dataset[i].LIDTYPE_ID == 602) ||
                 (this.dataset[i].LIDTYPE_ID == 603) ||
                 (this.dataset[i].LIDTYPE_ID == 604) ||
+                (this.dataset[i].LIDTYPE_ID == 605) ||
                 (this.dataset[i].LIDTYPE_ID == 606)) {
                 isLid = true;
             }
@@ -380,9 +382,13 @@ export class LedenGridComponent implements OnInit, OnDestroy {
             if (this.sharedService.ledenlijstFilter.leden && !isLid) {
                 continue;
             }
-            if (this.sharedService.ledenlijstFilter.ddwv && this.dataset[i].LIDTYPE_ID != 625) {
+            if (this.sharedService.ledenlijstFilter.wachtlijst && this.dataset[i].LIDTYPE_ID != 620) {  // 620 = wachtlijst
                 continue;
             }
+            if (this.sharedService.ledenlijstFilter.ddwv && this.dataset[i].LIDTYPE_ID != 625) {        // 625 = DDWV'er
+                continue;
+            }
+
             if (this.sharedService.ledenlijstFilter.startleiders && this.dataset[i].STARTLEIDER == false) {
                 continue;
             }
@@ -453,7 +459,19 @@ export class LedenGridComponent implements OnInit, OnDestroy {
         return (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isInstructeur || ui?.isCIMT) ? true : false;
     }
 
+    private toonLidNr() {
+        if (this.sharedService.getSchermSize() < SchermGrootte.xl) {
+            return false;
+        }
+        const ui = this.loginService.userInfo?.Userinfo;
+        return (ui?.isBeheerder) ? true : false;
+    }
+
     private toonLidType() {
+        if (this.sharedService.getSchermSize() < SchermGrootte.xl) {
+            return false;
+        }
+
         const ui = this.loginService.userInfo?.Userinfo;
         return (ui?.isBeheerder || ui?.isBeheerderDDWV) ? true : false;
     }

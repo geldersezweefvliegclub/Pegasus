@@ -26,6 +26,7 @@ import {faCalendarCheck, faSortAmountDownAlt, faTimesCircle} from "@fortawesome/
 import {DateTime} from "luxon";
 import {SharedService} from "../../../services/shared/shared.service";
 import {DdwvService} from "../../../services/apiservice/ddwv.service";
+import {UitbetalenDdwvCrewEditorComponent} from "../../../shared/components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component";
 
 
 @Component({
@@ -42,6 +43,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
     @Input() lidInRoosterClass: (dienst: HeliosDienstenDataset) => string;
 
     @ViewChild(JaarTotalenComponent) private jaarTotalen: JaarTotalenComponent;
+    @ViewChild(UitbetalenDdwvCrewEditorComponent) private uitbetalen: UitbetalenDdwvCrewEditorComponent;
 
     readonly resetIcon: IconDefinition = faTimesCircle;
     readonly assignIcon: IconDefinition = faCalendarCheck;
@@ -55,6 +57,8 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
     mijnNaam: string;
     isCIMT: boolean;
     isDDWVCrew: boolean;
+    isBeheerder: boolean;
+    isBeheerderDDWV: boolean;
     magWijzigen: boolean = false;
     ddwvActief: boolean = true;
 
@@ -74,10 +78,12 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
         this.lidData = ui!.LidData!;
         this.isCIMT = ui!.Userinfo?.isCIMT!;
         this.isDDWVCrew = ui!.LidData?.DDWV_CREW!;
+        this.isBeheerder = ui!.LidData?.BEHEERDER!;
+        this.isBeheerderDDWV = ui!.LidData?.DDWV_BEHEERDER!;
         this.mijnID = (this.lidData.ID) ? this.lidData.ID.toString() : "-1";    // -1 mag nooit voorkomen, maar je weet het nooit
         this.mijnNaam = this.lidData.NAAM as string;
 
-        this.magWijzigen = (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isBeheerderDDWV || ui?.Userinfo?.isRooster) ? true : false;
+        this.magWijzigen = (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isRooster) ? true : false;
 
         // abonneer op wijziging van lidTypes
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
@@ -136,6 +142,19 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
         if (!this.dienstBeschikbaar(datum, dienst)) return false;
         return this.controleerGeschiktheid(item, datum, 'LIERIST');
     }
+
+    /**
+     * Wordt in de template gebruikt om te controleren of iemand in een vakje gesleept mag worden. Gaat over lierist.
+     * @param datum
+     * @param dienst
+     * @param {CdkDrag<HeliosLid | HeliosRoosterDataset>} item
+     * @return {boolean}
+     */
+    lioEvaluatie(datum: string, dienst: number, item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
+        if (!this.dienstBeschikbaar(datum, dienst)) return false;
+        return this.controleerGeschiktheid(item, datum, 'LIERIST_IO');
+    }
+
 
     /**
      * Wordt in de template gebruikt om te controleren of iemand in een vakje gesleept mag worden. Gaat over instructeurs.
@@ -200,7 +219,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
      * Deze functie evalueert of de content een bepaalde rol is. Als dat zo is, returned hij true, anders false.
      * Als de meegegeven rol bijv. LIERIST is, kan een instructeur bijv. geen lieristdienst draaien.
      */
-    controleerGeschiktheid(item: CdkDrag<HeliosLid | HeliosRoosterDataset>, datum: string, rol: 'LIERIST' | 'INSTRUCTEUR' | 'STARTLEIDER' | 'SLEEPVLIEGER' | 'GASTENVLIEGER'): boolean {
+    controleerGeschiktheid(item: CdkDrag<HeliosLid | HeliosRoosterDataset>, datum: string, rol: 'LIERIST' | 'LIERIST_IO' | 'INSTRUCTEUR' | 'STARTLEIDER' | 'SLEEPVLIEGER' | 'GASTENVLIEGER'): boolean {
         // Content komt uit de ledenlijst of niet
 
         const roosterIndex = this.rooster.findIndex((dag => dag.DATUM == datum));
@@ -209,7 +228,11 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
             console.error("Datum " + datum + " onbekend");  // dat mag nooit voorkomen
             return false;
         }
+
         const ddwv = this.rooster[roosterIndex].DDWV && !this.rooster[roosterIndex].CLUB_BEDRIJF;  // alleen DDWV
+        if (!this.magWijzigen && this.isBeheerderDDWV && this.rooster[roosterIndex].CLUB_BEDRIJF) { // DDWV beheerder doet alleen rooster voor DDWV dagen
+            return false;
+        }
 
         if (item.dropContainer.id === 'LEDENLIJST') {
             const data = item.data as HeliosLid;
@@ -217,6 +240,8 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
             switch (rol) {
                 case 'LIERIST':
                     return (ddwv) ? data.DDWV_CREW! : data.LIERIST!;
+                case 'LIERIST_IO':
+                    return data.LIERIST_IO! || data.LIERIST!;
                 case 'INSTRUCTEUR':
                     return data.INSTRUCTEUR!;
                 case 'SLEEPVLIEGER':
@@ -240,6 +265,8 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
             switch (rol) {
                 case 'LIERIST':
                     return (ddwv) ? data.DDWV_CREW! : lid.LIERIST!;
+                case 'LIERIST_IO':
+                    return data.LIERIST_IO! || data.LIERIST!;
                 case 'INSTRUCTEUR':
                     return lid.INSTRUCTEUR!;
                 case 'SLEEPVLIEGER':
@@ -415,7 +442,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
     }
 
     toonRechts() {
-        if (!this.magWijzigen) {
+        if (!this.magWijzigen && !this.isBeheerderDDWV) {
             return false;
         }
 
@@ -450,5 +477,13 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
     // Dit is al geimplementeerd in util.ts
     DagVanDeWeek(DATUM: string) {
         return DagVanDeWeek(DATUM);
+    }
+
+    // Hebben we een datum in de toekomst, vandaag is geen toekomst
+    datumInToekomst(datum: string): boolean {
+        const nu: DateTime = DateTime.now();
+        const d: DateTime = DateTime.fromSQL(datum);
+
+        return (d > nu) // datum is in het toekomst
     }
 }
