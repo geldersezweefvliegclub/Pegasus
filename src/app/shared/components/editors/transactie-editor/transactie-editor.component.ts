@@ -20,6 +20,7 @@ export class TransactieEditorComponent implements OnInit {
 
     private ledenAbonnement: Subscription;
     leden: HeliosLedenDataset[] = [];
+    lidNaam: string;
 
     private typesAbonnement: Subscription;
     transactieTypes: HeliosType[];
@@ -50,12 +51,39 @@ export class TransactieEditorComponent implements OnInit {
         if (lidID) {
             this.nieuweTransactie.LID_ID = lidID;
         }
+
+        if (this.toonLidSelectie) {
+            this.lidNaam =""
+        }
+        else {
+            const Lid = this.leden.find((l) => l.ID == lidID)
+            this.lidNaam = (Lid) ? Lid.NAAM! : "";
+        }
         this.popup.open();
     }
 
     // opslaan van de transactie
     opslaan() {
-        this.transactiesService.addTransactie(this.nieuweTransactie).then(() => this.TransactieGedaan.emit());
+        this.transactiesService.addTransactie(this.nieuweTransactie).then((t) => {
+            let beschrijving =""
+            if (t.BEDRAG) {
+                const bijaf = (t.BEDRAG < 0) ? "af" : "bij";
+                beschrijving =  new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(Math.abs(t.BEDRAG)) + " is succesvol " + bijaf + "geboekt"
+            }
+            if (t.EENHEDEN) {
+                const bijaf = (t.EENHEDEN < 0) ? "af" : "bij";
+                beschrijving = Math.abs(t.EENHEDEN) + " strippen is succesvol " + bijaf + "geboekt"
+            }
+
+            this.success = {
+                titel: "Transactie",
+                beschrijving: beschrijving
+            }
+            this.TransactieGedaan.emit()
+        })
+        .catch(e => {
+            this.error = e;
+        })
         this.popup.close();
     }
 

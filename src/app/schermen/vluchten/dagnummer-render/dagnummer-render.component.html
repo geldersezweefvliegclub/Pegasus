@@ -1,5 +1,4 @@
-{{dagnummer}}
-<div class="badge bg-danger ms-2" style="font-size: larger"
-     *ngIf="!params.data.STARTMETHODE">
+<div *ngIf="params.data.STARTMETHODE">{{dagnummer}}</div>
+<div class="badge bg-danger" style="font-size: larger" *ngIf="!params.data.STARTMETHODE">
     <div class="fas fa-exclamation-triangle" data-toggle="tooltip" title="Onvolledige start, open editor"></div>
 </div>

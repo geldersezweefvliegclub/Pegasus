@@ -79,11 +79,17 @@
                 </td>
             </tr>
 
-            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_STARTLEIDER_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_STARTLEIDER_TYPE_ID]) && (tonen.Startleiders || tonen.DDWV)">
+            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_STARTLEIDER_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_STARTLEIDER_TYPE_ID]) && (tonen.Startleiders || tonen.DDWV) && (rooster[0].DDWV || rooster[0].CLUB_BEDRIJF)">
                 <td class="dienstType">Startleider</td>
                 <td>
-                    <ng-container [ngTemplateOutlet]="roosterDienst"
-                                  [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.OCHTEND_STARTLEIDER_TYPE_ID, configService.MIDDAG_STARTLEIDER_TYPE_ID]}"></ng-container>
+                    <div *ngIf="rooster[0].CLUB_BEDRIJF">
+                        <ng-container [ngTemplateOutlet]="roosterDienst"
+                                      [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.OCHTEND_STARTLEIDER_TYPE_ID, configService.MIDDAG_STARTLEIDER_TYPE_ID]}"></ng-container>
+                    </div>
+                    <div *ngIf="rooster[0].DDWV && !rooster[0].CLUB_BEDRIJF">
+                        <ng-container [ngTemplateOutlet]="roosterDienst"
+                                      [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.OCHTEND_STARTLEIDER_TYPE_ID]}"></ng-container>
+                    </div>
                 </td>
             </tr>
 
@@ -95,11 +101,17 @@
                 </td>
             </tr>
 
-            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_LIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_LIERIST_TYPE_ID]) && (tonen.Lieristen || tonen.DDWV)">
+            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_LIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_LIERIST_TYPE_ID]) && (tonen.Lieristen || tonen.DDWV) && (rooster[0].DDWV || rooster[0].CLUB_BEDRIJF)">
                 <td class="dienstType">Lierist</td>
                 <td>
-                    <ng-container [ngTemplateOutlet]="roosterDienst"
-                                  [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.OCHTEND_LIERIST_TYPE_ID, configService.MIDDAG_LIERIST_TYPE_ID]}"></ng-container>
+                    <div *ngIf="rooster[0].CLUB_BEDRIJF">
+                        <ng-container [ngTemplateOutlet]="roosterDienst"
+                                      [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.OCHTEND_LIERIST_TYPE_ID, configService.MIDDAG_LIERIST_TYPE_ID]}"></ng-container>
+                    </div>
+                    <div *ngIf="rooster[0].DDWV && !rooster[0].CLUB_BEDRIJF">
+                        <ng-container [ngTemplateOutlet]="roosterDienst"
+                                      [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.OCHTEND_LIERIST_TYPE_ID]}"></ng-container>
+                    </div>
                 </td>
             </tr>
 
@@ -119,7 +131,7 @@
                 </td>
             </tr>
 
-            <tr *ngIf="tonen.toonDienst[configService.SLEEPVLIEGER_TYPE_ID] && tonen.Sleepvliegers">
+            <tr *ngIf="tonen.toonDienst[configService.SLEEPVLIEGER_TYPE_ID] && tonen.Sleepvliegers  && (rooster[0].DDWV || rooster[0].CLUB_BEDRIJF)">
                 <td class="dienstType">Sleepvlieger</td>
                 <td>
                     <ng-container [ngTemplateOutlet]="roosterDienst"
@@ -152,7 +164,7 @@
                 <td>
                     <div *ngIf="!datumInToekomst(rooster[0].DATUM) && (isBeheerderDDWV || isBeheerder)" class="w-100">
                         <app-icon-button class="toolbarBtn" [toonKlein]="false"
-                                         tekst="Uitbetalen crew"
+                                         tekst="Uitbetalen"
                                          iconNaam="fas EuroSign" (btnClicked)="uitbetalen.openPopup(rooster[0])"
                                          btnColor="btn-secondary"></app-icon-button>
                     </div>

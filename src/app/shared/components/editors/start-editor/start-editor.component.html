@@ -1,5 +1,6 @@
 <app-error [error]="error"></app-error>
 <app-success [success]="success"></app-success>
+<app-transactie-editor [toonLidSelectie]="false"></app-transactie-editor>
 
 <ng-template #alleenPAX>
     Alleen vliegers met passagersbevoegdheid mogen deze vlucht uitvoeren.
@@ -77,11 +78,11 @@
             </div>
 
             <div class="row my-2" *ngIf="start.VLIEGTUIG_ID">
-                <div class="col-10 col-md-10">
+                <div [ngClass]="{'col-12': ddwvKnop, 'col-10': !ddwvKnop }">
                     <div class="row" *ngIf="start.VLIEGTUIG_ID">
-                        <div class="col-12 col-md-12">
-                            <div>
-                                <app-lid-invoer id="VLIEGER"
+                        <div class="col-12">
+                            <div class="d-flex">
+                                <app-lid-invoer id="VLIEGER" class="w-100"
                                                 [placeholder]="gekozenVliegtuig?.ZITPLAATSEN === 2 ? 'Wie zit voorin?' : 'Wie is de vlieger' "
                                                 [label]="gekozenVliegtuig?.ZITPLAATSEN === 2 ? 'Voorin' : 'Vlieger' "
                                                 [LID_ID]="start.VLIEGER_ID"
@@ -95,6 +96,11 @@
                                                 (LidChanged)="vliegerGeselecteerd($event)"
                                                 [uitleg]="start.PAX ? alleenPAX : undefined"
                                 ></app-lid-invoer>
+                                <div class="ms-2 d-flex align-items-end">
+                                    <app-icon-button id="ddwvPiloot" class="toolbarBtn" style="color: white" iconNaam="fas EuroSign"
+                                                     (btnClicked)="toonTransactieEditor(start.VLIEGER_ID)"
+                                                     btnColor="euroBtn"></app-icon-button>
+                                </div>
                             </div>
                             <div *ngIf="toonWaarschuwing && !start.INSTRUCTIEVLUCHT" class="flex-row cssWarning">
                                 <div class="fas fa-exclamation-triangle "></div>
@@ -132,19 +138,26 @@
 
                     <div class="row my-2"
                          *ngIf="gekozenVliegtuig?.ZITPLAATSEN === 2 && toonInzittendeNaam < 2 && !start.PAX">
-                        <div class="col-12 col-md-12">
-                            <app-lid-invoer id="INZITTENDE"
-                                            placeholder="Wie zit achterin"
-                                            label="Achterin"
-                                            [LID_ID]="start.INZITTENDE_ID"
-                                            [disabled]="isVerwijderMode || isRestoreMode || ((VliegerID === start.INZITTENDE_ID && VliegerID >0) && !magAltijdWijzigen)"
-                                            [aanwezig]="aanwezigLeden"
-                                            [excludeLidTypes]="exclLidtypeAlsInzittende"
-                                            [alleenInstructeurs]="start.INSTRUCTIEVLUCHT"
-                                            [leden]="leden"
-                                            (LidChanged)="inzittendeGeselecteerd($event)"
-                                            [uitleg]="start.INSTRUCTIEVLUCHT ? alleenInstructeurs : undefined"
-                            ></app-lid-invoer>
+                        <div class="col-12">
+                            <div class="d-flex">
+                                <app-lid-invoer id="INZITTENDE" class="w-100"
+                                                placeholder="Wie zit achterin"
+                                                label="Achterin"
+                                                [LID_ID]="start.INZITTENDE_ID"
+                                                [disabled]="isVerwijderMode || isRestoreMode || ((VliegerID === start.INZITTENDE_ID && VliegerID >0) && !magAltijdWijzigen)"
+                                                [aanwezig]="aanwezigLeden"
+                                                [excludeLidTypes]="exclLidtypeAlsInzittende"
+                                                [alleenInstructeurs]="start.INSTRUCTIEVLUCHT"
+                                                [leden]="leden"
+                                                (LidChanged)="inzittendeGeselecteerd($event)"
+                                                [uitleg]="start.INSTRUCTIEVLUCHT ? alleenInstructeurs : undefined"
+                                ></app-lid-invoer>
+                                <div class="ms-2 d-flex align-items-end">
+                                    <app-icon-button id="ddwvInzittende" class="toolbarBtn" style="color: white" iconNaam="fas EuroSign"
+                                                     (btnClicked)="toonTransactieEditor(start.INZITTENDE_ID)"
+                                                     btnColor="euroBtn"></app-icon-button>
+                                </div>
+                            </div>
                             <div *ngIf="toonWaarschuwing && start.INSTRUCTIEVLUCHT" class="flex-row cssWarning">
                                 <div class="fas fa-exclamation-triangle "></div>
                                 Vlieger onbevoegd
@@ -175,10 +188,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-2 col-md-2 row align-items-center">
+                <div class="col-2 col-md-2 row align-items-center" *ngIf="magOmwisselen()">
                     <app-icon-button id="switchVoorAchter" class="toolbarBtn display-1" iconNaam="fas ExchangeAlt"
                                      (btnClicked)="omwisselen()"
-                                     *ngIf="magOmwisselen()"
                                      btnColor="btn-secondary"></app-icon-button>
                 </div>
             </div>

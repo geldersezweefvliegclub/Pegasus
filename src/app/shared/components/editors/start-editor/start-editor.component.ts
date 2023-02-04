@@ -29,6 +29,7 @@ import {NgbDateFRParserFormatter} from "../../../ngb-date-fr-parser-formatter";
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {faStreetView} from "@fortawesome/free-solid-svg-icons";
 import {StorageService} from "../../../../services/storage/storage.service";
+import {TransactieEditorComponent} from "../transactie-editor/transactie-editor.component";
 
 @Component({
     selector: 'app-start-editor',
@@ -42,6 +43,8 @@ export class StartEditorComponent implements OnInit {
     @Input() VliegveldID: number | undefined;       // wordt gezet als we van start / vluchten een start aanmaken
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @ViewChild(VliegtuigInvoerComponent) vliegtuigInvoerComponent: VliegtuigInvoerComponent;
+    @ViewChild(TransactieEditorComponent) transactieEditor: TransactieEditorComponent;
+
     gastIcon: IconDefinition = faStreetView;
 
     start: HeliosStart = {};
@@ -54,6 +57,7 @@ export class StartEditorComponent implements OnInit {
     toonWaarschuwing: boolean = false;          // mag het lid op die vliegtuig vliegen volgens kruisjeslijst?
     medicalWaarschuwing: boolean = false;       // Controleer op geldigheid medical
     startVerbod: boolean = false;               // Vlieger heeft een startverbod
+    ddwvKnop: boolean = false;
 
     private typesAbonnement: Subscription;
     startMethodeTypes: HeliosType[];
@@ -271,6 +275,7 @@ export class StartEditorComponent implements OnInit {
         this.isSaving = false;
 
         const ui = this.loginService.userInfo?.Userinfo;
+        this.ddwvKnop = this.daginfoService.dagInfo.DDWV! && (ui!.isBeheerderDDWV! || ui!.isBeheerder!)
         this.startDatum = DateTime.fromSQL(this.start.DATUM!);
 
         const nu:  DateTime = DateTime.now()
@@ -813,5 +818,10 @@ export class StartEditorComponent implements OnInit {
         if (!this.start.ID) {
             this.storageService.opslaan("toonGastenCombo", this.toonGastCombobox, -1);
         }
+    }
+
+    // open de transactie om sleep of 3e lierstart strippen te afschrijven
+    toonTransactieEditor(VLIEGER_ID: number) {
+       this.transactieEditor.openPopup(VLIEGER_ID)
     }
 }

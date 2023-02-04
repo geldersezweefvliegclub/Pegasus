@@ -463,7 +463,7 @@
                 <td *ngIf="tonen.toonClubDDWV ===2">
                     <div *ngIf="!datumInToekomst(dagInRooster.DATUM) && dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF && (isBeheerderDDWV || isBeheerder)" class="w-100 ms-2">
                         <app-icon-button class="toolbarBtn"
-                                         tekst="Uitbetalen crew"
+                                         tekst="Uitbetalen"
                                          iconNaam="fas EuroSign" (btnClicked)="uitbetalen.openPopup(dagInRooster)"
                                          btnColor="btn-secondary"></app-icon-button>
                     </div>

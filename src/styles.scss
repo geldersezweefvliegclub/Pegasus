@@ -192,6 +192,24 @@ ngb-datepicker-navigation-select > .custom-select {
   padding-left: 7px;
 }
 
+.euroBtn {
+  background-color: #28a745;
+  color: white;
+  width: 35px;
+
+  &:hover {
+    border: 2px solid black;
+    background-color: #28a745;
+    color: white;
+  }
+
+  &:focus {
+    border: 2px solid #8c8c8c;
+    background-color: #29bb4f;
+    color: white;
+  }
+}
+
 
 // Tonen van waarschuwing dat er geen vlieger ingevuld is
 // Maar vlucht is nog niet gestart
@@ -205,6 +223,16 @@ ngb-datepicker-navigation-select > .custom-select {
   color: #ff0f07;
   font-size: 25px;
   padding-top: 8px;
+}
+
+// knop voor invullen landingstijd
+.landingsBtn {
+  background-color: #f80000;
+  color: white;
+  margin-bottom: 8px;
+  padding-bottom: 1px;
+  width: 35px;
+  padding-left: 7px;
 }
 
 // Laat knipperen van icon
