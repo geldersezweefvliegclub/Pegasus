@@ -1,7 +1,7 @@
 <app-modal titel="Ledenlijst filter">
     <div body>
         <div class="row">
-            <div class="col-6">
+            <div class="col-6" *ngIf="!isDDWVer">
                 <div class="d-flex flex-column">
                     <div>
                         <input type="checkbox"

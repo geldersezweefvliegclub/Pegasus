@@ -19,6 +19,7 @@ export class LedenFilterComponent {
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
     isBeheerder: boolean;
+    isDDWVer: boolean;
 
     constructor(private readonly loginService: LoginService, readonly sharedService: SharedService) {
     }
@@ -27,6 +28,7 @@ export class LedenFilterComponent {
     openPopup() {
         const ui = this.loginService.userInfo;
         this.isBeheerder = ui!.Userinfo?.isBeheerder!;
+        this.isDDWVer = ui!.Userinfo?.isDDWV!;
 
         this.popup.open();
     }

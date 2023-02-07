@@ -55,6 +55,9 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
     filteredStarts: HeliosStartDatasetExtended[] = [];
     geselecteerdeStart: HeliosStartDataset | undefined;
 
+    SchermGrootte = require("../../../services/shared/shared.service").SchermGrootte;
+
+    schermSize: SchermGrootte; //     xs, sm, md, lg,xl,xxl
     toonAvatar: boolean = true;
     isStarttoren: boolean = false;
     isLoading: boolean = false;
@@ -193,7 +196,7 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
 
     // Op large schermen tonen we de avatar
     onWindowResize() {
-        this.toonAvatar = (this.sharedService.getSchermSize() >= SchermGrootte.lg)
+        this.schermSize = this.sharedService.getSchermSize();
     }
 
     opvragen() {

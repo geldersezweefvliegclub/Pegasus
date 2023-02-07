@@ -96,7 +96,7 @@ export const routes: CustomRoute[] = [
         text: 'Ledenlijst'
     },
     {
-        path: 'vliegtuigen',
+        path: 'vlogboek',
         loadChildren: () => import('./schermen/vliegtuigen/vliegtuigen.module').then(m => m.VliegtuigenModule),
         excluded: true,
         icon: faPlane,

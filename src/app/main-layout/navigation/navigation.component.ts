@@ -280,6 +280,14 @@ export class NavigationComponent implements OnInit, OnDestroy  {
             leden.excluded = false;
         }
 
+        // DDWV'ers hebben geen toegang to vliegtuigen
+        const vliegtuigen = this.routes.find(route => route.path == "vliegtuigen") as CustomRoute;
+        if (verbergen.includes('vliegtuigen') || (ui?.isDDWV)) {
+            vliegtuigen.excluded = true;
+        } else {
+            vliegtuigen.excluded = false;
+        }
+
         // alleen echte gebruiker hebben toegang tot rooster, starttoren, zusterclubs, etc dus niet
         const rooster = this.routes.find(route => route.path == "rooster") as CustomRoute;
         if (verbergen.includes('rooster') || (!ui?.isDDWV && !ui?.isClubVlieger)) {
