@@ -41,7 +41,6 @@ import {
     UnderlineType
 } from 'docx';
 import {saveAs} from "file-saver";
-import imageSize from 'image-size';
 
 @Component({
     selector: 'app-dashboard',
