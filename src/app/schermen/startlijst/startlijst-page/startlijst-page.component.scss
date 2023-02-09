@@ -98,12 +98,14 @@
   min-width: 50px;
 }
 
-.rechts {
-  text-align: right;
+.schuifruimte {
+  margin-right: 30px;
 }
 
-.laag {
-  vertical-align: bottom;
+.veldOnTop {
+  position: absolute;
+  top: 5px;
+  right: 15px;
 }
 
 .vliegtuigtype {
@@ -162,6 +164,20 @@
 .warning {
   font-size: x-large;
   color: #edc61d;
+}
+
+.urgent {
+  font-size: x-large;
+  color: #dc3545;
+  animation:blinkingText 1s infinite;
+}
+
+@keyframes blinkingText{
+  0% { color: red;	}
+  49%{	color: transparent;	}
+  50%{	color: transparent;	}
+  99%{	color:transparent;	}
+  100%{	color: #000;	}
 }
 
 .rood {

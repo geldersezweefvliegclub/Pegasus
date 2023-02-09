@@ -57,8 +57,6 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
 
     SchermGrootte = require("../../../services/shared/shared.service").SchermGrootte;
 
-    schermSize: SchermGrootte; //     xs, sm, md, lg,xl,xxl
-    toonAvatar: boolean = true;
     isStarttoren: boolean = false;
     isLoading: boolean = false;
     filterAan: boolean = true;
@@ -196,7 +194,7 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
 
     // Op large schermen tonen we de avatar
     onWindowResize() {
-        this.schermSize = this.sharedService.getSchermSize();
+
     }
 
     opvragen() {

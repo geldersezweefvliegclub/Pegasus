@@ -45,16 +45,28 @@
                                  btnColor="landingsBtn"></app-icon-button>
             </td>
         </tr>
-        <tr>
-            <td *ngIf="!naarDashboard(false)">
-                <div class="d-flex">
-                    {{start.INZITTENDENAAM_LID}}
-                    <div *ngIf="start.PAX">{{start.INZITTENDENAAM}}</div>
-                    <div *ngIf="start.INZITTENDENAAM && !start.PAX">({{start.INZITTENDENAAM}})</div>
+        <tr>    <!-- inzittende -->
+            <td *ngIf="start.INSTRUCTIEVLUCHT && start.VLIEGER_ID && !start.INZITTENDE_ID"> <!-- instructie vlucht, maar geen instructeur -->
+                <div *ngIf="!start.DUUR" class="warning">
+                    <div class="fas fa-exclamation-triangle" data-toggle="tooltip"
+                         title="Vul de naam van de instructeur in"></div>
+                </div>
+                <div *ngIf="start.DUUR" class="urgent">
+                    <div class="fas fa-exclamation-triangle" data-toggle="tooltip"
+                         title="Vul de naam van de instructeur in"></div>
                 </div>
             </td>
-            <td *ngIf="naarDashboard(false)"><a aria-label="Naar dashboard" [routerLink]="['/dashboard']"
-                                                              [queryParams]="{lidID: start.INZITTENDE_ID}">{{start.INZITTENDENAAM_LID}}</a>
+
+            <td *ngIf="start.INZITTENDE_ID">
+                <div *ngIf="!naarDashboard(false)">
+                    <div class="d-flex">
+                        {{start.INZITTENDENAAM_LID}}
+                        <div *ngIf="start.PAX">{{start.INZITTENDENAAM}}</div>
+                        <div *ngIf="start.INZITTENDENAAM && !start.PAX">({{start.INZITTENDENAAM}})</div>
+                    </div>
+                </div>
+                <div *ngIf="naarDashboard(false)"><a aria-label="Naar dashboard" [routerLink]="['/dashboard']"
+                                                     [queryParams]="{lidID: start.INZITTENDE_ID}">{{start.INZITTENDENAAM_LID}}</a></div>
             </td>
 
             <td class="tijd rechts" *ngIf="!this.inTijdspan || !start.LANDINGSTIJD">{{start.LANDINGSTIJD}}</td>
