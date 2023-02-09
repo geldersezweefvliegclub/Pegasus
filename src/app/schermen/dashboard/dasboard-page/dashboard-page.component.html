@@ -5,6 +5,18 @@
                   subtitel="Een verzameling van nuttige info"
                   [icon]="iconCardIcon">
 
+    <div class="DDWVtegoed d-flex flex-column" (click)="toonTransacties()" *ngIf="saldoTonen && lidData">
+        <div style="font-size: x-small">
+            Tegoed
+        </div>
+        <div class="d-flex align-items-end justify-content-end">
+            {{lidData.TEGOED}}&nbsp;
+            <div style="font-size: x-small;  margin-bottom: 2px;">
+                strippen
+            </div>
+        </div>
+    </div>
+
     <div class="box">
         <div class="bg-tertiary rounded text-white " ngClass.gt-sm="px-5">
             <table class="w-100">
@@ -43,7 +55,7 @@
                 </tr>
             </table>
         </div>
-        <div class="row mt-4" *ngIf="!isDDWVer">
+        <div class="row mt-4" *ngIf="!alleenLogboekTonen()">
             <div class="col-12 col-sm-6 col-xl-3 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
                 <app-pegasus-card id="statusCard"
                                   class="kleineKaart"
@@ -122,7 +134,7 @@
         </div>
 
         <!-- progressie -->
-        <div class="row mt-4 progressie-hoogte" *ngIf="!isDDWVer">
+        <div class="row mt-4 progressie-hoogte" *ngIf="!alleenLogboekTonen()">
             <div class="col-12 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
                 <app-pegasus-card id="progressieCard"
                                   class="kleineKaart"
@@ -187,6 +199,7 @@
 
 <!-- toevoegen van een start vanuit groot logboek -->
 <app-start-editor [VliegerID]="lidData.ID" *ngIf="lidData"></app-start-editor>
+<app-transacties (TransactieGedaan)="opvragenLid()"></app-transacties>
 
 
 <app-modal #dienstenPopup titel="Diensten van {{lidData.NAAM}}" *ngIf="lidData">

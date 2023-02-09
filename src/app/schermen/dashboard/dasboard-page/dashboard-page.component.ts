@@ -41,6 +41,9 @@ import {
     UnderlineType
 } from 'docx';
 import {saveAs} from "file-saver";
+import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
+import {TransactiesComponent} from "../../../shared/components/transacties/transacties.component";
+import {DdwvService} from "../../../services/apiservice/ddwv.service";
 
 @Component({
     selector: 'app-dashboard',
@@ -67,24 +70,28 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     private datumAbonnement: Subscription; // volg de keuze van de kalender
     datum: DateTime = DateTime.now();      // de gekozen dag
 
+    isDDWVer: boolean = false;             // is ingelogde gebruiker een DDWV'er
+    saldoTonen: boolean = false;           // Tonen van DDWV saldo
     toonTracks: boolean = false;           // mogen de tracks vertoond worden
-    isDDWVer: boolean = false;             // DDWV'ers hebben een aangepast dashboard
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
     @ViewChild('logboekPopup') private popupLogboek: ModalComponent;
     @ViewChild('dienstenPopup') private popupDiensten: ModalComponent;
+    @ViewChild(TransactiesComponent) transactieScherm: TransactiesComponent;
     @ViewChild(StartEditorComponent) private startEditor: StartEditorComponent;
 
     verwijderMode: boolean = false;
     magVerwijderen: boolean = false;
 
-    constructor(private readonly ledenService: LedenService,
+    constructor(private readonly ddwvService: DdwvService,
+                private readonly ledenService: LedenService,
                 private readonly loginService: LoginService,
                 private readonly typesService: TypesService,
                 private readonly trackService: TracksService,
                 private readonly sharedService: SharedService,
+                private readonly configService: PegasusConfigService,
                 private readonly startlijstService: StartlijstService,
                 private readonly progressieService: ProgressieService,
                 private readonly router: Router,
@@ -132,6 +139,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         if (ui?.isStarttoren) {
             this.router.navigate(['vluchten']);
         }
+
+        this.saldoTonen = this.configService.saldoActief();
 
         this.toonTracks = (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) ? true : false;
         this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur) ? true : false;
@@ -384,5 +393,29 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     datumString(dt: string|undefined = undefined): string {
         const datumtijd = dt ? DateTime.fromSQL(dt) : DateTime.now();
         return datumtijd.day + "-" + datumtijd.month + "-" + datumtijd.year;
+    }
+
+    // gebruiker mage alleen logboek zien
+    alleenLogboekTonen() : boolean  {
+        if (this.toonTracks) {      // als je tracks mag zien, dan de rest ook
+            return false;
+        }
+        if (this.isDDWVer) {
+            return true;
+        }
+
+        const ui = this.loginService.userInfo?.LidData;
+        return (ui!.ID != this.lidData.ID)
+    }
+
+    // openen van windows voor het tonen van de transacties
+    toonTransacties() {
+        this.transactieScherm.openPopup(this.lidData!.ID!, this.ddwvService.magBestellen(this.lidData.TEGOED));
+    }
+
+    opvragenLid() {
+        this.ledenService.getLid(this.lidData!.ID!).then((lid: HeliosLid) => {
+            this.lidData = lid;
+        });
     }
 }

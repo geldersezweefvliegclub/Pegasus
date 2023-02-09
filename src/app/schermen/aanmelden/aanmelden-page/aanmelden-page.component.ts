@@ -544,7 +544,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
             return false;
         }
         const ui = this.loginService.userInfo?.Userinfo;
-        return (ui?.isBeheerder || ui?.isCIMT || ui?.isInstructeur) as boolean;
+        return (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT || ui?.isInstructeur) as boolean;
     }
 
     kleurBarometer(lid: HeliosAanwezigLedenDataset) {
