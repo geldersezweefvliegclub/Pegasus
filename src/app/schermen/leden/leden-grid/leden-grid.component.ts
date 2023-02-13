@@ -74,27 +74,27 @@ export class LedenGridComponent implements OnInit, OnDestroy {
 
         {field: 'MEDICAL', headerName: 'Medical', sortable: true, hide: true, cellRenderer: 'datumRender'},
         {field: 'GEBOORTE_DATUM', headerName: 'Geb datum', sortable: true, hide: true, cellRenderer: 'datumRender'},
-        {field: 'LIDTYPE', headerName: 'Lidmaatschap', sortable: true, hide: !this.toonLidType()},
-        {field: 'LIDNR', headerName: 'Lid nummer', sortable: true, hide: !this.toonLidNr()},
-        {field: 'STATUS', headerName: 'Status', sortable: true, hide: !this.toonStatus()},
-        {field: 'ZUSTERCLUB', headerName: 'Club', sortable: true, hide: !this.toonZusterClub()},
-        {field: 'TEGOED', headerName: 'Tegoed', sortable: true, hide: !this.toonTegoed()},
+        {field: 'LIDTYPE', headerName: 'Lidmaatschap', sortable: true, hide: true},
+        {field: 'LIDNR', headerName: 'Lid nummer', sortable: true, hide: true},
+        {field: 'STATUS', headerName: 'Status', sortable: true, hide: true},
+        {field: 'ZUSTERCLUB', headerName: 'Club', sortable: true, hide: true},
+        {field: 'TEGOED', headerName: 'Tegoed', sortable: true, hide: true},
 
         {field: 'BUDDY', headerName: 'Buddy', sortable: true, hide: true},
         {field: 'BUDDY2', headerName: 'Buddy', sortable: true, hide: true},
 
         {field: 'INLOGNAAM', headerName: 'Loginnaam', sortable: true, hide: true},
-        {field: 'CIMT', headerName: 'CIMT', sortable: true, hide: this.isDDWVer(), cellRenderer: 'checkboxRender'},
-        {field: 'INSTRUCTEUR', headerName: 'Instructeur', sortable: true, hide: this.isDDWVer(), cellRenderer: 'checkboxRender'},
-        {field: 'LIERIST', headerName: 'Lierist', sortable: true, hide: this.isDDWVer(), cellRenderer: 'checkboxRender'},
-        {field: 'STARTLEIDER', headerName: 'Startleider', sortable: true, hide: this.isDDWVer(), cellRenderer: 'checkboxRender'},
+        {field: 'CIMT', headerName: 'CIMT', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
+        {field: 'INSTRUCTEUR', headerName: 'Instructeur', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
+        {field: 'LIERIST', headerName: 'Lierist', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
+        {field: 'STARTLEIDER', headerName: 'Startleider', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
         {field: 'SLEEPVLIEGER', headerName: 'Sleepvlieger', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
         {field: 'STARTTOREN', headerName: 'Starttoren', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
         {field: 'ROOSTER', headerName: 'Rooster', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
         {field: 'AUTH', headerName: '2 Factor', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
 
-        {field: 'DDWV_CREW', headerName: 'DDWV crew', sortable: true, hide: !this.isDDWVer(), cellRenderer: 'checkboxRender'},
-        {field: 'DDWV_BEHEERDER', headerName: 'DDWV beheerder', sortable: true, hide: !this.isDDWVer(), cellRenderer: 'checkboxRender'},
+        {field: 'DDWV_CREW', headerName: 'DDWV crew', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
+        {field: 'DDWV_BEHEERDER', headerName: 'DDWV beheerder', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
 
         {field: 'BEHEERDER', headerName: 'Beheerder', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
         {field: 'SLEUTEL1', headerName: 'Sleutel GeZC', sortable: true, hide: true },
@@ -216,18 +216,9 @@ export class LedenGridComponent implements OnInit, OnDestroy {
 
     // aanpassen wat we op het scherm kwijt kunnen nadat scherm groote gewijzigd is
     onWindowResize() {
-        if(this.sharedService.getSchermSize() == SchermGrootte.xs)
-        {
-            this.toonBladwijzer = false;
-            this.kolomDefinitie();
-            this.zetPermissie();
-        }
-        else
-        {
-            this.toonBladwijzer = true;
-            this.kolomDefinitie();
-            this.zetPermissie();
-        }
+        this.toonBladwijzer = (this.sharedService.getSchermSize() == SchermGrootte.xs) ? false : true;
+        this.kolomDefinitie();
+        this.zetPermissie();
     }
 
     zetPermissie(): void {
@@ -296,23 +287,39 @@ export class LedenGridComponent implements OnInit, OnDestroy {
 
         let kolom: ColDef;
         kolom = this.columns.find(c => c.field == "ADRES") as ColDef;
-        kolom.hide = this.sharedService.getSchermSize() == SchermGrootte.xs;
+        kolom.hide = this.sharedService.getSchermSize() <= SchermGrootte.sm;
 
         kolom = this.columns.find(c => c.field == "CIMT") as ColDef;
-        kolom.hide = (this.sharedService.getSchermSize() <= SchermGrootte.lg || this.isDDWVer());
+        kolom.hide = (this.sharedService.getSchermSize() <= SchermGrootte.sm || ui!.isDDWV);
 
         kolom = this.columns.find(c => c.field == "INSTRUCTEUR") as ColDef;
-        kolom.hide = (this.sharedService.getSchermSize() == SchermGrootte.xs || this.isDDWVer());
+        kolom.hide = (this.sharedService.getSchermSize() <= SchermGrootte.sm || ui!.isDDWV);
 
         kolom = this.columns.find(c => c.field == "STARTLEIDER") as ColDef;
-        kolom.hide = (this.sharedService.getSchermSize() == SchermGrootte.xs || this.isDDWVer());
+        kolom.hide = (this.sharedService.getSchermSize() <= SchermGrootte.sm || ui!.isDDWV);
 
         kolom = this.columns.find(c => c.field == "LIERIST") as ColDef;
-        kolom.hide = (this.sharedService.getSchermSize() == SchermGrootte.xs || this.isDDWVer());
+        kolom.hide = (this.sharedService.getSchermSize() <= SchermGrootte.sm || ui!.isDDWV);
 
         kolom = this.columns.find(c => c.field == "STATUS") as ColDef;
         if (ui?.isInstructeur || ui?.isCIMT || ui?.isBeheerder){
             kolom.hide = this.sharedService.getSchermSize() <= SchermGrootte.md;
+        }
+        else  {
+            kolom.hide = true;
+        }
+
+        kolom = this.columns.find(c => c.field == "DDWV_CREW") as ColDef;
+        if (ui?.isBeheerderDDWV || ui?.isBeheerder){
+            kolom.hide = this.sharedService.getSchermSize() < SchermGrootte.xl;
+        }
+        else  {
+            kolom.hide = true;
+        }
+
+        kolom = this.columns.find(c => c.field == "DDWV_BEHEERDER") as ColDef;
+        if (ui?.isBeheerderDDWV || ui?.isBeheerder){
+            kolom.hide = this.sharedService.getSchermSize() < SchermGrootte.xl;
         }
         else  {
             kolom.hide = true;
@@ -328,7 +335,31 @@ export class LedenGridComponent implements OnInit, OnDestroy {
 
         kolom = this.columns.find(c => c.field == "ZUSTERCLUB") as ColDef;
         if (ui?.isInstructeur || ui?.isCIMT || ui?.isBeheerder || ui?.isBeheerderDDWV){
+            kolom.hide = this.sharedService.getSchermSize() <= SchermGrootte.md;
+        }
+        else  {
+            kolom.hide = true;
+        }
+
+        kolom = this.columns.find(c => c.field == "STATUS") as ColDef;
+        if (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isInstructeur || ui?.isCIMT) {
             kolom.hide = this.sharedService.getSchermSize() <= SchermGrootte.xl;
+        }
+        else  {
+            kolom.hide = true;
+        }
+
+        kolom = this.columns.find(c => c.field == "LIDNR") as ColDef;
+        if (ui?.isBeheerder) {
+            kolom.hide = this.sharedService.getSchermSize() <= SchermGrootte.xl;
+        }
+        else  {
+            kolom.hide = true;
+        }
+
+        kolom = this.columns.find(c => c.field == "TEGOED") as ColDef;
+        if (ui?.isBeheerder || ui?.isBeheerderDDWV) {
+            kolom.hide = this.sharedService.getSchermSize() <= SchermGrootte.md;
         }
         else  {
             kolom.hide = true;
@@ -453,46 +484,5 @@ export class LedenGridComponent implements OnInit, OnDestroy {
         if (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isInstructeur || ui?.isCIMT || ui!.isRooster) {
             this.router.navigate(['profiel'], {queryParams: {lidID: $event.data.ID}});
         }
-    }
-
-    private toonStatus(): boolean {
-        const ui = this.loginService.userInfo?.Userinfo;
-        return (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isInstructeur || ui?.isCIMT) ? true : false;
-    }
-
-    private toonLidNr(): boolean {
-        if (this.sharedService.getSchermSize() < SchermGrootte.xl) {
-            return false;
-        }
-        const ui = this.loginService.userInfo?.Userinfo;
-        return (ui?.isBeheerder) ? true : false;
-    }
-
-    private toonLidType(): boolean {
-        if (this.sharedService.getSchermSize() < SchermGrootte.xl) {
-            return false;
-        }
-
-        const ui = this.loginService.userInfo?.Userinfo;
-        return (ui?.isBeheerder || ui?.isBeheerderDDWV) ? true : false;
-    }
-
-    private toonZusterClub(): boolean {
-        if (!this.ddwvService.actief()) return false;               // DDWV is niet van toepassing
-
-        const ui = this.loginService.userInfo?.Userinfo;
-        return (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
-    }
-
-    private toonTegoed(): boolean {
-        if (!this.ddwvService.actief()) return false;               // DDWV is niet van toepassing
-
-        const ui = this.loginService.userInfo?.Userinfo;
-        return (ui?.isBeheerder || ui?.isBeheerderDDWV) ? true : false;
-    }
-
-    private isDDWVer(): boolean {
-        const ui = this.loginService.userInfo?.Userinfo;
-        return ui!.isDDWV!;
     }
 }
