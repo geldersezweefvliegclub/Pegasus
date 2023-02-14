@@ -148,7 +148,9 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
 
         this.ddwvActief = this.ddwvService.actief();
         this.isDDWVer = this.loginService.userInfo?.Userinfo?.isDDWV!;
-        this.saldoTonen = this.configService.saldoActief();
+
+        const ui = this.loginService.userInfo?.Userinfo;
+        this.saldoTonen = this.configService.saldoActief() && (ui!.isDDWV! || ui!.isClubVlieger!);
     }
 
     ngOnDestroy(): void {
