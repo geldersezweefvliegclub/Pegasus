@@ -55,14 +55,14 @@
 <ng-template #week>
     <div class="dataContent" *ngIf="rooster">
         <div class="d-flex justify-content-between mb-2">
-            <div>
+            <div *ngIf="toonDatumKnoppen">
                 <app-icon-button
                         class="toolbarBtn mx-2"
                         iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum.plus({days: -7}))"
                         btnColor="btn-secondary"></app-icon-button>
             </div>
             Aanmeldingen voor de week van {{maandag.day}}-{{maandag.month}}-{{maandag.year}}
-            <div>
+            <div *ngIf="toonDatumKnoppen">
                 <app-icon-button
                         class="toolbarBtn mx-2"
                         iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum.plus({days: 7}))"
@@ -221,11 +221,11 @@
     <div class="dataContent" *ngIf="rooster">
         <div class="d-flex flex-row justify-content-between dagHeader ps-1 pe-1">
             <div class="d-flex align-items-center">
-                <app-icon-button
+                <app-icon-button *ngIf="toonDatumKnoppen"
                         class="toolbarBtn"
                         iconNaam="fas AngleDoubleLeft" (btnClicked)="zetDatum(datum.plus({days: -7}))"
                         btnColor="btn-secondary"></app-icon-button>
-                <app-icon-button
+                <app-icon-button *ngIf="toonDatumKnoppen"
                         class="toolbarBtn mx-2"
                         iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum.plus({days: -1}))"
                         btnColor="btn-secondary"></app-icon-button>
@@ -238,11 +238,11 @@
 
 
             <div class="d-flex align-items-center">
-                <app-icon-button
+                <app-icon-button *ngIf="toonDatumKnoppen"
                         class="toolbarBtn"
                         iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum.plus({days: 1}))"
                         btnColor="btn-secondary"></app-icon-button>
-                <app-icon-button
+                <app-icon-button *ngIf="toonDatumKnoppen"
                         class="toolbarBtn ms-2"
                         iconNaam="fas AngleDoubleRight" (btnClicked)="zetDatum(datum.plus({days: 7}))"
                         btnColor="btn-secondary"></app-icon-button>

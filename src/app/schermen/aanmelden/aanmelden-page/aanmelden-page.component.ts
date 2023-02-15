@@ -81,6 +81,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     gasten: HeliosGastenDataset[];                  // De gasten voor de vliegdag
     dagInfo: HeliosDagInfosDataset[];               // De bijhoorende dag info
 
+    toonDatumKnoppen: boolean = false;              // Mag de gebruiker een andere datum kiezen
     toonGasten: boolean = false;
     isDDWVer: boolean = false;                      // DDWV'ers mogen geen club dagen zien
     ddwvActief: boolean = true;                     // Doen we aan een DDWV bedrijf
@@ -151,6 +152,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
 
         const ui = this.loginService.userInfo?.Userinfo;
         this.saldoTonen = this.configService.saldoActief() && (ui!.isDDWV! || ui!.isClubVlieger!);
+        this.toonDatumKnoppen = (ui!.isDDWV! || ui!.isClubVlieger!);
     }
 
     ngOnDestroy(): void {
@@ -161,10 +163,16 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     }
 
     onWindowResize() {
-        if (this.sharedService.getSchermSize() <= SchermGrootte.sm) {
+        // als je geen datum mag aanpassen, zie alleen vandaag
+        if (this.toonDatumKnoppen == false) {
             this.aanmeldenView = "dag"
-        } else {
-            this.aanmeldenView = "week"
+        }
+        else {
+            if (this.sharedService.getSchermSize() <= SchermGrootte.sm) {
+                this.aanmeldenView = "dag"
+            } else {
+                this.aanmeldenView = "week"
+            }
         }
     }
 
@@ -545,8 +553,23 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         if (lidAanwezig.LID_ID == this.loginService.userInfo?.LidData?.ID) {   //  Geen dashboard link voor ingelode gebruiker
             return false;
         }
+
         const ui = this.loginService.userInfo?.Userinfo;
-        return (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT || ui?.isInstructeur) as boolean;
+        if (ui?.isBeheerder || ui?.isCIMT || ui?.isInstructeur)  {
+            return true;
+        }
+
+        // DDWV beheerder mag alleen naar dashboard op een DDWV dag
+        if (ui?.isBeheerderDDWV) {
+            const roosterDag = this.rooster.find((r: HeliosRoosterDataset) => {
+                return r.DATUM == lidAanwezig.DATUM
+            });
+
+            if (roosterDag && (roosterDag.DDWV)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     kleurBarometer(lid: HeliosAanwezigLedenDataset) {

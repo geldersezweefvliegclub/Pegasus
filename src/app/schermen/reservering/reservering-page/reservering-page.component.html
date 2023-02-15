@@ -130,14 +130,14 @@
     <div class="w-100">
         <div class="d-flex flex-row justify-content-between mb-2">
             <div>
-                <app-icon-button
+                <app-icon-button *ngIf="toonDatumKnoppen"
                         class="toolbarBtn mx-2"
                         iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum.plus({days: -7}))"
                         btnColor="btn-secondary"></app-icon-button>
             </div>
             Reserveringen voor de week van {{maandag.day}}-{{maandag.month}}-{{maandag.year}}
             <div>
-                <app-icon-button
+                <app-icon-button *ngIf="toonDatumKnoppen"
                         class="toolbarBtn mx-2"
                         iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum.plus({days: 7}))"
                         btnColor="btn-secondary"></app-icon-button>
@@ -177,7 +177,7 @@
 <ng-template #dag>
     <div class="w-100 overflow-scroll">
         <div class="d-flex flex-row justify-content-between">
-            <div>
+            <div *ngIf="toonDatumKnoppen">
                 <app-icon-button
                         class="toolbarBtn"
                         iconNaam="fas AngleDoubleLeft" (btnClicked)="zetDatum(datum.plus({days: -7}))"
@@ -188,7 +188,7 @@
                         btnColor="btn-secondary"></app-icon-button>
             </div>
             {{DagVanDeWeek(datum.toISODate())}} <br>{{datum.day}}-{{datum.month}}-{{datum.year}}
-            <div>
+            <div *ngIf="toonDatumKnoppen">
                 <app-icon-button
                         class="toolbarBtn mx-2"
                         iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum.plus({days: 1}))"

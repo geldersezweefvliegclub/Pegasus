@@ -72,7 +72,8 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     maandag: DateTime                               // de eerste dag van de week
     nu: DateTime = DateTime.now()                   // vandaag
 
-    toonClubDDWV: number = 2;              // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
+    toonDatumKnoppen: boolean = false;              // Mag de gebruiker een andere datum kiezen
+    toonClubDDWV: number = 2;                       // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
     behaaldeCompetenties: string;
     magExporteren: boolean = false;
 
@@ -98,6 +99,8 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
         if (ui!.isBeheerder || ui!.isBeheerderDDWV) {
             this.magBoeken = true;
         }
+        this.toonDatumKnoppen = (ui!.isDDWV! || ui!.isClubVlieger!);
+
         this.onWindowResize();
         this.magExporteren = ui!.isClubVlieger!;
 
@@ -191,12 +194,18 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     }
 
     onWindowResize() {
-        if (this.sharedService.getSchermSize() <= SchermGrootte.sm) {
+        // als je geen datum mag aanpassen, zie alleen vandaag
+        if (this.toonDatumKnoppen == false) {
             this.reserveringView = "dag"
-        } else if (this.sharedService.getSchermSize() >= SchermGrootte.xl) {
-            this.reserveringView = "maand"
-        } else {
-            this.reserveringView = "week"
+        }
+        else {
+            if (this.sharedService.getSchermSize() <= SchermGrootte.sm) {
+                this.reserveringView = "dag"
+            } else if (this.sharedService.getSchermSize() >= SchermGrootte.xl) {
+                this.reserveringView = "maand"
+            } else {
+                this.reserveringView = "week"
+            }
         }
 
         if (this.datum) {

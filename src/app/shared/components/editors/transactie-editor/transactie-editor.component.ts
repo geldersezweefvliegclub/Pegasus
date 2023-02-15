@@ -20,6 +20,7 @@ export class TransactieEditorComponent implements OnInit {
 
     private ledenAbonnement: Subscription;
     leden: HeliosLedenDataset[] = [];
+    lidID: number;
     lidNaam: string;
 
     private typesAbonnement: Subscription;
@@ -49,6 +50,7 @@ export class TransactieEditorComponent implements OnInit {
 
     openPopup(lidID: number | undefined) {
         if (lidID) {
+            this.lidID = lidID;
             this.nieuweTransactie.LID_ID = lidID;
         }
 
