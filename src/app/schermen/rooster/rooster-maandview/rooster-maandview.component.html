@@ -102,7 +102,7 @@
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.OCHTEND_DDI_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this, dagInRooster.DATUM, configService.OCHTEND_DDI_TYPE_ID)">
-                            <div cdkDrag>
+                            <div cdkDrag [cdkDragDisabled]="dragDisabled">
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -125,7 +125,7 @@
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.MIDDAG_DDI_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this, dagInRooster.DATUM, configService.MIDDAG_DDI_TYPE_ID)">
-                            <div cdkDrag>
+                            <div cdkDrag [cdkDragDisabled]="dragDisabled">
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -151,7 +151,7 @@
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.OCHTEND_INSTRUCTEUR_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this, dagInRooster.DATUM, configService.OCHTEND_INSTRUCTEUR_TYPE_ID)">
-                            <div cdkDrag>
+                            <div cdkDrag [cdkDragDisabled]="dragDisabled">
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -174,7 +174,7 @@
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.MIDDAG_INSTRUCTEUR_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="instructeurEvaluatie.bind(this, dagInRooster.DATUM, configService.MIDDAG_INSTRUCTEUR_TYPE_ID)">
-                            <div cdkDrag>
+                            <div cdkDrag [cdkDragDisabled]="dragDisabled">
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -199,7 +199,7 @@
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.OCHTEND_STARTLEIDER_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this, dagInRooster.DATUM, configService.OCHTEND_STARTLEIDER_TYPE_ID)">
-                            <div cdkDrag>
+                            <div cdkDrag [cdkDragDisabled]="dragDisabled">
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -222,7 +222,7 @@
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.MIDDAG_STARTLEIDER_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this, dagInRooster.DATUM, configService.MIDDAG_STARTLEIDER_TYPE_ID)">
-                            <div cdkDrag>
+                            <div cdkDrag [cdkDragDisabled]="dragDisabled">
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -249,7 +249,7 @@
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.OCHTEND_STARTLEIDER_IO_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this, dagInRooster.DATUM, configService.OCHTEND_STARTLEIDER_IO_TYPE_ID)">
-                            <div cdkDrag>
+                            <div cdkDrag [cdkDragDisabled]="dragDisabled">
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -272,7 +272,7 @@
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.MIDDAG_STARTLEIDER_IO_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="startleiderEvaluatie.bind(this, dagInRooster.DATUM, configService.MIDDAG_STARTLEIDER_IO_TYPE_ID)">
-                            <div cdkDrag>
+                            <div cdkDrag [cdkDragDisabled]="dragDisabled">
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -298,8 +298,7 @@
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.OCHTEND_LIERIST_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this, dagInRooster.DATUM, configService.OCHTEND_LIERIST_TYPE_ID)">
-                            <div cdkDrag
-                                 >
+                            <div cdkDrag [cdkDragDisabled]="dragDisabled">
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -322,7 +321,7 @@
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.MIDDAG_LIERIST_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="lieristEvaluatie.bind(this, dagInRooster.DATUM, configService.MIDDAG_LIERIST_TYPE_ID)">
-                            <div cdkDrag>
+                            <div cdkDrag [cdkDragDisabled]="dragDisabled">
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -348,7 +347,7 @@
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.OCHTEND_HULPLIERIST_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="lioEvaluatie.bind(this, dagInRooster.DATUM, configService.OCHTEND_HULPLIERIST_TYPE_ID)">
-                            <div cdkDrag>
+                            <div cdkDrag [cdkDragDisabled]="dragDisabled">
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -371,7 +370,7 @@
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.MIDDAG_HULPLIERIST_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="lioEvaluatie.bind(this, dagInRooster.DATUM, configService.MIDDAG_HULPLIERIST_TYPE_ID)">
-                            <div cdkDrag>
+                            <div cdkDrag [cdkDragDisabled]="dragDisabled">
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -398,7 +397,7 @@
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.GASTEN_VLIEGER1_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="gastVliegerEvaluatie.bind(this, dagInRooster.DATUM, configService.GASTEN_VLIEGER1_TYPE_ID)">
-                            <div cdkDrag>
+                            <div cdkDrag [cdkDragDisabled]="dragDisabled">
                                 {{ (dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID]) ? dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -421,7 +420,7 @@
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.GASTEN_VLIEGER2_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="gastVliegerEvaluatie.bind(this, dagInRooster.DATUM, configService.GASTEN_VLIEGER2_TYPE_ID)">
-                            <div cdkDrag>
+                            <div cdkDrag [cdkDragDisabled]="dragDisabled">
                                 {{ (dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID]) ? dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>
@@ -446,7 +445,7 @@
                                 (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.SLEEPVLIEGER_TYPE_ID);"
                                 [cdkDropListData]="dagInRooster"
                                 [cdkDropListEnterPredicate]="sleepvliegerEvaluatie.bind(this, dagInRooster.DATUM, configService.SLEEPVLIEGER_TYPE_ID)">
-                            <div cdkDrag>
+                            <div cdkDrag [cdkDragDisabled]="dragDisabled">
                                 {{ (dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID]) ? dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID].NAAM : "" }}
                             </div>
                         </div>

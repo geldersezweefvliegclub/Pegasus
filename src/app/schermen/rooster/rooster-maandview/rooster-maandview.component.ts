@@ -61,6 +61,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
     isBeheerderDDWV: boolean;
     magWijzigen: boolean = false;
     ddwvActief: boolean = true;
+    dragDisabled: boolean = true;
 
     opslaanTimer: number;                           // kleine vertraging om starts opslaan te beperken
 
@@ -80,6 +81,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
         this.isDDWVCrew = ui!.LidData?.DDWV_CREW!;
         this.isBeheerder = ui!.LidData?.BEHEERDER!;
         this.isBeheerderDDWV = ui!.LidData?.DDWV_BEHEERDER!;
+        this.dragDisabled = (ui!.Userinfo?.isRooster || this.isBeheerder || this.isBeheerderDDWV) ? false : true
         this.mijnID = (this.lidData.ID) ? this.lidData.ID.toString() : "-1";    // -1 mag nooit voorkomen, maar je weet het nooit
         this.mijnNaam = this.lidData.NAAM as string;
 
