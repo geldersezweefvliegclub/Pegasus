@@ -346,8 +346,8 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         if (this.magVerwijderen) {
             this.deleteMode = !this.deleteMode;
 
-            if (!this.deleteMode) {
-                this.trashMode = false;
+            if (this.trashMode) {
+                this.trashModeJaNee(false);
             }
             this.kolomDefinitie();
             this.opvragen();

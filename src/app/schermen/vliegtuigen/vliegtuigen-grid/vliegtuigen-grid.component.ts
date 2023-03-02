@@ -214,6 +214,10 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
     // schakelen tussen deleteMode JA/NEE. In deleteMode kun je vliegtuigen verwijderen
     deleteModeJaNee() {
         this.deleteMode = !this.deleteMode;
+
+        if (this.trashMode) {
+            this.trashModeJaNee(false);
+        }
         this.kolomDefinitie();
     }
 

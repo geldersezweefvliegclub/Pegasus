@@ -164,6 +164,10 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
     // schakelen tussen deleteMode JA/NEE. In deleteMode kun je vliegtuigen verwijderen
     deleteModeJaNee() {
         this.deleteMode = !this.deleteMode;
+
+        if (this.trashMode) {
+            this.trashModeJaNee(false);
+        }
     }
 
     // schakelen tussen trashMode JA/NEE. In trashMode worden te verwijderde vliegtuigen getoond

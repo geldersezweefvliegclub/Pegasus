@@ -101,8 +101,6 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.onWindowResize();          // bepaal wat we moeten tonen dag/week/maand
-
         // de datum zoals die in de kalender gekozen is
         this.maandAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
             if (jaarMaand.year > 1900) {        // 1900 is bij initialisatie
@@ -153,6 +151,8 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         const ui = this.loginService.userInfo?.Userinfo;
         this.saldoTonen = this.configService.saldoActief() && (ui!.isDDWV! || ui!.isClubVlieger!);
         this.toonDatumKnoppen = (ui!.isDDWV! || ui!.isClubVlieger!);
+
+        this.onWindowResize();          // bepaal wat we moeten tonen dag/week/maand
     }
 
     ngOnDestroy(): void {

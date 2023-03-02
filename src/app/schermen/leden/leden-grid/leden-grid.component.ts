@@ -255,6 +255,10 @@ export class LedenGridComponent implements OnInit, OnDestroy {
     // schakelen tussen deleteMode JA/NEE. In deleteMode kun je leden verwijderen
     deleteModeJaNee() {
         this.deleteMode = !this.deleteMode;
+
+        if (this.trashMode) {
+            this.trashModeJaNee(false);
+        }
         this.kolomDefinitie();
     }
 
