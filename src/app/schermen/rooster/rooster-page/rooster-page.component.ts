@@ -526,8 +526,9 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         }
 
         // op DDWV dagen mag de DDWV crew zichzelf indelen
+        // Sleep vlieger mogen zichzelf ook op DDWV dagen indelen, ze zijn geen DDWWV crew
         if (this.ddwvService.actief()) {
-            if (rooster.DDWV && !rooster.CLUB_BEDRIJF) {
+            if (rooster.DDWV && !rooster.CLUB_BEDRIJF && dienstType != this.configService.SLEEPVLIEGER_TYPE_ID) {
                 return lid.DDWV_CREW!;
             }
         }
