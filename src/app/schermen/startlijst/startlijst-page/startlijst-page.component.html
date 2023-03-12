@@ -68,7 +68,7 @@
                                     <div class="d-flex flex-column w-100">
                                         <div class="d-flex justify-content-between">
                                             <div class="d-flex my-2">
-                                                <div class="ms-2 d-none d-md-inline">#{{start.DAGNUMMER}}</div> <!-- alleen tonen indien voldoende ruimte -->
+                                                <div class="ms-2"><fa-icon [icon]="iconEdit" (click)="openStartEditor(start)"></fa-icon></div> <!-- alleen tonen indien voldoende ruimte -->
                                                 <div class="ms-2">{{start.REG_CALL}}</div>
                                                 <div class="ms-2 d-none d-md-inline">{{start.STARTMETHODE}}</div> <!-- alleen tonen indien voldoende ruimte -->
                                             </div>

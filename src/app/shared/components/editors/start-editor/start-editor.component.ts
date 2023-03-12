@@ -48,6 +48,7 @@ export class StartEditorComponent implements OnInit {
     gastIcon: IconDefinition = faStreetView;
 
     start: HeliosStart = {};
+    toonTranactieKnop: boolean = false;        // Moet de transactie editor geopend kunnen worden?
     toonGastCombobox: boolean = false;
     toonVliegerNaam: boolean = false;
     toonInzittendeNaam: number = 0;             // 0, naam hoeft niet ingevoerd te worden
@@ -125,6 +126,7 @@ export class StartEditorComponent implements OnInit {
 
         if (ui?.isBeheerder || ui?.isBeheerderDDWV) {
             this.minDatum = DateTime.fromObject({year: this.vandaag.year, month:1, day:1})
+            this.toonTranactieKnop = true;
         }
         else {
             this.minDatum = this.vandaag.plus({days: -1 * this.configService.maxZelfEditDagen()});
@@ -511,10 +513,13 @@ export class StartEditorComponent implements OnInit {
         if (!this.toonVliegerNaam) {
             this.start.VLIEGERNAAM = undefined;
         }
-
         if (this.toonInzittendeNaam == 0 && !this.start.PAX) {
             this.start.INZITTENDENAAM = undefined;
         }
+        if (this.start.PAX) {
+            this.start.INZITTENDE_ID = undefined;
+        }
+
         this.startlijstService.addStart(this.start).then((s) => {
             this.success = {
                 titel: "Startlijst",
@@ -535,6 +540,10 @@ export class StartEditorComponent implements OnInit {
         if (!this.toonInzittendeNaam) {
             this.start.INZITTENDENAAM = undefined;
         }
+        if (this.start.PAX) {
+            this.start.INZITTENDE_ID = undefined;
+        }
+
         this.startlijstService.updateStart(this.start).then(() => {
             this.success = {
                 titel: "Startlijst",

@@ -1,29 +1,35 @@
 <div class="kaart" (dblclick)="openStartEditor()" *ngIf="start">
-    <table class="w-100">
-        <tr>
-            <td class="w-75"><b>{{this.datumDM}}</b> {{start.REG_CALL}}</td>
-            <td class="rechts vliegtuigtype">{{start.VLIEGTUIGTYPE}}</td>
-            <td class="rechts">
-                <div class="d-flex flex-row justify-content-end iconGroep">
-                    <div class="column">
-                        <div *ngIf="!start.INSTRUCTIEVLUCHT" class="geenIcoontje">-</div>
-                        <div *ngIf="start.INSTRUCTIEVLUCHT" class="icoontje" data-toggle="tooltip"
-                             title="Instructie vlucht">I
+    <div class="d-flex w-100">
+        <div class="d-flex flex-column w-100">
+            <!-- 1e rij -->
+            <div class="d-flex w-100 justify-content-between">
+                <div class="me-1"><b>{{this.datumDM}}</b> {{start.REG_CALL}}</div>
+                <div class="d-flex">
+                    <div class="justify-content-end">{{start.VLIEGTUIGTYPE}}</div>
+                    <div class="d-flex flex-row justify-content-end iconGroep ms-1">
+                        <div class="column">
+                            <div *ngIf="!start.INSTRUCTIEVLUCHT" class="geenIcoontje">-</div>
+                            <div *ngIf="start.INSTRUCTIEVLUCHT" class="icoontje" data-toggle="tooltip"
+                                 title="Instructie vlucht">I
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="column">
-                        <div *ngIf="!start.CHECKSTART" class="geenIcoontje">-</div>
-                        <div *ngIf="start.CHECKSTART" class="icoontje" data-toggle="tooltip" title="Trainingsvlucht">T
+                        <div class="column">
+                            <div *ngIf="!start.CHECKSTART" class="geenIcoontje">-</div>
+                            <div *ngIf="start.CHECKSTART" class="icoontje" data-toggle="tooltip" title="Trainingsvlucht">T
+                            </div>
                         </div>
-                    </div>
-                    <div class="column">
-                        <div *ngIf="!start.PAX" class="geenIcoontje">-</div>
-                        <div *ngIf="start.PAX" class="icoontje" data-toggle="tooltip" title="Passagiers">P</div>
+                        <div class="column">
+                            <div *ngIf="!start.PAX" class="geenIcoontje">-</div>
+                            <div *ngIf="start.PAX" class="icoontje" data-toggle="tooltip" title="Passagiers">P</div>
+                        </div>
                     </div>
                 </div>
-            </td>
-        </tr>
+            </div>
+        </div>
+    </div>
+
+    <table class="w-100">
         <tr>
             <td *ngIf="!naarDashboard(true)"><div class="d-flex">{{start.VLIEGERNAAM_LID}}<div *ngIf="start.VLIEGERNAAM">({{start.VLIEGERNAAM}})</div></div></td>
             <td *ngIf="naarDashboard(true)"><a aria-label="Naar dashboard" [routerLink]="['/dashboard']"
@@ -35,15 +41,16 @@
                 (click)="startTijdClicked()">{{start.STARTTIJD}}</td>
 
 
-            <td class="rechts" *ngIf="start.STARTTIJD && start.LANDINGSTIJD">{{start.STARTMETHODE}}</td>
+            <td class="rechts" *ngIf="start.STARTTIJD && start.LANDINGSTIJD"><div class="me-2">{{start.STARTMETHODE}}</div></td>
             <td class="rechts laag" *ngIf="!start.STARTTIJD && !start.LANDINGSTIJD" rowspan="3">
-                <app-icon-button class="toolbarBtn" iconNaam="fas PlaneDeparture" (btnClicked)="startTijdClicked()"
+                <app-icon-button class="toolbarBtn me-2" iconNaam="fas PlaneDeparture" (btnClicked)="startTijdClicked()"
                                  btnColor="startBtn"></app-icon-button>
             </td>
             <td class="rechts laag" *ngIf="start.STARTTIJD && !start.LANDINGSTIJD" rowspan="3">
-                <app-icon-button class="toolbarBtn" iconNaam="fas PlaneArrival" (btnClicked)="landingsTijdClicked()"
+                <app-icon-button class="toolbarBtn me-2" iconNaam="fas PlaneArrival" (btnClicked)="landingsTijdClicked()"
                                  btnColor="landingsBtn"></app-icon-button>
             </td>
+            <td rowspan="2" class="iconEdit" *ngIf="inTijdspan"><fa-icon [icon]="iconEdit" class="mx-2" (click)="openStartEditor()"></fa-icon></td>
         </tr>
         <tr>    <!-- inzittende -->
             <td *ngIf="start.INSTRUCTIEVLUCHT && start.VLIEGER_ID && !start.INZITTENDE_ID"> <!-- instructie vlucht, maar geen instructeur -->
@@ -57,6 +64,7 @@
                 </div>
             </td>
 
+            <td *ngIf="!start.INZITTENDE_ID"></td>
             <td *ngIf="start.INZITTENDE_ID">
                 <div *ngIf="!naarDashboard(false)">
                     <div class="d-flex">
@@ -69,14 +77,14 @@
                                                      [queryParams]="{lidID: start.INZITTENDE_ID}">{{start.INZITTENDENAAM_LID}}</a></div>
             </td>
 
-            <td class="tijd rechts" *ngIf="!this.inTijdspan || !start.LANDINGSTIJD">{{start.LANDINGSTIJD}}</td>
-            <td class="tijd rechts" *ngIf="this.inTijdspan && start.LANDINGSTIJD"
+            <td class="rechts" *ngIf="!this.inTijdspan || !start.LANDINGSTIJD">{{start.LANDINGSTIJD}}</td>
+            <td class="rechts" *ngIf="this.inTijdspan && start.LANDINGSTIJD"
                 (click)="landingsTijdClicked()">{{start.LANDINGSTIJD}}</td>
 
-            <td class="rechts" *ngIf="start.STARTTIJD && start.LANDINGSTIJD">{{start.DUUR}}</td>
+            <td class="rechts" *ngIf="start.STARTTIJD && start.LANDINGSTIJD"><div class="me-2">{{start.DUUR}}</div></td>
         </tr>
         <tr *ngIf="start.OPMERKINGEN">
-            <td colspan="2">{{start.OPMERKINGEN}}</td>
+            <td colspan="4">{{start.OPMERKINGEN}}</td>
         </tr>
     </table>
 </div>

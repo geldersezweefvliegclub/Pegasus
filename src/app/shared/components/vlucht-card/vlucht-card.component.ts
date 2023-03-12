@@ -7,6 +7,9 @@ import {StartEditorComponent} from "../editors/start-editor/start-editor.compone
 import {DateTime, Interval} from "luxon";
 import {SharedService} from "../../../services/shared/shared.service";
 import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
+import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import {faAngleLeft, faAngleRight, faPenToSquare} from "@fortawesome/free-solid-svg-icons";
+
 
 @Component({
     selector: 'app-vlucht-card',
@@ -20,6 +23,8 @@ export class VluchtCardComponent implements OnInit {
     @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
     @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
     @ViewChild(StartEditorComponent) startEditor: StartEditorComponent;
+
+    readonly iconEdit: IconDefinition = faPenToSquare;
 
     inTijdspan: boolean = false;
     datumDM: string;

@@ -1,6 +1,6 @@
 import {Component, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faPen, faSortAmountDownAlt} from "@fortawesome/free-solid-svg-icons";
+import {faPen, faPenToSquare, faSortAmountDownAlt} from "@fortawesome/free-solid-svg-icons";
 import {Observable, of, Subscription} from "rxjs";
 import {
     HeliosAanwezigLedenDataset,
@@ -48,6 +48,7 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
     @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
     @ViewChild(StartEditorComponent) startEditor: StartEditorComponent;
 
+    readonly iconEdit: IconDefinition = faPenToSquare;
     readonly startlijstIcon: IconDefinition = faPen;
     readonly iconSort: IconDefinition = faSortAmountDownAlt;
 
@@ -445,6 +446,13 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
                     this.eersteKlik = false;
                 }
             }, 250);
+        }
+    }
+
+    // openen van popup om bestaande start te kunnen aanpassen
+    openStartEditor(start: HeliosStartDataset) {
+        if (this.inTijdspan) {
+            this.startEditor.openPopup(start);
         }
     }
 
