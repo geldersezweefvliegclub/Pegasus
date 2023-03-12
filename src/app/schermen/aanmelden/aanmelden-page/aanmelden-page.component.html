@@ -49,7 +49,7 @@
         </div>
     </div>
 </app-modal>
-<app-samenvatting></app-samenvatting>
+<app-samenvatting (bulkEmail)="bulkEmail($event)" [diensten]="diensten"></app-samenvatting>
 
 <!-- template voor week view -->
 <ng-template #week>
@@ -82,6 +82,7 @@
                             <div class="d-flex justify-content-between">
                                 <div class="me-2" style="white-space: nowrap;">{{datumDMY(dagInRooster.DATUM)}}</div>
                                 <fa-icon class="infoIcon clickable" [icon]="infoIcon" placement="right" (click)="samenvatting(dagInRooster.DATUM)" *ngIf="!isDDWVer && dagInRooster.CLUB_BEDRIJF"></fa-icon>
+                                <fa-icon class="infoIcon clickable" [icon]="emailIcon" placement="right" (click)="bulkEmail(dagInRooster.DATUM)" *ngIf="magBulkMailen(dagInRooster.DATUM) && !dagInRooster.CLUB_BEDRIJF && dagInRooster.DDWV"></fa-icon>
                             </div>
 
                             <div *ngIf="dagInRooster.EENHEDEN > 0" class="strip d-flex justify-content-end w-100">

@@ -96,7 +96,7 @@
                                                 (LidChanged)="vliegerGeselecteerd($event)"
                                                 [uitleg]="start.PAX ? alleenPAX : undefined"
                                 ></app-lid-invoer>
-                                <div class="ms-2 d-flex align-items-end">
+                                <div class="ms-2 d-flex align-items-end" *ngIf="toonTranactieKnop">
                                     <app-icon-button id="ddwvPiloot" class="toolbarBtn" style="color: white" iconNaam="fas EuroSign"
                                                      (btnClicked)="toonTransactieEditor(start.VLIEGER_ID)"
                                                      btnColor="euroBtn"></app-icon-button>
@@ -152,7 +152,7 @@
                                                 (LidChanged)="inzittendeGeselecteerd($event)"
                                                 [uitleg]="start.INSTRUCTIEVLUCHT ? alleenInstructeurs : undefined"
                                 ></app-lid-invoer>
-                                <div class="ms-2 d-flex align-items-end">
+                                <div class="ms-2 d-flex align-items-end" *ngIf="toonTranactieKnop">
                                     <app-icon-button id="ddwvInzittende" class="toolbarBtn" style="color: white" iconNaam="fas EuroSign"
                                                      (btnClicked)="toonTransactieEditor(start.INZITTENDE_ID)"
                                                      btnColor="euroBtn"></app-icon-button>
