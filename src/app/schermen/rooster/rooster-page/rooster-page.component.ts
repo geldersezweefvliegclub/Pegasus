@@ -58,6 +58,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
 
     readonly roosterIcon: IconDefinition = faCalendarDay;
 
+    private ingedeeldMaand: number = 0   // hoeveel is het ingelogde lid al ingedeeld in deze maand
     roosterView: string = "maand";       // toon rooster voor maand, week of dag
 
     private typesAbonnement: Subscription;
@@ -81,7 +82,8 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
     maandag: DateTime                               // de eerste dag van de week
     ddwvActief: boolean = true;
 
-    private tonen: WeergaveData = {                    // Welke diensten worden wel/niet getoond
+
+    private tonen: WeergaveData = {                 // Welke diensten worden wel/niet getoond
         Startleiders: true,
         Instructeurs: true,
         Lieristen: true,
@@ -255,6 +257,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
                 this.diensten = diensten;
                 this.extendRooster();
                 this.applyRoosterFilter();
+                this.maandTotaalUser()      // opvragen totalen voor de ingelogde gebruiker
             })
         })
     }
@@ -469,14 +472,9 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
      */
     private maandTotaalUser() {
         const ui = this.loginService.userInfo;
-
-        if (this.alleLeden) {
-            const lid = this.alleLeden.find((l) => (l.ID?.toString() == ui!.LidData!.ID));
-
-            if (lid) {
-                const lidDiensten = this.diensten.filter((dienst) => dienst.LID_ID!.toString() == ui!.LidData!.ID!.toString());
-                lid.INGEDEELD_MAAND = lidDiensten.length;
-            }
+        if (this.diensten) {
+            const lidDiensten = this.diensten.filter((dienst) => dienst.LID_ID!.toString() == ui!.LidData!.ID!.toString());
+            this.ingedeeldMaand = lidDiensten.length;
         }
     }
 
@@ -509,12 +507,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         }
 
         const ui = this.loginService.userInfo;
-        const lid = this.alleLeden.find((l) => (l.ID! == ui!.LidData!.ID!));
         const rooster = this.heleRooster.find((r) => (r.DATUM == datum));
-
-        if (!lid) {
-            return false;    // Dit mag nooit voorkomen
-        }
 
         if (!rooster) {
             return false;    // Dit mag nooit voorkomen
@@ -529,7 +522,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         // Sleep vlieger mogen zichzelf ook op DDWV dagen indelen, ze zijn geen DDWWV crew
         if (this.ddwvService.actief()) {
             if (rooster.DDWV && !rooster.CLUB_BEDRIJF && dienstType != this.configService.SLEEPVLIEGER_TYPE_ID) {
-                return lid.DDWV_CREW!;
+                return ui!.Userinfo!.isDDWVCrew!;
             }
         }
 
@@ -592,7 +585,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         }
 
         // je mag jezelf maar beperkt indelen, geldt niet voor roostermakers en beheerders
-        if (!this.magWijzigen && (lid.INGEDEELD_MAAND! >= this.configService.maxZelfDienstenIndelen())) {
+        if (!this.magWijzigen && (this.ingedeeldMaand! >= this.configService.maxZelfDienstenIndelen())) {
             return false;
         }
 
