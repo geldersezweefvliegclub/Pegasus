@@ -778,8 +778,8 @@ export class StartEditorComponent implements OnInit {
     // Mogen de vlieger voorin / achterin omgewisseld worden?
     magOmwisselen() {
         if (this.gekozenVliegtuig?.ZITPLAATSEN !== 2)     return false;
-        if (this.start.INSTRUCTIEVLUCHT == true)          return false;
         if (this.start.PAX == true)                       return false;
+        if (this.start.INSTRUCTIEVLUCHT == true)          return false;
 
         return true;
     }

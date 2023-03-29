@@ -347,6 +347,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
             case 'googleAuth': {
                 return this.isgoogleAuthNodig();
             }
+            case 'zelfstartAbonnement':
             case 'gebruiker':
             case 'lidnummer':
             case 'lidmaatschap': {
@@ -439,6 +440,13 @@ export class LidEditorComponent implements OnInit, OnDestroy {
             }
             case 'OPMERKINGEN': {
                 if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT || ui?.isRooster || this.ikBenHetZelf()) {
+                    return true;
+                }
+                break;
+            }
+
+            case 'ZELFSTART_ABONNEMENT': {
+                if (ui?.isBeheerder || ui?.isBeheerderDDWV || this.ikBenHetZelf()) {
                     return true;
                 }
                 break;

@@ -490,7 +490,23 @@
                         </div>
                     </div>
                     <div class="row mt-2">
-                        <div class="col-8">
+                        <div class="col-6">
+                            <div *ngIf="isVisible('ZELFSTART_ABONNEMENT')">
+                                <input class="form-check-inline" type="checkbox" id="zelfstartAbonnement" name="zelfstartAbonnement"
+                                       [disabled]="isDisabled('zelfstartAbonnement')"
+                                       [(ngModel)]="lid.ZELFSTART_ABONNEMENT">
+                                <label class="form-check-label" for="startverbod"
+                                       [ngClass]="disabledClass('zelfstartAbonnement')">
+                                    Zelfstart abonnement
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row my-0">
+                        <div class="col-6">
                             <div *ngIf="isVisible('STARTVERBOD')">
                                 <input class="form-check-inline" type="checkbox" id="startverbod" name="startverbod"
                                        [disabled]="isDisabled('STARTVERBOD')"
@@ -502,9 +518,9 @@
                             </div>
                         </div>
                         <div class="col-4">
-
                         </div>
                     </div>
+
                     <hr>
                     <div class="row mt-3" *ngIf="toonSecret()">
                         <div class="d-flex">

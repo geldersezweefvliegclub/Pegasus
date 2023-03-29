@@ -413,6 +413,11 @@ export interface components {
        */
       CLUBBLAD_POST?: boolean;
       /**
+       * @description Is zelfstart afgekocht
+       * @example true
+       */
+      ZELFSTART_ABONNEMENT?: boolean;
+      /**
        * @description Verstuur het dagrapport per email
        * @example false
        */
