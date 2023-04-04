@@ -30,6 +30,8 @@ import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {faStreetView} from "@fortawesome/free-solid-svg-icons";
 import {StorageService} from "../../../../services/storage/storage.service";
 import {TransactieEditorComponent} from "../transactie-editor/transactie-editor.component";
+import {DienstenService} from "../../../../services/apiservice/diensten.service";
+import {RoosterService} from "../../../../services/apiservice/rooster.service";
 
 @Component({
     selector: 'app-start-editor',
@@ -58,7 +60,6 @@ export class StartEditorComponent implements OnInit {
     toonWaarschuwing: boolean = false;          // mag het lid op die vliegtuig vliegen volgens kruisjeslijst?
     medicalWaarschuwing: boolean = false;       // Controleer op geldigheid medical
     startVerbod: boolean = false;               // Vlieger heeft een startverbod
-    ddwvKnop: boolean = false;
 
     private typesAbonnement: Subscription;
     startMethodeTypes: HeliosType[];
@@ -111,7 +112,9 @@ export class StartEditorComponent implements OnInit {
         private readonly loginService: LoginService,
         private readonly sharedService: SharedService,
         private readonly daginfoService: DaginfoService,
+        private readonly roosterService: RoosterService,
         private readonly storageService: StorageService,
+        private readonly dienstenService: DienstenService,
         private readonly configService: PegasusConfigService,
         private readonly startlijstService: StartlijstService,
         private readonly progressieService: ProgressieService,
@@ -122,10 +125,9 @@ export class StartEditorComponent implements OnInit {
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo?.Userinfo;
-        this.magAltijdWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
 
         if (ui?.isBeheerder || ui?.isBeheerderDDWV) {
-            this.minDatum = DateTime.fromObject({year: this.vandaag.year, month:1, day:1})
+            this.minDatum = DateTime.fromObject({year: this.vandaag.year-1, month:1, day:1})
             this.toonTranactieKnop = true;
         }
         else {
@@ -139,6 +141,7 @@ export class StartEditorComponent implements OnInit {
                 month: datum.month,
                 day: datum.day
             })
+            this.magWijzigen(this.datum.toISODate());
         });
 
         // abonneer op wijziging van lidTypes
@@ -249,7 +252,7 @@ export class StartEditorComponent implements OnInit {
                 DATUM: this.datum.toISODate(),
                 DAGNUMMER: undefined,
                 VLIEGTUIG_ID: undefined,
-                VLIEGER_ID: (this.VliegerID) ? this.VliegerID : undefined,      // Vlieger ID is bekend als we vanuit logboek start toevoegen
+                VLIEGER_ID: (this.VliegerID && !this.magAltijdWijzigen) ? this.VliegerID : undefined,      // Vlieger ID is bekend als we vanuit logboek start toevoegen
                 INZITTENDE_ID: undefined,
                 VLIEGERNAAM: undefined,
                 INZITTENDENAAM: undefined,
@@ -277,7 +280,6 @@ export class StartEditorComponent implements OnInit {
         this.isSaving = false;
 
         const ui = this.loginService.userInfo?.Userinfo;
-        this.ddwvKnop = this.daginfoService.dagInfo.DDWV! && (ui!.isBeheerderDDWV! || ui!.isBeheerder!)
         this.startDatum = DateTime.fromSQL(this.start.DATUM!);
 
         const nu:  DateTime = DateTime.now()
@@ -763,6 +765,13 @@ export class StartEditorComponent implements OnInit {
             return true;
         }
 
+        // als je niet altijd mag wijzigen, dan moet je vlieger of inzittende zijn
+        if (!this.magAltijdWijzigen) {
+            const ui = this.loginService.userInfo!.LidData!;
+
+            return (this.start.VLIEGER_ID == ui.ID || this.start.INZITTENDE_ID) ? false : true;
+        }
+
         return false;
     }
 
@@ -817,6 +826,35 @@ export class StartEditorComponent implements OnInit {
     datumAanpassen($datum: NgbDate) {
         this.startDatum = DateTime.fromObject({year: $datum.year, month: $datum.month, day: $datum.day});
         this.start.DATUM = this.startDatum.toISODate();
+
+        this.magWijzigen(this.start.DATUM);
+    }
+
+    magWijzigen(datum: string) {
+        const ui = this.loginService.userInfo!;
+        const dt = DateTime.fromSQL(datum);
+
+        this.magAltijdWijzigen = false;
+
+        if (ui.Userinfo!.isBeheerder || ui.Userinfo!.isBeheerderDDWV || ui.Userinfo!.isCIMT) {
+            this.magAltijdWijzigen = true;
+        }
+        else {
+            this.roosterService.getRooster(dt, dt).then((rooster) => {
+                if ((rooster) && (rooster.length >0)) {
+                    if (rooster[0].DDWV && !rooster[0].CLUB_BEDRIJF) {
+                        // er is alleen DDWV bedrijf, dan mag de DDWV crew alles aanpassen
+                        this.dienstenService.getDiensten(dt, dt).then((diensten) => {
+                            diensten.forEach(lid => {
+                                if (lid.LID_ID == ui.LidData!.ID!) {
+                                    this.magAltijdWijzigen = true;
+                                }
+                            })
+                        })
+                    }
+                }
+            })
+        }
     }
 
     // laten we de combobox zien of standaard invoerveld
