@@ -38,6 +38,20 @@
                 <app-icon-button class="toolbarBtn" iconNaam="fas Redo" (btnClicked)="opvragen()"
                                  btnColor="btn-primary"></app-icon-button>
             </div>
+            <div class="col-3 d-flex justify-content-end">
+                <div class="input-group vliegdag">
+                    <input name="vliegdagInput" class="form-control dateInput" placeholder="dd-mm-yyyy"
+                           ngbDatepicker #vdag="ngbDatepicker"
+                           id="vliegdagInput"
+                           [(ngModel)]="vliegdag"
+                           (dateSelect)="vliegdagAanpassen($event)"
+                    >
+                    <div class="input-group-append">
+                        <app-icon-button iconNaam="far Calendar" (btnClicked)="vdag.toggle()"
+                                         btnColor="btn-primary"></app-icon-button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </app-pegasus-card>

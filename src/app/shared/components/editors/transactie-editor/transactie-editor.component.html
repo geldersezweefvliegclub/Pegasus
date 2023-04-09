@@ -19,8 +19,7 @@
                 <div class="col-12">
                     <label for="TYPE_ID" class="form-label">Type</label>
                     <select class="form-select" required name="TYPE_ID" id="TYPE_ID"
-                            [(ngModel)]="nieuweTransactie.TYPE_ID" (change)="typeAangepast()"
-                            >
+                            [(ngModel)]="nieuweTransactie.TYPE_ID" (change)="typeAangepast()">
                         <option *ngFor="let tType of transactieTypes"
                                 [value]="tType.ID">{{tType.OMSCHRIJVING}}</option>
                     </select>
@@ -28,17 +27,34 @@
             </div>
 
             <div class="row mt-3">
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-3">
                     <label for="EENHEDEN" class="form-label">Strippen</label>
                     <input name="callsign" type="number" class="form-control" id="EENHEDEN"
                            [required]="!nieuweTransactie.EENHEDEN && !nieuweTransactie.BEDRAG"
                            [(ngModel)]="nieuweTransactie.EENHEDEN">
                 </div>
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-3">
                     <label for="BEDRAG" class="form-label">Bedrag</label>
                     <input name="BEDRAG" type="number" class="form-control" id="BEDRAG"
                            [required]="!nieuweTransactie.EENHEDEN && !nieuweTransactie.BEDRAG"
                            [(ngModel)]="nieuweTransactie.BEDRAG">
+                </div>
+                <div class="col-md-1">&nbsp;</div>
+                <div class="col-12 col-md-5">
+                    <label for="vliegdagInput" class="form-label">Vliegdag</label>
+                    <div class="input-group">
+                        <input name="vliegdagInput" class="form-control dateInput" placeholder="dd-mm-yyyy"
+                               ngbDatepicker #vdag="ngbDatepicker"
+                               id="vliegdagInput"
+                               (keydown)="$event.preventDefault();"
+                               [(ngModel)]="vliegdag"
+                               (dateSelect)="vliegdagAanpassen($event)"
+                        >
+                        <div class="input-group-append">
+                            <app-icon-button iconNaam="far Calendar" (btnClicked)="vdag.toggle()"
+                                             btnColor="btn-primary"></app-icon-button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row mt-3">
@@ -55,7 +71,7 @@
         <app-icon-button
                 iconNaam="fas SquareXmark" btnColor="btn-secondary"
                 tekst="Leeg"
-                (btnClicked)="nieuweTransactie = {LID_ID: this.lidID}">
+                (btnClicked)="leegMaken()">
         </app-icon-button>
 
         <app-icon-button

@@ -141,6 +141,12 @@ export interface components {
        */
       DATUM?: string;
       /**
+       * Format: date
+       * @description Datum van de vliegdag
+       * @example 2022-04-02
+       */
+      VLIEGDAG?: string;
+      /**
        * Format: int32
        * @description Voor welk is de transactie
        * @example 10115

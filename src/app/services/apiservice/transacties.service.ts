@@ -21,7 +21,7 @@ export class TransactiesService {
                 private readonly loginService: LoginService) {
     }
 
-    async getTransacties(lidID?: number, startDatum?: DateTime, eindDatum?: DateTime, max?: number): Promise<HeliosTransactiesDataset[]> {
+    async getTransacties(lidID?: number, startDatum?: DateTime, eindDatum?: DateTime, vliegdag?: DateTime, max?: number): Promise<HeliosTransactiesDataset[]> {
         let getParams: KeyValueArray = {};
 
         if ((this.transactiesCache != undefined) && (this.transactiesCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
@@ -35,6 +35,9 @@ export class TransactiesService {
         }
         if (eindDatum) {
             getParams['EIND_DATUM'] = eindDatum.toISODate();
+        }
+        if (vliegdag) {
+            getParams['VLIEGDAG'] = vliegdag.toISODate();
         }
 
         if ((max) && (max > 0)) {

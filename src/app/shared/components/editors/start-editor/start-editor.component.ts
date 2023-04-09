@@ -836,7 +836,7 @@ export class StartEditorComponent implements OnInit {
 
         this.magAltijdWijzigen = false;
 
-        if (ui.Userinfo!.isBeheerder || ui.Userinfo!.isBeheerderDDWV || ui.Userinfo!.isCIMT) {
+        if (ui.Userinfo!.isBeheerder || ui.Userinfo!.isBeheerderDDWV || ui.Userinfo!.isCIMT || ui.Userinfo?.isStarttoren) {
             this.magAltijdWijzigen = true;
         }
         else {
@@ -869,6 +869,6 @@ export class StartEditorComponent implements OnInit {
 
     // open de transactie om sleep of 3e lierstart strippen te afschrijven
     toonTransactieEditor(VLIEGER_ID: number) {
-       this.transactieEditor.openPopup(VLIEGER_ID)
+       this.transactieEditor.openPopup(VLIEGER_ID, this.start.DATUM)
     }
 }

@@ -6,11 +6,15 @@ import {HeliosLedenDataset, HeliosTransactie, HeliosType} from "../../../../type
 import {Subscription} from "rxjs";
 import {LedenService} from "../../../../services/apiservice/leden.service";
 import {TypesService} from "../../../../services/apiservice/types.service";
+import {NgbDate, NgbDateParserFormatter} from "@ng-bootstrap/ng-bootstrap";
+import {DateTime} from "luxon";
+import {NgbDateFRParserFormatter} from "../../../ngb-date-fr-parser-formatter";
 
 @Component({
     selector: 'app-transactie-editor',
     templateUrl: './transactie-editor.component.html',
-    styleUrls: ['./transactie-editor.component.scss']
+    styleUrls: ['./transactie-editor.component.scss'],
+    providers: [{provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter}]
 })
 export class TransactieEditorComponent implements OnInit {
     @ViewChild(ModalComponent) private popup: ModalComponent;
@@ -31,6 +35,8 @@ export class TransactieEditorComponent implements OnInit {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
+    vliegdag: DateTime | undefined;
+
     constructor(private readonly ledenService: LedenService,
                 private readonly typesService: TypesService,
                 private readonly transactiesService: TransactiesService) {
@@ -48,10 +54,15 @@ export class TransactieEditorComponent implements OnInit {
         });
     }
 
-    openPopup(lidID: number | undefined) {
+    openPopup(lidID: number | undefined, vliegdag: string | undefined = undefined) {
         if (lidID) {
             this.lidID = lidID;
             this.nieuweTransactie.LID_ID = lidID;
+        }
+
+        if (vliegdag) {
+            this.vliegdag = DateTime.fromSQL(vliegdag);
+            this.nieuweTransactie.VLIEGDAG = this.vliegdag.toISODate();
         }
 
         if (this.toonLidSelectie) {
@@ -105,5 +116,16 @@ export class TransactieEditorComponent implements OnInit {
                 this.nieuweTransactie.BEDRAG = ttype!.BEDRAG;
             }
         }
+    }
+
+    // Datum van de start aanpassen
+    vliegdagAanpassen($datum: NgbDate) {
+        this.vliegdag = DateTime.fromObject({year: $datum.year, month: $datum.month, day: $datum.day});
+        this.nieuweTransactie.VLIEGDAG = this.vliegdag.toISODate();
+    }
+
+    leegMaken() {
+        this.vliegdag = undefined;
+        this.nieuweTransactie = {LID_ID: this.lidID}
     }
 }

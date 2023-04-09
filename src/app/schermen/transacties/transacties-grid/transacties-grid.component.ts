@@ -17,12 +17,15 @@ import {LoginService} from "../../../services/apiservice/login.service";
 import {LedenService} from "../../../services/apiservice/leden.service";
 import {OmschrijvingRenderComponent} from "./omschrijving-render/omschrijving-render.component";
 import {CheckboxRenderComponent} from "../../../shared/components/datatable/checkbox-render/checkbox-render.component";
-import {DatatableComponent} from "../../../shared/components/datatable/datatable.component";
+import {DatumRenderComponent} from "../../../shared/components/datatable/datum-render/datum-render.component";
+import {NgbDate, NgbDateParserFormatter} from "@ng-bootstrap/ng-bootstrap";
+import {NgbDateFRParserFormatter} from "../../../shared/ngb-date-fr-parser-formatter";
 
 @Component({
     selector: 'app-transacties-grid',
     templateUrl: './transacties-grid.component.html',
-    styleUrls: ['./transacties-grid.component.scss']
+    styleUrls: ['./transacties-grid.component.scss'],
+    providers: [{provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter}]
 })
 export class TransactiesGridComponent implements OnInit, OnDestroy {
     @ViewChild(TransactieEditorComponent) private editor: TransactieEditorComponent;
@@ -50,6 +53,12 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
             sortable: true,
             width: 150,
             cellRenderer: 'datumtijdRender'},
+        {
+            field: 'VLIEGDAG',
+            headerName: 'Vliegdag',
+            sortable: true,
+            width: 100,
+            cellRenderer: 'datumRender'},
         {field: 'OMSCHRIJVING', headerName: 'Omschrijving', sortable: true,  flex:10, cellRenderer: 'omschrijvingRender'},
         {
             field: 'BEDRAG',
@@ -96,10 +105,12 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
         checkboxRender: CheckboxRenderComponent,
         bedragRender: BedragRenderComponent,
         omschrijvingRender: OmschrijvingRenderComponent,
-        datumtijdRender: DatumtijdRenderComponent
+        datumtijdRender: DatumtijdRenderComponent,
+        datumRender: DatumRenderComponent
     };
 
     transacties: HeliosTransactiesDataset[];
+    vliegdag: DateTime | undefined;
     isLoading: boolean = false;
 
     iconCardIcon: IconDefinition = faEuroSign;
@@ -201,6 +212,7 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
     // ophalen data via de rest API
     opvragen() {
         this.isLoading = true;
+
         const vanDatum: DateTime = DateTime.fromObject({
             year: this.datum.year,
             month: 1,
@@ -213,7 +225,7 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
             day: 31
         })
 
-        this.transactiesService.getTransacties(this.lidID, vanDatum, totDatum).then((dataset) => {
+        this.transactiesService.getTransacties(this.lidID, vanDatum, totDatum, this.vliegdag).then((dataset) => {
             this.transacties = dataset;
             this.isLoading = false;
 
@@ -251,6 +263,14 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
     // van welk lid willen we de transacties zien
     lidGeselecteerd(id: number | undefined) {
         this.lidID = id;
+
+        clearTimeout(this.timerID)
+        this.timerID = window.setTimeout(() => this.opvragen(), 500);
+    }
+
+    // Datum van de start aanpassen
+    vliegdagAanpassen($datum: NgbDate) {
+        this.vliegdag = DateTime.fromObject({year: $datum.year, month: $datum.month, day: $datum.day});
 
         clearTimeout(this.timerID)
         this.timerID = window.setTimeout(() => this.opvragen(), 500);
