@@ -29,33 +29,63 @@
                 </tr>
             </table>
 
-            <h4>Vliegtuig types</h4>
-            <table>
-                <tr *ngFor="let type of samenvatting.types">
-                    <td class="vtype">
-                        {{type.type}}
-                    </td>
-                    <td>
-                        <b>{{type.aantal}}</b>
-                    </td>
+            <h4>Diensten</h4>
+            <table class="w-100">
+                <tr class="headerRow">
+                    <td class="cel" ngClass.gt-sm="w-20" *ngIf="rooster.CLUB_BEDRIJF">DDI</td>
+                    <td class="cel" ngClass.gt-sm="w-20" *ngIf="rooster.CLUB_BEDRIJF">Instructeur</td>
+                    <td class="cel" ngClass.gt-sm="w-20">Startleider</td>
+                    <td class="cel" ngClass.gt-sm="w-20">Lierist</td>
+                    <td class="cel" ngClass.gt-sm="w-20">Sleepvlieger</td>
+                </tr>
+                <tr>
+                    <td class="cel dienst" *ngIf="rooster.CLUB_BEDRIJF">{{ochtendDDI}}</td>
+                    <td class="cel dienst" *ngIf="rooster.CLUB_BEDRIJF">{{ochtendInstructeur}}</td>
+                    <td class="cel dienst">{{ochtendStartleider}}</td>
+                    <td class="cel dienst">{{ochtendLierist}}</td>
+                    <td class="cel dienst">{{ochtendSleper}}</td>
+                </tr>
+                <tr *ngIf="rooster.CLUB_BEDRIJF">
+                    <td class="cel dienst">{{middagDDI}}</td>
+                    <td class="cel dienst">{{middagInstructeur}}</td>
+                    <td class="cel dienst">{{middagStartleider}}</td>
+                    <td class="cel dienst">{{middagLierist}}</td>
+                    <td class="cel dienst">{{middagSleper}}</td>
                 </tr>
             </table>
+            <hr>
+            <div class="d-flex">
+                <div>
+                    <h4>Vliegtuig types</h4>
+                    <table>
+                        <tr *ngFor="let type of samenvatting.types">
+                            <td class="vtype">
+                                {{type.type}}
+                            </td>
+                            <td>
+                                <b>{{type.aantal}}</b>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
 
-            <div class="mt-2" *ngIf="samenvatting.overland.length > 0"><h4>Overland aanvragen</h4></div>
-            <table>
-                <tr *ngFor="let ovl of samenvatting.overland">
-                    <td>
-                        {{ovl.reg_call}}
-                    </td>
-                    <td>
-                        {{ovl.naam}}
-                    </td>
-                </tr>
-            </table>
+                <div class="ms-4"  *ngIf="samenvatting.overland.length > 0"><h4>Overland aanvragen</h4>
+                    <table>
+                        <tr *ngFor="let ovl of samenvatting.overland">
+                            <td>
+                                {{ovl.reg_call}}
+                            </td>
+                            <td>
+                                {{ovl.naam}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
     <div footer>
-        <app-icon-button class="toolbarBtn"  *ngIf="toonBulkEmail"
+        <app-icon-button class="toolbarBtn" *ngIf="toonBulkEmail"
                          tekst="Email aanmeldingen"
                          btnColor="btn-primary"
                          iconNaam="fas MailBulk"

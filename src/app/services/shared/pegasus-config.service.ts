@@ -10,21 +10,21 @@ export class PegasusConfigService {
     private configURL = '/assets/pegasus.config.json';
     private pegasusConfig: IPegasusConfig;
 
-    public readonly OCHTEND_DDI_TYPE_ID = 1800;
-    public readonly OCHTEND_INSTRUCTEUR_TYPE_ID = 1801;
-    public readonly OCHTEND_LIERIST_TYPE_ID = 1802;
-    public readonly OCHTEND_HULPLIERIST_TYPE_ID = 1803;
-    public readonly OCHTEND_STARTLEIDER_TYPE_ID = 1804;
-    public readonly OCHTEND_STARTLEIDER_IO_TYPE_ID = 1811;
-    public readonly MIDDAG_DDI_TYPE_ID = 1805;
-    public readonly MIDDAG_INSTRUCTEUR_TYPE_ID = 1806;
-    public readonly MIDDAG_LIERIST_TYPE_ID = 1807;
-    public readonly MIDDAG_HULPLIERIST_TYPE_ID = 1808;
-    public readonly MIDDAG_STARTLEIDER_TYPE_ID = 1809;
-    public readonly MIDDAG_STARTLEIDER_IO_TYPE_ID = 1812;
-    public readonly SLEEPVLIEGER_TYPE_ID = 1810;
-    public readonly GASTEN_VLIEGER1_TYPE_ID = 1813;
-    public readonly GASTEN_VLIEGER2_TYPE_ID = 1814;
+    public readonly OCHTEND_DDI_TYPE_ID: number = 1800;
+    public readonly OCHTEND_INSTRUCTEUR_TYPE_ID: number = 1801;
+    public readonly OCHTEND_LIERIST_TYPE_ID: number = 1802;
+    public readonly OCHTEND_HULPLIERIST_TYPE_ID: number = 1803;
+    public readonly OCHTEND_STARTLEIDER_TYPE_ID: number = 1804;
+    public readonly OCHTEND_STARTLEIDER_IO_TYPE_ID: number = 1811;
+    public readonly MIDDAG_DDI_TYPE_ID: number = 1805;
+    public readonly MIDDAG_INSTRUCTEUR_TYPE_ID: number = 1806;
+    public readonly MIDDAG_LIERIST_TYPE_ID: number = 1807;
+    public readonly MIDDAG_HULPLIERIST_TYPE_ID: number = 1808;
+    public readonly MIDDAG_STARTLEIDER_TYPE_ID: number = 1809;
+    public readonly MIDDAG_STARTLEIDER_IO_TYPE_ID: number = 1812;
+    public readonly SLEEPVLIEGER_TYPE_ID: number = 1810;
+    public readonly GASTEN_VLIEGER1_TYPE_ID: number = 1813;
+    public readonly GASTEN_VLIEGER2_TYPE_ID: number = 1814;
 
 
     constructor(private http: HttpClient) {

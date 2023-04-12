@@ -222,18 +222,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
 
             // We hebben  diensten nodig.Startleider/instructeur mag lid status zien (en mail sturen)
             this.dienstenService.getDiensten(beginDatum, eindDatum).then((diensten) => {
-                this.diensten = diensten.filter((d) => {
-                    return (
-                        d.TYPE_DIENST_ID == 1800 ||     // 1800 = Ochtend DDI
-                        d.TYPE_DIENST_ID == 1800 ||     // 1800 = Ochtend Instructeur
-                        d.TYPE_DIENST_ID == 1805 ||     // 1809 = Middag DDI
-                        d.TYPE_DIENST_ID == 1806 ||     // 1809 = Middag Instructeur
-
-                        d.TYPE_DIENST_ID == 1804 ||     // 1804 = Ochtend startleider
-                        d.TYPE_DIENST_ID == 1809 ||     // 1809 = Middag startleider
-                        d.TYPE_DIENST_ID == 1811 ||     // 1811 = 2e ochtend startleider
-                        d.TYPE_DIENST_ID == 1812)       // 1812 = 2e middag startleider
-                });
+                this.diensten = diensten;
                 this.isLoadingDiensten = false;
             }).catch(() => this.isLoadingDiensten = false)
         }).catch(() => this.isLoadingRooster = false)
@@ -403,8 +392,22 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         if (!this.diensten) {
             return false;
         }
+
+        const diensten = this.diensten.filter((d) => {
+            return (
+                d.TYPE_DIENST_ID == 1800 ||     // 1800 = Ochtend DDI
+                d.TYPE_DIENST_ID == 1800 ||     // 1800 = Ochtend Instructeur
+                d.TYPE_DIENST_ID == 1805 ||     // 1809 = Middag DDI
+                d.TYPE_DIENST_ID == 1806 ||     // 1809 = Middag Instructeur
+
+                d.TYPE_DIENST_ID == 1804 ||     // 1804 = Ochtend startleider
+                d.TYPE_DIENST_ID == 1809 ||     // 1809 = Middag startleider
+                d.TYPE_DIENST_ID == 1811 ||     // 1811 = 2e ochtend startleider
+                d.TYPE_DIENST_ID == 1812)       // 1812 = 2e middag startleider
+        });
+
         // als de ingelode gebruiker, startleider is. Is hij/zij staf lid.
-        const idx = this.diensten.findIndex((d) => {
+        const idx = diensten.findIndex((d) => {
             return (d.DATUM == dagDatum && d.LID_ID == ui!.LidData!.ID)
         });
         return idx >= 0;
@@ -597,8 +600,8 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     }
 
     // toon de samenvatting van de dag
-    samenvatting(datum: string) {
-        this.samenvattingPopup.openPopup(datum)
+    samenvatting(rooster: HeliosRoosterDataset) {
+        this.samenvattingPopup.openPopup(rooster)
     }
 
     // als we daginfo hebben, hoeven we niet meer te berekenen welke startmethode we gebruiken
