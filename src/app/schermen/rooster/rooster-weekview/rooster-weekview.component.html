@@ -162,7 +162,7 @@
                 <td class="dienstType">Slepen</td>
                 <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
                     <div class="d-flex flex-row" *ngIf="dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF">
-                        <input type="range" class="form-range" min="1" max="15"
+                        <input type="range" class="form-range" min="1" max="25"
                                [(ngModel)]="dagInRooster.MIN_SLEEPSTART" (change)="opslaanRooster(dagInRooster.DATUM)"
                                [disabled]="!magWijzigen">
                         <div class="ms-2 me-1">{{dagInRooster.MIN_SLEEPSTART}}</div>
@@ -173,7 +173,7 @@
                 <td class="dienstType">Lieren</td>
                 <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
                     <div class="d-flex flex-row" *ngIf="dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF">
-                        <input type="range" class="form-range" min="1" max="15" [(ngModel)]="dagInRooster.MIN_LIERSTART"
+                        <input type="range" class="form-range" min="1" max="25" [(ngModel)]="dagInRooster.MIN_LIERSTART"
                                (change)="opslaanRooster(dagInRooster.DATUM)" [disabled]="!magWijzigen">
                         <div class="ms-2 me-1">{{dagInRooster.MIN_LIERSTART}}</div>
                     </div>
