@@ -233,7 +233,6 @@
 
             <div class="d-flex justify-content-between">
                 {{DagVanDeWeek(datum.toISODate())}} <br>{{datum.day}}-{{datum.month}}-{{datum.year}}
-                <fa-icon class="infoIcon clickable" [icon]="infoIcon" placement="right" (click)="samenvatting(datum.toISODate())" *ngIf="!isDDWVer && rooster[0].CLUB_BEDRIJF"></fa-icon>
             </div>
 
 
@@ -266,7 +265,10 @@
                             <div *ngIf="rooster[0].CLUB_BEDRIJF && rooster[0].DDWV" class="me-2">&</div>
                             <div *ngIf="rooster[0].DDWV && ddwvActief ">DDWV</div>
                             <div *ngIf="(!rooster[0].DDWV || !ddwvActief) && !rooster[0].CLUB_BEDRIJF">Geen vliegbedrijf</div>
+
+                            <fa-icon class="infoIcon clickable" [icon]="infoIcon" placement="right" (click)="samenvatting(rooster[0])" *ngIf="!isDDWVer"></fa-icon>
                         </div>
+
                     </td>
                 </tr>
                 <tr *ngIf="ddwvActief && magTonen(rooster[0].DATUM) && rooster[0].DDWV && !rooster[0].CLUB_BEDRIJF">
