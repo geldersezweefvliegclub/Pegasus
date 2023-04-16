@@ -1,14 +1,15 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {TreeviewConfig, TreeviewItem} from 'ngx-treeview';
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
-import {HeliosCompetentiesDataset, HeliosProgressie, HeliosProgressieBoom} from "../../../types/Helios";
+import {HeliosCompetentiesDataset, HeliosProgressie, HeliosProgressieBoom, HeliosType} from "../../../types/Helios";
 import {LoginService} from "../../../services/apiservice/login.service";
 import {ModalComponent} from "../modal/modal.component";
 import {ErrorMessage, HeliosActie, SuccessMessage} from "../../../types/Utils";
 import {SharedService} from "../../../services/shared/shared.service";
 import {CompetentieService} from "../../../services/apiservice/competentie.service";
-import {Subscription} from "rxjs";
+import {Observable, of, Subscription} from "rxjs";
 import {ProgressieEditorComponent} from "../editors/progressie-editor/progressie-editor.component";
+import {TypesService} from "../../../services/apiservice/types.service";
 
 export class ProgressieTreeviewItem extends TreeviewItem {
     ProgresssieID: number | undefined;
@@ -32,6 +33,9 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
     private competentiesAbonnement: Subscription;
     boom: ProgressieTreeviewItem[];
 
+    private typesAbonnement: Subscription;
+    opleidingBlok: HeliosType[];         // welke opleidingen hebben we
+
     competenties: HeliosCompetentiesDataset[];
     values: number[];
     suspend: boolean = false;
@@ -50,12 +54,20 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
     error: ErrorMessage | undefined;
 
     constructor(private readonly loginService: LoginService,
+                private readonly typesService: TypesService,
                 private readonly sharedService: SharedService,
                 private readonly competentieService: CompetentieService,
                 private readonly progressieService: ProgressieService) {
     }
 
     ngOnInit(): void {
+        // abonneer op wijziging van types
+        this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
+            this.opleidingBlok = dataset!.filter((t: HeliosType) => {
+                return t.GROEP == 10
+            });
+        })
+
         // Als in de progressie tabel is aangepast, moet we onze dataset ook aanpassen
         this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Progressie") {
@@ -74,6 +86,7 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     ngOnDestroy(): void {
+        if (this.typesAbonnement) this.typesAbonnement.unsubscribe();
         if (this.dbEventAbonnement) this.dbEventAbonnement.unsubscribe();
         if (this.competentiesAbonnement) this.competentiesAbonnement.unsubscribe();
     }
@@ -91,7 +104,26 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
         this.progressieService.getBoom(this.VliegerID).then((b) => {
             let tree: ProgressieTreeviewItem[] = [];
             for (let i = 0; i < b.length; i++) {
-                tree.push(this.TreeView(b[i]))
+                const tak = this.TreeView(b[i])
+
+                if (this.boom) {
+                    // toevoegen van ext ref aan wortel van de boom (komt uit types). in ext_ref staat versie nummer van progressie kaart
+                    const blok: HeliosType|undefined = this.opleidingBlok.find((b) => {
+                        const txt = (b.CODE) ? b.CODE + ": " +b.OMSCHRIJVING : b.OMSCHRIJVING
+                        return txt == tak.text
+                    })
+
+                    if (blok && blok.EXT_REF) {
+                        tak.text += " (" + blok.EXT_REF +")"
+                    }
+                    // done
+
+                    // als een tak is uitgeklapt, don moeten we dat zo houden
+                    // collapsed is default uit (tak) , zo zet je het weer aan (via this.boom)
+                    tak.setCollapsedRecursive(this.boom[i].collapsed)
+                }
+
+                tree.push(tak)
             }
             this.boom = tree;
         });

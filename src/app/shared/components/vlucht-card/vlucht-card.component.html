@@ -41,7 +41,7 @@
                 (click)="startTijdClicked()">{{start.STARTTIJD}}</td>
 
 
-            <td class="rechts" *ngIf="start.STARTTIJD && start.LANDINGSTIJD"><div class="me-2">{{start.STARTMETHODE}}</div></td>
+            <td class="rechts startMethode" *ngIf="start.STARTTIJD && start.LANDINGSTIJD"><div class="me-2">{{start.STARTMETHODE}}</div></td>
             <td class="rechts laag" *ngIf="!start.STARTTIJD && !start.LANDINGSTIJD" rowspan="3">
                 <app-icon-button class="toolbarBtn me-2" iconNaam="fas PlaneDeparture" (btnClicked)="startTijdClicked()"
                                  btnColor="startBtn"></app-icon-button>
