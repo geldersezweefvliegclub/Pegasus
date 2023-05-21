@@ -30,13 +30,11 @@
                 <div class="col-12 col-md-3">
                     <label for="EENHEDEN" class="form-label">Strippen</label>
                     <input name="callsign" type="number" class="form-control" id="EENHEDEN"
-                           [required]="!nieuweTransactie.EENHEDEN && !nieuweTransactie.BEDRAG"
                            [(ngModel)]="nieuweTransactie.EENHEDEN">
                 </div>
                 <div class="col-12 col-md-3">
                     <label for="BEDRAG" class="form-label">Bedrag</label>
                     <input name="BEDRAG" type="number" class="form-control" id="BEDRAG"
-                           [required]="!nieuweTransactie.EENHEDEN && !nieuweTransactie.BEDRAG"
                            [(ngModel)]="nieuweTransactie.BEDRAG">
                 </div>
                 <div class="col-md-1">&nbsp;</div>
@@ -77,10 +75,7 @@
         <app-icon-button
                 iconNaam="fas Plus" btnColor="btn-primary"
                 tekst="Opslaan"
-                [disabled]="(!nieuweTransactie.EENHEDEN && !nieuweTransactie.BEDRAG) ||
-                                    !nieuweTransactie.OMSCHRIJVING ||
-                                    !nieuweTransactie.LID_ID ||
-                                    !nieuweTransactie.TYPE_ID"
+                [disabled]="!nieuweTransactie.OMSCHRIJVING || !nieuweTransactie.LID_ID || !nieuweTransactie.TYPE_ID"
                 [toonKlein]="false"
                 (btnClicked)="opslaan()">
         </app-icon-button>
