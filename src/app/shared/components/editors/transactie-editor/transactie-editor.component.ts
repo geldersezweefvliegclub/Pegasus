@@ -88,6 +88,10 @@ export class TransactieEditorComponent implements OnInit {
                 beschrijving = Math.abs(t.EENHEDEN) + " strippen is succesvol " + bijaf + "geboekt"
             }
 
+            if (beschrijving === "") {
+                beschrijving = "Geen mutatie, opmerking toegevoegd";
+            }
+
             this.success = {
                 titel: "Transactie",
                 beschrijving: beschrijving
