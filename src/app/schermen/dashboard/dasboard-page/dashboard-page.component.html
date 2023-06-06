@@ -62,7 +62,7 @@
                                   titel="Status"
                                   subtitel="Vliegstatus"
                                   [icon]="iconStatus">
-                    <app-status [VliegerID]="lidData.ID" *ngIf="lidData"></app-status>
+                    <app-status [Vlieger]="lidData" *ngIf="lidData"></app-status>
                 </app-pegasus-card>
             </div>
             <div class="col-12 col-sm-6 col-xl-3 mt-4 mt-sm-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
@@ -71,7 +71,7 @@
                                   titel="PVB"
                                   subtitel="Proef van bekwaamheid"
                                   [icon]="iconPVB">
-                    <app-pvb [VliegerID]="lidData.ID" *ngIf="lidData"></app-pvb>
+                    <app-pvb [Vlieger]="lidData" *ngIf="lidData"></app-pvb>
                 </app-pegasus-card>
             </div>
 
@@ -81,7 +81,7 @@
                                   titel="Recency"
                                   subtitel="Trainingsbarometer"
                                   [icon]="iconRecency">
-                    <app-recency [VliegerID]="lidData.ID" [naam]="lidData.NAAM" *ngIf="lidData"></app-recency>
+                    <app-recency [Vlieger]="lidData" [naam]="lidData.NAAM" *ngIf="lidData"></app-recency>
                 </app-pegasus-card>
             </div>
 
@@ -96,7 +96,7 @@
                             <fa-icon [icon]="iconExpand"></fa-icon>
                         </a>
                     </div>
-                    <app-diensten [VliegerID]="lidData.ID" *ngIf="lidData"></app-diensten>
+                    <app-diensten [Vlieger]="lidData" *ngIf="lidData"></app-diensten>
                 </app-pegasus-card>
             </div>
         </div>

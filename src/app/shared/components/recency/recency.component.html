@@ -2,38 +2,123 @@
 <app-success [success]="success"></app-success>
 
 <div *ngIf="recency">
-    <a aria-label="Recency in laatste 24 maanden" (click)="openRecencyPopup()" class="recencyGrafiek">
-        <div class="d-flex flex-column  groen" *ngIf="recency.STATUS_BAROMETER == 'groen'">
-            <p class="niveau">Groene zone</p>
-            <p class="currency">{{recency.STARTS_BAROMETER}} starts en {{recency.UREN_BAROMETER}} uur</p>
-            <p class="nivTekst">Recente vliegervaring is op orde</p>
-        </div>
-        <div class="d-flex flex-column  geel" *ngIf="recency.STATUS_BAROMETER == 'geel'">
-            <p class="niveau">Gele zone</p>
-            <p class="currency">{{recency.STARTS_BAROMETER}} starts en {{recency.UREN_BAROMETER}} uur</p>
-            <p class="nivTekst">Meer oefening kan geen kwaad</p>
-        </div>
-        <div class="d-flex flex-column rood" *ngIf="recency.STATUS_BAROMETER == 'rood'">
-            <p class="niveau">Rode zone</p>
-            <p class="currency">{{recency.STARTS_BAROMETER}} starts en {{recency.UREN_BAROMETER}} uur</p>
-            <p class="nivTekst">Onvoldoende recente ervaring</p>
-        </div>
-    </a>
-    <div>
-        <p class="titel">Laatste 3 maanden</p>
-        <p class="beschrijving">{{recency.STARTS_DRIE_MND}} starts en {{recency.UREN_DRIE_MND}} uur</p>
+    <div *ngIf="Vlieger && Vlieger.STATUSTYPE_ID === 1903">
+        <p *ngIf="!toonEASA" class="easa" (click)="toonEASA = !toonEASA" [ngClass]="{'geenGeldigBrevet': geenGeldigBrevet() }">EASA</p>
+        <p *ngIf="toonEASA" class="easa" (click)="toonEASA = !toonEASA">Barometer</p>
     </div>
-    <div>
-        <p class="titel">Dit jaar</p>
-        <p class="beschrijving">{{recency.STARTS_DIT_JAAR}} starts en {{recency.UREN_DIT_JAAR}} uur</p>
+    <div *ngIf="!toonEASA">
+        <a aria-label="Recency in laatste 24 maanden" (click)="openRecencyPopup()" class="recencyGrafiek">
+            <div class="d-flex flex-column  groen" *ngIf="recency.STATUS_BAROMETER === 'groen'">
+                <p class="niveau">Groene zone</p>
+                <p class="currency">{{recency.STARTS_BAROMETER}} starts en {{recency.UREN_BAROMETER}} uur</p>
+                <p class="nivTekst">Recente vliegervaring is op orde</p>
+            </div>
+            <div class="d-flex flex-column  geel" *ngIf="recency.STATUS_BAROMETER === 'geel'">
+                <p class="niveau">Gele zone</p>
+                <p class="currency">{{recency.STARTS_BAROMETER}} starts en {{recency.UREN_BAROMETER}} uur</p>
+                <p class="nivTekst">Meer oefening kan geen kwaad</p>
+            </div>
+            <div class="d-flex flex-column rood" *ngIf="recency.STATUS_BAROMETER === 'rood'">
+                <p class="niveau">Rode zone</p>
+                <p class="currency">{{recency.STARTS_BAROMETER}} starts en {{recency.UREN_BAROMETER}} uur</p>
+                <p class="nivTekst">Onvoldoende recente ervaring</p>
+            </div>
+        </a>
+        <div>
+            <p class="titel">Laatste 3 maanden</p>
+            <p class="beschrijving">{{recency.STARTS_DRIE_MND}} starts en {{recency.UREN_DRIE_MND}} uur</p>
+        </div>
+        <div>
+            <p class="titel">Dit jaar</p>
+            <p class="beschrijving">{{recency.STARTS_DIT_JAAR}} starts en {{recency.UREN_DIT_JAAR}} uur</p>
+        </div>
+        <div>
+            <p class="titel">Vorig jaar</p>
+            <p class="beschrijving">{{recency.STARTS_VORIG_JAAR}} starts en {{recency.UREN_VORIG_JAAR}} uur</p>
+        </div>
+        <div *ngIf="recency.STARTS_INSTRUCTIE >= 0" (click)="openInstructiePopup()" class="recencyGrafiek">
+            <p class="titel">Instructie laatste 3 jaar</p>
+            <p class="beschrijving">{{recency.STARTS_INSTRUCTIE}} starts en {{recency.UREN_INSTRUCTIE}} uur</p>
+        </div>
     </div>
-    <div>
-        <p class="titel">Vorig jaar</p>
-        <p class="beschrijving">{{recency.STARTS_VORIG_JAAR}} starts en {{recency.UREN_VORIG_JAAR}} uur</p>
-    </div>
-    <div *ngIf="recency.STARTS_INSTRUCTIE >= 0" (click)="openInstructiePopup()" class="recencyGrafiek">
-        <p class="titel">Instructie laatste 3 jaar</p>
-        <p class="beschrijving">{{recency.STARTS_INSTRUCTIE}} starts en {{recency.UREN_INSTRUCTIE}} uur</p>
+
+    <div *ngIf="toonEASA">
+        <div>
+            <p class="titelOpenPopup" (click)="openStartPopup()">Laatste 24 maanden</p>
+
+            <table>
+                <tr>
+                    <td class="w-100">
+                        <p class="beschrijving">{{recency.STARTS_24_MND}} starts en {{recency.UREN_24_MND}} uur</p>
+                    </td>
+                    <td>
+                        <fa-icon *ngIf="brevet.aantal" class="checkIcon" [icon]="checkIcon"></fa-icon>
+                        <fa-icon *ngIf="!brevet.aantal"class="declineIcon" [icon]="declineIcon"></fa-icon>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <ul class="listHeader">Startmethode</ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="w-100">
+                        <li class="beschrijving">{{recency.LIERSTARTS}} lierstarts</li>
+                    </td>
+                    <td>
+                        <fa-icon *ngIf="brevet.lierstarts === 1" class="checkIcon" [icon]="checkIcon"></fa-icon>
+                        <fa-icon *ngIf="brevet.lierstarts === 0" class="declineIcon" [icon]="declineIcon"></fa-icon>
+                    </td>
+                </tr>
+                <tr *ngIf="brevet.sleepstart !== -1">
+                    <td class="w-100">
+                        <li class="beschrijving">{{recency.SLEEPSTARTS}} sleepstarts</li>
+                    </td>
+                    <td>
+                        <fa-icon *ngIf="brevet.sleepstart === 1" class="checkIcon" [icon]="checkIcon"></fa-icon>
+                        <fa-icon *ngIf="brevet.sleepstart === 0" class="declineIcon" [icon]="declineIcon"></fa-icon>
+                    </td>
+                </tr>
+                <tr *ngIf="brevet.zelfstarts !== -1">
+                    <td class="w-100">
+                        <li class="beschrijving">{{recency.ZELFSTARTS}} zelfstarts</li>
+                    </td>
+                    <td>
+                        <fa-icon *ngIf="brevet.zelfstarts === 1" class="checkIcon" [icon]="checkIcon"></fa-icon>
+                        <fa-icon *ngIf="brevet.zelfstarts === 0" class="declineIcon" [icon]="declineIcon"></fa-icon>
+                    </td>
+                </tr>
+                <tr *ngIf="brevet.tmgstarts > 0">
+                    <td class="w-100">
+                        <li class="beschrijving">{{recency.TMGSTARTS}} TMG starts</li>
+                    </td>
+                    <td>
+                        <fa-icon *ngIf="brevet.tmgstarts === 1" class="checkIcon" [icon]="checkIcon"></fa-icon>
+                        <fa-icon *ngIf="brevet.tmgstarts === 0" class="declineIcon" [icon]="declineIcon"></fa-icon>
+                    </td>
+                </tr>
+
+                <tr *ngIf="brevet.pax !== -1">
+                    <td class="w-100">
+                        <div class="beschrijving">Passagiers vliegen</div>
+                    </td>
+                    <td>
+                        <fa-icon *ngIf="brevet.pax === 1"  class="checkIcon" [icon]="checkIcon"></fa-icon>
+                        <fa-icon *ngIf="brevet.pax === 0" class="declineIcon" [icon]="declineIcon"></fa-icon>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="w-100">
+                        <div class="beschrijving">Medical</div>
+                    </td>
+                    <td>
+                        <fa-icon *ngIf="brevet.medical"  class="checkIcon" [icon]="checkIcon"></fa-icon>
+                        <fa-icon *ngIf="!brevet.medical" class="declineIcon" [icon]="declineIcon"></fa-icon>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -41,6 +126,7 @@
     <app-loader></app-loader>
 </div>
 
-<app-recency-grafiek [VliegerID]="VliegerID" [naam]=""></app-recency-grafiek>
-<app-instructie-grafiek [VliegerID]="VliegerID" [naam]=""></app-instructie-grafiek>
+<app-recency-grafiek [VliegerID]="Vlieger.ID!" [naam]=""></app-recency-grafiek>
+<app-instructie-grafiek [VliegerID]="Vlieger.ID!" [naam]=""></app-instructie-grafiek>
+<app-start-grafiek [VliegerID]="Vlieger.ID!" [naam]=""></app-start-grafiek>
 

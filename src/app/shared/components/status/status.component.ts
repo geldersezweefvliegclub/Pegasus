@@ -1,7 +1,7 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
-import {HeliosBehaaldeProgressieDataset, HeliosCompetentiesDataset,} from "../../../types/Helios";
+import {HeliosBehaaldeProgressieDataset, HeliosCompetentiesDataset, HeliosLid,} from "../../../types/Helios";
 import {ErrorMessage, HeliosActie, SuccessMessage} from "../../../types/Utils";
 import {SharedService} from "../../../services/shared/shared.service";
 import {LoginService} from "../../../services/apiservice/login.service";
@@ -17,7 +17,7 @@ import {ProgressieEditorComponent} from "../editors/progressie-editor/progressie
 })
 
 export class StatusComponent implements OnInit, OnChanges, OnDestroy {
-    @Input() VliegerID: number;
+    @Input() Vlieger: HeliosLid;
     @ViewChild(ProgressieEditorComponent) private editor: ProgressieEditorComponent;
 
     cheks: any;
@@ -69,6 +69,11 @@ export class StatusComponent implements OnInit, OnChanges, OnDestroy {
         if (!this.cheks) // er zijn nog geen Checks
             return;
 
+        // Als vlieger niet bekend is, kunnen we niets ophalen
+        if (!this.Vlieger) {
+            return;
+        }
+
         // maak CSV string met de competentie IDs van de checks en overig
         let comptentieIDs = "";
 
@@ -83,7 +88,7 @@ export class StatusComponent implements OnInit, OnChanges, OnDestroy {
         }).join(',');
 
         this.isLoading = true;
-        this.progressieService.getProgressiesLid(this.VliegerID, comptentieIDs).then((p) => {
+        this.progressieService.getProgressiesLid(this.Vlieger.ID!, comptentieIDs).then((p) => {
             this.isLoading = false;
             this.gehaaldeProgressie = p
         }).catch(e => {
@@ -105,7 +110,7 @@ export class StatusComponent implements OnInit, OnChanges, OnDestroy {
     CheckDisabled(comptentieID: number): boolean {
         const ui = this.loginService.userInfo?.Userinfo;
 
-        if (this.VliegerID == this.loginService.userInfo?.LidData?.ID) {
+        if (this.Vlieger.ID == this.loginService.userInfo?.LidData?.ID) {
             return true;    // niet voor jezelf vinkjes zetten
         }
         if (!ui?.isBeheerder && !ui?.isInstructeur && !ui?.isCIMT) {
@@ -121,7 +126,7 @@ export class StatusComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.hasOwnProperty("VliegerID")) {
+        if (changes.hasOwnProperty("Vlieger")) {
             this.ophalen()
         }
     }

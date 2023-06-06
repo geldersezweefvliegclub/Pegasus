@@ -1,3 +1,12 @@
+.easa {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #0e6ffd;
+}
+
 .rood {
   background-color: #dc3545;
   text-align: center;
@@ -41,6 +50,15 @@
   margin-top: 5px;
 }
 
+.titelOpenPopup {
+  font-weight: bold;
+  margin-bottom: 0;
+  margin-top: 5px;
+  text-decoration: underline;
+  color: #0e6ffd;
+  cursor: pointer;
+}
+
 .beschrijving {
   margin-top: 0;
   margin-bottom: 2px;
@@ -58,4 +76,27 @@
   font-size: 20px;
   color: #e6ca87;
   z-index: 2;
+}
+
+.listHeader {
+  margin-left: 0;
+  margin-top: 8px;
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.checkIcon {
+  color: #09d109;
+}
+
+.declineIcon {
+  color: #dc3545;
+}
+
+.geenGeldigBrevet {
+  background-color: #dc3545;
+  color: white;
+  padding-right: 5px;
+  padding-left: 5px;
+  border-radius: 5px;
 }

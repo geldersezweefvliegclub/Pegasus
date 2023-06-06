@@ -78,6 +78,7 @@ import {ProgressieEditorComponent} from './components/editors/progressie-editor/
 import {VoortgangComponent} from './components/voortgang/voortgang.component';
 import { DocumentEditorComponent } from './components/editors/document-editor/document-editor.component';
 import { UitbetalenDdwvCrewEditorComponent } from './components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component';
+import { StartGrafiekComponent } from './components/recency/start-grafiek/start-grafiek.component';
 
 @NgModule({
     imports: [
@@ -165,6 +166,7 @@ import { UitbetalenDdwvCrewEditorComponent } from './components/editors/uitbetal
         VoortgangComponent,
         DocumentEditorComponent,
         UitbetalenDdwvCrewEditorComponent,
+        StartGrafiekComponent,
     ],
     exports: [
         LidEditorComponent,

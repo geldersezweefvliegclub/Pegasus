@@ -1,7 +1,7 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
-import {HeliosBehaaldeProgressieDataset, HeliosCompetentiesDataset} from "../../../types/Helios";
+import {HeliosBehaaldeProgressieDataset, HeliosCompetentiesDataset, HeliosLid} from "../../../types/Helios";
 import {ErrorMessage, HeliosActie, SuccessMessage} from "../../../types/Utils";
 import {SharedService} from "../../../services/shared/shared.service";
 import {LoginService} from "../../../services/apiservice/login.service";
@@ -16,7 +16,7 @@ import {ProgressieEditorComponent} from "../editors/progressie-editor/progressie
     styleUrls: ['./pvb.component.scss']
 })
 export class PvbComponent implements OnInit, OnChanges, OnDestroy {
-    @Input() VliegerID: number;
+    @Input() Vlieger: HeliosLid;
     @ViewChild(ProgressieEditorComponent) private editor: ProgressieEditorComponent;
 
     PVBs: any[];
@@ -63,7 +63,7 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.hasOwnProperty("VliegerID")) {
+        if (changes.hasOwnProperty("Vlieger")) {
             this.ophalen()
         }
     }
@@ -72,13 +72,18 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
         if (!this.PVBs) // er zijn nog geen PVB geconfigureerd
             return;
 
+        // Als vlieger niet bekend is, kunnen we niets ophalen
+        if (!this.Vlieger) {
+            return;
+        }
+
         // maak CSV string met de competentie IDs van de PVBs
         const comptentieIDs = this.PVBs.map((p: any) => {
             return p.Lokaal + "," + p.Overland;
         }).join(',');
 
         this.isLoading = true;
-        this.progressieService.getProgressiesLid(this.VliegerID, comptentieIDs).then((p) => {
+        this.progressieService.getProgressiesLid(this.Vlieger.ID!, comptentieIDs).then((p) => {
             this.gehaaldeProgressie = p;
             this.isLoading = false;
         }).catch(e => {
@@ -101,7 +106,7 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
     CheckDisabled(comptentieID: number): boolean {
         const ui = this.loginService.userInfo?.Userinfo;
 
-        if (this.VliegerID == this.loginService.userInfo?.LidData?.ID) {
+        if (this.Vlieger.ID == this.loginService.userInfo?.LidData?.ID) {
             return true;    // niet voor jezelf vinkjes zetten
         }
 

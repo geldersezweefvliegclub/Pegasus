@@ -3,7 +3,7 @@ import {DienstenService} from "../../../services/apiservice/diensten.service";
 import {Subscription} from "rxjs";
 import {DateTime} from "luxon";
 import {SharedService} from "../../../services/shared/shared.service";
-import {HeliosDienstenDataset} from "../../../types/Helios";
+import {HeliosDienstenDataset, HeliosLid} from "../../../types/Helios";
 import {DagRoosterComponent} from "../dag-rooster/dag-rooster.component";
 import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
 import {LoginService} from "../../../services/apiservice/login.service";
@@ -14,7 +14,7 @@ import {LoginService} from "../../../services/apiservice/login.service";
     styleUrls: ['./diensten.component.scss']
 })
 export class DienstenComponent implements OnInit, OnChanges {
-    @Input() VliegerID: number;
+    @Input() Vlieger: HeliosLid;
     @Input() UitgebreideWeergave: boolean = false;
 
     @ViewChild(DagRoosterComponent) popup: DagRoosterComponent;
@@ -57,6 +57,11 @@ export class DienstenComponent implements OnInit, OnChanges {
             return;
         }
 
+        // Als vlieger niet bekend is, kunnen we niets ophalen
+        if (!this.Vlieger) {
+            return;
+        }
+
         if (this.datum) {
             let startMaand: number = this.datum.month; // laat alles vanaf gekozen maand zien
             let startDag: number = this.datum.day; // laat alles vanaf gekozen maand zien
@@ -79,7 +84,7 @@ export class DienstenComponent implements OnInit, OnChanges {
             })
 
             this.isLoading = true;
-            this.dienstenService.getDiensten(startDatum, eindDatum, undefined, this.VliegerID).then((d) => {
+            this.dienstenService.getDiensten(startDatum, eindDatum, undefined, this.Vlieger.ID!).then((d) => {
                 this.isLoading = false;
                 if ((this.UitgebreideWeergave) || d.length < 5) {
                     this.diensten = d;

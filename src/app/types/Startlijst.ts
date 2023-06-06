@@ -431,161 +431,373 @@ export interface paths {
 export interface components {
   schemas: {
     oper_startlijst_in: {
-      /** Database ID van de vlucht */
+      /**
+       * Format: int32
+       * @description Database ID van de vlucht
+       * @example 12871
+       */
       ID?: number;
-      /** Datum van de start */
+      /**
+       * Format: date
+       * @description Datum van de start
+       * @example 2017-07-21
+       */
       DATUM?: string;
-      /** Dagnummer, start iedere dag op 1 */
+      /**
+       * Format: int32
+       * @description Dagnummer, start iedere dag op 1
+       * @example 4
+       */
       DAGNUMMER?: number;
-      /** Het vliegtuig ID. Verwijzing naar vliegtuigen tabel */
+      /**
+       * @description Het vliegtuig ID. Verwijzing naar vliegtuigen tabel
+       * @example 215
+       */
       VLIEGTUIG_ID?: number;
-      /** Starttijd (hh:mm:ss) */
+      /**
+       * @description Starttijd (hh:mm:ss)
+       * @example 12:32:44
+       */
       STARTTIJD?: string;
-      /** Starttijd (hh:mm:ss) */
+      /**
+       * @description Starttijd (hh:mm:ss)
+       * @example 12:32:15
+       */
       LANDINGSTIJD?: string;
-      /** De manier van starten (lier / sleep / zelfstart) Verwijzing naar type tabel */
+      /**
+       * @description De manier van starten (lier / sleep / zelfstart) Verwijzing naar type tabel
+       * @example 506
+       */
       STARTMETHODE_ID?: number;
-      /** De vlieger van deze vlucht. Verwijzing naar leden tabel */
+      /**
+       * @description De vlieger van deze vlucht. Verwijzing naar leden tabel
+       * @example 10825
+       */
       VLIEGER_ID?: number;
-      /** Wie zit er nog meer bij. Verwijzing naar leden tabel */
+      /**
+       * @description Wie zit er nog meer bij. Verwijzing naar leden tabel
+       * @example 10412
+       */
       INZITTENDE_ID?: number;
-      /** De naam van de vlieger. Nodig indien de vlieger niet in de leden tabel staat */
+      /**
+       * @description De naam van de vlieger. Nodig indien de vlieger niet in de leden tabel staat
+       * @example Peter Panda
+       */
       VLIEGERNAAM?: string;
-      /** De naam van de vlieger. Nodig indien de vlieger niet in de leden tabel staat */
+      /**
+       * @description De naam van de vlieger. Nodig indien de vlieger niet in de leden tabel staat
+       * @example Wally Windhond
+       */
       INZITTENDENAAM?: string;
-      /** Het sleepvliegtuig ID. Verwijzing naar vliegtuigen tabel */
+      /**
+       * @description Het sleepvliegtuig ID. Verwijzing naar vliegtuigen tabel
+       * @example 215
+       */
       SLEEPKIST_ID?: number;
-      /** Tot welke hoogte (meters) is er gesleept */
+      /**
+       * @description Tot welke hoogte (meters) is er gesleept
+       * @example 400
+       */
       SLEEP_HOOGTE?: number;
-      /** Op welk veld is er gestart. Verwijzing naar type tabel */
+      /**
+       * @description Op welk veld is er gestart. Verwijzing naar type tabel
+       * @example 901
+       */
       VELD_ID?: number;
-      /** Start strip. Verwijzing naar type tabel */
+      /**
+       * @description Start strip. Verwijzing naar type tabel
+       * @example 102
+       */
       BAAN_ID?: number;
-      /** Extra text om opmerkingen toe te voegen */
+      /**
+       * @description Extra text om opmerkingen toe te voegen
+       * @example Buitenlanding
+       */
       OPMERKINGEN?: string;
-      /** Extra text om ID van extern systeem op te slaan */
+      /**
+       * @description Extra text om ID van extern systeem op te slaan
+       * @example 2012-06-03:TQ:219
+       */
       EXTERNAL_ID?: string;
-      /** Is dit een passagiers start */
+      /**
+       * @description Is dit een passagiers start
+       * @example 0
+       */
       PAX?: boolean;
-      /** Is dit een trainingsvlucht start */
+      /**
+       * @description Is dit een trainingsvlucht start
+       * @example 0
+       */
       CHECKSTART?: boolean;
-      /** Is dit een instructie vlucht */
+      /**
+       * @description Is dit een instructie vlucht
+       * @example 0
+       */
       INSTRUCTIEVLUCHT?: boolean;
     };
     oper_startlijst: components["schemas"]["oper_startlijst_in"] & {
-      /** Is dit record gemarkeerd als verwijderd? */
+      /**
+       * @description Is dit record gemarkeerd als verwijderd?
+       * @example 0
+       */
       VERWIJDERD?: boolean;
-      /** Tijdstempel van laaste aanpassing in de database */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database
+       * @example 2006-01-05 22:11:43
+       */
       LAATSTE_AANPASSING?: string;
     };
     view_startlijst_dataset: components["schemas"]["oper_startlijst"] & {
-      /** Registratie van het vliegtuig waarop gevlogen is */
+      /**
+       * @description Registratie van het vliegtuig waarop gevlogen is
+       * @example D-KLUU
+       */
       REGISTRATIE?: string;
-      /** Callsign van het vliegtuig waarop gevlogen is */
+      /**
+       * @description Callsign van het vliegtuig waarop gevlogen is
+       * @example 7U
+       */
       CALLSIGN?: string;
-      /** Is het een club vliegtuig? */
+      /**
+       * @description Is het een club vliegtuig?
+       * @example 1
+       */
       CLUBKIST?: boolean;
-      /** Combinatie van registratie en callsign van het sleepvliegtuig */
+      /**
+       * @description Combinatie van registratie en callsign van het sleepvliegtuig
+       * @example PH-ELT (ELT)
+       */
       SLEEPKIST?: string;
-      /** Combinatie van registratie en callsign van het vliegtuig waarop gevlogen is */
+      /**
+       * @description Combinatie van registratie en callsign van het vliegtuig waarop gevlogen is
+       * @example D-KLUU (7U)
+       */
       REG_CALL?: string;
-      /** Hoe lang is er gevlogen. Indien landingstijd niet is ingevuld, op de dag zelf vliegtijd to nu toe, op alle andere dagen null */
+      /**
+       * @description Hoe lang is er gevlogen. Indien landingstijd niet is ingevuld, op de dag zelf vliegtijd to nu toe, op alle andere dagen null
+       * @example 02:11
+       */
       DUUR?: string;
-      /** De naam van het lid zoals dat in ref_leden staat */
+      /**
+       * @description De naam van het lid zoals dat in ref_leden staat
+       * @example Lowieke de Vos
+       */
       VLIEGERNAAM_LID?: string;
-      /** De naam van de inzittende zoals dat in ref_leden staat */
+      /**
+       * @description De naam van de inzittende zoals dat in ref_leden staat
+       * @example Momfer de Mol
+       */
       INZITTENDENAAM_LID?: string;
-      /** Vliegtuig type */
+      /**
+       * @description Vliegtuig type
+       * @example LS8
+       */
       VLIEGTUIGTYPE?: string;
-      /** Vliegtuig type ID */
+      /**
+       * @description Vliegtuig type ID
+       * @example 201
+       */
       VLIEGTUIG_TYPE_ID?: number;
-      /** Het lidtype van het lid zoals dat in ref_leden staat */
+      /**
+       * @description Het lidtype van het lid zoals dat in ref_leden staat
+       * @example 625
+       */
       VLIEGER_LIDTYPE_ID?: number;
-      /** Het lidtype van de inzittende zoals dat in ref_leden staat */
+      /**
+       * @description Het lidtype van de inzittende zoals dat in ref_leden staat
+       * @example 601
+       */
       INZITTENDE_LIDTYPE_ID?: number;
-      /** Is deze vlucht op een DDWV dag uitgevoerd */
+      /**
+       * @description Is deze vlucht op een DDWV dag uitgevoerd
+       * @example 0
+       */
       DDWV?: boolean;
-      /** De manier van de start */
+      /**
+       * @description De manier van de start
+       * @example Lierstart GeZC
+       */
       STARTMETHODE?: string;
-      /** Naam van het vliegveld waarop gestart is */
+      /**
+       * @description Naam van het vliegveld waarop gestart is
+       * @example Terlet
+       */
       VELD?: string;
-      /** Startstrip */
+      /**
+       * @description Startstrip
+       * @example 22R
+       */
       BAAN?: string;
     };
     view_startlijst: {
-      /** Aantal records dat voldoet aan de criteria in de database */
+      /**
+       * Format: int32
+       * @description Aantal records dat voldoet aan de criteria in de database
+       * @example 287
+       */
       totaal?: number;
-      /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
+       * @example 2009-12-02 10:19:00
+       */
       laatste_aanpassing?: string;
-      /** hash van de dataset */
+      /**
+       * @description hash van de dataset
+       * @example 4dccb3f
+       */
       hash?: string;
-      /** De dataset met records */
+      /** @description De dataset met records */
       dataset?: components["schemas"]["view_startlijst_dataset"][];
     };
     logboek: {
-      /** Aantal records dat voldoet aan de criteria in de database */
+      /**
+       * Format: int32
+       * @description Aantal records dat voldoet aan de criteria in de database
+       * @example 12
+       */
       totaal?: number;
-      /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
+       * @example 2020-06-01 19:59:00
+       */
       laatste_aanpassing?: string;
-      /** hash van de dataset */
+      /**
+       * @description hash van de dataset
+       * @example c0cabaf
+       */
       hash?: string;
-      /** De dataset met records */
+      /** @description De dataset met records */
       dataset?: components["schemas"]["logboek_dataset"][];
     };
     logboek_dataset: {
-      /** Database ID van de vlucht */
+      /**
+       * Format: int32
+       * @description Database ID van de vlucht
+       * @example 3570
+       */
       ID?: number;
-      /** Datum van de start */
+      /**
+       * Format: date
+       * @description Datum van de start
+       * @example 2012-01-24
+       */
       DATUM?: string;
-      /** Combinatie van registratie en callsign van het vliegtuig waarop gevlogen is */
+      /**
+       * @description Combinatie van registratie en callsign van het vliegtuig waarop gevlogen is
+       * @example PH-1292 (E6)
+       */
       REG_CALL?: string;
-      /** Het vliegtuig ID. Verwijzing naar vliegtuigen tabel */
+      /**
+       * @description Het vliegtuig ID. Verwijzing naar vliegtuigen tabel
+       * @example 215
+       */
       VLIEGTUIG_ID?: number;
-      /** Starttijd (hh:mm:ss) */
+      /**
+       * @description Starttijd (hh:mm:ss)
+       * @example 12:32:44
+       */
       STARTTIJD?: string;
-      /** Starttijd (hh:mm:ss) */
+      /**
+       * @description Starttijd (hh:mm:ss)
+       * @example 12:32:15
+       */
       LANDINGSTIJD?: string;
-      /** Hoe lang is er gevlogen. Indien landingstijd niet is ingevuld, op de dag zelf vliegtijd to nu toe, op alle andere dagen null */
+      /**
+       * @description Hoe lang is er gevlogen. Indien landingstijd niet is ingevuld, op de dag zelf vliegtijd to nu toe, op alle andere dagen null
+       * @example 02:11
+       */
       DUUR?: string;
-      /** De naam van de vlieger */
+      /**
+       * @description De naam van de vlieger
+       * @example Lowieke de Vos
+       */
       VLIEGERNAAM?: string;
-      /** De naam van de inzittende */
+      /**
+       * @description De naam van de inzittende
+       * @example Momfer de Mol
+       */
       INZITTENDENAAM?: string;
-      /** De vlieger van deze vlucht. Verwijzing naar leden tabel. LET OP; kan verwijzing zijn naar zusterclub of vergelijkbaar, de naam is dan handmatig ingevoerd. */
+      /**
+       * @description De vlieger van deze vlucht. Verwijzing naar leden tabel. LET OP; kan verwijzing zijn naar zusterclub of vergelijkbaar, de naam is dan handmatig ingevoerd.
+       * @example 10825
+       */
       VLIEGER_ID?: number;
-      /** Wie zit er nog meer bij. Verwijzing naar leden tabel, kan null zijn als inzittende als tekst is ingevoerd */
+      /**
+       * @description Wie zit er nog meer bij. Verwijzing naar leden tabel, kan null zijn als inzittende als tekst is ingevoerd
+       * @example 10412
+       */
       INZITTENDE_ID?: number;
-      /** De manier van de start */
+      /**
+       * @description De manier van de start
+       * @example Lierstart GeZC
+       */
       STARTMETHODE?: string;
-      /** Vliegveld waar gestart is */
+      /**
+       * @description Vliegveld waar gestart is
+       * @example Terlet
+       */
       VELD?: string;
-      /** Start strip */
+      /**
+       * @description Start strip
+       * @example 22R
+       */
       BAAN?: string;
-      /** Vliegtuig type */
+      /**
+       * @description Vliegtuig type
+       * @example LS8
+       */
       VLIEGTUIGTYPE?: string;
-      /** Is dit een pax start */
+      /**
+       * @description Is dit een pax start
+       * @example false
+       */
       PAX?: boolean;
-      /** Is dit een trainingsvlucht start */
+      /**
+       * @description Is dit een trainingsvlucht start
+       * @example false
+       */
       CHECKSTART?: boolean;
-      /** Is dit een instructie vlucht */
+      /**
+       * @description Is dit een instructie vlucht
+       * @example true
+       */
       INSTRUCTIEVLUCHT?: boolean;
-      /** De opmerkingen die ingevoerd zijn */
+      /**
+       * @description De opmerkingen die ingevoerd zijn
+       * @example Buitenlanding
+       */
       OPMERKINGEN?: string;
     };
     logboek_totalen: {
-      /** Aantal records dat voldoet aan de criteria in de database */
+      /**
+       * Format: int32
+       * @description Aantal records dat voldoet aan de criteria in de database
+       * @example 12
+       */
       totaal?: number;
-      /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
+       * @example 2020-06-01 19:59:00
+       */
       laatste_aanpassing?: string;
-      /** hash van de dataset */
+      /**
+       * @description hash van de dataset
+       * @example c0cabaf
+       */
       hash?: string;
-      /** Aantal van startmethodes */
+      /** @description Aantal van startmethodes */
       starts?: components["schemas"]["logboek_totalen_start"][];
-      /** Aantal starts en vliegtijd per vliegtuig */
+      /** @description Aantal starts en vliegtijd per vliegtuig */
       vliegtuigen?: components["schemas"]["logboek_totalen_vliegtuigen"][];
-      /** Totalen van het jaar */
+      /** @description Totalen van het jaar */
       jaar?: {
+        /** Format: int32 */
         STARTS?: number;
+        /** Format: int32 */
         INSTRUCTIE_STARTS?: number;
         INSTRUCTIE_UREN?: string;
         VLIEGTIJD?: string;
@@ -593,97 +805,230 @@ export interface components {
     };
     logboek_totalen_start: {
       METHODE?: string;
+      /** Format: int32 */
       AANTAL?: number;
     };
     logboek_totalen_vliegtuigen: {
       REG_CALL?: string;
+      /** Format: int32 */
       STARTS?: number;
       VLIEGTIJD?: string;
     };
     vliegtuig_logboek: {
-      /** Aantal records dat voldoet aan de criteria in de database */
+      /**
+       * Format: int32
+       * @description Aantal records dat voldoet aan de criteria in de database
+       * @example 12
+       */
       totaal?: number;
-      /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
+       * @example 2012-01-17 09:24:16
+       */
       laatste_aanpassing?: string;
-      /** hash van de dataset */
+      /**
+       * @description hash van de dataset
+       * @example c0cabaf
+       */
       hash?: string;
-      /** De dataset met records */
+      /** @description De dataset met records */
       dataset?: components["schemas"]["vliegtuig_logboek_dataset"][];
     };
     vliegtuig_logboek_dataset: {
-      /** Datum */
+      /**
+       * Format: date
+       * @description Datum
+       * @example 2012-01-24
+       */
       DATUM?: string;
-      /** Aantal vluchten van deze dag */
+      /**
+       * @description Aantal vluchten van deze dag
+       * @example 4
+       */
       VLUCHTEN?: number;
-      /** Aantal sleepstart op deze dag voor dit vliegtuig */
+      /**
+       * @description Aantal sleepstart op deze dag voor dit vliegtuig
+       * @example 4
+       */
       LIERSTARTS?: number;
-      /** Aantal sleepstart op deze dag voor dit vliegtuig */
+      /**
+       * @description Aantal sleepstart op deze dag voor dit vliegtuig
+       * @example 4
+       */
       SLEEPSTARTS?: number;
-      /** Starttijd (hh:mm) */
+      /**
+       * @description Starttijd (hh:mm)
+       * @example 12:32
+       */
       VLIEGTIJD?: string;
-      /** Combinatie van registratie en callsign van het vliegtuig waarop gevlogen is */
+      /**
+       * @description Combinatie van registratie en callsign van het vliegtuig waarop gevlogen is
+       * @example PH-1292 (E6)
+       */
       REG_CALL?: string;
     };
     vliegtuig_logboek_totalen: {
-      /** Aantal records dat voldoet aan de criteria in de database */
+      /**
+       * Format: int32
+       * @description Aantal records dat voldoet aan de criteria in de database
+       * @example 287
+       */
       totaal?: number;
-      /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
+       * @example 2009-12-02 10:19:00
+       */
       laatste_aanpassing?: string;
-      /** hash van de dataset */
+      /**
+       * @description hash van de dataset
+       * @example 4dccb3f
+       */
       hash?: string;
       totalen?: {
-        /** Aantal vluchten in dit jaar */
+        /**
+         * @description Aantal vluchten in dit jaar
+         * @example 528
+         */
         VLUCHTEN?: number;
-        /** Aantal lierstarts voor dit jaar voor dit vliegtuig */
+        /**
+         * @description Aantal lierstarts voor dit jaar voor dit vliegtuig
+         * @example 466
+         */
         LIERSTARTS?: number;
-        /** Aantal sleepstarts voor dit jaarvoor dit vliegtuig */
+        /**
+         * @description Aantal sleepstarts voor dit jaarvoor dit vliegtuig
+         * @example 62
+         */
         SLEEPSTARTS?: number;
-        /** Starttijd (hhh:mm) */
+        /**
+         * @description Starttijd (hhh:mm)
+         * @example 807:52
+         */
         VLIEGTIJD?: string;
       };
       dataset?: {
-        /** Maand */
+        /**
+         * Format: integer
+         * @description Maand
+         * @example 10
+         */
         MAAND?: string;
-        /** Aantal vluchten in deze maand */
+        /**
+         * @description Aantal vluchten in deze maand
+         * @example 58
+         */
         VLUCHTEN?: number;
-        /** Aantal lierstarts voor deze maand voor dit vliegtuig */
+        /**
+         * @description Aantal lierstarts voor deze maand voor dit vliegtuig
+         * @example 12
+         */
         LIERSTARTS?: number;
-        /** Aantal sleepstarts voor deze maand voor dit vliegtuig */
+        /**
+         * @description Aantal sleepstarts voor deze maand voor dit vliegtuig
+         * @example 46
+         */
         SLEEPSTARTS?: number;
-        /** Starttijd (hh:mm) */
+        /**
+         * @description Starttijd (hh:mm)
+         * @example 12:32
+         */
         VLIEGTIJD?: string;
-        /** Combinatie van registratie en callsign van het vliegtuig waarop gevlogen is */
+        /**
+         * @description Combinatie van registratie en callsign van het vliegtuig waarop gevlogen is
+         * @example PH-1292 (E6)
+         */
         REG_CALL?: string;
       }[];
     };
     recency: {
+      /** @example 2 */
       STARTS_DRIE_MND?: number;
+      /** @example 85 */
+      STARTS_24_MND?: number;
+      /** @example 36 */
       STARTS_VORIG_JAAR?: number;
+      /** @example 2 */
       STARTS_DIT_JAAR?: number;
-      /** aantal instructie starts in laatste 3 jaar (alleen voor instructeurs) */
+      /**
+       * @description aantal instructie starts in laatste 3 jaar (alleen voor instructeurs)
+       * @example 12
+       */
       STARTS_INSTRUCTIE?: number;
+      /** @example 1:42 */
       UREN_DRIE_MND?: string;
+      /** @example 29:13 */
+      UREN_24_MND?: string;
+      /** @example 1:42 */
       UREN_VORIG_JAAR?: string;
+      /** @example 27:31 */
       UREN_DIT_JAAR?: string;
-      /** aantal instructie uren in laatste 3 jaar (alleen voor instructeurs) */
+      /**
+       * @description aantal instructie uren in laatste 3 jaar (alleen voor instructeurs)
+       * @example 78:31
+       */
       UREN_INSTRUCTIE?: string;
+      /** @example onbekend */
       STATUS_BAROMETER?: string;
-      /** 0-10 = rood, 10-20 = geel, > 20 = groen.  Geeft inzicht waarde in de status */
+      /**
+       * @description 0-10 = rood, 10-20 = geel, > 20 = groen.  Geeft inzicht waarde in de status
+       * @example 12.4
+       */
       WAARDE?: number;
+      /** @example 38 */
       STARTS_BAROMETER?: string;
+      /** @example 29:13 */
       UREN_BAROMETER?: string;
+      /**
+       * @description Aantal lierstarts in 24 maanden voor peildatum
+       * @example 36
+       */
+      LIERSTARTS?: number;
+      /**
+       * @description Aantal sleepstarts in 24 maanden voor peildatum
+       * @example 10
+       */
+      SLEEPSTARTS?: number;
+      /**
+       * @description Aantal zelfstarts in 24 maanden voor peildatum
+       * @example 8
+       */
+      ZELFSTARTS?: number;
+      /**
+       * @description Aantal TMG starts in 24 maanden voor peildatum
+       * @example 0
+       */
+      TMGSTARTS?: number;
     };
     vliegdagen: {
-      /** Aantal records dat voldoet aan de criteria in de database */
+      /**
+       * Format: int32
+       * @description Aantal records dat voldoet aan de criteria in de database
+       * @example 287
+       */
       totaal?: number;
-      /** Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria */
+      /**
+       * Format: date-time
+       * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
+       * @example 2009-12-02 10:19:00
+       */
       laatste_aanpassing?: string;
-      /** hash van de dataset */
+      /**
+       * @description hash van de dataset
+       * @example 4dccb3f
+       */
       hash?: string;
       dataset?: {
-        /** Datum van de start */
+        /**
+         * Format: date
+         * @description Datum van de start
+         * @example 2017-07-21
+         */
         DATUM?: string;
+        /** @example 2 */
         STARTS?: number;
+        /** @example 29:13 */
         VLIEGTIJD?: string;
       }[];
     };
@@ -691,3 +1036,5 @@ export interface components {
 }
 
 export interface operations {}
+
+export interface external {}
