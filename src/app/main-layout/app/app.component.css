@@ -3,11 +3,11 @@
 }
 
 .hoogte-desktop {
-    height: calc(100vh - 45px);
+    height: calc(100svh - 45px);
 }
 
 .hoogte-tablet {
-    height: calc(100vh - 50px);
+    height: calc(100svh - 50px);
 }
 
 .card {
@@ -35,3 +35,34 @@
     color:white;
     right: 50%;
 }
+
+.app-footer {
+    width: 100%;
+}
+
+.safe-area {
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* indien geinstalleerd als app, dan menu on top zetten */
+
+@media all and (display-mode: standalone) {
+    .hoogte-desktop {
+        height: calc(100lvh - 45px);
+    }
+
+    .hoogte-tablet {
+        height: calc(100lvh - 50px);
+    }
+
+    .app-footer {
+        position: fixed;
+        bottom: 10px;
+        height: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+    }
+}
+
+

@@ -7,7 +7,7 @@ import {HeliosConfigDDWV, HeliosLedenDataset} from "../../types/Helios";
     providedIn: 'root'
 })
 export class PegasusConfigService {
-    private configURL = '/assets/pegasus.config.json';
+    private configURL = './assets/pegasus.config.json';
     private pegasusConfig: IPegasusConfig;
 
     public readonly OCHTEND_DDI_TYPE_ID: number = 1800;

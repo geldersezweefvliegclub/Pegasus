@@ -13,7 +13,7 @@ Als DDWV deelnemen moet je vliegend lid zijn bij een aangesloten club. Neem cont
 Je kunt geen gebruik maken van DDWV, neem contact op met de DDWV beheerder
 </div>
 
-<main class="d-flex maxHoogte">
+<main class="d-flex maxHoogte safe-area">
     <div class="ps-0 d-none d-xl-block" *ngIf="isIngelogd">
         <app-navigation class="sticky-top"></app-navigation>
     </div>
@@ -23,6 +23,6 @@ Je kunt geen gebruik maken van DDWV, neem contact op met de DDWV beheerder
                 <router-outlet></router-outlet>
             </div>
         </div>
-        <app-footer *ngIf="isIngelogd"></app-footer>
+        <app-footer *ngIf="isIngelogd" class="app-footer"></app-footer>
     </div>
 </main>

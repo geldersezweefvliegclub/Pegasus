@@ -1,7 +1,7 @@
 import {Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {fas} from '@fortawesome/free-solid-svg-icons';
 import {far, IconDefinition} from '@fortawesome/free-regular-svg-icons';
-import {FlipProp} from '@fortawesome/fontawesome-svg-core';
+import {FlipProp, SizeProp} from '@fortawesome/fontawesome-svg-core';
 import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
 import {Subscription} from "rxjs";
 
@@ -17,6 +17,7 @@ export class IconButtonComponent implements OnInit, OnDestroy {
     @Input() disabled: boolean = false;
     @Input() toonKlein: boolean = true;
     @Input() flip: FlipProp;
+    @Input() size: SizeProp;
     @Input() stopPropagation: boolean = false;
     @Input() type: 'button' | 'submit' = 'button';
     @Output() btnClicked: EventEmitter<void> = new EventEmitter<void>();
