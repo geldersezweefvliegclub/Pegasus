@@ -160,6 +160,11 @@ export class RecencyComponent implements OnInit, OnChanges {
     }
 
     geenGeldigBrevet() {
+        if (this.recency) {
+            if (this.recency.CHECKS!.length < 2) {
+                return false;
+            }
+        }
         return ((this.brevet.aantal === false) ||
             (this.brevet.medical === false) ||
             (this.brevet.lierstarts === 0) ||
@@ -167,5 +172,17 @@ export class RecencyComponent implements OnInit, OnChanges {
             (this.brevet.zelfstarts === 0) ||
             (this.brevet.pax === 0))
      }
+
+     // Toon een popup met de datums waarop de check is afgenomen
+    toonCheckDatum() {
+        let datumString ="";
+        if (this.recency)
+            if (this.recency.CHECKS!.length > 0) {
+                this.recency.CHECKS!.forEach(datum => {
+                    datumString += "\u00BB " + datum + "\n";
+                })
+                window.alert("De trainingvluchten zijn uitgevoerd op:\n" + datumString)
+        }
+    }
 }
 

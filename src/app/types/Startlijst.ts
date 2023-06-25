@@ -1000,6 +1000,11 @@ export interface components {
        * @example 0
        */
       TMGSTARTS?: number;
+      /**
+       * @description Array met checkstarts
+       * @example 04-03-2022, 05-04-2021
+       */
+      CHECKS?: string[];
     };
     vliegdagen: {
       /**

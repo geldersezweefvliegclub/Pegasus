@@ -117,6 +117,15 @@
                         <fa-icon *ngIf="!brevet.medical" class="declineIcon" [icon]="declineIcon"></fa-icon>
                     </td>
                 </tr>
+                <tr>
+                    <td class="w-100">
+                        <div class="beschrijving"><a href="" (click)="toonCheckDatum()">Trainingsvluchten</a></div>
+                    </td>
+                    <td>
+                        <fa-icon *ngIf="recency.CHECKS.length >= 2"  class="checkIcon" [icon]="checkIcon"></fa-icon>
+                        <fa-icon *ngIf="recency.CHECKS.length < 2" class="declineIcon" [icon]="declineIcon"></fa-icon>
+                    </td>
+                </tr>
             </table>
         </div>
     </div>
