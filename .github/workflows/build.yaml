@@ -25,6 +25,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
+
+      # Because package-lock.json is in the .gitignore we cannot use `npm ci` (clean-install). But since the package-lock.json is missing, regular `npm install` will do the same thing :)
+      - run: npm i
+        name: Install Dependencies
+
       - run: npm run build
+        name: Run Build
+
       - run: npm lint
+        name: Run Linting
