@@ -1,0 +1,19 @@
+<app-modal popupClass="popupLarge" titel="Recency verloop {{naam}} over 24 maanden">
+    <div body>
+        <div *ngIf="bezig">
+            <ngb-progressbar type="info" [value]="counter" showValue="true" max="36" [striped]="true"></ngb-progressbar>
+        </div>
+        <div class="barchart-wrapper popupLargeWrapper" *ngIf="!bezig">
+            <div class="linechart-wrapper inlineGrafiek">
+                <canvas class="recencyGrafiek" baseChart *ngIf="lierstarts.length > 0"
+                        style="width: inherit;height: 65vh;"
+                        [type]="'line'"
+                        [datasets]="startsLineChartData"
+                        [labels]="startsLineChartLabels"
+                        [options]="startsLineChartOptions"
+                        [plugins]="lineChartPlugins">
+                </canvas>
+            </div>
+        </div>
+    </div>
+</app-modal>

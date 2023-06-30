@@ -72,53 +72,53 @@ export class RecencyComponent implements OnInit, OnChanges {
     ophalen(): void {
         this.isLoading = true;
 
+        if (this.Vlieger.STATUSTYPE_ID !== 1903) {
+            this.toonEASA = false;
+        }
+
         // Welke aantekingen heeft vlieger (lees competenties)
         // 271 = Passagiers vliegen
         // 272 = Lieren
         // 273 = Slepen
         // 274 = Zelfstart
 
-        this.progressieService.getProgressiesLid(this.Vlieger.ID!, "271,272,273,274").then((p:HeliosBehaaldeProgressieDataset[]) => {
+        this.progressieService.getProgressiesLid(this.Vlieger.ID!, "271,272,273,274").then((p: HeliosBehaaldeProgressieDataset[]) => {
             this.aantekeningen = p;
 
             this.brevet.lierstarts = -1;
             this.brevet.zelfstarts = -1;
             this.brevet.sleepstart = -1;
-            this.brevet.tmgstarts =-1;
+            this.brevet.tmgstarts = -1;
             this.brevet.medical = false;
 
             this.startlijstService.getRecency(this.Vlieger.ID!).then((r) => {
                 this.isLoading = false;
                 this.recency = r
 
-                if (this.aantekeningen.findIndex (a => a.COMPETENTIE_ID === 271) >= 0) {
+                if (this.aantekeningen.findIndex(a => a.COMPETENTIE_ID === 271) >= 0) {
                     this.brevet.pax = (r.STARTS_DRIE_MND! >= 3) ? 1 : 0;
-                }
-                else {
+                } else {
                     this.brevet.pax = -1;
                 }
 
-                if (r.LIERSTARTS! > 5) {
+                if (r.LIERSTARTS! >= 5) {
                     this.brevet.lierstarts = 1;
-                }
-                else if (this.aantekeningen.findIndex (a => a.COMPETENTIE_ID === 272) >= 0) {
+                } else if (this.aantekeningen.findIndex(a => a.COMPETENTIE_ID === 272) >= 0) {
                     this.brevet.lierstarts = 0;
                 }
 
-                if (r.SLEEPSTARTS! > 5) {
+                if (r.SLEEPSTARTS! >= 5) {
                     this.brevet.sleepstart = 1;
-                }
-                else if (this.aantekeningen.findIndex (a => a.COMPETENTIE_ID === 273) >= 0) {
+                } else if (this.aantekeningen.findIndex(a => a.COMPETENTIE_ID === 273) >= 0) {
                     this.brevet.sleepstart = 0;
                 }
 
-                if (r.ZELFSTARTS! > 5) {
+                if (r.ZELFSTARTS! >= 5) {
                     this.brevet.zelfstarts = 1;
-                }
-                else if (this.aantekeningen.findIndex (a => a.COMPETENTIE_ID === 274) >= 0) {
+                } else if (this.aantekeningen.findIndex(a => a.COMPETENTIE_ID === 274) >= 0) {
                     this.brevet.zelfstarts = 0;
                 }
-                if (r.TMGSTARTS! > 5) {
+                if (r.TMGSTARTS! >= 5) {
                     this.brevet.tmgstarts = 1;
                 }
 
@@ -128,8 +128,9 @@ export class RecencyComponent implements OnInit, OnChanges {
                     const nu: DateTime = DateTime.now();
                     const d: DateTime = DateTime.fromSQL(this.Vlieger.MEDICAL);
 
-                    console.log(this.Vlieger)
-                    this.brevet.medical =  (d > nu); // datum is in het toekomst
+                    this.brevet.medical = (d > nu); // datum is in het toekomst
+                } else {
+                    this.brevet.medical = false;
                 }
             }).catch(e => {
                 this.error = e;
@@ -142,8 +143,8 @@ export class RecencyComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.hasOwnProperty("VliegerID")) {
-            this.ophalen()
+        if (changes.hasOwnProperty("Vlieger")) {
+            this.ophalen();
         }
     }
 
@@ -162,7 +163,7 @@ export class RecencyComponent implements OnInit, OnChanges {
     geenGeldigBrevet() {
         if (this.recency) {
             if (this.recency.CHECKS!.length < 2) {
-                return false;
+                return true;
             }
         }
         return ((this.brevet.aantal === false) ||
@@ -171,17 +172,21 @@ export class RecencyComponent implements OnInit, OnChanges {
             (this.brevet.sleepstart === 0) ||
             (this.brevet.zelfstarts === 0) ||
             (this.brevet.pax === 0))
-     }
+    }
 
-     // Toon een popup met de datums waarop de check is afgenomen
+    // Toon een popup met de datums waarop de check is afgenomen
     toonCheckDatum() {
-        let datumString ="";
-        if (this.recency)
-            if (this.recency.CHECKS!.length > 0) {
+        let datumString = "";
+        if (this.recency) {
+            if (this.recency.CHECKS!.length == 0) {
+                window.alert("Er zijn geen trainingvluchten geregistreerd\n")
+            }
+            else {
                 this.recency.CHECKS!.forEach(datum => {
                     datumString += "\u00BB " + datum + "\n";
                 })
                 window.alert("De trainingvluchten zijn uitgevoerd op:\n" + datumString)
+            }
         }
     }
 }
