@@ -3,11 +3,11 @@
 
 name: Angular Build
 
+# This build must run for every push to any branch, and for every pull request to any branch. Additionally, it must run for every manual trigger.
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+#  pull_request:
+  workflow_dispatch:
 
 jobs:
   build:
