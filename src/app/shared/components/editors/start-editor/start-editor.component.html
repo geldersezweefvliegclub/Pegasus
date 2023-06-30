@@ -39,7 +39,7 @@
                     <app-vliegtuig-invoer id="VLIEGTUIG"
                                           [disabled]="isVerwijderMode || isRestoreMode"
                                           [VLIEGTUIG_ID]="start.VLIEGTUIG_ID"
-                                          [aanwezig]="(start.DATUM == datum.toISODate()) ? aanwezigVliegtuigen : []"
+                                          [aanwezig]="(start.DATUM === datum.toISODate()) ? aanwezigVliegtuigen : []"
                                           [vliegtuigen]="vliegtuigen"
                                           (VliegtuigChanged)="vliegtuigGeselecteerd($event)"
                                           label="Vliegtuig"

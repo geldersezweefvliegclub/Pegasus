@@ -9,7 +9,7 @@ import {DocumentenService} from "../../../../services/apiservice/documenten.serv
     templateUrl: './document-editor.component.html',
     styleUrls: ['./document-editor.component.scss']
 })
-export class DocumentEditorComponent implements OnInit {
+export class DocumentEditorComponent {
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @Output() refresh: EventEmitter<void> = new EventEmitter<void>();
     formTitel: string;
@@ -26,9 +26,6 @@ export class DocumentEditorComponent implements OnInit {
     document: HeliosDocument;
 
     constructor(private readonly documentenService: DocumentenService) {
-    }
-
-    ngOnInit(): void {
     }
 
     // open popup, maar haal eerst de start op. De eerder ingevoerde tijd wordt als default waarde gebruikt

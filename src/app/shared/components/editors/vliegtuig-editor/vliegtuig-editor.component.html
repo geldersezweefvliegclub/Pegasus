@@ -37,6 +37,7 @@
                 <div class="col-12 col-md-6">
                     <label for="TYPE_ID" class="form-label">Type</label>
                     <select class="form-select" [required]="vliegtuig.CLUBKIST" [(ngModel)]="vliegtuig.TYPE_ID"
+                            id="TYPE_ID"
                             name="TYPE_ID">
                         <option value=-1>onbekend</option>
                         <option *ngFor="let vliegtuigType of vliegtuigTypes"
@@ -94,7 +95,7 @@
                 </div>
                 <div class="col-6">
                     <input name="TRAINER" type="checkbox" class="form-check-input" id="TRAINER"
-                           [disabled]="vliegtuig.ZITPLAATSEN != 2"
+                           [disabled]="vliegtuig.ZITPLAATSEN !== 2"
                            [(ngModel)]="vliegtuig.TRAINER">
                     <label for="TRAINER" class="form-check-label ms-2">DBO Trainer</label>
                 </div>

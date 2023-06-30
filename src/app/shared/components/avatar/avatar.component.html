@@ -2,7 +2,7 @@
 
 <app-modal [titel]="naam">
     <div body>
-        <img class="volBeeld"  alt="Avatar groot" [src]="url" *ngIf="url && ref.children.length == 0">
+        <img class="volBeeld"  alt="Avatar groot" [src]="url" *ngIf="url && ref.children.length === 0">
         <div #ref><ng-content></ng-content></div>
     </div>
 </app-modal>

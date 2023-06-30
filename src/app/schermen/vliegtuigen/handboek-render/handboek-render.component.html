@@ -1,6 +1,6 @@
-<div *ngIf="url == ''">
+<div *ngIf="url === ''">
     {{txt}}
 </div>
-<div *ngIf="url != ''">
+<div *ngIf="url !== ''">
 <a href="{{url}}" target="_blank" rel="noopener noreferrer">{{txt}} </a>
 </div>

@@ -508,7 +508,7 @@
                 [cdkDropListData]="leden"
                 (cdkDropListDropped)="onDropInLedenlijst($event)">
 
-            <div *ngIf="leden && leden.length == 0" class="d-flex justify-content-center">
+            <div *ngIf="leden && leden.length === 0" class="d-flex justify-content-center">
                 Geen resultaten gevonden
             </div>
             <div class="card my-1" [ngClass.lt-lg]="'mb-3'"
