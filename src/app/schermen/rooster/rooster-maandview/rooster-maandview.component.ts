@@ -6,12 +6,14 @@ import {
 } from "../rooster-page/rooster-page.component";
 import {CdkDrag, CdkDragDrop} from "@angular/cdk/drag-drop";
 import {
-    HeliosDienst, HeliosDienstenDataset,
+    HeliosDienst,
+    HeliosDienstenDataset,
     HeliosLedenDataset,
     HeliosLid,
-    HeliosLidData, HeliosRoosterDag,
+    HeliosLidData,
+    HeliosRoosterDag,
     HeliosRoosterDataset,
-    HeliosType, HeliosUserinfo
+    HeliosType
 } from "../../../types/Helios";
 import {JaarTotalenComponent} from "../jaar-totalen/jaar-totalen.component";
 import {DienstenService} from "../../../services/apiservice/diensten.service";
@@ -26,7 +28,9 @@ import {faCalendarCheck, faSortAmountDownAlt, faTimesCircle} from "@fortawesome/
 import {DateTime} from "luxon";
 import {SharedService} from "../../../services/shared/shared.service";
 import {DdwvService} from "../../../services/apiservice/ddwv.service";
-import {UitbetalenDdwvCrewEditorComponent} from "../../../shared/components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component";
+import {
+    UitbetalenDdwvCrewEditorComponent
+} from "../../../shared/components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component";
 
 
 @Component({

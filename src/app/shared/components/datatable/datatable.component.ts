@@ -1,14 +1,4 @@
-import {
-    Component,
-    EventEmitter,
-    HostListener,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Output,
-    SimpleChanges
-} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {ColDef, GridApi, GridOptions, RowDoubleClickedEvent, RowSelectedEvent} from 'ag-grid-community';
 import {SharedService} from "../../../services/shared/shared.service";
 import {Subscription} from "rxjs";

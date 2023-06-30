@@ -28,7 +28,6 @@ import {StartEditorComponent} from "../../../shared/components/editors/start-edi
 import {DaginfoService} from "../../../services/apiservice/daginfo.service";
 import * as xlsx from "xlsx";
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
-import {DatatableComponent} from "../../../shared/components/datatable/datatable.component";
 
 export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
     Tonen?: boolean;

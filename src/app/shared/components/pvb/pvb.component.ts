@@ -7,7 +7,6 @@ import {SharedService} from "../../../services/shared/shared.service";
 import {LoginService} from "../../../services/apiservice/login.service";
 import {CompetentieService} from "../../../services/apiservice/competentie.service";
 import {Subscription} from "rxjs";
-import {ModalComponent} from "../modal/modal.component";
 import {ProgressieEditorComponent} from "../editors/progressie-editor/progressie-editor.component";
 
 @Component({

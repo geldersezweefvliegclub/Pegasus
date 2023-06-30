@@ -10,10 +10,7 @@ import {faArtstation} from "@fortawesome/free-brands-svg-icons";
 import {DateTime} from "luxon";
 import {Observable, of, Subscription} from "rxjs";
 import {SchermGrootte, SharedService} from "../../../../services/shared/shared.service";
-import {
-    HeliosDagRapport, HeliosTrack,
-    HeliosType
-} from "../../../../types/Helios";
+import {HeliosDagRapport, HeliosType} from "../../../../types/Helios";
 import {TypesService} from "../../../../services/apiservice/types.service";
 import {DagRapportenService} from "../../../../services/apiservice/dag-rapporten.service";
 

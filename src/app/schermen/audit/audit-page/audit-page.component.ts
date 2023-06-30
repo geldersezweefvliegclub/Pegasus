@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ColDef, RowSelectedEvent} from 'ag-grid-community';
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {HeliosAuditDataset} from '../../../types/Helios';
@@ -8,7 +8,6 @@ import {LoginService} from '../../../services/apiservice/login.service';
 import {nummerSort} from '../../../utils/Utils';
 import {AuditService} from "../../../services/apiservice/audit.service";
 import {faWaveSquare} from "@fortawesome/free-solid-svg-icons";
-import {DatatableComponent} from "../../../shared/components/datatable/datatable.component";
 
 
 @Component({

@@ -8,7 +8,6 @@ import {Observable, of, Subscription} from 'rxjs';
 import {ErrorMessage, SuccessMessage} from '../../../types/Utils';
 import {
     HeliosDagInfo,
-    HeliosDagRapport,
     HeliosDagRapportenDataset,
     HeliosDienstenDataset,
     HeliosRoosterDataset,
@@ -22,8 +21,9 @@ import {DagRoosterComponent} from "../../../shared/components/dag-rooster/dag-ro
 import {RoosterService} from "../../../services/apiservice/rooster.service";
 import {DienstenService} from "../../../services/apiservice/diensten.service";
 import {DagRapportenService} from "../../../services/apiservice/dag-rapporten.service";
-import {DagRapportEditorComponent} from "../../../shared/components/editors/dag-rapport-editor/dag-rapport-editor.component";
-import {TracksLedenDataset} from "../../../shared/components/tracks/tracks.component";
+import {
+    DagRapportEditorComponent
+} from "../../../shared/components/editors/dag-rapport-editor/dag-rapport-editor.component";
 
 @Component({
     selector: 'app-daginfo',

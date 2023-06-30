@@ -8,7 +8,7 @@ import {DateTime, Interval} from "luxon";
 import {SharedService} from "../../../services/shared/shared.service";
 import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faAngleLeft, faAngleRight, faPenToSquare} from "@fortawesome/free-solid-svg-icons";
+import {faPenToSquare} from "@fortawesome/free-solid-svg-icons";
 
 
 @Component({

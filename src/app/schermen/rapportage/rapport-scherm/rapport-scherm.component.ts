@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
 import {ActivatedRoute} from "@angular/router";
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 
 @Component({
     selector: 'app-rapport-scherm',

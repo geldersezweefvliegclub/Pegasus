@@ -2,15 +2,11 @@ import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {beheerRoutes, CustomRoute, routes} from '../../routing.module';
 
 import {Router} from '@angular/router';
-import {
-    faGaugeSimpleHigh,
-    faSignOutAlt,
-    faWrench
-} from '@fortawesome/free-solid-svg-icons';
+import {faGaugeSimpleHigh, faSignOutAlt, faWrench} from '@fortawesome/free-solid-svg-icons';
 import {
     NgbCalendar,
     NgbDate,
-    NgbDateParserFormatter, NgbDatepicker,
+    NgbDateParserFormatter,
     NgbDatepickerNavigateEvent,
     NgbDateStruct
 } from '@ng-bootstrap/ng-bootstrap';

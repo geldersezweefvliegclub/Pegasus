@@ -1,4 +1,4 @@
-import {Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {fas} from '@fortawesome/free-solid-svg-icons';
 import {far, IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {FlipProp, SizeProp} from '@fortawesome/fontawesome-svg-core';

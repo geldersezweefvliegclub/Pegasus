@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {faCaretSquareDown, faCaretSquareUp, faKeyboard, faMinusCircle, faUndo} from "@fortawesome/free-solid-svg-icons";
 import {TypesGroepenService} from "../../../services/apiservice/types-groepen.service";
-import {HeliosType, HeliosTypes, HeliosTypesGroep} from "../../../types/Helios";
+import {HeliosType, HeliosTypesGroep} from "../../../types/Helios";
 import {TypesService} from "../../../services/apiservice/types.service";
 import {TypeEditorComponent} from "../../../shared/components/editors/type-editor/type-editor.component";
 import {Subscription} from "rxjs";

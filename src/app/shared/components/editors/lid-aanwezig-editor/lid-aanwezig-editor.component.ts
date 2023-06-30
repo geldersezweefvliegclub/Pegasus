@@ -8,7 +8,6 @@ import {AanwezigLedenService} from "../../../../services/apiservice/aanwezig-led
 import {VliegtuigenService} from "../../../../services/apiservice/vliegtuigen.service";
 import {LoginService} from "../../../../services/apiservice/login.service";
 import {StorageService} from "../../../../services/storage/storage.service";
-import {DateTime} from "luxon";
 
 type HeliosTypeExtended = HeliosType & {
     Geselecteerd?: boolean;

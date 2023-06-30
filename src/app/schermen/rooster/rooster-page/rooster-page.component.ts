@@ -1,12 +1,12 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {LedenService} from '../../../services/apiservice/leden.service';
 import {
-    HeliosDienst,
     HeliosDienstenDataset,
-    HeliosLedenDataset, HeliosLidData,
+    HeliosLedenDataset,
     HeliosRoosterDag,
     HeliosRoosterDataset,
-    HeliosType, HeliosUserinfo
+    HeliosType,
+    HeliosUserinfo
 } from '../../../types/Helios';
 import {faCalendarDay} from '@fortawesome/free-solid-svg-icons';
 import {SchermGrootte, SharedService} from '../../../services/shared/shared.service';
@@ -21,7 +21,7 @@ import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {TypesService} from "../../../services/apiservice/types.service";
 import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
 import {getBeginEindDatumVanMaand} from "../../../utils/Utils";
-import {HeliosActie, KeyValueArray} from "../../../types/Utils";
+import {KeyValueArray} from "../../../types/Utils";
 import {DdwvService} from "../../../services/apiservice/ddwv.service";
 
 export type HeliosLedenDatasetExtended = HeliosLedenDataset & {
