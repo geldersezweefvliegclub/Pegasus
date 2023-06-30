@@ -41,8 +41,8 @@ export class StartlijstService {
 
     async getVliegdagen(startDatum: DateTime, eindDatum: DateTime): Promise<[]> {
         let getParams: parameters = {};
-        getParams['BEGIN_DATUM'] = startDatum.toISODate();
-        getParams['EIND_DATUM'] = eindDatum.toISODate();
+        getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
+        getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
 
         // starttoren heeft geen vliegdagen nodig
         if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
@@ -77,8 +77,8 @@ export class StartlijstService {
         }
 
         getParams['LID_ID'] = id.toString();
-        getParams['BEGIN_DATUM'] = startDatum.toISODate();
-        getParams['EIND_DATUM'] = eindDatum.toISODate();
+        getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
+        getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
 
         if (maxRecords) {
             getParams['MAX'] = maxRecords.toString();
@@ -124,8 +124,8 @@ export class StartlijstService {
 
         let getParams: parameters = {};
         getParams['ID'] = id.toString();
-        getParams['BEGIN_DATUM'] = startDatum.toISODate();
-        getParams['EIND_DATUM'] = eindDatum.toISODate();
+        getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
+        getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
 
         try {
             const response: Response = await this.apiService.get('Startlijst/GetVliegtuigLogboek',
@@ -167,8 +167,8 @@ export class StartlijstService {
             getParams['HASH'] = this.startsCache.hash;
         }
 
-        getParams['BEGIN_DATUM'] = startDatum.toISODate();
-        getParams['EIND_DATUM'] = eindDatum.toISODate();
+        getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
+        getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
 
         if (zoekString) {
             getParams['SELECTIE'] = zoekString;
@@ -206,7 +206,7 @@ export class StartlijstService {
         }
 
         if (datum) {
-            getParams['DATUM'] = datum.toISODate();
+            getParams['DATUM'] = datum.toISODate() as string;
         }
 
         const response: Response = await this.apiService.get('Startlijst/GetRecency', getParams);

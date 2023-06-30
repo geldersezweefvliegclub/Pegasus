@@ -129,7 +129,7 @@ export class DaginfoComponent implements OnInit, OnDestroy{
     }
 
     opvragen(): void {
-        this.dagRapportenService.getDagRapporten(this.trashMode, this.datum.toISODate()).then((dr) => this.dagRapporten = dr);
+        this.dagRapportenService.getDagRapporten(this.trashMode, this.datum.toISODate() as string).then((dr) => this.dagRapporten = dr);
     }
 
     // mag de gebruiker de dag info zien?
@@ -257,7 +257,7 @@ export class DaginfoComponent implements OnInit, OnDestroy{
 
     // Hebben we een datum in de toekomst, vandaag is geen toekomst
     datumInToekomst(): boolean {
-        const datum = this.datum.toISODate();
+        const datum = this.datum.toISODate() as string;
 
         const nu: DateTime = DateTime.now();
         const d: DateTime = DateTime.fromSQL(datum);

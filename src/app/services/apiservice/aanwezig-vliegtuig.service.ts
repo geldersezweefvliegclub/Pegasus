@@ -93,8 +93,8 @@ export class AanwezigVliegtuigService {
         if ((this.aanwezigCache != undefined)  && (this.aanwezigCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
             getParams['HASH'] = this.aanwezigCache.hash;
         }
-        getParams['BEGIN_DATUM'] = startDatum.toISODate();
-        getParams['EIND_DATUM'] = eindDatum.toISODate();
+        getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
+        getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
 
         if (zoekString) {
             getParams['SELECTIE'] = zoekString;

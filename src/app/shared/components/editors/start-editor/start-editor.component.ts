@@ -141,7 +141,7 @@ export class StartEditorComponent implements OnInit {
                 month: datum.month,
                 day: datum.day
             })
-            this.magWijzigen(this.datum.toISODate());
+            this.magWijzigen(this.datum.toISODate() as string);
         });
 
         // abonneer op wijziging van lidTypes
@@ -249,7 +249,7 @@ export class StartEditorComponent implements OnInit {
 
             this.start = {
                 ID: undefined,
-                DATUM: this.datum.toISODate(),
+                DATUM: this.datum.toISODate() as string,
                 DAGNUMMER: undefined,
                 VLIEGTUIG_ID: undefined,
                 VLIEGER_ID: (this.VliegerID && !this.magAltijdWijzigen) ? this.VliegerID : undefined,      // Vlieger ID is bekend als we vanuit logboek start toevoegen
@@ -825,7 +825,7 @@ export class StartEditorComponent implements OnInit {
     // Datum van de start aanpassen
     datumAanpassen($datum: NgbDate) {
         this.startDatum = DateTime.fromObject({year: $datum.year, month: $datum.month, day: $datum.day});
-        this.start.DATUM = this.startDatum.toISODate();
+        this.start.DATUM = this.startDatum.toISODate() as string;
 
         this.magWijzigen(this.start.DATUM);
     }

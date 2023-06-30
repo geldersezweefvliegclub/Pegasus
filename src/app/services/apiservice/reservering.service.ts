@@ -21,8 +21,8 @@ export class ReserveringService {
             getParams['HASH'] = this.reserveringenCache.hash;
         }
 
-        getParams['BEGIN_DATUM'] = startDatum.toISODate();
-        getParams['EIND_DATUM'] = eindDatum.toISODate();
+        getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
+        getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
 
         if (maxRecords) {
             getParams['MAX'] = maxRecords.toString();

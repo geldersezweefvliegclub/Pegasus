@@ -258,6 +258,6 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
     // Datum van de start aanpassen
     datumAanpassen($datum: NgbDate) {
         this.geldigTot = DateTime.fromObject({year: $datum.year, month: $datum.month, day: $datum.day});
-        this.progressie.GELDIG_TOT = this.geldigTot.toISODate();
+        this.progressie.GELDIG_TOT = this.geldigTot.toISODate() as string;
     }
 }

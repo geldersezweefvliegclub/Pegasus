@@ -90,7 +90,7 @@ export class RoosterDagviewComponent implements OnInit, OnDestroy {
     }
 
     // Dit is al geimplementeerd in util.ts
-    DagVanDeWeek(DATUM: string) {
+    DagVanDeWeek(DATUM: string | null) {
         return DagVanDeWeek(DATUM);
     }
 

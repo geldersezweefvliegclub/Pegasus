@@ -77,8 +77,8 @@ export class DienstenService {
 
     async getDiensten(startDatum: DateTime, eindDatum: DateTime, dienstType?: number, lidID?: number): Promise<HeliosDienstenDataset[]> {
         let getParams: KeyValueArray = {};
-        getParams['BEGIN_DATUM'] = startDatum.toISODate();
-        getParams['EIND_DATUM'] = eindDatum.toISODate();
+        getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
+        getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
 
         if ((this.dienstenCache != undefined)  && (this.dienstenCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
             getParams['HASH'] = this.dienstenCache.hash;

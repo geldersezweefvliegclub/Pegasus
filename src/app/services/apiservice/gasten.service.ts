@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
 import {APIService} from "./api.service";
-import {HeliosGasten, HeliosGastenDataset, HeliosTrack, HeliosGast} from "../../types/Helios";
+import {HeliosGast, HeliosGasten, HeliosGastenDataset} from "../../types/Helios";
 import {KeyValueArray} from "../../types/Utils";
-import {LoginService} from "./login.service";
 import {DateTime} from "luxon";
 
 @Injectable({
@@ -17,8 +16,8 @@ export class GastenService {
     async getGasten(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime): Promise<HeliosGastenDataset[]> {
         let getParams: KeyValueArray = {};
 
-        getParams['BEGIN_DATUM'] = startDatum.toISODate();
-        getParams['EIND_DATUM'] = eindDatum.toISODate();
+        getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
+        getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
         if (verwijderd) {
             getParams['VERWIJDERD'] = "true";
         }

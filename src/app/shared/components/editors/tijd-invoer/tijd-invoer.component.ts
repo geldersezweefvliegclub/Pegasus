@@ -90,7 +90,7 @@ export class TijdInvoerComponent {
             this.tijdOK = true;
         } else {
             // Zet de huidige tijd als default
-            this.tijdIngevoerd = DateTime.now().toISOTime().substring(0, 5);
+            this.tijdIngevoerd = (DateTime.now().toISOTime() as string).substring(0, 5);
             this.tijdOK = true;
         }
         this.popup.open();
@@ -128,7 +128,7 @@ export class TijdInvoerComponent {
             this.tijdOK = true;
         } else {
             // Zet de huidige tijd als default
-            this.tijdIngevoerd = DateTime.now().toISOTime().substring(0, 5);
+            this.tijdIngevoerd = (DateTime.now().toISOTime() as string).substring(0, 5);
             this.tijdOK = true;
         }
         this.popup.open();

@@ -31,13 +31,13 @@ export class TransactiesService {
             getParams['LID_ID'] = lidID.toString();
         }
         if (startDatum) {
-            getParams['BEGIN_DATUM'] = startDatum.toISODate();
+            getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
         }
         if (eindDatum) {
-            getParams['EIND_DATUM'] = eindDatum.toISODate();
+            getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
         }
         if (vliegdag) {
-            getParams['VLIEGDAG'] = vliegdag.toISODate();
+            getParams['VLIEGDAG'] = vliegdag.toISODate() as string;
         }
 
         if ((max) && (max > 0)) {

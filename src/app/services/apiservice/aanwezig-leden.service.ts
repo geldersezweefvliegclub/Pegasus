@@ -93,8 +93,8 @@ export class AanwezigLedenService {
         if ((this.aanwezigCache != undefined)  && (this.aanwezigCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
             getParams['HASH'] = this.aanwezigCache.hash;
         }
-        getParams['BEGIN_DATUM'] = startDatum.toISODate();
-        getParams['EIND_DATUM'] = eindDatum.toISODate();
+        getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
+        getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
 
         if (zoekString) {
             getParams['SELECTIE'] = zoekString;
@@ -114,7 +114,7 @@ export class AanwezigLedenService {
     }
 
     async getSamenvatting(datum: DateTime): Promise<HeliosAanwezigSamenvatting> {
-        const response: Response = await this.apiService.get('AanwezigLeden/Samenvatting', {'DATUM': datum.toISODate()});
+        const response: Response = await this.apiService.get('AanwezigLeden/Samenvatting', {'DATUM': datum.toISODate() as string});
         return response.json();
     }
 

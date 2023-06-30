@@ -71,8 +71,8 @@ export class RoosterService {
 
     async getRooster(startDatum: DateTime, eindDatum: DateTime, velden?: string): Promise<HeliosRoosterDataset[]> {
         let getParams: KeyValueArray = {};
-        getParams['BEGIN_DATUM'] = startDatum.toISODate();
-        getParams['EIND_DATUM'] = eindDatum.toISODate();
+        getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
+        getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
         if (velden) {
             getParams['VELDEN'] = velden;
         }
@@ -104,7 +104,7 @@ export class RoosterService {
      * @return {void}
      */
     private vulMissendeDagenAan(roosterDagen: HeliosRoosterDataset[]): boolean {
-        const dagenInDeMaand = this.datum.daysInMonth;
+        const dagenInDeMaand = this.datum.daysInMonth ?? 0;
         let retValue = false;
 
         const nu: DateTime = DateTime.now();
@@ -120,7 +120,7 @@ export class RoosterService {
 
             if (!inRooster) {       // datum staat nog niet in de database, gaan we aanmaken
                 const roosterRecord: HeliosRoosterDag = {
-                    DATUM: d.toISODate(),
+                    DATUM: d.toISODate() as string,
                 }
                 this.addRoosterdag(roosterRecord);
                 retValue = true;
