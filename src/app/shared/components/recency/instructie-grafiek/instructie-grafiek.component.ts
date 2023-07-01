@@ -4,7 +4,7 @@ import {Subscription} from 'rxjs';
 import {DateTime} from 'luxon';
 import * as pluginAnnotations from 'chartjs-plugin-annotation';
 import {AnnotationOptions} from 'chartjs-plugin-annotation';
-import {ChartDataset, ChartOptions} from 'chart.js';
+import {ChartDataset, ChartOptions, ChartType} from 'chart.js';
 import {StartlijstService} from '../../../../services/apiservice/startlijst.service';
 import {SharedService} from '../../../../services/shared/shared.service';
 

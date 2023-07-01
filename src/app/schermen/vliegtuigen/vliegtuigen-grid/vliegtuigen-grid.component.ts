@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {VliegtuigenService} from '../../../services/apiservice/vliegtuigen.service';
 
 import {faPlane, faRecycle} from '@fortawesome/free-solid-svg-icons';

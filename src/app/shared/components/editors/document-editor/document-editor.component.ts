@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {ModalComponent} from "../../modal/modal.component";
 import {HeliosDocument} from "../../../../types/Helios";
 import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";

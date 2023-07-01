@@ -29,9 +29,7 @@ import {RecencyComponent} from './components/recency/recency.component';
 import {StatusComponent} from './components/status/status.component';
 import {TijdInvoerComponent} from './components/editors/tijd-invoer/tijd-invoer.component';
 import {NaamRenderComponent} from './components/vlieger-logboek/naam-render/naam-render.component';
-import {
-    WachtwoordSterkteValidatorDirective
-} from './components/editors/lid-editor/wachtwoord-sterkte-validator.directive';
+import {WachtwoordSterkteValidatorDirective} from './components/editors/lid-editor/wachtwoord-sterkte-validator.directive';
 import {RecencyGrafiekComponent} from './components/recency/recency-grafiek/recency-grafiek.component';
 import {NgChartsModule} from 'ng2-charts';
 import {NgbDatepickerModule, NgbPopoverModule, NgbProgressbarModule} from '@ng-bootstrap/ng-bootstrap';
@@ -75,16 +73,12 @@ import {IdealBestellenComponent} from './components/ideal-bestellen/ideal-bestel
 import {DatumtijdRenderComponent} from './components/datatable/datumtijd-render/datumtijd-render.component';
 import {DagRapportEditorComponent} from './components/editors/dag-rapport-editor/dag-rapport-editor.component';
 import {ComposeMeteoComponent} from "./components/editors/dag-rapport-editor/compose-meteo/compose-meteo.component";
-import {
-    ComposeBedrijfComponent
-} from "./components/editors/dag-rapport-editor/compose-bedrijf/compose-bedrijf.component";
+import {ComposeBedrijfComponent} from "./components/editors/dag-rapport-editor/compose-bedrijf/compose-bedrijf.component";
 import {ProgressieEditorComponent} from './components/editors/progressie-editor/progressie-editor.component';
 import {VoortgangComponent} from './components/voortgang/voortgang.component';
-import {DocumentEditorComponent} from './components/editors/document-editor/document-editor.component';
-import {
-    UitbetalenDdwvCrewEditorComponent
-} from './components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component';
-import {StartGrafiekComponent} from './components/recency/start-grafiek/start-grafiek.component';
+import { DocumentEditorComponent } from './components/editors/document-editor/document-editor.component';
+import { UitbetalenDdwvCrewEditorComponent } from './components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component';
+import { StartGrafiekComponent } from './components/recency/start-grafiek/start-grafiek.component';
 
 @NgModule({
     imports: [

@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
+import {SharedService} from "../shared/shared.service";
 import {APIService} from "./api.service";
-import {HeliosConfigDDWV} from "../../types/Helios";
+import {HeliosConfigDDWV, HeliosLedenDataset} from "../../types/Helios";
 import {StorageService} from "../storage/storage.service";
 import {DateTime, Interval} from "luxon";
 import {KeyValueArray} from "../../types/Utils";

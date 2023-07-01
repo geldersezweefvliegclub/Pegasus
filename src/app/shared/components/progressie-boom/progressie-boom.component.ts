@@ -1,12 +1,13 @@
 import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {TreeviewConfig, TreeviewItem} from 'ngx-treeview';
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
-import {HeliosCompetentiesDataset, HeliosProgressieBoom, HeliosType} from "../../../types/Helios";
+import {HeliosCompetentiesDataset, HeliosProgressie, HeliosProgressieBoom, HeliosType} from "../../../types/Helios";
 import {LoginService} from "../../../services/apiservice/login.service";
+import {ModalComponent} from "../modal/modal.component";
 import {ErrorMessage, HeliosActie, SuccessMessage} from "../../../types/Utils";
 import {SharedService} from "../../../services/shared/shared.service";
 import {CompetentieService} from "../../../services/apiservice/competentie.service";
-import {Subscription} from "rxjs";
+import {Observable, of, Subscription} from "rxjs";
 import {ProgressieEditorComponent} from "../editors/progressie-editor/progressie-editor.component";
 import {TypesService} from "../../../services/apiservice/types.service";
 

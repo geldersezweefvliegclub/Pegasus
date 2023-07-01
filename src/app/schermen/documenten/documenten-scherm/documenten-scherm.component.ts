@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {faFile, IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {HeliosDocument, HeliosDocumentenDataset, HeliosType} from "../../../types/Helios";
+import {HeliosDocument, HeliosDocumenten, HeliosDocumentenDataset, HeliosType} from "../../../types/Helios";
 import {Subscription} from "rxjs";
 import {TypesService} from "../../../services/apiservice/types.service";
 import {DocumentenService} from "../../../services/apiservice/documenten.service";

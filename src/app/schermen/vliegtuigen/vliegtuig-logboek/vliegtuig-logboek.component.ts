@@ -16,6 +16,7 @@ import {ModalComponent} from '../../../shared/components/modal/modal.component';
 import {ActivatedRoute} from '@angular/router';
 import {nummerSort, tijdSort} from '../../../utils/Utils';
 import {ErrorMessage} from '../../../types/Utils';
+import {DatatableComponent} from "../../../shared/components/datatable/datatable.component";
 
 
 @Component({

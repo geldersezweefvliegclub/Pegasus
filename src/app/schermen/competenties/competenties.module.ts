@@ -1,6 +1,6 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {CompetentiesPageComponent} from './competenties-page/competenties-page.component';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { CompetentiesPageComponent } from './competenties-page/competenties-page.component';
 import {RouterModule} from "@angular/router";
 import {SharedModule} from "../../shared/shared.module";
 import {TreeviewModule} from "ngx-treeview";

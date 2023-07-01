@@ -6,6 +6,7 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {NgSelectModule} from "@ng-select/ng-select";
 import {SharedModule} from "../../shared/shared.module";
 import {RouterModule} from "@angular/router";
+import {DaginfoComponent} from "../daginfo/daginfo/daginfo.component";
 
 
 @NgModule({

@@ -1,6 +1,9 @@
-import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {ModalComponent} from "../../../shared/components/modal/modal.component";
-import {HeliosAanwezigSamenvatting, HeliosDienstenDataset, HeliosRoosterDataset,} from "../../../types/Helios";
+import {
+    HeliosAanwezigSamenvatting,
+    HeliosDienstenDataset, HeliosRoosterDataset,
+} from "../../../types/Helios";
 import {DateTime} from "luxon";
 import {AanwezigLedenService} from "../../../services/apiservice/aanwezig-leden.service";
 import {SharedService} from "../../../services/shared/shared.service";

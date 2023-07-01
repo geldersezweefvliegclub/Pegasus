@@ -7,6 +7,7 @@ import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
 import {CodeInputComponent} from "angular-code-input";
 import {StorageService} from "../../../services/storage/storage.service";
+import {SharedService} from "../../../services/shared/shared.service";
 import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
 
 @Component({

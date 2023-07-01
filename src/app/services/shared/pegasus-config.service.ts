@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+import {HeliosConfigDDWV, HeliosLedenDataset} from "../../types/Helios";
 
 
 @Injectable({

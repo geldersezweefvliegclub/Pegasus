@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ModalComponent} from "../../modal/modal.component";
 import {ErrorMessage, KeyValueArray, SuccessMessage} from "../../../../types/Utils";
-import {HeliosDienstenDataset} from "../../../../types/Helios";
+import {HeliosDienstenDataset, HeliosGast, HeliosType} from "../../../../types/Helios";
 import {HeliosRoosterDagExtended} from "../../../../schermen/rooster/rooster-page/rooster-page.component";
 import {DdwvService} from "../../../../services/apiservice/ddwv.service";
 

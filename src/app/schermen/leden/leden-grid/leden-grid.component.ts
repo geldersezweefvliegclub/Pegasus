@@ -1,5 +1,5 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {faUsers} from '@fortawesome/free-solid-svg-icons';
+import {Component, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {faRecycle, faUsers} from '@fortawesome/free-solid-svg-icons';
 import {HeliosLedenDataset, HeliosTrack} from '../../../types/Helios';
 import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
 import {ErrorMessage} from '../../../types/Utils';

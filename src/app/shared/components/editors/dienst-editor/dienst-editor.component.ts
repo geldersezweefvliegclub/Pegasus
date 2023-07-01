@@ -3,7 +3,12 @@ import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
 import {ModalComponent} from "../../modal/modal.component";
 import {HeliosRoosterDagExtended} from "../../../../schermen/rooster/rooster-page/rooster-page.component";
 import {Subscription} from "rxjs";
-import {HeliosDienst, HeliosLedenDataset, HeliosType} from "../../../../types/Helios";
+import {
+    HeliosAanwezigLedenDataset, HeliosDienst,
+    HeliosDienstenDataset,
+    HeliosLedenDataset,
+    HeliosType
+} from "../../../../types/Helios";
 import {TypesService} from "../../../../services/apiservice/types.service";
 import {LedenService} from "../../../../services/apiservice/leden.service";
 import {PegasusConfigService} from "../../../../services/shared/pegasus-config.service";

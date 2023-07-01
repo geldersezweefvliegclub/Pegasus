@@ -3,8 +3,7 @@ import {APIService} from "./api.service";
 import {StorageService} from "../storage/storage.service";
 import {
     HeliosBehaaldeProgressie,
-    HeliosBehaaldeProgressieDataset,
-    HeliosDagRapport,
+    HeliosBehaaldeProgressieDataset, HeliosDagRapport, HeliosLid,
     HeliosProgressie,
     HeliosProgressieBoom,
     HeliosProgressieKaart,

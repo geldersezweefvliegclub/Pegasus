@@ -6,19 +6,15 @@ import {
     faAddressCard,
     faCalendarAlt,
     faCalendarDay,
-    faChartPie,
-    faEuroSign,
-    faFilm,
-    faGraduationCap,
-    faKey,
-    faKeyboard,
+    faChartPie, faFilm, faGraduationCap,
+    faKey, faKeyboard,
     faPen,
     faPlane,
-    faPlaneDeparture,
-    faStreetView,
+    faPlaneDeparture, faStreetView,
     faUser,
     faUsers,
-    faWaveSquare
+    faWaveSquare,
+    faEuroSign
 } from '@fortawesome/free-solid-svg-icons';
 import {AuditPageComponent} from "./schermen/audit/audit-page/audit-page.component";
 import {TypesPageComponent} from "./schermen/types/types-page/types-page.component";

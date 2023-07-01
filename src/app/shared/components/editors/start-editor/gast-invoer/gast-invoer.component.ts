@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {GastenService} from "../../../../../services/apiservice/gasten.service";
 import {DateTime} from "luxon";
-import {HeliosGastenDataset} from "../../../../../types/Helios";
+import {HeliosAanwezigLedenDataset, HeliosGastenDataset} from "../../../../../types/Helios";
 
 @Component({
     selector: 'app-gast-invoer',

@@ -5,8 +5,9 @@ import {SharedService} from '../../../../services/shared/shared.service';
 import {StartlijstService} from '../../../../services/apiservice/startlijst.service';
 
 import * as pluginAnnotations from 'chartjs-plugin-annotation';
-import AnnotationPlugin, {AnnotationOptions} from 'chartjs-plugin-annotation';
-import {Chart, ChartConfiguration, ChartDataset, ChartOptions} from 'chart.js';
+import AnnotationPlugin, {AnnotationOptions, LineAnnotationOptions} from 'chartjs-plugin-annotation';
+import {Chart, ChartConfiguration, ChartDataset, ChartOptions, ChartEvent, ChartType} from 'chart.js';
+import {BaseChartDirective} from 'ng2-charts';
 
 import {ModalComponent} from '../../modal/modal.component';
 

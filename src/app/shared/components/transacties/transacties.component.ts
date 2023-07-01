@@ -8,6 +8,7 @@ import {SchermGrootte, SharedService} from "../../../services/shared/shared.serv
 import {LoginService} from "../../../services/apiservice/login.service";
 import {TransactieEditorComponent} from "../editors/transactie-editor/transactie-editor.component";
 import {IdealBestellenComponent} from "../ideal-bestellen/ideal-bestellen.component";
+import {ErrorMessage} from "../../../types/Utils";
 
 @Component({
     selector: 'app-transacties',

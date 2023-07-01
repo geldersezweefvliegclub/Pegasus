@@ -6,8 +6,9 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {SharedModule} from "../../shared/shared.module";
 import {RouterModule} from "@angular/router";
 import {ExtendedModule, GridModule} from "@angular/flex-layout";
-import {BedragRenderComponent} from './transacties-grid/bedrag-render/bedrag-render.component';
-import {OmschrijvingRenderComponent} from './transacties-grid/omschrijving-render/omschrijving-render.component';
+import { BedragRenderComponent } from './transacties-grid/bedrag-render/bedrag-render.component';
+import {TransactieEditorComponent} from "../../shared/components/editors/transactie-editor/transactie-editor.component";
+import { OmschrijvingRenderComponent } from './transacties-grid/omschrijving-render/omschrijving-render.component';
 import {NgbDatepickerModule} from "@ng-bootstrap/ng-bootstrap";
 
 

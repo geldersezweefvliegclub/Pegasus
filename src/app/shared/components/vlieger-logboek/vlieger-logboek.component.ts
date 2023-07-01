@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {ColDef} from "ag-grid-community";
 import {HeliosLogboekDataset, HeliosTrack} from "../../../types/Helios";
 import {DateTime, Interval} from "luxon";

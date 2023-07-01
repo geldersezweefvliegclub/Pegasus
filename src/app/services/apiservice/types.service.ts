@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {APIService} from './api.service';
-import {HeliosType, HeliosTypes} from '../../types/Helios';
+import {HeliosStart, HeliosTrack, HeliosType, HeliosTypes} from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
 import {KeyValueArray} from '../../types/Utils';
 import {BehaviorSubject} from "rxjs";

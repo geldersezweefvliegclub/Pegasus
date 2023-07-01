@@ -1,31 +1,33 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faChevronDown, faChevronUp, faEnvelope, faInfoCircle, faStreetView} from "@fortawesome/free-solid-svg-icons";
+import {
+    faChevronDown,
+    faChevronUp,
+    faEnvelope,
+    faInfoCircle,
+    faMailBulk,
+    faStreetView
+} from "@fortawesome/free-solid-svg-icons";
 import {Subscription} from "rxjs";
 import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
-import {DagVanDeWeek} from "../../../utils/Utils";
+import {getBeginEindDatumVanMaand} from "../../../utils/Utils";
 import {DateTime} from "luxon";
 import {
-    HeliosAanwezigLedenDataset,
-    HeliosDagInfosDataset,
-    HeliosDienstenDataset,
+    HeliosAanwezigLedenDataset, HeliosDagInfosDataset, HeliosDienstenDataset,
     HeliosGast,
-    HeliosGastenDataset,
-    HeliosLid,
-    HeliosRoosterDataset,
-    HeliosType
+    HeliosGastenDataset, HeliosLid,
+    HeliosRoosterDataset, HeliosType
 } from "../../../types/Helios";
 import {RoosterService} from "../../../services/apiservice/rooster.service";
 import {ModalComponent} from "../../../shared/components/modal/modal.component";
-import {
-    LidAanwezigEditorComponent
-} from "../../../shared/components/editors/lid-aanwezig-editor/lid-aanwezig-editor.component";
+import {LidAanwezigEditorComponent} from "../../../shared/components/editors/lid-aanwezig-editor/lid-aanwezig-editor.component";
 import {LoginService} from "../../../services/apiservice/login.service";
 import {AanwezigLedenService} from "../../../services/apiservice/aanwezig-leden.service";
 import {GastenService} from "../../../services/apiservice/gasten.service";
 import {GastEditorComponent} from "../../../shared/components/editors/gast-editor/gast-editor.component";
 import {DienstenService} from "../../../services/apiservice/diensten.service";
 import {StorageService} from "../../../services/storage/storage.service";
+import {DagVanDeWeek} from "../../../utils/Utils";
 import {TypesService} from "../../../services/apiservice/types.service";
 import {DdwvService} from "../../../services/apiservice/ddwv.service";
 import {LedenService} from "../../../services/apiservice/leden.service";

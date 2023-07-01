@@ -13,8 +13,8 @@ import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
 import {
     HeliosBehaaldeProgressieDataset,
     HeliosCompetentiesDataset,
-    HeliosLid,
-    HeliosType
+    HeliosDagRapport,
+    HeliosLid, HeliosType
 } from "../../../../types/Helios";
 import {ModalComponent} from "../../modal/modal.component";
 import {ProgressieService} from "../../../../services/apiservice/progressie.service";

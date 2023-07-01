@@ -300,7 +300,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT || ui?.isStarttoren) {
             this.VliegerID = undefined;
         } else if (this.rooster) {
-            const d = (this.datum.toSQL() as string).substring(0, 10);
+            const d = (this.datum.toSQL() as string).substr(0, 10);
             const rooster: HeliosRoosterDataset | undefined = this.rooster.find((dag) => d == dag.DATUM)
 
             if (rooster) {
