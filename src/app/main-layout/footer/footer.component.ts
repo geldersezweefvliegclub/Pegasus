@@ -2,22 +2,15 @@ import {animate, style, transition, trigger} from '@angular/animations';
 import {Component} from '@angular/core';
 import {Router} from "@angular/router";
 import {SharedService} from "../../services/shared/shared.service";
+import {slideInOutLeftAnimation} from "../../utils/animations";
+
 
 @Component({
     selector: 'app-footer',
     templateUrl: './footer.component.html',
     styleUrls: ['./footer.component.scss'],
     animations: [
-        trigger('slideInOut', [
-            transition(':enter', [
-                style({ transform: 'translateX(-100%)' }),
-                animate('0.3s ease-out', style({ transform: 'translateX(0%)' }))
-            ]),
-            transition(':leave', [
-                style({ transform: 'translateX(0%)' }),
-                animate('0.3s ease-out', style({ transform: 'translateX(-100%)' }))
-            ])
-        ])
+        slideInOutLeftAnimation
     ]
 })
 export class FooterComponent {
