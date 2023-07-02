@@ -77,7 +77,6 @@
                             [(ngModel)]="kalenderIngave"
                             (dateSelect)="NieuweDatum($event)"
                             (navigate)="KalenderAndereMaand($event)"
-
                             [dayTemplate]="t">
                     </ngb-datepicker>
                 </div>
@@ -92,7 +91,7 @@
     </div>
 
     <ng-template #t let-date>
-        <span class="custom-day calendarDag">
+        <span class="custom-day calendarDag" placement="top" ngbTooltip="Tooltip on top">
             <div [ngClass]="cssCustomDay(date)">{{ date.day }} </div>
         </span>
     </ng-template>

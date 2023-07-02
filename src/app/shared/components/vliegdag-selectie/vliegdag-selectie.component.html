@@ -1,0 +1,18 @@
+<ngb-datepicker
+    #d
+    name="datumIngave"
+    class="navCalendar w-100"
+    outsideDays="hidden"
+    [minDate]="kalenderEersteDatum"
+    [maxDate]="kalenderLaatsteDatum"
+    [(ngModel)]="kalenderIngave"
+    (dateSelect)="NieuweDatum($event)"
+    (navigate)="KalenderAndereMaand($event)"
+    [dayTemplate]="t">
+</ngb-datepicker>
+
+<ng-template #t let-date>
+        <span class="custom-day calendarDag">
+            <div [ngClass]="cssCustomDay(date)">{{ date.day }} </div>
+        </span>
+</ng-template>

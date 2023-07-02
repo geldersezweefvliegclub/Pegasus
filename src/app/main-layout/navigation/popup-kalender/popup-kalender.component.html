@@ -1,23 +1,14 @@
 <app-modal titel="Kies datum">
     <div body>
-        <ngb-datepicker
-                #d
-                name="datumIngave"
-                class="navCalendar w-100"
-                outsideDays="hidden"
-                [minDate]="kalenderEersteDatum"
-                [maxDate]="kalenderLaatsteDatum"
-                [(ngModel)]="kalenderIngave"
+        <app-vliegdag-selectie
+                [daginfo]="daginfo"
+                [diensten]="diensten"
+                [vliegdagen]="vliegdagen"
+                [kalenderEersteDatum]="kalenderEersteDatum"
+                [kalenderLaatsteDatum]="kalenderLaatsteDatum"
+                [kalenderIngave]="kalenderIngave"
                 (dateSelect)="NieuweDatum($event)"
                 (navigate)="KalenderAndereMaand($event)"
-
-                [dayTemplate]="t">
-        </ngb-datepicker>
+        ></app-vliegdag-selectie>
     </div>
-
-    <ng-template #t let-date>
-        <span class="custom-day calendarDag">
-            <div [ngClass]="cssCustomDay(date)">{{ date.day }} </div>
-        </span>
-    </ng-template>
 </app-modal>
