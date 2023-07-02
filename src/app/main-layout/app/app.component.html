@@ -1,24 +1,23 @@
-<div class="alert alert-info" *ngIf="updateAvailable"  (click)="applyUpdate()">
-    <p>Er is een nieuwe versie beschikbaar. Klik hier om bij te werken</p>
-</div>
 
-<div *ngIf="heeftStartVerbod" class="startVerbod">
-Je hebt een startverbod. Graag even melden bij het bestuur.
-</div>
 
-<div *ngIf="zusterclubOntbreekDDWV && !contactBeheerderDDWV" class="contactBeheerderDDWV">
-Als DDWV deelnemen moet je vliegend lid zijn bij een aangesloten club. Neem contact op met de DDWV beheerder
-</div>
-<div *ngIf="contactBeheerderDDWV" class="contactBeheerderDDWV">
-Je kunt geen gebruik maken van DDWV, neem contact op met de DDWV beheerder
-</div>
-
-<main class="d-flex maxHoogte safe-area">
+<main class="d-flex vh-100">
     <div class="ps-0 d-none d-xl-block" *ngIf="isIngelogd">
         <app-navigation class="sticky-top"></app-navigation>
     </div>
-    <div class="w-100">
-        <div [ngClass]="'hoogte-desktop'" [ngClass.lt-lg]="'hoogte-tablet'" class="card">
+    <div class="w-100 d-flex flex-column justify-content-between">
+        <div class="alert alert-info pegasus-alert text-large" *ngIf="updateAvailable" (click)="applyUpdate()">
+            Er is een nieuwe versie beschikbaar! Klik hier om bij te werken.
+        </div>
+        <div class="alert pegasus-alert startVerbod text-large" *ngIf="heeftStartVerbod">
+            Je hebt een startverbod. Graag even melden bij het bestuur.
+        </div>
+        <div class="alert pegasus-alert contactBeheerderDDWV" *ngIf="zusterclubOntbreekDDWV && !contactBeheerderDDWV">
+            Als DDWV deelnemer moet je vliegend lid zijn bij een aangesloten club. Neem contact op met de DDWV beheerder
+        </div>
+        <div class="alert pegasus-alert contactBeheerderDDWV" *ngIf="contactBeheerderDDWV">
+            Je kunt geen gebruik maken van DDWV, neem contact op met de DDWV beheerder
+        </div>
+        <div class="card flex-grow-1">
             <div class="card-body">
                 <router-outlet></router-outlet>
             </div>

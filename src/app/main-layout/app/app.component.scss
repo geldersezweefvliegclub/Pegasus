@@ -1,0 +1,50 @@
+.card {
+    overflow-y: auto;
+}
+
+.pegasus-alert {
+    margin-bottom: 0;
+    text-align: center;
+}
+
+.text-large {
+    font-size: large;
+}
+
+.startVerbod {
+    background-color: darkorange;
+}
+
+.contactBeheerderDDWV {
+    background-color: #3a6780;
+    font-size: small;
+    color:white;
+}
+
+.app-footer {
+    width: 100%;
+}
+
+
+/* indien geinstalleerd als app, dan menu on top zetten */
+
+@media all and (display-mode: standalone) {
+    .hoogte-desktop {
+        height: calc(100lvh - 45px);
+    }
+
+    .hoogte-tablet {
+        height: calc(100lvh - 50px);
+    }
+
+    .app-footer {
+        position: fixed;
+        bottom: 10px;
+        height: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+    }
+}
+
+
