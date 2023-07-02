@@ -32,7 +32,12 @@ import {NaamRenderComponent} from './components/vlieger-logboek/naam-render/naam
 import {WachtwoordSterkteValidatorDirective} from './components/editors/lid-editor/wachtwoord-sterkte-validator.directive';
 import {RecencyGrafiekComponent} from './components/recency/recency-grafiek/recency-grafiek.component';
 import {NgChartsModule} from 'ng2-charts';
-import {NgbDatepickerModule, NgbPopoverModule, NgbProgressbarModule} from '@ng-bootstrap/ng-bootstrap';
+import {
+    NgbDatepickerModule,
+    NgbPopoverModule,
+    NgbProgressbarModule,
+    NgbTooltipModule
+} from '@ng-bootstrap/ng-bootstrap';
 import {ProgressieBoomComponent} from './components/progressie-boom/progressie-boom.component';
 import {TreeviewModule} from 'ngx-treeview';
 import {PegasusCardComponent} from './components/pegasus-card/pegasus-card.component';
@@ -98,7 +103,8 @@ import { VliegdagSelectieComponent } from './components/vliegdag-selectie/vliegd
         ImageCropperModule,
         RouterModule,
         DragDropModule,
-        ExtendedModule
+        ExtendedModule,
+        NgbTooltipModule
     ],
     declarations: [
         PegasusCardComponent,

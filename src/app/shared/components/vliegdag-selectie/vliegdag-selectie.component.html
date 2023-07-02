@@ -6,13 +6,13 @@
     [minDate]="kalenderEersteDatum"
     [maxDate]="kalenderLaatsteDatum"
     [(ngModel)]="kalenderIngave"
-    (dateSelect)="NieuweDatum($event)"
-    (navigate)="KalenderAndereMaand($event)"
+    (dateSelect)="nieuweDatumGeselecteerd($event)"
+    (navigate)="onMonthSelectionChange($event)"
     [dayTemplate]="t">
 </ngb-datepicker>
 
 <ng-template #t let-date>
-        <span class="custom-day calendarDag">
+        <span class="custom-day calendarDag" [ngbTooltip]="getTooltipText(date)">
             <div [ngClass]="cssCustomDay(date)">{{ date.day }} </div>
         </span>
 </ng-template>
