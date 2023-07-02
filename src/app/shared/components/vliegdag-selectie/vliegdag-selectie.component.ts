@@ -81,6 +81,6 @@ export class VliegdagSelectieComponent {
         if (this.isDagVliegdag(datum)) tooltipParts.push("Vliegdag")
         if (this.isGebruikerIngeroosterdVoorDag(datum)) tooltipParts.push("Ingeroosterd")
 
-        return tooltipParts.join(' & ')
+        return tooltipParts.length > 0 ? tooltipParts.join(' & ') : undefined;
     }
 }
