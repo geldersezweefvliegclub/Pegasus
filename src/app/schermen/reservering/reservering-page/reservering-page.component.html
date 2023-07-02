@@ -10,13 +10,13 @@
     <div class="h-100">
         <div class="box h-100">
             <div id="data" class="w-100">
-                <div class="dataContent w-100" *ngIf="reserveringView == 'maand'">
+                <div class="dataContent w-100" *ngIf="reserveringView === 'maand'">
                     <ng-template *ngTemplateOutlet="maand"></ng-template>
                 </div>
-                <div class="dataContent w-100" *ngIf="reserveringView == 'week'">
+                <div class="dataContent w-100" *ngIf="reserveringView === 'week'">
                     <ng-template *ngTemplateOutlet="week"></ng-template>
                 </div>
-                <div class="dataContent w-100" *ngIf="reserveringView == 'dag'">
+                <div class="dataContent w-100" *ngIf="reserveringView === 'dag'">
                     <ng-template *ngTemplateOutlet="dag"></ng-template>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                                 btnColor="btn-primary"></app-icon-button>
 
                         <app-icon-button
-                                *ngIf="reserveringView != 'dag'"
+                                *ngIf="reserveringView !== 'dag'"
                                 class="toolbarBtn ps-2"
                                 tekst="Club / DDWV"
                                 iconNaam="fas CalendarWeek" (btnClicked)="ToggleWeekendDDWV()"

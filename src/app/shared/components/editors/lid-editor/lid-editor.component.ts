@@ -283,7 +283,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     // Datum velden moeten in YYYY-MM-DD aan api worden aangeboden
     converteerDatumNaarISO($event: NgbDate): string {
         const unformatted = DateTime.fromObject($event);
-        return unformatted.isValid ? unformatted.toISODate().toString() : '';
+        return unformatted.isValid ? (unformatted.toISODate() as string) : '';
     }
 
     // Datum velden komen in ISO formaat van API, conversie naar NgbDate zodat invoer gedaan kan worden

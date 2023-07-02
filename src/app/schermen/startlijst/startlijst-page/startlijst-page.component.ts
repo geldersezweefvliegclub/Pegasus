@@ -1,4 +1,4 @@
-import {Component, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {faPen, faPenToSquare, faSortAmountDownAlt} from "@fortawesome/free-solid-svg-icons";
 import {Observable, of, Subscription} from "rxjs";
@@ -8,18 +8,23 @@ import {
     HeliosBehaaldeProgressieDataset,
     HeliosLedenDataset,
     HeliosStart,
-    HeliosStartDataset, HeliosType,
+    HeliosStartDataset,
+    HeliosType,
     HeliosVliegtuigenDataset
 } from "../../../types/Helios";
 import {DateTime, Interval} from "luxon";
 import {StartlijstService} from "../../../services/apiservice/startlijst.service";
 import {LoginService} from "../../../services/apiservice/login.service";
-import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
+import {SharedService} from "../../../services/shared/shared.service";
 import {AanwezigVliegtuigService} from "../../../services/apiservice/aanwezig-vliegtuig.service";
 import {AanwezigLedenService} from "../../../services/apiservice/aanwezig-leden.service";
-import {AanmeldenVliegtuigComponent} from "../../../shared/components/aanmelden-vliegtuig/aanmelden-vliegtuig.component";
+import {
+    AanmeldenVliegtuigComponent
+} from "../../../shared/components/aanmelden-vliegtuig/aanmelden-vliegtuig.component";
 import {AanmeldenLedenComponent} from "../../../shared/components/aanmelden-leden/aanmelden-leden.component";
-import {LidAanwezigEditorComponent} from "../../../shared/components/editors/lid-aanwezig-editor/lid-aanwezig-editor.component";
+import {
+    LidAanwezigEditorComponent
+} from "../../../shared/components/editors/lid-aanwezig-editor/lid-aanwezig-editor.component";
 import {ErrorMessage, KeyValueArray, SuccessMessage} from "../../../types/Utils";
 import {TijdInvoerComponent} from "../../../shared/components/editors/tijd-invoer/tijd-invoer.component";
 import {StartEditorComponent} from "../../../shared/components/editors/start-editor/start-editor.component";
@@ -511,7 +516,7 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
 
         const start: HeliosStart = {
             ID: undefined,
-            DATUM: this.datum.toISODate(),
+            DATUM: this.datum.toISODate() as string,
             DAGNUMMER: undefined,
             VLIEGTUIG_ID: vliegtuigID,
             VLIEGER_ID: undefined,

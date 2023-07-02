@@ -34,13 +34,13 @@
                             </div>
                         </div>
                         <div class="d-flex" *ngIf="!deleteMode">
-                            <fa-icon class="upBtn mx-3" *ngIf="i != 0" [icon]="upIcon"
+                            <fa-icon class="upBtn mx-3" *ngIf="i !== 0" [icon]="upIcon"
                                      (click)="omhoog(t.ID)"></fa-icon>
-                            <div class="mx-3" style="min-width: 18px;max-width: 18px;" *ngIf="i == 0"></div>
+                            <div class="mx-3" style="min-width: 18px;max-width: 18px;" *ngIf="i === 0"></div>
 
-                            <fa-icon class="downBtn me-5" *ngIf="i != (filteredTypes.length-1)" [icon]="downIcon"
+                            <fa-icon class="downBtn me-5" *ngIf="i !== (filteredTypes.length-1)" [icon]="downIcon"
                                      (click)="omlaag(t.ID)"></fa-icon>
-                            <div *ngIf="i == (filteredTypes.length-1)" style="width:66px;"></div>
+                            <div *ngIf="i === (filteredTypes.length-1)" style="width:66px;"></div>
                         </div>
                     </div>
                 </li>

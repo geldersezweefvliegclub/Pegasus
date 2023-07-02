@@ -6,7 +6,7 @@
     <div cdkDropListGroup class="h-100">
         <div class="box h-100">
             <div id="data">
-                <div class="dataContent w-100 h-100" *ngIf="roosterView == 'maand'">
+                <div class="dataContent w-100 h-100" *ngIf="roosterView === 'maand'">
                     <app-rooster-maandview class="w-100 h-100"
                             [zelfIndelen]="zelfIndelen"
                             [magVerwijderen]="magVerwijderen"
@@ -16,7 +16,7 @@
                             [rooster]="filteredRooster">
                     </app-rooster-maandview>
                 </div>
-                <div class="dataContent w-100 h-100" *ngIf="roosterView == 'week'">
+                <div class="dataContent w-100 h-100" *ngIf="roosterView === 'week'">
                     <app-rooster-weekview class="w-100 h-100"
                             [zelfIndelen]="zelfIndelen"
                             [magVerwijderen]="magVerwijderen"
@@ -28,7 +28,7 @@
                             [rooster]="filteredRooster">
                     </app-rooster-weekview>
                 </div>
-                <div class="dataContent w-100 h-100" *ngIf="roosterView == 'dag'">
+                <div class="dataContent w-100 h-100" *ngIf="roosterView === 'dag'">
                     <app-rooster-dagview class="w-100 h-100"
                             [zelfIndelen]="zelfIndelen"
                             [magVerwijderen]="magVerwijderen"
@@ -50,14 +50,14 @@
                                          iconNaam="fas Filter" (btnClicked)="filterPopup()"
                                          btnColor="btn-primary"></app-icon-button>
 
-                        <app-icon-button *ngIf="!isDDWVer && roosterView != 'dag'"
+                        <app-icon-button *ngIf="!isDDWVer && roosterView !== 'dag'"
                                          class="toolbarBtn"
                                          [tekst]="ddwvActief ? 'Club / DDWV' : 'Club / Alles'"
                                          iconNaam="fas CalendarWeek" (btnClicked)="ToggleWeekendDDWV()"
                                          btnColor="btn-primary"></app-icon-button>
                     </div>
                     <div class="col-xl-8 col-sm-7">
-                        <div class="d-flex align-items-end text-nowrap" id="zoekbar" *ngIf="magWijzigen && roosterView == 'maand'">
+                        <div class="d-flex align-items-end text-nowrap" id="zoekbar" *ngIf="magWijzigen && roosterView === 'maand'">
 
                             <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>
                             <input id="zoekInput"

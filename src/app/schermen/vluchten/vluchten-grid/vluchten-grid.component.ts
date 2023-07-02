@@ -1,4 +1,4 @@
-import {Component, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {StartlijstService} from '../../../services/apiservice/startlijst.service';
 import {CheckboxRenderComponent} from '../../../shared/components/datatable/checkbox-render/checkbox-render.component';
 import {faDownload} from '@fortawesome/free-solid-svg-icons';
@@ -7,18 +7,17 @@ import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {DeleteActionComponent} from '../../../shared/components/datatable/delete-action/delete-action.component';
 import {RestoreActionComponent} from '../../../shared/components/datatable/restore-action/restore-action.component';
-import {
-    HeliosDienstenDataset,
-    HeliosRoosterDataset,
-    HeliosStartDataset,
-    HeliosType
-} from '../../../types/Helios';
+import {HeliosDienstenDataset, HeliosRoosterDataset, HeliosStartDataset, HeliosType} from '../../../types/Helios';
 import {ErrorMessage, KeyValueArray, SuccessMessage} from '../../../types/Utils';
 import * as xlsx from 'xlsx';
 import {LoginService} from '../../../services/apiservice/login.service';
 import {DateTime, Interval} from 'luxon';
-import {StarttijdRenderComponent} from '../../../shared/components/datatable/starttijd-render/starttijd-render.component';
-import {LandingstijdRenderComponent} from '../../../shared/components/datatable/landingstijd-render/landingstijd-render.component';
+import {
+    StarttijdRenderComponent
+} from '../../../shared/components/datatable/starttijd-render/starttijd-render.component';
+import {
+    LandingstijdRenderComponent
+} from '../../../shared/components/datatable/landingstijd-render/landingstijd-render.component';
 import {TijdInvoerComponent} from '../../../shared/components/editors/tijd-invoer/tijd-invoer.component';
 import {StartEditorComponent} from '../../../shared/components/editors/start-editor/start-editor.component';
 import {Observable, of, Subscription} from 'rxjs';
@@ -32,7 +31,6 @@ import {VoorinRenderComponent} from "../voorin-render/voorin-render.component";
 import {AchterinRenderComponent} from "../achterin-render/achterin-render.component";
 import {DagnummerRenderComponent} from "../dagnummer-render/dagnummer-render.component";
 import {TypesService} from "../../../services/apiservice/types.service";
-import {DatatableComponent} from "../../../shared/components/datatable/datatable.component";
 
 type HeliosStartDatasetExtended = HeliosStartDataset & {
     inTijdspan?: boolean
@@ -302,7 +300,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT || ui?.isStarttoren) {
             this.VliegerID = undefined;
         } else if (this.rooster) {
-            const d = this.datum.toSQL().substr(0, 10);
+            const d = (this.datum.toSQL() as string).substring(0, 10);
             const rooster: HeliosRoosterDataset | undefined = this.rooster.find((dag) => d == dag.DATUM)
 
             if (rooster) {
@@ -435,10 +433,9 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         queryParams["SORT"] = "DATUM"
 
         let tobeExported: HeliosStartDataset[] = []
-        let bestandsnaam: string = datum.toISODate()
+        let bestandsnaam = datum.toISODate() as string
         switch (exportDMJ) {
             case "dag": {
-                bestandsnaam = datum.toISODate()
                 tobeExported = this.starts; // default is dag
                 break;
             }

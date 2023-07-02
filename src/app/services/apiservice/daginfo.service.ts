@@ -46,8 +46,8 @@ export class DaginfoService {
     // haal op, op welke dag er daginfo ingevoerd is
     async getDagen(startDatum: DateTime, eindDatum: DateTime): Promise<HeliosDagInfosDataset[]> {
         let getParams: KeyValueArray = {};
-        getParams['BEGIN_DATUM'] = startDatum.toISODate();
-        getParams['EIND_DATUM'] = eindDatum.toISODate();
+        getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
+        getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
         getParams['VELDEN'] = "ID,DATUM";
 
         try {
@@ -71,8 +71,8 @@ export class DaginfoService {
         if ((this.dagInfoTotaalCache != undefined)  && (this.dagInfoTotaalCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
             getParams['HASH'] = this.dagInfoTotaalCache.hash;
         }
-        getParams['BEGIN_DATUM'] = startDatum.toISODate();
-        getParams['EIND_DATUM'] = eindDatum.toISODate();
+        getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
+        getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
 
         if (zoekString) {
             getParams['SELECTIE'] = zoekString;
@@ -104,14 +104,14 @@ export class DaginfoService {
 
             // we halen de starts op met een datum (hebben geen ID nodig)
             if (datum) {
-                const response: Response = await this.apiService.get('Daginfo/GetObject', {'DATUM': datum.toISODate()});
+                const response: Response = await this.apiService.get('Daginfo/GetObject', {'DATUM': datum.toISODate() as string});
                 this.dagInfo = await response.json();
             }
             return this.dagInfo;
         } catch (e) {
             const rooster: HeliosRoosterDataset[] = await this.roosterService.getRooster(this.datum, this.datum);
             this.dagInfo = {
-                DATUM: this.datum.toISODate(),
+                DATUM: this.datum.toISODate() as string,
                 DDWV: (rooster.length > 0) ? rooster[0].DDWV : false,
                 CLUB_BEDRIJF: (rooster.length > 0) ? rooster[0].CLUB_BEDRIJF : false,
                 VELD_ID: undefined,

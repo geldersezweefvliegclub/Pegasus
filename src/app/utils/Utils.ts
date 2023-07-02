@@ -30,7 +30,8 @@ export const getBeginEindDatumVanMaand = (maand: number, jaar: number): { begind
 };
 
 
-export const DagVanDeWeek = (datum: string): string => {
+export const DagVanDeWeek = (datum: string | null): string => {
+  if(!datum) return "??"
   const dt: DateTime = DateTime.fromSQL(datum);
 
   switch (dt.weekday) {
@@ -48,6 +49,7 @@ export const DagVanDeWeek = (datum: string): string => {
       return "Zaterdag";
     case 7:
       return "Zondag";
+    default:
+      return "??";
   }
-  return "??";
 }

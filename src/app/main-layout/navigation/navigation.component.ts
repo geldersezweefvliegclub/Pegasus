@@ -388,11 +388,11 @@ export class NavigationComponent implements OnInit, OnDestroy  {
         const datum: DateTime = DateTime.fromObject({year: date.year, month: date.month, day: date.day})
 
         let classes = "";
-        if (this.vliegdagen.includes(datum.toISODate())) {
+        if (this.vliegdagen.includes(datum.toISODate() as string)) {
             classes += " vliegdag";
         }
 
-        if (this.dagRapporten.includes(datum.toISODate())) {
+        if (this.dagRapporten.includes(datum.toISODate() as string)) {
             classes += " dagrapport";
         }
 

@@ -62,7 +62,7 @@ export class TransactieEditorComponent implements OnInit {
 
         if (vliegdag) {
             this.vliegdag = DateTime.fromSQL(vliegdag);
-            this.nieuweTransactie.VLIEGDAG = this.vliegdag.toISODate();
+            this.nieuweTransactie.VLIEGDAG = this.vliegdag.toISODate() ?? undefined;
         }
 
         if (this.toonLidSelectie) {
@@ -125,7 +125,7 @@ export class TransactieEditorComponent implements OnInit {
     // Datum van de start aanpassen
     vliegdagAanpassen($datum: NgbDate) {
         this.vliegdag = DateTime.fromObject({year: $datum.year, month: $datum.month, day: $datum.day});
-        this.nieuweTransactie.VLIEGDAG = this.vliegdag.toISODate();
+        this.nieuweTransactie.VLIEGDAG = this.vliegdag.toISODate() ?? undefined;
     }
 
     leegMaken() {

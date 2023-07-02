@@ -122,7 +122,7 @@ export class BoekingEditorComponent implements OnInit, OnDestroy {
             // Toevoegen van reserveringen door aanroepen API
             while (datum <= eind)
             {
-                reservering.DATUM = datum.toISODate();
+                reservering.DATUM = datum.toISODate() as string;
                 try {
                     await this.reserveringenService.addReservering(reservering);
                 }

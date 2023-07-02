@@ -132,8 +132,8 @@
                                                              btnColor="btn-primary"></app-icon-button>
                                         </div>
                                     </div>
-                                    <div *ngIf="lid.LIDTYPE_ID == 601 || lid.LIDTYPE_ID == 602 || lid.LIDTYPE_ID == 603">
-                                        <div class="cssWarning" *ngIf="MedicalDatum == null">
+                                    <div *ngIf="lid.LIDTYPE_ID === 601 || lid.LIDTYPE_ID === 602 || lid.LIDTYPE_ID === 603">
+                                        <div class="cssWarning" *ngIf="MedicalDatum === null">
                                             <div class="fas fa-exclamation-triangle"></div>
                                             Medical ontbreekt
                                         </div>
@@ -276,7 +276,7 @@
                                 </div>
                             </div>
                             <div class="col-12 col-md-6 col-xl-5 col-xxl-4">
-                                <app-lid-invoer *ngIf="lid.LIDTYPE_ID == 625"
+                                <app-lid-invoer *ngIf="lid.LIDTYPE_ID === 625"
                                                 id="ZUSTERCLUB_ID"
                                                 placeholder="Zusterclub"
                                                 label="Zusterclub"

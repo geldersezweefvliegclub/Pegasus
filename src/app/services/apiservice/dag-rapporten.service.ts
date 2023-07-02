@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {APIService} from "./api.service";
 import {
-    HeliosDagInfoDagen,
     HeliosDagInfosDataset,
     HeliosDagRapport,
     HeliosDagRapporten,
@@ -92,8 +91,8 @@ export class DagRapportenService {
         }
 
         let getParams: KeyValueArray = {};
-        getParams['BEGIN_DATUM'] = startDatum.toISODate();
-        getParams['EIND_DATUM'] = eindDatum.toISODate();
+        getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
+        getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
         getParams['VELDEN'] = "ID,DATUM";
 
         try {

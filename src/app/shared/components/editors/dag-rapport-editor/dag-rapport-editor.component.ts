@@ -103,10 +103,10 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
         }
         else {
             this.dagRapport = {
-                DATUM: this.datum.toISODate(),
+                DATUM: this.datum.toISODate() as string,
                 VELD_ID: this.veld_id
             }
-            this.formTitel = "Nieuw dag rapport voor " + this.sharedService.datumDMJ(this.datum.toISODate())
+            this.formTitel = "Nieuw dag rapport voor " + this.sharedService.datumDMJ(this.datum.toISODate() as string)
         }
         this.popup.open();
     }

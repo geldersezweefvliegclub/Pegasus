@@ -32,9 +32,9 @@
                         </div>
                         <div>
                             <fa-icon [icon]="upIcon" class="upBtn me-2 clickable" (click)="omhoog(item);"
-                                     *ngIf="item.value >= 0 && item.blokID != -1"></fa-icon>
+                                     *ngIf="item.value >= 0 && item.blokID !== -1"></fa-icon>
                             <fa-icon [icon]="downIcon" class="downBtn me-2 clickable" (click)="omlaag(item);"
-                                     *ngIf="item.value >= 0 && item.blokID != -1"></fa-icon>
+                                     *ngIf="item.value >= 0 && item.blokID !== -1"></fa-icon>
                             <fa-icon [icon]="toevoegenIcon" class="addBtn me-2 clickable" (click)="toevoegen(item);"
                                      *ngIf="item.value >= 0"></fa-icon>
                         </div>
