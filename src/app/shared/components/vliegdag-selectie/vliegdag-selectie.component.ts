@@ -77,9 +77,9 @@ export class VliegdagSelectieComponent {
     getTooltipText(ngDate: NgbDate): string | undefined {
         const tooltipParts: string[] = [];
         const datum: DateTime = DateTime.fromObject({year: ngDate.year, month: ngDate.month, day: ngDate.day})
-        if(this.isDagInfoIngevuldVoorDag(datum)) tooltipParts.push("Daginfo ingevuld")
-        if(this.isDagVliegdag(datum)) tooltipParts.push("Vliegdag")
-        if(this.isGebruikerIngeroosterdVoorDag(datum)) tooltipParts.push("Ingeroosterd")
+        if (this.isDagInfoIngevuldVoorDag(datum)) tooltipParts.push("Daginfo ingevuld")
+        if (this.isDagVliegdag(datum)) tooltipParts.push("Vliegdag")
+        if (this.isGebruikerIngeroosterdVoorDag(datum)) tooltipParts.push("Ingeroosterd")
 
         return tooltipParts.join(' & ')
     }

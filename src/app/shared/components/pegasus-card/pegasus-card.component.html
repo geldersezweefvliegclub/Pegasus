@@ -1,5 +1,5 @@
-<div class="card" [ngClass]="hoogte()" >
-    <div id="ZowLpM" class="admin-up" >
+<div class="card" [ngClass]="hoogte()">
+    <div id="ZowLpM" class="admin-up">
         <div class="d-flex">
             <div id="pREyAD" class="icon" [class.bg-primary]="!img">
                 <fa-icon *ngIf="!img" [icon]="icon"></fa-icon>
@@ -11,6 +11,9 @@
                 <h4 class="text-primary"><strong>{{titel}}</strong></h4>
                 <p class="my-0">{{subtitel}}</p>
             </div>
+        </div>
+        <div class="data">
+            <ng-content select="[header]"></ng-content>
         </div>
         <div id="nnDsKv" class="excel" *ngIf="hasExportListener && exportEnabled">
             <img class="logo" src="{{exportImg}}" alt="excel logo" (click)="this.export()"/>

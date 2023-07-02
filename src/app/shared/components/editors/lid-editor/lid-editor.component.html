@@ -24,19 +24,19 @@
                     <app-image-crop (opslaan)="uploadFoto($event)" (cropped)="setAvatar($event)"
                                     *ngIf="!this.isVerwijderMode && !this.isRestoreMode"></app-image-crop>
                 </div>
-
-                <div class="DDVWtegoed d-flex flex-column" (click)="toonTransacties()" *ngIf="saldoInProfiel">
-                    <div style="font-size: x-small">
-                        DDWV tegoed
-                    </div>
-                    <div class="d-flex align-items-end justify-content-end">
-                        {{lid.TEGOED}}&nbsp;
-                        <div style="font-size: x-small;  margin-bottom: 2px;">
-                            strippen
+                <div header>
+                    <div class="DDWVtegoed d-flex flex-column" (click)="toonTransacties()" *ngIf="saldoInProfiel">
+                        <div style="font-size: x-small">
+                            Tegoed
+                        </div>
+                        <div class="d-flex align-items-end justify-content-end">
+                            {{lid.TEGOED}}&nbsp;
+                            <div style="font-size: x-small;  margin-bottom: 2px;">
+                                strippen
+                            </div>
                         </div>
                     </div>
                 </div>
-
                 <div class="cssWarning cssWarningAvatar" *ngIf="lid.AVATAR === null">
                     <div class="fas fa-exclamation-triangle"></div>
                     Avatar ontbreekt
@@ -492,7 +492,8 @@
                     <div class="row mt-2">
                         <div class="col-6">
                             <div *ngIf="isVisible('ZELFSTART_ABONNEMENT')">
-                                <input class="form-check-inline" type="checkbox" id="zelfstartAbonnement" name="zelfstartAbonnement"
+                                <input class="form-check-inline" type="checkbox" id="zelfstartAbonnement"
+                                       name="zelfstartAbonnement"
                                        [disabled]="isDisabled('zelfstartAbonnement')"
                                        [(ngModel)]="lid.ZELFSTART_ABONNEMENT">
                                 <label class="form-check-label" for="startverbod"
