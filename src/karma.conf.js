@@ -24,15 +24,15 @@ module.exports = function (config) {
             suppressAll: true // removes the duplicated traces
         },
         coverageReporter: {
-            dir: require('path').join(__dirname, './artifacts/Pegasus/test-results/coverage'),
+            dir: require('path').join(__dirname, '../artifacts/Pegasus/test-results/coverage'),
             subdir: '.',
             reporters: [
                 {type: 'html'},
                 {type: 'text-summary'},
-                      ]
+            ]
         },
         junitReporter: {
-            outputDir: './artifacts/Pegasus/test-results/junit',
+            outputDir: '../artifacts/Pegasus/test-results/junit',
             outputFile: 'junit-results.xml',
             useBrowserName: false
         },
