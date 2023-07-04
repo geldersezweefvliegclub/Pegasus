@@ -1,6 +1,5 @@
 <footer class="page-footer">
-    <app-icon-button *ngIf="toonHamburgerMenu()"
-            class="hamburger-menu" size="xl" aria-label="Hamburger menu"
+    <app-icon-button class="hamburger-menu d-lg-none" size="xl" aria-label="Hamburger menu"
             iconNaam="fas Bars" (btnClicked)="menuShowHide()" btnColor="">
     </app-icon-button>
 
@@ -11,5 +10,5 @@
 
 
 
-<app-navigation class="sidebarMenu" [topMenu]="true" *ngIf="toonMenu">
+<app-navigation class="sidebarMenu" [topMenu]="true" [@slideInOutLeft]="toonMenu" *ngIf="toonMenu">
 </app-navigation>

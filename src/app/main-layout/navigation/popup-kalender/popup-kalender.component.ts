@@ -30,35 +30,6 @@ export class PopupKalenderComponent {
     this.popup.open();
   }
 
-  // highlight de dag als er starts zijn geweest
-  cssCustomDay(date: NgbDate): string {
-    const datum: DateTime = DateTime.fromObject({year: date.year, month: date.month, day: date.day})
-
-    let classes = "";
-    if (this.vliegdagen.includes(datum.toISODate() as string)) {
-      classes += " vliegdag";
-    }
-
-    if (this.daginfo.includes(datum.toISODate() as string)) {
-      classes += " dagrapport";
-    }
-
-    if (this.diensten.includes('"DATUM":"' + datum.toISODate())) {
-      classes += " diensten";
-    }
-
-    const d = DateTime.fromObject({
-      year: this.kalenderIngave.year,
-      month: this.kalenderIngave.month,
-      day: this.kalenderIngave.day
-    });
-    if (datum.toISODate() == d.toISODate()) {
-      classes += " gekozenDatum";
-    }
-
-    return classes;
-  }
-
   NieuweDatum($event: NgbDate) {
     this.dateSelect.emit($event);
     this.popup.close();

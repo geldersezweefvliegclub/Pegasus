@@ -1,17 +1,19 @@
+import {animate, style, transition, trigger} from '@angular/animations';
 import {Component} from '@angular/core';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faBars} from "@fortawesome/free-solid-svg-icons";
-
 import {Router} from "@angular/router";
-import {SchermGrootte, SharedService} from "../../services/shared/shared.service";
+import {SharedService} from "../../services/shared/shared.service";
+import {slideInOutLeftAnimation} from "../../utils/animations";
+
 
 @Component({
     selector: 'app-footer',
     templateUrl: './footer.component.html',
-    styleUrls: ['./footer.component.scss']
+    styleUrls: ['./footer.component.scss'],
+    animations: [
+        slideInOutLeftAnimation
+    ]
 })
 export class FooterComponent {
-    jaartal = new Date().getFullYear();
     toonMenu: boolean = false;
 
     constructor(private readonly router: Router,
@@ -23,12 +25,6 @@ export class FooterComponent {
         this.sharedService.ingegevenDatum.subscribe(datum => {
             this.toonMenu = false;
         });
-    }
-
-    menuIcon: IconDefinition = faBars;
-
-    toonHamburgerMenu() {
-        return (this.sharedService.getSchermSize() <= SchermGrootte.lg);
     }
 
     menuShowHide() {
