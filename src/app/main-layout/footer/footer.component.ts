@@ -1,9 +1,8 @@
 import {Component} from '@angular/core';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faBars} from "@fortawesome/free-solid-svg-icons";
+import {NavigationEnd, Router} from "@angular/router";
+import {SharedService} from "../../services/shared/shared.service";
+import {filter} from "rxjs/operators";
 
-import {Router} from "@angular/router";
-import {SchermGrootte, SharedService} from "../../services/shared/shared.service";
 
 @Component({
     selector: 'app-footer',
@@ -16,19 +15,12 @@ export class FooterComponent {
 
     constructor(private readonly router: Router,
                 private readonly sharedService: SharedService) {
-        this.router.events.subscribe(() => {
-            this.toonMenu = false;
-        });
-
+        this.router.events
+            .pipe(filter(event => event instanceof NavigationEnd))
+            .subscribe(() => this.toonMenu = false);
         this.sharedService.ingegevenDatum.subscribe(datum => {
             this.toonMenu = false;
         });
-    }
-
-    menuIcon: IconDefinition = faBars;
-
-    toonHamburgerMenu() {
-        return (this.sharedService.getSchermSize() <= SchermGrootte.lg);
     }
 
     menuShowHide() {
