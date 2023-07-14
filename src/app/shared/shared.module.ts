@@ -32,7 +32,12 @@ import {NaamRenderComponent} from './components/vlieger-logboek/naam-render/naam
 import {WachtwoordSterkteValidatorDirective} from './components/editors/lid-editor/wachtwoord-sterkte-validator.directive';
 import {RecencyGrafiekComponent} from './components/recency/recency-grafiek/recency-grafiek.component';
 import {NgChartsModule} from 'ng2-charts';
-import {NgbDatepickerModule, NgbPopoverModule, NgbProgressbarModule} from '@ng-bootstrap/ng-bootstrap';
+import {
+    NgbDatepickerModule,
+    NgbPopoverModule,
+    NgbProgressbarModule,
+    NgbTooltipModule
+} from '@ng-bootstrap/ng-bootstrap';
 import {ProgressieBoomComponent} from './components/progressie-boom/progressie-boom.component';
 import {TreeviewModule} from 'ngx-treeview';
 import {PegasusCardComponent} from './components/pegasus-card/pegasus-card.component';
@@ -79,6 +84,7 @@ import {VoortgangComponent} from './components/voortgang/voortgang.component';
 import { DocumentEditorComponent } from './components/editors/document-editor/document-editor.component';
 import { UitbetalenDdwvCrewEditorComponent } from './components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component';
 import { StartGrafiekComponent } from './components/recency/start-grafiek/start-grafiek.component';
+import { VliegdagSelectieComponent } from './components/vliegdag-selectie/vliegdag-selectie.component';
 
 @NgModule({
     imports: [
@@ -97,7 +103,8 @@ import { StartGrafiekComponent } from './components/recency/start-grafiek/start-
         ImageCropperModule,
         RouterModule,
         DragDropModule,
-        ExtendedModule
+        ExtendedModule,
+        NgbTooltipModule
     ],
     declarations: [
         PegasusCardComponent,
@@ -167,6 +174,7 @@ import { StartGrafiekComponent } from './components/recency/start-grafiek/start-
         DocumentEditorComponent,
         UitbetalenDdwvCrewEditorComponent,
         StartGrafiekComponent,
+        VliegdagSelectieComponent,
     ],
     exports: [
         LidEditorComponent,
@@ -212,7 +220,8 @@ import { StartGrafiekComponent } from './components/recency/start-grafiek/start-
         TransactiesComponent,
         DagRapportEditorComponent,
         DocumentEditorComponent,
-        UitbetalenDdwvCrewEditorComponent
+        UitbetalenDdwvCrewEditorComponent,
+        VliegdagSelectieComponent
     ],
     providers: [],
     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

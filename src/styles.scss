@@ -40,6 +40,21 @@ footer {
   height: $footer-height;
 }
 
+/**
+ * Op dit moment in gebruik in het dashboard-scherm & lid-editor
+ */
+.DDWVtegoed {
+  @extend .me-3;
+  cursor: pointer;
+  padding: 10px 10px 10px 10px;
+
+  background-color: #28a745;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+}
+
+
 // De dagen van de week
 .Maandag {
   background-color: #E0E2DB !important;
