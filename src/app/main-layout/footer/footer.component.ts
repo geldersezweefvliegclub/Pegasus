@@ -1,10 +1,7 @@
-import {animate, style, transition, trigger} from '@angular/animations';
 import {Component} from '@angular/core';
-import {Router} from "@angular/router";
-import {SharedService} from "../../services/shared/shared.service";
-import {slideInOutLeftAnimation} from "../../utils/animations";
 import {NavigationEnd, Router} from "@angular/router";
 import {SharedService} from "../../services/shared/shared.service";
+import {slideInOutLeftAnimation} from "../../utils/animations";
 import {filter} from "rxjs/operators";
 
 
