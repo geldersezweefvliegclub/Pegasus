@@ -20,7 +20,7 @@ html {
 body {
   background-color: #eee;
   font-size: 0.9rem;
-  overflow-y:hidden;
+  overflow-y: hidden;
 }
 
 .mb-2, .my-2 {
@@ -349,8 +349,6 @@ body > .popupMedium > div {
 }
 
 
-
-
 // recency grafiek, progress bar
 .bg-info {
   background-color: getColor('secondary') !important;
@@ -410,4 +408,8 @@ canvas.recencyGrafiek.chartjs-render-monitor {
     font-size: 14px;
     margin: 0;
   }
+}
+
+.dvh-100 {
+  height: 100dvh;
 }
