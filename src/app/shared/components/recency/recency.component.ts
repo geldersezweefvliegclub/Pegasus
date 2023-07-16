@@ -5,7 +5,7 @@ import {RecencyGrafiekComponent} from "./recency-grafiek/recency-grafiek.compone
 import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
 import {InstructieGrafiekComponent} from "./instructie-grafiek/instructie-grafiek.component";
 import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faCircleCheck, faCircleXmark, faEnvelope} from "@fortawesome/free-solid-svg-icons";
+import {faCircleCheck, faCircleXmark, faEnvelope, faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
 import {DateTime} from "luxon";
 import {StartGrafiekComponent} from "./start-grafiek/start-grafiek.component";
@@ -39,8 +39,9 @@ export class RecencyComponent implements OnInit, OnChanges {
     @ViewChild(InstructieGrafiekComponent) private grafiekInstructie: InstructieGrafiekComponent;
     @ViewChild(StartGrafiekComponent) private grafiekStarts: StartGrafiekComponent;
 
-    checkIcon: IconDefinition = faCircleCheck;
-    declineIcon: IconDefinition = faCircleXmark;
+    readonly checkIcon: IconDefinition = faCircleCheck;
+    readonly declineIcon: IconDefinition = faCircleXmark;
+    readonly infoIcon: IconDefinition = faInfoCircle;
 
     aantekeningen: HeliosBehaaldeProgressieDataset[];
 

@@ -1,6 +1,19 @@
 <app-error [error]="error"></app-error>
 <app-success [success]="success"></app-success>
 
+<ng-template #startsPopover>
+EASA minimum is 15 starts en 5 uur per 24 maanden
+</ng-template>
+<ng-template #methodePopover>
+    EASA minimum is 5 starts per startmethode per 24 maanden
+</ng-template>
+<ng-template #paxPopover>
+    EASA minimum is 3 starts in de laatste 3 maanden
+</ng-template>
+<ng-template #checksPopover>
+    EASA minimum is 2 trainingsvluchten per 24 maanden
+</ng-template>
+
 <div *ngIf="recency">
     <div *ngIf="Vlieger && Vlieger.STATUSTYPE_ID === 1903">
         <p *ngIf="!toonEASA" class="easa" (click)="toonEASA = !toonEASA" [ngClass]="{'geenGeldigBrevet': geenGeldigBrevet() }">EASA</p>
@@ -49,7 +62,10 @@
             <table>
                 <tr>
                     <td class="w-100">
-                        <p class="beschrijving">{{recency.STARTS_24_MND}} starts en {{recency.UREN_24_MND}} uur</p>
+                        <p class="beschrijving">{{recency.STARTS_24_MND}} starts en {{recency.UREN_24_MND}} uur
+                        <fa-icon [icon]="infoIcon" [ngbPopover]="startsPopover" placement="right"
+                                 class="text-info ms-2 clickable"></fa-icon>
+                        </p>
                     </td>
                     <td>
                         <fa-icon *ngIf="brevet.aantal" class="checkIcon" [icon]="checkIcon"></fa-icon>
@@ -59,7 +75,10 @@
 
                 <tr>
                     <td colspan="2">
-                        <ul class="listHeader">Startmethode</ul>
+                        <ul class="listHeader">Startmethode
+                            <fa-icon [icon]="infoIcon" [ngbPopover]="methodePopover" placement="right"
+                                 class="text-info ms-2 clickable"></fa-icon>
+                        </ul>
                     </td>
                 </tr>
                 <tr>
@@ -101,7 +120,10 @@
 
                 <tr *ngIf="brevet.pax !== -1">
                     <td class="w-100">
-                        <div class="beschrijving">Passagiers vliegen</div>
+                        <div class="beschrijving">Passagiers vliegen
+                            <fa-icon [icon]="infoIcon" [ngbPopover]="paxPopover" placement="right"
+                                     class="text-info ms-2 clickable"></fa-icon>
+                        </div>
                     </td>
                     <td>
                         <fa-icon *ngIf="brevet.pax === 1"  class="checkIcon" [icon]="checkIcon"></fa-icon>
@@ -119,7 +141,10 @@
                 </tr>
                 <tr>
                     <td class="w-100">
-                        <div class="beschrijving"><span style="color: #0e6ffd; font-weight: bold; text-decoration: underline; cursor: pointer" (click)="toonCheckDatum()">Trainingsvluchten</span></div>
+                        <div class="beschrijving"><span style="color: #0e6ffd; font-weight: bold; text-decoration: underline; cursor: pointer" (click)="toonCheckDatum()">Trainingsvluchten</span>
+                            <fa-icon [icon]="infoIcon" [ngbPopover]="checksPopover" placement="right"
+                                     class="text-info ms-2 clickable"></fa-icon>
+                        </div>
                     </td>
                     <td>
                         <fa-icon *ngIf="recency.CHECKS.length >= 2"  class="checkIcon" [icon]="checkIcon"></fa-icon>
