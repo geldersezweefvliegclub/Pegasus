@@ -66,8 +66,7 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
     magVerwijderen: boolean = false;
     magWijzigen: boolean = false;
 
-    geselecteerdLid: number;
-    Naam: string;
+    geselecteerdLid: HeliosLedenDataset;
 
     constructor(private readonly trackService: TracksService,
                 private readonly ledenService: LedenService,
@@ -208,9 +207,8 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
         }
     }
 
-    trackSelected(l: TracksLedenDataset) {
-        this.geselecteerdLid = l.LID_ID as number;
-        this.Naam = l.lid.NAAM as string;
+    trackSelected(s: TracksLedenDataset) {
+        this.geselecteerdLid = this.leden.find(l => l.ID == s.LID_ID) as HeliosLedenDataset;
     }
 
     tijdString(dt: string): string {

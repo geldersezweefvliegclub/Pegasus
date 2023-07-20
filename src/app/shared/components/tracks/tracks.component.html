@@ -109,7 +109,7 @@
 
     <div class="col-3 kolomRechts d-none d-xxl-block" *ngIf="toonLid">
         <div *ngIf="geselecteerdLid">
-            <h4>{{Naam}}</h4>
+            <h4>{{geselecteerdLid.NAAM}}</h4>
             <div class="container">
                 <app-pegasus-card id="statusCard"
                                   class="kleineKaart"
@@ -117,7 +117,7 @@
                                   subtitel="Vliegstatus"
                                   minimum="true"
                                   [icon]="iconStatus">
-                    <app-status [VliegerID]="geselecteerdLid"></app-status>
+                    <app-status [Vlieger]="geselecteerdLid"></app-status>
                 </app-pegasus-card>
             </div>
             <div class="container">
@@ -127,7 +127,7 @@
                                   subtitel="Proef van bekwaamheid"
                                   minimum="true"
                                   [icon]="iconPVB">
-                    <app-pvb [VliegerID]="geselecteerdLid"></app-pvb>
+                    <app-pvb [VliegerID]="geselecteerdLid.ID"></app-pvb>
                 </app-pegasus-card>
             </div>
             <div class="container">
@@ -137,7 +137,7 @@
                                   subtitel="Trainingsbarometer"
                                   minimum="true"
                                   [icon]="iconRecency">
-                    <app-recency [VliegerID]="geselecteerdLid" [naam]="Naam"></app-recency>
+                    <app-recency [Vlieger]="geselecteerdLid" [naam]="geselecteerdLid.NAAM"></app-recency>
                 </app-pegasus-card>
             </div>
             <div class="container">
@@ -148,7 +148,7 @@
                                   minimum="true"
                                   [icon]="iconPlane">
                     <app-vlieger-logboek-totalen
-                            [VliegerID]="geselecteerdLid"></app-vlieger-logboek-totalen>
+                            [VliegerID]="geselecteerdLid.ID"></app-vlieger-logboek-totalen>
                 </app-pegasus-card>
             </div>
         </div>

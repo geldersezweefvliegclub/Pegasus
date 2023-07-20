@@ -106,6 +106,9 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
     CheckDisabled(comptentieID: number): boolean {
         const ui = this.loginService.userInfo?.Userinfo;
 
+        if (this.Vlieger === undefined) {
+            return true;    // als de vlieger niet bekend is, kunnen er ook geen vinkjes gezet worden
+        }
         if (this.Vlieger.ID == this.loginService.userInfo?.LidData?.ID) {
             return true;    // niet voor jezelf vinkjes zetten
         }
