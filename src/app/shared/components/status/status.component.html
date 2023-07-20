@@ -51,4 +51,4 @@
     <app-loader></app-loader>
 </div>
 
-<app-progressie-editor [competenties]="competenties" [vliegerID]="Vlieger.ID!" (aangepast)="ophalen()"></app-progressie-editor>
+<app-progressie-editor [competenties]="competenties" *ngIf="Vlieger" [vliegerID]="Vlieger.ID!" (aangepast)="ophalen()"></app-progressie-editor>
