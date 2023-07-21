@@ -58,7 +58,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     isSaving: boolean = false;
     isMobiel: boolean = true;
 
-    saldoInProfiel: boolean = false;
+    saldoTonen: boolean = false;
 
     MedicalDatum: NgbDate | null;
     GeboorteDatum: NgbDate | null;
@@ -110,7 +110,14 @@ export class LidEditorComponent implements OnInit, OnDestroy {
             this.onWindowResize();
         });
 
-        this.saldoInProfiel = this.configService.saldoActief();
+        // saldo tonen we alleen voor onszelf, behalve als we (DDWV) beheerder zijn, dan mogen we ook ondere leden zien
+        const ui = this.loginService.userInfo?.Userinfo;
+        if (this.lid.ID == this.loginService.userInfo?.LidData?.ID) {
+            this.saldoTonen = this.configService.saldoActief() && (ui!.isDDWV! || ui!.isClubVlieger!);
+        }
+        else {
+            this.saldoTonen = this.configService.saldoActief() && (ui?.isBeheerder! || ui?.isBeheerderDDWV!);
+        }
         this.opvragen();
     }
 
