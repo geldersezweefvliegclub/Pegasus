@@ -110,14 +110,6 @@ export class LidEditorComponent implements OnInit, OnDestroy {
             this.onWindowResize();
         });
 
-        // saldo tonen we alleen voor onszelf, behalve als we (DDWV) beheerder zijn, dan mogen we ook ondere leden zien
-        const ui = this.loginService.userInfo?.Userinfo;
-        if (this.lid.ID == this.loginService.userInfo?.LidData?.ID) {
-            this.saldoTonen = this.configService.saldoActief() && (ui!.isDDWV! || ui!.isClubVlieger!);
-        }
-        else {
-            this.saldoTonen = this.configService.saldoActief() && (ui?.isBeheerder! || ui?.isBeheerderDDWV!);
-        }
         this.opvragen();
     }
 
@@ -131,6 +123,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
 
     // opvragen van lid informatie, of creeer nieuw lid
     opvragen() {
+        this.saldoTonen = false;
 
         // als lidID > 0, dan wijzigen we een bestaand lid profiel
         if (this.lidID >= 0) {
@@ -153,6 +146,15 @@ export class LidEditorComponent implements OnInit, OnDestroy {
                     this.GeboorteDatum = this.converteerDatumNaarNgbDate(lid.GEBOORTE_DATUM);
                     this.avatar = lid.AVATAR + "";  // voorkom dat lid.avatar undefined is. Dan kan je geen avatar uploaden
                     this.isLoading = false;
+
+                    // saldo tonen we alleen voor onszelf, behalve als we (DDWV) beheerder zijn, dan mogen we ook ondere leden zien
+                    const ui = this.loginService.userInfo?.Userinfo;
+                    if (this.lid.ID == this.loginService.userInfo?.LidData?.ID) {
+                        this.saldoTonen = this.configService.saldoActief() && (ui!.isDDWV! || ui!.isClubVlieger!);
+                    }
+                    else {
+                        this.saldoTonen = this.configService.saldoActief() && (ui?.isBeheerder! || ui?.isBeheerderDDWV!);
+                    }
                 });
             } catch (e) {
                 this.isLoading = false;

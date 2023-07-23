@@ -127,10 +127,14 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
                 this.ledenService.getLid(lidID).then((l) => {
                     this.lidData = l
                     this.isDDWVer = (this.lidData.LIDTYPE_ID == 625);
+
+                    this.magSaldoTonen();
                 });
             } else {
                 this.lidData = this.loginService.userInfo?.LidData as HeliosLid;
                 this.isDDWVer = (this.loginService.userInfo?.Userinfo?.isDDWV!);
+
+                this.magSaldoTonen()
             }
         });
 
@@ -138,14 +142,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
         if (ui?.isStarttoren) {
             this.router.navigate(['vluchten']);
-        }
-
-        // saldo tonen we alleen voor onszelf, behalve als we (DDWV) beheerder zijn, dan mogen we ook ondere leden zien
-        if (this.lidData.ID == this.loginService.userInfo?.LidData?.ID) {
-            this.saldoTonen = this.configService.saldoActief() && (ui!.isDDWV! || ui!.isClubVlieger!);
-        }
-        else {
-            this.saldoTonen = this.configService.saldoActief() && (ui?.isBeheerder! || ui?.isBeheerderDDWV!);
         }
 
         this.toonTracks = (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) ? true : false;
@@ -417,6 +413,19 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     // openen van windows voor het tonen van de transacties
     toonTransacties() {
         this.transactieScherm.openPopup(this.lidData!.ID!, this.ddwvService.magBestellen(this.lidData.TEGOED));
+    }
+
+    magSaldoTonen() {
+        const ui = this.loginService.userInfo?.Userinfo;
+
+        if (this.lidData) {
+            // saldo tonen we alleen voor onszelf, behalve als we (DDWV) beheerder zijn, dan mogen we ook ondere leden zien
+            if (this.lidData.ID == this.loginService.userInfo?.LidData?.ID) {
+                this.saldoTonen = this.configService.saldoActief() && (ui!.isDDWV! || ui!.isClubVlieger!);
+            } else {
+                this.saldoTonen = this.configService.saldoActief() && (ui?.isBeheerder! || ui?.isBeheerderDDWV!);
+            }
+        }
     }
 
     opvragenLid() {
