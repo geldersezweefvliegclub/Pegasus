@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {NgbDate, NgbDateParserFormatter, NgbDatepickerNavigateEvent, NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
 import {DateTime} from "luxon";
-import {ModalComponent} from "../../../shared/components/modal/modal.component";
-import {NgbDateFRParserFormatter} from "../../../shared/ngb-date-fr-parser-formatter";
+import {ModalComponent} from "../../modal/modal.component";
+import {NgbDateFRParserFormatter} from "../../../ngb-date-fr-parser-formatter";
 
 @Component({
   selector: 'app-popup-kalender',

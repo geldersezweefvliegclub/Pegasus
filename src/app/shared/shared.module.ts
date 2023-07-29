@@ -85,6 +85,7 @@ import { DocumentEditorComponent } from './components/editors/document-editor/do
 import { UitbetalenDdwvCrewEditorComponent } from './components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component';
 import { StartGrafiekComponent } from './components/recency/start-grafiek/start-grafiek.component';
 import { VliegdagSelectieComponent } from './components/vliegdag-selectie/vliegdag-selectie.component';
+import { NavigatieComponent } from './components/navigatie/navigatie.component';
 
 @NgModule({
     imports: [
@@ -175,6 +176,7 @@ import { VliegdagSelectieComponent } from './components/vliegdag-selectie/vliegd
         UitbetalenDdwvCrewEditorComponent,
         StartGrafiekComponent,
         VliegdagSelectieComponent,
+        NavigatieComponent,
     ],
     exports: [
         LidEditorComponent,
@@ -221,7 +223,8 @@ import { VliegdagSelectieComponent } from './components/vliegdag-selectie/vliegd
         DagRapportEditorComponent,
         DocumentEditorComponent,
         UitbetalenDdwvCrewEditorComponent,
-        VliegdagSelectieComponent
+        VliegdagSelectieComponent,
+        NavigatieComponent
     ],
     providers: [],
     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]
