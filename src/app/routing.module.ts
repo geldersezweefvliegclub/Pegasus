@@ -40,6 +40,20 @@ export const routes: CustomRoute[] = [
         text: 'EXCLUDED'
     },
     {
+        path: 'login',
+        loadChildren: () => import('./schermen/login/login.module').then(m => m.LoginModule),
+        excluded: true,
+        icon: faKey,
+        text: 'Login'
+    },
+    {
+        path: 'hoofdscherm',
+        loadChildren: () => import('./schermen/hoofmenu/hoofmenu.module').then(m => m.HoofmenuModule),
+        excluded: true,
+        icon: faKey,
+        text: 'Hoofdscherm'
+    },
+    {
         path: 'dashboard',
         loadChildren: () => import('./schermen/dashboard/dashboard.module').then(m => m.DashboardModule),
         excluded: false,
@@ -108,13 +122,6 @@ export const routes: CustomRoute[] = [
         excluded: false,
         icon: faPlane,
         text: 'Vliegtuigen'
-    },
-    {
-        path: 'login',
-        loadChildren: () => import('./schermen/login/login.module').then(m => m.LoginModule),
-        excluded: true,
-        icon: faKey,
-        text: 'Login'
     },
     {
         path: 'profiel',

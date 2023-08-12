@@ -21,10 +21,30 @@
     color:white;
 }
 
-.app-footer {
-    width: 100%;
+.terugBtn {
+    --bs-btn-color: #000;
+    --bs-btn-bg: rgb(238 238 238);
+    --bs-btn-border-color: rgb(238 238 238);
+    --bs-btn-hover-color: #000;
+    --bs-btn-hover-bg: #dbb864;
+    --bs-btn-hover-border-color: #d9b45b;
+    --bs-btn-focus-shadow-rgb: 181, 146, 62;
+    --bs-btn-active-color: #000;
+    --bs-btn-active-bg: #ddbd6d;
+    --bs-btn-active-border-color: #d9b45b;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #000;
+    --bs-btn-disabled-bg: rgb(213, 172, 73);
+    --bs-btn-disabled-border-color: rgb(213, 172, 73);
 }
 
+.page-footer {
+    background-color: #eaeaea;
+
+    div {
+        height: 2.5em;
+    }
+}
 
 /* indien geinstalleerd als app, dan menu on top zetten */
 
@@ -36,15 +56,8 @@
     .hoogte-tablet {
         height: calc(100lvh - 50px);
     }
-
-    .app-footer {
-        position: fixed;
-        bottom: 10px;
-        height: 10px;
-        display: flex;
-        flex-direction: column;
-        justify-content: end;
-    }
 }
+
+
 
 

@@ -14,7 +14,6 @@ import {HttpClientModule} from '@angular/common/http';
 import {ExtendedModule} from "@angular/flex-layout";
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
-import {PopupKalenderComponent} from "./shared/components/navigatie/popup-kalender/popup-kalender.component";
 
 export function initializeApp(appConfigService: PegasusConfigService) {
     return (): Promise<any> => {
@@ -25,8 +24,7 @@ export function initializeApp(appConfigService: PegasusConfigService) {
 @NgModule({
     declarations: [
         AppComponent,
-        FooterComponent,
-        PopupKalenderComponent
+        FooterComponent
     ],
     imports: [
         BrowserModule,

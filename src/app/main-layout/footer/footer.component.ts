@@ -25,9 +25,5 @@ export class FooterComponent {
             this.toonMenu = false;
         });
     }
-
-    menuShowHide() {
-        this.toonMenu = !this.toonMenu;
-    }
 }
 

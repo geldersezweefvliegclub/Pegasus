@@ -33,6 +33,8 @@ export class ModalComponent {
     }
 
     close() {
-        this.modalRef.close();
+        if (this.modalRef !== undefined) {
+            this.modalRef.close();
+        }
     }
 }

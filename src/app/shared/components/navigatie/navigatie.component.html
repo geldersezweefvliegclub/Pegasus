@@ -10,20 +10,91 @@
     Uw avatar ontbreekt, graag toevoegen.
 </ng-template>
 
-<nav>
+<nav class="h-100">
+    <ng-container *ngIf="!hoofdscherm" [ngTemplateOutlet]="menuInside"></ng-container>
+    <ng-container class="d-flex h-100" *ngIf="hoofdscherm" [ngTemplateOutlet]="menuScherm"></ng-container>
+</nav>
+
+<ng-template #menuScherm>
+    <div class="h-100 row">
+        <div class="row" *ngIf="!showBeheer">
+            <div class="p-0 col-12 col-sm-6 col-md-3" *ngFor="let route of activeRoutes() ;let i=index;">
+                    <a
+                            class="menuButton menuItemScherm"
+                            routerLinkActive="active"
+                            [routerLink]="'/' + route.path"
+                    >
+                        <div class="text-nowrap">
+                            <fa-icon [icon]="route.icon" class="me-3"></fa-icon>
+                            {{route.text}}
+                            <div class="badge bg-danger ms-2" *ngIf="route.batch" [innerHTML]="route.batch"></div>
+                        </div>
+                    </a>
+            </div>
+
+            <div class="p-0 col-12 col-sm-6 col-md-3">
+                <a class="menuButton menuItemScherm" (click)="Uitloggen()">
+                    <fa-icon [icon]="logUitIcon" class="me-3"></fa-icon>
+                    Uitloggen
+                </a>
+            </div>
+        </div>
+
+        <div class="flex-grow-1"></div>
+        <div class="-d-flex row align-content-end" *ngIf="!this.loginService.userInfo?.Userinfo.isStarttoren">
+
+
+            <div class="p-0 col-12 col-sm-6 col-md-3">
+                <a class="menuButton menuItemScherm" (click)="showBeheer = !showBeheer">
+                    <fa-icon [icon]="beheerIcon" class="me-3"></fa-icon>
+                    Beheer
+                </a>
+            </div>
+            <div *ngIf="showBeheer">
+                <div class="p-0 col-12 col-sm-6 col-md-3" *ngFor="let route of activeBeheerRoutes() ;let i=index;">
+                    <a
+                            class="menuButton menuItemScherm"
+                            routerLinkActive="active"
+                            [routerLink]="'/' + route.path"
+                    >
+                        <div class="text-nowrap">
+                            <fa-icon [icon]="route.icon" class="me-3"></fa-icon>
+                            {{route.text}}
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="p-0" *ngIf="!showBeheer">
+                <div *ngIf="kleineDatum()" class="d-flex">
+                    <div class="datumVeld">{{datumDMY}}</div>
+                    <app-icon-button iconNaam="far Calendar" (btnClicked)="popupKalender.openPopup()"
+                                     btnColor="btn-primary"></app-icon-button>
+                </div>
+                <div class="w-100 overflow-auto" style="max-width: 280px;" *ngIf="!kleineDatum() && !showBeheer">
+                    <app-vliegdag-selectie
+                            [kalenderIngave]="kalenderIngave"
+                            (dateSelect)="NieuweDatum($event)"
+                    ></app-vliegdag-selectie>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #menuInside>
     <div class="card ps-0 rounded-0" >
-        <div class="linker-menu d-flex flex-column justify-content-between"
-             [ngClass]="{'min-vh-100': !topMenu,'bovenop': topMenu, 'linker-menu-smal': kleineDatum()}">
+        <div class="linker-menu d-flex flex-column justify-content-between min-vh-100'"
+             [ngClass]="{'linker-menu-smal': kleineDatum()}">
 
             <div class="list-group list-group-flush p-3">
                 <div class="logoContainer" *ngIf="toonLogo()">
                     <img src="/assets/img/logo.png" class="logo" alt="logo">
                 </div>
-                <ng-template ngFor let-route [ngForOf]="routes">
+                <ng-template ngFor let-route [ngForOf]="activeRoutes()">
                     <a
                             class="list-group-item list-group-item-action waves-effect py-2"
                             routerLinkActive="active"
-                            *ngIf="!route.excluded"
                             [routerLink]="route.path"
                     >
                         <div class="text-nowrap">
@@ -49,11 +120,10 @@
                     <fa-icon [icon]="beheerIcon" class="me-3"></fa-icon>
                     Beheer
                     <div *ngIf="showBeheer">
-                        <ng-template ngFor let-route [ngForOf]="beheerRoutes">
+                        <ng-template ngFor let-route [ngForOf]="activeBeheerRoutes">
                             <a
                                     class="list-group-item list-subgroup-item list-group-item-action waves-effect py-2"
                                     routerLinkActive="active"
-                                    *ngIf="!route.excluded"
                                     [routerLink]="route.path"
                             >
                                 <div class="text-nowrap">
@@ -67,14 +137,7 @@
 
                 <div class="w-100 overflow-auto" *ngIf="!kleineDatum() && !showBeheer">
                     <app-vliegdag-selectie
-                            [daginfo]="dagRapporten"
-                            [diensten]="diensten"
-                            [vliegdagen]="vliegdagen"
-                            [kalenderEersteDatum]="kalenderEersteDatum"
-                            [kalenderLaatsteDatum]="kalenderLaatsteDatum"
-                            [kalenderIngave]="kalenderIngave"
                             (dateSelect)="NieuweDatum($event)"
-                            (navigate)="KalenderAndereMaand($event)"
                     ></app-vliegdag-selectie>
                 </div>
 
@@ -86,15 +149,6 @@
             </div>
         </div>
     </div>
-</nav>
+</ng-template>
 
-<app-popup-kalender
-        [daginfo]="dagRapporten"
-        [diensten]="diensten"
-        [vliegdagen]="vliegdagen"
-        [kalenderEersteDatum]="kalenderEersteDatum"
-        [kalenderLaatsteDatum]="kalenderLaatsteDatum"
-        [kalenderIngave]="kalenderIngave"
-        (dateSelect)="NieuweDatum($event)"
-        (navigate)="KalenderAndereMaand($event)"
-></app-popup-kalender>
+<app-popup-kalender></app-popup-kalender>

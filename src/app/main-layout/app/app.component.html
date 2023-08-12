@@ -2,7 +2,25 @@
     <div class="ps-0 d-none d-xl-block" *ngIf="isIngelogd">
         <app-navigatie class="sticky-top"></app-navigatie>
     </div>
+
     <div class="w-100 d-flex flex-column justify-content-between">
+        <!-- hoofdscherm & login hebben geen terug -->
+        <div *ngIf="this.router.url !== '/hoofdscherm' && this.router.url !== '/login'">
+            <div class="d-flex justify-content-between d-block d-xl-none">
+                <app-icon-button iconNaam="fas ChevronLeft"
+                                 btnColor="rgb(238 238 238);"
+                                 (btnClicked)="hoofdmenu()"
+                ></app-icon-button>
+
+                <div class="d-flex flex-row pe-4 align-items-center">
+                    <div class="pe-2">{{datumDMY}}</div>
+                    <app-icon-button iconNaam="far Calendar" (btnClicked)="popupKalender.openPopup()"
+                                     btnColor="btn-primary"></app-icon-button>
+                </div>
+            </div>
+
+
+        </div>
         <div class="alert alert-info pegasus-alert text-large" *ngIf="updateAvailable" (click)="applyUpdate()">
             Er is een nieuwe versie beschikbaar! Klik hier om bij te werken.
         </div>
@@ -20,6 +38,12 @@
                 <router-outlet></router-outlet>
             </div>
         </div>
-        <app-footer *ngIf="isIngelogd" class="app-footer"></app-footer>
+        <footer  *ngIf="isIngelogd" class="page-footer d-flex justify-content-around align-items-center flex-row mx-1">
+            <div class="d-flex align-items-center justify-content-center bg-primary mt-1 mb-1 rounded text-white-50 font-small w-100">
+                Mogelijk gemaakt door de GeZC
+            </div>
+        </footer>
     </div>
 </main>
+
+<app-popup-kalender></app-popup-kalender>
