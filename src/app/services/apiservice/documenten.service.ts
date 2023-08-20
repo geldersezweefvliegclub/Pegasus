@@ -6,6 +6,7 @@ import {
 } from "../../types/Helios";
 import {KeyValueArray} from "../../types/Utils";
 import {StorageService} from "../storage/storage.service";
+import {LoginService} from "./login.service";
 
 @Injectable({
     providedIn: 'root'
@@ -14,6 +15,7 @@ export class DocumentenService {
     private documentenCache: HeliosDocumenten = {dataset: []};      // return waarde van API call
 
     constructor(private readonly apiService: APIService,
+                private readonly loginService: LoginService,
                 private readonly storageService: StorageService) {
 
         // We hebben misschien eerder de documenten opgehaald. Die laden we alvast
@@ -24,6 +26,11 @@ export class DocumentenService {
 
     async getDocumenten(verwijderd: boolean = false, groep: number | undefined = undefined): Promise<HeliosDocumentenDataset[]> {
         let getParams: KeyValueArray = {};
+
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
 
         if (groep) {
             getParams['GROEPEN'] = groep;
@@ -50,8 +57,11 @@ export class DocumentenService {
     }
 
     async getDocument(id: number): Promise<HeliosDocument> {
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return {};
+        }
         const response: Response = await this.apiService.get('Documenten/GetObject', {'ID': id.toString()});
-
         return response.json();
     }
 

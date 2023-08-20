@@ -24,6 +24,11 @@ export class TransactiesService {
     async getTransacties(lidID?: number, startDatum?: DateTime, eindDatum?: DateTime, vliegdag?: DateTime, max?: number): Promise<HeliosTransactiesDataset[]> {
         let getParams: KeyValueArray = {};
 
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
+
         if ((this.transactiesCache != undefined) && (this.transactiesCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
             getParams['HASH'] = this.transactiesCache.hash;
         }
@@ -58,6 +63,12 @@ export class TransactiesService {
 
     async getBanken(): Promise<HeliosTransactiesBanken[]> {
         let banken:HeliosTransactiesBanken[] = [];
+
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
+
         try {
             const response: Response = await this.apiService.get('Transacties/GetBanken');
             banken = await response.json();

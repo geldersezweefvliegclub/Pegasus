@@ -25,8 +25,6 @@ export class LoginService  {
 
     private dbEventAbonnement: Subscription;
 
-
-
     constructor(private readonly apiService: APIService,
                 private readonly ddwwService: DdwvService,
                 private readonly sharedService: SharedService,
@@ -41,6 +39,7 @@ export class LoginService  {
             }
         });
     }
+
     isIngelogd(): boolean {
         if (this.userInfo == null) {
             if (this.storageService.ophalen("userInfo") == null) {

@@ -77,6 +77,11 @@ export class RoosterService {
             getParams['VELDEN'] = velden;
         }
 
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
+
         if ((this.roosterCache != undefined)  && (this.roosterCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
             getParams['HASH'] = this.roosterCache.hash;
         }

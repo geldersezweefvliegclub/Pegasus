@@ -44,6 +44,11 @@ export class StartlijstService {
         getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
         getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
 
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
+
         // starttoren heeft geen vliegdagen nodig
         if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
             return [];
@@ -66,6 +71,11 @@ export class StartlijstService {
 
     async getLogboek(id: number, startDatum: DateTime, eindDatum: DateTime, maxRecords?: number): Promise<HeliosLogboekDataset[]> {
         let getParams: parameters = {};
+
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
 
         // starttoren heeft geen logboek nodig
         if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
@@ -100,11 +110,15 @@ export class StartlijstService {
             [key: string]: string;
         }
 
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return {};
+        }
+
         // starttoren heeft geen logboek totalen nodig
         if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
             return {};
         }
-
 
         let getParams: parameters = {};
         getParams['LID_ID'] = id.toString();
@@ -121,11 +135,15 @@ export class StartlijstService {
     }
 
     async getVliegtuigLogboek(id: number, startDatum: DateTime, eindDatum: DateTime): Promise<HeliosLogboekDataset[]> {
-
         let getParams: parameters = {};
         getParams['ID'] = id.toString();
         getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
         getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
+
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
 
         try {
             const response: Response = await this.apiService.get('Startlijst/GetVliegtuigLogboek',
@@ -147,6 +165,11 @@ export class StartlijstService {
         getParams['ID'] = id.toString();
         getParams['JAAR'] = jaar.toString();
 
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return {};
+        }
+
         try {
             const response: Response = await this.apiService.get('Startlijst/GetVliegtuigLogboekTotalen',
                 getParams
@@ -162,6 +185,11 @@ export class StartlijstService {
 
     async getStarts(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise< HeliosStartDataset[]> {
         let getParams: KeyValueArray = params;
+
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
 
         if ((this.startsCache != undefined)  && (this.startsCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
             getParams['HASH'] = this.startsCache.hash;
@@ -190,15 +218,22 @@ export class StartlijstService {
     }
 
     async getStart(id: number): Promise<HeliosStart> {
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return {};
+        }
         const response: Response = await this.apiService.get('Startlijst/GetObject', {'ID': id.toString()});
-
         return response.json();
     }
 
     async getRecency(lidID: number, datum?: DateTime): Promise<HeliosRecency> {
-
         let getParams: KeyValueArray = {};
         getParams['VLIEGER_ID'] = lidID.toString();
+
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return {};
+        }
 
         // starttoren heeft geen recency nodig
         if (this.loginService.userInfo?.Userinfo!.isStarttoren) {

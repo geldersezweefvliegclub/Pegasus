@@ -3,6 +3,7 @@ import {APIService} from "./api.service";
 import {HeliosReservering, HeliosReserveringen, HeliosReserveringenDataset} from "../../types/Helios";
 import {KeyValueArray} from "../../types/Utils";
 import {DateTime} from "luxon";
+import {LoginService} from "./login.service";
 
 @Injectable({
     providedIn: 'root'
@@ -11,11 +12,17 @@ export class ReserveringService {
 
     private reserveringenCache: HeliosReserveringen = { dataset: []};                      // return waarde van API call
 
-    constructor(private readonly apiService: APIService) {
+    constructor(private readonly apiService: APIService,
+                private readonly loginService: LoginService) {
     }
 
     async getReserveringen(startDatum: DateTime, eindDatum: DateTime, maxRecords?: number): Promise<HeliosReserveringenDataset[]> {
         let getParams: KeyValueArray = {};
+
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
 
         if ((this.reserveringenCache != undefined)  && (this.reserveringenCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
             getParams['HASH'] = this.reserveringenCache.hash;

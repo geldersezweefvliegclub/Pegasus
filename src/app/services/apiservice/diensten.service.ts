@@ -80,6 +80,11 @@ export class DienstenService {
         getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
         getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
 
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
+
         if ((this.dienstenCache != undefined)  && (this.dienstenCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
             getParams['HASH'] = this.dienstenCache.hash;
         }
@@ -105,6 +110,11 @@ export class DienstenService {
     async getTotalen(jaar: number, lidID?: number): Promise<HeliosDienstenTotaal[]> {
         let getParams: KeyValueArray = {};
         getParams['JAAR'] = jaar.toString();
+
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
 
         if (lidID) {
             getParams['LID_ID'] = lidID.toString();

@@ -58,6 +58,11 @@ export class TypesService {
     async getTypes(verwijderd: boolean = false): Promise<HeliosType[]> {
         let getParams: KeyValueArray = {};
 
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
+
         if ((this.typesCache != undefined)  && (this.typesCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
             getParams['HASH'] = this.typesCache.hash;
         }
@@ -81,6 +86,11 @@ export class TypesService {
     async getClubVliegtuigTypes(): Promise<HeliosType[]> {
         let getParams: KeyValueArray = {};
 
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
+
         if ((this.cvTypesCache != undefined) && (this.cvTypesCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
             getParams['HASH'] = this.cvTypesCache.hash;
         }
@@ -98,6 +108,10 @@ export class TypesService {
     }
 
     async getType(id: number): Promise<HeliosType> {
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return {};
+        }
         const response: Response = await this.apiService.get('Types/GetObject', {'ID': id.toString()});
         return response.json();
     }

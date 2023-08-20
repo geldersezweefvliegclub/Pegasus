@@ -45,6 +45,12 @@ export class DaginfoService {
 
     // haal op, op welke dag er daginfo ingevoerd is
     async getDagen(startDatum: DateTime, eindDatum: DateTime): Promise<HeliosDagInfosDataset[]> {
+
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
+
         let getParams: KeyValueArray = {};
         getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
         getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
@@ -67,6 +73,11 @@ export class DaginfoService {
 
     async getDagInfoDagen(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosDagInfosDataset[]> {
         let getParams: KeyValueArray = params;
+
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
 
         if ((this.dagInfoTotaalCache != undefined)  && (this.dagInfoTotaalCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
             getParams['HASH'] = this.dagInfoTotaalCache.hash;
@@ -95,6 +106,11 @@ export class DaginfoService {
 
     // haal de daginfo op van een enkele dag
     async getDagInfo(id: number | undefined, datum: DateTime | undefined): Promise<HeliosDagInfo> {
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return {};
+        }
+
         try {
             // we halen de starts op met een ID
             if (id) {

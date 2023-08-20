@@ -29,6 +29,11 @@ export class ProgressieService {
     async getProgressiesLid(lidID:number, comptentiesIDs?: string): Promise<HeliosBehaaldeProgressieDataset[]> {
         let progressie: HeliosBehaaldeProgressie | null = null;
 
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
+
         let getParams: KeyValueArray = {};
         getParams['LID_ID'] = lidID.toString();
 
@@ -51,6 +56,10 @@ export class ProgressieService {
     }
 
     async getProgressie(id: number): Promise<HeliosBehaaldeProgressieDataset> {
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return {};
+        }
         const response: Response = await this.apiService.get('Progressie/GetObject', {'ID': id.toString()});
         return await response.json();
     }

@@ -3,6 +3,7 @@ import {APIService} from "./api.service";
 import {HeliosGast, HeliosGasten, HeliosGastenDataset} from "../../types/Helios";
 import {KeyValueArray} from "../../types/Utils";
 import {DateTime} from "luxon";
+import {LoginService} from "./login.service";
 
 @Injectable({
     providedIn: 'root'
@@ -10,11 +11,17 @@ import {DateTime} from "luxon";
 export class GastenService {
     private gastenCache: HeliosGasten = {dataset: []};      // return waarde van API call
 
-    constructor(private readonly apiService: APIService) {
+    constructor(private readonly apiService: APIService,
+                private readonly loginService: LoginService) {
     }
 
     async getGasten(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime): Promise<HeliosGastenDataset[]> {
         let getParams: KeyValueArray = {};
+
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
 
         getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
         getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
@@ -34,8 +41,11 @@ export class GastenService {
     }
 
     async getGast(id: number): Promise<HeliosGast> {
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return {};
+        }
         const response: Response = await this.apiService.get('Gasten/GetObject', {'ID': id.toString()});
-
         return response.json();
     }
 

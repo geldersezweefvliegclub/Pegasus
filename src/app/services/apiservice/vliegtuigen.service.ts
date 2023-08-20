@@ -84,6 +84,11 @@ export class VliegtuigenService {
     async getVliegtuigen(verwijderd: boolean = false, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosVliegtuigenDataset[]> {
         let getParams: KeyValueArray = params;
 
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
+
         if ((this.vliegtuigenCache != undefined)  && (this.vliegtuigenCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
             getParams['HASH'] = this.vliegtuigenCache.hash
         }
@@ -108,6 +113,10 @@ export class VliegtuigenService {
     }
 
     async getVliegtuig(id: number): Promise<HeliosVliegtuig> {
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return {};
+        }
         const response: Response = await this.apiService.get('Vliegtuigen/GetObject', {'ID': id.toString()});
         return response.json();
     }

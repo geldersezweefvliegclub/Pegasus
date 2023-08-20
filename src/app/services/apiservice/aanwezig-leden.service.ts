@@ -76,9 +76,15 @@ export class AanwezigLedenService {
     }
 
     async updateAanwezigCache(force: boolean = false) {
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return undefined;
+        }
+
         if (this.overslaan && force === false) {
             return this.aanwezigDagCache;
         }
+
         this.overslaan = true;
         setTimeout(() => this.overslaan = false, 1000 * 5)
         this.getAanwezig(this.datum, this.datum).then((dataset) => {
@@ -89,6 +95,11 @@ export class AanwezigLedenService {
 
     async getAanwezig(startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosAanwezigLedenDataset[]> {
         let getParams: KeyValueArray = params;
+
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
 
         if ((this.aanwezigCache != undefined)  && (this.aanwezigCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
             getParams['HASH'] = this.aanwezigCache.hash;
@@ -114,11 +125,19 @@ export class AanwezigLedenService {
     }
 
     async getSamenvatting(datum: DateTime): Promise<HeliosAanwezigSamenvatting> {
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return {};
+        }
         const response: Response = await this.apiService.get('AanwezigLeden/Samenvatting', {'DATUM': datum.toISODate() as string});
         return response.json();
     }
 
     async getAanwezigLid(id: number): Promise<HeliosAanwezigLedenDataset> {
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return {};
+        }
         const response: Response = await this.apiService.get('AanwezigLeden/GetObject', {'ID': id.toString()});
         return response.json();
     }

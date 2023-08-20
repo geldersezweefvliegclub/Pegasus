@@ -76,6 +76,11 @@ export class LedenService {
     async getLeden(verwijderd: boolean = false, zoekString?: string): Promise<HeliosLedenDataset[]> {
         let getParams: KeyValueArray = {};
 
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
+
         if ((this.ledenCache != undefined)  && (this.ledenCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
             getParams['HASH'] = this.ledenCache.hash;
         }
@@ -99,6 +104,10 @@ export class LedenService {
     }
 
     async getLid(id: number): Promise<HeliosLid> {
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return {};
+        }
         const response: Response = await this.apiService.get('Leden/GetObject', {'ID': id.toString()});
         return response.json();
     }

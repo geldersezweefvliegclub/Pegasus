@@ -32,6 +32,11 @@ export class TypesGroepenService {
     async getTypesGroepen(): Promise<HeliosTypesGroep[]> {
         let getParams: KeyValueArray = {};
 
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
+
         if ((this.typesGroepenCache != undefined) && (this.typesGroepenCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
             getParams['HASH'] = this.typesGroepenCache.hash;
         }

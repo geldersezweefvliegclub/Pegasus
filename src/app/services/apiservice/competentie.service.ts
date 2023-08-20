@@ -63,6 +63,11 @@ export class CompetentieService {
         let competenties: HeliosCompetenties | null = null;
         let getParams: KeyValueArray = {};
 
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
+
         // starttoren heeft geen competenties nodig
         if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
             return [];
@@ -88,6 +93,11 @@ export class CompetentieService {
     async getBoom(): Promise<HeliosProgressieBoom[]> {
         let getParams: KeyValueArray = {};
 
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
+
         // starttoren heeft geen comptenties nodig
         if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
             return [];
@@ -100,6 +110,10 @@ export class CompetentieService {
     }
 
     async getCompetentie(id: number): Promise<HeliosType> {
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return {};
+        }
         const response: Response = await this.apiService.get('Competenties/GetObject', {'ID': id.toString()});
         return response.json();
     }
@@ -127,5 +141,4 @@ export class CompetentieService {
     async restoreCompetentie(id: number) {
         await this.apiService.patch('Competenties/RestoreObject', {'ID': id.toString()});
     }
-
 }

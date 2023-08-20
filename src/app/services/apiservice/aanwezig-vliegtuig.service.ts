@@ -76,6 +76,11 @@ export class AanwezigVliegtuigService {
     }
 
     async updateAanwezigCache(force: boolean = false) {
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return undefined;
+        }
+
         if (this.overslaan && force === false) {
             return this.aanwezigDagCache;
         }
@@ -89,6 +94,11 @@ export class AanwezigVliegtuigService {
 
     async getAanwezig(startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosAanwezigVliegtuigenDataset[]> {
         let getParams: KeyValueArray = params;
+
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
 
         if ((this.aanwezigCache != undefined)  && (this.aanwezigCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
             getParams['HASH'] = this.aanwezigCache.hash;

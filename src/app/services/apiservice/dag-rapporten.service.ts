@@ -54,6 +54,11 @@ export class DagRapportenService {
     }
 
     async getDagRapport(id: number): Promise<HeliosDagRapport> {
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return {};
+        }
+
         // Alleen als we onderstaande rollen niet hebben, gaan we ook niets ophalen. DDWV crew/beheerder heeft niet altijd
         // toegang, dat wordt afgevangen door HMI en op de server. Onnodig om het hier ook te doen
         const ui = this.loginService.userInfo?.Userinfo;
@@ -86,6 +91,11 @@ export class DagRapportenService {
 
     // haal op, op welke dag er daginfo ingevoerd is
     async getDagen(startDatum: DateTime, eindDatum: DateTime): Promise<HeliosDagInfosDataset[]> {
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
+
         if (!this.magDagInfoOphalen()) {
             return [];
         }
