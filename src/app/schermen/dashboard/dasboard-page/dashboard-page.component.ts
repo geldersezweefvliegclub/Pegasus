@@ -397,7 +397,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         return datumtijd.day + "-" + datumtijd.month + "-" + datumtijd.year;
     }
 
-    // gebruiker mage alleen logboek zien
+    // gebruiker mag alleen logboek zien
     alleenLogboekTonen() : boolean  {
         if (this.toonTracks) {      // als je tracks mag zien, dan de rest ook
             return false;
@@ -407,7 +407,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         }
 
         const ui = this.loginService.userInfo?.LidData;
-        return (ui!.ID != this.lidData.ID)
+        return !(this.lidData &&  ui!.ID === this.lidData.ID)
     }
 
     // openen van windows voor het tonen van de transacties
