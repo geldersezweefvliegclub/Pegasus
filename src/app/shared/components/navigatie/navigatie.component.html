@@ -120,7 +120,7 @@
                     <fa-icon [icon]="beheerIcon" class="me-3"></fa-icon>
                     Beheer
                     <div *ngIf="showBeheer">
-                        <ng-template ngFor let-route [ngForOf]="activeBeheerRoutes">
+                        <ng-template ngFor let-route [ngForOf]="activeBeheerRoutes()">
                             <a
                                     class="list-group-item list-subgroup-item list-group-item-action waves-effect py-2"
                                     routerLinkActive="active"
