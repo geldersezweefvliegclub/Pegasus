@@ -15,6 +15,7 @@
                     </div>
                 </div>
 
+
                 <div class="row my-2">
                     <div class="col-8">
                         <label class="form-label">Tekst</label>
@@ -30,10 +31,35 @@
                     </div>
                 </div>
                 <div class="row my-2">
-                    <div class="col-12">
-                        <label class="form-label">URL</label>
-                        <input name="test" type="text" class="form-control" id="URL"
-                               [(ngModel)]="document.URL" [disabled]="document.LEGE_REGEL">
+                    <div class="col-1">
+                        <input type="checkbox"
+                               [ngModel]="isDoc"
+                               [disabled]="document.LEGE_REGEL"
+                               (change)="docUrl('doc')"
+                               class="form-check-inline">
+                    </div>
+                    <div class="col-6">
+                        <input type="file" [disabled]="document.LEGE_REGEL || this.isUrl" (change)="BijlageChange($event)">
+                    </div>
+                    <div class="col-5 ">
+                        <input type="checkbox"
+                               [ngModel]="document.OVERSCHRIJVEN"
+                               [disabled]="document.LEGE_REGEL || isUrl"
+                               class="form-check-inline">
+                        Mag overschrijven
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <div class="col-1">
+                        <input type="checkbox"
+                               [ngModel]="isUrl"
+                               [disabled]="document.LEGE_REGEL"
+                               (change)="docUrl('url')"
+                               class="form-check-inline">
+                    </div>
+                    <div class="col-11" >
+                        <input type="text" class="form-control" id="URL" placeholder="URL naar website of document"
+                               [(ngModel)]="document.URL" [disabled]="document.LEGE_REGEL || isDoc">
                     </div>
                 </div>
 

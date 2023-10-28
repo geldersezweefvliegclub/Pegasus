@@ -249,6 +249,18 @@ export interface components {
        * @example 0
        */
       BOVEN?: boolean;
+      /** @description Document in base 64 encoding, heeft DOC_NAAM om gegevens op te slaan */
+      BASE64_DOC?: string;
+      /**
+       * @description Naam van het docuement als bijgevoegd in BASE64_DOC
+       * @example handboek.pdf
+       */
+      DOC_NAAM?: string;
+      /**
+       * @description Mag bestaand bestand overschreven worden
+       * @example 0
+       */
+      OVERSCHRIJVEN?: boolean;
     };
     document: components["schemas"]["document_in"] & {
       /**

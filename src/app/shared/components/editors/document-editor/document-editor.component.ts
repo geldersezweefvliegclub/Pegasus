@@ -23,6 +23,9 @@ export class DocumentEditorComponent {
     isVerwijderMode: boolean = false;
     isRestoreMode: boolean = false;
 
+    isDoc: boolean = true;
+    isUrl: boolean = false;
+
     document: HeliosDocument;
 
     constructor(private readonly documentenService: DocumentenService) {
@@ -33,10 +36,16 @@ export class DocumentEditorComponent {
     openPopup(record: HeliosDocument) {
         this.document = record;
 
+        this.document.BASE64_DOC = undefined;
+        this.document.DOC_NAAM = undefined;
+        this.document.OVERSCHRIJVEN = false;
+
         if (this.document.ID) {
+            this.docUrl("url");
             this.formTitel = 'Aanpassen';
         }
         else {
+            this.docUrl("doc");
             this.formTitel = 'Toevoegen';
         }
         this.popup.open();
@@ -71,6 +80,7 @@ export class DocumentEditorComponent {
     // uitvoeren van de actie waar we mee bezig zijn
     uitvoeren() {
         this.isSaving = true;
+
         if (this.isRestoreMode) {
             this.herstellen();
         }
@@ -80,6 +90,15 @@ export class DocumentEditorComponent {
         }
 
         if (!this.isVerwijderMode && !this.isRestoreMode) {
+            if (this.isDoc && this.document.DOC_NAAM !== undefined) {
+                this.document.URL = undefined;
+            }
+
+            if (this.isUrl) {
+                this.document.BASE64_DOC = undefined;
+                this.document.DOC_NAAM = undefined;
+            }
+
             if (this.document.ID) {
                 this.aanpassen();
             } else {
@@ -144,5 +163,23 @@ export class DocumentEditorComponent {
             this.error = e;
             this.isSaving = false;
         });
+    }
+
+    BijlageChange(event: Event) {
+        const target = event.target as HTMLInputElement;
+        const files = target.files as FileList;
+
+        const reader = new FileReader();
+        reader.readAsDataURL(files[0]);
+        reader.onload = () => {
+            this.document.BASE64_DOC = reader.result?.toString().split(",")[1];
+            this.document.DOC_NAAM = files[0].name;
+        };
+
+    }
+
+    docUrl(p: string) {
+        this.isDoc = (p == "doc");
+        this.isUrl = (p == "url");
     }
 }
