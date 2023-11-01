@@ -1,0 +1,69 @@
+<app-pegasus-card id="docCard"
+                  class="kleineKaart"
+                  titel="Documenten"
+                  [icon]=iconCardIcon>
+
+    <div class="add-doc" *ngIf="editMode">
+        <fa-icon [icon]="toevoegenIcon" class="addBtn me-2 clickable" (click)="toevoegen();"></fa-icon>
+    </div>
+
+
+    <div class="d-flex flex-column justify-content-between box h-100">
+        <div>
+            <div class="d-flex flex-column">
+                <div *ngFor="let doc of documenten; let d=index" >
+                    <div (dblclick)="aanpassen(doc.ID)" class="d-flex justify-content-between w-100" [ngClass]="{'bovenlijn': doc.ONDERSTREEP && doc.BOVEN, 'onderlijn': doc.ONDERSTREEP && !doc.BOVEN }">
+                        <button class="docContent btn btn-noborder" (click)="delete(doc.ID)" *ngIf="deleteMode && !trashMode">
+                            <fa-icon [icon]="deleteIcon" class="deleteBtn"></fa-icon>
+                        </button>
+
+                        <button class="docContent btn btn-noborder" (click)="restore(doc.ID)"  *ngIf="trashMode">
+                            <fa-icon [icon]="restoreIcon" class="restoreBtn"></fa-icon>
+                        </button>
+
+                        <div *ngIf="!doc.LEGE_REGEL && !editMode" class="w-100">
+                            <div *ngIf="doc.URL" class="docContent linkButton" (click)="openUrl(doc.URL)">{{doc.TEKST}}</div>
+                            <div *ngIf="!doc.URL" class="docContent paragraafHeader w-100">{{doc.TEKST}}</div>
+                        </div>
+                        <div *ngIf="editMode" class="docContent linkButton editButton w-100"  [ngClass]="{'paragraafHeader': !doc.URL && !doc.LEGE_REGEL}"> {{doc.TEKST}}</div>
+                        <div *ngIf="doc.LEGE_REGEL">&nbsp;</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="toolbar">
+            <div class="col-12">
+                <div class="d-flex justify-content-between">
+
+                    <div class="d-flex">
+                        <app-icon-button class="toolbarBtn" *ngIf="!deleteMode"
+                                         tekst="Aanpassen"
+                                         [disabled]="deleteMode"
+                                         iconNaam="far Edit" (btnClicked)="editMode = !editMode"
+                                         btnColor="btn-primary"></app-icon-button>
+
+                        <div *ngIf="deleteMode">
+                            <app-status-button
+                                    class="toolbarBtn"
+                                    tekst="Archief"
+                                    [actief]="trashMode"
+                                    (btnClicked)="trashModeJaNee($event)"
+                                    iconNaam="fas Inbox">
+                            </app-status-button>
+                        </div>
+                    </div>
+
+                    <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
+                                     btnColor="btn-secondary" *ngIf="!deleteMode" [disabled]="editMode"
+                                     (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                    <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
+                                     btnColor="btn btn-outline-primary" *ngIf="deleteMode"
+                                     (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-pegasus-card>
+
+<app-document-editor (refresh)="opvragen()"></app-document-editor>

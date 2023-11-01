@@ -235,6 +235,12 @@ export interface components {
        */
       URL?: string;
       /**
+       * Format: int32
+       * @description Verwijzing naar lid. Document is aan lid gekoppeld
+       * @example 129205
+       */
+      LID_ID?: number;
+      /**
        * @description Lege regel om paragraaf te kunnen maken
        * @example 0
        */

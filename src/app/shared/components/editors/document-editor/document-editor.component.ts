@@ -34,14 +34,16 @@ export class DocumentEditorComponent {
     // open popup, maar haal eerst de start op. De eerder ingevoerde tijd wordt als default waarde gebruikt
     // indien niet eerder ingvuld, dan de huidige tijd. Buiten de daglicht periode is het veld leeg
     openPopup(record: HeliosDocument) {
+        this.docUrl("url");
         this.document = record;
+        this.isVerwijderMode = false;
+        this.isRestoreMode = false;
 
         this.document.BASE64_DOC = undefined;
         this.document.DOC_NAAM = undefined;
         this.document.OVERSCHRIJVEN = false;
 
         if (this.document.ID) {
-            this.docUrl("url");
             this.formTitel = 'Aanpassen';
         }
         else {
@@ -57,6 +59,7 @@ export class DocumentEditorComponent {
 
     // Toon popup om type te verwijderen
     openVerwijderPopup(record: HeliosDocument) {
+        this.docUrl("url");
         this.document = record;
         this.formTitel = 'Verwijderen';
 
@@ -68,6 +71,7 @@ export class DocumentEditorComponent {
 
     // Toon popup om type uit de archief te halen
     openRestorePopup(record: HeliosDocument) {
+        this.docUrl("url");
         this.document = record;
         this.formTitel = 'Herstellen';
 

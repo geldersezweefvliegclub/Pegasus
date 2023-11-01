@@ -24,7 +24,7 @@ export class DocumentenService {
         }
     }
 
-    async getDocumenten(verwijderd: boolean = false, groep: number | undefined = undefined): Promise<HeliosDocumentenDataset[]> {
+    async getDocumenten(verwijderd: boolean = false, lid_id: number | undefined = undefined, groep: number | undefined = undefined): Promise<HeliosDocumentenDataset[]> {
         let getParams: KeyValueArray = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn
@@ -34,6 +34,10 @@ export class DocumentenService {
 
         if (groep) {
             getParams['GROEPEN'] = groep;
+        }
+
+        if (lid_id) {
+            getParams['LID_ID'] = lid_id;
         }
 
         if (verwijderd) {

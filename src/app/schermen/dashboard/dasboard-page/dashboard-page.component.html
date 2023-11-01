@@ -135,7 +135,7 @@
 
         <!-- progressie -->
         <div class="row mt-4 progressie-hoogte" *ngIf="!alleenLogboekTonen()">
-            <div class="col-12 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
+            <div class="col-12 col-lg-8 col-xl-9 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
                 <app-pegasus-card id="progressieCard"
                                   class="kleineKaart"
                                   titel="Progressiekaart"
@@ -147,6 +147,11 @@
                             [VliegerID]="lidData.ID" *ngIf="lidData">
                     </app-progressie-boom>
                 </app-pegasus-card>
+            </div>
+            <div class="col-12 col-lg-4 col-xl-3 mt-4 mt-lg-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
+                <app-leden-documenten [LidID]="lidData.ID">
+
+                </app-leden-documenten>
             </div>
         </div>
 

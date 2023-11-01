@@ -1,0 +1,84 @@
+.paragraafHeader {
+  font-size: 0.9rem;
+  color: white;
+
+  background-color: #bdc3d1;
+
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.linkButton {
+  border-radius: 5px;
+  border: solid 1px;
+
+  padding-top: 2px;
+  padding-bottom: 2px;
+  margin: 3px;
+
+  outline: none;
+  border-color: rgb(37 66 122);
+  color: rgb(37 66 122);
+  font-size: 11pt;
+  line-height: normal;
+  text-decoration: none;
+
+  display:flex;
+  align-items:center;
+
+  &:hover {
+    background-color: rgb(37 66 122);
+    color: white
+  }
+}
+
+.editButton {
+  background-color: #d5ac4a;
+}
+
+.docContent {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.bovenlijn {
+  border-top: 1px solid #aaa;
+  margin-top: 5px;
+  padding-top: 5px;
+}
+
+.onderlijn {
+  border-bottom: 1px solid #aaa;
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+}
+
+.toolbarBtn {
+  margin-left: 0.4em;
+  margin-right: 0.4em;
+}
+
+.add-doc {
+  display: flex;
+  justify-content: end;
+  margin-top: -30px;
+}
+.addBtn {
+  color: #5a9602;
+  font-size: 20px;
+}
+
+.upBtn {
+  color: #d5ac49;
+  font-size: 20px;
+}
+
+.downBtn {
+  color: #d5ac49;
+  font-size: 20px;
+}
+
+.deleteBtn {
+  color: #dc3545;
+}
+

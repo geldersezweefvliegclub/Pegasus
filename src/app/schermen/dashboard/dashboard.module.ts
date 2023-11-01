@@ -6,10 +6,12 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {SharedModule} from "../../shared/shared.module";
 import {RouterModule} from "@angular/router";
 import {FlexLayoutModule} from "@angular/flex-layout";
+import { LedenDocumentenComponent } from './dasboard-page/leden-documenten/leden-documenten.component';
 
 @NgModule({
     declarations: [
         DashboardPageComponent,
+        LedenDocumentenComponent,
     ],
     imports: [
         CommonModule,

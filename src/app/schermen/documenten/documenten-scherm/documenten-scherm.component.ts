@@ -198,6 +198,5 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
 
     openUrl(url: string | URL) {
         window.open(url);
-
     }
 }

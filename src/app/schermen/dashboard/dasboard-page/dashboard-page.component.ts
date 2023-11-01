@@ -85,6 +85,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     verwijderMode: boolean = false;
     magVerwijderen: boolean = false;
 
+
     constructor(private readonly ddwvService: DdwvService,
                 private readonly ledenService: LedenService,
                 private readonly loginService: LoginService,
