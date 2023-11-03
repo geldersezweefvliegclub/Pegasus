@@ -467,6 +467,15 @@
                                     Startleider
                                 </label>
                             </div>
+                            <div class="text-nowrap">
+                                <input class="form-check-inline" type="checkbox" id="TECHNICUS" name="TECHNICUS"
+                                       [disabled]="isDisabled('TECHNICUS')"
+                                       [(ngModel)]="lid.TECHNICUS">
+                                <label class="form-check-label" for="TECHNICUS"
+                                       [ngClass]="disabledClass('TECHNICUS')">
+                                    Technicus
+                                </label>
+                            </div>
                         </div>
                         <div class="col-6 col-sm-4">
                             <div class="text-nowrap">

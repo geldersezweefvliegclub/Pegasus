@@ -246,6 +246,88 @@ export interface paths {
       };
     };
   };
+  "/Leden/vCard": {
+    get: {
+      parameters: {
+        query: {
+          /** Database ID van het lid record */
+          ID: number;
+        };
+      };
+      responses: {
+        /** OK, data succesvol opgehaald */
+        200: {
+          content: {
+            "application/json": components["schemas"]["vCard"];
+          };
+        };
+        /** Data niet gevonden */
+        404: unknown;
+        /** Methode niet toegestaan, input validatie error */
+        405: unknown;
+        /** Niet aanvaardbaar, input ontbreekt */
+        406: unknown;
+        /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
+        500: unknown;
+      };
+    };
+  };
+  "/Leden/vCards": {
+    get: {
+      parameters: {
+        query: {
+          /** Database ID van het aanwezig record */
+          ID?: number;
+          /** Toon welke records verwijderd zijn. Default = false */
+          VERWIJDERD?: boolean;
+          /** Laatste aanpassing op basis van records in dataset. Bedoeld om data verbruik te verminderen. Dataset is daarom leeg */
+          LAATSTE_AANPASSING?: boolean;
+          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
+          HASH?: string;
+          /** Sortering van de velden in ORDER BY formaat. Default = NAAM */
+          SORT?: string;
+          /** Maximum aantal records in de dataset. Gebruikt in LIMIT query */
+          MAX?: number;
+          /** Eerste record in de dataset. Gebruikt in LIMIT query */
+          START?: number;
+          /** Welke velden moet opgenomen worden in de dataset */
+          VELDEN?: string;
+          /** Zoek in de NAAM, TELEFOON, MOBIEL, NOODNUMMER, EMAIL */
+          SELECTIE?: string;
+          /** Meerdere lid database IDs in CSV formaat */
+          IN?: string;
+          /** Zoek op een of meerder lid types. Types als CSV formaat */
+          TYPES?: string;
+          /** Wanneer 'true', toon alleen de leden */
+          CLUBLEDEN?: boolean;
+          /** Wanneer 'true', toon alleen de instructeurs */
+          INSTRUCTEURS?: boolean;
+          /** Wanneer 'true', toon alleen de DDWV crew */
+          DDWV_CREW?: boolean;
+          /** Wanneer 'true', toon alleen de lieristen */
+          LIERISTEN?: boolean;
+          /** Wanneer 'true', toon alleen de lieristen in opleiding */
+          LIO?: boolean;
+          /** Wanneer 'true', toon alleen de startleiders */
+          STARTLEIDERS?: boolean;
+        };
+      };
+      responses: {
+        /** OK, data succesvol opgehaald */
+        200: {
+          content: {
+            "application/json": unknown;
+          };
+        };
+        /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
+        304: never;
+        /** Methode niet toegestaan, input validatie error */
+        405: unknown;
+        /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
+        500: unknown;
+      };
+    };
+  };
 }
 
 export interface components {
@@ -433,6 +515,11 @@ export interface components {
        */
       GASTENVLIEGER?: boolean;
       /**
+       * @description Techniscus heeft aftekenbevoegdheid
+       * @example true
+       */
+      TECHNICUS?: boolean;
+      /**
        * Format: date
        * @description Verloopdatum van het medical
        * @example 2022-01-16
@@ -575,6 +662,35 @@ export interface components {
       hash?: string;
       /** @description De dataset met records */
       dataset?: components["schemas"]["view_leden_dataset"][];
+    };
+    vCard: {
+      /**
+       * @description Databse record ID
+       * @example 10456
+       */
+      id?: string;
+      /**
+       * @description Naam van contact
+       * @example Willem Bever
+       */
+      naam?: string;
+      /**
+       * @description uniek identificatie (versleuteld ID)
+       * @example =YDM3AjM6QUSklGT.vcf
+       */
+      uri?: string;
+      /**
+       * @description checksum
+       * @example 3834844087
+       */
+      etag?: string;
+      /**
+       * @description checksum
+       * @example 1670860245
+       */
+      lastmodified?: string;
+      /** @description de vCard */
+      carddata?: string;
     };
   };
 }

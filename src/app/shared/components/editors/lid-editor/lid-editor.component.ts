@@ -381,6 +381,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
                 break;
             }
             case 'CIMT':
+            case 'TECHNICUS':
             case 'STARTTOREN':
             case 'RAPPORTEUR':
             case 'ROOSTER':
