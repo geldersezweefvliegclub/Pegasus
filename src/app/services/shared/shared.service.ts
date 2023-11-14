@@ -108,13 +108,23 @@ export class SharedService {
     }
 
     datumDMJ(ISOdatum: string): string {
-        const datePart = ISOdatum.split('-');
-        return datePart[2] + '-' + datePart[1] + '-' + datePart[0];
+        if (ISOdatum.includes(":"))     // er zit ook een tijd in
+        {
+            const datePart = ISOdatum.split(' ');
+            ISOdatum = datePart[0];
+        }
+        const datum = ISOdatum.split('-');
+        return datum[2] + '-' + datum[1] + '-' + datum[0];
     }
 
     datumDM(ISOdatum: string): string {
-        const datePart = ISOdatum.split('-');
-        return datePart[2] + '-' + datePart[1];
+        if (ISOdatum.includes(":"))     // er zit ook een tijd in
+        {
+            const datePart = ISOdatum.split(' ');
+            ISOdatum = datePart[0];
+        }
+        const datum = ISOdatum.split('-');
+        return datum[2] + '-' + datum[1];
     }
 
     // Hebben we een datum in de toekomst, vandaag is geen toekomst
