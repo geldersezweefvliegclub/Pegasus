@@ -113,8 +113,10 @@ export class LedenService {
     }
 
     async addLid(lid: HeliosLid) {
-        const response: Response = await this.apiService.post('Leden/SaveObject', JSON.stringify(lid));
-        return response.json();
+        const response: Response  = await this.apiService.post('Leden/SaveObject', JSON.stringify(lid));
+        const dbLid = await response.json();
+        this.syncSynapse(dbLid.ID!, lid.WACHTWOORD);
+        return dbLid;
     }
 
     async updateLid(lid: HeliosLid) {
@@ -122,14 +124,22 @@ export class LedenService {
             typeof value === 'undefined' ? null : value;
 
         const response: Response = await this.apiService.put('Leden/SaveObject', JSON.stringify(lid, replacer));
+        this.syncSynapse(lid.ID!, lid.WACHTWOORD)
         return response.json();
     }
 
     async deleteLid(id: number) {
         await this.apiService.delete('Leden/DeleteObject', {'ID': id.toString()});
+        this.syncSynapse(id)
     }
 
     async restoreLid(id: number) {
         await this.apiService.patch('Leden/RestoreObject', {'ID': id.toString()});
+    }
+
+    async syncSynapse(id: number, password: string | undefined = undefined)
+    {
+        const body = { 'ID': id, 'PASSWORD': password};
+        this.apiService.post('Leden/SynapseGebruiker', JSON.stringify(body))
     }
 }

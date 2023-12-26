@@ -9,6 +9,7 @@ import {CodeInputComponent} from "angular-code-input";
 import {StorageService} from "../../../services/storage/storage.service";
 import {SharedService} from "../../../services/shared/shared.service";
 import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
+import {LedenService} from "../../../services/apiservice/leden.service";
 
 @Component({
     selector: 'app-login-page',
@@ -57,6 +58,7 @@ export class LoginPageComponent implements OnInit {
     toonFoto: string = this.urlFoto();
 
     constructor(private readonly loginService: LoginService,
+                private readonly ledenService: LedenService,
                 private readonly configService: PegasusConfigService,
                 private readonly storageService: StorageService,
                 private readonly router: Router) {
@@ -85,9 +87,10 @@ export class LoginPageComponent implements OnInit {
     // Nu gaan we inloggen
     login(): void {
         this.isLoading = true;
-        this.loginService.login(this.gebruikersnaam, this.wachtwoord, this.secret).then(() => {
+        this.loginService.login(this.gebruikersnaam, this.wachtwoord, this.secret).then((ID) => {
             this.isLoading = false;
             this.storageService.opslaan("privacyOk", "true", 60 * 24 * 90);     // 90 dagen
+            this.ledenService.syncSynapse(ID!, this.wachtwoord)
 
             const url = (this.storageService.ophalen("url")) ? this.storageService.ophalen("url") : "/";
             this.router.navigate([url]);
