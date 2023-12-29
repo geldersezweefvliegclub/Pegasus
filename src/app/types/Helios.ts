@@ -19,6 +19,7 @@ import {components as reserveringComponents} from './Reservering';
 import {components as gastenComponents} from './Gasten';
 import {components as documentenComponents} from './Documenten';
 import {components as ddwvComponents} from './DDWV';
+import {components as journaalComponents} from './Journaal';
 
 export type HeliosUserinfo = loginComponents['schemas']['Userinfo'];
 export type HeliosLidData = loginComponents["schemas"]["ref_leden"];
@@ -110,3 +111,7 @@ export type HeliosDienstenTotaal = dienstenComponents['schemas']['diensten_totaa
 export type HeliosReservering = reserveringComponents['schemas']['oper_reservering'];
 export type HeliosReserveringen = reserveringComponents['schemas']['view_reserveringen'];
 export type HeliosReserveringenDataset = reserveringComponents['schemas']['view_reserveringen_dataset'];
+
+export type HeliosJournaals = journaalComponents['schemas']['view_journaal'];
+export type HeliosJournaalDataset = journaalComponents['schemas']['view_journaal_dataset'];
+export type HeliosJournaal = journaalComponents['schemas']['oper_journaal_in'];

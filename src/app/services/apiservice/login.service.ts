@@ -50,7 +50,7 @@ export class LoginService  {
         return true;
     }
 
-    async login(gebruikersnaam: string, wachtwoord: string, token?: string): Promise<void> {
+    async login(gebruikersnaam: string, wachtwoord: string, token?: string): Promise<number | undefined> {
         const headers = new Headers(
     {
             'Authorization': 'Basic ' + Base64.encode(`${gebruikersnaam}:${wachtwoord}`)
@@ -71,7 +71,10 @@ export class LoginService  {
             await this.getUserInfo();
             this.ddwwService.loadConfigDDWV();
             this.successEmit();
+
+            return this.userInfo!.LidData!.ID;
         }
+        return undefined;
     }
 
     // Haal nieuw token op zodat de sessie alive blijft

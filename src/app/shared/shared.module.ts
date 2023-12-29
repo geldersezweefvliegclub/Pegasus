@@ -87,6 +87,7 @@ import { StartGrafiekComponent } from './components/recency/start-grafiek/start-
 import { VliegdagSelectieComponent } from './components/vliegdag-selectie/vliegdag-selectie.component';
 import { NavigatieComponent } from './components/navigatie/navigatie.component';
 import { PopupKalenderComponent} from "./components/popup-kalender/popup-kalender.component";
+import { JournaalEditorComponent } from './components/editors/journaal-editor/journaal-editor.component';
 
 @NgModule({
     imports: [
@@ -179,6 +180,7 @@ import { PopupKalenderComponent} from "./components/popup-kalender/popup-kalende
         VliegdagSelectieComponent,
         NavigatieComponent,
         PopupKalenderComponent,
+        JournaalEditorComponent,
     ],
     exports: [
         LidEditorComponent,
@@ -228,6 +230,7 @@ import { PopupKalenderComponent} from "./components/popup-kalender/popup-kalende
         VliegdagSelectieComponent,
         NavigatieComponent,
         PopupKalenderComponent,
+        JournaalEditorComponent,
     ],
     providers: [],
     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

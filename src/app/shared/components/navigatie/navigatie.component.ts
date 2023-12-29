@@ -259,6 +259,14 @@ export class NavigatieComponent implements OnInit, OnDestroy {
             documenten.excluded = false;
         }
 
+        // meldingen voor clubvliegers
+        const meldingen = this.routes.find(route => route.path == "meldingen") as CustomRoute;
+        if (verbergen.includes('meldingen') || (!ui?.isClubVlieger && !ui?.isStarttoren)) {
+            documenten.excluded = true;
+        } else {
+            documenten.excluded = false;
+        }
+
         if (verbergen.includes('beheer') || (this.sharedService.getSchermSize() < SchermGrootte.lg) || (window.innerHeight < 600)) {
             this.beheerExcluded = true;
         } else {

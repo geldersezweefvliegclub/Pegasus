@@ -14,7 +14,7 @@ import {
     faUser,
     faUsers,
     faWaveSquare,
-    faEuroSign
+    faEuroSign, faBug
 } from '@fortawesome/free-solid-svg-icons';
 import {AuditPageComponent} from "./schermen/audit/audit-page/audit-page.component";
 import {TypesPageComponent} from "./schermen/types/types-page/types-page.component";
@@ -143,6 +143,13 @@ export const routes: CustomRoute[] = [
         excluded: false,
         icon: faFile,
         text: 'Documenten'
+    },
+    {
+        path: 'journaal',
+        loadChildren: () => import('./schermen/journaal/journaal.module').then(m => m.JournaalModule),
+        excluded: false,
+        icon: faBug,
+        text: 'Journaal'
     },
 
     {
