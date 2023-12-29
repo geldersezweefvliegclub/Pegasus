@@ -8,12 +8,12 @@ import {LoginService} from "./login.service";
     providedIn: 'root'
 })
 export class TracksService {
-    private tracksCache: HeliosTracks = { dataset: []};      // return waarde van API call
+    private tracksCache: HeliosTracks = {dataset: []};      // return waarde van API call
 
     constructor(private readonly apiService: APIService,
                 private readonly loginService: LoginService) {}
 
-    async getTracks(verwijderd: boolean = false, lidID?:number, max?: number): Promise<HeliosTracksDataset[]> {
+    async getTracks(verwijderd: boolean = false, lidID?: number, max?: number): Promise<HeliosTracksDataset[]> {
 
         // Alleen als we onderstaande rollen nie hebben, gaan we ook geen starts proberen op te halen
         const ui = this.loginService.userInfo?.Userinfo;
@@ -23,7 +23,7 @@ export class TracksService {
 
         let getParams: KeyValueArray = {};
 
-        if ((this.tracksCache != undefined)  && (this.tracksCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
+        if ((this.tracksCache != undefined) && (this.tracksCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
             getParams['HASH'] = this.tracksCache.hash;
         }
         if (lidID && lidID >= 0) {
@@ -42,7 +42,7 @@ export class TracksService {
             this.tracksCache = await response.json();
         } catch (e) {
             if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde starts als cache
-                throw(e);
+                throw (e);
             }
         }
         return this.tracksCache?.dataset as HeliosTracksDataset[];
