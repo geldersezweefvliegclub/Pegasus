@@ -1,0 +1,134 @@
+<app-error [error]="error"></app-error>
+<app-success [success]="success"></app-success>
+
+<app-modal [titel]="formTitel">
+    <div body>
+        <fieldset [disabled]="isVerwijderMode || isRestoreMode || isLoading || isSaving">
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <label for="VLIEGTUIG_ID" class="form-label">Vliegtuig</label>
+                    <ng-select id="VLIEGTUIG_ID"
+                               [disabled]="isVerwijderMode || isRestoreMode || (melding.ROLLEND_ID !=undefined)"
+                               [items]="clubVliegtuigen$ | async"
+                               placeholder="Vliegtuig"
+                               bindLabel="REG_CALL"
+                               bindValue="ID"
+                               closeOnSelect="true"
+                               openOnEnter="true"
+                               [ngClass]="{'ng-select-required': opslaanDisabled()}"
+                               [(ngModel)]="melding.VLIEGTUIG_ID">
+                    </ng-select>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label for="ROLLEND_ID" class="form-label">Rollend</label>
+                    <ng-select id="ROLLEND_ID"
+                               [disabled]="isVerwijderMode || isRestoreMode || (melding.VLIEGTUIG_ID != undefined)"
+                               [items]="rollend$ | async"
+                               placeholder="Rollend"
+                               bindLabel="OMSCHRIJVING"
+                               bindValue="ID"
+                               closeOnSelect="true"
+                               openOnEnter="true"
+                               [ngClass]="{'ng-select-required': opslaanDisabled()}"
+                               [(ngModel)]="melding.ROLLEND_ID">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-12 col-md-8">
+                    <label for="TITEL" class="form-label">Titel</label>
+                    <input name="Titel" type="text" class="form-control" id="TITEL" required
+                           [(ngModel)]="melding.TITEL"
+                           min="0"
+                    >
+                </div>
+                <div class="col-12 col-md-4">
+                    <label for="STATUS_ID" class="form-label">Status</label>
+                    <select class="form-select" required [(ngModel)]="melding.STATUS_ID"
+                            id="STATUS_ID"
+                            name="STATUS_ID">
+                        <option *ngFor="let s of status"
+                                [value]="s.ID">{{s.OMSCHRIJVING}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row my-2">
+                <div class="col-12">
+                    <label for="OMSCHRIJVING" class="form-label">Gedetailleerde omschrijving</label>
+                    <textarea name="Titel" type="text" class="w-100 text-invoer form-control" id="OMSCHRIJVING" required
+                           [(ngModel)]="melding.OMSCHRIJVING"
+                           min="0" rows=2></textarea>
+                </div>
+            </div>
+
+            <div class="row my-2">
+                <div class="col-12">
+                    <label for="CATEGORIE_ID" class="form-label">Categorie</label>
+                    <select class="form-select" required [(ngModel)]="melding.CATEGORIE_ID"
+                            id="CATEGORIE_ID"
+                            name="CATEGORIE_ID">
+                        <option *ngFor="let c of categorie"
+                                [value]="c.ID">{{c.OMSCHRIJVING}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-12 col-md-8">
+                    <label for="TECHNICUS_ID" class="form-label">Beoordeeld door</label>
+                    <ng-select id="TECHNICUS_ID"
+                               [disabled]="isVerwijderMode || isRestoreMode"
+                               [items]="techneuten$ | async"
+                               placeholder="Eerste inspectie gedaan door"
+                               bindLabel="NAAM"
+                               bindValue="ID"
+                               closeOnSelect="true"
+                               openOnEnter="true"
+                               required
+                               [(ngModel)]="melding.TECHNICUS_ID">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-12 col-md-8">
+                    <label for="ROLLEND_ID" class="form-label">Afgetekend door</label>
+                    <ng-select id="AFGETEKEND_ID"
+                               [disabled]="isVerwijderMode || isRestoreMode"
+                               [items]="techneuten$ | async"
+                               placeholder="Naam van Techneut"
+                               bindLabel="NAAM"
+                               bindValue="ID"
+                               closeOnSelect="true"
+                               openOnEnter="true"
+                               required
+                               [(ngModel)]="melding.AFGETEKEND_ID">
+                    </ng-select>
+                </div>
+            </div>
+
+
+        </fieldset>
+    </div>
+    <div footer>
+        <app-icon-button
+                *ngIf="!isLoading && !isSaving && melding.ID !== undefined && !isRestoreMode && !isVerwijderMode"
+                iconNaam="fas Edit" btnColor="btn-primary"
+                [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()"
+                (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button
+                *ngIf="!isLoading && !isSaving && melding.ID === undefined && !isRestoreMode && !isVerwijderMode"
+                iconNaam="fas Plus" btnColor="btn-primary"
+                [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()"
+                (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button *ngIf="!isLoading && !isSaving && isVerwijderMode" iconNaam="fas TrashAlt"
+                         btnColor="btn-primary editorDeleteBtn"
+                         [toonKlein]=false tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button *ngIf="!isLoading && !isSaving && isRestoreMode" iconNaam="fas Undo"
+                         btnColor="btn-primary editorRestoreBtn"
+                         [toonKlein]=false tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
+
+        <button class="btn btn-primary" *ngIf="isLoading || isSaving">
+            <span><app-loader></app-loader></span>
+        </button>
+    </div>
+</app-modal>

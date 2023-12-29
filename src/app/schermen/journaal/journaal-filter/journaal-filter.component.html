@@ -1,0 +1,52 @@
+<app-modal titel="Meldingen filter">
+    <div body>
+        <table class="mb-2" style="width:100%;">
+            <td style="width:50%; padding-right: 5px">
+                <input type="checkbox"
+                       id="alleenVliegtuigen" class="form-check-inline"
+                       [(ngModel)]="activeFilter.alleenVliegtuigen">
+                <label for="alleenVliegtuigen" class="form-check-label">Vliegtuigen</label>
+            </td>
+            <td style="width:50%;padding-left: 5px;">
+                <input type="checkbox"
+                       id="alleenRollend" class="form-check-inline"
+                       [(ngModel)]="activeFilter.alleenRollend">
+                <label for="alleenVliegtuigen" class="form-check-label">Rollend</label>
+            </td>
+        </table>
+
+        <div *ngIf="!activeFilter.alleenRollend">
+            <label for="vliegend" class="form-check-label">Vliegtuigen</label>
+            <ng-select [multiple]="true" [(ngModel)]="activeFilter.selectedVliegtuigen" id="vliegend">
+                <ng-option *ngFor="let c of clubVliegtuigen" [value]="c.ID">{{c.CALLSIGN}}</ng-option>
+            </ng-select>
+        </div>
+
+        <div *ngIf="!activeFilter.alleenVliegtuigen">
+            <label for="rollend" class="form-check-label">Rollend materieel</label>
+            <ng-select [multiple]="true" [(ngModel)]="activeFilter.selectedRollend" id="rollend">
+                <ng-option *ngFor="let r of rollendTypes" [value]="r.ID">{{r.OMSCHRIJVING}}</ng-option>
+            </ng-select>
+        </div>
+
+        <table style="width:100%;">
+            <td style="width:50%; padding-right: 5px">
+                <label for="status" class="form-check-label">Status</label>
+                <ng-select [multiple]="true" [(ngModel)]="activeFilter.selectedStatus" id="status">
+                    <ng-option *ngFor="let r of statusTypes" [value]="r.ID">{{r.CODE}}</ng-option>
+                </ng-select>
+            </td>
+            <td style="width:50%;padding-left: 5px;">
+                <label for="categorie" class="form-check-label">Categorie</label>
+                <ng-select [multiple]="true" [(ngModel)]="activeFilter.selectedCategorie" id="categorie">
+                    <ng-option *ngFor="let r of categorieTypes" [value]="r.ID">{{r.CODE}}</ng-option>
+                </ng-select>
+            </td>
+        </table>
+    </div>
+
+    <div footer>
+        <app-icon-button iconNaam="fas Edit" btnColor="btn-primary" [toonKlein]=false
+                         tekst="Opvragen" (btnClicked)="filter()"></app-icon-button>
+    </div>
+</app-modal>

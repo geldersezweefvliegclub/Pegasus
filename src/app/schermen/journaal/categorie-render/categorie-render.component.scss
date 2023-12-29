@@ -1,0 +1,56 @@
+/* 2401 = Algemeen, Mededeling over gebruik */
+.Cat2401  {
+  background-color: rgb(255, 255, 255) !important;
+  color: rgb(0, 0, 0) !important;
+  border-width: 1px;
+  border-color: #5e5e62 !important;
+}
+
+/* 2402 = Visueel, Kras / deuk, geen invloed op inzetbaarheid */
+.Cat2402  {
+  background-color: rgb(64, 128, 155) !important;
+  color: rgb(255, 255, 255) !important;
+  border-width: 1px;
+  border-color: #5e5e62 !important;
+}
+
+/* 2403 = Klacht, Observatie, geen invloed op inzetbaarheid */
+.Cat2403  {
+  background-color: rgb(255, 255, 155) !important;
+  color: rgb(0, 0, 0) !important;
+  border-width: 1px;
+  border-color: #5e5e62 !important;
+}
+
+/* 2404 = Defect, kan niet meer ingezet worden */
+.Cat2404  {
+  background-color: rgb(255, 0, 0) !important;
+  color: rgb(255, 255, 255) !important;
+  border-width: 1px;
+  border-color: #5e5e62 !important;
+}
+
+.baseStatus {
+  align-items: center;
+  cursor: default;
+  display: inline-flex;
+  line-height: 30px;
+  max-width: 100%;
+  outline: 0;
+  overflow: hidden;
+  padding: 0 12px;
+  position: relative;
+  text-decoration: none;
+  transition-duration: .28s;
+  transition-property: box-shadow,opacity;
+  transition-timing-function: cubic-bezier(.4,0,.2,1);
+  vertical-align: middle;
+  white-space: nowrap;
+  border-radius: 4px !important;
+  border-style: solid;
+  width: 100%;
+
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+  border-color: #5e5e62;
+}
