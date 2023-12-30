@@ -12,6 +12,7 @@ import {JournaalService} from "../../../../services/apiservice/journaal.service"
 import {VliegtuigenService} from "../../../../services/apiservice/vliegtuigen.service";
 import {LedenService} from "../../../../services/apiservice/leden.service";
 import {SharedService} from "../../../../services/shared/shared.service";
+import {LoginService} from "../../../../services/apiservice/login.service";
 
 @Component({
     selector: 'app-melding-editor',
@@ -36,7 +37,7 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
     isLoading: boolean = false;
     isSaving: boolean = false;
 
-    magWijzigen: boolean = false;
+    magWijzigen: boolean = true;
     isVerwijderMode: boolean = false;
     isRestoreMode: boolean = false;
     formTitel: string = "";
@@ -48,7 +49,7 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
 
     constructor(private readonly typesService: TypesService,
                 private readonly ledenService: LedenService,
-                private readonly sharedService: SharedService,
+                private readonly loginService: LoginService,
                 private readonly journaalService: JournaalService,
                 private readonly vliegtuigenService: VliegtuigenService) {
     }
@@ -76,9 +77,7 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
         if (this.typesAbonnement)           this.typesAbonnement.unsubscribe();
         if (this.ledenAbonnement)           this.ledenAbonnement.unsubscribe();
         if (this.vliegtuigenAbonnement)     this.vliegtuigenAbonnement.unsubscribe();
-
     }
-
 
     openPopup(melding: HeliosJournaal | null) {
         if (melding) {
@@ -99,10 +98,6 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
 
             this.formTitel = 'Melding bewerken';
             this.haalMeldingOp(melding.ID!); // maar melding kan gewijzigd zijn, dus toch even starts ophalen van API
-
-            // TODO
-            // const ui = this.loginService.userInfo?.Userinfo;
-            this.magWijzigen = true;   //(ui?.isBeheerder || ui?.isStarttoren) ? true : false;
         } else {
             this.melding = {
                 ID: undefined,
@@ -238,6 +233,11 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
             this.isSaving = false;
             this.error = e;
         })
+    }
+
+    superGebruiker() {
+        const ui = this.loginService.userInfo?.LidData;
+        return (ui?.BEHEERDER || ui?.CIMT || ui?.INSTRUCTEUR || ui?.TECHNICUS) ? true : false;
     }
 
     opslaanDisabled(): boolean {

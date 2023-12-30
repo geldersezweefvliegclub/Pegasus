@@ -281,6 +281,11 @@ export interface components {
        */
       MEDICAL?: string;
       /**
+       * @description Is lid een technicus voor rollend / vliegend. Zo ja dan extra bevoegdheden in Journaal
+       * @example true
+       */
+      TECHNICUS?: boolean;
+      /**
        * Format: date
        * @description Geboorte datum van het lid
        * @example 1932-01-16

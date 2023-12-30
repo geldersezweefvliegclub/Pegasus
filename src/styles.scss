@@ -145,6 +145,9 @@ input.ng-dirty.ng-invalid {
   color: #9a9a9a;
 }
 
+textarea.ng-invalid {
+  border: 1px solid #ffc107;
+}
 .ng-select-required > .ng-select-container {
   border: 1px solid #ffc107 !important;
 }
