@@ -10,8 +10,7 @@ import {
 import {
     NgbCalendar,
     NgbDate,
-    NgbDateParserFormatter, NgbDatepicker,
-    NgbDatepickerNavigateEvent,
+    NgbDateParserFormatter,
     NgbDateStruct
 } from '@ng-bootstrap/ng-bootstrap';
 
@@ -42,7 +41,6 @@ export class NavigatieComponent implements OnInit, OnDestroy {
     readonly beheerRoutes = beheerRoutes;
     readonly logUitIcon: IconDefinition = faSignOutAlt;
     readonly beheerIcon: IconDefinition = faWrench;
-    readonly rapportageIcon: IconDefinition = faGaugeSimpleHigh;
 
     urlMenuItems:any[];
     showBeheer: boolean = false;

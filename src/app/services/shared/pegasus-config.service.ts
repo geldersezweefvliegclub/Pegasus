@@ -1,7 +1,5 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {HeliosConfigDDWV, HeliosLedenDataset} from "../../types/Helios";
-
 
 @Injectable({
     providedIn: 'root'
@@ -43,7 +41,7 @@ export class PegasusConfigService {
                 this.pegasusConfig = <IPegasusConfig>response;
 
                 resolve(this.pegasusConfig);
-            }).catch((response: any) => {
+            }).catch(() => {
                 reject(`Could not load the config file`);
             });
         });

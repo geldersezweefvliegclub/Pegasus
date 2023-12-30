@@ -82,8 +82,6 @@
                 </div>
                 <div class="w-100 overflow-auto" style="max-width: 280px;" *ngIf="!kleineDatum() && !showBeheer">
                     <app-vliegdag-selectie
-                            [kalenderIngave]="kalenderIngave"
-                            (dateSelect)="NieuweDatum($event)"
                     ></app-vliegdag-selectie>
                 </div>
             </div>
@@ -155,7 +153,6 @@
 
                 <div class="w-100 overflow-auto" *ngIf="!kleineDatum() && !showBeheer">
                     <app-vliegdag-selectie
-                            (dateSelect)="NieuweDatum($event)"
                     ></app-vliegdag-selectie>
                 </div>
 
