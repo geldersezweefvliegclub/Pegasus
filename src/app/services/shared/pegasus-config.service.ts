@@ -96,6 +96,10 @@ export class PegasusConfigService {
     public getRapporten(): any[] {
         return this.pegasusConfig.rapporten;
     }
+
+    public menuItems(): any[] {
+        return this.pegasusConfig.menuItems;
+    }
 }
 
 
@@ -107,6 +111,15 @@ export interface IPegasusConfig {
     maxZelfEditDagen: number | undefined;
 
     menuItemsNietTonen: string[];
+
+    menuItems: [
+        {
+            Titel: string,
+            Url: string,
+            Icon: string,
+            css: string
+        }
+    ]
 
     diensten: [
         {

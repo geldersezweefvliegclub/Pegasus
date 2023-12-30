@@ -3,7 +3,7 @@ import {beheerRoutes, CustomRoute, routes} from '../../../routing.module';
 
 import {Router} from '@angular/router';
 import {
-    faGaugeSimpleHigh,
+    faGaugeSimpleHigh, fas,
     faSignOutAlt,
     faWrench
 } from '@fortawesome/free-solid-svg-icons';
@@ -17,23 +17,15 @@ import {
 
 import {DateTime} from 'luxon';
 
-import {HeliosActie, KalenderMaand} from '../../../types/Utils';
-import {getBeginEindDatumVanMaand} from '../../../utils/Utils';
-
 import {LoginService} from '../../../services/apiservice/login.service';
-import {RoosterService} from "../../../services/apiservice/rooster.service";
-import {DienstenService} from "../../../services/apiservice/diensten.service";
 import {VliegtuigenService} from "../../../services/apiservice/vliegtuigen.service";
-import {StartlijstService} from '../../../services/apiservice/startlijst.service';
 import {DaginfoService} from '../../../services/apiservice/daginfo.service';
 import {Subscription} from "rxjs";
-import {delay} from "rxjs/operators";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import {far, IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {SchermGrootte, SharedService} from '../../../services/shared/shared.service';
 import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
 import {PopupKalenderComponent} from "../popup-kalender/popup-kalender.component";
 import {NgbDateFRParserFormatter} from "../../../shared/ngb-date-fr-parser-formatter";
-import {DagRapportenService} from "../../../services/apiservice/dag-rapporten.service";
 
 @Component({
     selector: 'app-navigatie',
@@ -52,7 +44,7 @@ export class NavigatieComponent implements OnInit, OnDestroy {
     readonly beheerIcon: IconDefinition = faWrench;
     readonly rapportageIcon: IconDefinition = faGaugeSimpleHigh;
 
-    kalenderMaand: KalenderMaand;
+    urlMenuItems:any[];
     showBeheer: boolean = false;
 
     vandaag = this.calendar.getToday();
@@ -81,6 +73,7 @@ export class NavigatieComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.toonMenuItems();
+        this.urlMenuItems = this.configService.menuItems()
 
         // abonneer op wijziging van vliegtuigen
         this.vliegtuigenAbonnement = this.vliegtuigenService.vliegtuigenChange.subscribe(vliegtuigen => {
@@ -333,5 +326,29 @@ export class NavigatieComponent implements OnInit, OnDestroy {
             return (window.innerHeight < 670)
 
         return (window.innerHeight < 850 || this.sharedService.getSchermSize() < SchermGrootte.xxl)
+    }
+
+    toonIcon(iconNaam:string) : IconDefinition {
+        let parts: string[] = iconNaam.split(' ');
+        let faIcon: IconDefinition = fas['faQuestion'];
+
+        if (parts.length != 2) {
+            console.error('iconNaam moet 2 parameters hebben');
+        } else {
+            if (parts[0] == 'fas') {
+                faIcon = fas['fa' + parts[1]];
+            } else {
+                faIcon =  far['fa' + parts[1]];
+            }
+
+            // als een verkeerde naam is opgegeven tonen we een uitroepteken en printen alle mogelijkheden in console
+            if (!faIcon) {
+                console.log('fa' + parts[1]);
+                console.log('fas', fas);
+                console.log('far', far);
+                faIcon = fas['faExclamation'];
+            }
+        }
+        return faIcon;
     }
 }
