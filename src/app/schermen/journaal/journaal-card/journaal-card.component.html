@@ -7,9 +7,10 @@
             </div>
         </b>
     </div>
+
     <div class="d-flex w-100">
         <div class="d-flex w-100 justify-content-between">
-            <div class="baseStatus me-1" ngClass="Cat{{melding.CATEGORIE_ID}}"> {{ melding.CATEGORIE }}</div>
+            <div class="baseStatus me-1" ngClass="Cat{{melding.CATEGORIE_ID}}"> {{ melding.CATEGORIE_CODE }}</div>
             <div class="baseStatus ms-1" ngClass="Status{{melding.STATUS_ID}}"> {{ melding.STATUS }}</div>
         </div>
     </div>
@@ -28,10 +29,10 @@
         </table>
     </div>
     <div class="d-flex w-100">
-            <div *ngIf="melding.TECHNICUS_ID">Technicus: {{ melding.TECHNICUS }}</div>
+            <div class="mt-1 naamStyle" *ngIf="melding.TECHNICUS_ID">Technicus: {{ melding.TECHNICUS }}</div>
     </div>
     <div class="d-flex w-100">
-        <div *ngIf="melding.AFGETEKEND_ID">Afgetekend: {{ melding.AFGETEKEND }}</div>
+        <div class="mt-1 naamStyle"  *ngIf="melding.AFGETEKEND_ID">Afgetekend: {{ melding.AFGETEKEND }}</div>
     </div>
 </div>
 
