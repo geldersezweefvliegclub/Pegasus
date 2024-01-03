@@ -1,0 +1,39 @@
+<div class="kaart"  *ngIf="melding">
+    <div class="d-flex w-100">
+        <b>
+            <div class="d-flex w-100 justify-content-between">
+                <div class="me-1" *ngIf="melding.ROLLEND_ID != undefined">{{ melding.ROLLEND }}: {{ melding.TITEL }}</div>
+                <div class="me-1" *ngIf="melding.ROLLEND_ID == undefined">{{ melding.REG_CALL }}: {{ melding.TITEL }}</div>
+            </div>
+        </b>
+    </div>
+    <div class="d-flex w-100">
+        <div class="d-flex w-100 justify-content-between">
+            <div class="baseStatus me-1" ngClass="Cat{{melding.CATEGORIE_ID}}"> {{ melding.CATEGORIE }}</div>
+            <div class="baseStatus ms-1" ngClass="Status{{melding.STATUS_ID}}"> {{ melding.STATUS }}</div>
+        </div>
+    </div>
+    <div class="d-flex w-100">
+        <table class="w-100">
+            <tr>
+                <td class="w-100">
+                    {{ melding.OMSCHRIJVING }}
+                </td>
+                <td class="pt-1" style="vertical-align: bottom">
+                    <div class="iconEdit">
+                        <fa-icon [icon]="iconEdit" class="mx-2" (click)="openEditor()"></fa-icon>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="d-flex w-100">
+            <div *ngIf="melding.TECHNICUS_ID">Technicus: {{ melding.TECHNICUS }}</div>
+    </div>
+    <div class="d-flex w-100">
+        <div *ngIf="melding.AFGETEKEND_ID">Afgetekend: {{ melding.AFGETEKEND }}</div>
+    </div>
+</div>
+
+
+<app-melding-editor></app-melding-editor>
