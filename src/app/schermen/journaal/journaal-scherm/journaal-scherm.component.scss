@@ -27,6 +27,12 @@
   flex-grow: 100;
 }
 
+.data {
+  flex-grow: 100;
+  overflow: scroll;
+  max-height: calc(100vh - 240px);
+}
+
 #toolbar {
   flex-grow: 1;
 }

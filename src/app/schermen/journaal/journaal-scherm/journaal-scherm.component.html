@@ -1,13 +1,13 @@
 <app-error [error]="error"></app-error>
 <app-success [success]="success"></app-success>
 
-<app-pegasus-card titel="Meldingen"
+<app-pegasus-card titel="Journaal"
                   subtitel="Een overzicht van de meldingegn"
                   [icon]="iconCardIcon"
                   [exportEnabled]="this.magExporten"
                   (Exporting)="exportDataset()">
     <div class="box h-100">
-        <div id="data">
+        <div id="data" class="data" *ngIf="!toonKlein">
             <app-datatable
                     id="meldingengrid"
                     [pagination]="false"
@@ -17,6 +17,11 @@
                     [frameworkComponents]="frameworkComponents"
                     (rowDoubleClicked)="openEditor($event)"
                     class="h-100 mt-n8"></app-datatable>
+        </div>
+        <div id="datacard" class="data" *ngIf="toonKlein">
+            <div *ngFor="let melding of data;let i = index">
+                <app-journaal-card [melding]="melding"></app-journaal-card>
+            </div>
         </div>
         <div class="row justify-content-start mt-2" id="toolbar">
             <div class="col-4">

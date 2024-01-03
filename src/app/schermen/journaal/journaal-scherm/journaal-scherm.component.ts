@@ -37,6 +37,7 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
 
     data:HeliosJournaalDataset[] = [];
     isLoading: boolean = false;
+    toonKlein: boolean = false;                 // Klein formaat van het journaal
 
     private dbEventAbonnement: Subscription;    // Abonneer op aanpassingen in de database
     private datumAbonnement: Subscription;      // volg de keuze van de kalender
@@ -267,6 +268,8 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
 
     // Welke kolommen moet worden getoond in het grid
     kolomDefinitie() {
+        this.toonKlein = (this.sharedService.getSchermSize() < SchermGrootte.xl);
+
         if (!this.deleteMode) {
             this.columns = this.dataColumns;
         } else {
