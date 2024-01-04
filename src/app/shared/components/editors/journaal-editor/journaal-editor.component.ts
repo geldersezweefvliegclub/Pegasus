@@ -57,9 +57,9 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         // abonneer op wijziging van rollend materieel
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
-            this.rollend$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 23})); // 23 is rollend materieel
-            this.categorie = dataset!.filter((t: HeliosType) => { return t.GROEP == 24 });  // 24 is categorie
-            this.status = dataset!.filter((t: HeliosType) => { return t.GROEP == 25 });     // 25 is status van de melding
+            this.rollend$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP === 23})); // 23 is rollend materieel
+            this.categorie = dataset!.filter((t: HeliosType) => { return t.GROEP === 24 });  // 24 is categorie
+            this.status = dataset!.filter((t: HeliosType) => { return t.GROEP === 25 });     // 25 is status van de melding
         });
 
         // abonneer op wijziging van vliegtuigen
@@ -241,6 +241,6 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
     }
 
     opslaanDisabled(): boolean {
-        return ((this.melding.ROLLEND_ID == undefined) && (this.melding.VLIEGTUIG_ID == undefined))
+        return ((this.melding.ROLLEND_ID === undefined) && (this.melding.VLIEGTUIG_ID === undefined))
     }
 }

@@ -150,7 +150,7 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
             // de datum zoals die in de kalender gekozen is
             this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
                 // ophalen is alleen nodig als er een ander jaar gekozen is in de kalendar
-                const ophalen = ((this.data == undefined) || (this.datum.year != datum.year))
+                const ophalen = ((this.data === undefined) || (this.datum.year !== datum.year))
                 this.datum = DateTime.fromObject({
                     year: datum.year,
                     month: datum.month,
@@ -166,7 +166,7 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
             this.maandAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
                 if (jaarMaand.year > 1900) {        // 1900 is bij initialisatie
                     // ophalen is alleen nodig als er een ander jaar gekozen is in de kalendar
-                    const ophalen = ((this.data == undefined) || (this.datum.year != jaarMaand.year))
+                    const ophalen = ((this.data === undefined) || (this.datum.year !== jaarMaand.year))
                     this.datum = DateTime.fromObject({
                         year: jaarMaand.year,
                         month: jaarMaand.month,
@@ -180,7 +180,7 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
             })
 
             this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
-                if (ev.tabel == "Journaal") {
+                if (ev.tabel === "Journaal") {
                     this.opvragen();
                 }
             });
@@ -206,7 +206,7 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
 
     // aanpassen wat we op het scherm kwijt kunnen nadat scherm groote gewijzigd is
     onWindowResize() {
-        if(this.sharedService.getSchermSize() == SchermGrootte.xs)
+        if(this.sharedService.getSchermSize() === SchermGrootte.xs)
         {
             this.kolomDefinitie();
             this.zetPermissie();

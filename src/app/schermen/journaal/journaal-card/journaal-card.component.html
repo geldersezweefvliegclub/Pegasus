@@ -2,8 +2,8 @@
     <div class="d-flex w-100">
         <b>
             <div class="d-flex w-100 justify-content-between">
-                <div class="me-1" *ngIf="melding.ROLLEND_ID != undefined">{{ melding.ROLLEND }}: {{ melding.TITEL }}</div>
-                <div class="me-1" *ngIf="melding.ROLLEND_ID == undefined">{{ melding.REG_CALL }}: {{ melding.TITEL }}</div>
+                <div class="me-1" *ngIf="melding.ROLLEND_ID !== undefined">{{ melding.ROLLEND }}: {{ melding.TITEL }}</div>
+                <div class="me-1" *ngIf="melding.ROLLEND_ID === undefined">{{ melding.REG_CALL }}: {{ melding.TITEL }}</div>
             </div>
         </b>
     </div>

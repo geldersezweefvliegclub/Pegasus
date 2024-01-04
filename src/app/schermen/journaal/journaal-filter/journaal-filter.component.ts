@@ -34,13 +34,13 @@ export class JournaalFilterComponent implements OnInit, OnDestroy {
         // abonneer op wijziging van transactie types
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
             this.rollendTypes = dataset!.filter((t: HeliosType) => {
-                return t.GROEP == 23
+                return t.GROEP === 23
             });
             this.categorieTypes = dataset!.filter((t: HeliosType) => {
-                return t.GROEP == 24
+                return t.GROEP === 24
             });
             this.statusTypes = dataset!.filter((t: HeliosType) => {
-                return t.GROEP == 25
+                return t.GROEP === 25
             });
         });
         // abonneer op wijziging van vliegtuigen
