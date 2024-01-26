@@ -79,7 +79,13 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
 
         // maak CSV string met de competentie IDs van de PVBs
         const comptentieIDs = this.PVBs.map((p: any) => {
-            return p.Lokaal + "," + p.Overland;
+            var str = "";
+            if (p.Lokaal != undefined) str += p.Lokaal;
+            if (p.Overland != undefined) {
+                str += (str == undefined) ? "" : ",";
+                str += p.Overland;
+            }
+            return str;
         }).join(',');
 
         this.isLoading = true;
@@ -137,7 +143,10 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     // Check of het ID uit de configuratie ook daadwerkelijk bestaat
-    competentieBestaat(id: number) {
+    competentieBestaat(id: number|undefined) {
+        if (id == undefined)
+            return false;
+
         if (this.competenties.length == 0)
             return false;
         return (this.competenties.findIndex(c => c.ID == id) < 0) ? false : true;
