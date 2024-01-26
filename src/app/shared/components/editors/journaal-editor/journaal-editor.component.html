@@ -8,7 +8,7 @@
                 <div class="col-12 col-md-6">
                     <label for="VLIEGTUIG_ID" class="form-label">Vliegtuig</label>
                     <ng-select id="VLIEGTUIG_ID"
-                               [disabled]="isVerwijderMode || isRestoreMode || (melding.ROLLEND_ID !=undefined)"
+                               [disabled]="isVerwijderMode || isRestoreMode || (melding.ROLLEND_ID !== undefined)"
                                [items]="clubVliegtuigen$ | async"
                                placeholder="Vliegtuig"
                                bindLabel="REG_CALL"
@@ -22,7 +22,7 @@
                 <div class="col-12 col-md-6">
                     <label for="ROLLEND_ID" class="form-label">Rollend</label>
                     <ng-select id="ROLLEND_ID"
-                               [disabled]="isVerwijderMode || isRestoreMode || (melding.VLIEGTUIG_ID != undefined)"
+                               [disabled]="isVerwijderMode || isRestoreMode || (melding.VLIEGTUIG_ID !== undefined)"
                                [items]="rollend$ | async"
                                placeholder="Rollend"
                                bindLabel="OMSCHRIJVING"
@@ -114,12 +114,12 @@
         <app-icon-button
                 *ngIf="!isLoading && !isSaving && melding.ID !== undefined && !isRestoreMode && !isVerwijderMode"
                 iconNaam="fas Edit" btnColor="btn-primary"
-                [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled() || melding.TITEL == undefined || melding.OMSCHRIJVING == undefined"
+                [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled() || melding.TITEL === undefined || melding.OMSCHRIJVING === undefined"
                 (btnClicked)="uitvoeren()"></app-icon-button>
         <app-icon-button
                 *ngIf="!isLoading && !isSaving && melding.ID === undefined && !isRestoreMode && !isVerwijderMode"
                 iconNaam="fas Plus" btnColor="btn-primary"
-                [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled() || melding.TITEL == undefined || melding.OMSCHRIJVING == undefined"
+                [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled() || melding.TITEL === undefined || melding.OMSCHRIJVING === undefined"
                 (btnClicked)="uitvoeren()"></app-icon-button>
         <app-icon-button *ngIf="!isLoading && !isSaving && isVerwijderMode" iconNaam="fas TrashAlt"
                          btnColor="btn-primary editorDeleteBtn"
