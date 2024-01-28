@@ -328,6 +328,27 @@ export interface paths {
       };
     };
   };
+  "/Leden/SynapseGebruiker": {
+    post: {
+      responses: {
+        /** OK, data succesvol gesynchroniseerd */
+        200: unknown;
+        /** Fout in synchronisatie */
+        500: unknown;
+      };
+      /** lid ID en wachtwoord */
+      requestBody: {
+        content: {
+          "application/json": {
+            /** @description lid ID uit de database */
+            ID?: string;
+            /** @description Het password van deze gebruiker */
+            PASSWORD?: string;
+          };
+        };
+      };
+    };
+  };
 }
 
 export interface components {
@@ -621,6 +642,11 @@ export interface components {
        * @example Jeugdlid
        */
       LIDTYPE?: string;
+      /**
+       * @description Lidtype externe referentie
+       * @example JL
+       */
+      LIDTYPE_REF?: string;
       /**
        * @description Vliegstatus, zoals DBO, Solist of Brevethouder
        * @example Brevethouder

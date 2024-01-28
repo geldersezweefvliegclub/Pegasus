@@ -9,7 +9,6 @@ import {ErrorMessage, SuccessMessage} from '../../../types/Utils';
 
 import * as xlsx from 'xlsx';
 import {LoginService} from '../../../services/apiservice/login.service';
-import {Router} from "@angular/router";
 import {nummerSort} from '../../../utils/Utils';
 import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
 import {Subscription} from "rxjs";

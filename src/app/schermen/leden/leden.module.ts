@@ -4,7 +4,7 @@ import {FormsModule} from "@angular/forms";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {SharedModule} from "../../shared/shared.module";
 import {RouterModule} from "@angular/router";
-import {LedenGridComponent} from "./leden-grid/leden-grid.component";
+import {LedenSchermComponent} from "./leden-scherm/leden-scherm.component";
 import {ExtendedModule, GridModule} from "@angular/flex-layout";
 import {AvatarRenderComponent} from "./avatar-render/avatar-render.component";
 import {AdresRenderComponent} from "./adres-render/adres-render.component";
@@ -12,16 +12,18 @@ import {TelefoonRenderComponent} from "./telefoon-render/telefoon-render.compone
 import {EmailRenderComponent} from "./email-render/email-render.component";
 import {NaamRenderComponent} from "./naam-render/naam-render.component";
 import {TrackRenderComponent} from "./track-render/track-render.component";
+import { LedenCardComponent } from './leden-card/leden-card.component';
 
 @NgModule({
     declarations: [
-        LedenGridComponent,
+        LedenSchermComponent,
         AvatarRenderComponent,
         AdresRenderComponent,
         TelefoonRenderComponent,
         EmailRenderComponent,
         NaamRenderComponent,
-        TrackRenderComponent,],
+        TrackRenderComponent,
+        LedenCardComponent,],
     imports: [
         CommonModule,
         FormsModule,
@@ -30,13 +32,13 @@ import {TrackRenderComponent} from "./track-render/track-render.component";
         RouterModule.forChild([
             {
                 path: '',
-                component: LedenGridComponent
+                component: LedenSchermComponent
             }
         ]),
         GridModule,
         ExtendedModule
     ],
-    exports: [LedenGridComponent]
+    exports: [LedenSchermComponent]
 })
 export class LedenModule {
 }
