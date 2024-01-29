@@ -1,0 +1,83 @@
+@import "../../../../variables";
+
+.kaart {
+  margin: 4px 0 4px 0;
+  padding: 0 2px 0 2px;
+  border-radius: 5px;
+  border: 1px solid #c4c2c1;
+  background-color: #f2f2f2;
+}
+
+.naam {
+  font-weight: bold;
+}
+
+
+.iconGroep {
+  margin: 0;
+}
+
+.icoontje {
+  margin-right: 2px;
+  margin-left: 2px;
+  padding-left: 2px;
+  padding-right: 2px;
+  border-radius: 10%;
+  width: 15px;
+  height: 15px;
+  border: 1px solid #626161FF;
+  color: black;
+  text-align: center;
+  font: 13px "Courier New"
+}
+
+.geenIcoontje {
+  margin-right: 2px;
+  margin-left: 2px;
+  padding-left: 2px;
+  padding-right: 2px;
+  width: 15px;
+  height: 15px;
+  color: black;
+  text-align: center;
+  font: 13px "Courier New"
+}
+
+#avatar {
+  position: relative;
+}
+
+.enveloppe {
+  font-size: 20px;
+  color: getColor('secondary');
+}
+
+.adresRegel {
+  font-weight:200;
+}
+
+.spinnerPosition {
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-body {
+  padding: 0 0 0 0px;
+}
+
+.tegoed {
+  padding-left: 3px;
+  padding-right: 3px;
+  left: 5px;
+  font-weight: bold;
+  height: 25px;
+  color: white;
+  background-color: #28a745;
+  border-radius: 3px;
+  border: 0.5px solid #a2a4a6;
+  z-index: 2;
+  position: absolute;
+}
+

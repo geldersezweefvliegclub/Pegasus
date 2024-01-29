@@ -1,0 +1,81 @@
+<div class="kaart" *ngIf="lid">
+    <table>
+        <tr>
+            <td class="pe-1">
+                <div class="card-body">
+                    <div id="avatar" class="d-flex">
+                        <div class="tegoed" data-toggle="tooltip" title="DDWV Saldo" *ngIf="toonTegoed">
+                            {{ lid.TEGOED }}
+                        </div>
+                        <div class="avatar">
+                            <app-avatar [url]="lid.AVATAR"></app-avatar>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td class="w-100" style="vertical-align: top;">
+                <div class="d-flex flex-column w-100">
+                    <!-- 1e rij -->
+                    <div class="d-flex w-100 justify-content-between">
+                        <div class="d-flex align-items-baseline">
+                            <div class="naam mb-1">{{ lid.NAAM }}</div>
+                            <div class="ms-1" *ngIf="(lid.EMAIL !== undefined) && (lid.EMAIL !== null)">
+                                <a aria-label="Verstuur email" title="verstuur email" href="mailto:{{lid.EMAIL}}"
+                                   target="_blank">
+                                    <fa-icon [icon]="faIcon" class="enveloppe"></fa-icon>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="d-flex mt-2">
+                            <div class="d-flex flex-row justify-content-end iconGroep ms-1">
+                                <div class="column">
+                                    <div *ngIf="!lid.CIMT" class="geenIcoontje">-</div>
+                                    <div *ngIf="lid.CIMT" class="icoontje" data-toggle="tooltip"
+                                         title="Chef instructie">C
+                                    </div>
+                                </div>
+
+                                <div class="column">
+                                    <div *ngIf="!lid.INSTRUCTEUR" class="geenIcoontje">-</div>
+                                    <div *ngIf="lid.INSTRUCTEUR" class="icoontje" data-toggle="tooltip"
+                                         title="instructeur">I
+                                    </div>
+                                </div>
+
+                                <div class="column">
+                                    <div *ngIf="!lid.LIERIST" class="geenIcoontje">-</div>
+                                    <div *ngIf="lid.LIERIST" class="icoontje" data-toggle="tooltip"
+                                         title="Lierist">L
+                                    </div>
+                                </div>
+
+                                <div class="column">
+                                    <div *ngIf="!lid.STARTLEIDER" class="geenIcoontje">-</div>
+                                    <div *ngIf="lid.STARTLEIDER" class="icoontje" data-toggle="tooltip"
+                                         title="Startleider">S
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2e rij -->
+                    <div class="d-flex w-100 adresRegel">
+                        {{ lid.ADRES }} {{ lid.POSTCODE }} {{ lid.WOONPLAATS }}
+                    </div>
+
+                    <!-- 3e rij -->
+                    <div class="d-flex w-100 justify-content-between">
+                        <div *ngIf="!lid.TELEFOON"></div>
+                        <div *ngIf="lid.TELEFOON"><b>T:</b>{{ lid.TELEFOON }}</div>
+                        <div *ngIf="!lid.MOBIEL"></div>
+                        <div *ngIf="lid.MOBIEL"><b>M:</b>{{ lid.MOBIEL }}</div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+
