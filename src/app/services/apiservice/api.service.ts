@@ -38,6 +38,10 @@ export class APIService {
             apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
         }
 
+        if (!apiHeaders?.has('Content-Type')) {
+            apiHeaders.append('Content-Type', 'application/json');
+        }
+
         const response = await fetch(`${this.getApiUrl(url)}${url}`, {
             method: 'GET',
             headers: apiHeaders,
@@ -56,6 +60,9 @@ export class APIService {
         const apiHeaders: Headers =  (headers) ? headers : new Headers();
         if (!apiHeaders?.has('Authorization') && this.BearerToken) {
             apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
+        }
+        if (!apiHeaders?.has('Content-Type')) {
+            apiHeaders.append('Content-Type', 'application/json');
         }
         const response = await fetch(`${this.getApiUrl(url)}${url}`, {
             method: 'POST',
@@ -80,6 +87,9 @@ export class APIService {
         const apiHeaders: Headers =  (headers) ? headers : new Headers();
         if (!apiHeaders?.has('Authorization') && this.BearerToken) {
             apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
+        }
+        if (!apiHeaders?.has('Content-Type')) {
+            apiHeaders.append('Content-Type', 'application/json');
         }
         const response = await fetch(`${this.getApiUrl(url)}${url}`, {
             method: 'PUT',
@@ -107,7 +117,9 @@ export class APIService {
         if (!apiHeaders?.has('Authorization') && this.BearerToken) {
             apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
         }
-
+        if (!apiHeaders?.has('Content-Type')) {
+            apiHeaders.append('Content-Type', 'application/json');
+        }
         const response = await fetch(`${this.getApiUrl(url)}${url}`, {
             method: 'DELETE',
             headers: apiHeaders,
@@ -130,7 +142,9 @@ export class APIService {
         if (!apiHeaders?.has('Authorization') && this.BearerToken) {
             apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
         }
-
+        if (!apiHeaders?.has('Content-Type')) {
+            apiHeaders.append('Content-Type', 'application/json');
+        }
         const response = await fetch(`${this.getApiUrl(url)}${url}`, {
             method: 'PATCH',
             headers: apiHeaders,
