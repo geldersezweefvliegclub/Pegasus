@@ -51,6 +51,10 @@ export class PegasusConfigService {
         return this.pegasusConfig.url;
     }
 
+    public getNewApiURL(): string {
+        return this.pegasusConfig.new_api_url;
+    }
+    
     public getPVB(): any[] {
         return this.pegasusConfig.pvb;
     }
@@ -103,6 +107,8 @@ export class PegasusConfigService {
 
 export interface IPegasusConfig {
     url: string;
+    // todo: remove when all endpoints have been moved to the new API
+    new_api_url: string;
     privacy_url: string;
     saldo_actief: boolean | undefined;
     maxZelfDienstenIndelen: number | undefined;

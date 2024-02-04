@@ -9,12 +9,18 @@ import {PegasusConfigService} from "../shared/pegasus-config.service";
 export class APIService {
     private readonly URL:string = 'http://localhost:4200/api/'
     private BearerToken: string | null = null;
+    // todo remove this when all endpoints are using the new API
+    private endpointsUsingNewApi: string[] = ['Types']; // replace with your actual endpoints
 
     constructor(private readonly sharedService: SharedService,
                 private readonly configService: PegasusConfigService) {
 
         const url = configService.getURL();
         if (url) this.URL = url;
+    }
+
+    private getApiUrl(endpoint: string): string {
+        return this.endpointsUsingNewApi.some((newEndpoint) => endpoint.startsWith(newEndpoint)) ? this.configService.getNewApiURL() : this.URL;
     }
 
     // opslaan van de token die we met inloggen hebben vekregen
@@ -32,7 +38,7 @@ export class APIService {
             apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
         }
 
-        const response = await fetch(`${this.URL}${url}`, {
+        const response = await fetch(`${this.getApiUrl(url)}${url}`, {
             method: 'GET',
             headers: apiHeaders,
             credentials: 'include'
@@ -51,7 +57,7 @@ export class APIService {
         if (!apiHeaders?.has('Authorization') && this.BearerToken) {
             apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
         }
-        const response = await fetch(`${this.URL}${url}`, {
+        const response = await fetch(`${this.getApiUrl(url)}${url}`, {
             method: 'POST',
             headers: apiHeaders,
             body: body,
@@ -75,7 +81,7 @@ export class APIService {
         if (!apiHeaders?.has('Authorization') && this.BearerToken) {
             apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
         }
-        const response = await fetch(`${this.URL}${url}`, {
+        const response = await fetch(`${this.getApiUrl(url)}${url}`, {
             method: 'PUT',
             headers: apiHeaders,
             body: body,
@@ -102,7 +108,7 @@ export class APIService {
             apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
         }
 
-        const response = await fetch(`${this.URL}${url}`, {
+        const response = await fetch(`${this.getApiUrl(url)}${url}`, {
             method: 'DELETE',
             headers: apiHeaders,
             credentials: 'include'
@@ -125,7 +131,7 @@ export class APIService {
             apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
         }
 
-        const response = await fetch(`${this.URL}${url}`, {
+        const response = await fetch(`${this.getApiUrl(url)}${url}`, {
             method: 'PATCH',
             headers: apiHeaders,
             credentials: 'include'
