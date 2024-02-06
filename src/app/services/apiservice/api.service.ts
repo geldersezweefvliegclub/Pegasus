@@ -70,8 +70,7 @@ export class APIService {
             body: body,
             credentials: 'include'
         });
-        //todo response heeft een .ok property. Mogelijk beter te gebruiken? (Zoals get())
-        if (response.status != 200) {  // 200 is normaal voor post
+        if (!response.ok ) {
             this.handleError(response);
         }
         response.clone().json().then((d) => {
