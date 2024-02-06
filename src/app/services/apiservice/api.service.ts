@@ -10,7 +10,7 @@ export class APIService {
     private readonly URL:string = 'http://localhost:4200/api/'
     private BearerToken: string | null = null;
     // todo remove this when all endpoints are using the new API
-    private endpointsUsingNewApi: string[] = ['Types']; // replace with your actual endpoints
+    private endpointsUsingNewApi: string[] = ['Types', 'Vliegtuigen']; // replace with your actual endpoints
 
     constructor(private readonly sharedService: SharedService,
                 private readonly configService: PegasusConfigService) {
