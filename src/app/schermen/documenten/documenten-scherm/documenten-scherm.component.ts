@@ -12,6 +12,7 @@ import {
     faUndo
 } from "@fortawesome/free-solid-svg-icons";
 import {DocumentEditorComponent} from "../../../shared/components/editors/document-editor/document-editor.component";
+import {LoginService} from "../../../services/apiservice/login.service";
 
 @Component({
     selector: 'app-documenten-scherm',
@@ -36,7 +37,10 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
     deleteMode: boolean = false;        // zitten we in delete mode om documenten te kunnen verwijderen
     trashMode: boolean = false;         // zitten in restore mode om documenten te kunnen terughalen
 
+    magAanpassen: boolean = false;      // mag de gebruiker documenten aanpassen
+
     constructor(private readonly typesService: TypesService,
+                private readonly loginService: LoginService,
                 private readonly documentenService: DocumentenService) {
     }
 
@@ -49,6 +53,10 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
         });
 
         this.opvragen();
+
+        // alleen beheerder mag documenten aanpassen
+        const ui = this.loginService.userInfo?.Userinfo;
+        this.magAanpassen = ui?.isBeheerder!;
     }
 
     ngOnDestroy(): void {
