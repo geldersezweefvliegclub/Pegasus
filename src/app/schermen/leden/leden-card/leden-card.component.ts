@@ -12,13 +12,14 @@ export class LedenCardComponent implements OnInit {
     @Input() lid: HeliosLedenDataset;
 
     toonTegoed: boolean = false;        // toon DDWV tegoed
-
+    naarDashboard: boolean = false;     // toon link naar dashboard van het lid
     constructor(private readonly loginService: LoginService) {
     }
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo?.Userinfo;
         this.toonTegoed = ui?.isBeheerder! || ui?.isBeheerderDDWV!
+        this.naarDashboard = (ui?.isBeheerder || ui?.isCIMT || ui?.isInstructeur) as boolean;
     }
 
     protected readonly faIcon = faEnvelope;

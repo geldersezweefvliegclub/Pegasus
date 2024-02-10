@@ -18,7 +18,10 @@
                     <!-- 1e rij -->
                     <div class="d-flex w-100 justify-content-between">
                         <div class="d-flex align-items-baseline">
-                            <div class="naam mb-1">{{ lid.NAAM }}</div>
+                            <div class="naam mb-1" *ngIf="!naarDashboard">{{ lid.NAAM }}</div>
+                            <div *ngIf="naarDashboard">
+                                <a aria-label="Naar dashboard" [routerLink]="['/dashboard']" [queryParams]="{lidID: lid.ID}">{{lid.NAAM}}</a>
+                            </div>
                             <div class="ms-1" *ngIf="(lid.EMAIL !== undefined) && (lid.EMAIL !== null)">
                                 <a aria-label="Verstuur email" title="verstuur email" href="mailto:{{lid.EMAIL}}"
                                    target="_blank">
