@@ -123,20 +123,18 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
         // Als lidID is meegegeven in URL, moeten we de lidData ophalen
         this.activatedRoute.queryParams.subscribe(params => {
+            const hl= this.loginService.userInfo?.LidData as HeliosLid;
+            var lidID = hl.ID!
             if (params['lidID']) {
-                const lidID = params['lidID'];
-                this.ledenService.getLid(lidID).then((l) => {
-                    this.lidData = l
-                    this.isDDWVer = (this.lidData.LIDTYPE_ID == 625);
-
-                    this.magSaldoTonen();
-                });
-            } else {
-                this.lidData = this.loginService.userInfo?.LidData as HeliosLid;
-                this.isDDWVer = (this.loginService.userInfo?.Userinfo?.isDDWV!);
-
-                this.magSaldoTonen()
+                lidID = params['lidID'];
             }
+
+            this.ledenService.getLid(lidID).then((l) => {
+                this.lidData = l
+                this.isDDWVer = (this.lidData.LIDTYPE_ID == 625);
+
+                this.magSaldoTonen();
+            });
         });
 
         const ui = this.loginService.userInfo?.Userinfo;
