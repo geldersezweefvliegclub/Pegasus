@@ -80,11 +80,12 @@ export class TransactiesService {
         return banken;
     }
 
-    async StartIDealTransactie(lidID: number, bestellingID: number, bankID: string): Promise<string> {
+    async StartIDealTransactie(lidID: number, bestellingID: number, bankID: string, url: string): Promise<string> {
         const response: Response = await this.apiService.post('Transacties/StartIDealTransactie', JSON.stringify({
             LID_ID: lidID,
             BESTELLING_ID: bestellingID,
-            BANK_ID: bankID
+            BANK_ID: bankID,
+            url: url
         }));
         return response.json();
     }

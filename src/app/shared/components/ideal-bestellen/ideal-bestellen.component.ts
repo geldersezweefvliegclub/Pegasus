@@ -49,7 +49,8 @@ export class IdealBestellenComponent implements OnInit{
         this.transactieService.StartIDealTransactie(
             this.lidID,
             this.bestelling,
-            this.banken[this.bank].ID!
+            this.banken[this.bank].ID!,
+            window.location.href,
         ).then((url) => window.location.href = url).catch(e => {
             this.error = e;
         });
