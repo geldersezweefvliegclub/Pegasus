@@ -161,6 +161,10 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
 
     columns: ColDef[];
 
+    rowClassRules = {
+        'rode_regel_startverbod': function(params: any) {return params.data.STARTVERBOD === true; },
+    }
+
     frameworkComponents = {
         avatarRender: AvatarRenderComponent,
         naamRender: NaamRenderComponent,
