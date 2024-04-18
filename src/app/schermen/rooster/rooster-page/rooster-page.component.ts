@@ -380,24 +380,15 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         // leden-filter de dataset naar de lijst
         let tmpLeden: HeliosLedenDatasetExtended[] = [];
         for (let i = 0; i < this.alleLeden.length; i++) {
-
-            // 601 = Erelid
-            // 602 = Lid
-            // 603 = Jeugdlid
-            // 604 = private owner
-            // 605 = veteraan
-            let isLid = false;
-            if ((this.alleLeden[i].LIDTYPE_ID == 601) ||
-                (this.alleLeden[i].LIDTYPE_ID == 602) ||
-                (this.alleLeden[i].LIDTYPE_ID == 603) ||
-                (this.alleLeden[i].LIDTYPE_ID == 604) ||
-                (this.alleLeden[i].LIDTYPE_ID == 605)) {
-                isLid = true;
-            }
-
             let tonen = false;
-            if (isLid && toonAlles) {
-                if (this.alleLeden[i].INSTRUCTEUR == true || this.alleLeden[i].STARTLEIDER == true || this.alleLeden[i].LIERIST == true || this.alleLeden[i].LIERIST_IO == true) {
+            if (toonAlles) {
+                if (this.alleLeden[i].INSTRUCTEUR == true ||
+                    this.alleLeden[i].STARTLEIDER == true ||
+                    this.alleLeden[i].LIERIST == true ||
+                    this.alleLeden[i].LIERIST_IO == true  ||
+                    this.alleLeden[i].SLEEPVLIEGER == true ||
+                    this.alleLeden[i].GASTENVLIEGER == true)
+                {
                     tonen = true;
                 }
             } else if (this.sharedService.ledenlijstFilter.startleiders && this.alleLeden[i].STARTLEIDER == true) {
