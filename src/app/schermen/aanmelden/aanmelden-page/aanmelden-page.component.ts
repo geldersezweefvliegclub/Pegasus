@@ -180,11 +180,11 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         }
     }
 
-    opvragen(): void {
+    opvragen(force:boolean = false): void {
         let beginDatum: DateTime;
         let eindDatum: DateTime;
 
-        if (this.ophalenOverslaan) {    // tweede verzoek om data op te vragen binnen 2 seconden
+        if (this.ophalenOverslaan && !force) {    // tweede verzoek om data op te vragen binnen 2 seconden
             return;
         }
         this.onWindowResize();  // bepaal wat we moeten tonen dag/week/maand
@@ -258,7 +258,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     zetDatum(nieuweDatum: DateTime) {
         this.datum = nieuweDatum;
         this.maandag = this.datum.startOf('week'); // de eerste dag van de gekozen week
-        this.opvragen();
+        this.opvragen(true);
     }
 
     // Is de datum in het verleden
