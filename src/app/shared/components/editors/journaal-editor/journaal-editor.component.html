@@ -5,10 +5,10 @@
     <div body>
         <fieldset [disabled]="isVerwijderMode || isRestoreMode || isLoading || isSaving">
             <div class="row">
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-6" [hidden]="melding.ROLLEND_ID !== undefined">
                     <label for="VLIEGTUIG_ID" class="form-label">Vliegtuig</label>
                     <ng-select id="VLIEGTUIG_ID"
-                               [disabled]="isVerwijderMode || isRestoreMode || (melding.ROLLEND_ID !== undefined)"
+                               [disabled]="isVerwijderMode || isRestoreMode"
                                [items]="clubVliegtuigen$ | async"
                                placeholder="Vliegtuig"
                                bindLabel="REG_CALL"
@@ -19,10 +19,10 @@
                                [(ngModel)]="melding.VLIEGTUIG_ID">
                     </ng-select>
                 </div>
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-6" [hidden]="melding.VLIEGTUIG_ID !== undefined">
                     <label for="ROLLEND_ID" class="form-label">Rollend</label>
                     <ng-select id="ROLLEND_ID"
-                               [disabled]="isVerwijderMode || isRestoreMode || (melding.VLIEGTUIG_ID !== undefined)"
+                               [disabled]="isVerwijderMode || isRestoreMode"
                                [items]="rollend$ | async"
                                placeholder="Rollend"
                                bindLabel="OMSCHRIJVING"
