@@ -10,12 +10,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {Subscription} from "rxjs";
 import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
-import {getBeginEindDatumVanMaand} from "../../../utils/Utils";
+import {DateDiff, getBeginEindDatumVanMaand} from "../../../utils/Utils";
 import {DateTime} from "luxon";
 import {
     HeliosAanwezigLedenDataset, HeliosDagInfosDataset, HeliosDienstenDataset,
     HeliosGast,
-    HeliosGastenDataset, HeliosLid,
+    HeliosGastenDataset, HeliosLedenDataset, HeliosLid,
     HeliosRoosterDataset, HeliosType
 } from "../../../types/Helios";
 import {RoosterService} from "../../../services/apiservice/rooster.service";
@@ -36,9 +36,21 @@ import {PegasusConfigService} from "../../../services/shared/pegasus-config.serv
 import {DaginfoService} from "../../../services/apiservice/daginfo.service";
 import {KeyValueArray} from "../../../types/Utils";
 import {SamenvattingComponent} from "../samenvatting/samenvatting.component";
+import {number} from "ng2-validation/dist/number";
 
 export type HeliosRoosterDatasetExtended = HeliosRoosterDataset & {
     EENHEDEN?: number
+}
+
+export type TrancactiesDDWV = {
+    AANGEMELD: boolean,
+    AFGEMELD: boolean,
+    STRIPPEN: number
+}
+
+export type HeliosAanwezigLedenDatasetExtended = HeliosAanwezigLedenDataset & {
+    AFGEMELD: boolean
+    DDWV : TrancactiesDDWV
 }
 
 @Component({
@@ -55,7 +67,6 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     @ViewChild(TransactiesComponent) transactieScherm: TransactiesComponent;
 
     readonly aanmeldenIcon: IconDefinition = faStreetView;
-    readonly emailIcon: IconDefinition = faEnvelope;
     readonly infoIcon: IconDefinition = faInfoCircle;
     readonly iconDown: IconDefinition = faChevronDown;
     readonly iconUp: IconDefinition = faChevronUp;
@@ -92,6 +103,8 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     toonDatumKnoppen: boolean = false;              // Mag de gebruiker een andere datum kiezen
     toonGasten: boolean = false;
     isDDWVer: boolean = false;                      // DDWV'ers mogen geen club dagen zien
+    isBeheerder: boolean = false;                   // Beheerders mogen meer zien
+    isBeheerderDDWV: boolean = false;               // Beheerders mogen meer zien
     ddwvActief: boolean = true;                     // Doen we aan een DDWV bedrijf
 
     constructor(private readonly ddwvService: DdwvService,
@@ -111,6 +124,8 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.ddwvActief = this.ddwvService.actief();
         this.isDDWVer = this.loginService.userInfo?.Userinfo?.isDDWV!;
+        this.isBeheerder = this.loginService.userInfo?.Userinfo?.isBeheerder!;
+        this.isBeheerderDDWV = this.loginService.userInfo?.Userinfo?.isBeheerderDDWV!;
 
         const ui = this.loginService.userInfo?.Userinfo;
         this.saldoTonen = this.configService.saldoActief() && (ui!.isDDWV! || ui!.isClubVlieger!);
@@ -219,6 +234,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
             this.rooster = rooster;
             this.isLoadingRooster = false;
             this.berekenStrippen();
+            this.UitschrijvingenDDWV(beginDatum, eindDatum);
 
             // We hebben  diensten nodig.Startleider/instructeur mag lid status zien (en mail sturen)
             this.dienstenService.getDiensten(beginDatum, eindDatum).then((diensten) => {
@@ -230,8 +246,11 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         this.isLoadingAanwezig = true;
         this.aanwezigLedenService.getAanwezig(beginDatum, eindDatum).then((aanmeldingen) => {
             this.aanmeldingen = aanmeldingen;
-            this.isLoadingAanwezig = false;
             this.berekenStrippen();
+            this.isLoadingAanwezig = false;
+
+            this.UitschrijvingenDDWV(beginDatum, eindDatum);
+
         }).catch(() => this.isLoadingAanwezig = false)
 
         this.isLoadingGasten = true;
@@ -244,6 +263,42 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         // Het tegoed moet dan beschikbaar zijn
         if (this.ddwvService.actief()) {
             this.opvragenLid();
+        }
+    }
+
+    UitschrijvingenDDWV(beginDatum: DateTime, eindDatum: DateTime)
+    {
+        // We moeten weten of aanwezige leden geladen zijn en dat rooster geladen is
+        if (this.isLoadingAanwezig || this.isLoadingRooster)
+            return;
+
+        const ui = this.loginService.userInfo!;
+
+        // voor beheerders moeten we meer data ophalen
+        if (!ui!.Userinfo?.isBeheerderDDWV && !ui!.Userinfo?.isBeheerder!) {
+            this.isLoadingAanwezig = false;
+        }
+        else {
+            this.aanwezigLedenService.getAanwezigVerwijderd(beginDatum, eindDatum).then((afmeldingen) => {
+                for (let i=0 ; i < afmeldingen.length ; i++)
+                {
+                    const afmelding: HeliosAanwezigLedenDataset = afmeldingen[i];
+                    const dag: HeliosRoosterDatasetExtended = this.rooster.find(d => d.DATUM == afmelding.DATUM) as HeliosLedenDataset;
+
+                    // we zijn niet geintresseerd in afmeldingen bij club dagen
+                    if (!dag.DDWV && dag.CLUB_BEDRIJF)
+                        continue
+
+                    // bij gecombineerd bedrijf betalen alleen de DDWV'ers. Afmelden van leden is niet interessant
+                    if (dag.DDWV && dag.CLUB_BEDRIJF) {
+                        if (afmelding.LIDTYPE_ID == 625)
+                            this.aanmeldingen.push(afmelding);
+                    }
+                    else {
+                        this.aanmeldingen.push(afmelding);
+                    }
+                }
+            });
         }
     }
 
@@ -422,19 +477,23 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
             return a.DATUM == dagDatum;
         });
 
-        // Voor staf sorteren we op vlieg status
-        if (this.staf(dagDatum)) {
-            aanwezig.sort(function (a, b) {
-                const posA = (a.STATUS_SORTEER_VOLGORDE) ? a.STATUS_SORTEER_VOLGORDE : 10000;
-                const posB = (b.STATUS_SORTEER_VOLGORDE) ? b.STATUS_SORTEER_VOLGORDE : 10000;
+        aanwezig.sort(function (a, b) {
+            if (a.VERWIJDERD !== b.VERWIJDERD)
+            {
+                const av = a.VERWIJDERD ? 1 :0;
+                const bv = b.VERWIJDERD ? 1 :0;
 
-                if (posA != posB) {
-                    return posB - posA;
-                }
-                return a.ID! - b.ID!;
-            })
-        }
+                return av-bv;
+            }
 
+            const posA = (a.STATUS_SORTEER_VOLGORDE) ? a.STATUS_SORTEER_VOLGORDE : 10000;
+            const posB = (b.STATUS_SORTEER_VOLGORDE) ? b.STATUS_SORTEER_VOLGORDE : 10000;
+
+            if (posA != posB) {
+                return posB - posA;
+            }
+            return a.ID! - b.ID!;
+        })
         return aanwezig ? aanwezig : []
     }
 
@@ -458,7 +517,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         }
 
         const aanwezig = this.aanmeldingen.findIndex((a: HeliosAanwezigLedenDataset) => {
-            return (a.DATUM == dagDatum && a.LID_ID == ui.ID);
+            return (a.DATUM == dagDatum && a.LID_ID == ui.ID && a.VERWIJDERD == false);
         });
 
         return aanwezig < 0 ? false : true;
@@ -583,6 +642,14 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         return false;
     }
 
+    toonBarometer(lid: HeliosAanwezigLedenDataset) {
+        const ui = this.loginService.userInfo?.Userinfo;
+        if (ui?.isBeheerder || ui?.isCIMT || ui?.isInstructeur) {
+            return true;
+        }
+        return false
+    }
+
     kleurBarometer(lid: HeliosAanwezigLedenDataset) {
         switch (lid.STATUS_BAROMETER) {
             case 'rood' :
@@ -651,4 +718,6 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
 
         window.location.href = `mailto:${toEmail}?bcc=${bcc}`;
     }
+
+    protected readonly DateDiff = DateDiff;
 }

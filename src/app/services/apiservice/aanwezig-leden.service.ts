@@ -93,6 +93,7 @@ export class AanwezigLedenService {
         });
     }
 
+    // Ophalen van alle leden die zich aangemeld hebben
     async getAanwezig(startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosAanwezigLedenDataset[]> {
         let getParams: KeyValueArray = params;
 
@@ -111,18 +112,41 @@ export class AanwezigLedenService {
             getParams['SELECTIE'] = zoekString;
         }
 
-        getParams['NIET_VERTROKKEN'] = 'true';      // We zijn niet geintresseerd in leden die al vertrokken zijn
+        this.aanwezigCache = await this.GetObjects(getParams)
+        return this.aanwezigCache.dataset as HeliosAanwezigLedenDataset[];
+    }
 
+    // Ophalen va leden die zich uitgeschreven hebben
+    async getAanwezigVerwijderd(startDatum: DateTime, eindDatum: DateTime): Promise<HeliosAanwezigLedenDataset[]> {
+        let getParams: KeyValueArray = {};
+
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
+
+        getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
+        getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
+        getParams['VERWIJDERD'] = 'true';      // Leden die zich uitgeschreven hebben, hebben hun aanmelding verwijderd
+
+        const obj = await this.GetObjects(getParams)
+        return obj.dataset as HeliosAanwezigLedenDataset[];
+    }
+
+    // ophalen van de onjecten van helios
+    async GetObjects(params: KeyValueArray): Promise<HeliosAanwezigLeden>
+    {
         try {
-            const response: Response = await this.apiService.get('AanwezigLeden/GetObjects', getParams);
-            this.aanwezigCache = await response.json();
+            const response: Response = await this.apiService.get('AanwezigLeden/GetObjects', params);
+            return  await response.json();
         } catch (e) {
             if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde starts als cache
                 throw(e);
             }
         }
-        return this.aanwezigCache?.dataset as HeliosAanwezigLedenDataset[];
+        return {};
     }
+
 
     async getSamenvatting(datum: DateTime): Promise<HeliosAanwezigSamenvatting> {
         // kunnen alleen data ophalen als we ingelogd zijn

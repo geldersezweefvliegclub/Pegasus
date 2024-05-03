@@ -151,21 +151,23 @@
                             <table>
                                 <tr *ngFor="let lid of aanwezigen(dagInRooster.DATUM)">
                                     <td (dblclick)="openLidAanwezigEditor(lid)">
-                                        <div *ngIf="!naarDashboard(lid)" class="nowrap">
-                                            <div class="barometer"></div>
-                                            {{lid.NAAM}}
-                                            <div *ngIf="staf(dagInRooster.DATUM) && lid.STATUSTYPE_ID" class="icoontje"
+                                        <div class="nowrap">
+                                            <div class="me-1 starts" *ngIf="(isBeheerder || (isBeheerderDDWV && dagInRooster.DDWV)) && DateDiff(dagInRooster.DATUM) < 0">{{lid.STARTS}}</div>
+                                            <div class="barometer" [ngClass]="kleurBarometer(lid)" *ngIf="toonBarometer(lid) && DateDiff(dagInRooster.DATUM) >= 0"></div>
+                                            <div [ngClass]="{'vertrokken': lid.VERTREK}">
+                                                <div *ngIf="lid.VERWIJDERD" class="verwijderd" >{{lid.NAAM}}</div>
+                                                <div *ngIf="!lid.VERWIJDERD && !naarDashboard(lid)">{{lid.NAAM}}</div>
+                                                <div *ngIf="!lid.VERWIJDERD &&  naarDashboard(lid)">
+                                                    <a aria-label="Naar dashboard" [routerLink]="['/dashboard']" [queryParams]="{lidID: lid.LID_ID}">{{lid.NAAM}}</a>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="staf(dagInRooster.DATUM) && lid.STATUSTYPE_ID && DateDiff(dagInRooster.DATUM) >= 0" class="icoontje"
                                                  style="white-space: pre;">{{lid.STATUS}}
                                             </div>
-                                        </div>
-
-                                        <div *ngIf="naarDashboard(lid)" class="nowrap">
-                                            <div class="barometer" [ngClass]="kleurBarometer(lid)"></div>
-                                            <a aria-label="Naar dashboard" [routerLink]="['/dashboard']"
-                                               [queryParams]="{lidID: lid.LID_ID}">{{lid.NAAM}}</a>
-                                            <div *ngIf="staf(dagInRooster.DATUM) && lid.STATUSTYPE_ID" class="icoontje"
-                                                 style="white-space: pre;">{{lid.STATUS}}
+                                            <div class="fas fa-exclamation-triangle niet-betaald ms-1" data-toggle="tooltip" title="DDWV nog niet betaald"
+                                                *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && (isBeheerder || isBeheerderDDWV) && !lid.ZELFSTART_ABONNEMENT && !lid.TRANSACTIE_ID && dagInRooster.DDWV && (lid.LIDTYPE_ID == 625 || !dagInRooster.CLUB_BEDRIJF)">
                                             </div>
+                                            <div *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && lid.ZELFSTART_ABONNEMENT && (isBeheerder || isBeheerderDDWV)">&nbsp;ZSA</div>
                                         </div>
                                     </td>
                                 </tr>
@@ -219,7 +221,7 @@
 <!-- template voor dag view -->
 <ng-template #dag>
     <div class="dataContent" *ngIf="rooster">
-        <div class="d-flex flex-row justify-content-between dagHeader ps-1 pe-1">
+        <div class="d-flex flex-row justify-content-between dagHeader ps-1 pe-1" >
             <div class="d-flex align-items-center">
                 <app-icon-button *ngIf="toonDatumKnoppen"
                         class="toolbarBtn"
@@ -315,25 +317,27 @@
                     </td>
                 </tr>
                 <tr *ngIf="magTonen(rooster[0].DATUM)">
-                    <td class="aanwezigenLijst">
+                    <td class="aanwezigenLijst" *ngIf="rooster[0] as dagInRooster">
                         <table>
-                            <tr *ngFor="let lid of aanwezigen(rooster[0].DATUM)">
-                                <td (dblclick)="openLidAanwezigEditor(lid)">
-                                    <div *ngIf="!naarDashboard(lid)" class="nowrap">
-                                        <div class="barometer"></div>
-                                        {{lid.NAAM}}
-                                        <div *ngIf="staf(rooster[0].DATUM) && lid.STATUSTYPE_ID" class="icoontje"
+                            <tr *ngFor="let lid of aanwezigen(dagInRooster.DATUM)">
+                                <td (dblclick)="openLidAanwezigEditor(lid)" >
+                                    <div class="nowrap">
+                                        <div class="me-1 starts" *ngIf="(isBeheerder || (isBeheerderDDWV && dagInRooster.DDWV)) && DateDiff(dagInRooster.DATUM) < 0">{{lid.STARTS}}</div>
+                                        <div class="barometer" [ngClass]="kleurBarometer(lid)" *ngIf="toonBarometer(lid) && DateDiff(dagInRooster.DATUM) >= 0"></div>
+                                        <div [ngClass]="{'vertrokken': lid.VERTREK}">
+                                            <div *ngIf="lid.VERWIJDERD" class="verwijderd" >{{lid.NAAM}}</div>
+                                            <div *ngIf="!lid.VERWIJDERD && !naarDashboard(lid)">{{lid.NAAM}}</div>
+                                            <div *ngIf="!lid.VERWIJDERD &&  naarDashboard(lid)">
+                                                <a aria-label="Naar dashboard" [routerLink]="['/dashboard']" [queryParams]="{lidID: lid.LID_ID}">{{lid.NAAM}}</a>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="staf(dagInRooster.DATUM) && lid.STATUSTYPE_ID && DateDiff(dagInRooster.DATUM) >= 0" class="icoontje"
                                              style="white-space: pre;">{{lid.STATUS}}
                                         </div>
-                                    </div>
-
-                                    <div *ngIf="naarDashboard(lid)" class="nowrap">
-                                        <div class="barometer" [ngClass]="kleurBarometer(lid)"></div>
-                                        <a aria-label="Naar dashboard" [routerLink]="['/dashboard']"
-                                           [queryParams]="{lidID: lid.LID_ID}">{{lid.NAAM}}</a>
-                                        <div *ngIf="staf(rooster[0].DATUM) && lid.STATUSTYPE_ID" class="icoontje"
-                                             style="white-space: pre;">{{lid.STATUS}}
+                                        <div class="fas fa-exclamation-triangle niet-betaald ms-1" data-toggle="tooltip" title="DDWV nog niet betaald"
+                                             *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && (isBeheerder || isBeheerderDDWV) && !lid.ZELFSTART_ABONNEMENT && !lid.TRANSACTIE_ID && dagInRooster.DDWV && (lid.LIDTYPE_ID == 625 || !dagInRooster.CLUB_BEDRIJF)">
                                         </div>
+                                        <div *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && lid.ZELFSTART_ABONNEMENT && (isBeheerder || isBeheerderDDWV)">&nbsp;ZSA</div>
                                     </div>
                                 </td>
                             </tr>

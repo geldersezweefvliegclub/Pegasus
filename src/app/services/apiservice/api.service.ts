@@ -61,9 +61,16 @@ export class APIService {
         if (response.status != 200) {  // 200 is normaal voor post
             this.handleError(response);
         }
-        response.clone().json().then((d) => {
-            this.sharedService.fireHeliosEvent({actie: HeliosActie.Add, tabel: url.split('/')[0], data: d});
-        });
+        try {
+            response.clone().json().then((d) => {
+                this.sharedService.fireHeliosEvent({actie: HeliosActie.Add, tabel: url.split('/')[0], data: d});
+            });
+        }
+        catch (e)
+        {
+            console.error(url, e)
+        }
+
 
         return response;
     }

@@ -609,6 +609,11 @@ export interface components {
        */
       PRIVACY?: boolean;
       /**
+       * @description Heeft het lid een zelfstart abonnement?
+       * @example false
+       */
+      ZELFSTART_ABONNEMENT?: boolean;
+      /**
        * Format: int32
        * @description De vliegstatus van het lid (DBO, solist, brevethouder), NULL indien niet van toepassing
        * @example 1901
