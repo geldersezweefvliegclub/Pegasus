@@ -1,4 +1,4 @@
-import {DateTime} from 'luxon';
+import {DateTime, Interval} from 'luxon';
 
 export const nummerSort = (num1: number, num2: number) => {
   return (num1 > num2) ? 1 : -1;
@@ -53,3 +53,19 @@ export const DagVanDeWeek = (datum: string | null): string => {
       return "??";
   }
 }
+
+export const DateDiff = (datum1 : string, datum2: string|undefined = undefined) : number => {
+  const dt1: DateTime = DateTime.fromSQL(datum1);
+  const dt2: DateTime = (datum2 == undefined) ? DateTime.now() : DateTime.fromSQL(datum2);
+
+  if (dt1 < dt2) {
+    const diff = Interval.fromDateTimes(dt1, dt2);
+    return -1* Math.floor(diff.length("days"))
+  }
+  else {
+    const diff = Interval.fromDateTimes(dt2, dt1);
+    return Math.ceil(diff.length("days"))
+  }
+
+}
+
