@@ -387,6 +387,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
             case 'ROOSTER':
             case 'BEHEERDER':
             case 'DDWV_BEHEERDER':
+            case 'OPGEZEGD':
             case 'STARTVERBOD': {
                 if (ui?.isBeheerder) {
                     return false;
@@ -438,6 +439,12 @@ export class LidEditorComponent implements OnInit, OnDestroy {
 
             case 'email_daginfo' : {
                 if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) {
+                    return true;
+                }
+                break;
+            }
+            case 'OPGEZEGD': {
+                if (ui?.isBeheerder || this.ikBenHetZelf()) {
                     return true;
                 }
                 break;

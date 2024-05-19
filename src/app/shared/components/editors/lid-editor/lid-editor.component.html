@@ -286,6 +286,13 @@
                                 ></app-lid-invoer>
                             </div>
                         </div>
+                        <div class="row mt-2">
+                            <div class="col-6">
+                                <label for="beroep" class="form-label">Beroep</label>
+                                <input type="text" name="beroep" class="form-control" id="beroep"
+                                   [(ngModel)]="lid.BEROEP">
+                             </div>
+                        </div>
                     </div>
                 </fieldset>
             </app-pegasus-card>
@@ -505,7 +512,7 @@
                                        name="zelfstartAbonnement"
                                        [disabled]="isDisabled('zelfstartAbonnement')"
                                        [(ngModel)]="lid.ZELFSTART_ABONNEMENT">
-                                <label class="form-check-label" for="startverbod"
+                                <label class="form-check-label" for="zelfstartAbonnement"
                                        [ngClass]="disabledClass('zelfstartAbonnement')">
                                     Zelfstart abonnement
                                 </label>
@@ -516,7 +523,7 @@
                     </div>
                     <hr>
                     <div class="row my-0">
-                        <div class="col-6">
+                        <div class="col-5">
                             <div *ngIf="isVisible('STARTVERBOD')">
                                 <input class="form-check-inline" type="checkbox" id="startverbod" name="startverbod"
                                        [disabled]="isDisabled('STARTVERBOD')"
@@ -527,7 +534,16 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-6">
+                            <div *ngIf="isVisible('OPGEZEGD')">
+                                <input class="form-check-inline" type="checkbox" id="opgezegd" name="opgezegd"
+                                       [disabled]="isDisabled('OPGEZEGD')"
+                                       [(ngModel)]="lid.OPGEZEGD">
+                                <label class="form-check-label" for="opgezegd"
+                                       [ngClass]="disabledClass('OPGEZEGD')">
+                                    Lidmaatschap opgezegd
+                                </label>
+                            </div>
                         </div>
                     </div>
 

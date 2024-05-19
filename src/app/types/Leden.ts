@@ -578,6 +578,11 @@ export interface components {
        */
       STARTVERBOD?: boolean;
       /**
+       * @description Heeft het lid het lidmaatschap opgezegd
+       * @example true
+       */
+      OPGEZEGD?: boolean;
+      /**
        * @description Staat privacy mode (AVG / GDPR) uit/aan
        * @example true
        */
@@ -592,6 +597,11 @@ export interface components {
        * @example 88AB021EC04
        */
       SLEUTEL2?: string;
+      /**
+       * @description Beroep van het lid
+       * @example Student bedrijgfysica
+       */
+      BEROEP?: string;
       /**
        * @description Het lidmaatschapsnummer van de KNVVL
        * @example 158700
