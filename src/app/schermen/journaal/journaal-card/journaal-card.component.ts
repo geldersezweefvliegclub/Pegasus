@@ -25,4 +25,8 @@ export class JournaalCardComponent implements OnInit {
     openEditor() {
         this.editor.openPopup(this.melding as HeliosJournaalDataset);
     }
+
+    details(melding: HeliosJournaalDataset) {
+        window.alert("Gemeld door " + melding.MELDER + " op " +  this.sharedService.datumDMJ(melding.DATUM!));
+    }
 }

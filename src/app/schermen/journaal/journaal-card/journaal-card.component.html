@@ -2,8 +2,9 @@
     <div class="d-flex w-100">
         <b>
             <div class="d-flex w-100 justify-content-between">
-                <div class="me-1" *ngIf="melding.ROLLEND_ID !== undefined">{{ melding.ROLLEND }}: {{ melding.TITEL }}</div>
-                <div class="me-1" *ngIf="melding.ROLLEND_ID === undefined">{{ melding.REG_CALL }}: {{ melding.TITEL }}</div>
+                <div class="me-1" *ngIf="melding.ROLLEND_ID !== null">{{ melding.ROLLEND }}: </div>
+                <div class="me-1" *ngIf="melding.VLIEGTUIG_ID !== null">{{ melding.REG_CALL }}: </div>
+                {{ melding.TITEL }}
             </div>
         </b>
     </div>
@@ -11,7 +12,7 @@
     <div class="d-flex w-100">
         <div class="d-flex w-100 justify-content-between">
             <div class="baseStatus me-1" ngClass="Cat{{melding.CATEGORIE_ID}}"> {{ melding.CATEGORIE_CODE }}</div>
-            <div class="baseStatus ms-1" ngClass="Status{{melding.STATUS_ID}}"> {{ melding.STATUS }}</div>
+            <div class="baseStatus ms-1" ngClass="Status{{melding.STATUS_ID}}" (click)=details(melding)> {{ melding.STATUS }}</div>
         </div>
     </div>
     <div class="d-flex w-100">
