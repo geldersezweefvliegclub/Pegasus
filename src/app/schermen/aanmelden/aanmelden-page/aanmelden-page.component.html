@@ -165,7 +165,7 @@
                                                  style="white-space: pre;">{{lid.STATUS}}
                                             </div>
                                             <div class="fas fa-exclamation-triangle niet-betaald ms-1" data-toggle="tooltip" title="DDWV nog niet betaald"
-                                                *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && (isBeheerder || isBeheerderDDWV) && !lid.ZELFSTART_ABONNEMENT && !lid.TRANSACTIE_ID && dagInRooster.DDWV && (lid.LIDTYPE_ID == 625 || !dagInRooster.CLUB_BEDRIJF)">
+                                                *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && (isBeheerder || isBeheerderDDWV) && !lid.ZELFSTART_ABONNEMENT && !lid.TRANSACTIE_ID && dagInRooster.DDWV && (lid.LIDTYPE_ID === 625 || !dagInRooster.CLUB_BEDRIJF)">
                                             </div>
                                             <div *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && lid.ZELFSTART_ABONNEMENT && (isBeheerder || isBeheerderDDWV)">&nbsp;ZSA</div>
                                         </div>
@@ -335,7 +335,7 @@
                                              style="white-space: pre;">{{lid.STATUS}}
                                         </div>
                                         <div class="fas fa-exclamation-triangle niet-betaald ms-1" data-toggle="tooltip" title="DDWV nog niet betaald"
-                                             *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && (isBeheerder || isBeheerderDDWV) && !lid.ZELFSTART_ABONNEMENT && !lid.TRANSACTIE_ID && dagInRooster.DDWV && (lid.LIDTYPE_ID == 625 || !dagInRooster.CLUB_BEDRIJF)">
+                                             *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && (isBeheerder || isBeheerderDDWV) && !lid.ZELFSTART_ABONNEMENT && !lid.TRANSACTIE_ID && dagInRooster.DDWV && (lid.LIDTYPE_ID === 625 || !dagInRooster.CLUB_BEDRIJF)">
                                         </div>
                                         <div *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && lid.ZELFSTART_ABONNEMENT && (isBeheerder || isBeheerderDDWV)">&nbsp;ZSA</div>
                                     </div>
