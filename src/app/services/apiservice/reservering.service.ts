@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {APIService} from "./api.service";
-import {HeliosReservering, HeliosReserveringen, HeliosReserveringenDataset} from "../../types/Helios";
+import {HeliosReservering, HeliosReserveringen, HeliosReserveringenDataset, HeliosTrack} from "../../types/Helios";
 import {KeyValueArray} from "../../types/Utils";
 import {DateTime} from "luxon";
 import {LoginService} from "./login.service";
@@ -60,4 +60,11 @@ export class ReserveringService {
     async deleteReservering(id: number) {
         await this.apiService.delete('Reservering/DeleteObject', {'ID': id.toString()});
     }
+
+
+    async MagNogReserveren(): Promise<boolean> {
+        const response: Response = await this.apiService.get('Reservering/MagNogReserveren');
+        return response.json();
+    }
+
 }

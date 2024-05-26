@@ -92,17 +92,21 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.nu = DateTime.now();
-        this.onWindowResize();
-
         const ui = this.loginService.userInfo?.Userinfo;
+
+        this.nu = DateTime.now();
+        this.toonDatumKnoppen = (ui!.isDDWV! || ui!.isClubVlieger!);
+
+        this.bepaalDagWeek()
+
         if (ui!.isBeheerder || ui!.isBeheerderDDWV) {
             this.magBoeken = true;
         }
-        this.toonDatumKnoppen = (ui!.isDDWV! || ui!.isClubVlieger!);
 
-        this.onWindowResize();
         this.magExporteren = ui!.isClubVlieger!;
+        this.reserveringenService.MagNogReserveren().then((magNogReserveren) => {
+            this.magNogReserveren = magNogReserveren;
+        });
 
         // de datum zoals die in de kalender gekozen is
         this.maandAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
@@ -193,7 +197,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
         if (this.resizeSubscription) this.resizeSubscription.unsubscribe();
     }
 
-    onWindowResize() {
+    bepaalDagWeek(): void {
         // als je geen datum mag aanpassen, zie alleen vandaag
         if (this.toonDatumKnoppen == false) {
             this.reserveringView = "dag"
@@ -207,6 +211,10 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
                 this.reserveringView = "week"
             }
         }
+    }
+
+    onWindowResize() {
+        this.bepaalDagWeek()
 
         if (this.datum) {
             this.opvragen();        // moeten wel een datum hebben, anders kunnen we niets opvragen
@@ -231,22 +239,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
                 break;
             }
         }
-        // We laden veel meer starts, dan de gekozen maand, en dat heeft een reden
-        // Je mag maar 1 openstaande reservering hebben. In de functie magReserveren() wordt gekeken of er een openstaande reservering is
-        // altijd vanaf vandaag controleren
-        if (beginDatum > this.nu) {
-            beginDatum = this.nu;
-        }
 
-        // als einde van de maand in het verleden is, kunnen we sowieso niet meer reserveren, beperk starts opvraag
-        if (beginEindDatum.einddatum < this.nu) {
-            eindDatum = beginEindDatum.einddatum;
-
-            if (this.reserveringView == "week") {   // week kan in 2 maanden vallen, dus paar dagen extra opvragen
-                const dagenExtra = 7 - eindDatum.weekday;
-                eindDatum = eindDatum.plus({days: dagenExtra});
-            }
-        }
         this.roosterService.getRooster(beginDatum, eindDatum).then((rooster) => {
             this.rooster = rooster;
             this.applyRoosterFilter();
@@ -254,24 +247,6 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
             this.reserveringenService.getReserveringen(beginDatum, eindDatum).then((dataset) => {
                 this.data = (dataset) ? dataset : [];
                 this.isLoading = false;
-
-                // staat er nog een reserving open?
-                // een reservering is iets anders dan een boeking
-                // een reservering wordt gedaan door een lid, een boeking wordt gedaan door de beheerder
-                // een boeking is bijvoorbeeld een NK, Euroglide etc
-                // Je mag niet reserveren als er nog een reservering (in de toekomst) open staat
-                // maar je mag wel reserveren als er een boeking open staat.
-                // als starttoren mag je sowieso niet een kist reserveren
-
-                if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
-                    this.magNogReserveren = false;
-                } else {
-                    const ui = this.loginService.userInfo?.LidData
-                    const idx = this.data.findIndex((reservering) => {
-                        return ((reservering.LID_ID == ui?.ID) && (reservering.IS_GEBOEKT == false) && (DateTime.fromSQL(reservering.DATUM!) > this.nu))
-                    });
-                    this.magNogReserveren = (idx < 0);
-                }
             }).catch(e => {
                 this.error = e;
                 this.isLoading = false;
@@ -393,7 +368,13 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     toekennenReservering(datum: string, vliegtuigID: number) {
         const ui = this.loginService.userInfo;
         const r = {DATUM: datum, LID_ID: ui!.LidData!.ID, VLIEGTUIG_ID: vliegtuigID, NAAM: ui!.LidData?.NAAM}
-        this.reserveringenService.addReservering(r).then();
+        this.reserveringenService.addReservering(r).then(() => {
+
+            // we hebben een nieuwe reservering, dus we moeten opnieuw bepalen of er nog reserveringen gemaakt mogen worden
+            this.reserveringenService.MagNogReserveren().then((magNogReserveren) => {
+                this.magNogReserveren = magNogReserveren;
+            });
+        });
 
         this.data.push(r);  // update grid zonder reload
         setTimeout(() => this.opvragen(), 1000);  // we gaan wel laatste reserveringen ophalen, er kan nog iemand bezig zijn
@@ -406,7 +387,12 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
         })
 
         if (idx >= 0) {
-            this.reserveringenService.deleteReservering(this.data[idx].ID!).then();
+            this.reserveringenService.deleteReservering(this.data[idx].ID!).then(() => {
+                // we hebben een reservering verwijderd, dus we moeten opnieuw bepalen of er nog reserveringen gemaakt mogen worden
+                this.reserveringenService.MagNogReserveren().then((magNogReserveren) => {
+                    this.magNogReserveren = magNogReserveren;
+                });
+            });
             this.data.splice(idx, 1);
 
             setTimeout(() => this.opvragen(), 1000);  // we gaan wel laatste reserveringen ophalen, er kan nog iemand bezig zijn
@@ -592,8 +578,8 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
         this.datum = nieuweDatum;
         this.maandag = this.datum.startOf('week');     // de eerste dag van de gekozen week
 
-        if (opvragen) {
-            this.opvragen();            // gaan naar nieuwe maand, dus opvragen van database
+        if (opvragen || this.reserveringView == "dag") {
+            this.opvragen();
         } else {
             this.applyRoosterFilter();  // zorg dat we de juiste starts hebben om weer te geven
         }
