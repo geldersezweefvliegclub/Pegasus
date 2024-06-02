@@ -45,13 +45,19 @@
   vertical-align: top;
 }
 
-.aanmeldingen {
+.lierBedrijf {
   font-size: smaller;
   color: #9a9a9a;
   font-style: italic;
 }
 
-.onvoldoendeAanmeldingen {
+.sleepBedrijf {
+  font-size: smaller;
+  color: #9a9a9a;
+  font-style: italic;
+}
+
+.geenBedrijf {
   font-weight: bold;
   font-size: smaller;
   color: red;

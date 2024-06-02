@@ -99,22 +99,14 @@
                 <tr>
                     <td *ngFor="let dagInRooster of rooster;let r = index">
                         <div *ngIf="magTonen(dagInRooster.DATUM)">
-                            <div *ngIf="!dagInRooster.CLUB_BEDRIJF && dagInRooster.DDWV && ddwvActief && dagInfoDefaultStartMetode(dagInRooster.DATUM)" class="aanmeldingen">
+                            <div *ngIf="!dagInRooster.CLUB_BEDRIJF && dagInRooster.DDWV && ddwvActief && dagInfoDefaultStartMetode(dagInRooster.DATUM)"
+                                [ngClass]  class="aanmeldingen">
                                 {{dagInfoDefaultStartMetode(dagInRooster.DATUM)}}
                             </div>
-                            <div *ngIf="!dagInRooster.CLUB_BEDRIJF && dagInRooster.DDWV && ddwvActief && !dagInfoDefaultStartMetode(dagInRooster.DATUM)">
-                                <div *ngIf="aanwezigen(dagInRooster.DATUM).length < dagInRooster.MIN_SLEEPSTART && aanwezigen(dagInRooster.DATUM).length < dagInRooster.MIN_LIERSTART"
-                                     class="onvoldoendeAanmeldingen">
-                                    Onvoldoende aanmeldingen
-                                </div>
-                                <div *ngIf="aanwezigen(dagInRooster.DATUM).length >= dagInRooster.MIN_SLEEPSTART && aanwezigen(dagInRooster.DATUM).length < dagInRooster.MIN_LIERSTART"
-                                     class="aanmeldingen">
-                                    Sleep bedrijf
-                                </div>
-                                <div *ngIf="aanwezigen(dagInRooster.DATUM).length >= dagInRooster.MIN_LIERSTART"
-                                     class="aanmeldingen">
-                                    Lier bedrijf
-                                </div>
+
+                            <div *ngIf="!dagInRooster.CLUB_BEDRIJF && dagInRooster.DDWV && ddwvActief && !dagInfoDefaultStartMetode(dagInRooster.DATUM)"
+                                 [ngClass]="TypeBedrijfClass(dagInRooster.DATUM, dagInRooster)" >
+                                {{TypeBedrijf(dagInRooster.DATUM, dagInRooster)}}
                             </div>
                         </div>
                     </td>
@@ -275,17 +267,8 @@
                 </tr>
                 <tr *ngIf="ddwvActief && magTonen(rooster[0].DATUM) && rooster[0].DDWV && !rooster[0].CLUB_BEDRIJF">
                     <td>
-                        <div *ngIf="aanwezigen(rooster[0].DATUM).length < rooster[0].MIN_SLEEPSTART && aanwezigen(rooster[0].DATUM).length < rooster[0].MIN_LIERSTART"
-                             class="onvoldoendeAanmeldingen">
-                            Onvoldoende aanmeldingen
-                        </div>
-                        <div *ngIf="aanwezigen(rooster[0].DATUM).length >= rooster[0].MIN_SLEEPSTART && aanwezigen(rooster[0].DATUM).length < rooster[0].MIN_LIERSTART"
-                             class="aanmeldingen">
-                            Sleep bedrijf
-                        </div>
-                        <div *ngIf="aanwezigen(rooster[0].DATUM).length >= rooster[0].MIN_LIERSTART"
-                             class="aanmeldingen">
-                            Lier bedrijf
+                        <div  [ngClass]="TypeBedrijfClass(rooster[0].DATUM, rooster[0])" >
+                            {{TypeBedrijf(rooster[0].DATUM, rooster[0])}}
                         </div>
                     </td>
                 </tr>

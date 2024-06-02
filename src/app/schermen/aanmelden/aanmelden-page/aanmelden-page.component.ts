@@ -721,4 +721,35 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     }
 
     protected readonly DateDiff = DateDiff;
+
+    TypeBedrijf(DATUM: string, dagInRooster: HeliosRoosterDatasetExtended): string {
+        const tbc = this.TypeBedrijfClass(DATUM, dagInRooster)
+        switch (tbc) {
+            case "geenBedrijf": return "Onvoldoende aanmeldingen";
+            case "sleepBedrijf": return "Sleep bedrijf";
+            case "lierBedrijf": return "Lier bedrijf";
+        }
+        return tbc;
+    }
+
+
+    TypeBedrijfClass(DATUM: string, dagInRooster: HeliosRoosterDatasetExtended): string {
+        if (this.aanmeldingen === undefined) {
+            return "geenBedrijf";
+        }
+
+        const aanwezig = this.aanmeldingen.filter((a: HeliosAanwezigLedenDataset) => {
+            return a.DATUM == DATUM && a.VERWIJDERD == false;
+        });
+
+        if (aanwezig.length < dagInRooster.MIN_SLEEPSTART! && aanwezig.length < dagInRooster.MIN_LIERSTART!) {
+            return "geenBedrijf";
+        }
+
+        if (aanwezig.length >= dagInRooster.MIN_SLEEPSTART! && aanwezig.length < dagInRooster.MIN_LIERSTART!) {
+            return "sleepBedrijf";
+        }
+
+        return "lierBedrijf";
+    }
 }
