@@ -20,7 +20,6 @@ import {LidInvoerComponent} from './components/editors/start-editor/lid-invoer/l
 import {TelefoonValidatorDirective} from './components/editors/lid-editor/telefoon-validator.directive';
 import {WachtwoordMatchValidatorDirective} from './components/editors/lid-editor/wachtwoord-match-validator.directive';
 import {DatumRenderComponent} from './components/datatable/datum-render/datum-render.component';
-import {LogboekRenderComponent} from './components/datatable/logboek-render/logboek-render.component';
 import {AvatarComponent} from './components/avatar/avatar.component';
 import {LazyLoadImageModule} from 'ng-lazyload-image';
 import {VliegerLogboekComponent} from './components/vlieger-logboek/vlieger-logboek.component';
@@ -127,7 +126,7 @@ import { JournaalEditorComponent } from './components/editors/journaal-editor/jo
         TelefoonValidatorDirective,
         WachtwoordMatchValidatorDirective,
         DatumRenderComponent,
-        LogboekRenderComponent,
+        IconRenderComponent,
         AvatarComponent,
         VliegerLogboekComponent,
         PvbComponent,

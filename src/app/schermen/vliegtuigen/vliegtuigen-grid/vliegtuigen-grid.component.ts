@@ -7,7 +7,7 @@ import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {DeleteActionComponent} from '../../../shared/components/datatable/delete-action/delete-action.component';
 import {RestoreActionComponent} from '../../../shared/components/datatable/restore-action/restore-action.component';
-import {LogboekRenderComponent} from "../../../shared/components/datatable/logboek-render/logboek-render.component";
+import {IconRenderComponent} from "../icon-render/icon-render.component";
 import {ZitplaatsRenderComponent} from '../zitplaats-render/zitplaats-render.component';
 import {HandboekRenderComponent} from '../handboek-render/handboek-render.component';
 import {CheckboxRenderComponent} from '../../../shared/components/datatable/checkbox-render/checkbox-render.component';
@@ -26,6 +26,7 @@ import {Subscription} from "rxjs";
 
 type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
     toonLogboek?: boolean;
+    toonJournaal?: boolean;
 }
 
 @Component({
@@ -88,18 +89,21 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
     }];
 
     // kolom om logboek te zien
-    logboekColumn: ColDef[] = [{
+    iconColumn: ColDef[] = [{
         pinned: 'left',
-        maxWidth: 50,
-        initialWidth: 50,
+        maxWidth: 100,
+        initialWidth: 100,
         resizable: false,
         suppressSizeToFit:true,
         hide: false,
         cellClass: "geenDots",
-        cellRenderer: 'logboekRender', headerName: 'Logboek', sortable: false,
+        cellRenderer: 'iconRender', headerName: 'Icons', sortable: false,
         cellRendererParams: {
             onLogboekClicked: (ID: number) => {
                 this.openVliegtuigLogboek(ID);
+            },
+            onJournaalClicked: (ID: number) => {
+                this.openVliegtuigJournaal(ID);
             }
         },
     }];
@@ -114,7 +118,7 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
         zitplaatsRender: ZitplaatsRenderComponent,
         handboekRender: HandboekRenderComponent,
         checkboxRender: CheckboxRenderComponent,
-        logboekRender: LogboekRenderComponent,
+        iconRender: IconRenderComponent,
         deleteAction: DeleteActionComponent,
         restoreAction: RestoreActionComponent
     };
@@ -248,7 +252,7 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
     // Welke kolommen moet worden getoond in het grid
     kolomDefinitie() {
         if (!this.deleteMode) {
-            this.columns = this.logboekColumn.concat(this.dataColumns);
+            this.columns = this.iconColumn.concat(this.dataColumns);
         } else {
             if (this.trashMode) {
                 this.columns = this.restoreColumn.concat(this.dataColumns);
@@ -288,6 +292,10 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
                 this.data = dataset;
 
                 const ui = this.loginService.userInfo?.Userinfo;
+
+                if (!ui?.isDDWV) {  // DDWV'ers mogen geen clubkist logboek zien
+                    this.data.forEach((v) => v.toonJournaal = v.CLUBKIST);   // alle clubkisten mogen getoond worden voor leden
+                }
 
                 if (!ui?.isDDWV) {  // DDWV'ers mogen geen clubkist logboek zien
                     this.data.forEach((v) => v.toonLogboek = v.CLUBKIST);   // alle clubkisten mogen getoond worden voor leden
@@ -349,6 +357,10 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
     // wijzig de route naar vliegtuig logboek. Vliegtuig logboek is te groot voor popup
     private openVliegtuigLogboek(ID: number) {
         this.router.navigate(['/vliegtuigen/vlogboek'],{ queryParams: { vliegtuigID: ID } });
+    }
+
+    private openVliegtuigJournaal(ID: number) {
+        this.router.navigate(['/journaal'],{ queryParams: { vliegtuigID: ID } });
     }
 }
 

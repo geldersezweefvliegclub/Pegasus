@@ -22,6 +22,7 @@ import {JournaalFilterComponent} from "../journaal-filter/journaal-filter.compon
 import {DateTime} from "luxon";
 import {TitleRenderComponent} from "../title-render/title-render.component";
 import {JournaalEditorComponent} from "../../../shared/components/editors/journaal-editor/journaal-editor.component";
+import {ActivatedRoute} from "@angular/router";
 
 
 @Component({
@@ -129,6 +130,7 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
 
     constructor(private readonly loginService: LoginService,
                 private readonly sharedService: SharedService,
+                private readonly activatedRoute: ActivatedRoute,
                 private readonly meldingenService: JournaalService) {
 
     }
@@ -143,6 +145,13 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
             selectedCategorie: [],
             selectedStatus: []
         }
+
+        // Als lidID is meegegeven in URL, moeten we de lidData ophalen
+        this.activatedRoute.queryParams.subscribe(params => {
+            if (params['vliegtuigID']) {
+                this.activeFilter.selectedVliegtuigen = [ params['vliegtuigID'] ];
+            }
+        });
 
         // Op safari hebben we een korte vertraging nodig op te zorgen dat initialisatie gedaan is
         setTimeout(() => {

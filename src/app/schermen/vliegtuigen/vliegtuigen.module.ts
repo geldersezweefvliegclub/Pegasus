@@ -7,6 +7,7 @@ import {RouterModule} from "@angular/router";
 import {VliegtuigenGridComponent} from "./vliegtuigen-grid/vliegtuigen-grid.component";
 import {ZitplaatsRenderComponent} from "./zitplaats-render/zitplaats-render.component";
 import {HandboekRenderComponent} from "./handboek-render/handboek-render.component";
+import {IconRenderComponent} from "./icon-render/icon-render.component";
 import {ExtendedModule} from "@angular/flex-layout";
 import {VliegtuigLogboekComponent} from "./vliegtuig-logboek/vliegtuig-logboek.component";
 import {NgChartsModule} from "ng2-charts";
@@ -16,7 +17,8 @@ import {NgChartsModule} from "ng2-charts";
         VliegtuigenGridComponent,
         VliegtuigLogboekComponent,
         ZitplaatsRenderComponent,
-        HandboekRenderComponent
+        HandboekRenderComponent,
+        IconRenderComponent
     ],
     imports: [
         CommonModule,
