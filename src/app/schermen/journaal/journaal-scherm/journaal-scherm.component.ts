@@ -293,8 +293,8 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
     opvragen() {
         clearTimeout(this.zoekTimer);
 
-        let startDatum: DateTime = DateTime.fromObject({year: DateTime.now().year, month: 1, day: 1});
-        let eindDatum: DateTime = DateTime.fromObject({year: DateTime.now().year, month: 12, day: 31});
+        let startDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 1, day: 1});
+        let eindDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 12, day: 31});
 
         if (this.datum) {
             startDatum = DateTime.fromObject({year: this.datum.year, month: 1, day: 1});
