@@ -7,7 +7,7 @@
                [exportEnabled]="this.magExporten"
                (Exporting)="exportDataset()">
     <div class="box h-100">
-        <div id="data">
+        <div id="data" class="data" *ngIf="!toonKlein">
             <app-datatable
                     id="vliegtuiggrid"
                     [pagination]="false"
@@ -16,9 +16,19 @@
                     [loading]="isLoading"
                     [rowClassRules]="rowClassRules"
                     [frameworkComponents]="frameworkComponents"
-                    (rowDoubleClicked)="openEditor($event)"
+                    (rowDoubleClicked)="dbClickVliegtuig($event)"
                     class="h-100 mt-n8"></app-datatable>
         </div>
+        <div id="datacard" class="data" *ngIf="toonKlein">
+            <div *ngFor="let vliegtuig of data;let i = index">
+                <app-vliegtuig-card [vliegtuig]="vliegtuig"
+                                    (Logboek)="openVliegtuigLogboek($event)"
+                                    (Journaal)="openVliegtuigJournaal($event)"
+                                    (Editor)="OpenEditor($event)"
+                ></app-vliegtuig-card>
+            </div>
+        </div>
+
         <div class="row justify-content-start mt-2" id="toolbar">
             <div class="col-4 col-xl-2" *ngIf="this.magToevoegen">
                 <app-icon-button class="toolbarBtn"
@@ -71,4 +81,5 @@
 
 
     <app-vliegtuig-editor *ngIf="this.magToevoegen || this.magWijzigen || this.magVerwijderen"></app-vliegtuig-editor>
+    <app-popup-journaal></app-popup-journaal>
 </app-pegasus-card>

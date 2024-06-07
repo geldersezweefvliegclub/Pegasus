@@ -1,0 +1,17 @@
+<app-modal titel="Journaal">
+    <div body>
+        <div class="spinnerOverlay" *ngIf="isLoading">
+            <div class="spinnerPosition">
+                <span><img src="../../../../assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Data wordt geladen .....</span>
+            </div>
+        </div>
+
+        <div class="spinnerOverlay" *ngIf="!isLoading">
+            <div id="datacard" class="data">
+                <div *ngFor="let melding of data;let i = index">
+                    <app-journaal-card [melding]="melding"></app-journaal-card>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-modal>

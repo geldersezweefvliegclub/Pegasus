@@ -23,23 +23,27 @@ import {StartlijstService} from "../../../services/apiservice/startlijst.service
 import {DateTime} from "luxon";
 import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
 import {Subscription} from "rxjs";
+import {PopupJournaalComponent} from "../../../shared/components/popup-journaal/popup-journaal.component";
 
-type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
+export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
     toonLogboek?: boolean;
     toonJournaal?: boolean;
+    magWijzigen?: boolean;
 }
 
 @Component({
     selector: 'app-vliegtuigen-grid',
-    templateUrl: './vliegtuigen-grid.component.html',
-    styleUrls: ['./vliegtuigen-grid.component.scss']
+    templateUrl: './vliegtuigen-scherm.component.html',
+    styleUrls: ['./vliegtuigen-scherm.component.scss']
 })
-export class VliegtuigenGridComponent implements OnInit, OnDestroy {
+export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
     @ViewChild(VliegtuigEditorComponent) editor: VliegtuigEditorComponent;
+    @ViewChild(PopupJournaalComponent) journaal: PopupJournaalComponent;
 
     data:HeliosVliegtuigenDatasetExtended[] = [];
     logboek: HeliosLogboekDataset[] = [];
     isLoading: boolean = false;
+    toonKlein: boolean = false;                 // Klein formaat van het scherm
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
@@ -202,15 +206,20 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
     }
 
     // openen van popup om gegevens van een bestaand vliegtuig aan te passen
-    openEditor(event?: RowDoubleClickedEvent) {
-        if (this.magWijzigen) {
+    dbClickVliegtuig(event?: RowDoubleClickedEvent) {
+        const vliegtuig = event?.data as HeliosVliegtuigenDataset;
+        this.OpenEditor(vliegtuig);
+    }
 
+    OpenEditor(vliegtuig: HeliosVliegtuigenDataset)
+    {
+        if (this.magWijzigen) {
             // clubkisten mag niet iedereen aanpassen
-            if (!event?.data.CLUBKIST) {
-                this.editor.openPopup(event?.data as HeliosVliegtuigenDataset);
+            if (!vliegtuig.CLUBKIST) {
+                this.editor.openPopup(vliegtuig);
             }
             else if (this.magClubkistWijzigen) {
-                this.editor.openPopup(event?.data as HeliosVliegtuigenDataset);
+                this.editor.openPopup(vliegtuig);
             }
         }
     }
@@ -234,23 +243,26 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
 
     zetPermissie() {
         const ui = this.loginService.userInfo?.Userinfo;
-        this.magToevoegen = (!ui?.isDDWV) ? true : false;
 
-        if (this.sharedService.getSchermSize() < SchermGrootte.lg) {
+        this.magClubkistWijzigen = (ui?.isBeheerder! || ui?.isCIMT!);
+        this.magWijzigen = (!ui?.isDDWV) ? true : false;
+
+        if (this.sharedService.getSchermSize() < SchermGrootte.xl) {
+            this.magExporten = false;
             this.magVerwijderen = false;
-            this.magWijzigen = false;
+            this.magToevoegen = false;
         }
         else {
-            this.magClubkistWijzigen = (ui?.isBeheerder! || ui?.isCIMT!);
-
+            this.magToevoegen = (!ui?.isDDWV) ? true : false;
             this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
-            this.magWijzigen = (!ui?.isDDWV) ? true : false;
             this.magExporten = (!ui?.isDDWV) ? true : false;
         }
     }
 
     // Welke kolommen moet worden getoond in het grid
     kolomDefinitie() {
+        this.toonKlein = (this.sharedService.getSchermSize() < SchermGrootte.xl);
+
         if (!this.deleteMode) {
             this.columns = this.iconColumn.concat(this.dataColumns);
         } else {
@@ -293,20 +305,19 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
 
                 const ui = this.loginService.userInfo?.Userinfo;
 
-                if (!ui?.isDDWV) {  // DDWV'ers mogen geen clubkist logboek zien
-                    this.data.forEach((v) => v.toonJournaal = v.CLUBKIST);   // alle clubkisten mogen getoond worden voor leden
-                }
+                this.data.forEach((v) => {
+                    v.toonJournaal = (ui?.isDDWV) ? false : v.CLUBKIST
 
-                if (!ui?.isDDWV) {  // DDWV'ers mogen geen clubkist logboek zien
-                    this.data.forEach((v) => v.toonLogboek = v.CLUBKIST);   // alle clubkisten mogen getoond worden voor leden
-                }
+                    if (ui?.isDDWV) {
+                        v.toonLogboek = false;  // DDWV'ers mogen geen clubkist logboek zien
+                    }
+                    if (ui?.isBeheerder || v.CLUBKIST) {
+                        v.toonLogboek = true;   // alle logboeken zichtbaar voor beheerder, logboek voor clubkisten zijn openbaar
+                    }
+                    v.magWijzigen = (ui?.isBeheerder || !v.CLUBKIST) ? true : false;
+                });
+                this.laatste6Mnd();
 
-                if (ui?.isBeheerder) {  // beheerders mogen alles zien
-                    this.data.forEach((v) => v.toonLogboek = true);
-                }
-                else {
-                    this.laatste6Mnd();
-                }
 
             }).catch(e => {
                 this.isLoading = false;
@@ -355,12 +366,12 @@ export class VliegtuigenGridComponent implements OnInit, OnDestroy {
     }
 
     // wijzig de route naar vliegtuig logboek. Vliegtuig logboek is te groot voor popup
-    private openVliegtuigLogboek(ID: number) {
+    public openVliegtuigLogboek(ID: number) {
         this.router.navigate(['/vliegtuigen/vlogboek'],{ queryParams: { vliegtuigID: ID } });
     }
 
-    private openVliegtuigJournaal(ID: number) {
-        this.router.navigate(['/journaal'],{ queryParams: { vliegtuigID: ID } });
+    public openVliegtuigJournaal(ID: number) {
+        this.journaal.showPopup(ID);
     }
 }
 

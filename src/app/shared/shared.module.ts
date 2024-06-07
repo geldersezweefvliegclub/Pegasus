@@ -87,6 +87,8 @@ import { VliegdagSelectieComponent } from './components/vliegdag-selectie/vliegd
 import { NavigatieComponent } from './components/navigatie/navigatie.component';
 import { PopupKalenderComponent} from "./components/popup-kalender/popup-kalender.component";
 import { JournaalEditorComponent } from './components/editors/journaal-editor/journaal-editor.component';
+import {JournaalCardComponent} from "./components/journaal-card/journaal-card.component";
+import { PopupJournaalComponent } from './components/popup-journaal/popup-journaal.component';
 
 @NgModule({
     imports: [
@@ -180,6 +182,8 @@ import { JournaalEditorComponent } from './components/editors/journaal-editor/jo
         NavigatieComponent,
         PopupKalenderComponent,
         JournaalEditorComponent,
+        JournaalCardComponent,
+        PopupJournaalComponent,
     ],
     exports: [
         LidEditorComponent,
@@ -230,6 +234,8 @@ import { JournaalEditorComponent } from './components/editors/journaal-editor/jo
         NavigatieComponent,
         PopupKalenderComponent,
         JournaalEditorComponent,
+        JournaalCardComponent,
+        PopupJournaalComponent,
     ],
     providers: [],
     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

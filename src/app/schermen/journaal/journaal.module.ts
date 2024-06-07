@@ -12,7 +12,7 @@ import { CategorieRenderComponent } from './categorie-render/categorie-render.co
 import { JournaalFilterComponent } from './journaal-filter/journaal-filter.component';
 import {NgSelectModule} from "@ng-select/ng-select";
 import { TitleRenderComponent } from './title-render/title-render.component';
-import { JournaalCardComponent } from './journaal-card/journaal-card.component';
+import { JournaalCardComponent } from '../../shared/components/journaal-card/journaal-card.component';
 
 @NgModule({
     declarations: [
@@ -21,8 +21,7 @@ import { JournaalCardComponent } from './journaal-card/journaal-card.component';
         StatusRenderComponent,
         CategorieRenderComponent,
         JournaalFilterComponent,
-        TitleRenderComponent,
-        JournaalCardComponent
+        TitleRenderComponent
     ],
     imports: [
         CommonModule,

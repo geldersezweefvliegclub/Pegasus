@@ -1,0 +1,7 @@
+<button class="btn btn-noborder" (click)="logbooekButtonClicked()" *ngIf="params.data.toonLogboek">
+    <fa-icon [icon]="logboekIcon" class="logboekBtn"></fa-icon>
+</button>
+
+<button class="btn btn-noborder" (click)="journaalButtonClicked()" *ngIf="params.data.toonJournaal">
+    <fa-icon [icon]="journaalIcon" class="journaalBtn"></fa-icon>
+</button>

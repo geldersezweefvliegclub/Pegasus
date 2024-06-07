@@ -1,0 +1,18 @@
+@import "../../../../variables";
+
+.btn {
+  font-size: 20px;
+}
+
+.logboekBtn {
+  color: getColor('secondary');
+}
+
+.journaalBtn {
+  color: #737474;
+}
+
+.btn-noborder {
+  outline: none !important;
+  box-shadow: none;
+}

@@ -4,21 +4,23 @@ import {FormsModule} from "@angular/forms";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {SharedModule} from "../../shared/shared.module";
 import {RouterModule} from "@angular/router";
-import {VliegtuigenGridComponent} from "./vliegtuigen-grid/vliegtuigen-grid.component";
+import {VliegtuigenSchermComponent} from "./vliegtuigen-scherm/vliegtuigen-scherm.component";
 import {ZitplaatsRenderComponent} from "./zitplaats-render/zitplaats-render.component";
 import {HandboekRenderComponent} from "./handboek-render/handboek-render.component";
 import {IconRenderComponent} from "./icon-render/icon-render.component";
 import {ExtendedModule} from "@angular/flex-layout";
 import {VliegtuigLogboekComponent} from "./vliegtuig-logboek/vliegtuig-logboek.component";
 import {NgChartsModule} from "ng2-charts";
+import { VliegtuigCardComponent } from './vliegtuig-card/vliegtuig-card.component';
 
 @NgModule({
     declarations: [
-        VliegtuigenGridComponent,
+        VliegtuigenSchermComponent,
         VliegtuigLogboekComponent,
         ZitplaatsRenderComponent,
         HandboekRenderComponent,
-        IconRenderComponent
+        IconRenderComponent,
+        VliegtuigCardComponent
     ],
     imports: [
         CommonModule,
@@ -30,7 +32,7 @@ import {NgChartsModule} from "ng2-charts";
         RouterModule.forChild([
             {
                 path: '',
-                component: VliegtuigenGridComponent
+                component: VliegtuigenSchermComponent
             },
             {
                 path: 'vlogboek',
@@ -40,7 +42,7 @@ import {NgChartsModule} from "ng2-charts";
         ExtendedModule
     ],
     exports: [
-        VliegtuigenGridComponent,
+        VliegtuigenSchermComponent,
         VliegtuigLogboekComponent
     ]
 })

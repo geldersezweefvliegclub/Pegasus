@@ -1,0 +1,47 @@
+<div class="kaart"  [ngClass]="{nietInzetbaarKaart: vliegtuig.INZETBAAR === false}"  *ngIf="vliegtuig">
+    <table>
+        <tr>
+            <td>
+                <button class="btn btn-noborder noLeftPadding" (click)="logboekButtonClicked()" *ngIf="vliegtuig.toonLogboek">
+                    <fa-icon [icon]="logboekIcon" class="logboekBtn"></fa-icon>
+                </button>
+            </td>
+            <td class="w-100">
+                <b>
+                    <div class="d-flex w-100 flex-row>">
+                        <div class="me-1">{{ vliegtuig.REG_CALL }}: </div>
+                        {{ vliegtuig.VLIEGTUIGTYPE }}
+                    </div>
+                </b>
+            </td>
+
+            <td>
+                <button class="btn btn-noborder" (click)="journaalButtonClicked()" *ngIf="vliegtuig.CLUBKIST">
+                    <fa-icon [icon]="journaalIcon" class="journaalBtn"></fa-icon>
+                </button>
+            </td>
+        </tr>
+    </table>
+    <div class="d-flex w-100 justify-content-between" *ngIf="vliegtuig.OPMERKINGEN">
+            {{ vliegtuig.OPMERKINGEN }}
+    </div>
+
+    <div class="d-flex w-100">
+        <table class="w-100">
+            <tr>
+                <td class="w-100">
+                    <img src="/assets/img/seat.png" alt="Stoel PIC" />
+                    <img src="/assets/img/seat.png" alt="Stoel inzittende" *ngIf="vliegtuig.ZITPLAATSEN === 2"/>
+                </td>
+                <td class="pt-1" style="vertical-align: bottom" *ngIf="vliegtuig.magWijzigen">
+                    <div class="iconEdit">
+                        <fa-icon [icon]="iconEdit" class="mx-2" (click)="editorButtonClicked()"></fa-icon>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+
+<app-vliegtuig-editor></app-vliegtuig-editor>
