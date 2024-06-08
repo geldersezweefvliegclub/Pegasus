@@ -24,6 +24,7 @@ import {DateTime} from "luxon";
 import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
 import {Subscription} from "rxjs";
 import {PopupJournaalComponent} from "../../../shared/components/popup-journaal/popup-journaal.component";
+import {VliegtuigLogboekComponent} from "../vliegtuig-logboek/vliegtuig-logboek.component";
 
 export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
     toonLogboek?: boolean;
@@ -39,6 +40,7 @@ export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
 export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
     @ViewChild(VliegtuigEditorComponent) editor: VliegtuigEditorComponent;
     @ViewChild(PopupJournaalComponent) journaal: PopupJournaalComponent;
+    @ViewChild(VliegtuigLogboekComponent) vliegtuigLogboek: VliegtuigLogboekComponent;
 
     data:HeliosVliegtuigenDatasetExtended[] = [];
     logboek: HeliosLogboekDataset[] = [];
@@ -367,7 +369,7 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
 
     // wijzig de route naar vliegtuig logboek. Vliegtuig logboek is te groot voor popup
     public openVliegtuigLogboek(ID: number) {
-        this.router.navigate(['/vliegtuigen/vlogboek'],{ queryParams: { vliegtuigID: ID } });
+        this.vliegtuigLogboek.showPopup(ID);
     }
 
     public openVliegtuigJournaal(ID: number) {

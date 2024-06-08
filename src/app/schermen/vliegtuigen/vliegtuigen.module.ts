@@ -33,10 +33,6 @@ import { VliegtuigCardComponent } from './vliegtuig-card/vliegtuig-card.componen
             {
                 path: '',
                 component: VliegtuigenSchermComponent
-            },
-            {
-                path: 'vlogboek',
-                component: VliegtuigLogboekComponent
             }
         ]),
         ExtendedModule

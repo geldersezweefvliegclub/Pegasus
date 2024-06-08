@@ -10,7 +10,7 @@ import {
     HeliosStartDataset,
     HeliosStarts,
     HeliosVliegdagen,
-    HeliosVliegtuigLogboek,
+    HeliosVliegtuigLogboek, HeliosVliegtuigLogboekDataset,
     HeliosVliegtuigLogboekTotalen
 } from '../../types/Helios';
 import {StorageService} from '../storage/storage.service';
@@ -134,11 +134,16 @@ export class StartlijstService {
         return this.logboekTotalen as HeliosLogboekTotalen;
     }
 
-    async getVliegtuigLogboek(id: number, startDatum: DateTime, eindDatum: DateTime): Promise<HeliosLogboekDataset[]> {
+    async getVliegtuigLogboek(id: number, startDatum: DateTime, eindDatum: DateTime, limit?: number): Promise<HeliosVliegtuigLogboekDataset[]> {
         let getParams: parameters = {};
         getParams['ID'] = id.toString();
         getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
         getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
+
+        if (limit) {
+            getParams['START'] = "0"
+            getParams['MAX'] = limit.toString();
+        }
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {

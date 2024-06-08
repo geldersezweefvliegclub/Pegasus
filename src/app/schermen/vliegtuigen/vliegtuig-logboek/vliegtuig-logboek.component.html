@@ -1,121 +1,34 @@
 <app-error [error]="error"></app-error>
 
-<app-pegasus-card titel="Logboek {{REG_CALL}}"
-               subtitel="Cummulatieven per vliegdag"
-               [icon]="iconCardIcon"
-               [exportEnabled]="this.magExporteren"
-               (Exporting)="exportDataset()">
-    <div class="box h-100">
-        <div class="d-flex pe-3 headerCards" *ngIf="toonGrafiek">
-            <div class="card col-6 grafiekCard me-2" *ngIf="barChartData.length > 0">
-                <div class="clearBarChart">
-                    <a aria-label="opschonen grafiek" (click)="clearGrafiekData()">
-                        <fa-icon [icon]="clearChartIcon"></fa-icon>
-                    </a>
-                </div>
-                <div class="barchart-wrapper inlineGrafiek">
-                    <canvas baseChart
-                            (chartClick)="toonVluchtenDetail()"
-                            [datasets]="barChartData"
-                            [labels]="barChartLabels"
-                            [options]="barChartOptions"
-                            [plugins]="barChartPlugins"
-                            [legend]="barChartLegend"
-                            [chartType]="barChartType">
-                    </canvas>
-                </div>
-                <div class="d-flex GrafiekFooter">
-                    <h4 class="GrafiekFooterIcon">
-                        <fa-icon [icon]="planeDepartureIcon"></fa-icon>
-                    </h4>
-                    <div class="GrafiekFooterTitel">
-                        Aantal vluchten
-                    </div>
-                </div>
-                <div class="d-flex GrafiekFooterSamenvatting">
-                    <h4 class="GrafiekFooterSamenvattingIcon">
-                        <fa-icon [icon]="bookmarkIcon"></fa-icon>
-                    </h4>
-                    <div class="GrafiekFooterSamenvattingTekst" *ngIf="totalen">
-                        Totaal in {{datum.year}}, {{totalen.totalen.VLUCHTEN}} starts
-                        waarvan {{totalen.totalen.LIERSTARTS}} lierstart en {{totalen.totalen.SLEEPSTARTS}} sleepstarts
+<app-modal titel="Logboek {{ vliegtuig.REGISTRATIE}} {{vliegtuig.CALLSIGN}}">
+    <div body>
+        <div class="spinnerOverlay" *ngIf="isLoading">
+            <div class="spinnerPosition">
+                <span><img src="../../../../assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Data wordt geladen .....</span>
+            </div>
+        </div>
+
+        <div *ngIf="!isLoading">
+            <div id="datacard" class="data">
+                <div *ngFor="let dag of data;let i = index">
+                    <div class="kaart">
+                        <table class="w-100">
+                            <tr>
+                                <td>
+                                    <b>{{dag.DATUM}}</b>
+                                </td>
+                                <td>vluchten:</td><td>{{dag.VLUCHTEN }}</td>
+                                <td>lierstarts:</td><td>{{dag.LIERSTARTS}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>vliegtijd:</td><td>{{dag.VLIEGTIJD }}</td>
+                                <td>sleepstarts:</td><td>{{dag.SLEEPSTARTS}}</td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
-
-            <div class="card col-6 grafiekCard ms-1" *ngIf="lineChartData.length > 0">
-                <div class="clearBarChart">
-                    <a aria-label="opschonen grafiek" (click)="clearGrafiekData()">
-                        <fa-icon [icon]="clearChartIcon"></fa-icon>
-                    </a>
-                </div>
-                <div class="linechart-wrapper inlineGrafiek">
-                    <canvas baseChart
-                            (chartClick)="toonTijdDetail()"
-                            [datasets]="lineChartData"
-                            [labels]="lineChartLabels"
-                            [options]="lineChartOptions"
-                            [plugins]="lineChartPlugins"
-                            [legend]="lineChartLegend"
-                            [chartType]="lineChartType">
-                    </canvas>
-                </div>
-                <div class="d-flex GrafiekFooter">
-                    <h4 class="GrafiekFooterIcon">
-                        <fa-icon [icon]="clockIcon"></fa-icon>
-                    </h4>
-                    <div class="GrafiekFooterTitel">
-                        Tijd
-                    </div>
-                </div>
-                <div class="d-flex GrafiekFooterSamenvatting">
-                    <h4 class="GrafiekFooterSamenvattingIcon">
-                        <fa-icon [icon]="bookmarkIcon"></fa-icon>
-                    </h4>
-                    <div class="GrafiekFooterSamenvattingTekst" *ngIf="totalen">
-                        Totaal in {{datum.year}}, {{totalen.totalen.VLIEGTIJD}} uren
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        <div class="row overflow-hidden" [ngClass]="{'vliegtuiggrid': toonGrafiek, 'vliegtuiggrid-full' : !toonGrafiek }">
-            <app-datatable
-                    id="vliegtuiglogboekgrid"
-                    [rowData]="data"
-                    [columnDefs]="columns"
-                    [frameworkComponents]="frameworkComponents"
-                    class="h-100 mt-n8"></app-datatable>
-        </div>
-    </div>
-</app-pegasus-card>
-
-<app-modal popupClass="popupLarge" [titel]="DetailGrafiekTitel">
-    <div body *ngIf="toonVluchtenDetailGrafiek">
-        <div class="barchart-wrapper popupLargeWrapper">
-            <canvas baseChart
-                    (chartClick)="toonVluchtenDetail()"
-                    [datasets]="barChartData"
-                    [labels]="barChartLabels"
-                    [options]="barChartOptions"
-                    [plugins]="barChartPlugins"
-                    [legend]="barChartLegend"
-                    [chartType]="barChartType">
-            </canvas>
-        </div>
-    </div>
-
-    <div body *ngIf="toonVliegtijdDetailGrafiek">
-        <div class="linechart-wrapper popupLargeWrapper">
-            <canvas baseChart
-                    (chartClick)="toonTijdDetail()"
-                    [datasets]="lineChartData"
-                    [labels]="lineChartLabels"
-                    [options]="lineChartOptions"
-                    [plugins]="lineChartPlugins"
-                    [legend]="lineChartLegend"
-                    [chartType]="lineChartType">
-            </canvas>
         </div>
     </div>
 </app-modal>
