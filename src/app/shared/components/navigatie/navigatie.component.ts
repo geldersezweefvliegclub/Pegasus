@@ -292,6 +292,13 @@ export class NavigatieComponent implements OnInit, OnDestroy {
         } else {
             rapportage.excluded = !(ui?.isBeheerder || ui?.isCIMT);
         }
+
+        const facturen = this.beheerRoutes.find(route => route.path == "facturen") as CustomRoute;
+        if (verbergen.includes('facturen') || (this.sharedService.getSchermSize() < SchermGrootte.lg) || (window.innerHeight < 600)) {
+            rapportage.excluded = true;
+        } else {
+            rapportage.excluded = !(ui?.isBeheerder);
+        }
     }
 
     // array met alleen de active routes

@@ -14,7 +14,7 @@ import {
     faUser,
     faUsers,
     faWaveSquare,
-    faEuroSign, faBug
+    faEuroSign, faBug, faLayerGroup
 } from '@fortawesome/free-solid-svg-icons';
 import {AuditPageComponent} from "./schermen/audit/audit-page/audit-page.component";
 import {TypesPageComponent} from "./schermen/types/types-page/types-page.component";
@@ -22,6 +22,7 @@ import {CompetentiesPageComponent} from "./schermen/competenties/competenties-pa
 import {faAvianex} from "@fortawesome/free-brands-svg-icons";
 import {RapportSchermComponent} from "./schermen/rapportage/rapport-scherm/rapport-scherm.component";
 import {TransactiesGridComponent} from "./schermen/transacties/transacties-grid/transacties-grid.component";
+import {FacturenSchermComponent} from "./schermen/facturen/facturen-scherm/facturen-scherm.component";
 
 export interface CustomRoute extends Route {
     excluded: boolean;
@@ -178,6 +179,14 @@ export const routes: CustomRoute[] = [
     },
 
     {
+        path: 'facturen',
+        loadChildren: () => import('./schermen/facturen/facturen.module').then(m => m.FacturenModule),
+        excluded: true,
+        icon: faLayerGroup,
+        text: 'Facturen'
+    },
+
+    {
         path: 'transacties',
         loadChildren: () => import('./schermen/transacties/transacties.module').then(m => m.TransactiesModule),
         excluded: true,
@@ -200,6 +209,7 @@ export const beheerRoutes: CustomRoute[] = [
     {path: 'types', component: TypesPageComponent, excluded: false, icon: faKeyboard, text: 'Types'},
     {path: 'transacties', component: TransactiesGridComponent, excluded: false, icon: faEuroSign, text: 'Transacties'},
     {path: 'rapportage', component: RapportSchermComponent, excluded: false, icon: faFilm, text: 'Rapportage'},
+    {path: 'facturen', component: FacturenSchermComponent, excluded: false, icon: faLayerGroup, text: 'Facturen'},
 
 ];
 

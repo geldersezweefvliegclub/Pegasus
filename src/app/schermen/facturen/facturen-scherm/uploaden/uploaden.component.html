@@ -1,0 +1,16 @@
+<app-modal popupClass="popupLarge" titel="Uploaden facturen">
+    <div body>
+        <div *ngIf="isBezig">
+            <ngb-progressbar type="info" [value]="counter" showValue="true" [max]="max" [striped]="true"></ngb-progressbar>
+        </div>
+        <div class="klaar" *ngIf="isKlaar">
+            Uploaden geslaagd: {{ max }} facturen geupload naar de boekhouding
+        </div>
+    </div>
+    <div footer>
+        <div class="d-flex justify-content-end" *ngIf="isBezig">
+            <app-icon-button class="toolbarBtn" tekst="Annuleren" iconNaam="fas BasketShopping"
+                             btnColor="btn btn-outline-primary" (btnClicked)="closePopup()"></app-icon-button>
+        </div>
+    </div>
+</app-modal>

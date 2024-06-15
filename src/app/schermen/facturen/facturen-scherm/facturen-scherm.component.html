@@ -1,0 +1,82 @@
+<app-error [error]="error"></app-error>
+<app-success [success]="success"></app-success>
+
+<app-pegasus-card [titel]="(mode == 'facturen') ? 'Facturen ' +jaar : 'Nog te doen ' + jaar"
+                  subtitel="Maak contributie facturen"
+                  [icon]="iconCardIcon"
+                  [exportEnabled]="this.magExporten"
+                  (Exporting)="exportDataset()">
+    <div class="box h-100">
+        <div id="data" class="data">
+            <app-datatable
+                    id="facturengrid"
+                    [pagination]="false"
+                    [rowData]="data"
+                    [columnDefs]="columns"
+                    [loading]="isLoading"
+                    [rowClassRules]="rowClassRules"
+                    [multipleSelection]="mode === 'nogTeDoen'"
+                    [frameworkComponents]="frameworkComponents"
+                    class="h-100 mt-n8"></app-datatable>
+        </div>
+        <div class="row justify-content-start mt-2" id="toolbar">
+            <div class="col-4">
+                <div class="d-flex">
+
+                    <app-icon-button *ngIf="mode === 'facturen'"
+                                     class="toolbarBtn"
+                                     tekst="Nog te doen"
+                                     iconNaam="fas Filter" (btnClicked)="modeSwitch()"
+                                     btnColor="btn-primary"></app-icon-button>
+
+                    <app-icon-button *ngIf="mode === 'nogTeDoen'"
+                                     class="toolbarBtn"
+                                     tekst="Facturen"
+                                     iconNaam="fas Filter" (btnClicked)="modeSwitch()"
+                                     btnColor="btn-secondary"></app-icon-button>
+
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="row justify-content-between" id="zoekbar">
+                    <div class="col-12 col-sm-8 flex-grow-1">
+                        <div class="d-flex justify-content-begin align-items-end text-nowrap">
+                            <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>
+                            <input id="zoekInput"
+                                   type="search"
+                                   class="form-control"
+                                   [(ngModel)]="zoekString"
+                                   name="zoekString"
+                                   (keyup)="opvragen()"
+                                   (search)="opvragen()"
+                            >
+                            <app-icon-button class="toolbarBtn d-none d-md-block" iconNaam="fas Redo"
+                                             (btnClicked)="opvragen()"
+                                             btnColor="btn-primary"></app-icon-button>
+                        </div>
+                    </div>
+                    <div class="col-4" *ngIf="this.magVerwijderen && this.mode == 'facturen'">
+                        <div class="d-flex justify-content-end">
+                            <app-icon-button class="toolbarBtn" tekst="Uploaden" iconNaam="fas BasketShopping"
+                                             btnColor="btn btn-outline-primary" (btnClicked)="uploadenFacturen()"></app-icon-button>
+                            <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
+                                             btnColor="btn-secondary" *ngIf="this.magVerwijderen && !deleteMode"
+                                             (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                            <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
+                                             btnColor="btn btn-outline-primary" *ngIf="deleteMode"
+                                             (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                        </div>
+                    </div>
+                    <div class="col-4" *ngIf="this.mode == 'nogTeDoen'">
+                        <div class="d-flex justify-content-end">
+                            <app-icon-button class="toolbarBtn" tekst="Maak facturen" iconNaam="fas LayerGroup"
+                                             btnColor="btn-primary" (btnClicked)="maakFacturen()"></app-icon-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-pegasus-card>
+
+<app-uploaden></app-uploaden>

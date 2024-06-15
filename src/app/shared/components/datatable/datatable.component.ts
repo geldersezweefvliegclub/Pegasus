@@ -28,6 +28,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     @Input() autoSizeColumns: boolean = false;
     @Input() autoHeight: boolean = false;
     @Input() rowHeight: number = 40;
+    @Input() multipleSelection = false;
     @Input() pagination: boolean = true;
     @Input() rowClassRules: any = null;
     @Output() rowDoubleClicked: EventEmitter<RowDoubleClickedEvent> = new EventEmitter<RowDoubleClickedEvent>();
@@ -69,6 +70,12 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         this.defaultColDef.autoHeight = this.autoHeight;
         this.options.pagination = this.pagination;
 
+        if (this.multipleSelection)
+        {
+            this.options.rowSelection = 'multiple'
+            this.options.rowMultiSelectWithClick = true;
+        }
+
         if (this.rowClassRules) {
             this.options.rowClassRules = this.rowClassRules;
         }
@@ -93,6 +100,15 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
 
     ngOnChanges(changes: SimpleChanges): void {
         this.options.pagination = this.pagination;
+
+        if (this.multipleSelection) {
+            this.options.rowSelection = 'multiple'
+            this.options.rowMultiSelectWithClick = true;
+        }
+        else {
+            this.options.rowSelection = 'single'
+        }
+
         if (this.api) {
             this.api.setColumnDefs(this.columnDefs);
             this.api.setRowData(this.rowData);
@@ -155,5 +171,12 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
             });
         }
         return rowData;
+    }
+
+    selectedRecords(): any[] {
+        if (this.api) {
+            return this.api.getSelectedRows()
+        }
+        return []
     }
 }
