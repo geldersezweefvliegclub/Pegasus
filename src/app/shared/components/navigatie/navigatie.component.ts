@@ -295,9 +295,9 @@ export class NavigatieComponent implements OnInit, OnDestroy {
 
         const facturen = this.beheerRoutes.find(route => route.path == "facturen") as CustomRoute;
         if (verbergen.includes('facturen') || (this.sharedService.getSchermSize() < SchermGrootte.lg) || (window.innerHeight < 600)) {
-            rapportage.excluded = true;
+            facturen.excluded = true;
         } else {
-            rapportage.excluded = !(ui?.isBeheerder);
+            facturen.excluded = !(ui?.isBeheerder);
         }
     }
 
