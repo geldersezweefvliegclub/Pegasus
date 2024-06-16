@@ -179,10 +179,13 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
 
   // Welke kolommen moet worden getoond in het grid
   kolomDefinitie() {
-    window.setTimeout(() => this.grid.multipleSelection = !this.deleteMode, 500);
-
     if (!this.deleteMode) {
-      this.columns = this.naamSelColumn.concat(this.dataColumns);
+      if (this.mode === 'facturen') {
+        this.columns = this.naamSelColumn.concat(this.dataColumns);
+      }
+      else {
+        this.columns = this.teDoenColumns;
+      }
     } else {
       this.columns = this.deleteColumn.concat(this.naamColumn.concat(this.dataColumns));
     }
@@ -232,17 +235,15 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
   }
 
   modeSwitch() {
-    if (this.mode === 'facturen') {
+    this.deleteMode = false;
+    if (this.mode === 'facturen')
+    {
       this.mode = 'nogTeDoen';
       this.data = this.teDoenData;
-      this.columns = this.teDoenColumns;
-      this.deleteMode = false;
-
     }
     else {
       this.mode = 'facturen';
       this.data = this.facturenData;
-      this.columns = this.dataColumns;
     }
     this.kolomDefinitie()
   }
@@ -258,6 +259,7 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
 
     this.facturenService.aanmakenFacturen (this.jaar, IDs).then(() => {
       this.success = {titel:"Facturen",beschrijving: IDs.length + " facturen aangemaakt"}
+      this.modeSwitch();
       this.opvragen();
     }).catch(e => {
       this.error = e;
