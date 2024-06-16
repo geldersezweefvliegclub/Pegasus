@@ -34,6 +34,7 @@ export class UploadenComponent implements OnInit {
     this.counter = 0;
     this.max = IDs.length;
     this.isBezig = true;
+    this.isKlaar = false;
 
     this.uploadEnkeleFactuur(0);
   }
@@ -51,6 +52,8 @@ export class UploadenComponent implements OnInit {
       }
     }).catch(e => {
       this.isBezig = false;
+      this.isKlaar = true;
+      this.counter--;
       this.error = e;
     });
   }

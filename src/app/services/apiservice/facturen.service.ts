@@ -17,7 +17,7 @@ export class FacturenService {
   constructor(private readonly apiService: APIService) {
   }
 
-  async getFacturen(Jaar: number, verwijderd: boolean = false): Promise<HeliosFacturenDataset[]> {
+  async getFacturen(Jaar: number, zoekString?: string): Promise<HeliosFacturenDataset[]> {
     let getParams: KeyValueArray = {};
 
     getParams['JAAR'] = Jaar
@@ -26,8 +26,8 @@ export class FacturenService {
       getParams['HASH'] = this.facturenCache.hash;
     }
 
-    if (verwijderd) {
-      getParams['VERWIJDERD'] = "true";
+    if (zoekString) {
+      getParams['SELECTIE'] = zoekString;
     }
 
     try {

@@ -39,7 +39,8 @@
             </div>
             <div class="col-8">
                 <div class="row justify-content-between" id="zoekbar">
-                    <div class="col-12 col-sm-8 flex-grow-1">
+                    <div class="col-12 col-sm-8 flex-grow-1" *ngIf="mode === 'nogTeDoen'"></div>
+                    <div class="col-12 col-sm-8 flex-grow-1" *ngIf="mode === 'facturen'">
                         <div class="d-flex justify-content-begin align-items-end text-nowrap">
                             <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>
                             <input id="zoekInput"

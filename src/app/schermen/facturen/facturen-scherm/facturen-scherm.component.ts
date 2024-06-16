@@ -197,7 +197,7 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
 
     this.zoekTimer = window.setTimeout(() => {
       this.isLoading = true;
-      this.facturenService.getFacturen(this.jaar, false).then((dataset) => {
+      this.facturenService.getFacturen(this.jaar, this.zoekString).then((dataset) => {
         this.isLoading = false;
 
         this.facturenData = dataset;

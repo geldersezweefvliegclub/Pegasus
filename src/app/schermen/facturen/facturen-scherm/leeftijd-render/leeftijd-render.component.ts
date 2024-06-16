@@ -15,7 +15,7 @@ export class LeeftijdRenderComponent {
 
   agInit(params: ICellRendererParams): void {
     this.value = params.value
-    this.controleNodig = (params.data.LIDTYPE_ID == 603 && params.data.LEEFTIJD > 18) ? true : false
+    this.controleNodig = (params.data.LIDTYPE_ID == 603 && params.data.LEEFTIJD >= 21) ? true : false
   }
 
   refresh(params: ICellRendererParams): boolean {

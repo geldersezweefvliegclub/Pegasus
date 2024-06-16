@@ -1,10 +1,12 @@
+<app-error [error]="error"></app-error>
+
 <app-modal popupClass="popupLarge" titel="Uploaden facturen">
     <div body>
         <div *ngIf="isBezig">
             <ngb-progressbar type="info" [value]="counter" showValue="true" [max]="max" [striped]="true"></ngb-progressbar>
         </div>
         <div class="klaar" *ngIf="isKlaar">
-            Uploaden geslaagd: {{ max }} facturen geupload naar de boekhouding
+            Uploaden gereed: {{ counter }} facturen geupload naar de boekhouding
         </div>
     </div>
     <div footer>
