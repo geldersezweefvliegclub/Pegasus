@@ -1,7 +1,7 @@
 <app-error [error]="error"></app-error>
 <app-success [success]="success"></app-success>
 
-<app-pegasus-card [titel]="(mode == 'facturen') ? 'Facturen ' +jaar : 'Nog te doen ' + jaar"
+<app-pegasus-card [titel]="(mode === 'facturen') ? 'Facturen ' +jaar : 'Nog te doen ' + jaar"
                   subtitel="Maak contributie facturen"
                   [icon]="iconCardIcon"
                   [exportEnabled]="this.magExporten"
@@ -56,7 +56,7 @@
                                              btnColor="btn-primary"></app-icon-button>
                         </div>
                     </div>
-                    <div class="col-4" *ngIf="this.magVerwijderen && this.mode == 'facturen'">
+                    <div class="col-4" *ngIf="this.magVerwijderen && this.mode === 'facturen'">
                         <div class="d-flex justify-content-end">
                             <app-icon-button class="toolbarBtn" tekst="Uploaden" iconNaam="fas BasketShopping"
                                              btnColor="btn btn-outline-primary" (btnClicked)="uploadenFacturen()"></app-icon-button>
@@ -68,7 +68,7 @@
                                              (btnClicked)="deleteModeJaNee()"></app-icon-button>
                         </div>
                     </div>
-                    <div class="col-4" *ngIf="this.mode == 'nogTeDoen'">
+                    <div class="col-4" *ngIf="this.mode === 'nogTeDoen'">
                         <div class="d-flex justify-content-end">
                             <app-icon-button class="toolbarBtn" tekst="Maak facturen" iconNaam="fas LayerGroup"
                                              btnColor="btn-primary" (btnClicked)="maakFacturen()"></app-icon-button>
