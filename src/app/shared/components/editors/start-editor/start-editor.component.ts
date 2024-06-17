@@ -707,6 +707,7 @@ export class StartEditorComponent implements OnInit {
         } else {
             // Checkstart alleen mogelijk bij leden
             switch (gekozenVlieger.LIDTYPE_ID) {
+                case 600:  break;  // Student
                 case 601:  break;  // Erelid
                 case 602:  break;  // Lid
                 case 603:  break;  // Jeugdlid

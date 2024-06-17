@@ -404,6 +404,7 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
         // leden-filter de dataset naar de lijst
         this.leden = [];
         for (let i = 0; i < this.dataset.length; i++) {
+            // 600 = Student
             // 601 = Erelid
             // 602 = Lid
             // 603 = Jeugdlid
@@ -411,7 +412,8 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
             // 605 = Veteraan
             // 606 = Donateur
             let isLid = false;
-            if ((this.dataset[i].LIDTYPE_ID == 601) ||
+            if ((this.dataset[i].LIDTYPE_ID == 600) ||
+                (this.dataset[i].LIDTYPE_ID == 601) ||
                 (this.dataset[i].LIDTYPE_ID == 602) ||
                 (this.dataset[i].LIDTYPE_ID == 603) ||
                 (this.dataset[i].LIDTYPE_ID == 604) ||

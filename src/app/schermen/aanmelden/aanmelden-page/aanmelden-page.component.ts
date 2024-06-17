@@ -554,7 +554,8 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         if (!this.rooster[idx].CLUB_BEDRIJF)    // welke lidtypes mogen aanmelden als we geen club bedrijf hebben
         {
             switch (ui!.LidData!.LIDTYPE_ID) {
-                case 601: // ere lid
+                case 600: // student
+                case 601: // erelid
                 case 602: // lid
                 case 603: // jeugdlid
                 case 604: // private owner

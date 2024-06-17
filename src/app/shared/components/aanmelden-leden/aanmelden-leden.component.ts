@@ -142,6 +142,8 @@ export class AanmeldenLedenComponent implements OnInit, OnDestroy {
 
         this.filteredLeden = this.leden.filter((lid: HeliosLedenDataset) => {
             switch (lid.LIDTYPE_ID) {
+                case 600:
+                    break;  // Student
                 case 601:
                     break;  // Erelid
                 case 602:
