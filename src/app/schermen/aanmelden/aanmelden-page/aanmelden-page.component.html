@@ -38,7 +38,7 @@
 
 <app-modal titel="Bevestig afmelden">
     <div body>
-        Bevestig de afmelding voor de vliegdag van {{afmeldDatumDMY}}
+        Bevestig de afmelding voor {{afmeldDatumDMY}}
     </div>
 
     <div footer class="row mt-2 justify-content-end">
@@ -79,9 +79,9 @@
                              class="w-100 dagInRooster" [style]="KolomBreedte()"
                              [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
                             {{DagVanDeWeek(dagInRooster.DATUM)}}
-                            <div class="d-flex justify-content-between">
+                            <div class="d-flex justify-content-between" >
                                 <div class="me-2" style="white-space: nowrap;">{{datumDMY(dagInRooster.DATUM)}}</div>
-                                <fa-icon class="infoIcon clickable" [icon]="infoIcon" placement="right" (click)="samenvatting(dagInRooster)" *ngIf="!isDDWVer"></fa-icon>
+                                <fa-icon class="infoIcon clickable" [icon]="infoIcon" placement="right" (click)="samenvatting(dagInRooster)" *ngIf="!isDDWVer && (dagInRooster.DDWV && ddwvActief) || dagInRooster.CLUB_BEDRIJF"></fa-icon>
                             </div>
 
                             <div *ngIf="dagInRooster.EENHEDEN > 0" class="strip d-flex justify-content-end w-100">
@@ -92,7 +92,8 @@
                         <div *ngIf="magTonen(dagInRooster.DATUM)">
                             <div *ngIf="dagInRooster.CLUB_BEDRIJF" class="me-2">Clubbedrijf</div>
                             <div *ngIf="dagInRooster.DDWV && ddwvActief">DDWV</div>
-                            <div *ngIf="(!dagInRooster.DDWV || !ddwvActief) && !dagInRooster.CLUB_BEDRIJF">Geen vliegbedrijf</div>
+                            <div *ngIf="dagInRooster.WINTER_WERK && ddwvActief">Winterwerk</div>
+                            <div *ngIf="(!dagInRooster.DDWV || !ddwvActief) && !dagInRooster.CLUB_BEDRIJF && !dagInRooster.WINTER_WERK">Geen activiteiten</div>
                         </div>
                     </td>
                 </tr>
@@ -145,7 +146,7 @@
                                     <td (dblclick)="openLidAanwezigEditor(lid)">
                                         <div class="nowrap">
                                             <div class="me-1 starts" *ngIf="(isBeheerder || (isBeheerderDDWV && dagInRooster.DDWV)) && DateDiff(dagInRooster.DATUM) < 0">{{lid.STARTS}}</div>
-                                            <div class="barometer" [ngClass]="kleurBarometer(lid)" *ngIf="toonBarometer(lid) && DateDiff(dagInRooster.DATUM) >= 0"></div>
+                                            <div class="barometer" [ngClass]="kleurBarometer(lid)" *ngIf="toonBarometer(lid) && DateDiff(dagInRooster.DATUM) >= 0 && !dagInRooster.WINTER_WERK"></div>
                                             <div [ngClass]="{'vertrokken': lid.VERTREK}">
                                                 <div *ngIf="lid.VERWIJDERD" class="verwijderd" >{{lid.NAAM}}</div>
                                                 <div *ngIf="!lid.VERWIJDERD && !naarDashboard(lid)">{{lid.NAAM}}</div>
@@ -153,13 +154,13 @@
                                                     <a aria-label="Naar dashboard" [routerLink]="['/dashboard']" [queryParams]="{lidID: lid.LID_ID}">{{lid.NAAM}}</a>
                                                 </div>
                                             </div>
-                                            <div *ngIf="staf(dagInRooster.DATUM) && lid.STATUSTYPE_ID && DateDiff(dagInRooster.DATUM) >= 0" class="icoontje"
+                                            <div *ngIf="staf(dagInRooster.DATUM) && lid.STATUSTYPE_ID && DateDiff(dagInRooster.DATUM) >= 0 && !dagInRooster.WINTER_WERK" class="icoontje"
                                                  style="white-space: pre;">{{lid.STATUS}}
                                             </div>
                                             <div class="fas fa-exclamation-triangle niet-betaald ms-1" data-toggle="tooltip" title="DDWV nog niet betaald"
-                                                *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && (isBeheerder || isBeheerderDDWV) && !lid.ZELFSTART_ABONNEMENT && !lid.TRANSACTIE_ID && dagInRooster.DDWV && (lid.LIDTYPE_ID === 625 || !dagInRooster.CLUB_BEDRIJF)">
+                                                *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && (isBeheerder || isBeheerderDDWV) && !lid.ZELFSTART_ABONNEMENT && !lid.TRANSACTIE_ID && dagInRooster.DDWV && (lid.LIDTYPE_ID === 625 || !dagInRooster.CLUB_BEDRIJF) && !dagInRooster.WINTER_WERK ">
                                             </div>
-                                            <div *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && lid.ZELFSTART_ABONNEMENT && (isBeheerder || isBeheerderDDWV)">&nbsp;ZSA</div>
+                                            <div *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && lid.ZELFSTART_ABONNEMENT && (isBeheerder || isBeheerderDDWV) && !dagInRooster.WINTER_WERK ">&nbsp;ZSA</div>
                                         </div>
                                     </td>
                                 </tr>
@@ -180,7 +181,7 @@
                 <tr *ngIf="toonGasten && !isDDWVer" class="gastenHeader">
                     <td *ngFor="let dagInRooster of rooster;let r = index">
                         <div *ngIf="!verleden(dagInRooster.DATUM) && magTonen(dagInRooster.DATUM)" class="dagInRooster">
-                            <div class="d-flex">
+                            <div class="d-flex" *ngIf="dagInRooster.CLUB_BEDRIJF || dagInRooster.DDWV">
                                 <app-icon-button
                                         class="ps-1 toolbarBtn"
                                         iconNaam="fas UserPlus" (btnClicked)="aanmeldenGastScherm(dagInRooster.DATUM)"
@@ -192,7 +193,7 @@
                 </tr>
                 <tr *ngIf="toonGasten && !isDDWVer" class="gastenHeader">
                     <td *ngFor="let dagInRooster of rooster;let r = index" class="aanwezigenLijst">
-                        <div *ngIf="magTonen(dagInRooster.DATUM)">
+                        <div *ngIf="magTonen(dagInRooster.DATUM) && dagInRooster.CLUB_BEDRIJF || dagInRooster.DDWV">
                             <table>
                                 <tr *ngFor="let gast of gastenAanwezig(dagInRooster.DATUM)">
                                     <td (dblclick)="openGastAanwezigEditor(gast)">
@@ -258,9 +259,10 @@
                             <div *ngIf="rooster[0].CLUB_BEDRIJF" class="me-2">Clubbedrijf</div>
                             <div *ngIf="rooster[0].CLUB_BEDRIJF && rooster[0].DDWV" class="me-2">&</div>
                             <div *ngIf="rooster[0].DDWV && ddwvActief ">DDWV</div>
-                            <div *ngIf="(!rooster[0].DDWV || !ddwvActief) && !rooster[0].CLUB_BEDRIJF">Geen vliegbedrijf</div>
+                            <div *ngIf="rooster[0].WINTER_WERK ">Winterwerk</div>
+                            <div *ngIf="(!rooster[0].DDWV || !ddwvActief) && !rooster[0].CLUB_BEDRIJF && !rooster[0].WINTER_WERK">Geen activiteiten</div>
 
-                            <fa-icon class="infoIcon clickable" [icon]="infoIcon" placement="right" (click)="samenvatting(rooster[0])" *ngIf="!isDDWVer"></fa-icon>
+                            <fa-icon class="infoIcon clickable" [icon]="infoIcon" placement="right" (click)="samenvatting(rooster[0])" *ngIf="!isDDWVer && (rooster[0].DDWV && ddwvActief) || rooster[0].CLUB_BEDRIJF"></fa-icon>
                         </div>
 
                     </td>
@@ -279,7 +281,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr *ngIf="magTonen(rooster[0].DATUM) && !verleden(rooster[0].DATUM) && (rooster[0].DDWV || rooster[0].CLUB_BEDRIJF)">
+                <tr *ngIf="magTonen(rooster[0].DATUM) && !verleden(rooster[0].DATUM) && (rooster[0].DDWV || rooster[0].CLUB_BEDRIJF || rooster[0].WINTER_WERK)">
                     <td>
                         <div class="dagInRooster">
                             <app-icon-button *ngIf="magAanmelden(rooster[0].DATUM)"
@@ -306,7 +308,7 @@
                                 <td (dblclick)="openLidAanwezigEditor(lid)" >
                                     <div class="nowrap">
                                         <div class="me-1 starts" *ngIf="(isBeheerder || (isBeheerderDDWV && dagInRooster.DDWV)) && DateDiff(dagInRooster.DATUM) < 0">{{lid.STARTS}}</div>
-                                        <div class="barometer" [ngClass]="kleurBarometer(lid)" *ngIf="toonBarometer(lid) && DateDiff(dagInRooster.DATUM) >= 0"></div>
+                                        <div class="barometer" [ngClass]="kleurBarometer(lid)" *ngIf="toonBarometer(lid) && DateDiff(dagInRooster.DATUM) >= 0 && !dagInRooster.WINTER_WERK"></div>
                                         <div [ngClass]="{'vertrokken': lid.VERTREK}">
                                             <div *ngIf="lid.VERWIJDERD" class="verwijderd" >{{lid.NAAM}}</div>
                                             <div *ngIf="!lid.VERWIJDERD && !naarDashboard(lid)">{{lid.NAAM}}</div>
@@ -314,13 +316,13 @@
                                                 <a aria-label="Naar dashboard" [routerLink]="['/dashboard']" [queryParams]="{lidID: lid.LID_ID}">{{lid.NAAM}}</a>
                                             </div>
                                         </div>
-                                        <div *ngIf="staf(dagInRooster.DATUM) && lid.STATUSTYPE_ID && DateDiff(dagInRooster.DATUM) >= 0" class="icoontje"
+                                        <div *ngIf="staf(dagInRooster.DATUM) && lid.STATUSTYPE_ID && DateDiff(dagInRooster.DATUM) >= 0 && !dagInRooster.WINTER_WERK" class="icoontje"
                                              style="white-space: pre;">{{lid.STATUS}}
                                         </div>
                                         <div class="fas fa-exclamation-triangle niet-betaald ms-1" data-toggle="tooltip" title="DDWV nog niet betaald"
-                                             *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && (isBeheerder || isBeheerderDDWV) && !lid.ZELFSTART_ABONNEMENT && !lid.TRANSACTIE_ID && dagInRooster.DDWV && (lid.LIDTYPE_ID === 625 || !dagInRooster.CLUB_BEDRIJF)">
+                                             *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && (isBeheerder || isBeheerderDDWV) && !lid.ZELFSTART_ABONNEMENT && !lid.TRANSACTIE_ID && dagInRooster.DDWV && (lid.LIDTYPE_ID === 625 || !dagInRooster.CLUB_BEDRIJF) && !dagInRooster.WINTER_WERK ">
                                         </div>
-                                        <div *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && lid.ZELFSTART_ABONNEMENT && (isBeheerder || isBeheerderDDWV)">&nbsp;ZSA</div>
+                                        <div *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && lid.ZELFSTART_ABONNEMENT && (isBeheerder || isBeheerderDDWV) && !dagInRooster.WINTER_WERK ">&nbsp;ZSA</div>
                                     </div>
                                 </td>
                             </tr>

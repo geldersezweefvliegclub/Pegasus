@@ -150,6 +150,7 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
             ID: ingevoerd.ID,
             DDWV: ingevoerd.DDWV,
             CLUB_BEDRIJF: ingevoerd.CLUB_BEDRIJF,
+            WINTER_WERK: ingevoerd.WINTER_WERK,
             MIN_SLEEPSTART: ingevoerd.MIN_SLEEPSTART,
             MIN_LIERSTART: ingevoerd.MIN_LIERSTART,
             OPMERKINGEN: ingevoerd.OPMERKINGEN

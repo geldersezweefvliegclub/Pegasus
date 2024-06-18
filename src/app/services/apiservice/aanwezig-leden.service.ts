@@ -112,7 +112,14 @@ export class AanwezigLedenService {
             getParams['SELECTIE'] = zoekString;
         }
 
-        this.aanwezigCache = await this.GetObjects(getParams)
+        try {
+            const response: Response = await this.apiService.get('AanwezigLeden/GetObjects', getParams);
+            this.aanwezigCache = await response.json();
+        } catch (e) {
+            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde starts als cache
+                throw(e);
+            }
+        }
         return this.aanwezigCache.dataset as HeliosAanwezigLedenDataset[];
     }
 
@@ -129,22 +136,10 @@ export class AanwezigLedenService {
         getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
         getParams['VERWIJDERD'] = 'true';      // Leden die zich uitgeschreven hebben, hebben hun aanmelding verwijderd
 
-        const obj = await this.GetObjects(getParams)
-        return obj.dataset as HeliosAanwezigLedenDataset[];
-    }
+        const response: Response = await this.apiService.get('AanwezigLeden/GetObjects', getParams);
+        const obj = await response.json();
 
-    // ophalen van de onjecten van helios
-    async GetObjects(params: KeyValueArray): Promise<HeliosAanwezigLeden>
-    {
-        try {
-            const response: Response = await this.apiService.get('AanwezigLeden/GetObjects', params);
-            return  await response.json();
-        } catch (e) {
-            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde starts als cache
-                throw(e);
-            }
-        }
-        return {};
+        return obj.dataset as HeliosAanwezigLedenDataset[];
     }
 
 

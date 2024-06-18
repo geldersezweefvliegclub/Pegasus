@@ -289,14 +289,10 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
                     if (!dag.DDWV && dag.CLUB_BEDRIJF)
                         continue
 
-                    // bij gecombineerd bedrijf betalen alleen de DDWV'ers. Afmelden van leden is niet interessant
-                    if (dag.DDWV && dag.CLUB_BEDRIJF) {
-                        if (afmelding.LIDTYPE_ID == 625)
-                            this.aanmeldingen.push(afmelding);
-                    }
-                    else {
+                    if (this.aanmeldingen)
                         this.aanmeldingen.push(afmelding);
-                    }
+                    else
+                        this.aanmeldingen = [ afmelding ]
                 }
             });
         }
@@ -388,16 +384,18 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
                 return al.LID_ID == this.loginService.userInfo!.LidData!.ID
             })
 
+            console.log(aanmeldingen)
+
             for (let i = 0; i < aanmeldingen.length; i++) {
                 if (aanmeldingen[i].DATUM == DateTime.now().toISODate() && aanmeldingen[i].AANKOMST) {
                     this.aanwezigLedenService.afmelden(aanmeldingen[i].LID_ID!).then(() => this.opvragen());
-                } else {
+                } else if (!aanmeldingen[i].VERWIJDERD) {
                     this.aanwezigLedenService.aanmeldingVerwijderen(aanmeldingen[i].ID!).then(() => this.opvragen());
                 }
             }
             this.isLoadingAanwezig = false;
             this.bevestigAfmeldenPopup.close();
-        }).catch(() => this.isLoadingAanwezig = false)
+        }).catch((e) => { console.error (e); this.isLoadingAanwezig = false})
     }
 
     // openen van windows voor aanmelden vlieger
@@ -412,7 +410,14 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
             DATUM: datum,
             VOORAANMELDING: true
         }
-        this.aanmeldEditor.openPopup(aanmelding, strippen);
+
+        if (rooster && rooster.WINTER_WERK) {
+            this.aanwezigLedenService.aanmelden(aanmelding).then(() => this.opvragen(true))
+        }
+        else {
+            this.aanmeldEditor.openPopup(aanmelding, strippen);
+        }
+
     }
 
     // open van editor voor aanmelden
@@ -539,7 +544,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
             console.log(dagDatum, "start verbod");
             return false;
         }
-        if (!this.rooster[idx].DDWV && !this.rooster[idx].CLUB_BEDRIJF) {   // geen vliegdag
+        if (!this.rooster[idx].DDWV && !this.rooster[idx].CLUB_BEDRIJF && !this.rooster[idx].WINTER_WERK) {   // geen vliegdag, geen winterwerk
             console.log(dagDatum, "geen vliegdag");
             return false;
         }

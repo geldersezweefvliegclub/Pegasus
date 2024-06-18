@@ -238,6 +238,11 @@ export interface components {
        */
       CLUB_BEDRIJF?: boolean;
       /**
+       * @description Wordt er gesleuteld aan vliegtuigen / rollend materieel
+       * @example 0
+       */
+      WINTER_WERK?: boolean;
+      /**
        * Format: int32
        * @description Minimaal aantal aanmeldingen voordat we gaan slepen (alleen DDWV)
        * @example 3

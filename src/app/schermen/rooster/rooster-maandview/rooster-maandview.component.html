@@ -86,6 +86,16 @@
                                        class="labelClub form-check-label">Club
                                     bedrijf</label>
                             </div>
+                            <div class="text-nowrap">
+                                <input type="checkbox" class="form-check-inline"
+                                       [id]="'Winterwerk' + i"
+                                       [name]="'Winterwerk' + i"
+                                       [(ngModel)]="dagInRooster.WINTER_WERK"
+                                       (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
+                                       [disabled]="!magWijzigen">
+                                <label [for]="'Winterwerk' + i"
+                                       class="labelClub form-check-label">Winterwerk</label>
+                            </div>
                         </div>
                     </div>
                 </td>

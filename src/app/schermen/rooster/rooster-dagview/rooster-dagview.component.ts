@@ -101,7 +101,7 @@ export class RoosterDagviewComponent implements OnInit, OnDestroy {
 
     // Double klik werkt niet, maar enkel klik wel. Dan is de workarround een boolean en een timer
     openPopup(dag: HeliosRoosterDagExtended, typeDienstID: number) {
-        if (!dag.DDWV && !dag.CLUB_BEDRIJF) { return}  // geen vliegdag
+        if (!dag.DDWV && !dag.CLUB_BEDRIJF) { return}  // geen vliegdag, winterwerk wordt niet ingedeeld
         if (!this.magWijzigen && !this.isBeheerderDDWV) { return }  // gebruiker mag niet wijzigen
         if (!this.magWijzigen && this.isBeheerderDDWV && dag.CLUB_BEDRIJF ) {   // DDWV beheer maakt geen rooster voor clubdag
             return
@@ -129,6 +129,7 @@ export class RoosterDagviewComponent implements OnInit, OnDestroy {
             ID: ingevoerd.ID,
             DDWV: ingevoerd.DDWV,
             CLUB_BEDRIJF: ingevoerd.CLUB_BEDRIJF,
+            WINTER_WERK: ingevoerd.WINTER_WERK,
             MIN_SLEEPSTART: ingevoerd.MIN_SLEEPSTART,
             MIN_LIERSTART: ingevoerd.MIN_LIERSTART,
             OPMERKINGEN: ingevoerd.OPMERKINGEN
