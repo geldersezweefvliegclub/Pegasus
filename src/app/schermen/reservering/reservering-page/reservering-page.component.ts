@@ -327,27 +327,6 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
         this.boeking.openPopup();
     }
 
-    // vanuit de reserveringspagina kun je een start aanmaken
-    nieuweStart(datum: string, vliegtuigID: number): void {
-        const reservering = this.data.find((reservering) => {
-            return (reservering.DATUM == datum && reservering.VLIEGTUIG_ID == vliegtuigID)
-        })
-
-        if (reservering) {
-            const d: DateTime = DateTime.fromSQL(datum);
-            this.dagInfoService.getDagInfo(undefined, d).then((dagInfo) => {
-                let start: HeliosStartDataset = {
-                    DATUM: datum,
-                    VLIEGTUIG_ID: vliegtuigID,
-                    VLIEGER_ID: reservering.LID_ID,
-                    STARTMETHODE_ID: dagInfo.STARTMETHODE_ID,
-                    VELD_ID: dagInfo.VELD_ID
-                }
-                this.startEditor.openPopup(start);
-            });
-        }
-    }
-
     ToggleWeekendDDWV() {
         this.toonClubDDWV = ++this.toonClubDDWV % 3; // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
 
@@ -540,21 +519,6 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
         this.clubVliegtuigenFiltered = this.clubVliegtuigen!.filter((v) => {
             return v.Tonen!;
         });
-    }
-
-    // we maken het makkelijk om een start vanuit de reservering aan te maken
-    toonStartButton(datum: string, vliegtuigID: number): boolean {
-        if (this.nu.toISODate() != datum || this.isBeschikbaar(datum, vliegtuigID)) {
-            return false;
-        }
-        let rooster: HeliosRoosterDataset | undefined = this.rooster.find((dag) => datum == dag.DATUM!)
-
-        if (rooster) {
-            if (rooster!.CLUB_BEDRIJF) return false;            // het is een Clubdag, dan geen start button
-        }
-
-        const ui = this.loginService.userInfo?.Userinfo;
-        return (ui!.isBeheerder || ui!.isBeheerderDDWV || ui!.isDDWVCrew) ? true : false;
     }
 
     // Export naar excel

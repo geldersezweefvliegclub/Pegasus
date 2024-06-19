@@ -217,14 +217,7 @@
 
 <ng-template #reservering let-dag="dag" let-vliegtuigID="vliegtuigID">
     <div class="d-flex w-100">
-        <div *ngIf="toonStartButton(dag, vliegtuigID)" class="w-100">
-            <app-icon-button
-                    class="button-reservering" [toonKlein]="false"
-                    (btnClicked)="nieuweStart(dag, vliegtuigID)"
-                    [tekst]="ToonNaam(dag, vliegtuigID)">
-            </app-icon-button>
-        </div>
-        <div *ngIf="!toonStartButton(dag, vliegtuigID)" class="w-100">
+        <div class="w-100">
             <div class="d-flex flex-row w-100">
                 <div [ngClass]="htmlClassReservering(dag, vliegtuigID)">
                     {{ ToonNaam(dag, vliegtuigID)}}
