@@ -14,7 +14,7 @@
 
                 <div class="d-flex flex-row pe-4 align-items-center">
                     <div class="pe-2">{{datumDMY}}</div>
-                    <app-icon-button iconNaam="far Calendar" (btnClicked)="popupKalender.openPopup()"
+                    <app-icon-button iconNaam="far Calendar" (btnClicked)="popupKalender.openPopup()" *ngIf="!this.loginService.userInfo?.Userinfo.isStarttoren"
                                      btnColor="btn-primary"></app-icon-button>
                 </div>
             </div>

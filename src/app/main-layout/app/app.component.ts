@@ -41,7 +41,7 @@ export class AppComponent {
     constructor(readonly router: Router,
                 private readonly updates: SwUpdate,
                 private readonly calendar: NgbCalendar,
-                private readonly loginService: LoginService,
+                public readonly loginService: LoginService,
                 private readonly sharedService: SharedService,
                 private readonly storageService: StorageService,
 
