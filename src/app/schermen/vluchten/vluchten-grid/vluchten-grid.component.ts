@@ -31,6 +31,7 @@ import {VoorinRenderComponent} from "../voorin-render/voorin-render.component";
 import {AchterinRenderComponent} from "../achterin-render/achterin-render.component";
 import {DagnummerRenderComponent} from "../dagnummer-render/dagnummer-render.component";
 import {TypesService} from "../../../services/apiservice/types.service";
+import {StorageService} from "../../../services/storage/storage.service";
 
 type HeliosStartDatasetExtended = HeliosStartDataset & {
     inTijdspan?: boolean
@@ -181,6 +182,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
     filterOn: boolean = false;
     toonRefresh: boolean = true;
+    toonVeldFilter: boolean = true;
     toonStartlijstKlein: boolean = false;     // Klein formaat van de startlijst
 
     private datumAbonnement: Subscription;    // volg de keuze van de kalender
@@ -201,6 +203,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
                 private readonly loginService: LoginService,
                 private readonly typesService: TypesService,
                 private readonly roosterService: RoosterService,
+                private readonly storageService: StorageService,
                 private readonly dienstenService: DienstenService,
                 private readonly configService: PegasusConfigService,
                 private readonly sharedService: SharedService) {
@@ -274,6 +277,8 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         this.magVerwijderen = (!this.beperkteInvoer()) ? true : false;
         this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isDDWV || ui?.isClubVlieger) ? true : false;
         this.magExporteren = (!ui?.isDDWV && !ui?.isStarttoren);
+
+        this.vliegveld = this.storageService.ophalen('VeldFilter');
     }
 
     ngOnDestroy(): void {
@@ -364,6 +369,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     kolomDefinitie() {
         this.toonStartlijstKlein = (this.sharedService.getSchermSize() < SchermGrootte.xl);
         this.toonRefresh = (this.sharedService.getSchermSize() != SchermGrootte.xs);
+        this.toonVeldFilter = (this.sharedService.getSchermSize() != SchermGrootte.xs);
 
         if (!this.deleteMode) {
             this.columns = this.dataColumns;
@@ -405,6 +411,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
     // Filter start op een specifiek vliegveld, nodig tijdens zomerkamp op eigen veld en buitenland
     filterStarts(): void {
+        this.storageService.opslaan("VeldFilter", this.vliegveld, 24 * 2);   // 2 dagen
         if (!this.vliegveld) {
             this.filteredStarts = this.starts;
         }
