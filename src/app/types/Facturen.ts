@@ -298,6 +298,11 @@ export interface components {
        */
       LIDTYPE_ID?: number;
       /**
+       * @description Heeft het lid zijn/haar lidmaatschap opgezegd?
+       * @example false
+       */
+      OPGEZEGD?: boolean;
+      /**
        * Format: int16
        * @description Leeftijd van het lid op 1 januari van het te factureren jaar
        * @example 12

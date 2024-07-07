@@ -87,7 +87,7 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
   columns: ColDef[];
 
   rowClassRules = {
-    'rode_regel_niet_inzetbaar': function(params: any) { return !params.data.LIDNR; },
+    'rode_regel_niet_inzetbaar': function(params: any) { return !params.data.LIDNR || params.data.OPGEZEGD; },
   }
 
   frameworkComponents = {
