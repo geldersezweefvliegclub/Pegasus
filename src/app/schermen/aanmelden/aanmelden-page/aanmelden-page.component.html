@@ -147,8 +147,8 @@
                                         <div class="nowrap">
                                             <div class="me-1 starts" *ngIf="(isBeheerder || (isBeheerderDDWV && dagInRooster.DDWV)) && DateDiff(dagInRooster.DATUM) < 0">{{lid.STARTS}}</div>
                                             <div class="barometer" [ngClass]="kleurBarometer(lid)" *ngIf="toonBarometer(lid) && DateDiff(dagInRooster.DATUM) >= 0 && !dagInRooster.WINTER_WERK"></div>
-                                            <div [ngClass]="{'vertrokken': lid.VERTREK}">
-                                                <div *ngIf="lid.VERWIJDERD" class="verwijderd" >{{lid.NAAM}}</div>
+                                            <div [ngClass]="{'vertrokken': lid.VERTREK && (isBeheerder || (isBeheerderDDWV && dagInRooster.DDWV))}">
+                                                <div *ngIf="lid.VERWIJDERD && (isBeheerder || (isBeheerderDDWV && dagInRooster.DDWV))" class="verwijderd" >{{lid.NAAM}}</div>
                                                 <div *ngIf="!lid.VERWIJDERD && !naarDashboard(lid)">{{lid.NAAM}}</div>
                                                 <div *ngIf="!lid.VERWIJDERD &&  naarDashboard(lid)">
                                                     <a aria-label="Naar dashboard" [routerLink]="['/dashboard']" [queryParams]="{lidID: lid.LID_ID}">{{lid.NAAM}}</a>
@@ -309,7 +309,7 @@
                                     <div class="nowrap">
                                         <div class="me-1 starts" *ngIf="(isBeheerder || (isBeheerderDDWV && dagInRooster.DDWV)) && DateDiff(dagInRooster.DATUM) < 0">{{lid.STARTS}}</div>
                                         <div class="barometer" [ngClass]="kleurBarometer(lid)" *ngIf="toonBarometer(lid) && DateDiff(dagInRooster.DATUM) >= 0 && !dagInRooster.WINTER_WERK"></div>
-                                        <div [ngClass]="{'vertrokken': lid.VERTREK}">
+                                        <div [ngClass]="{'vertrokken': lid.VERTREK && (isBeheerder || (isBeheerderDDWV && dagInRooster.DDWV))}">
                                             <div *ngIf="lid.VERWIJDERD" class="verwijderd" >{{lid.NAAM}}</div>
                                             <div *ngIf="!lid.VERWIJDERD && !naarDashboard(lid)">{{lid.NAAM}}</div>
                                             <div *ngIf="!lid.VERWIJDERD &&  naarDashboard(lid)">
