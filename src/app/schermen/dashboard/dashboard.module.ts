@@ -7,6 +7,7 @@ import {SharedModule} from "../../shared/shared.module";
 import {RouterModule} from "@angular/router";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import { LedenDocumentenComponent } from './dasboard-page/leden-documenten/leden-documenten.component';
+import {NgbCarouselModule} from "@ng-bootstrap/ng-bootstrap";
 
 @NgModule({
     declarations: [
@@ -25,7 +26,8 @@ import { LedenDocumentenComponent } from './dasboard-page/leden-documenten/leden
                 path: '',
                 component: DashboardPageComponent
             }
-        ])
+        ]),
+        NgbCarouselModule
     ],
     exports: [
         DashboardPageComponent

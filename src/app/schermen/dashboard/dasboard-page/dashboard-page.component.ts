@@ -145,6 +145,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
         this.toonTracks = (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) ? true : false;
         this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur) ? true : false;
+
+        const myCarouselElement = document.querySelector('#myCarousel')
     }
 
     ngOnDestroy(): void {

@@ -86,18 +86,44 @@
             </div>
 
             <div class="col-12 col-sm-6 col-xl-3 mt-4 mt-xl-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
-                <app-pegasus-card id="dientenCard"
-                                  class="kleineKaart"
-                                  titel="Diensten"
-                                  subtitel="Ingeroosterde diensten"
-                                  [icon]="iconRooster">
-                    <div class="expand">
-                        <a aria-label="Toon diensten groter" class="clickable" (click)="toonDienstenGroot()">
-                            <fa-icon [icon]="iconExpand"></fa-icon>
-                        </a>
-                    </div>
-                    <app-diensten [Vlieger]="lidData" *ngIf="lidData"></app-diensten>
-                </app-pegasus-card>
+                <!-- carousel met diensten / verjaardagen -->
+
+                <ngb-carousel [showNavigationIndicators]="true" [pauseOnHover]="true" [interval]="10000" class="carousel-dva h-100">
+                    <ng-template ngbSlide>
+                        <app-pegasus-card id="dientenCard"
+                                          class="kleineKaart"
+                                          titel="Diensten"
+                                          subtitel="Ingeroosterde diensten"
+                                          [icon]="iconRooster">
+                            <div class="expand">
+                                <a aria-label="Toon diensten groter" class="clickable" (click)="toonDienstenGroot()">
+                                    <fa-icon [icon]="iconExpand"></fa-icon>
+                                </a>
+                            </div>
+                            <app-diensten [Vlieger]="lidData" *ngIf="lidData"></app-diensten>
+                        </app-pegasus-card>
+                    </ng-template>
+                    <ng-template ngbSlide class="h-100">
+                        <app-pegasus-card id="verjaardagenCard"
+                                          class="kleineKaart"
+                                          titel="Verjaardagen"
+                                          subtitel="Komende jarigen"
+                                          [icon]="iconRooster">
+                            <app-verjaardagen></app-verjaardagen>
+                        </app-pegasus-card>
+                    </ng-template>
+                    <!--
+                    <ng-template ngbSlide>
+                        <div class="picsum-img-wrapper">
+                            <img [src]="images[2]" alt="Random third slide" />
+                        </div>
+                        <div class="carousel-caption">
+                            <h3>Third slide label</h3>
+                            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+                        </div>
+                    </ng-template>
+                    -->
+                </ngb-carousel>
             </div>
         </div>
 
@@ -149,8 +175,7 @@
                 </app-pegasus-card>
             </div>
             <div class="col-12 col-lg-4 col-xl-3 mt-4 mt-lg-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
-                <app-leden-documenten [LidID]="lidData.ID">
-
+                <app-leden-documenten [LidID]="lidData.ID" *ngIf="lidData">
                 </app-leden-documenten>
             </div>
         </div>

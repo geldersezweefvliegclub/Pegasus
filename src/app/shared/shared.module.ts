@@ -89,6 +89,7 @@ import { PopupKalenderComponent} from "./components/popup-kalender/popup-kalende
 import { JournaalEditorComponent } from './components/editors/journaal-editor/journaal-editor.component';
 import {JournaalCardComponent} from "./components/journaal-card/journaal-card.component";
 import { PopupJournaalComponent } from './components/popup-journaal/popup-journaal.component';
+import { VerjaardagenComponent } from './components/verjaardagen/verjaardagen.component';
 
 @NgModule({
     imports: [
@@ -184,6 +185,7 @@ import { PopupJournaalComponent } from './components/popup-journaal/popup-journa
         JournaalEditorComponent,
         JournaalCardComponent,
         PopupJournaalComponent,
+        VerjaardagenComponent,
     ],
     exports: [
         LidEditorComponent,
@@ -236,6 +238,7 @@ import { PopupJournaalComponent } from './components/popup-journaal/popup-journa
         JournaalEditorComponent,
         JournaalCardComponent,
         PopupJournaalComponent,
+        VerjaardagenComponent,
     ],
     providers: [],
     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

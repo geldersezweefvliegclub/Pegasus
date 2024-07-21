@@ -137,6 +137,16 @@ export class LedenService {
         await this.apiService.patch('Leden/RestoreObject', {'ID': id.toString()});
     }
 
+    public async getVerjaardagen(): Promise<HeliosLedenDataset[]> {
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
+
+        const response: Response = await this.apiService.get('Leden/GetVerjaardagen');
+        return response.json();
+    }
+
     async syncSynapse(id: number, password: string | undefined = undefined)
     {
         const body = { 'ID': id, 'PASSWORD': password};
