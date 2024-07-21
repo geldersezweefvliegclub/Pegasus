@@ -71,10 +71,12 @@ export class AppComponent {
 
         // nadat we ingelogd zijn, blijven we controleren of we ingelogd zijn, zo niet, dan loggen we uit
         loginService.inloggenSucces.subscribe(() => {
-            const ui = this.loginService.userInfo?.LidData;
-            this.heeftStartVerbod = (ui!.LIDTYPE_ID != 625 && ui!.STARTVERBOD!);
-            this.contactBeheerderDDWV = (ui!.LIDTYPE_ID == 625 && ui!.STARTVERBOD!);
-            this.zusterclubOntbreekDDWV = (ui!.LIDTYPE_ID == 625 && ui!.ZUSTERCLUB_ID == undefined)
+            if (this.loginService.userInfo) {
+                const ui = this.loginService.userInfo?.LidData;
+                this.heeftStartVerbod = (ui!.LIDTYPE_ID != 625 && ui!.STARTVERBOD!);
+                this.contactBeheerderDDWV = (ui!.LIDTYPE_ID == 625 && ui!.STARTVERBOD!);
+                this.zusterclubOntbreekDDWV = (ui!.LIDTYPE_ID == 625 && ui!.ZUSTERCLUB_ID == undefined)
+            }
 
             this.keepAliveTimer = window.setInterval(() => {
                 loginService.relogin().then((success) => {
@@ -84,6 +86,12 @@ export class AppComponent {
                         loginService.uitloggen();                            // verwijder inloginfo
                         this.router.navigate(['login']).then();    // ga noar login pagina
                     }
+
+                    const ui = this.loginService.userInfo?.LidData;
+                    this.heeftStartVerbod = (ui!.LIDTYPE_ID != 625 && ui!.STARTVERBOD!);
+                    this.contactBeheerderDDWV = (ui!.LIDTYPE_ID == 625 && ui!.STARTVERBOD!);
+                    this.zusterclubOntbreekDDWV = (ui!.LIDTYPE_ID == 625 && ui!.ZUSTERCLUB_ID == undefined)
+
                 })
             }, 1000 * 60 * 10);   // 10 minuten
         });
