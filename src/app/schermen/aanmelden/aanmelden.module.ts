@@ -7,6 +7,7 @@ import {ExtendedModule} from "@angular/flex-layout";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {SharedModule} from "../../shared/shared.module";
 import { SamenvattingComponent } from './samenvatting/samenvatting.component';
+import {NgSelectModule} from "@ng-select/ng-select";
 
 @NgModule({
     declarations: [
@@ -26,6 +27,7 @@ import { SamenvattingComponent } from './samenvatting/samenvatting.component';
                 component: AanmeldenPageComponent
             }
         ]),
+        NgSelectModule,
     ]
 })
 export class AanmeldenModule {

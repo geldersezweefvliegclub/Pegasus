@@ -13,6 +13,21 @@
                 </div>
             </div>
         </div>
+        <div class="ms-2 d-flex justify-content-begin align-items-end text-nowrap" [ngClass]="{'veldTop':aanmeldenView === 'week', 'mb-1' : aanmeldenView === 'dag'}">
+            <label for="VELD" class="form-label me-2">Vliegveld:</label>
+            <ng-select id="VELD" style="width: 160px;"
+                       [items]="veldTypes$ | async"
+                       placeholder="Filter op vliegveld"
+                       bindLabel="OMSCHRIJVING"
+                       bindValue="ID"
+                       closeOnSelect="true"
+                       openOnEnter="true"
+                       [searchable]="false"
+                       (change)="filter()"
+                       [(ngModel)]="vliegveld">
+            </ng-select>
+        </div>
+
         <div class="box" *ngIf="!isLoadingAanwezig &&
                                 !isLoadingRooster &&
                                 !isLoadingGasten &&

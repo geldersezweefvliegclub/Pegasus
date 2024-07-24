@@ -8,12 +8,12 @@ import {
     faMailBulk,
     faStreetView
 } from "@fortawesome/free-solid-svg-icons";
-import {Subscription} from "rxjs";
+import {Observable, of, Subscription} from "rxjs";
 import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
 import {DateDiff, getBeginEindDatumVanMaand} from "../../../utils/Utils";
 import {DateTime} from "luxon";
 import {
-    HeliosAanwezigLedenDataset, HeliosDagInfosDataset, HeliosDienstenDataset,
+    HeliosAanwezigLedenDataset, HeliosAanwezigVliegtuigenDataset, HeliosDagInfosDataset, HeliosDienstenDataset,
     HeliosGast,
     HeliosGastenDataset, HeliosLedenDataset, HeliosLid,
     HeliosRoosterDataset, HeliosType
@@ -97,6 +97,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     rooster: HeliosRoosterDatasetExtended[];        // rooster voor gekozen periode (dag/week/maand)
     diensten: HeliosDienstenDataset[];              // Wie hebben er dienst
     aanmeldingen: HeliosAanwezigLedenDataset[];     // De aanmeldingen
+    filteredAanmeldingen: HeliosAanwezigLedenDataset[];     // De aanmeldingen na filteren
     gasten: HeliosGastenDataset[];                  // De gasten voor de vliegdag
     dagInfo: HeliosDagInfosDataset[];               // De bijhoorende dag info
 
@@ -106,6 +107,9 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     isBeheerder: boolean = false;                   // Beheerders mogen meer zien
     isBeheerderDDWV: boolean = false;               // Beheerders mogen meer zien
     ddwvActief: boolean = true;                     // Doen we aan een DDWV bedrijf
+
+    veldTypes$: Observable<HeliosType[]>;
+    vliegveld: number | undefined;                      // laat aanmeldingen van een speciek vliegveld zien
 
     constructor(private readonly ddwvService: DdwvService,
                 private readonly typesService: TypesService,
@@ -167,6 +171,8 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
             this.ddwvTypes = dataset!.filter((t: HeliosType) => {
                 return t.GROEP == 20
             });
+
+            this.veldTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));            // vliegvelden
         });
 
         const toonGasten = this.storageService.ophalen("toonGasten")
@@ -246,6 +252,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         this.isLoadingAanwezig = true;
         this.aanwezigLedenService.getAanwezig(beginDatum, eindDatum).then((aanmeldingen) => {
             this.aanmeldingen = aanmeldingen;
+            this.filter();  // filter de aanmeldingen op vliegveld
             this.berekenStrippen();
             this.isLoadingAanwezig = false;
 
@@ -474,11 +481,11 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     }
 
     aanwezigen(dagDatum: string): HeliosAanwezigLedenDataset[] {
-        if (!this.aanmeldingen) {
+        if (!this.filteredAanmeldingen) {
             return [];
         }
 
-        const aanwezig = this.aanmeldingen.filter((a: HeliosAanwezigLedenDataset) => {
+        const aanwezig = this.filteredAanmeldingen.filter((a: HeliosAanwezigLedenDataset) => {
             return a.DATUM == dagDatum;
         });
 
@@ -689,6 +696,17 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         });
 
         return (dagInfo) ? dagInfo.STARTMETHODE_OMS : undefined
+    }
+
+    filter() {
+        if (this.vliegveld) {
+            this.filteredAanmeldingen = this.aanmeldingen.filter((s: HeliosAanwezigLedenDataset) => {
+                return ((s.VELD_ID == this.vliegveld) || (s.VELD_ID == undefined))
+            })
+        }
+        else {
+            this.filteredAanmeldingen = this.aanmeldingen
+        }
     }
 
     magBulkMailen(datum: string) {
