@@ -1,0 +1,10 @@
+<table>
+    <tr style="font-width: bold;">
+        <th style="width: 70px;">Datum</th>
+        <th>Agenda</th>
+    </tr>
+    <tr *ngFor="let a of agenda">
+        <td>{{datumDM(a.DATUM)}}</td>
+        <td>{{a.KORT}}</td>
+    </tr>
+</table>

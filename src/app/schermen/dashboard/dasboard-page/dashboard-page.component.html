@@ -112,17 +112,15 @@
                             <app-verjaardagen></app-verjaardagen>
                         </app-pegasus-card>
                     </ng-template>
-                    <!--
-                    <ng-template ngbSlide>
-                        <div class="picsum-img-wrapper">
-                            <img [src]="images[2]" alt="Random third slide" />
-                        </div>
-                        <div class="carousel-caption">
-                            <h3>Third slide label</h3>
-                            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-                        </div>
+                    <ng-template ngbSlide class="h-100">
+                        <app-pegasus-card id="agendaCard"
+                                          class="kleineKaart"
+                                          titel="Agenda"
+                                          subtitel="Komende evenementen"
+                                          [icon]="iconRooster">
+                            <app-agenda></app-agenda>
+                        </app-pegasus-card>
                     </ng-template>
-                    -->
                 </ngb-carousel>
             </div>
         </div>

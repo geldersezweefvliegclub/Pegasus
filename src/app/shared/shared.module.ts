@@ -90,6 +90,7 @@ import { JournaalEditorComponent } from './components/editors/journaal-editor/jo
 import {JournaalCardComponent} from "./components/journaal-card/journaal-card.component";
 import { PopupJournaalComponent } from './components/popup-journaal/popup-journaal.component';
 import { VerjaardagenComponent } from './components/verjaardagen/verjaardagen.component';
+import { AgendaComponent } from './components/agenda/agenda.component';
 
 @NgModule({
     imports: [
@@ -186,6 +187,7 @@ import { VerjaardagenComponent } from './components/verjaardagen/verjaardagen.co
         JournaalCardComponent,
         PopupJournaalComponent,
         VerjaardagenComponent,
+        AgendaComponent,
     ],
     exports: [
         LidEditorComponent,
@@ -239,6 +241,7 @@ import { VerjaardagenComponent } from './components/verjaardagen/verjaardagen.co
         JournaalCardComponent,
         PopupJournaalComponent,
         VerjaardagenComponent,
+        AgendaComponent,
     ],
     providers: [],
     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]

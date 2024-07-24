@@ -66,6 +66,5 @@ export const DateDiff = (datum1 : string, datum2: string|undefined = undefined) 
     const diff = Interval.fromDateTimes(dt2, dt1);
     return Math.ceil(diff.length("days"))
   }
-
 }
 

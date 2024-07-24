@@ -21,6 +21,7 @@ import {components as documentenComponents} from './Documenten';
 import {components as ddwvComponents} from './DDWV';
 import {components as journaalComponents} from './Journaal';
 import {components as facturenComponents} from './Facturen';
+import {components as agendaComponents} from './Agenda';
 
 export type HeliosUserinfo = loginComponents['schemas']['Userinfo'];
 export type HeliosLidData = loginComponents["schemas"]["ref_leden"];
@@ -120,3 +121,7 @@ export type HeliosJournaal = journaalComponents['schemas']['oper_journaal_in'];
 export type HeliosFacturen = facturenComponents['schemas']['view_facturen'];
 export type HeliosFacturenDataset = facturenComponents['schemas']['view_facturen_dataset'];
 export type HeliosFactuur = facturenComponents['schemas']['oper_factuur_in'];
+
+export type HeliosAgendas = agendaComponents['schemas']['view_agenda'];
+export type HeliosAgendaDataset = agendaComponents['schemas']['view_agenda_dataset'];
+export type HeliosAgenda = agendaComponents['schemas']['oper_agenda_in'];

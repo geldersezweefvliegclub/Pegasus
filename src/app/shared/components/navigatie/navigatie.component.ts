@@ -299,6 +299,13 @@ export class NavigatieComponent implements OnInit, OnDestroy {
         } else {
             facturen.excluded = !(ui?.isBeheerder);
         }
+
+        const agenda = this.beheerRoutes.find(route => route.path == "agenda") as CustomRoute;
+        if (verbergen.includes('agenda') || (this.sharedService.getSchermSize() < SchermGrootte.lg) || (window.innerHeight < 600)) {
+            agenda.excluded = true;
+        } else {
+            agenda.excluded = !(ui?.isBeheerder);
+        }
     }
 
     // array met alleen de active routes

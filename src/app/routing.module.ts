@@ -3,6 +3,7 @@ import {Route, RouterModule} from '@angular/router';
 
 import {faFile, IconDefinition} from '@fortawesome/free-regular-svg-icons';
 import {
+    faCalendar,
     faAddressCard,
     faCalendarAlt,
     faCalendarDay,
@@ -23,6 +24,7 @@ import {faAvianex} from "@fortawesome/free-brands-svg-icons";
 import {RapportSchermComponent} from "./schermen/rapportage/rapport-scherm/rapport-scherm.component";
 import {TransactiesGridComponent} from "./schermen/transacties/transacties-grid/transacties-grid.component";
 import {FacturenSchermComponent} from "./schermen/facturen/facturen-scherm/facturen-scherm.component";
+import {AgendaSchermComponent} from "./schermen/agenda/agenda-scherm/agenda-scherm.component";
 
 export interface CustomRoute extends Route {
     excluded: boolean;
@@ -155,6 +157,14 @@ export const routes: CustomRoute[] = [
     },
 
     {
+        path: 'agenda',
+        loadChildren: () => import('./schermen/agenda/agenda.module').then(m => m.AgendaModule),
+        excluded: true,
+        icon: faCalendar,
+        text: 'Agenda'
+    },
+
+    {
         path: 'types',
         loadChildren: () => import('./schermen/types/types.module').then(m => m.TypesModule),
         excluded: true,
@@ -204,13 +214,13 @@ export const routes: CustomRoute[] = [
 ];
 
 export const beheerRoutes: CustomRoute[] = [
+    {path: 'agenda', component: AgendaSchermComponent, excluded: false, icon: faCalendar, text: 'Agenda'},
     {path: 'audit', component: AuditPageComponent, excluded: false, icon: faWaveSquare, text: 'Audit'},
     {path: 'competenties', component: CompetentiesPageComponent, excluded: false, icon: faGraduationCap, text: 'Competenties'},
     {path: 'types', component: TypesPageComponent, excluded: false, icon: faKeyboard, text: 'Types'},
     {path: 'transacties', component: TransactiesGridComponent, excluded: false, icon: faEuroSign, text: 'Transacties'},
     {path: 'rapportage', component: RapportSchermComponent, excluded: false, icon: faFilm, text: 'Rapportage'},
     {path: 'facturen', component: FacturenSchermComponent, excluded: false, icon: faLayerGroup, text: 'Facturen'},
-
 ];
 
 
