@@ -63,3 +63,28 @@
 .zoeken {
   min-width: 40%;
 }
+
+.flarm-container {
+  border-style: double;
+  border-color: #d2d2d2;
+  border-width: 3px;
+}
+
+
+.slider {
+  width: 0px;
+  z-index: 1;
+}
+
+.handle {
+  padding: 5px;
+  background-color: #e8e8e8;
+  position: absolute;
+  top: 50%;
+  margin: -20px;
+  z-index: 2;
+}
+
+.omdraaien {
+  transform: rotate(180deg);
+}

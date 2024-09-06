@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {StartlijstService} from '../../../services/apiservice/startlijst.service';
 import {CheckboxRenderComponent} from '../../../shared/components/datatable/checkbox-render/checkbox-render.component';
-import {faDownload} from '@fortawesome/free-solid-svg-icons';
+import {faChevronRight, faDownload, faPlane} from '@fortawesome/free-solid-svg-icons';
 import {faClipboardList} from '@fortawesome/free-solid-svg-icons/faClipboardList';
 import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
 import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
@@ -32,9 +32,13 @@ import {AchterinRenderComponent} from "../achterin-render/achterin-render.compon
 import {DagnummerRenderComponent} from "../dagnummer-render/dagnummer-render.component";
 import {TypesService} from "../../../services/apiservice/types.service";
 import {StorageService} from "../../../services/storage/storage.service";
+import {FlarmData, FlarmInputService, FlarmStartData} from "../../../services/flarm-input.service";
+import EventEmitter2 from "eventemitter2";
+import {DatatableComponent} from "../../../shared/components/datatable/datatable.component";
 
 type HeliosStartDatasetExtended = HeliosStartDataset & {
     inTijdspan?: boolean
+    hasFlarm?: boolean
 }
 
 @Component({
@@ -46,6 +50,9 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     @ViewChild(StartEditorComponent) editor: StartEditorComponent;
     @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
     @ViewChild(ExportStartlijstComponent) exportStartlijstKeuze: ExportStartlijstComponent;
+    @ViewChild(DatatableComponent) grid: DatatableComponent;
+
+    iconExpandShrink: IconDefinition = faChevronRight;
 
     starts: HeliosStartDatasetExtended[] = [];
     filteredStarts: HeliosStartDatasetExtended[] = [];
@@ -55,7 +62,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
-        {field: 'DAGNUMMER', headerName: '#', cellRenderer: 'dagnummerRender', maxWidth:50, sortable: true},
+        {field: 'DAGNUMMER', headerName: '#', cellRenderer: 'dagnummerRender', maxWidth:60, sortable: true},
         {field: 'REGISTRATIE', headerName: 'Registratie', sortable: true, hide: true},
         {field: 'CALLSIGN', headerName: 'Callsign', sortable: true, hide: true},
         {field: 'REG_CALL', headerName: 'RegCall', sortable: true},
@@ -111,6 +118,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         {field: 'SLEEPKIST_ID', headerName: 'Sleepkist ID', sortable: true, hide: true, comparator: nummerSort},
         {field: 'SLEEP_HOOGTE', headerName: 'Sleep hoogte', sortable: true, hide: true, comparator: nummerSort},
         {field: 'OPMERKINGEN', headerName: 'Opmerkingen', sortable: true},
+        {field: 'hasFlarm', headerName: 'flarm', hide: true},
     ];
 
     rowClassRules = {
@@ -171,16 +179,20 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     private dbEventAbonnement: Subscription;            // Abonneer op aanpassingen in de database
     private dienstenAbonnement: Subscription;
     private roosterAbonnement: Subscription;
+    private flarmStartAbonnement: Subscription;         // abonneer op wijziging van starts door flarm
     rooster: HeliosRoosterDataset[];
     diensten: HeliosDienstenDataset[];
+    flarm: FlarmData[] = [];
 
     zoekString: string;
     zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
+    hasFlarmTimer: number;
     refreshTimer: number;
     deleteMode: boolean = false;        // zitten we in delete mode om starts te kunnen verwijderen
     trashMode: boolean = false;         // zitten in restore mode om starts te kunnen terughalen
 
     filterOn: boolean = false;
+    toonFlarm: boolean = true;
     toonRefresh: boolean = true;
     toonVeldFilter: boolean = true;
     toonStartlijstKlein: boolean = false;     // Klein formaat van de startlijst
@@ -206,6 +218,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
                 private readonly storageService: StorageService,
                 private readonly dienstenService: DienstenService,
                 private readonly configService: PegasusConfigService,
+                private readonly flarmService: FlarmInputService,
                 private readonly sharedService: SharedService) {
     }
 
@@ -255,6 +268,10 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
             this.beperkteInvoer();
         });
 
+        // abonneer op wijziging van flarm
+        // Het grid toont dan de informatie uit Helios, zonder dat we een request naar Helios hoeven te doen
+        this.flarmStartAbonnement = this.flarmService.startUpdate.subscribe((start) => this.updateStartByFlarm(start));
+
         // Als startlijst is aangepast, moeten we grid opnieuw laden
         this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Startlijst") {
@@ -279,6 +296,8 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         this.magExporteren = (!ui?.isDDWV && !ui?.isStarttoren);
 
         this.vliegveld = this.storageService.ophalen('VeldFilter');
+        this.hasFlarmTimer = window.setInterval(() => this.updateGrid(), 1000 * 60 * 0.5);  // iedere 30 sec
+        this.refreshTimer = window.setInterval(() => this.opvragen(), 1000 * 60 * 5);  // iedere 5 minuten
     }
 
     ngOnDestroy(): void {
@@ -288,9 +307,12 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         if (this.datumAbonnement)       this.datumAbonnement.unsubscribe();
         if (this.typesAbonnement)       this.typesAbonnement.unsubscribe();
         if (this.resizeSubscription)    this.resizeSubscription.unsubscribe();
+        if (this.flarmStartAbonnement)  this.flarmStartAbonnement.unsubscribe();
 
         clearTimeout(this.refreshTimer);
+        clearTimeout(this.hasFlarmTimer);
     }
+
 
     // aantal kolommen dat we tonen is afhankelijk van scherm grootte
     onWindowResize() {
@@ -400,13 +422,28 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
             for (let i = 0; i < this.filteredStarts.length; i++) {
                 this.filteredStarts[i].inTijdspan = this.inTijdspan;
             }
+            this.updateGrid()
             this.isLoading = false;
         }).catch(e => {
             this.error = e;
             this.isLoading = false;
         });
+    }
 
-        this.refreshTimer = window.setTimeout(() => this.opvragen(), 1000 * 60 * 5);  // iedere 5 minuten
+    private updateStartByFlarm(start: FlarmStartData) {
+        if (start) {
+            const idx = this.starts.findIndex((s) => s.ID == start.START_ID);
+            if (idx >= 0) {
+                if ((!this.starts[idx].STARTTIJD) && (start.STARTTIJD))
+                    this.starts[idx].STARTTIJD = start.STARTTIJD;
+                if ((!this.starts[idx].LANDINGSTIJD) && (start.LANDINGSTIJD))
+                    this.starts[idx].LANDINGSTIJD = start.LANDINGSTIJD;
+
+                this.starts[idx].OPMERKINGEN = start.OPMERKINGEN;
+                this.filterStarts();
+                this.grid.refreshGrid()
+            }
+        }
     }
 
     // Filter start op een specifiek vliegveld, nodig tijdens zomerkamp op eigen veld en buitenland
@@ -420,6 +457,29 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         }
     }
 
+    updateGrid() {
+        const now = DateTime.fromSQL(DateTime.now().toFormat("HH:mm"));
+        for (let i = 0; i < this.starts.length; i++) {
+            const idx = this.flarmService.flarmCache.findIndex((f) => f.START_ID == this.starts[i].ID);
+            this.starts[i].hasFlarm = (idx >= 0);
+
+            if (this.starts[i].STARTTIJD)
+            {
+                if (!this.starts[i].LANDINGSTIJD) {
+                    const start = DateTime.fromSQL(this.starts[i].STARTTIJD!);
+                    this.starts[i].DUUR = now.diff(start).toFormat("hh:mm");
+                }
+                else
+                {
+                    const start = DateTime.fromSQL(this.starts[i].STARTTIJD!);
+                    const landing = DateTime.fromSQL(this.starts[i].LANDINGSTIJD!);
+                    this.starts[i].DUUR = landing.diff(start).toFormat("hh:mm");
+                }
+            }
+        }
+        this.filterStarts();
+        this.grid.refreshGrid()
+    }
     // keuze voor startlijst export
     exporteerStartlijst() {
         this.exportStartlijstKeuze.openPopup();

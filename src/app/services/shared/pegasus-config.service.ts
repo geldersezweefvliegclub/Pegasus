@@ -51,6 +51,10 @@ export class PegasusConfigService {
         return this.pegasusConfig.url;
     }
 
+    public getFlarmURL(): string {
+        return this.pegasusConfig.flarm_url;
+    }
+
     public getPVB(): any[] {
         return this.pegasusConfig.pvb;
     }
@@ -103,6 +107,7 @@ export class PegasusConfigService {
 
 export interface IPegasusConfig {
     url: string;
+    flarm_url: string;
     privacy_url: string;
     saldo_actief: boolean | undefined;
     maxZelfDienstenIndelen: number | undefined;

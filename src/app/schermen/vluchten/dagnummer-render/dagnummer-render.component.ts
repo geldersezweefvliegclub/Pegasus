@@ -10,12 +10,14 @@ import {ICellRendererParams} from "ag-grid-community";
 export class DagnummerRenderComponent implements AgRendererComponent {
   params: ICellRendererParams;
   dagnummer: number;
+  hasFlarm: boolean = false;
 
   constructor() { }
 
   agInit(params: ICellRendererParams): void {
     this.params = params;
     this.dagnummer = params.data.DAGNUMMER;
+    this.hasFlarm = params.data.hasFlarm;
   }
 
   refresh(params: ICellRendererParams): boolean {

@@ -163,6 +163,12 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         this.rowSelected.emit(event);
     }
 
+    refreshGrid() {
+        if (this.api) {
+            this.api.refreshCells({force: true});
+        }
+    }
+
     filteredRecords(): any[] {
         let rowData:any = [];
         if (this.api) {

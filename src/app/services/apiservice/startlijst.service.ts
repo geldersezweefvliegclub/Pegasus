@@ -222,6 +222,27 @@ export class StartlijstService {
         return this.startsCache?.dataset as [];
     }
 
+    async getStartDetails(id: number): Promise< HeliosStartDataset | undefined> {
+        let getParams: KeyValueArray = {};
+
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return;
+        }
+
+        getParams['ID'] = id;
+
+        try {
+            const response: Response = await this.apiService.get('Startlijst/GetObjects', getParams );
+            const obj = await response.json();
+            return obj.dataset[0];
+        } catch (e) {
+            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde starts als cache
+                throw (e);
+            }
+        }
+    }
+
     async getStart(id: number): Promise<HeliosStart> {
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {

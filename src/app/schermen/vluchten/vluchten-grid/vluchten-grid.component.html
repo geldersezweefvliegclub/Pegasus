@@ -7,17 +7,26 @@
                   [exportEnabled]="this.magExporteren"
                   (Exporting)="exporteerStartlijst()">
     <div class="box h-100">
-        <div id="data" class="data" *ngIf="!toonStartlijstKlein">
-            <app-datatable
-                    id="startlijstgrid"
-                    [rowData]="filteredStarts"
-                    [columnDefs]="columns"
-                    [loading]="isLoading"
-                    [rowClassRules]="rowClassRules"
-                    [frameworkComponents]="frameworkComponents"
-                    (rowDoubleClicked)="openEditor($event)"
-                    class="h-100 mt-n8"></app-datatable>
+        <div id="data" class="d-flex data" *ngIf="!toonStartlijstKlein">
+            <div class="flex-row h-100 flex-grow-1">
+                <app-datatable
+                        id="startlijstgrid"
+                        [rowData]="filteredStarts"
+                        [columnDefs]="columns"
+                        [loading]="isLoading"
+                        [rowClassRules]="rowClassRules"
+                        [frameworkComponents]="frameworkComponents"
+                        (rowDoubleClicked)="openEditor($event)"
+                        class="h-100 mt-n8"></app-datatable>
+            </div>
+            <div class="flex-row h-100 flex-column flarm-container" *ngIf="isStarttoren">
+                <div class="slider">
+                    <fa-icon [icon]="iconExpandShrink" class="handle" [ngClass]="{'omdraaien': !toonFlarm}" (click)="toonFlarm = !toonFlarm"></fa-icon>
+                </div>
+                <app-flarm-lijst *ngIf="toonFlarm" [veldID]="vliegveld"></app-flarm-lijst>
+            </div>
         </div>
+
         <div id="datacard" class="data" *ngIf="toonStartlijstKlein">
             <div *ngFor="let vlucht of filteredStarts;let i = index">
                 <app-vlucht-card [start]="vlucht"></app-vlucht-card>

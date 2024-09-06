@@ -1,0 +1,62 @@
+
+<div class="h-100 flarm-container">
+    <div class="d-flex flex-column justify-content-between h-100 w-100">
+        <div class="vliegt w-100">
+            <div class="row">
+                <div class="col-6" *ngFor="let kist of flying; let i = index">
+                    <div class="d-flex flex-column vliegtuig"  [ngClass]="{'no-start': kist.START_ID === undefined}" (click)="toonStartdetails(kist)">
+                        <div class="d-flex flex-row justify-content-between">
+                            {{kist.REG_CALL}}
+                            <span [ngClass]="kist.flarmOntvangstStatusClass" class="bolletje">&#11044;</span>
+                        </div>
+                        <div class="d-flex flex-row justify-content-between smalltext">
+                            <div>{{ kist.starttijd }}</div>
+                            <div>{{ kist.altitude_agl }} / {{ kist.speed}} / {{ kist.climb}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- einde vliegende vliegtuigen -->
+        </div>
+        <div class="row take-off-landing w-100">
+            <div class="col-6 take-off">
+                <div class="col-6" *ngFor="let kist of takeoff; let i = index">
+                    <div class="vliegtuig-kort" [ngClass]="{'no-start': kist.START_ID === undefined}" (click)="toonStartdetails(kist)">
+                        <div class="d-flex flex-row justify-content-between">
+                            {{kist.REG_CALL}}
+                            <span [ngClass]="kist.flarmOntvangstStatusClass" class="bolletje">&#11044;</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 landing">
+                <div class="col-6" *ngFor="let kist of landing; let i = index">
+                <div class="vliegtuig-kort" [ngClass]="{'no-start': kist.START_ID === undefined}" (click)="toonStartdetails(kist)">
+                    <div class="d-flex flex-row justify-content-between">
+                        {{kist.REG_CALL}}
+                        <span [ngClass]="kist.flarmOntvangstStatusClass" class="bolletje">&#11044;</span>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="grond w-100">
+            <div class="row">
+                <div class="col-6" *ngFor="let kist of grond; let i = index">
+                    <div *ngIf="kist.flarmID === undefined"></div>
+                    <div class=" d-flex flex-column vliegtuig" [ngClass]="{'no-start': kist.START_ID === undefined}" *ngIf="kist.flarmID !== undefined" (click)="toonStartdetails(kist)">
+                        <div class="d-flex flex-row justify-content-between">
+                            {{kist.REG_CALL}}
+                            <span [ngClass]="kist.flarmOntvangstStatusClass" class="bolletje">&#11044;</span>
+                        </div>
+                        <div class="d-flex flex-row justify-content-between smalltext">
+                            <div>{{  kist.starttijd }}</div>
+                            <div>{{  kist.landingstijd }}</div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-start-details></app-start-details>

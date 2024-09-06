@@ -1,5 +1,6 @@
 {
-  "url": "http://localhost:8081/",
+  "url": "http://localhost:8082/",
+  "flarm_url": "http://localhost:3000/",
   "privacy_url": "https://www.gezc.org/contact/privacy-statement-gezc/",
   "passagiersAantekeningID": 271,
   "maxZelfDienstenIndelen": 5,

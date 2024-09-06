@@ -10,6 +10,8 @@ import {AchterinRenderComponent} from "./achterin-render/achterin-render.compone
 import {VoorinRenderComponent} from "./voorin-render/voorin-render.component";
 import {DagnummerRenderComponent} from "./dagnummer-render/dagnummer-render.component";
 import {NgSelectModule} from "@ng-select/ng-select";
+import { FlarmLijstComponent } from './flarm-lijst/flarm-lijst.component';
+import { StartDetailsComponent } from './start-details/start-details.component';
 
 
 @NgModule({
@@ -18,7 +20,9 @@ import {NgSelectModule} from "@ng-select/ng-select";
         ExportStartlijstComponent,
         AchterinRenderComponent,
         VoorinRenderComponent,
-        DagnummerRenderComponent
+        DagnummerRenderComponent,
+        FlarmLijstComponent,
+        StartDetailsComponent
     ],
     imports: [
         CommonModule,

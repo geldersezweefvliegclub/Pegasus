@@ -1,0 +1,124 @@
+.flarm-container
+{
+  max-width: 320px;
+  min-width: 320px;
+}
+
+.vliegt {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+
+  flex-grow: 7;
+  border-bottom: 3px double #d2d2d2;
+  background-color: #cdecff;
+}
+
+.take-off-landing
+{
+  margin: 0px;
+  flex-grow: 2;
+  background-color: #ededed;
+}
+
+.take-off
+{
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+
+  border-right: 3px double #d2d2d2;
+  background-color: #ededed;
+}
+
+.landing {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+
+  flex-direction: column;
+  align-content: end;
+}
+
+.grond {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+
+  width: 300px;
+  flex-grow: 7;
+
+  border-top: 3px double #d2d2d2;
+  background-color: #b0f3b0;
+  flex-direction: column;
+  align-content: end;
+}
+
+.vliegtuig {
+  cursor: pointer;
+  background-color: rgb(37, 65, 121);
+  color: white;
+  border-radius: 2px;
+
+  margin-top: 2px;
+  margin-bottom: 2px;
+
+  width: 130px;
+  max-width: 130px;
+
+  height: 40px;
+
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.vliegtuig-kort {
+  cursor: pointer;
+  background-color: rgb(37, 65, 121);
+  color: white;
+  border-radius: 2px;
+
+  margin-top: 2px;
+  margin-bottom: 2px;
+
+  width: 140px;
+  max-width: 140px;
+
+  height: 25px;
+
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.no-start {
+  background-color: #aeacac !important;
+}
+
+.smalltext {
+  font-weight: 200;
+    font-size: 0.8em;
+}
+
+.bolletje {
+  font-size: 8px;
+}
+
+.color-0 { color: #00FF00; }
+.color-1 { color: #B2FF00; }
+.color-2 { color: #E5FF00; }
+.color-3 { color: #FFFF00; }
+.color-4 { color: #FFE500; }
+.color-5 { color: #FFCC00; }
+.color-6 { color: #FF9900; }
+.color-7 { color: #FF7F00; }
+.color-8 { color: #FF6600; }
+.color-9 { color: #FF4C00; }
+.color-10 { color: #FF0000; }
