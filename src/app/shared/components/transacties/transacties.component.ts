@@ -104,9 +104,14 @@ export class TransactiesComponent implements OnInit, OnDestroy {
 
     // Dit is al geimplementeerd in util.ts
     datumDMY(dagDatum: string) {
+
+        if (dagDatum === null || dagDatum === undefined) return "";
+
         const dt = dagDatum.split(' ');
         const d = dt[0].split('-');
-        return d[2] + '-' + d[1] + '-' + d[0] + ' ' + dt[1].substring(0, 5);
+
+        const tijd = (dt.length > 1) ? " " + dt[1].substring(0, 5) : '';
+        return d[2] + '-' + d[1] + '-' + d[0] + tijd
     }
 
     // Opvragen van de starts via de api

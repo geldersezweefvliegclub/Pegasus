@@ -34,6 +34,7 @@
     <table class="w-100">
         <tr class="headerRow">
             <th class="text-nowrap pe-2">Datum</th>
+            <th class="text-nowrap pe-2">Vliegdag</th>
             <th class="text-nowrap w-100">Omschrijving</th>
             <th class="text-nowrap ps-2">Bedrag</th>
             <th class="text-nowrap ps-2">Saldo voor</th>
@@ -43,6 +44,9 @@
         <tr *ngFor="let transactie of transacties;let i = index" style="vertical-align: top;" [ngClass]="{'nietBetaaldRow': !transactie.BETAALD && transactie.BEDRAG}">
             <td style="white-space: nowrap;" class="pe-2">
                 {{datumDMY(transactie.DATUM)}}
+            </td>
+            <td style="white-space: nowrap;" class="pe-2">
+                {{datumDMY(transactie.VLIEGDAG).substring(0, 5)}}
             </td>
             <td>
                 {{transactie.TYPE}} {{transactie.OMSCHRIJVING}}
@@ -76,9 +80,14 @@
 <ng-template #card>
     <div *ngFor="let transactie of transacties;let i = index" class="transactieCard"
             [ngClass]="{'nietBetaaldRow': !transactie.BETAALD && transactie.BEDRAG}" (click)="expandedView = !expandedView">
-        <table>
-            <tr>
-                <td><b>Datum:</b> {{transactie.DATUM}}</td>
+        <table class="w-100">
+            <tr class="w-100">
+                <td class="w-100">
+                    <div class="w-100 d-flex justify-content-between">
+                        <div><b>Datum:</b> {{transactie.DATUM}} </div>
+                        <div><b>Vliegdag:</b> {{datumDMY(transactie.VLIEGDAG).substring(0, 5)}}</div>
+                    </div>
+                </td>
             </tr>
             <tr>
                 <td>{{transactie.TYPE}} {{transactie.OMSCHRIJVING}}</td>
