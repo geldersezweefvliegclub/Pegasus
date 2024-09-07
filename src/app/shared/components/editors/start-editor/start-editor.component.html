@@ -179,7 +179,7 @@
                             <app-gast-invoer *ngIf="toonGastCombobox" class="w-100"
                                              [DATUM]="startDatum"
                                              (gast)="start.INZITTENDENAAM = $event"
-                                             (opmerking)="start.OPMERKINGEN = $event">
+                                             (opmerking)="start.EXTERNAL_ID = $event">
                             </app-gast-invoer>
                             <button class="ms-1 btn btn-noborder" (click)="toonGastenCombo()"
                                     [ngClass]="toonGastCombobox ? 'gastBtnAan': 'gastBtnUit'">
@@ -253,6 +253,17 @@
                            [(ngModel)]="start.SLEEP_HOOGTE"
                            placeholder="Invullen indien bekend"
                            min="300" max="1500" step="50"
+                    >
+                </div>
+            </div>
+
+            <div class="row my-2"
+                 *ngIf="(!isVerwijderMode && start.VLIEGTUIG_ID) || (isVerwijderMode && start.EXTERNAL_ID)">
+                <div class="opmerkingInvoer">
+                    <label for="EXTERNAL_ID" class="form-label">Referentie</label>
+                    <input name="inzittende" type="text" class="form-control w-50" id="EXTERNAL_ID"
+                           [(ngModel)]="start.EXTERNAL_ID"
+                           placeholder="referentie, bijv vluchtnr"
                     >
                 </div>
             </div>

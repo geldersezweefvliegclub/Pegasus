@@ -12,6 +12,7 @@ import {DagnummerRenderComponent} from "./dagnummer-render/dagnummer-render.comp
 import {NgSelectModule} from "@ng-select/ng-select";
 import { FlarmLijstComponent } from './flarm-lijst/flarm-lijst.component';
 import { StartDetailsComponent } from './start-details/start-details.component';
+import { OpmerkingenRenderComponent } from './opmerkingen-render/opmerkingen-render.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { StartDetailsComponent } from './start-details/start-details.component';
         VoorinRenderComponent,
         DagnummerRenderComponent,
         FlarmLijstComponent,
-        StartDetailsComponent
+        StartDetailsComponent,
+        OpmerkingenRenderComponent
     ],
     imports: [
         CommonModule,
