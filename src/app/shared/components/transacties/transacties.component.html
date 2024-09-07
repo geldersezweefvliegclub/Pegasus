@@ -85,7 +85,7 @@
                 <td class="w-100">
                     <div class="w-100 d-flex justify-content-between">
                         <div><b>Datum:</b> {{transactie.DATUM}} </div>
-                        <div><b>Vliegdag:</b> {{datumDMY(transactie.VLIEGDAG).substring(0, 5)}}</div>
+                        <div><div *ngIf="transactie.VLIEGDAG"><b>Vliegdag:</b> {{datumDMY(transactie.VLIEGDAG).substring(0, 5)}}</div></div>
                     </div>
                 </td>
             </tr>
