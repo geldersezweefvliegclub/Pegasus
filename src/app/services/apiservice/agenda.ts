@@ -3,10 +3,9 @@ import {DateTime} from 'luxon';
 import {APIService} from './api.service';
 import {KeyValueArray} from '../../types/Utils';
 import {
-    HeliosAgendaDataset,
-    HeliosAgendas,
-    HeliosRooster,
-    HeliosRoosterDag,
+    HeliosAgenda,
+    HeliosAgendaActiviteit,
+    HeliosAgendaDataset, HeliosJournaal,
     HeliosRoosterDataset
 } from '../../types/Helios';
 import {BehaviorSubject, Subscription} from "rxjs";
@@ -20,19 +19,23 @@ import * as inspector from "inspector";
     providedIn: 'root'
 })
 export class AgendaService {
-    private agendaCache: HeliosAgendas = {dataset: []};    // return waarde van API call
+    private agendaCache: HeliosAgenda = {dataset: []};    // return waarde van API call
     private datumAbonnement: Subscription;                  // volg de keuze van de kalender
 
     constructor(private readonly apiService: APIService,
                 private readonly loginService: LoginService,
                 private readonly sharedService: SharedService) {}
 
-    async getAgenda(startDatum: DateTime, eindDatum: DateTime, max?: number): Promise<HeliosAgendaDataset[]> {
+    async getAgenda(startDatum: DateTime, eindDatum: DateTime, max?: number, verwijderd:boolean = false): Promise<HeliosAgendaDataset[]> {
         let getParams: KeyValueArray = {};
         getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
         getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
         if (max) {
             getParams['MAX'] = max;
+        }
+
+        if (verwijderd) {
+            getParams['VERWIJDERD'] = 1;
         }
 
         // kunnen alleen data ophalen als we ingelogd zijn
@@ -59,5 +62,29 @@ export class AgendaService {
             }
         }
         return this.agendaCache!.dataset as HeliosRoosterDataset[];
+    }
+
+    async getActiviteit(id: number): Promise<HeliosAgendaActiviteit> {
+        const response: Response = await this.apiService.get('Agenda/GetObject', {'ID': id.toString()});
+        return response.json();
+    }
+
+    async addActiviteit(activiteit: HeliosAgendaActiviteit) {
+        const response: Response = await this.apiService.post('Agenda/SaveObject', JSON.stringify(activiteit));
+        return response.json();
+    }
+
+    async updateActiviteit(activiteit: HeliosAgendaActiviteit) {
+        const response: Response = await this.apiService.put('Agenda/SaveObject', JSON.stringify(activiteit));
+
+        return response.json();
+    }
+
+    async deleteActiviteit(id: number) {
+        await this.apiService.delete('Agenda/DeleteObject', {'ID': id.toString()});
+    }
+
+    async restoreActiviteit(id: number) {
+        await this.apiService.patch('Journaal/RestoreObject', {'ID': id.toString()});
     }
 }

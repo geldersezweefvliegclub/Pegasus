@@ -122,6 +122,6 @@ export type HeliosFacturen = facturenComponents['schemas']['view_facturen'];
 export type HeliosFacturenDataset = facturenComponents['schemas']['view_facturen_dataset'];
 export type HeliosFactuur = facturenComponents['schemas']['oper_factuur_in'];
 
-export type HeliosAgendas = agendaComponents['schemas']['view_agenda'];
+export type HeliosAgenda = agendaComponents['schemas']['view_agenda'];
 export type HeliosAgendaDataset = agendaComponents['schemas']['view_agenda_dataset'];
-export type HeliosAgenda = agendaComponents['schemas']['oper_agenda_in'];
+export type HeliosAgendaActiviteit = agendaComponents['schemas']['oper_agenda_in'];

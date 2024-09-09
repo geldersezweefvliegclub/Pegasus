@@ -108,7 +108,6 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
         titleRender: TitleRenderComponent
     };
     iconCardIcon: IconDefinition = faBug;
-    prullenbakIcon: IconDefinition = faRecycle;
 
     zoekString: string;
     zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken

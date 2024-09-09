@@ -4,7 +4,16 @@
         <th>Agenda</th>
     </tr>
     <tr *ngFor="let a of agenda">
+        <ng-template #tipContent><span class="oms">{{a.OMSCHRIJVING}}</span></ng-template>
+
         <td>{{datumDM(a.DATUM)}}</td>
-        <td>{{a.KORT}}</td>
+        <td>
+            <div class="d-flex flex-row">
+                <div *ngIf="a.TIJD">{{a.TIJD}}&nbsp;</div>
+                <div *ngIf="!a.OMSCHRIJVING">{{a.KORT}}</div>
+                <div [ngbTooltip]="tipContent" *ngIf="a.OMSCHRIJVING">{{a.KORT}}</div>
+            </div>
+        </td>
     </tr>
 </table>
+

@@ -1,0 +1,105 @@
+<app-error [error]="error"></app-error>
+<app-success [success]="success"></app-success>
+
+<app-modal [titel]="formTitel">
+    <div body>
+        <fieldset [disabled]="isVerwijderMode || isRestoreMode || isLoading || isSaving">
+            <div class="row">
+                <div class="row my-2">
+                    <div class="col-6">
+                        <label class="form-label" for="eersteDag">Vanaf</label>
+                        <div class="input-group">
+                            <input name="eersteDag" class="form-control" placeholder="dd-mm-yyyy"
+                                   ngbDatepicker #df="ngbDatepicker"
+                                   id="eersteDag"
+                                   required
+                                   appDatumValidator
+                                   [ngModel]="eersteDag"
+                                   (dateSelect)="eersteDag = $event"
+                            >
+                            <div class="input-group-append">
+                                <app-icon-button iconNaam="far Calendar" (btnClicked)="df.toggle()"
+                                                 btnColor="btn-primary"></app-icon-button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6" *ngIf="!activiteit.ID">
+                        <label class="form-label" for="laatsteDag">Laatste dag</label>
+                        <div class="input-group">
+                            <input name="laatsteDag" class="form-control" placeholder="dd-mm-yyyy"
+                                   [ngClass]="{'ng-invalid': !vanTotOke()}"
+                                   ngbDatepicker #dl="ngbDatepicker"
+                                   id="laatsteDag"
+                                   appDatumValidator
+                                   [ngModel]="laatsteDag"
+                                   (dateSelect)="laatsteDag = $event"
+                            >
+                            <div class="input-group-append">
+                                <app-icon-button iconNaam="far Calendar" (btnClicked)="dl.toggle()"
+                                                 btnColor="btn-primary"></app-icon-button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6" [ngClass]="{'mt-2': !activiteit.ID}">
+                        <div>
+                            <label class="form-label">Begin tijd</label>
+                        </div>
+                        <div class="d-flex col-4">
+                                <ngx-timepicker-field class="timepicker"
+                                        [format]="24"
+                                        [minutesGap]="5"
+                                        [defaultTime]="activiteit.TIJD"
+                                        [(ngModel)]="activiteit.TIJD"
+                                        [controlOnly]="true">
+                                </ngx-timepicker-field>
+                                <app-icon-button class="timeResetBtn" iconNaam="fas Trash" (btnClicked)="activiteit.TIJD = undefined"
+                                                 btnColor="btn-primary"></app-icon-button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <div class="col-12 col-md-8">
+                        <label for="KORT" class="form-label">Activiteit</label>
+                        <input name="KORT" type="text" class="form-control" id="KORT" required
+                               [(ngModel)]="activiteit.KORT"
+                               min="0">
+                    </div>
+
+                </div>
+
+                <div class="row my-2">
+                    <div class="col-12">
+                        <label for="OMSCHRIJVING" class="form-label">Gedetailleerde omschrijving</label>
+                        <textarea name="Titel" type="text" class="w-100 text-invoer form-control" id="OMSCHRIJVING"
+                                  [(ngModel)]="activiteit.OMSCHRIJVING"
+                                  min="0" rows=2></textarea>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div footer>
+        <app-icon-button
+                *ngIf="!isLoading && !isSaving && activiteit.ID !== undefined && !isRestoreMode && !isVerwijderMode"
+                iconNaam="fas Edit" btnColor="btn-primary"
+                [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled() || eersteDag === undefined || activiteit.KORT === undefined"
+                (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button
+                *ngIf="!isLoading && !isSaving && activiteit.ID === undefined && !isRestoreMode && !isVerwijderMode"
+                iconNaam="fas Plus" btnColor="btn-primary"
+                [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled() || eersteDag === undefined || activiteit.KORT === undefined"
+                (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button *ngIf="!isLoading && !isSaving && isVerwijderMode" iconNaam="fas TrashAlt"
+                         btnColor="btn-primary editorDeleteBtn"
+                         [toonKlein]=false tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button *ngIf="!isLoading && !isSaving && isRestoreMode" iconNaam="fas Undo"
+                         btnColor="btn-primary editorRestoreBtn"
+                         [toonKlein]=false tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
+
+        <button class="btn btn-primary" *ngIf="isLoading || isSaving">
+            <span><app-loader></app-loader></span>
+        </button>
+    </div>
+</app-modal>

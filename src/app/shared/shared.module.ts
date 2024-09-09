@@ -91,6 +91,8 @@ import {JournaalCardComponent} from "./components/journaal-card/journaal-card.co
 import { PopupJournaalComponent } from './components/popup-journaal/popup-journaal.component';
 import { VerjaardagenComponent } from './components/verjaardagen/verjaardagen.component';
 import { AgendaComponent } from './components/agenda/agenda.component';
+import { AgendaEditorComponent } from './components/editors/agenda-editor/agenda-editor.component';
+import {NgxMaterialTimepickerModule} from "ngx-material-timepicker";
 
 @NgModule({
     imports: [
@@ -110,7 +112,8 @@ import { AgendaComponent } from './components/agenda/agenda.component';
         RouterModule,
         DragDropModule,
         ExtendedModule,
-        NgbTooltipModule
+        NgbTooltipModule,
+        NgxMaterialTimepickerModule
     ],
     declarations: [
         PegasusCardComponent,
@@ -188,6 +191,7 @@ import { AgendaComponent } from './components/agenda/agenda.component';
         PopupJournaalComponent,
         VerjaardagenComponent,
         AgendaComponent,
+        AgendaEditorComponent,
     ],
     exports: [
         LidEditorComponent,
@@ -242,6 +246,7 @@ import { AgendaComponent } from './components/agenda/agenda.component';
         PopupJournaalComponent,
         VerjaardagenComponent,
         AgendaComponent,
+        AgendaEditorComponent
     ],
     providers: [],
     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]
