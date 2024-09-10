@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {AgendaService} from "../../../services/apiservice/agenda";
 import {HeliosAgendaDataset} from "../../../types/Helios";
 import {DateTime} from "luxon";
+import {faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
   selector: 'app-agenda',
@@ -28,4 +29,6 @@ export class AgendaComponent implements OnInit {
     const d = dt[0].split('-');
     return d[2] + '-' + d[1]
   }
+
+    protected readonly infoIcon = faInfoCircle;
 }
