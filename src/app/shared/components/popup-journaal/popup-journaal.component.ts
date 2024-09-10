@@ -11,7 +11,7 @@ import {SharedService} from "../../../services/shared/shared.service";
   templateUrl: './popup-journaal.component.html',
   styleUrls: ['./popup-journaal.component.scss']
 })
-export class PopupJournaalComponent  {
+export class PopupJournaalComponent implements OnInit, OnDestroy {
   @ViewChild(ModalComponent) private popup: ModalComponent;
 
   data:HeliosJournaalDataset[] = [];
@@ -51,8 +51,8 @@ export class PopupJournaalComponent  {
     }, 250);
   }
 
-  ngOnDestroy(): void {
-
+  ngOnDestroy(): void
+  {
     if (this.maandAbonnement)       this.maandAbonnement.unsubscribe();
     if (this.datumAbonnement)       this.datumAbonnement.unsubscribe();
   }

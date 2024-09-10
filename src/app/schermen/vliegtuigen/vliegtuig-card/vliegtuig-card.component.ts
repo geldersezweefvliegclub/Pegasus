@@ -10,7 +10,7 @@ import {HeliosVliegtuigenDatasetExtended} from "../vliegtuigen-scherm/vliegtuige
   templateUrl: './vliegtuig-card.component.html',
   styleUrls: ['./vliegtuig-card.component.scss']
 })
-export class VliegtuigCardComponent implements OnInit {
+export class VliegtuigCardComponent  {
   @Input() vliegtuig: HeliosVliegtuigenDatasetExtended;
   @Output() Journaal: EventEmitter<number> = new EventEmitter<number>();
   @Output() Logboek: EventEmitter<number> = new EventEmitter<number>();
@@ -20,9 +20,6 @@ export class VliegtuigCardComponent implements OnInit {
 
   constructor(private readonly sharedService: SharedService) {
   }
-
-  ngOnInit(): void {
-   }
 
   editorButtonClicked() {
     this.Editor.emit(this.vliegtuig as HeliosVliegtuigenDataset);
