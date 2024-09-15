@@ -140,8 +140,7 @@ export class DienstenService {
     }
 
     async updateDienst(dienst: HeliosDienst) {
-        const replacer = (key:string, value:any) =>
-            typeof value === 'undefined' ? null : value;
+        const replacer = (_:string, value: unknown) => typeof value === 'undefined' ? null : value;
 
         dienst.ROOSTER_ID = undefined;
         dienst.INGEVOERD_DOOR_ID = undefined;

@@ -153,7 +153,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
                         this.saldoTonen = this.configService.saldoActief() && (ui!.isDDWV! || ui!.isClubVlieger!);
                     }
                     else {
-                        this.saldoTonen = this.configService.saldoActief() && (ui?.isBeheerder! || ui?.isBeheerderDDWV!);
+                        this.saldoTonen = this.configService.saldoActief() && ((ui?.isBeheerder || ui?.isBeheerderDDWV) ?? false);
                     }
                 });
             } catch (e) {

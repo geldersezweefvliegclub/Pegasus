@@ -36,9 +36,6 @@ export class LidInvoerComponent implements OnInit, OnChanges {
 
     InputChangeEventFired = false;
 
-    constructor() {
-    }
-
     ngOnInit(): void {
         this.lidInput$.subscribe((newTerm) => {
             const nweLijst = this.zoekLid(newTerm);

@@ -16,7 +16,7 @@ export class OpmerkingenRenderComponent implements AgRendererComponent  {
     this.opm = params.data.EXTERNAL_ID ? params.data.EXTERNAL_ID + ' ' : '';
     this.opm += params.data.OPMERKINGEN ? params.data.OPMERKINGEN : '';
   }
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
 }

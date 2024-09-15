@@ -22,7 +22,7 @@ export class EmailRenderComponent implements AgRendererComponent {
     this.emailHref = "mailto:" + this.email;
   }
 
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
 }

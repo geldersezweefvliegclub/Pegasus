@@ -16,7 +16,7 @@ export class AvatarRenderComponent implements AgRendererComponent {
     this.naam = params.data.NAAM;
   }
 
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
 }

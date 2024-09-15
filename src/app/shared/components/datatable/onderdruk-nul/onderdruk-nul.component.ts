@@ -11,14 +11,13 @@ export class OnderdrukNulComponent implements AgRendererComponent {
 
   waarde: number;
 
-  constructor() {
-  }
+
 
   agInit(params: ICellRendererParams): void {
     this.waarde = params.value;
   }
 
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
 }

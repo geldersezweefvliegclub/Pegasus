@@ -70,10 +70,6 @@ export class DdwvService {
             "DIENSTEN": IDs
         }
 
-        try {
-            const response: Response = await this.apiService.post('DDWV/UitbetalenCrew', JSON.stringify(obj));
-        } catch (e) {
-            throw(e);
-        }
+        await this.apiService.post('DDWV/UitbetalenCrew', JSON.stringify(obj));
     }
 }

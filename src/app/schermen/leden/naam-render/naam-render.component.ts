@@ -23,7 +23,7 @@ export class NaamRenderComponent implements AgRendererComponent {
     this.lidID = params.data.ID;
   }
 
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
 }

@@ -32,17 +32,21 @@ export class FlarmLijstComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnInit(): void {
     this.classTimer = window.setInterval(() => {
-        for (let i = 0; i < this.flying.length; i++)
-          this.flying[i].flarmOntvangstStatusClass = this.flarmOntvangstStatus(this.flying[i]);
+      for (const item of this.flying) {
+        item.flarmOntvangstStatusClass = this.flarmOntvangstStatus(item);
+      }
 
-        for (let i = 0; i < this.landing.length; i++)
-          this.landing[i].flarmOntvangstStatusClass = this.flarmOntvangstStatus(this.landing[i]);
+      for (const item of this.landing) {
+        item.flarmOntvangstStatusClass = this.flarmOntvangstStatus(item);
+      }
 
-        for (let i = 0; i < this.takeoff.length; i++)
-          this.takeoff[i].flarmOntvangstStatusClass = this.flarmOntvangstStatus(this.takeoff[i]);
+      for (const item of this.takeoff) {
+        item.flarmOntvangstStatusClass = this.flarmOntvangstStatus(item);
+      }
 
-       for (let i = 0; i < this.grond.length; i++)
-         this.grond[i].flarmOntvangstStatusClass = this.flarmOntvangstStatus(this.grond[i]);
+      for (const item of this.grond) {
+        item.flarmOntvangstStatusClass = this.flarmOntvangstStatus(item);
+      }
 
     }, 1000 * 5);
 

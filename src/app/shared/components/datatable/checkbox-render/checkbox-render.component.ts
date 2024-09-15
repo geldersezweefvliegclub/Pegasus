@@ -13,8 +13,7 @@ export class CheckboxRenderComponent implements AgRendererComponent {
   check = faCheck;
   cross = faTimes;
 
-  constructor() {
-  }
+
 
   agInit(params: ICellRendererParams): void {
     if ((params.value === 1) || (params.value === '1') || (params.value == true)) {
@@ -22,7 +21,7 @@ export class CheckboxRenderComponent implements AgRendererComponent {
     }
   }
 
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
 

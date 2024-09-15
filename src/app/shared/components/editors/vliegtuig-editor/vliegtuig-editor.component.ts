@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { LoginService } from '../../../../services/apiservice/login.service';
 import { CompetentieService } from '../../../../services/apiservice/competentie.service';
 import { PegasusConfigService } from '../../../../services/shared/pegasus-config.service';
+import { PVB } from '../../../../types/IPegasusConfig';
 
 @Component({
     selector: 'app-vliegtuig-editor',
@@ -59,7 +60,7 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
-    PVBs: any[];        // proef van bekwaamheid met kruisjeslijst (lokaal / overland)
+    PVBs: PVB[];        // proef van bekwaamheid met kruisjeslijst (lokaal / overland)
 
     constructor(
         private readonly vliegtuigenService: VliegtuigenService,

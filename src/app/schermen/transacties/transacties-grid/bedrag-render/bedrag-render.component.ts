@@ -10,8 +10,7 @@ export class BedragRenderComponent  {
     bedrag:number | undefined = undefined ;
     betaald:boolean | undefined = undefined ;
 
-    constructor() {
-    }
+
 
     agInit(params: ICellRendererParams): void {
         this.bedrag = params.value;

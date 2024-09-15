@@ -20,7 +20,7 @@ export class DagnummerRenderComponent implements AgRendererComponent {
     this.hasFlarm = params.data.hasFlarm;
   }
 
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
 

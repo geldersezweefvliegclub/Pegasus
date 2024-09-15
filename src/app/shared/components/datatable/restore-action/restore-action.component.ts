@@ -13,14 +13,13 @@ export class RestoreActionComponent implements AgRendererComponent {
   private params: any;
   restoreIcon:IconDefinition = faUndo;
 
-  constructor() {
-  }
+
 
   agInit(params: ICellRendererParams): void {
     this.params = params;
   }
 
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
 

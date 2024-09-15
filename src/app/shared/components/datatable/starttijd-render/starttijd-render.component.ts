@@ -13,15 +13,14 @@ export class StarttijdRenderComponent implements AgRendererComponent {
   params: any;
   startTijd: string;         // string met de tijd om te tonen
 
-  constructor() {
-  }
+
 
   agInit(params: ICellRendererParams): void {
       this.params = params;
       this.startTijd = params.data.STARTTIJD;
   }
 
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
 

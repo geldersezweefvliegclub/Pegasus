@@ -250,7 +250,7 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
     zetPermissie() {
         const ui = this.loginService.userInfo?.Userinfo;
 
-        this.magClubkistWijzigen = (ui?.isBeheerder! || ui?.isCIMT!);
+        this.magClubkistWijzigen = ((ui?.isBeheerder || ui?.isCIMT) ?? false);
         this.magWijzigen = (!ui?.isDDWV) ? true : false;
 
         if (this.sharedService.getSchermSize() < SchermGrootte.xl) {

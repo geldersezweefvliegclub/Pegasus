@@ -12,8 +12,7 @@ export class ExportStartlijstComponent {
 
     exportKeuze = "dag"
 
-    constructor() {
-    }
+
 
     openPopup() {
         this.popup.open();

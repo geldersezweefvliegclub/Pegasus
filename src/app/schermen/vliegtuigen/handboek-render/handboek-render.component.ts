@@ -17,7 +17,7 @@ export class HandboekRenderComponent implements AgRendererComponent {
     this.txt = params.value;
   }
 
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
 }

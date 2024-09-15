@@ -18,7 +18,7 @@ export class TitleRenderComponent implements AgRendererComponent {
     this.titel = params.data.TITEL
   }
 
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
 

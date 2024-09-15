@@ -10,8 +10,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 export class OmschrijvingRenderComponent {
     gridTekst: string | undefined
 
-    constructor() {
-    }
+
 
     agInit(params: ICellRendererParams): void {
         this.gridTekst = params.data.TYPE + " " + params.data.OMSCHRIJVING;

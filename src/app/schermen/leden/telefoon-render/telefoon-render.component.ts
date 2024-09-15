@@ -20,7 +20,7 @@ export class TelefoonRenderComponent implements AgRendererComponent {
     this.noodnummer = params.data.NOODNUMMER;
   }
 
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
 }

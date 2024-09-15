@@ -13,8 +13,7 @@ export class DeleteActionComponent implements AgRendererComponent {
     private params: any;
     deleteIcon:IconDefinition = faMinusCircle;
 
-    constructor() {
-    }
+
 
     agInit(params: ICellRendererParams): void {
         this.params = params;

@@ -14,8 +14,7 @@ export class IconRenderComponent implements AgRendererComponent {
     logboekIcon: IconDefinition = faFileAlt;
     journaalIcon: IconDefinition = faBug;
 
-    constructor() {
-    }
+
 
     agInit(params: ICellRendererParams): void {
         this.params = params;

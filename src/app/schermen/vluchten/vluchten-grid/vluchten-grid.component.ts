@@ -249,7 +249,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
             else {
                 const diff = Interval.fromDateTimes(datum, nu);
                 if (diff.length("days") > this.configService.maxZelfEditDagen()) {
-                    this.inTijdspan = ui?.isBeheerder!;     // alleen beheerder mag na xx dagen wijzigen. xx is geconfigureerd in pegasus.config
+                    this.inTijdspan = ui?.isBeheerder ?? false;     // alleen beheerder mag na xx dagen wijzigen. xx is geconfigureerd in pegasus.config
                 }
                 else {
                     this.inTijdspan = true;                 // zitten nog binnen de termijn

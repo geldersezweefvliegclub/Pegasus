@@ -13,8 +13,7 @@ export class StatusRenderComponent implements AgRendererComponent {
     status: string | undefined;
     id: number | undefined;
 
-    constructor() {
-    }
+
 
     agInit(params: ICellRendererParams): void {
         this.status = params.data.STATUS;

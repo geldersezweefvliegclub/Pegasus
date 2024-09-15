@@ -10,8 +10,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 export class MaterieelRenderComponent implements AgRendererComponent {
     tekst: string | undefined;
 
-    constructor() {
-    }
+
 
     agInit(params: ICellRendererParams): void {
         this.tekst = (params.data.ROLLEND_ID) ? params.data.ROLLEND : params.data.REG_CALL ;

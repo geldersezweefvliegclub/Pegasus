@@ -27,9 +27,6 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
 
     inzetbaar = true;
 
-    constructor() {
-    }
-
     ngOnInit(): void {
         this.vliegtuigInput$.subscribe((newTerm) => {
             const nweLijst = this.zoekVliegtuig(newTerm);

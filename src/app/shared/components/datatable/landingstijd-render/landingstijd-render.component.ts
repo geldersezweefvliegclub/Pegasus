@@ -14,8 +14,7 @@ export class LandingstijdRenderComponent implements AgRendererComponent {
   landingsTijd: string;         // string met de tijd om te tonen
   toonButton = false;
 
-  constructor() {
-  }
+
 
   agInit(params: ICellRendererParams): void {
     this.params = params;
@@ -23,7 +22,7 @@ export class LandingstijdRenderComponent implements AgRendererComponent {
     this.toonButton = ((params.data.STARTTIJD) && (!params.data.LANDINGSTIJD))
   }
 
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
 

@@ -15,7 +15,7 @@ export class ZitplaatsRenderComponent implements AgRendererComponent {
     this.stoelen = params.value;
   }
 
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
 }
