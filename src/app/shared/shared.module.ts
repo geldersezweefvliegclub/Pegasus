@@ -30,7 +30,6 @@ import {TijdInvoerComponent} from './components/editors/tijd-invoer/tijd-invoer.
 import {NaamRenderComponent} from './components/vlieger-logboek/naam-render/naam-render.component';
 import {WachtwoordSterkteValidatorDirective} from './components/editors/lid-editor/wachtwoord-sterkte-validator.directive';
 import {RecencyGrafiekComponent} from './components/recency/recency-grafiek/recency-grafiek.component';
-import {NgChartsModule} from 'ng2-charts';
 import {
     NgbDatepickerModule,
     NgbPopoverModule,
@@ -38,10 +37,9 @@ import {
     NgbTooltipModule
 } from '@ng-bootstrap/ng-bootstrap';
 import {ProgressieBoomComponent} from './components/progressie-boom/progressie-boom.component';
-import {TreeviewModule} from 'ngx-treeview';
+import {TreeviewModule} from 'ngx-treeview2';
 import {PegasusCardComponent} from './components/pegasus-card/pegasus-card.component';
 import {LidEditorComponent} from './components/editors/lid-editor/lid-editor.component';
-import {ImageCropperModule} from 'ngx-image-cropper';
 import {ImageCropComponent} from './components/image-crop/image-crop.component';
 import {VliegerLogboekTotalenComponent} from './components/vlieger-logboek-totalen/vlieger-logboek-totalen.component';
 import {RouterModule} from "@angular/router";
@@ -61,7 +59,6 @@ import {VluchtCardComponent} from './components/vlucht-card/vlucht-card.componen
 import {AanmeldenVliegtuigComponent} from './components/aanmelden-vliegtuig/aanmelden-vliegtuig.component';
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import {AanmeldenLedenComponent} from './components/aanmelden-leden/aanmelden-leden.component';
-import {ExtendedModule} from "@angular/flex-layout";
 import {LidAanwezigEditorComponent} from './components/editors/lid-aanwezig-editor/lid-aanwezig-editor.component';
 import {LedenFilterComponent} from "./components/leden-filter/leden-filter.component";
 import {StarttijdRenderComponent} from "./components/datatable/starttijd-render/starttijd-render.component";
@@ -93,6 +90,9 @@ import { VerjaardagenComponent } from './components/verjaardagen/verjaardagen.co
 import { AgendaComponent } from './components/agenda/agenda.component';
 import { AgendaEditorComponent } from './components/editors/agenda-editor/agenda-editor.component';
 import {NgxMaterialTimepickerModule} from "ngx-material-timepicker";
+import {BaseChartDirective} from "ng2-charts";
+import {ImageCropperComponent} from "ngx-image-cropper";
+import {CustomFormsModule} from "ng2-validation";
 
 @NgModule({
     imports: [
@@ -102,18 +102,17 @@ import {NgxMaterialTimepickerModule} from "ngx-material-timepicker";
         FormsModule,
         NgSelectModule,
         LazyLoadImageModule,
-        NgChartsModule,
+        BaseChartDirective,
         NgbDatepickerModule,
         NgbPopoverModule,
         NgbProgressbarModule,
         TreeviewModule,
         TreeviewModule.forRoot(),
-        ImageCropperModule,
         RouterModule,
         DragDropModule,
-        ExtendedModule,
         NgbTooltipModule,
-        NgxMaterialTimepickerModule
+        NgxMaterialTimepickerModule,
+        ImageCropperComponent
     ],
     declarations: [
         PegasusCardComponent,

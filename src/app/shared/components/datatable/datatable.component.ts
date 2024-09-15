@@ -110,15 +110,11 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         if (this.api) {
-            this.api.setColumnDefs(this.columnDefs);
-            this.api.setRowData(this.rowData);
+            this.api.setGridOption("columnDefs", this.columnDefs);
+            this.api.setGridOption("rowData", this.rowData);
 
             if (changes.hasOwnProperty("loading")) {
-                if (changes["loading"].currentValue) {
-                    this.api.showLoadingOverlay()
-                } else {
-                    //  is niet nodig, gaat vanzelf
-                }
+                this.api.setGridOption("loading", changes["loading"].currentValue);
             }
         }
         else
@@ -136,7 +132,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         console.log(this.id, "grid ready")
         this.api = ready.api;
 
-        this.api!.setColumnDefs(this.columnDefs);
+        this.api!.setGridOption("columnDefs", this.columnDefs);
         this.api!.sizeColumnsToFit()
 
         this.columnStateTimer = window.setInterval(() => {
@@ -150,7 +146,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
                 this.api.sizeColumnsToFit();
             }
             if (this.autoSizeColumns) {
-                this.options!.columnApi!.autoSizeAllColumns(false);
+                this.api.autoSizeAllColumns(false);
             }
         }
     }

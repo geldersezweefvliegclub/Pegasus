@@ -6,7 +6,6 @@ import {SharedModule} from "../../shared/shared.module";
 import {RouterModule} from "@angular/router";
 import {StartlijstPageComponent} from "./startlijst-page/startlijst-page.component";
 import {DragDropModule} from "@angular/cdk/drag-drop";
-import {ExtendedModule} from "@angular/flex-layout";
 import {NgSelectModule} from "@ng-select/ng-select";
 
 
@@ -26,7 +25,6 @@ import {NgSelectModule} from "@ng-select/ng-select";
                 component: StartlijstPageComponent
             }
         ]),
-        ExtendedModule,
         NgSelectModule
     ],
     exports: []

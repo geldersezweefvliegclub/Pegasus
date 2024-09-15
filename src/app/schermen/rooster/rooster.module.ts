@@ -6,7 +6,6 @@ import {SharedModule} from "../../shared/shared.module";
 import {RouterModule} from "@angular/router";
 import {RoosterPageComponent} from "./rooster-page/rooster-page.component";
 import {JaarTotalenComponent} from "./jaar-totalen/jaar-totalen.component";
-import {ExtendedModule} from "@angular/flex-layout";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import { RoosterMaandviewComponent } from './rooster-maandview/rooster-maandview.component';
 import { RoosterWeekviewComponent } from './rooster-weekview/rooster-weekview.component';
@@ -24,7 +23,6 @@ import { RoosterDagviewComponent } from './rooster-dagview/rooster-dagview.compo
     imports: [
         CommonModule,
         FormsModule,
-        ExtendedModule,
         FontAwesomeModule,
         SharedModule,
 

@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 import {AgRendererComponent} from "ag-grid-angular";
 import {ICellRendererParams} from "ag-grid-community";
-import {padStartWidthZeros} from "ag-grid-community/dist/lib/utils/number";
 
 @Component({
   selector: 'app-title-render',

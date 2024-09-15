@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {HostListener, Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {ErrorMessage, HeliosEvent, KalenderMaand} from '../../types/Utils';
@@ -56,7 +56,7 @@ export class SharedService {
     private heliosEventSubject: Subject<HeliosEvent> = new Subject<HeliosEvent>();          // starts in de database is aangepast
     private heliosFailedSubject: Subject<ErrorMessage> = new Subject<ErrorMessage>();       // api call heef gefaald
 
-    private resizeSubject: Subject<Window>;                                                 // resize window, of draaien mobiel device
+    private resizeSubject: Subject<Window> = new Subject();                                                 // resize window, of draaien mobiel device
 
     public readonly ingegevenDatum = this.datumStore.asObservable();                // nieuwe datum gekozen
     public readonly kalenderMaandChange = this.kalenderMaandStore.asObservable();   // nieuwe maand / jaar gekozen in de kalender
@@ -81,10 +81,12 @@ export class SharedService {
     // laat andere component weten dat er iets in de database is aangepast
     public readonly heliosEventFailed: Observable<ErrorMessage> = this.heliosFailedSubject.asObservable();
 
-    constructor(private eventManager: EventManager) {
-        this.resizeSubject = new Subject();
-        this.eventManager.addGlobalEventListener('window', 'resize', this.onResize.bind(this));
+    @HostListener('window:resize', ['$event'])
+    onResize(event: Window): void {
+        console.log('resize event', event);
+        this.resizeSubject.next(event);
     }
+
 
     // afvuren event dat een andere maand / jaar gekozen is in de kalender
     zetKalenderMaand(kalenderMaand: KalenderMaand) {
@@ -137,10 +139,6 @@ export class SharedService {
 
     get onResize$(): Observable<Window> {
         return this.resizeSubject.asObservable();
-    }
-
-    private onResize(event: UIEvent) {
-        this.resizeSubject.next(<Window>event.target);
     }
 
     // Wat is scherm grootte
