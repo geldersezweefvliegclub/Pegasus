@@ -1,6 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {LoaderComponent} from './loader.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 describe('LoaderComponent', () => {
   let component: LoaderComponent;
