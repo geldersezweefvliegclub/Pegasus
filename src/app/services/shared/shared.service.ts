@@ -83,7 +83,7 @@ export class SharedService {
 
 
     constructor() {
-        fromEvent(window, 'resize').pipe().subscribe((x: Event) => this.resizeSubject.next(x.target as Window));
+        fromEvent(window, 'resize').subscribe((x: Event) => this.resizeSubject.next(x.target as Window));
     }
 
 

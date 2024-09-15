@@ -3,17 +3,15 @@ import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
 import {
     faChevronDown,
     faChevronUp,
-    faEnvelope,
     faInfoCircle,
-    faMailBulk,
     faStreetView
 } from "@fortawesome/free-solid-svg-icons";
 import {Observable, of, Subscription} from "rxjs";
 import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
-import {DateDiff, getBeginEindDatumVanMaand} from "../../../utils/Utils";
+import {DateDiff} from "../../../utils/Utils";
 import {DateTime} from "luxon";
 import {
-    HeliosAanwezigLedenDataset, HeliosAanwezigVliegtuigenDataset, HeliosDagInfosDataset, HeliosDienstenDataset,
+    HeliosAanwezigLedenDataset, HeliosDagInfosDataset, HeliosDienstenDataset,
     HeliosGast,
     HeliosGastenDataset, HeliosLedenDataset, HeliosLid,
     HeliosRoosterDataset, HeliosType
@@ -36,7 +34,6 @@ import {PegasusConfigService} from "../../../services/shared/pegasus-config.serv
 import {DaginfoService} from "../../../services/apiservice/daginfo.service";
 import {KeyValueArray} from "../../../types/Utils";
 import {SamenvattingComponent} from "../samenvatting/samenvatting.component";
-import {DefaultValidity, IfValid} from "luxon/src/_util";
 
 export type HeliosRoosterDatasetExtended = HeliosRoosterDataset & {
     EENHEDEN?: number
