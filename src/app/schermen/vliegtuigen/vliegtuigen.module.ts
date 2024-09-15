@@ -8,9 +8,8 @@ import {VliegtuigenSchermComponent} from "./vliegtuigen-scherm/vliegtuigen-scher
 import {ZitplaatsRenderComponent} from "./zitplaats-render/zitplaats-render.component";
 import {HandboekRenderComponent} from "./handboek-render/handboek-render.component";
 import {IconRenderComponent} from "./icon-render/icon-render.component";
-import {ExtendedModule} from "@angular/flex-layout";
 import {VliegtuigLogboekComponent} from "./vliegtuig-logboek/vliegtuig-logboek.component";
-import {NgChartsModule} from "ng2-charts";
+import {BaseChartDirective} from "ng2-charts";
 import { VliegtuigCardComponent } from './vliegtuig-card/vliegtuig-card.component';
 
 @NgModule({
@@ -26,7 +25,7 @@ import { VliegtuigCardComponent } from './vliegtuig-card/vliegtuig-card.componen
         CommonModule,
         FormsModule,
         FontAwesomeModule,
-        NgChartsModule,
+        BaseChartDirective,
         SharedModule,
 
         RouterModule.forChild([
@@ -34,8 +33,7 @@ import { VliegtuigCardComponent } from './vliegtuig-card/vliegtuig-card.componen
                 path: '',
                 component: VliegtuigenSchermComponent
             }
-        ]),
-        ExtendedModule
+        ])
     ],
     exports: [
         VliegtuigenSchermComponent,
