@@ -83,7 +83,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
     ddwvActief: boolean = true;
 
 
-    private tonen: WeergaveData = {                 // Welke diensten worden wel/niet getoond
+    protected tonen: WeergaveData = {                 // Welke diensten worden wel/niet getoond
         Startleiders: true,
         Instructeurs: true,
         Lieristen: true,

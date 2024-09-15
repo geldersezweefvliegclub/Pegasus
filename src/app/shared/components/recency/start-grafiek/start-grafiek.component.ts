@@ -83,13 +83,15 @@ export class StartGrafiekComponent implements OnInit {
                     font: {
                         family: 'Roboto, sans-serif',
                         size: 12,
-                        weight: '300'
+                        weight: 300
                     }
                 }
             },
             "y-axis-0": {
+                border: {
+                    dash: [6, 4],
+                },
                 grid: {
-                    borderDash: [6, 4],
                     color: '#9b9b9b',
                 },
                 ticks: {
@@ -98,7 +100,7 @@ export class StartGrafiekComponent implements OnInit {
                     font: {
                         family: 'Roboto, sans-serif',
                         size: 12,
-                        weight: '300'
+                        weight: 300
                     },
                 },
                 beginAtZero: true

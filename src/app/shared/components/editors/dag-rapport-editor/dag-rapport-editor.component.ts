@@ -31,10 +31,10 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
     @Output() aangepast: EventEmitter<number> = new EventEmitter<number>();
 
     private readonly iconMeteo: IconDefinition = faCloudSunRain;
-    private readonly iconVliegend: IconDefinition = faPaperPlane;
-    private readonly iconRollend: IconDefinition = faTruck;
-    private readonly iconVerslag: IconDefinition = faFlagCheckered;
-    private readonly iconIncident: IconDefinition = faFrown;
+    protected readonly iconVliegend: IconDefinition = faPaperPlane;
+    protected readonly iconRollend: IconDefinition = faTruck;
+    protected readonly iconVerslag: IconDefinition = faFlagCheckered;
+    protected readonly iconIncident: IconDefinition = faFrown;
     private readonly iconBedrijf: IconDefinition = faArtstation;
 
     private datumAbonnement: Subscription;         // volg de keuze van de kalender

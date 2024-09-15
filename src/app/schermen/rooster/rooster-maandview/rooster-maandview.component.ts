@@ -43,7 +43,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
     @Input() lidInRoosterClass: (dienst: HeliosDienstenDataset) => string;
 
     @ViewChild(JaarTotalenComponent) private jaarTotalen: JaarTotalenComponent;
-    @ViewChild(UitbetalenDdwvCrewEditorComponent) private uitbetalen: UitbetalenDdwvCrewEditorComponent;
+    @ViewChild(UitbetalenDdwvCrewEditorComponent) protected uitbetalen: UitbetalenDdwvCrewEditorComponent;
 
     readonly resetIcon: IconDefinition = faTimesCircle;
     readonly assignIcon: IconDefinition = faCalendarCheck;
@@ -68,7 +68,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
     constructor(private readonly ddwvService: DdwvService,
                 private readonly loginService: LoginService,
                 private readonly typesService: TypesService,
-                private readonly sharedService: SharedService,
+                protected readonly sharedService: SharedService,
                 private readonly roosterService: RoosterService,
                 private readonly dienstenService: DienstenService,
                 readonly configService: PegasusConfigService) {

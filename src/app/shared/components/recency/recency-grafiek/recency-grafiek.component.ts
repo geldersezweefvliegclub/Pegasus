@@ -113,14 +113,16 @@ export class RecencyGrafiekComponent implements OnInit {
                     font: {
                         family: 'Roboto, sans-serif',
                         size: 12,
-                        weight: '300'
+                        weight: 300
                     },
                 }
             },
             'y-axis-0': {
                 beginAtZero: true,
+                border: {
+                    dash: [6, 4],
+                },
                 grid: {
-                    borderDash: [6, 4],
                     color: '#548bcd',
                 },
                 ticks: {
@@ -129,7 +131,7 @@ export class RecencyGrafiekComponent implements OnInit {
                     font: {
                         family: 'Roboto, sans-serif',
                         size: 12,
-                        weight: '300',
+                        weight: 300
                     },
 
                 }

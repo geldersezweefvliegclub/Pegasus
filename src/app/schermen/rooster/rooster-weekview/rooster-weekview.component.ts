@@ -52,7 +52,7 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
     @Output() nieuweDatum: EventEmitter<DateTime> = new EventEmitter<DateTime>();
 
     @ViewChild(DienstEditorComponent) dienstEditor: DienstEditorComponent;
-    @ViewChild(UitbetalenDdwvCrewEditorComponent) private uitbetalen: UitbetalenDdwvCrewEditorComponent;
+    @ViewChild(UitbetalenDdwvCrewEditorComponent) protected uitbetalen: UitbetalenDdwvCrewEditorComponent;
 
     readonly resetIcon: IconDefinition = faTimesCircle;
     readonly assignIcon: IconDefinition = faCalendarCheck;
