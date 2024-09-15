@@ -41,5 +41,14 @@ module.exports = tseslint.config(
             '@angular-eslint/template/label-has-associated-control': 'warn',
             '@angular-eslint/template/alt-text': 'warn',
         },
+    },
+    // Special configuration for generated Types inside src/app/types/generated
+    {
+        files: ["src/app/types/generated/*.ts"],
+        rules: {
+            '@typescript-eslint/no-empty-interface': 'off',
+            '@typescript-eslint/no-empty-object-type': 'off',
+            '@typescript-eslint/no-explicit-any': 'off',
+        },
     }
 );
