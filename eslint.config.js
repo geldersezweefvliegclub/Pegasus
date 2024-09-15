@@ -14,7 +14,19 @@ module.exports = tseslint.config(
         ],
         processor: angular.processInlineTemplates,
         rules: {
-            '@typescript-eslint/no-empty-object-type': 'warn'
+            '@typescript-eslint/no-empty-object-type': 'warn',
+            '@typescript-eslint/no-unused-vars': [
+              'warn',
+              {
+                args: "all",
+                argsIgnorePattern: "^_",
+                caughtErrors: "all",
+                varsIgnorePattern: "^_",
+                caughtErrorsIgnorePattern: "^_",
+                destructuredArrayIgnorePattern: "^_",
+                ignoreRestSiblings: true,
+              }
+            ],
         }
     },
     {
