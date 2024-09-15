@@ -195,14 +195,14 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     lidToevoegenAanTrack() {
-        for (let i = 0; i < this.data.length; i++) {
-            this.data[i].lid = this.leden.find(l => l.ID == this.data[i].LID_ID) as HeliosLedenDataset;
+        for (const item of this.data) {
+            item.lid = this.leden.find(l => l.ID == item.LID_ID) as HeliosLedenDataset;
         }
     }
 
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.hasOwnProperty("VliegerID")) {
+        if (Object.prototype.hasOwnProperty.call(changes, "VliegerID")) {
             this.opvragen()
         }
     }

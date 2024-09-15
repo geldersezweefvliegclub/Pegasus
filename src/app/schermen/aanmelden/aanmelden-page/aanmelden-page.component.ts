@@ -128,9 +128,9 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.ddwvActief = this.ddwvService.actief();
-        this.isDDWVer = this.loginService.userInfo?.Userinfo?.isDDWV!;
-        this.isBeheerder = this.loginService.userInfo?.Userinfo?.isBeheerder!;
-        this.isBeheerderDDWV = this.loginService.userInfo?.Userinfo?.isBeheerderDDWV!;
+        this.isDDWVer = this.loginService.userInfo?.Userinfo?.isDDWV ?? false;
+        this.isBeheerder = this.loginService.userInfo?.Userinfo?.isBeheerder ?? false;
+        this.isBeheerderDDWV = this.loginService.userInfo?.Userinfo?.isBeheerderDDWV ?? false;
 
         const ui = this.loginService.userInfo?.Userinfo;
         this.saldoTonen = this.configService.saldoActief() && (ui!.isDDWV! || ui!.isClubVlieger!);
@@ -158,12 +158,12 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         });
 
         // abonneer op wijziging van aanwezige leden
-        this.aanwezigLedenAbonnement = this.aanwezigLedenService.aanwezigChange.subscribe(dataset => {
-            this.opvragen();        // kunnen dataset niet gebruiken omdat we hier ander tijdspanne gebruiken
+        this.aanwezigLedenAbonnement = this.aanwezigLedenService.aanwezigChange.subscribe((_) => {
+            this.opvragen();        // kunnen dataset die normaal in subscribe payload zit niet gebruiken omdat we hier ander tijdspanne gebruiken
         });
 
         // Roep onWindowResize aan zodra we het event ontvangen hebben
-        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(() => {
             this.opvragen();
         });
 
@@ -187,6 +187,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         if (this.datumAbonnement) this.datumAbonnement.unsubscribe();
         if (this.maandAbonnement) this.maandAbonnement.unsubscribe();
         if (this.resizeSubscription) this.resizeSubscription.unsubscribe();
+        if (this.aanwezigLedenAbonnement) this.aanwezigLedenAbonnement.unsubscribe();
     }
 
     onWindowResize() {
@@ -283,16 +284,13 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         const ui = this.loginService.userInfo!;
 
         // voor beheerders moeten we meer data ophalen
-        if (!ui!.Userinfo?.isBeheerderDDWV && !ui!.Userinfo?.isBeheerder!) {
+        if (!ui!.Userinfo?.isBeheerderDDWV && !ui!.Userinfo?.isBeheerder) {
             this.isLoadingAanwezig = false;
         }
         else {
             this.aanwezigLedenService.getAanwezigVerwijderd(beginDatum, eindDatum).then((afmeldingen) => {
-                for (let i=0 ; i < afmeldingen.length ; i++)
-                {
-                    const afmelding: HeliosAanwezigLedenDataset = afmeldingen[i];
+                for (const afmelding of afmeldingen) {
                     const dag: HeliosRoosterDatasetExtended = this.rooster.find(d => d.DATUM == afmelding.DATUM) as HeliosLedenDataset;
-
                     // we zijn niet geintresseerd in afmeldingen bij club dagen
                     if (!dag.DDWV && dag.CLUB_BEDRIJF)
                         continue
@@ -336,12 +334,12 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
 
     berekenStrippen() {
         if (this.isLoadingRooster || this.isLoadingAanwezig) {
-            for (let i = 0; i < this.rooster.length; i++) {
-                this.rooster[i].EENHEDEN = -1;
+            for (const item of this.rooster) {
+                item.EENHEDEN = -1;
             }
         } else {
-            for (let i = 0; i < this.rooster.length; i++) {
-                this.rooster[i].EENHEDEN = this.dagStrip(this.rooster[i].DATUM!);
+            for (const item of this.rooster) {
+                item.EENHEDEN = this.dagStrip(item.DATUM!);
             }
         }
     }
@@ -654,7 +652,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         return false;
     }
 
-    toonBarometer(lid: HeliosAanwezigLedenDataset) {
+    toonBarometer(_: HeliosAanwezigLedenDataset) {
         const ui = this.loginService.userInfo?.Userinfo;
         if (ui?.isBeheerder || ui?.isCIMT || ui?.isInstructeur) {
             return true;
@@ -704,22 +702,6 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         }
         else {
             this.filteredAanmeldingen = this.aanmeldingen
-        }
-    }
-
-    magBulkMailen(datum: string) {
-        const ui = this.loginService.userInfo;
-        if (ui!.Userinfo!.isBeheerder || ui?.Userinfo!.isCIMT)
-            return true;
-        else {
-            if (!this.diensten) {
-                return false;
-            }
-            // als de ingelode gebruiker dienst heeft, dan toegang tot bulk email
-            const idx = this.diensten.findIndex((d) => {
-                return (d.DATUM == datum && d.LID_ID == ui!.LidData!.ID)
-            });
-            return (idx >= 0);
         }
     }
 

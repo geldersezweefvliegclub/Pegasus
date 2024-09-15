@@ -152,7 +152,7 @@ export class VliegdagSelectieComponent implements OnInit, OnDestroy {
         return classes;
     }
 
-    nieuweDatumGeselecteerd($event: NgbDate) {
+    nieuweDatumGeselecteerd() {
         this.sharedService.zetKalenderDatum({
             year: this.kalenderIngave.year,
             month: this.kalenderIngave.month,

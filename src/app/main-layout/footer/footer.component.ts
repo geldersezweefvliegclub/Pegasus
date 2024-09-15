@@ -21,7 +21,7 @@ export class FooterComponent {
         this.router.events
             .pipe(filter(event => event instanceof NavigationEnd))
             .subscribe(() => this.toonMenu = false);
-        this.sharedService.ingegevenDatum.subscribe(datum => {
+        this.sharedService.ingegevenDatum.subscribe(() => {
             this.toonMenu = false;
         });
     }

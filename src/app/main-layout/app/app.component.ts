@@ -1,20 +1,13 @@
-import {Component, ViewChild} from '@angular/core';
-import {NavigationEnd, Router} from '@angular/router';
-import {LoginService} from '../../services/apiservice/login.service';
-import {SwUpdate} from "@angular/service-worker";
-import {debounceTime} from "rxjs/operators";
-import {SharedService} from "../../services/shared/shared.service";
-import {StorageService} from "../../services/storage/storage.service";
-import {StartlijstService} from "../../services/apiservice/startlijst.service";
-import {DaginfoService} from "../../services/apiservice/daginfo.service";
-import {DagRapportenService} from "../../services/apiservice/dag-rapporten.service";
-import {RoosterService} from "../../services/apiservice/rooster.service";
-import {DienstenService} from "../../services/apiservice/diensten.service";
-import {VliegtuigenService} from "../../services/apiservice/vliegtuigen.service";
-import {PopupKalenderComponent} from "../../shared/components/popup-kalender/popup-kalender.component";
-import {NgbCalendar, NgbDate} from "@ng-bootstrap/ng-bootstrap";
-import {DateTime} from "luxon";
-import {Subscription} from "rxjs";
+import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { LoginService } from '../../services/apiservice/login.service';
+import { SwUpdate } from '@angular/service-worker';
+import { debounceTime } from 'rxjs/operators';
+import { SharedService } from '../../services/shared/shared.service';
+import { StorageService } from '../../services/storage/storage.service';
+import { PopupKalenderComponent } from '../../shared/components/popup-kalender/popup-kalender.component';
+import { NgbCalendar, NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-root',
@@ -22,7 +15,7 @@ import {Subscription} from "rxjs";
     styleUrls: ['app.component.scss']
 })
 
-export class AppComponent {
+export class AppComponent implements OnDestroy{
     @ViewChild(PopupKalenderComponent) popupKalender: PopupKalenderComponent;
 
     private maandAbonnement: Subscription;          // volg de keuze van de kalender
@@ -119,6 +112,11 @@ export class AppComponent {
         });
     }
 
+    ngOnDestroy(): void {
+        this.maandAbonnement.unsubscribe();
+        this.datumAbonnement.unsubscribe();
+    }
+
     // ga noar hoofdscherm pagina, alleen voor toepassing bij kleine schermen
     hoofdmenu() {
         this.router.navigate(['hoofdscherm']).then();
@@ -136,10 +134,5 @@ export class AppComponent {
     // Er is een nieuwe software update en de gebruiker wil deze software gebruiken
     applyUpdate() {
         this.updates.activateUpdate().then(() => document.location.reload());
-    }
-
-    //  Er is een nieuwe datum is gekozen
-    NieuweDatum(datum: NgbDate) {
-        this.datumDMY = datum.day + "-" + datum.month + "-" + datum.year;
     }
 }

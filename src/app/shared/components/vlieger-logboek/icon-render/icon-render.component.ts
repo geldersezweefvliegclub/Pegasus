@@ -13,16 +13,13 @@ export class IconRenderComponent implements AgRendererComponent {
   toonCheckStart = false;
   toonInstructieVlucht = false;
 
-  constructor() { }
-
   agInit(params: ICellRendererParams): void {
     this.toonPax = params.data.PAX;
     this.toonCheckStart = params.data.CHECKSTART;
     this.toonInstructieVlucht = params.data.INSTRUCTIEVLUCHT;
   }
 
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
-
 }

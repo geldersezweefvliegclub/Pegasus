@@ -9,11 +9,11 @@ function padNumber(value: number) {
     }
 }
 
-function isNumber(value: any): boolean {
+function isNumber(value: unknown): boolean {
     return !isNaN(toInteger(value));
 }
 
-function toInteger(value: any): number {
+function toInteger(value: unknown): number {
     return parseInt(`${value}`, 10);
 }
 

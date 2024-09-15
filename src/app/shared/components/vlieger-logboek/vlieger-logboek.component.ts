@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { ColDef } from 'ag-grid-community';
+import { ColDef, RowClassParams } from 'ag-grid-community';
 import { HeliosLogboekDataset, HeliosTrack } from '../../../types/Helios';
 import { DateTime, Interval } from 'luxon';
 import { Subscription } from 'rxjs';
@@ -135,7 +135,8 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
     }];
 
     rowClassRules = {
-        'start_niet_wijzigbaar': function(params: any) { return !params.data.inTijdspan; },
+        // todo moet deze controleren met RJ of de logica nog klopt! Data is optional, dus wat als data niet bestaat??
+        'start_niet_wijzigbaar': (params: RowClassParams<HeliosLogboekDatasetExtended>) => !params.data?.inTijdspan,
     }
 
     frameworkComponents = {
@@ -200,7 +201,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
         }, 250);
 
         // Roep onWindowResize aan zodra we het event ontvangen hebben
-        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(() => {
             this.onWindowResize()
         });
 
@@ -215,7 +216,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.hasOwnProperty("VliegerID")) {
+        if (Object.prototype.hasOwnProperty.call(changes, "VliegerID")) {
             this.opvragen()
         }
         this.kolomDefinitie();
@@ -240,15 +241,15 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
                 const ui = this.loginService.userInfo;
                 const nu:  DateTime = DateTime.now()
 
-                for (let i = 0; i < data.length; i++) {
-                    const diff = Interval.fromDateTimes(DateTime.fromSQL(data[i].DATUM!), nu);
+                for (const item of data) {
+                    const diff = Interval.fromDateTimes(DateTime.fromSQL(item.DATUM!), nu);
                     if (Math.floor(diff.length("days")) > this.configService.maxZelfEditDagen()) {
-                        data[i].inTijdspan = ui!.Userinfo!.isBeheerder!;   // alleen beheerder mag na xx dagen wijzigen. xx is geconfigureerd in pegasus.config
+                        item.inTijdspan = ui!.Userinfo!.isBeheerder!;   // alleen beheerder mag na xx dagen wijzigen. xx is geconfigureerd in pegasus.config
                     }
                     else {
-                        data[i].inTijdspan = true; // zitten nog binnen de termijn
+                        item.inTijdspan = true; // zitten nog binnen de termijn
                     }
-                    data[i].DatumDM = this.sharedService.datumDM(data[i].DATUM!)
+                    item.DatumDM = this.sharedService.datumDM(item.DATUM!)
                 }
                 this.data = data;
             }).catch(e => {

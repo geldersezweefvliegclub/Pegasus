@@ -37,7 +37,7 @@ export class TrackRenderComponent implements AgRendererComponent {
         }
     }
 
-    refresh(params: ICellRendererParams): boolean {
+    refresh(_: ICellRendererParams): boolean {
         return false;
     }
 
