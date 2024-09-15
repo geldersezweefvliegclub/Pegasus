@@ -1,31 +1,32 @@
-import {Component, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {faUsers} from '@fortawesome/free-solid-svg-icons';
-import {HeliosLedenDataset, HeliosTrack} from '../../../types/Helios';
-import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
-import {ErrorMessage} from '../../../types/Utils';
-import {CheckboxRenderComponent} from '../../../shared/components/datatable/checkbox-render/checkbox-render.component';
-import {DeleteActionComponent} from '../../../shared/components/datatable/delete-action/delete-action.component';
-import {RestoreActionComponent} from '../../../shared/components/datatable/restore-action/restore-action.component';
-import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
-import {LoginService} from '../../../services/apiservice/login.service';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { faUsers } from '@fortawesome/free-solid-svg-icons';
+import { HeliosLedenDataset, HeliosTrack } from '../../../types/Helios';
+import { ColDef, RowDoubleClickedEvent } from 'ag-grid-community';
+import { ErrorMessage } from '../../../types/Utils';
+import {
+  CheckboxRenderComponent,
+} from '../../../shared/components/datatable/checkbox-render/checkbox-render.component';
+import { DeleteActionComponent } from '../../../shared/components/datatable/delete-action/delete-action.component';
+import { RestoreActionComponent } from '../../../shared/components/datatable/restore-action/restore-action.component';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { LoginService } from '../../../services/apiservice/login.service';
 import * as xlsx from 'xlsx';
-import {LedenService} from '../../../services/apiservice/leden.service';
-import {AvatarRenderComponent} from '../avatar-render/avatar-render.component';
-import {AdresRenderComponent} from '../adres-render/adres-render.component';
-import {TelefoonRenderComponent} from '../telefoon-render/telefoon-render.component';
-import {EmailRenderComponent} from '../email-render/email-render.component';
-import {LedenFilterComponent} from '../../../shared/components/leden-filter/leden-filter.component';
-import {SchermGrootte, SharedService} from '../../../services/shared/shared.service';
-import {NaamRenderComponent} from '../naam-render/naam-render.component';
-import {Router} from '@angular/router';
-import {nummerSort} from '../../../utils/Utils';
-import {TrackEditorComponent} from "../../../shared/components/editors/track-editor/track-editor.component";
-import {TracksService} from "../../../services/apiservice/tracks.service";
-import {TrackRenderComponent} from "../track-render/track-render.component";
-import {DatumRenderComponent} from "../../../shared/components/datatable/datum-render/datum-render.component";
-import {Subscription} from "rxjs";
-import {DdwvService} from "../../../services/apiservice/ddwv.service";
-import {DatatableComponent} from "../../../shared/components/datatable/datatable.component";
+import { LedenService } from '../../../services/apiservice/leden.service';
+import { AvatarRenderComponent } from '../avatar-render/avatar-render.component';
+import { AdresRenderComponent } from '../adres-render/adres-render.component';
+import { TelefoonRenderComponent } from '../telefoon-render/telefoon-render.component';
+import { EmailRenderComponent } from '../email-render/email-render.component';
+import { LedenFilterComponent } from '../../../shared/components/leden-filter/leden-filter.component';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { NaamRenderComponent } from '../naam-render/naam-render.component';
+import { Router } from '@angular/router';
+import { nummerSort } from '../../../utils/Utils';
+import { TrackEditorComponent } from '../../../shared/components/editors/track-editor/track-editor.component';
+import { TracksService } from '../../../services/apiservice/tracks.service';
+import { TrackRenderComponent } from '../track-render/track-render.component';
+import { DatumRenderComponent } from '../../../shared/components/datatable/datum-render/datum-render.component';
+import { Subscription } from 'rxjs';
+import { DatatableComponent } from '../../../shared/components/datatable/datatable.component';
 
 
 @Component({

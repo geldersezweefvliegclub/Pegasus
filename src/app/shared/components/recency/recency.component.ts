@@ -1,14 +1,14 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {StartlijstService} from "../../../services/apiservice/startlijst.service";
-import {HeliosBehaaldeProgressieDataset, HeliosLid, HeliosRecency} from "../../../types/Helios";
-import {RecencyGrafiekComponent} from "./recency-grafiek/recency-grafiek.component";
-import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
-import {InstructieGrafiekComponent} from "./instructie-grafiek/instructie-grafiek.component";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faCircleCheck, faCircleXmark, faEnvelope, faInfoCircle} from "@fortawesome/free-solid-svg-icons";
-import {ProgressieService} from "../../../services/apiservice/progressie.service";
-import {DateTime} from "luxon";
-import {StartGrafiekComponent} from "./start-grafiek/start-grafiek.component";
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { StartlijstService } from '../../../services/apiservice/startlijst.service';
+import { HeliosBehaaldeProgressieDataset, HeliosLid, HeliosRecency } from '../../../types/Helios';
+import { RecencyGrafiekComponent } from './recency-grafiek/recency-grafiek.component';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { InstructieGrafiekComponent } from './instructie-grafiek/instructie-grafiek.component';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faCircleCheck, faCircleXmark, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { ProgressieService } from '../../../services/apiservice/progressie.service';
+import { DateTime } from 'luxon';
+import { StartGrafiekComponent } from './start-grafiek/start-grafiek.component';
 
 // is EASA brevet geldig,
 // -1 = niet van toepasssing

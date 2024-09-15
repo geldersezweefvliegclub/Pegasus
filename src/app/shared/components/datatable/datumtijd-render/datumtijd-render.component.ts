@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
-import {ICellRendererParams} from 'ag-grid-community';
-import {SharedService} from "../../../../services/shared/shared.service";
+import { Component } from '@angular/core';
+import { ICellRendererParams } from 'ag-grid-community';
+import { SharedService } from '../../../../services/shared/shared.service';
 
 @Component({
     selector: 'app-datumtijd-render',

@@ -1,24 +1,24 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {HeliosLedenDataset, HeliosTrack, HeliosTracksDataset} from "../../../types/Helios";
-import {TracksService} from "../../../services/apiservice/tracks.service";
-import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
-import {TrackEditorComponent} from "../editors/track-editor/track-editor.component";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { HeliosLedenDataset, HeliosTrack, HeliosTracksDataset } from '../../../types/Helios';
+import { TracksService } from '../../../services/apiservice/tracks.service';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { TrackEditorComponent } from '../editors/track-editor/track-editor.component';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import {
-    faAddressCard,
-    faBookmark,
-    faMinusCircle,
-    faPlane,
-    faRecycle,
-    faTachometerAlt,
-    faUndo
-} from "@fortawesome/free-solid-svg-icons";
-import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
-import {LedenService} from "../../../services/apiservice/leden.service";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {faAvianex} from "@fortawesome/free-brands-svg-icons";
-import {DateTime} from "luxon";
-import {Subscription} from "rxjs";
+  faAddressCard,
+  faBookmark,
+  faMinusCircle,
+  faPlane,
+  faRecycle,
+  faTachometerAlt,
+  faUndo,
+} from '@fortawesome/free-solid-svg-icons';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { LedenService } from '../../../services/apiservice/leden.service';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { faAvianex } from '@fortawesome/free-brands-svg-icons';
+import { DateTime } from 'luxon';
+import { Subscription } from 'rxjs';
 
 export interface TracksLedenDataset extends HeliosTracksDataset {
     lid: HeliosLedenDataset;

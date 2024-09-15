@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
-import {ICellRendererParams} from 'ag-grid-community';
-import {AgRendererComponent} from 'ag-grid-angular';
+import { Component } from '@angular/core';
+import { ICellRendererParams } from 'ag-grid-community';
+import { AgRendererComponent } from 'ag-grid-angular';
 
 @Component({
   selector: 'app-adres-render',

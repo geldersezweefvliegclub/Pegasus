@@ -1,4 +1,4 @@
-import {animate, AnimationTriggerMetadata, style, transition, trigger} from "@angular/animations";
+import { animate, AnimationTriggerMetadata, style, transition, trigger } from '@angular/animations';
 
 /**
  * Animeer een element door hem links naar binnen te sliden wanneer hij wordt getoond, en daarna links uit te sliden voordat het element onzichtbaar wordt.

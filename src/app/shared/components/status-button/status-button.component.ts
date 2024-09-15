@@ -1,8 +1,8 @@
-import {Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
-import {far, IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {fas} from "@fortawesome/free-solid-svg-icons";
-import {Subscription} from "rxjs";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { far, IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-status-button',

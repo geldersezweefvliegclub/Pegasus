@@ -1,10 +1,10 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../modal/modal.component";
-import {HeliosCompetentie, HeliosCompetentiesDataset, HeliosType} from "../../../../types/Helios";
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {CompetentieService} from "../../../../services/apiservice/competentie.service";
-import {Observable, of, Subscription} from "rxjs";
-import {TypesService} from "../../../../services/apiservice/types.service";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ModalComponent } from '../../modal/modal.component';
+import { HeliosCompetentie, HeliosCompetentiesDataset, HeliosType } from '../../../../types/Helios';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { CompetentieService } from '../../../../services/apiservice/competentie.service';
+import { Observable, of, Subscription } from 'rxjs';
+import { TypesService } from '../../../../services/apiservice/types.service';
 
 export interface CompetentieLijst {
     ID: number | undefined;

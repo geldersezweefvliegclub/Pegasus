@@ -1,5 +1,5 @@
-import {Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
-import {ErrorMessage} from '../../../types/Utils';
+import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { ErrorMessage } from '../../../types/Utils';
 
 @Component({
   selector: 'app-error',

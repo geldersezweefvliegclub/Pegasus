@@ -1,15 +1,14 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {Subscription} from 'rxjs';
-import {DateTime} from 'luxon';
-import {SharedService} from '../../../../services/shared/shared.service';
-import {StartlijstService} from '../../../../services/apiservice/startlijst.service';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { DateTime } from 'luxon';
+import { SharedService } from '../../../../services/shared/shared.service';
+import { StartlijstService } from '../../../../services/apiservice/startlijst.service';
 
 import * as pluginAnnotations from 'chartjs-plugin-annotation';
-import AnnotationPlugin, {AnnotationOptions, LineAnnotationOptions} from 'chartjs-plugin-annotation';
-import {Chart, ChartConfiguration, ChartDataset, ChartOptions, ChartEvent, ChartType} from 'chart.js';
-import {BaseChartDirective} from 'ng2-charts';
+import AnnotationPlugin, { AnnotationOptions } from 'chartjs-plugin-annotation';
+import { Chart, ChartConfiguration, ChartDataset, ChartOptions } from 'chart.js';
 
-import {ModalComponent} from '../../modal/modal.component';
+import { ModalComponent } from '../../modal/modal.component';
 
 
 @Component({

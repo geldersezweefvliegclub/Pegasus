@@ -1,18 +1,13 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {
-    HeliosJournaal, HeliosLedenDataset,
-    HeliosType,
-    HeliosVliegtuigenDataset
-} from "../../../../types/Helios";
-import {TypesService} from "../../../../services/apiservice/types.service";
-import {Observable, of, Subscription} from "rxjs";
-import {ModalComponent} from "../../modal/modal.component";
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {JournaalService} from "../../../../services/apiservice/journaal.service";
-import {VliegtuigenService} from "../../../../services/apiservice/vliegtuigen.service";
-import {LedenService} from "../../../../services/apiservice/leden.service";
-import {SharedService} from "../../../../services/shared/shared.service";
-import {LoginService} from "../../../../services/apiservice/login.service";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { HeliosJournaal, HeliosLedenDataset, HeliosType, HeliosVliegtuigenDataset } from '../../../../types/Helios';
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { Observable, of, Subscription } from 'rxjs';
+import { ModalComponent } from '../../modal/modal.component';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { JournaalService } from '../../../../services/apiservice/journaal.service';
+import { VliegtuigenService } from '../../../../services/apiservice/vliegtuigen.service';
+import { LedenService } from '../../../../services/apiservice/leden.service';
+import { LoginService } from '../../../../services/apiservice/login.service';
 
 @Component({
     selector: 'app-melding-editor',

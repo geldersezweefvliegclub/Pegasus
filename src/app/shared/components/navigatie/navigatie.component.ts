@@ -1,30 +1,21 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {beheerRoutes, CustomRoute, routes} from '../../../routing.module';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { beheerRoutes, CustomRoute, routes } from '../../../routing.module';
 
-import {Router} from '@angular/router';
-import {
-    faGaugeSimpleHigh, fas,
-    faSignOutAlt,
-    faWrench
-} from '@fortawesome/free-solid-svg-icons';
-import {
-    NgbCalendar,
-    NgbDate,
-    NgbDateParserFormatter,
-    NgbDateStruct
-} from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
+import { fas, faSignOutAlt, faWrench } from '@fortawesome/free-solid-svg-icons';
+import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
-import {DateTime} from 'luxon';
+import { DateTime } from 'luxon';
 
-import {LoginService} from '../../../services/apiservice/login.service';
-import {VliegtuigenService} from "../../../services/apiservice/vliegtuigen.service";
-import {DaginfoService} from '../../../services/apiservice/daginfo.service';
-import {Subscription} from "rxjs";
-import {far, IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {SchermGrootte, SharedService} from '../../../services/shared/shared.service';
-import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
-import {PopupKalenderComponent} from "../popup-kalender/popup-kalender.component";
-import {NgbDateFRParserFormatter} from "../../../shared/ngb-date-fr-parser-formatter";
+import { LoginService } from '../../../services/apiservice/login.service';
+import { VliegtuigenService } from '../../../services/apiservice/vliegtuigen.service';
+import { DaginfoService } from '../../../services/apiservice/daginfo.service';
+import { Subscription } from 'rxjs';
+import { far, IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { PopupKalenderComponent } from '../popup-kalender/popup-kalender.component';
+import { NgbDateFRParserFormatter } from '../../../shared/ngb-date-fr-parser-formatter';
 
 @Component({
     selector: 'app-navigatie',

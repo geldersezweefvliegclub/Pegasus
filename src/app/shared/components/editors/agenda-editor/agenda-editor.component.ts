@@ -1,10 +1,10 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../modal/modal.component";
-import {HeliosAgendaActiviteit, HeliosAgendaDataset, HeliosJournaal} from "../../../../types/Helios";
-import {AgendaService} from "../../../../services/apiservice/agenda";
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {LoginService} from "../../../../services/apiservice/login.service";
-import {DateTime} from "luxon";
+import { Component, ViewChild } from '@angular/core';
+import { ModalComponent } from '../../modal/modal.component';
+import { HeliosAgendaActiviteit, HeliosAgendaDataset, HeliosJournaal } from '../../../../types/Helios';
+import { AgendaService } from '../../../../services/apiservice/agenda';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { LoginService } from '../../../../services/apiservice/login.service';
+import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-agenda-editor',

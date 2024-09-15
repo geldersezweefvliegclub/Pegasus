@@ -1,8 +1,7 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ModalComponent} from "../modal/modal.component";
-import {Subscription} from "rxjs";
-import {SharedService} from "../../../services/shared/shared.service";
-import {debounceTime} from "rxjs/operators";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ModalComponent } from '../modal/modal.component';
+import { Subscription } from 'rxjs';
+import { SharedService } from '../../../services/shared/shared.service';
 
 @Component({
   selector: 'app-popup-kalender',

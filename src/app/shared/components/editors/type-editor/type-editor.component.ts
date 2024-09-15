@@ -1,10 +1,8 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {ModalComponent} from "../../modal/modal.component";
-import {TracksLedenDataset} from "../../tracks/tracks.component";
-import {HeliosTrack, HeliosType} from "../../../../types/Helios";
-import {TypesService} from "../../../../services/apiservice/types.service";
-import {ExpressionType} from "@angular/compiler";
+import { Component, Input, ViewChild } from '@angular/core';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { ModalComponent } from '../../modal/modal.component';
+import { HeliosType } from '../../../../types/Helios';
+import { TypesService } from '../../../../services/apiservice/types.service';
 
 @Component({
     selector: 'app-type-editor',

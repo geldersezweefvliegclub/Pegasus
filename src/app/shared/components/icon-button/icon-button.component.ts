@@ -1,9 +1,9 @@
-import {Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {fas} from '@fortawesome/free-solid-svg-icons';
-import {far, IconDefinition} from '@fortawesome/free-regular-svg-icons';
-import {FlipProp, SizeProp} from '@fortawesome/fontawesome-svg-core';
-import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
-import {Subscription} from "rxjs";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { far, IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { FlipProp, SizeProp } from '@fortawesome/fontawesome-svg-core';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-icon-button',

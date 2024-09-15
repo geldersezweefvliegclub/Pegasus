@@ -1,8 +1,8 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {HeliosJournaalDataset} from "../../../types/Helios";
-import {SharedService} from "../../../services/shared/shared.service";
-import {faPenToSquare} from "@fortawesome/free-solid-svg-icons";
-import {JournaalEditorComponent} from "../editors/journaal-editor/journaal-editor.component";
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { HeliosJournaalDataset } from '../../../types/Helios';
+import { SharedService } from '../../../services/shared/shared.service';
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { JournaalEditorComponent } from '../editors/journaal-editor/journaal-editor.component';
 
 @Component({
     selector: 'app-journaal-card',

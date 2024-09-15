@@ -1,10 +1,10 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ModalComponent} from "../modal/modal.component";
-import {journaalFilter, JournaalService} from "../../../services/apiservice/journaal.service";
-import {HeliosJournaalDataset} from "../../../types/Helios";
-import {DateTime} from "luxon";
-import {Subscription} from "rxjs";
-import {SharedService} from "../../../services/shared/shared.service";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ModalComponent } from '../modal/modal.component';
+import { journaalFilter, JournaalService } from '../../../services/apiservice/journaal.service';
+import { HeliosJournaalDataset } from '../../../types/Helios';
+import { DateTime } from 'luxon';
+import { Subscription } from 'rxjs';
+import { SharedService } from '../../../services/shared/shared.service';
 
 @Component({
   selector: 'app-popup-journaal',

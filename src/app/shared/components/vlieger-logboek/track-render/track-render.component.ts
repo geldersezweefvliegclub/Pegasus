@@ -1,9 +1,9 @@
-import {Component} from '@angular/core';
-import {faAddressCard} from "@fortawesome/free-solid-svg-icons";
-import {AgRendererComponent} from "ag-grid-angular";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {ICellRendererParams} from "ag-grid-community";
-import {LoginService} from "../../../../services/apiservice/login.service";
+import { Component } from '@angular/core';
+import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
+import { AgRendererComponent } from 'ag-grid-angular';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { ICellRendererParams } from 'ag-grid-community';
+import { LoginService } from '../../../../services/apiservice/login.service';
 
 @Component({
     selector: 'app-track-render',

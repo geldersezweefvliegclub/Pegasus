@@ -1,8 +1,8 @@
-import {Component} from '@angular/core';
-import {AgRendererComponent} from 'ag-grid-angular';
-import {ICellRendererParams} from 'ag-grid-community';
-import {faMinusCircle} from '@fortawesome/free-solid-svg-icons';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import { Component } from '@angular/core';
+import { AgRendererComponent } from 'ag-grid-angular';
+import { ICellRendererParams } from 'ag-grid-community';
+import { faMinusCircle } from '@fortawesome/free-solid-svg-icons';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 
 @Component({
     selector: 'app-delete-action',

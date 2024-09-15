@@ -1,14 +1,16 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {HeliosVliegtuigenDatasetExtended} from "../../../../schermen/reservering/reservering-page/reservering-page.component";
-import {ModalComponent} from "../../modal/modal.component";
-import {Subscription} from "rxjs";
-import {HeliosLedenDataset, HeliosReservering} from "../../../../types/Helios";
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {LedenService} from "../../../../services/apiservice/leden.service";
-import {NgbDate, NgbDateParserFormatter} from "@ng-bootstrap/ng-bootstrap";
-import {NgbDateFRParserFormatter} from "../../../ngb-date-fr-parser-formatter";
-import {DateTime} from "luxon";
-import {ReserveringService} from "../../../../services/apiservice/reservering.service";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  HeliosVliegtuigenDatasetExtended,
+} from '../../../../schermen/reservering/reservering-page/reservering-page.component';
+import { ModalComponent } from '../../modal/modal.component';
+import { Subscription } from 'rxjs';
+import { HeliosLedenDataset, HeliosReservering } from '../../../../types/Helios';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { LedenService } from '../../../../services/apiservice/leden.service';
+import { NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateFRParserFormatter } from '../../../ngb-date-fr-parser-formatter';
+import { DateTime } from 'luxon';
+import { ReserveringService } from '../../../../services/apiservice/reservering.service';
 
 @Component({
     selector: 'app-boeking-editor',

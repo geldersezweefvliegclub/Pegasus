@@ -1,37 +1,37 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import {
-    HeliosAanwezigLedenDataset,
-    HeliosBehaaldeProgressieDataset,
-    HeliosLedenDataset,
-    HeliosStart,
-    HeliosStartDataset,
-    HeliosType,
-    HeliosVliegtuigenDataset
+  HeliosAanwezigLedenDataset,
+  HeliosBehaaldeProgressieDataset,
+  HeliosLedenDataset,
+  HeliosStart,
+  HeliosStartDataset,
+  HeliosType,
+  HeliosVliegtuigenDataset,
 } from '../../../../types/Helios';
-import {TypesService} from '../../../../services/apiservice/types.service';
-import {ModalComponent} from '../../modal/modal.component';
-import {StartlijstService} from '../../../../services/apiservice/startlijst.service';
-import {VliegtuigenService} from '../../../../services/apiservice/vliegtuigen.service';
-import {AanwezigVliegtuigService} from '../../../../services/apiservice/aanwezig-vliegtuig.service';
-import {Observable, of, Subscription} from 'rxjs';
-import {DateTime, Interval} from 'luxon';
-import {LedenService} from '../../../../services/apiservice/leden.service';
-import {AanwezigLedenService} from '../../../../services/apiservice/aanwezig-leden.service';
-import {SharedService} from '../../../../services/shared/shared.service';
-import {DaginfoService} from '../../../../services/apiservice/daginfo.service';
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {VliegtuigInvoerComponent} from "./vliegtuig-invoer/vliegtuig-invoer.component";
-import {ProgressieService} from "../../../../services/apiservice/progressie.service";
-import {LoginService} from "../../../../services/apiservice/login.service";
-import {PegasusConfigService} from "../../../../services/shared/pegasus-config.service";
-import {NgbDate, NgbDateParserFormatter} from "@ng-bootstrap/ng-bootstrap";
-import {NgbDateFRParserFormatter} from "../../../ngb-date-fr-parser-formatter";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faStreetView} from "@fortawesome/free-solid-svg-icons";
-import {StorageService} from "../../../../services/storage/storage.service";
-import {TransactieEditorComponent} from "../transactie-editor/transactie-editor.component";
-import {DienstenService} from "../../../../services/apiservice/diensten.service";
-import {RoosterService} from "../../../../services/apiservice/rooster.service";
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { ModalComponent } from '../../modal/modal.component';
+import { StartlijstService } from '../../../../services/apiservice/startlijst.service';
+import { VliegtuigenService } from '../../../../services/apiservice/vliegtuigen.service';
+import { AanwezigVliegtuigService } from '../../../../services/apiservice/aanwezig-vliegtuig.service';
+import { Observable, of, Subscription } from 'rxjs';
+import { DateTime, Interval } from 'luxon';
+import { LedenService } from '../../../../services/apiservice/leden.service';
+import { AanwezigLedenService } from '../../../../services/apiservice/aanwezig-leden.service';
+import { SharedService } from '../../../../services/shared/shared.service';
+import { DaginfoService } from '../../../../services/apiservice/daginfo.service';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { VliegtuigInvoerComponent } from './vliegtuig-invoer/vliegtuig-invoer.component';
+import { ProgressieService } from '../../../../services/apiservice/progressie.service';
+import { LoginService } from '../../../../services/apiservice/login.service';
+import { PegasusConfigService } from '../../../../services/shared/pegasus-config.service';
+import { NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateFRParserFormatter } from '../../../ngb-date-fr-parser-formatter';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faStreetView } from '@fortawesome/free-solid-svg-icons';
+import { StorageService } from '../../../../services/storage/storage.service';
+import { TransactieEditorComponent } from '../transactie-editor/transactie-editor.component';
+import { DienstenService } from '../../../../services/apiservice/diensten.service';
+import { RoosterService } from '../../../../services/apiservice/rooster.service';
 
 @Component({
     selector: 'app-start-editor',

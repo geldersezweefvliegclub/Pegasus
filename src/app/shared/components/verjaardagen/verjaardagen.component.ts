@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {LedenService} from "../../../services/apiservice/leden.service";
-import {TracksLedenDataset} from "../tracks/tracks.component";
+import { LedenService } from '../../../services/apiservice/leden.service';
 
 @Component({
   selector: 'app-verjaardagen',

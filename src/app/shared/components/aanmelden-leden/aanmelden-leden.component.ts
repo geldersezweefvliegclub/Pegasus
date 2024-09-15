@@ -1,21 +1,21 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ModalComponent} from "../modal/modal.component";
-import {Subscription} from "rxjs";
-import {DateTime} from "luxon";
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ModalComponent } from '../modal/modal.component';
+import { Subscription } from 'rxjs';
+import { DateTime } from 'luxon';
 import {
-    HeliosAanwezigLedenDataset,
-    HeliosLedenDataset,
-    HeliosType,
-    HeliosVliegtuigenDataset,
-} from "../../../types/Helios";
-import {SharedService} from "../../../services/shared/shared.service";
-import {LedenService} from "../../../services/apiservice/leden.service";
-import {AanwezigLedenService} from "../../../services/apiservice/aanwezig-leden.service";
-import {TypesService} from "../../../services/apiservice/types.service";
-import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
-import {VliegtuigenService} from "../../../services/apiservice/vliegtuigen.service";
-import {LidAanwezigEditorComponent} from "../editors/lid-aanwezig-editor/lid-aanwezig-editor.component";
-import {DaginfoService} from "../../../services/apiservice/daginfo.service";
+  HeliosAanwezigLedenDataset,
+  HeliosLedenDataset,
+  HeliosType,
+  HeliosVliegtuigenDataset,
+} from '../../../types/Helios';
+import { SharedService } from '../../../services/shared/shared.service';
+import { LedenService } from '../../../services/apiservice/leden.service';
+import { AanwezigLedenService } from '../../../services/apiservice/aanwezig-leden.service';
+import { TypesService } from '../../../services/apiservice/types.service';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { VliegtuigenService } from '../../../services/apiservice/vliegtuigen.service';
+import { LidAanwezigEditorComponent } from '../editors/lid-aanwezig-editor/lid-aanwezig-editor.component';
+import { DaginfoService } from '../../../services/apiservice/daginfo.service';
 
 type HeliosTypeExtended = HeliosType & {
     Geselecteerd?: boolean;

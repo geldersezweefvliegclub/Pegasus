@@ -1,12 +1,12 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {DienstenService} from "../../../services/apiservice/diensten.service";
-import {Subscription} from "rxjs";
-import {DateTime} from "luxon";
-import {SharedService} from "../../../services/shared/shared.service";
-import {HeliosDienstenDataset, HeliosLid} from "../../../types/Helios";
-import {DagRoosterComponent} from "../dag-rooster/dag-rooster.component";
-import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
-import {LoginService} from "../../../services/apiservice/login.service";
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { DienstenService } from '../../../services/apiservice/diensten.service';
+import { Subscription } from 'rxjs';
+import { DateTime } from 'luxon';
+import { SharedService } from '../../../services/shared/shared.service';
+import { HeliosDienstenDataset, HeliosLid } from '../../../types/Helios';
+import { DagRoosterComponent } from '../dag-rooster/dag-rooster.component';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { LoginService } from '../../../services/apiservice/login.service';
 
 @Component({
     selector: 'app-diensten',

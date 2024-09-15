@@ -1,14 +1,13 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../modal/modal.component";
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {HeliosAanwezigLedenDataset, HeliosType, HeliosVliegtuigenDataset} from "../../../../types/Helios";
-import {Observable, of, Subscription} from "rxjs";
-import {TypesService} from "../../../../services/apiservice/types.service";
-import {AanwezigLedenService} from "../../../../services/apiservice/aanwezig-leden.service";
-import {VliegtuigenService} from "../../../../services/apiservice/vliegtuigen.service";
-import {LoginService} from "../../../../services/apiservice/login.service";
-import {StorageService} from "../../../../services/storage/storage.service";
-import {DateTime} from "luxon";
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ModalComponent } from '../../modal/modal.component';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { HeliosAanwezigLedenDataset, HeliosType, HeliosVliegtuigenDataset } from '../../../../types/Helios';
+import { Observable, of, Subscription } from 'rxjs';
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { AanwezigLedenService } from '../../../../services/apiservice/aanwezig-leden.service';
+import { VliegtuigenService } from '../../../../services/apiservice/vliegtuigen.service';
+import { LoginService } from '../../../../services/apiservice/login.service';
+import { StorageService } from '../../../../services/storage/storage.service';
 
 type HeliosTypeExtended = HeliosType & {
     Geselecteerd?: boolean;

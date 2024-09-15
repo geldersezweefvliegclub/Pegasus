@@ -1,9 +1,7 @@
-import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {ModalComponent} from '../modal/modal.component';
-import {SharedService} from '../../../services/shared/shared.service';
-import {StartEditorComponent} from "../editors/start-editor/start-editor.component";
-import {TransactiesComponent} from "../transacties/transacties.component";
-import {LoginService} from "../../../services/apiservice/login.service";
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ModalComponent } from '../modal/modal.component';
+import { SharedService } from '../../../services/shared/shared.service';
+import { LoginService } from '../../../services/apiservice/login.service';
 
 
 @Component({

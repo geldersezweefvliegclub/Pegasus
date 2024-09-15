@@ -1,8 +1,8 @@
-import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../modal/modal.component";
-import {HeliosDocument} from "../../../../types/Helios";
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {DocumentenService} from "../../../../services/apiservice/documenten.service";
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { ModalComponent } from '../../modal/modal.component';
+import { HeliosDocument } from '../../../../types/Helios';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { DocumentenService } from '../../../../services/apiservice/documenten.service';
 
 @Component({
     selector: 'app-document-editor',

@@ -1,13 +1,13 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {ModalComponent} from '../../modal/modal.component';
-import {HeliosType, HeliosVliegtuig, HeliosVliegtuigenDataset} from '../../../../types/Helios';
-import {VliegtuigenService} from '../../../../services/apiservice/vliegtuigen.service';
-import {TypesService} from '../../../../services/apiservice/types.service';
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {Subscription} from "rxjs";
-import {LoginService} from "../../../../services/apiservice/login.service";
-import {CompetentieService} from "../../../../services/apiservice/competentie.service";
-import {PegasusConfigService} from "../../../../services/shared/pegasus-config.service";
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ModalComponent } from '../../modal/modal.component';
+import { HeliosType, HeliosVliegtuig, HeliosVliegtuigenDataset } from '../../../../types/Helios';
+import { VliegtuigenService } from '../../../../services/apiservice/vliegtuigen.service';
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { Subscription } from 'rxjs';
+import { LoginService } from '../../../../services/apiservice/login.service';
+import { CompetentieService } from '../../../../services/apiservice/competentie.service';
+import { PegasusConfigService } from '../../../../services/shared/pegasus-config.service';
 
 @Component({
     selector: 'app-vliegtuig-editor',

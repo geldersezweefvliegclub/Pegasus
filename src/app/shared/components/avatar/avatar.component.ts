@@ -1,5 +1,5 @@
-import {Component, Input, ViewChild} from '@angular/core';
-import {ModalComponent} from '../modal/modal.component';
+import { Component, Input, ViewChild } from '@angular/core';
+import { ModalComponent } from '../modal/modal.component';
 
 @Component({
   selector: 'app-avatar',

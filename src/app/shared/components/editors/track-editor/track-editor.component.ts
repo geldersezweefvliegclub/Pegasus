@@ -1,12 +1,12 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {HeliosLedenDataset, HeliosTrack} from "../../../../types/Helios";
-import {ModalComponent} from "../../modal/modal.component";
-import {TracksService} from "../../../../services/apiservice/tracks.service";
-import {LedenService} from "../../../../services/apiservice/leden.service";
-import {LoginService} from "../../../../services/apiservice/login.service";
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {Subscription} from "rxjs";
-import {TracksLedenDataset} from "../../tracks/tracks.component";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { HeliosLedenDataset, HeliosTrack } from '../../../../types/Helios';
+import { ModalComponent } from '../../modal/modal.component';
+import { TracksService } from '../../../../services/apiservice/tracks.service';
+import { LedenService } from '../../../../services/apiservice/leden.service';
+import { LoginService } from '../../../../services/apiservice/login.service';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { Subscription } from 'rxjs';
+import { TracksLedenDataset } from '../../tracks/tracks.component';
 
 @Component({
     selector: 'app-track-editor',

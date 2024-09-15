@@ -1,5 +1,5 @@
-import {Directive} from '@angular/core';
-import {AbstractControl, NG_VALIDATORS, ValidatorFn} from '@angular/forms';
+import { Directive } from '@angular/core';
+import { AbstractControl, NG_VALIDATORS, ValidatorFn } from '@angular/forms';
 
 @Directive({
   selector: '[appTelefoonValidator]',

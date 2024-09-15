@@ -1,7 +1,7 @@
-import {Component} from '@angular/core';
-import {AgRendererComponent} from "ag-grid-angular";
-import {LoginService} from "../../../../services/apiservice/login.service";
-import {ICellRendererParams} from "ag-grid-community";
+import { Component } from '@angular/core';
+import { AgRendererComponent } from 'ag-grid-angular';
+import { LoginService } from '../../../../services/apiservice/login.service';
+import { ICellRendererParams } from 'ag-grid-community';
 
 @Component({
     selector: 'app-naam-render',

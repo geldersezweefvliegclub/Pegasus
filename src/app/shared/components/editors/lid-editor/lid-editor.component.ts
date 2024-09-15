@@ -1,22 +1,22 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {NgbDate, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
-import {DateTime} from 'luxon';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faEye, faEyeSlash, faInfo, faInfoCircle, faUser} from '@fortawesome/free-solid-svg-icons';
-import {TypesService} from '../../../../services/apiservice/types.service';
-import {HeliosLedenDataset, HeliosLid, HeliosType} from '../../../../types/Helios';
-import {LedenService} from '../../../../services/apiservice/leden.service';
-import {LoginService} from "../../../../services/apiservice/login.service";
-import {NgbDateFRParserFormatter} from "../../../ngb-date-fr-parser-formatter";
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {ImageService} from "../../../../services/apiservice/image.service";
-import {Router} from "@angular/router";
-import {StorageService} from "../../../../services/storage/storage.service";
-import {Subscription} from "rxjs";
-import {SchermGrootte, SharedService} from "../../../../services/shared/shared.service";
-import {TransactiesComponent} from "../../transacties/transacties.component";
-import {PegasusConfigService} from "../../../../services/shared/pegasus-config.service";
-import {DdwvService} from "../../../../services/apiservice/ddwv.service";
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { DateTime } from 'luxon';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faEye, faEyeSlash, faInfo, faInfoCircle, faUser } from '@fortawesome/free-solid-svg-icons';
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { HeliosLedenDataset, HeliosLid, HeliosType } from '../../../../types/Helios';
+import { LedenService } from '../../../../services/apiservice/leden.service';
+import { LoginService } from '../../../../services/apiservice/login.service';
+import { NgbDateFRParserFormatter } from '../../../ngb-date-fr-parser-formatter';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { ImageService } from '../../../../services/apiservice/image.service';
+import { Router } from '@angular/router';
+import { StorageService } from '../../../../services/storage/storage.service';
+import { Subscription } from 'rxjs';
+import { SchermGrootte, SharedService } from '../../../../services/shared/shared.service';
+import { TransactiesComponent } from '../../transacties/transacties.component';
+import { PegasusConfigService } from '../../../../services/shared/pegasus-config.service';
+import { DdwvService } from '../../../../services/apiservice/ddwv.service';
 
 @Component({
     selector: 'app-lid-editor',

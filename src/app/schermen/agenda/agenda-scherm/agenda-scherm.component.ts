@@ -1,17 +1,17 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {HeliosAgendaDataset, HeliosJournaalDataset} from "../../../types/Helios";
-import {AgendaService} from "../../../services/apiservice/agenda";
-import {Subscription} from "rxjs";
-import {DateTime} from "luxon";
-import {ColDef, RowDoubleClickedEvent} from "ag-grid-community";
-import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {SharedService} from "../../../services/shared/shared.service";
-import {nummerSort} from "../../../utils/Utils";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faCalendar} from "@fortawesome/free-solid-svg-icons";
-import {AgendaEditorComponent} from "../../../shared/components/editors/agenda-editor/agenda-editor.component";
-import {DatumRenderComponent} from "../../../shared/components/datatable/datum-render/datum-render.component";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { HeliosAgendaDataset } from '../../../types/Helios';
+import { AgendaService } from '../../../services/apiservice/agenda';
+import { Subscription } from 'rxjs';
+import { DateTime } from 'luxon';
+import { ColDef, RowDoubleClickedEvent } from 'ag-grid-community';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { SharedService } from '../../../services/shared/shared.service';
+import { nummerSort } from '../../../utils/Utils';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { AgendaEditorComponent } from '../../../shared/components/editors/agenda-editor/agenda-editor.component';
+import { DatumRenderComponent } from '../../../shared/components/datatable/datum-render/datum-render.component';
 
 @Component({
   selector: 'app-agenda-scherm',

@@ -1,10 +1,10 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {Subscription} from "rxjs";
-import {DateTime} from "luxon";
-import {HeliosLogboekTotalen} from "../../../types/Helios";
-import {StartlijstService} from "../../../services/apiservice/startlijst.service";
-import {SharedService} from "../../../services/shared/shared.service";
-import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { DateTime } from 'luxon';
+import { HeliosLogboekTotalen } from '../../../types/Helios';
+import { StartlijstService } from '../../../services/apiservice/startlijst.service';
+import { SharedService } from '../../../services/shared/shared.service';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
 
 @Component({
     selector: 'app-vlieger-logboek-totalen',

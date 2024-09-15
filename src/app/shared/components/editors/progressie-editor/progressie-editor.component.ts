@@ -1,29 +1,29 @@
 import {
-    Component,
-    EventEmitter,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Output,
-    SimpleChanges,
-    ViewChild
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
 } from '@angular/core';
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import {
-    HeliosBehaaldeProgressieDataset,
-    HeliosCompetentiesDataset,
-    HeliosDagRapport,
-    HeliosLid, HeliosType
-} from "../../../../types/Helios";
-import {ModalComponent} from "../../modal/modal.component";
-import {ProgressieService} from "../../../../services/apiservice/progressie.service";
-import {LoginService} from "../../../../services/apiservice/login.service";
-import {LedenService} from "../../../../services/apiservice/leden.service";
-import {Subscription} from "rxjs";
-import {TypesService} from "../../../../services/apiservice/types.service";
-import {NgbDate, NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
-import {DateTime} from "luxon";
+  HeliosBehaaldeProgressieDataset,
+  HeliosCompetentiesDataset,
+  HeliosLid,
+  HeliosType,
+} from '../../../../types/Helios';
+import { ModalComponent } from '../../modal/modal.component';
+import { ProgressieService } from '../../../../services/apiservice/progressie.service';
+import { LoginService } from '../../../../services/apiservice/login.service';
+import { LedenService } from '../../../../services/apiservice/leden.service';
+import { Subscription } from 'rxjs';
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { DateTime } from 'luxon';
 
 @Component({
     selector: 'app-progressie-editor',

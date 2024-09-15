@@ -1,7 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {HeliosJournaalDataset, HeliosLedenDataset, HeliosLid, HeliosLidData} from "../../../types/Helios";
-import {faEnvelope} from "@fortawesome/free-solid-svg-icons";
-import {LoginService} from "../../../services/apiservice/login.service";
+import { Component, Input, OnInit } from '@angular/core';
+import { HeliosLedenDataset } from '../../../types/Helios';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { LoginService } from '../../../services/apiservice/login.service';
 
 @Component({
     selector: 'app-leden-card',

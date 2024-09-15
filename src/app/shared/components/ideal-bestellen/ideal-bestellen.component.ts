@@ -1,11 +1,11 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {TransactiesService} from "../../../services/apiservice/transacties.service";
-import {HeliosTransactiesBanken, HeliosType} from "../../../types/Helios";
-import {ModalComponent} from "../modal/modal.component";
-import {DdwvService} from "../../../services/apiservice/ddwv.service";
-import {ErrorMessage} from "../../../types/Utils";
-import {Subscription} from "rxjs";
-import {TypesService} from "../../../services/apiservice/types.service";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { TransactiesService } from '../../../services/apiservice/transacties.service';
+import { HeliosTransactiesBanken, HeliosType } from '../../../types/Helios';
+import { ModalComponent } from '../modal/modal.component';
+import { DdwvService } from '../../../services/apiservice/ddwv.service';
+import { ErrorMessage } from '../../../types/Utils';
+import { Subscription } from 'rxjs';
+import { TypesService } from '../../../services/apiservice/types.service';
 
 @Component({
     selector: 'app-ideal-bestellen',

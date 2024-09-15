@@ -1,14 +1,13 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
-import {ProgressieService} from "../../../services/apiservice/progressie.service";
-import {HeliosBehaaldeProgressieDataset, HeliosCompetentiesDataset, HeliosLid,} from "../../../types/Helios";
-import {ErrorMessage, HeliosActie, SuccessMessage} from "../../../types/Utils";
-import {SharedService} from "../../../services/shared/shared.service";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {CompetentieService} from "../../../services/apiservice/competentie.service";
-import {Subscription} from "rxjs";
-import {ModalComponent} from "../modal/modal.component";
-import {ProgressieEditorComponent} from "../editors/progressie-editor/progressie-editor.component";
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { ProgressieService } from '../../../services/apiservice/progressie.service';
+import { HeliosBehaaldeProgressieDataset, HeliosCompetentiesDataset, HeliosLid } from '../../../types/Helios';
+import { ErrorMessage, HeliosActie, SuccessMessage } from '../../../types/Utils';
+import { SharedService } from '../../../services/shared/shared.service';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { CompetentieService } from '../../../services/apiservice/competentie.service';
+import { Subscription } from 'rxjs';
+import { ProgressieEditorComponent } from '../editors/progressie-editor/progressie-editor.component';
 
 @Component({
     selector: 'app-status',

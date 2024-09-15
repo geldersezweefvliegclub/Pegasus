@@ -1,4 +1,4 @@
-import {DateTime, Interval} from 'luxon';
+import { DateTime, Interval } from 'luxon';
 
 export const nummerSort = (num1: number, num2: number) => {
   return (num1 > num2) ? 1 : -1;

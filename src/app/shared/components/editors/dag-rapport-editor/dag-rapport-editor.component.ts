@@ -1,21 +1,18 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../modal/modal.component";
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faCloudSunRain, faFlagCheckered, faFrown, faTruck} from "@fortawesome/free-solid-svg-icons";
-import {faPaperPlane} from "@fortawesome/free-solid-svg-icons/faPaperPlane";
-import {ComposeMeteoComponent} from "./compose-meteo/compose-meteo.component";
-import {ComposeBedrijfComponent} from "./compose-bedrijf/compose-bedrijf.component";
-import {faArtstation} from "@fortawesome/free-brands-svg-icons";
-import {DateTime} from "luxon";
-import {Observable, of, Subscription} from "rxjs";
-import {SchermGrootte, SharedService} from "../../../../services/shared/shared.service";
-import {
-    HeliosDagRapport, HeliosTrack,
-    HeliosType
-} from "../../../../types/Helios";
-import {TypesService} from "../../../../services/apiservice/types.service";
-import {DagRapportenService} from "../../../../services/apiservice/dag-rapporten.service";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ModalComponent } from '../../modal/modal.component';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faCloudSunRain, faFlagCheckered, faFrown, faTruck } from '@fortawesome/free-solid-svg-icons';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';
+import { ComposeMeteoComponent } from './compose-meteo/compose-meteo.component';
+import { ComposeBedrijfComponent } from './compose-bedrijf/compose-bedrijf.component';
+import { faArtstation } from '@fortawesome/free-brands-svg-icons';
+import { DateTime } from 'luxon';
+import { Observable, of, Subscription } from 'rxjs';
+import { SchermGrootte, SharedService } from '../../../../services/shared/shared.service';
+import { HeliosDagRapport, HeliosType } from '../../../../types/Helios';
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { DagRapportenService } from '../../../../services/apiservice/dag-rapporten.service';
 
 @Component({
     selector: 'app-dag-rapport-editor',
