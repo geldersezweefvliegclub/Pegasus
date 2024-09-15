@@ -1,8 +1,5 @@
 module.exports = [
   {
-    ignores: ["projects/**/*"]
-  },
-  {
     files: ["*.ts"],
     languageOptions: {
       parserOptions: {
