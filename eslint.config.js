@@ -1,40 +1,33 @@
-module.exports = [
-  {
-    files: ["*.ts"],
-    languageOptions: {
-      parserOptions: {
-        project: ["tsconfig.json", "e2e/tsconfig.json"],
-        createDefaultProgram: true
-      }
-    },
-    plugins: {
-      "@angular-eslint": require("@angular-eslint/eslint-plugin"),
-      "@typescript-eslint": require("@typescript-eslint/eslint-plugin")
-    },
-    rules: {
-      "@angular-eslint/component-selector": [
-        "error",
-        {
-          "prefix": "app",
-          "style": "kebab-case",
-          "type": "element"
+// @ts-check
+const eslint = require("@eslint/js");
+const tseslint = require("typescript-eslint");
+const angular = require("angular-eslint");
+
+module.exports = tseslint.config(
+    {
+        files: ["**/*.ts"],
+        extends: [
+            eslint.configs.recommended,
+            ...tseslint.configs.recommended,
+            // ...tseslint.configs.stylistic,
+            // ...angular.configs.tsRecommended,
+        ],
+        processor: angular.processInlineTemplates,
+        rules: {
+            '@typescript-eslint/no-empty-object-type': 'warn'
         }
-      ],
-      "@angular-eslint/directive-selector": [
-        "error",
-        {
-          "prefix": "app",
-          "style": "camelCase",
-          "type": "attribute"
-        }
-      ]
+    },
+    {
+        files: ["**/*.html"],
+        extends: [
+            ...angular.configs.templateRecommended,
+            ...angular.configs.templateAccessibility,
+        ],
+        rules: {
+            '@angular-eslint/template/click-events-have-key-events': 'warn',
+            '@angular-eslint/template/interactive-supports-focus': 'warn',
+            '@angular-eslint/template/label-has-associated-control': 'warn',
+            '@angular-eslint/template/alt-text': 'warn',
+        },
     }
-  },
-  {
-    files: ["*.html"],
-    plugins: {
-      "@angular-eslint/template": require("@angular-eslint/eslint-plugin-template")
-    },
-    rules: {}
-  }
-];
+);

@@ -25,6 +25,7 @@
                           "@angular/localize/init"
                         ],
                         "tsConfig": "tsconfig.app.json",
+                        "inlineStyleLanguage": "scss",
                         "assets": [
                             "src/favicon.ico",
                             "src/assets",
@@ -39,8 +40,8 @@
                         "serviceWorker": true,
                         "ngswConfigPath": "ngsw-config.json"
                     },
+                    "defaultConfiguration": "production",
                     "configurations": {
-                        "defaultConfiguration": "development",
                         "production": {
                             "fileReplacements": [
                                 {
@@ -76,9 +77,6 @@
                 },
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
-                    "options": {
-                      "buildTarget": "pegasus:build"
-                    },
                     "configurations": {
                         "development": {
                           "buildTarget": "pegasus:build:development"
@@ -90,20 +88,17 @@
                     "defaultConfiguration": "development"
                 },
                 "extract-i18n": {
-                    "builder": "@angular-devkit/build-angular:extract-i18n",
-                    "options": {
-                      "buildTarget": "pegasus:build"
-                    }
+                    "builder": "@angular-devkit/build-angular:extract-i18n"
                 },
                 "test": {
                     "builder": "@angular-devkit/build-angular:karma",
                     "options": {
-                        "main": "src/test.ts",
                         "polyfills": [
                             "zone.js",
                             "@angular/localize/init"
                         ],
                         "tsConfig": "tsconfig.spec.json",
+                        "inlineStyleLanguage": "scss",
                         "karmaConfig": "src/karma.conf.js",
                         "styles": [
                             "src/styles.scss"
@@ -123,25 +118,6 @@
                             "src/**/*.ts",
                             "src/**/*.html"
                         ]
-                    }
-                }
-            }
-        },
-        "pegasus-e2e": {
-            "root": "e2e/",
-            "projectType": "application",
-            "prefix": "",
-            "architect": {
-                "e2e": {
-                    "builder": "@angular-devkit/build-angular:protractor",
-                    "options": {
-                        "protractorConfig": "e2e/protractor.conf.js",
-                        "devServerTarget": "pegasus:serve"
-                    },
-                    "configurations": {
-                        "production": {
-                            "devServerTarget": "pegasus:serve:production"
-                        }
                     }
                 }
             }
