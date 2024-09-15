@@ -158,8 +158,8 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
                 nieuwetak.GeldigTot = (boomTak.GELDIG_TOT) ? this.sharedService.datumDMJ(boomTak.GELDIG_TOT) : undefined;
             }
         } else {
-            for (let i = 0; i < boomTak.children.length; i++) {
-                const extraTak: TreeviewItem = this.TreeView(boomTak.children[i]);   // recursion
+            for (const item of boomTak.children) {
+                const extraTak: TreeviewItem = this.TreeView(item);   // recursion
 
                 if (!nieuwetak.children) {
                     nieuwetak.children = [extraTak];  // creeer object en vullen

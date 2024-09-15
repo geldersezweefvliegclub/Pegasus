@@ -6,7 +6,7 @@
     [minDate]="kalenderEersteDatum"
     [maxDate]="kalenderLaatsteDatum"
     [(ngModel)]="kalenderIngave"
-    (dateSelect)="nieuweDatumGeselecteerd($event)"
+    (dateSelect)="nieuweDatumGeselecteerd()"
     (navigate)="onMonthSelectionChange($event)"
     [dayTemplate]="t">
 </ngb-datepicker>

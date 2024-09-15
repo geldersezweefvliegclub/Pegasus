@@ -47,8 +47,6 @@ export class AuditPageComponent implements OnInit {
 
     ngOnInit(): void {
         this.opvragen();
-
-        const ui = this.loginService.userInfo?.Userinfo;
         this.magExporten = true
     }
 

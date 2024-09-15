@@ -163,9 +163,6 @@ export class AgendaSchermComponent implements OnInit, OnDestroy {
     this.agendaService.getAgenda(startDatum, eindDatum, 5000, this.trashMode).then((dataset) => {
       this.isLoading = false;
       this.data = dataset;
-
-      const ui = this.loginService.userInfo?.Userinfo;
-
     }).catch(e => {
       this.isLoading = false;
       this.error = e;

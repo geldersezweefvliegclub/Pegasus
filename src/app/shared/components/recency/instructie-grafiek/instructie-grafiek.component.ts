@@ -259,7 +259,7 @@ export class InstructieGrafiekComponent implements OnInit {
                 if (hours+1 > maxWaarde) {
                     maxWaarde = hours+1;
                 }
-            } catch (e) {
+            } catch (_) {
                 starts.push(0);
                 uren.push(0);
             }

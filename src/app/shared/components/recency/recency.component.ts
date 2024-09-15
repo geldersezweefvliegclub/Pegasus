@@ -144,7 +144,7 @@ export class RecencyComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.hasOwnProperty("Vlieger")) {
+        if (Object.prototype.hasOwnProperty.call(changes, "Vlieger")) {
             this.ophalen();
         }
     }

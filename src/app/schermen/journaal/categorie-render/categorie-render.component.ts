@@ -12,15 +12,12 @@ export class CategorieRenderComponent implements AgRendererComponent {
     categorie: string | undefined;
     id: number | undefined;
 
-    constructor() {
-    }
-
     agInit(params: ICellRendererParams): void {
         this.categorie = params.data.CATEGORIE_CODE;
         this.id = params.data.CATEGORIE_ID;
     }
 
-    refresh(params: ICellRendererParams): boolean {
+    refresh(_: ICellRendererParams): boolean {
         return false;
     }
 }

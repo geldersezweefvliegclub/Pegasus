@@ -82,10 +82,10 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
 
     opvragen(): void {
         this.isLoading = true;
-        this.competentieService.getBoom().then((b) => {
+        this.competentieService.getBoom().then((boom) => {
             const tree: CompetentieTreeviewItem[] = [];
-            for (let i = 0; i < b.length; i++) {
-                const t = this.TreeView(b[i]);
+            for (const item of boom) {
+                const t = this.TreeView(item);
                 t.blokID = -1;                    // indicatie dat het top level item is
                 tree.push(t)
             }
@@ -115,8 +115,8 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
         nieuwetak.competentieID = boomTak.COMPETENTIE_ID;
 
         if (boomTak.children) {
-            for (let i = 0; i < boomTak.children.length; i++) {
-                const extraTak: CompetentieTreeviewItem  = this.TreeView(boomTak.children[i]);   // recursion
+            for (const item of boomTak.children) {
+                const extraTak: CompetentieTreeviewItem  = this.TreeView(item);   // recursion
 
                 if (!nieuwetak.children) {
                     nieuwetak.children = [extraTak];  // creeer object en vullen
@@ -125,6 +125,7 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
                 }
 
                 if (this.competenties) {  // als competentie geladen zijn, zetten we sorteeer volgorde
+                    // todo: dit doet niets??
                     boomTak.COMPETENTIE_ID
                 }
             }
@@ -164,8 +165,8 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
 
         // We gaan dieper de boom in om te kijken of daar toegevoegd moet worden
         if (boomTak.children) {
-            for (let i = 0; i < boomTak.children.length; i++) {
-                this.nieuweBoomTak(boomTak.children[i] as CompetentieTreeviewItem, parentID);
+            for (const item of boomTak.children) {
+                this.nieuweBoomTak(item as CompetentieTreeviewItem, parentID);
             }
         }
     }
@@ -216,8 +217,8 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
                 children[idx + 1].VOLGORDE!--;
 
                 this.suspend();
-                for (let i=0 ; i < children.length ; i++) {
-                    this.competentieService.updateCompetentie(children[i]);
+                for (const item1 of children) {
+                    this.competentieService.updateCompetentie(item1);
                 }
                 this.opvragen();
             }
@@ -246,8 +247,8 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
                 children[idx - 1].VOLGORDE!++;
 
                 this.suspend();
-                for (let i=0 ; i < children.length ; i++) {
-                    this.competentieService.updateCompetentie(children[i]);
+                for (const item1 of children) {
+                    this.competentieService.updateCompetentie(item1).then();
                 }
                 this.opvragen();
             }

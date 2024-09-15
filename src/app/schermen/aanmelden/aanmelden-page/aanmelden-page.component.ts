@@ -389,11 +389,11 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
 
             console.log(aanmeldingen)
 
-            for (let i = 0; i < aanmeldingen.length; i++) {
-                if (aanmeldingen[i].DATUM == DateTime.now().toISODate() && aanmeldingen[i].AANKOMST) {
-                    this.aanwezigLedenService.afmelden(aanmeldingen[i].LID_ID!).then(() => this.opvragen());
-                } else if (!aanmeldingen[i].VERWIJDERD) {
-                    this.aanwezigLedenService.aanmeldingVerwijderen(aanmeldingen[i].ID!).then(() => this.opvragen());
+            for (const item of aanmeldingen) {
+                if (item.DATUM == DateTime.now().toISODate() && item.AANKOMST) {
+                    this.aanwezigLedenService.afmelden(item.LID_ID!).then(() => this.opvragen());
+                } else if (!item.VERWIJDERD) {
+                    this.aanwezigLedenService.aanmeldingVerwijderen(item.ID!).then(() => this.opvragen());
                 }
             }
             this.isLoadingAanwezig = false;
@@ -518,17 +518,18 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     }
 
     isAangemeld(dagDatum: string): boolean {
-        const ui = this.loginService.userInfo?.LidData!;
+        const ui = this.loginService.userInfo?.LidData;
 
         if (!this.aanmeldingen) {
             return false;
         }
 
+        // findIndex geeft -1 als het niet gevonden is
         const aanwezig = this.aanmeldingen.findIndex((a: HeliosAanwezigLedenDataset) => {
-            return (a.DATUM == dagDatum && a.LID_ID == ui.ID && a.VERWIJDERD == false);
+            return (a.DATUM == dagDatum && a.LID_ID == ui?.ID && a.VERWIJDERD == false);
         });
 
-        return aanwezig < 0 ? false : true;
+        return aanwezig >= 0;
     }
 
     magAanmelden(dagDatum: string): boolean {

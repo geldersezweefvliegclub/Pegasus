@@ -265,7 +265,7 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
             this.magWijzigen = false;
         }
         else {
-            this.magClubkistWijzigen = (ui?.isBeheerder! || ui?.isCIMT!);
+            this.magClubkistWijzigen = (ui?.isBeheerder || ui?.isCIMT) ?? false;
 
             this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
             this.magWijzigen = (!ui?.isDDWV) ? true : false;
@@ -305,9 +305,6 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
             this.meldingenService.getJournaals(this.activeFilter, startDatum, eindDatum, this.zoekString, this.trashMode).then((dataset) => {
                 this.isLoading = false;
                 this.data = dataset;
-
-                const ui = this.loginService.userInfo?.Userinfo;
-
             }).catch(e => {
                 this.isLoading = false;
                 this.error = e;

@@ -215,7 +215,7 @@ export class StartGrafiekComponent implements OnInit {
                 zelfstarts.push(recency.ZELFSTARTS as number);
                 tmgstarts.push(recency.TMGSTARTS as number);
 
-            } catch (e) {
+            } catch (_) {
                 lierstarts.push(0);
                 sleepstarts.push(0);
                 zelfstarts.push(0);

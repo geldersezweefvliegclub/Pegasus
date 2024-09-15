@@ -25,8 +25,8 @@ export class LedenFilterComponent {
     // Open leden-filter dialoog met de leden-filter opties
     openPopup() {
         const ui = this.loginService.userInfo;
-        this.isBeheerder = ui!.Userinfo?.isBeheerder!;
-        this.isDDWVer = ui!.Userinfo?.isDDWV!;
+        this.isBeheerder = ui!.Userinfo?.isBeheerder ?? false;
+        this.isDDWVer = ui!.Userinfo?.isDDWV ?? false;
 
         this.popup.open();
     }
@@ -37,7 +37,7 @@ export class LedenFilterComponent {
     }
 
     // DDWV en leden mogen niet tegelijk 'aan' staan, dan is dataset altijd leeg
-    filterLedenChanged(checked: any) {
+    filterLedenChanged(checked: boolean) {
         if ((checked) && ((this.sharedService.ledenlijstFilter.ddwv) || this.sharedService.ledenlijstFilter.wachtlijst)) {
             this.sharedService.ledenlijstFilter.ddwv = false;
             this.sharedService.ledenlijstFilter.wachtlijst = false;
@@ -46,7 +46,7 @@ export class LedenFilterComponent {
     }
 
     // DDWV en leden mogen niet tegelijk 'aan' staan, dan is dataset altijd leeg
-    filterDDWVChanged(checked: any) {
+    filterDDWVChanged(checked: boolean) {
         if ((checked) && ((this.sharedService.ledenlijstFilter.leden) || this.sharedService.ledenlijstFilter.wachtlijst)) {
             this.sharedService.ledenlijstFilter.leden = false;
             this.sharedService.ledenlijstFilter.wachtlijst = false;
@@ -55,7 +55,7 @@ export class LedenFilterComponent {
     }
 
     // DDWV en leden en wachtlijst mogen niet tegelijk 'aan' staan, dan is dataset altijd leeg
-    filterWachtlijstChanged(checked: any) {
+    filterWachtlijstChanged(checked: boolean) {
         if ((checked) && ((this.sharedService.ledenlijstFilter.leden) || this.sharedService.ledenlijstFilter.ddwv)) {
             this.sharedService.ledenlijstFilter.leden = false;
             this.sharedService.ledenlijstFilter.ddwv = false;

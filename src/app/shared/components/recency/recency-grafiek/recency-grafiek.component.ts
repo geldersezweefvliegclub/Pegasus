@@ -6,7 +6,7 @@ import { StartlijstService } from '../../../../services/apiservice/startlijst.se
 
 import * as pluginAnnotations from 'chartjs-plugin-annotation';
 import AnnotationPlugin, { AnnotationOptions } from 'chartjs-plugin-annotation';
-import { Chart, ChartConfiguration, ChartDataset, ChartOptions } from 'chart.js';
+import { Chart, ChartConfiguration, ChartOptions } from 'chart.js';
 
 import { ModalComponent } from '../../modal/modal.component';
 
@@ -266,7 +266,7 @@ export class RecencyGrafiekComponent implements OnInit {
                 if (recency.WAARDE as number > maxWaarde) {
                     maxWaarde = recency.WAARDE as number;
                 }
-            } catch (e) {
+            } catch (_) {
                 waardes.push(0);
             }
         }
@@ -280,16 +280,5 @@ export class RecencyGrafiekComponent implements OnInit {
 
         this.lineChartData.datasets[0].data = waardes;
         this.lineChartData.labels = lineChartLabels;
-
-        const lineReeks: ChartDataset = {
-
-            borderColor: 'rgba(42,42,42,0.59)',
-            pointBackgroundColor: 'rgba(148,159,177,1)',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgba(148,159,177,0.8)',
-
-            data: this.waardes,
-        }
     }
 }

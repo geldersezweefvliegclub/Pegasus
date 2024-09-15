@@ -9,10 +9,11 @@ import { FooterComponent } from './main-layout/footer/footer.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
-import { IPegasusConfig, PegasusConfigService } from './services/shared/pegasus-config.service';
+import { PegasusConfigService } from './services/shared/pegasus-config.service';
 import { HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { IPegasusConfig } from './types/IPegasusConfig';
 
 export function initializeApp(appConfigService: PegasusConfigService) {
     return (): Promise<IPegasusConfig> => {

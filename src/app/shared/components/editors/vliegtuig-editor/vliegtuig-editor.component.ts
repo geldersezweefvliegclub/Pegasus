@@ -112,7 +112,7 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
             // Foutieve invoer kan opgelost worden in toren of door beheerder
             const ui = this.loginService.userInfo?.Userinfo;
             this.magWijzigen = (ui?.isBeheerder || ui?.isStarttoren) ? true : false;
-            this.magClubkistWijzigen = (ui?.isBeheerder! || ui?.isCIMT!);
+            this.magClubkistWijzigen = (ui?.isBeheerder || ui?.isCIMT) ?? false;
         } else {
             this.formTitel = 'Vliegtuig aanmaken';
             this.vliegtuig = {};
@@ -137,7 +137,7 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
                 this.vliegtuig = vliegtuig;
                 this.isLoading = false;
             });
-        } catch (e) {
+        } catch (_) {
             this.isLoading = false;
         }
     }

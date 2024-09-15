@@ -8,6 +8,7 @@ import { LoginService } from '../../../services/apiservice/login.service';
 import { CompetentieService } from '../../../services/apiservice/competentie.service';
 import { Subscription } from 'rxjs';
 import { ProgressieEditorComponent } from '../editors/progressie-editor/progressie-editor.component';
+import { Check, Overig } from '../../../types/IPegasusConfig';
 
 @Component({
     selector: 'app-status',
@@ -19,8 +20,8 @@ export class StatusComponent implements OnInit, OnChanges, OnDestroy {
     @Input() Vlieger: HeliosLid;
     @ViewChild(ProgressieEditorComponent) private editor: ProgressieEditorComponent;
 
-    cheks: any;
-    overig: any;
+    checks: { Jaren: number[], Check: Check[] };
+    overig: Overig[];
     gehaaldeProgressie: HeliosBehaaldeProgressieDataset[];
     private dbEventAbonnement: Subscription;
     private competentiesAbonnement: Subscription;
@@ -30,9 +31,6 @@ export class StatusComponent implements OnInit, OnChanges, OnDestroy {
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
-
-    bevestigCompetentie: HeliosCompetentiesDataset | undefined;
-    checkboxSelected: any;
 
     constructor(private readonly loginService: LoginService,
                 private readonly configService: PegasusConfigService,
@@ -54,7 +52,7 @@ export class StatusComponent implements OnInit, OnChanges, OnDestroy {
         this.competentiesAbonnement = this.competentieService.competentiesChange.subscribe(dataset => {
             this.competenties = dataset!;
         });
-        this.cheks = this.configService.getChecks();
+        this.checks = this.configService.getChecks();
         this.overig = this.configService.getOverig();
         this.ophalen();
     }
@@ -65,7 +63,7 @@ export class StatusComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ophalen(): void {
-        if (!this.cheks) // er zijn nog geen Checks
+        if (!this.checks) // er zijn nog geen Checks
             return;
 
         // Als vlieger niet bekend is, kunnen we niets ophalen
@@ -77,12 +75,12 @@ export class StatusComponent implements OnInit, OnChanges, OnDestroy {
         let comptentieIDs = "";
 
         // checks
-        comptentieIDs += this.cheks.Check.map((p: any) => {
+        comptentieIDs += this.checks.Check.map((p) => {
             return p.CompetentieID.join(',');
         }).join(',');
 
         comptentieIDs += ',';
-        comptentieIDs += this.overig.map((p: any) => {
+        comptentieIDs += this.overig.map((p) => {
             return p.CompetentieID;
         }).join(',');
 

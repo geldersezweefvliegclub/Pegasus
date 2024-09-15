@@ -8,6 +8,7 @@ import { LoginService } from '../../../services/apiservice/login.service';
 import { CompetentieService } from '../../../services/apiservice/competentie.service';
 import { Subscription } from 'rxjs';
 import { ProgressieEditorComponent } from '../editors/progressie-editor/progressie-editor.component';
+import { PVB } from '../../../types/IPegasusConfig';
 
 @Component({
     selector: 'app-pvb',
@@ -18,7 +19,7 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
     @Input() Vlieger: HeliosLid;
     @ViewChild(ProgressieEditorComponent) private editor: ProgressieEditorComponent;
 
-    PVBs: any[];
+    PVBs: PVB[];
     gehaaldeProgressie: HeliosBehaaldeProgressieDataset[];
     private dbEventAbonnement: Subscription;
     private competentiesAbonnement: Subscription;
@@ -28,9 +29,6 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
-
-    bevestigCompetentie: HeliosCompetentiesDataset | undefined;
-    checkboxSelected: any;
 
     constructor(private readonly loginService: LoginService,
                 private readonly configService: PegasusConfigService,
@@ -62,7 +60,7 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.hasOwnProperty("Vlieger")) {
+        if (Object.prototype.hasOwnProperty.call(changes, "Vlieger")) {
             this.ophalen()
         }
     }
@@ -77,7 +75,7 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         // maak CSV string met de competentie IDs van de PVBs
-        const comptentieIDs = this.PVBs.map((p: any) => {
+        const comptentieIDs = this.PVBs.map((p: PVB) => {
             let str = "";
             if (p.Lokaal != undefined) str += p.Lokaal;
             if (p.Overland != undefined) {
@@ -130,14 +128,8 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
         return false;
     }
 
-    // Zorg ervoor dat we niet gaan laden
-    uitstellen(): void {
-        this.suspend = true;
-        setTimeout(() => this.suspend = false, 1000);
-    }
-
     // Progressie kan gezet worden via snelkeuze in deze component, lange weg kan via progressie boom
-    zetProgressie(e:any, id:number) {
+    zetProgressie(id:number) {
         this.editor.openNieuwPopup(id);
     }
 
@@ -148,7 +140,7 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
 
         if (this.competenties.length == 0)
             return false;
-        return (this.competenties.findIndex(c => c.ID == id) < 0) ? false : true;
+        return (this.competenties.findIndex(c => c.ID == id) >= 0);
     }
 }
 

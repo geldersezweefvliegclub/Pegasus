@@ -13,8 +13,6 @@ export class TrackRenderComponent implements AgRendererComponent {
   private params: any;
   trackIcon: IconDefinition = faAddressCard;
 
-  constructor() {}
-
   agInit(params: ICellRendererParams): void {
     this.params = params;
   }

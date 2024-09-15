@@ -185,7 +185,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     // mogen we vlieger status aanpassen
     statusWijzigbaar(): boolean {
         const ui = this.loginService.userInfo?.Userinfo;
-        return (ui?.isBeheerder! || ui?.isCIMT!);
+        return (ui?.isBeheerder || ui?.isCIMT) ?? false;
     }
 
     // Toevoegen van een start
@@ -223,11 +223,11 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
             this.progressieService.getProgressieKaart(this.lidData.ID).then((dataset) => {
 
                 // velden die voor de gebruiker nutteloos zijn, halen we weg
-                for (let i = 0; i < dataset.length; i++) {
-                    dataset[i].ID = undefined;
-                    dataset[i].LEERFASE_ID = undefined;
-                    dataset[i].BLOK_ID = undefined;
-                    dataset[i].PROGRESSIE_ID = undefined;
+                for (const item of dataset) {
+                    item.ID = undefined;
+                    item.LEERFASE_ID = undefined;
+                    item.BLOK_ID = undefined;
+                    item.PROGRESSIE_ID = undefined;
                 }
                 const ws = xlsx.utils.json_to_sheet(dataset);
                 const wb: xlsx.WorkBook = xlsx.utils.book_new();
@@ -298,35 +298,33 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
                     ]
                 })
             )
-            for (let i = 0; i < dataset.length; i++) {
-                const trk = dataset[i];
-                docInhoud.push(
-                    new Paragraph({
-                        children: [
-                            new TextRun({
-                                    text: "Op " + this.datumString(trk.INGEVOERD!) + " om " + this.tijdString(trk.INGEVOERD!) + " schreef " + trk.INSTRUCTEUR_NAAM + ":",
-                                    font: "Calibri",
-                                    underline: {
-                                        type: UnderlineType.SINGLE,
-                                        color: "990011",
-                                    },
-                                }
-                            ),
-                            new TextRun({
-                                text: "",
-                                break: 1,
-                            }),
-                            new TextRun({
-                                text: trk.TEKST,
-                                font: "Calibri",
-                            }),
-                            new TextRun({
-                                text: "",
-                                break: 1,
-                            })
-                        ]
-                    })
-                )
+            for (const trk of dataset) {
+                const paragraph = new Paragraph({
+                    children: [
+                        new TextRun({
+                              text: "Op " + this.datumString(trk.INGEVOERD!) + " om " + this.tijdString(trk.INGEVOERD!) + " schreef " + trk.INSTRUCTEUR_NAAM + ":",
+                              font: "Calibri",
+                              underline: {
+                                  type: UnderlineType.SINGLE,
+                                  color: "990011",
+                              },
+                          }
+                        ),
+                        new TextRun({
+                            text: "",
+                            break: 1,
+                        }),
+                        new TextRun({
+                            text: trk.TEKST,
+                            font: "Calibri",
+                        }),
+                        new TextRun({
+                            text: "",
+                            break: 1,
+                        })
+                    ]
+                });
+                docInhoud.push(paragraph);
             }
 
             const doc = new Document({
@@ -425,7 +423,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
             if (this.lidData.ID == this.loginService.userInfo?.LidData?.ID) {
                 this.saldoTonen = this.configService.saldoActief() && (ui!.isDDWV! || ui!.isClubVlieger!);
             } else {
-                this.saldoTonen = this.configService.saldoActief() && (ui?.isBeheerder! || ui?.isBeheerderDDWV!);
+                this.saldoTonen = this.configService.saldoActief() && ((ui?.isBeheerder || ui?.isBeheerderDDWV) ?? false);
             }
         }
     }
