@@ -12,7 +12,7 @@ export class TelefoonRenderComponent implements AgRendererComponent {
   mobiel: string;
   noodnummer: string;
 
-  constructor() { }
+
 
   agInit(params: ICellRendererParams): void {
     this.telefoon = params.data.TELEFOON;

@@ -121,13 +121,9 @@ export class StartlijstService {
         getParams['LID_ID'] = id.toString();
         getParams['JAAR'] = jaar.toString();
 
-        try {
-            const response: Response = await this.apiService.get('Startlijst/GetLogboekTotalen', getParams);
+        const response: Response = await this.apiService.get('Startlijst/GetLogboekTotalen', getParams);
 
-            this.logboekTotalen = await response.json();
-        } catch (e) {
-            throw(e);
-        }
+        this.logboekTotalen = await response.json();
         return this.logboekTotalen as HeliosLogboekTotalen;
     }
 
@@ -172,16 +168,12 @@ export class StartlijstService {
             return {};
         }
 
-        try {
-            const response: Response = await this.apiService.get('Startlijst/GetVliegtuigLogboekTotalen',
-                getParams
-            );
 
-            this.vliegtuigLogboekTotalen = await response.json();
-        } catch (e) {
-            //todo nutteloze catch?
-            throw(e);
-        }
+        const response: Response = await this.apiService.get('Startlijst/GetVliegtuigLogboekTotalen',
+            getParams
+        );
+
+        this.vliegtuigLogboekTotalen = await response.json();
         return this.vliegtuigLogboekTotalen;
     }
 
@@ -277,8 +269,7 @@ export class StartlijstService {
     }
 
     async updateStart(start: HeliosStart) {
-        const replacer = (key:string, value:any) =>
-            typeof value === 'undefined' ? null : value;
+        const replacer = (_:string, value:unknown) => typeof value === 'undefined' ? null : value;
 
         const response: Response = await this.apiService.put('Startlijst/SaveObject', JSON.stringify(start, replacer));
 
@@ -286,20 +277,11 @@ export class StartlijstService {
     }
 
     async deleteStart(id: number) {
-        try {
-            await this.apiService.delete('Startlijst/DeleteObject', {'ID': id.toString()});
-        } catch (e) {
-            // todo nutteloze catch?
-            throw(e);
-        }
+        await this.apiService.delete('Startlijst/DeleteObject', {'ID': id.toString()});
     }
 
     async restoreStart(id: number) {
-        try {
-            await this.apiService.patch('Startlijst/RestoreObject', {'ID': id.toString()});
-        } catch (e) {
-            throw(e);
-        }
+        await this.apiService.patch('Startlijst/RestoreObject', {'ID': id.toString()});
     }
 
     async startTijd(id: number, tijd: string) {

@@ -11,7 +11,7 @@ export class AdresRenderComponent implements AgRendererComponent {
   regel1: string;
   regel2: string;
 
-  constructor() { }
+
 
   agInit(params: ICellRendererParams): void {
     this.regel1 = (params.data.ADRES) ? params.data.ADRES : '';

@@ -11,7 +11,7 @@ export class TitleRenderComponent implements AgRendererComponent {
   omschrijving: string
   titel: string
 
-  constructor() { }
+
 
   agInit(params: ICellRendererParams): void {
     this.omschrijving = params.data.OMSCHRIJVING;

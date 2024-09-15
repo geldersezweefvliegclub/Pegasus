@@ -12,7 +12,7 @@ export class DagnummerRenderComponent implements AgRendererComponent {
   dagnummer: number;
   hasFlarm = false;
 
-  constructor() { }
+
 
   agInit(params: ICellRendererParams): void {
     this.params = params;

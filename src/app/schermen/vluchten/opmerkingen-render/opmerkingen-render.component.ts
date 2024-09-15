@@ -10,7 +10,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 export class OpmerkingenRenderComponent implements AgRendererComponent  {
 
   opm: string;
-  constructor() { }
+
 
   agInit(params: ICellRendererParams): void {
     this.opm = params.data.EXTERNAL_ID ? params.data.EXTERNAL_ID + ' ' : '';

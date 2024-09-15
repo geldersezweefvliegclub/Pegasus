@@ -10,7 +10,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 export class HandboekRenderComponent implements AgRendererComponent {
   url: string | undefined;
   txt: string | undefined;
-  constructor() { }
+
 
   agInit(params: ICellRendererParams): void {
     this.url = (params.data.URL) ? params.data.URL : '';

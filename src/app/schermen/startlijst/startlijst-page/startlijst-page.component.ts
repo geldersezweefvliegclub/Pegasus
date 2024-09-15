@@ -55,13 +55,10 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
 
     readonly iconEdit: IconDefinition = faPenToSquare;
     readonly startlijstIcon: IconDefinition = faPen;
-    readonly iconSort: IconDefinition = faSortAmountDownAlt;
 
     starts: HeliosStartDataset[] = [];
     filteredStarts: HeliosStartDatasetExtended[] = [];
     geselecteerdeStart: HeliosStartDataset | undefined;
-
-    SchermGrootte = require("../../../services/shared/shared.service").SchermGrootte;
 
     isStarttoren = false;
     isLoading = false;
@@ -129,7 +126,7 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
             } else {
                 const diff = Interval.fromDateTimes(datum, nu);
                 if (diff.length("days") > this.configService.maxZelfEditDagen()) {
-                    this.inTijdspan = ui?.isBeheerder!;     // alleen beheerder mag na xx dagen wijzigen. xx is geconfigureerd in pegasus.config
+                    this.inTijdspan = ui?.isBeheerder ?? false;     // alleen beheerder mag na xx dagen wijzigen. xx is geconfigureerd in pegasus.config
                 } else {
                     this.inTijdspan = true;                 // zitten nog binnen de termijn
                 }
@@ -176,13 +173,7 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
             this.veldTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));            // vliegvelden
         });
 
-        // Roep onWindowResize aan zodra we het event ontvangen hebben
-        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
-            this.onWindowResize()
-        });
-
         this.opvragen();
-        this.onWindowResize();
     }
 
     ngOnDestroy(): void {
@@ -196,11 +187,6 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
         if (this.resizeSubscription) this.resizeSubscription.unsubscribe();
 
         clearTimeout(this.refreshTimer);
-    }
-
-    // Op large schermen tonen we de avatar
-    onWindowResize() {
-
     }
 
     opvragen() {
@@ -348,26 +334,26 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
 
     // Voeg aan de extra velden toe
     async startExtendedVelden() {
-        for (let i = 0; i < this.filteredStarts.length; i++) {
-            const idxV = this.aanwezigVliegtuigen.findIndex(v => v.VLIEGTUIG_ID == this.filteredStarts[i].VLIEGTUIG_ID);
+        for (const item of this.filteredStarts) {
+            const idxV = this.aanwezigVliegtuigen.findIndex(v => v.VLIEGTUIG_ID == item.VLIEGTUIG_ID);
 
             if (idxV < 0) {
-                this.filteredStarts[i].ZITPLAATSEN = 0
+                item.ZITPLAATSEN = 0
             } else {
-                this.filteredStarts[i].ZITPLAATSEN = this.aanwezigVliegtuigen[idxV].ZITPLAATSEN;
+                item.ZITPLAATSEN = this.aanwezigVliegtuigen[idxV].ZITPLAATSEN;
             }
 
-            const checkID = this.filteredStarts[i].INSTRUCTIEVLUCHT ? this.filteredStarts[i].INZITTENDE_ID : this.filteredStarts[i].VLIEGER_ID;
+            const checkID = item.INSTRUCTIEVLUCHT ? item.INZITTENDE_ID : item.VLIEGER_ID;
 
             if (!checkID) {  // er is nog geen vlieger / instructeur bekend
-                this.filteredStarts[i].MEDICAL = true;
-                this.filteredStarts[i].BEVOEGD = true;
+                item.MEDICAL = true;
+                item.BEVOEGD = true;
             } else {
                 const gekozenVlieger = this.aanwezigLeden.find(lid => lid.LID_ID == checkID) as HeliosAanwezigLedenDataset;
 
                 if (!gekozenVlieger) { // er is nog geen vlieger geselecteerd
-                    this.filteredStarts[i].MEDICAL = true;
-                    this.filteredStarts[i].BEVOEGD = true;
+                    item.MEDICAL = true;
+                    item.BEVOEGD = true;
                 } else {
                     switch (gekozenVlieger.LIDTYPE_ID) {
                         case 609:   // nieuw lid
@@ -375,25 +361,25 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
                         case 610:   // oprotkabel
                         case 612:   // penningmeester
                         {
-                            this.filteredStarts[i].MEDICAL = true;
+                            item.MEDICAL = true;
                             break;
                         }
                         default: {
                             if (!gekozenVlieger.MEDICAL) {
-                                this.filteredStarts[i].MEDICAL = false;   // medical niet ingevoerd
+                                item.MEDICAL = false;   // medical niet ingevoerd
                             } else {
                                 // is medical verlopen op de vliegdag?
 
                                 const d = DateTime.fromSQL(gekozenVlieger.MEDICAL);
-                                this.filteredStarts[i].MEDICAL = (d >= this.datum);
+                                item.MEDICAL = (d >= this.datum);
                             }
                             break;
                         }
                     }
                 }
 
-                if (!this.filteredStarts[i].CLUBKIST) {
-                    this.filteredStarts[i].BEVOEGD = true;    // op een prive vliegtuig doen we geen controle
+                if (!item.CLUBKIST) {
+                    item.BEVOEGD = true;    // op een prive vliegtuig doen we geen controle
                 } else {
                     // kijk of er al iets de cache staat voor deze vlieger
                     const idxP = this.progressieCache.findIndex(p => p.LID_ID == checkID);
@@ -408,25 +394,25 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
                                 this.progressieCache = this.progressieCache.concat(p);                   // voeg opgehaalde competenties toe aan cache
                             }
                         } catch (e) {
-                            this.filteredStarts[i].BEVOEGD = true;    // ophalen is mislukt, geen controle mogelijk
+                            item.BEVOEGD = true;    // ophalen is mislukt, geen controle mogelijk
                             this.error = e;
                         }
                     }
 
                     // Gaan nu kijken of de bevoegdheid aanwezig is
-                    const vliegtuig = this.clubVliegtuigen.find((v) => v.ID == this.filteredStarts[i].VLIEGTUIG_ID)
+                    const vliegtuig = this.clubVliegtuigen.find((v) => v.ID == item.VLIEGTUIG_ID)
 
                     if (!vliegtuig) { // dit zo niet mogen geberen, maar als het gebeurd dan controleren we niet verder
-                        this.filteredStarts[i].BEVOEGD = true;
+                        item.BEVOEGD = true;
                     } else {
                         if (!vliegtuig.BEVOEGDHEID_OVERLAND_ID && !vliegtuig.BEVOEGDHEID_LOKAAL_ID) { // voor dit vliegtuig is geen competentie nodig
-                            this.filteredStarts[i].BEVOEGD = true;
+                            item.BEVOEGD = true;
                         } else {
                             const progressie = this.progressieCache.find((p) =>
                                 p.LID_ID == checkID &&
                                 (p.COMPETENTIE_ID == vliegtuig.BEVOEGDHEID_LOKAAL_ID || p.COMPETENTIE_ID == vliegtuig.BEVOEGDHEID_OVERLAND_ID));
 
-                            this.filteredStarts[i].BEVOEGD = !!(progressie);
+                            item.BEVOEGD = !!(progressie);
                         }
                     }
                 }

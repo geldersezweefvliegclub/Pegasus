@@ -15,7 +15,7 @@ export class EmailRenderComponent implements AgRendererComponent {
 
   faIcon: IconDefinition = faEnvelope
 
-  constructor() { }
+
 
   agInit(params: ICellRendererParams): void {
     this.email = params.data.EMAIL;

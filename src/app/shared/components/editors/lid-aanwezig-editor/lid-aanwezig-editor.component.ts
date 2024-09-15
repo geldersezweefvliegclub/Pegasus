@@ -57,8 +57,8 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
         this.typesService.getClubVliegtuigTypes().then((records) => {
             this.vliegtuigTypes = records;
 
-            for (let i = 0; i < this.vliegtuigTypes.length; i++) {
-                this.vliegtuigTypes[i].Geselecteerd = false;
+            for (const item of this.vliegtuigTypes) {
+                item.Geselecteerd = false;
             }
             this.vliegtuigTypes.sort(function compareFn(a, b) {
                 const vA = (a.SORTEER_VOLGORDE) ? a.SORTEER_VOLGORDE : 100;
@@ -134,10 +134,10 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
         this.vliegtuigTypes[idx].Geselecteerd = (event.target as HTMLInputElement).checked;
 
         let voorkeur = '';
-        for (let i = 0; i < this.vliegtuigTypes.length; i++) {
-            if (this.vliegtuigTypes[i].Geselecteerd) {
+        for (const item of this.vliegtuigTypes) {
+            if (item.Geselecteerd) {
                 voorkeur += (voorkeur == '') ? '' : ',';
-                voorkeur += this.vliegtuigTypes[i].ID!.toString();
+                voorkeur += item.ID!.toString();
             }
         }
         this.aanwezig.VOORKEUR_VLIEGTUIG_TYPE = (voorkeur !== "") ? voorkeur : undefined;

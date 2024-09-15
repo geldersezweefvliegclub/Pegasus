@@ -9,7 +9,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 })
 export class ZitplaatsRenderComponent implements AgRendererComponent {
   stoelen: number;
-  constructor() { }
+
 
   agInit(params: ICellRendererParams): void {
     this.stoelen = params.value;
