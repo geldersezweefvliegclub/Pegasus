@@ -1,5 +1,5 @@
 import {HostListener, Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {BehaviorSubject, debounceTime, fromEvent, Observable, Subject} from 'rxjs';
 import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {ErrorMessage, HeliosEvent, KalenderMaand} from '../../types/Utils';
 import {EventManager} from "@angular/platform-browser";
@@ -81,10 +81,9 @@ export class SharedService {
     // laat andere component weten dat er iets in de database is aangepast
     public readonly heliosEventFailed: Observable<ErrorMessage> = this.heliosFailedSubject.asObservable();
 
-    @HostListener('window:resize', ['$event'])
-    onResize(event: Window): void {
-        console.log('resize event', event);
-        this.resizeSubject.next(event);
+
+    constructor() {
+        fromEvent(window, 'resize').pipe().subscribe((x: Event) => this.resizeSubject.next(x.target as Window));
     }
 
 
@@ -161,3 +160,4 @@ export class SharedService {
         return SchermGrootte.xs;
     }
 }
+
