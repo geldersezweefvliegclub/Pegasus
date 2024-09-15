@@ -33,7 +33,6 @@ import {DagnummerRenderComponent} from "../dagnummer-render/dagnummer-render.com
 import {TypesService} from "../../../services/apiservice/types.service";
 import {StorageService} from "../../../services/storage/storage.service";
 import {FlarmData, FlarmInputService, FlarmStartData} from "../../../services/flarm-input.service";
-import EventEmitter2 from "eventemitter2";
 import {DatatableComponent} from "../../../shared/components/datatable/datatable.component";
 import {OpmerkingenRenderComponent} from "../opmerkingen-render/opmerkingen-render.component";
 
