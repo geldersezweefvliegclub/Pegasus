@@ -53,9 +53,8 @@
                             <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>
                             <input id="zoekInput"
                                    type="search"
-                                   class="form-control"
+                                   class="form-control w-100"
                                    [(ngModel)]="zoekString"
-                                   [ngClass.lt-md]="'w-100'"
                                    name="zoekString"
                                    (keyup)="opvragen()"
                                    (search)="opvragen()"

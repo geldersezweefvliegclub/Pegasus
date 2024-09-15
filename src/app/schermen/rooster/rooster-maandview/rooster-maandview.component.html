@@ -521,7 +521,7 @@
             <div *ngIf="leden && leden.length === 0" class="d-flex justify-content-center">
                 Geen resultaten gevonden
             </div>
-            <div class="card my-1" [ngClass.lt-lg]="'mb-3'"
+            <div class="card my-1 mb-lg-3"
                  *ngFor="let lid of leden"
                  [cdkDragData]="lid" cdkDrag>
                 <div *cdkDragPreview>
