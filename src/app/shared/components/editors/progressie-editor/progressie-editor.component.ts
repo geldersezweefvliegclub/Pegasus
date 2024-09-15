@@ -81,7 +81,7 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         // ophalen van lid gegevens
-        if (changes.hasOwnProperty("vliegerID")) {
+        if (Object.prototype.hasOwnProperty.call(changes, "vliegerID")) {
             const ui = this.loginService.userInfo?.Userinfo;
             if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) {
                 this.ledenService.getLid(this.vliegerID).then((l) => this.lid = l)

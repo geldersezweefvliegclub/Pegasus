@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { base64ToFile, Dimensions, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
+import { base64ToFile, ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
 import { faSearchMinus, faSearchPlus, faTimesCircle, faUndoAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -35,9 +35,6 @@ export class ImageCropComponent {
 
   imageLoaded() {
     this.showCropper = true;
-  }
-
-  cropperReady(sourceImageDimensions: Dimensions) {
   }
 
   loadImageFailed() {

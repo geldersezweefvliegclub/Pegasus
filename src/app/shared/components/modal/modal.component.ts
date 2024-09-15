@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 
@@ -15,13 +15,12 @@ export class ModalComponent {
     @ViewChild('content') content: ElementRef;
 
     cross: IconDefinition = faTimes;
-    private modalRef: any;
+    private modalRef: NgbModalRef;
 
     constructor(private modalService: NgbModal) {
     }
 
     open() {
-        // this.content.nativeEle   // TODO
         this.modalRef = this.modalService.open(this.content, {
             ariaLabelledBy: 'modal-basic-title',
             backdrop: "static",

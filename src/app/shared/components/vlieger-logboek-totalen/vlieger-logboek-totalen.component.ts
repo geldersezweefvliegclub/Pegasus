@@ -106,7 +106,7 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDest
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.hasOwnProperty("VliegerID")) {
+        if (Object.prototype.hasOwnProperty.call(changes, "VliegerID")) {
             this.opvragen()
         }
     }

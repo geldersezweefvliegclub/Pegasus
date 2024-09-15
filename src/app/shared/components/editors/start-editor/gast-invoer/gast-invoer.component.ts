@@ -23,7 +23,7 @@ export class GastInvoerComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes.hasOwnProperty("DATUM")) {
+        if (Object.prototype.hasOwnProperty.call(changes, "DATUM")) {
             this.opvragen();
         }
     }

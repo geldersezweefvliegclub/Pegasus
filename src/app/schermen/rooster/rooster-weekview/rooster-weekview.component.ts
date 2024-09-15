@@ -98,7 +98,7 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.hasOwnProperty("datum")) {
+        if (Object.prototype.hasOwnProperty.call(changes, "datum")) {
             this.maandag = this.datum.startOf('week');     // de eerste dag van de gekozen week
         }
     }

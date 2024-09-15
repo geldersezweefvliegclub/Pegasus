@@ -16,6 +16,7 @@ import { SchermGrootte, SharedService } from '../../../services/shared/shared.se
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
 import { PopupKalenderComponent } from '../popup-kalender/popup-kalender.component';
 import { NgbDateFRParserFormatter } from '../../../shared/ngb-date-fr-parser-formatter';
+import { MenuItem } from '../../../types/IPegasusConfig';
 
 @Component({
     selector: 'app-navigatie',
@@ -33,7 +34,7 @@ export class NavigatieComponent implements OnInit, OnDestroy {
     readonly logUitIcon: IconDefinition = faSignOutAlt;
     readonly beheerIcon: IconDefinition = faWrench;
 
-    urlMenuItems:any[];
+    urlMenuItems: MenuItem[];
     showBeheer = false;
 
     vandaag = this.calendar.getToday();
@@ -48,8 +49,6 @@ export class NavigatieComponent implements OnInit, OnDestroy {
     private vliegtuigenAbonnement: Subscription;
     private userInfoAbonnement: Subscription;
     private resizeSubscription: Subscription;       // Abonneer op aanpassing van window grootte (of draaien mobiel)
-
-    readonly activeRouteFilter = {excluded: false};
 
     constructor(readonly loginService: LoginService,
                 private readonly router: Router,
@@ -123,6 +122,7 @@ export class NavigatieComponent implements OnInit, OnDestroy {
         if (this.datumAbonnement) this.datumAbonnement.unsubscribe();
         if (this.maandAbonnement) this.maandAbonnement.unsubscribe();
         if (this.resizeSubscription) this.resizeSubscription.unsubscribe();
+        if (this.vliegtuigenAbonnement) this.vliegtuigenAbonnement.unsubscribe();
     }
 
     // als scherm dimensie aangepast worden, kunnen we meer/minder menu items tonen

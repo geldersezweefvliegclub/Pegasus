@@ -91,7 +91,7 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes.hasOwnProperty("VliegerID")) {
+        if (Object.prototype.hasOwnProperty.call(changes, "VliegerID")) {
             this.ophalen();
         }
     }

@@ -171,20 +171,21 @@ export class StartEditorComponent implements OnInit {
             // Als er starts is, even in juiste formaat zetten. Aanwezig moet hetzelfde formaat hebben als vliegtuigen
             this.aanwezigVliegtuigen = [];
 
-            for (let i = 0; i < dataset!.length; i++) {
+            for (const item of (dataset ?? [])) {
                 this.aanwezigVliegtuigen.push(
-                    {
-                        ID: dataset![i].VLIEGTUIG_ID,
-                        REGISTRATIE: dataset![i].REGISTRATIE,
-                        REG_CALL: dataset![i].REG_CALL,
-                        CALLSIGN: dataset![i].CALLSIGN,
-                        TYPE_ID: dataset![i].TYPE_ID,
-                        SLEEPKIST: dataset![i].SLEEPKIST,
-                        TMG: dataset![i].TMG,
-                        ZELFSTART: dataset![i].ZELFSTART,
-                        CLUBKIST: dataset![i].CLUBKIST,
-                        ZITPLAATSEN: dataset![i].ZITPLAATSEN
-                    });
+                  {
+                      ID: item.ID,
+                      REGISTRATIE: item.REGISTRATIE,
+                      REG_CALL: item.REG_CALL,
+                      CALLSIGN: item.CALLSIGN,
+                      TYPE_ID: item.TYPE_ID,
+                      SLEEPKIST: item.SLEEPKIST,
+                      TMG: item.TMG,
+                      ZELFSTART: item.ZELFSTART,
+                      CLUBKIST: item.CLUBKIST,
+                      ZITPLAATSEN: item.ZITPLAATSEN
+                  });
+
             }
         });
     }

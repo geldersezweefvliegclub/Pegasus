@@ -103,7 +103,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
             this.api.setGridOption("columnDefs", this.columnDefs);
             this.api.setGridOption("rowData", this.rowData);
 
-            if (changes.hasOwnProperty("loading")) {
+            if (Object.prototype.hasOwnProperty.call(changes, "loading")) {
                 this.api.setGridOption("loading", changes["loading"].currentValue);
             }
         }
