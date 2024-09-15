@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {ErrorMessage, HeliosActie, KeyValueArray} from '../../types/Utils';
-import {SharedService} from '../shared/shared.service';
-import {PegasusConfigService} from "../shared/pegasus-config.service";
+import { Injectable } from '@angular/core';
+import { ErrorMessage, HeliosActie, KeyValueArray } from '../../types/Utils';
+import { SharedService } from '../shared/shared.service';
+import { PegasusConfigService } from '../shared/pegasus-config.service';
 
 @Injectable({
     providedIn: 'root'

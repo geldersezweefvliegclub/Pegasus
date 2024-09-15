@@ -1,22 +1,22 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {HeliosFacturenDataset, HeliosJournaalDataset} from "../../../types/Helios";
-import {Subscription} from "rxjs";
-import {ColDef} from "ag-grid-community";
-import {nummerSort} from "../../../utils/Utils";
-import {DeleteActionComponent} from "../../../shared/components/datatable/delete-action/delete-action.component";
-import {RestoreActionComponent} from "../../../shared/components/datatable/restore-action/restore-action.component";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faLayerGroup, faRecycle} from "@fortawesome/free-solid-svg-icons";
-import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
-import {LoginService} from "../../../services/apiservice/login.service";
-import * as xlsx from "xlsx";
-import {FacturenService} from "../../../services/apiservice/facturen.service";
-import {SharedService} from "../../../services/shared/shared.service";
-import {TypeRenderComponent} from "./type-render/type-render.component";
-import {DatatableComponent} from "../../../shared/components/datatable/datatable.component";
-import {LeeftijdRenderComponent} from "./leeftijd-render/leeftijd-render.component";
-import {GefactureerdRenderComponent} from "./gefactureerd-render/gefactureerd-render.component";
-import {UploadenComponent} from "./uploaden/uploaden.component";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { HeliosFacturenDataset } from '../../../types/Helios';
+import { Subscription } from 'rxjs';
+import { ColDef } from 'ag-grid-community';
+import { nummerSort } from '../../../utils/Utils';
+import { DeleteActionComponent } from '../../../shared/components/datatable/delete-action/delete-action.component';
+import { RestoreActionComponent } from '../../../shared/components/datatable/restore-action/restore-action.component';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faLayerGroup } from '@fortawesome/free-solid-svg-icons';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { LoginService } from '../../../services/apiservice/login.service';
+import * as xlsx from 'xlsx';
+import { FacturenService } from '../../../services/apiservice/facturen.service';
+import { SharedService } from '../../../services/shared/shared.service';
+import { TypeRenderComponent } from './type-render/type-render.component';
+import { DatatableComponent } from '../../../shared/components/datatable/datatable.component';
+import { LeeftijdRenderComponent } from './leeftijd-render/leeftijd-render.component';
+import { GefactureerdRenderComponent } from './gefactureerd-render/gefactureerd-render.component';
+import { UploadenComponent } from './uploaden/uploaden.component';
 
 @Component({
   selector: 'app-facturen-scherm',

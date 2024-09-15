@@ -1,12 +1,12 @@
-import {EventEmitter, Injectable} from '@angular/core';
-import {APIService} from './api.service';
-import {Base64} from 'js-base64';
+import { EventEmitter, Injectable } from '@angular/core';
+import { APIService } from './api.service';
+import { Base64 } from 'js-base64';
 
-import {HeliosUserinfo} from '../../types/Helios';
-import {StorageService} from '../storage/storage.service';
-import {SharedService} from "../shared/shared.service";
-import {BehaviorSubject, Subscription} from "rxjs";
-import {DdwvService} from "./ddwv.service";
+import { HeliosUserinfo } from '../../types/Helios';
+import { StorageService } from '../storage/storage.service';
+import { SharedService } from '../shared/shared.service';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { DdwvService } from './ddwv.service';
 
 interface BearerToken {
     TOKEN: string;

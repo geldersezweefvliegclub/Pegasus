@@ -5,13 +5,13 @@ import { SchermGrootte, SharedService } from '../../../services/shared/shared.se
 import { TrackEditorComponent } from '../editors/track-editor/track-editor.component';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import {
-  faAddressCard,
-  faBookmark,
-  faMinusCircle,
-  faPlane,
-  faRecycle,
-  faTachometerAlt,
-  faUndo,
+    faAddressCard,
+    faBookmark,
+    faMinusCircle,
+    faPlane,
+    faRecycle,
+    faTachometerAlt,
+    faUndo,
 } from '@fortawesome/free-solid-svg-icons';
 import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
 import { LedenService } from '../../../services/apiservice/leden.service';

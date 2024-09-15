@@ -1,22 +1,23 @@
-import {Injectable} from '@angular/core';
-import {APIService} from './api.service';
+import { Injectable } from '@angular/core';
+import { APIService } from './api.service';
 
 import {
-    HeliosLogboek,
-    HeliosLogboekDataset,
-    HeliosLogboekTotalen,
-    HeliosRecency,
-    HeliosStart,
-    HeliosStartDataset,
-    HeliosStarts,
-    HeliosVliegdagen,
-    HeliosVliegtuigLogboek, HeliosVliegtuigLogboekDataset,
-    HeliosVliegtuigLogboekTotalen
+  HeliosLogboek,
+  HeliosLogboekDataset,
+  HeliosLogboekTotalen,
+  HeliosRecency,
+  HeliosStart,
+  HeliosStartDataset,
+  HeliosStarts,
+  HeliosVliegdagen,
+  HeliosVliegtuigLogboek,
+  HeliosVliegtuigLogboekDataset,
+  HeliosVliegtuigLogboekTotalen,
 } from '../../types/Helios';
-import {StorageService} from '../storage/storage.service';
-import {KeyValueArray} from '../../types/Utils';
-import {DateTime} from 'luxon';
-import {LoginService} from "./login.service";
+import { StorageService } from '../storage/storage.service';
+import { KeyValueArray } from '../../types/Utils';
+import { DateTime } from 'luxon';
+import { LoginService } from './login.service';
 
 type parameters = Record<string, string>;
 

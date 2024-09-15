@@ -1,39 +1,40 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faChevronDown, faChevronUp, faInfoCircle, faStreetView } from '@fortawesome/free-solid-svg-icons';
+import { Observable, of, Subscription } from 'rxjs';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { DagVanDeWeek, DateDiff } from '../../../utils/Utils';
+import { DateTime } from 'luxon';
 import {
-    faChevronDown,
-    faChevronUp,
-    faInfoCircle,
-    faStreetView
-} from "@fortawesome/free-solid-svg-icons";
-import {Observable, of, Subscription} from "rxjs";
-import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
-import {DateDiff} from "../../../utils/Utils";
-import {DateTime} from "luxon";
-import {
-    HeliosAanwezigLedenDataset, HeliosDagInfosDataset, HeliosDienstenDataset,
+    HeliosAanwezigLedenDataset,
+    HeliosDagInfosDataset,
+    HeliosDienstenDataset,
     HeliosGast,
-    HeliosGastenDataset, HeliosLedenDataset, HeliosLid,
-    HeliosRoosterDataset, HeliosType
-} from "../../../types/Helios";
-import {RoosterService} from "../../../services/apiservice/rooster.service";
-import {ModalComponent} from "../../../shared/components/modal/modal.component";
-import {LidAanwezigEditorComponent} from "../../../shared/components/editors/lid-aanwezig-editor/lid-aanwezig-editor.component";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {AanwezigLedenService} from "../../../services/apiservice/aanwezig-leden.service";
-import {GastenService} from "../../../services/apiservice/gasten.service";
-import {GastEditorComponent} from "../../../shared/components/editors/gast-editor/gast-editor.component";
-import {DienstenService} from "../../../services/apiservice/diensten.service";
-import {StorageService} from "../../../services/storage/storage.service";
-import {DagVanDeWeek} from "../../../utils/Utils";
-import {TypesService} from "../../../services/apiservice/types.service";
-import {DdwvService} from "../../../services/apiservice/ddwv.service";
-import {LedenService} from "../../../services/apiservice/leden.service";
-import {TransactiesComponent} from "../../../shared/components/transacties/transacties.component";
-import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
-import {DaginfoService} from "../../../services/apiservice/daginfo.service";
-import {KeyValueArray} from "../../../types/Utils";
-import {SamenvattingComponent} from "../samenvatting/samenvatting.component";
+    HeliosGastenDataset,
+    HeliosLedenDataset,
+    HeliosLid,
+    HeliosRoosterDataset,
+    HeliosType,
+} from '../../../types/Helios';
+import { RoosterService } from '../../../services/apiservice/rooster.service';
+import { ModalComponent } from '../../../shared/components/modal/modal.component';
+import {
+    LidAanwezigEditorComponent,
+} from '../../../shared/components/editors/lid-aanwezig-editor/lid-aanwezig-editor.component';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { AanwezigLedenService } from '../../../services/apiservice/aanwezig-leden.service';
+import { GastenService } from '../../../services/apiservice/gasten.service';
+import { GastEditorComponent } from '../../../shared/components/editors/gast-editor/gast-editor.component';
+import { DienstenService } from '../../../services/apiservice/diensten.service';
+import { StorageService } from '../../../services/storage/storage.service';
+import { TypesService } from '../../../services/apiservice/types.service';
+import { DdwvService } from '../../../services/apiservice/ddwv.service';
+import { LedenService } from '../../../services/apiservice/leden.service';
+import { TransactiesComponent } from '../../../shared/components/transacties/transacties.component';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { DaginfoService } from '../../../services/apiservice/daginfo.service';
+import { KeyValueArray } from '../../../types/Utils';
+import { SamenvattingComponent } from '../samenvatting/samenvatting.component';
 
 export type HeliosRoosterDatasetExtended = HeliosRoosterDataset & {
     EENHEDEN?: number

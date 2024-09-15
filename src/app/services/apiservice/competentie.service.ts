@@ -1,16 +1,16 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
-    HeliosCompetentie,
-    HeliosCompetenties,
-    HeliosCompetentiesDataset,
-    HeliosProgressieBoom,
-    HeliosType,
-} from "../../types/Helios";
-import {KeyValueArray} from "../../types/Utils";
-import {APIService} from "./api.service";
-import {StorageService} from "../storage/storage.service";
-import {BehaviorSubject} from "rxjs";
-import {LoginService} from "./login.service";
+  HeliosCompetentie,
+  HeliosCompetenties,
+  HeliosCompetentiesDataset,
+  HeliosProgressieBoom,
+  HeliosType,
+} from '../../types/Helios';
+import { KeyValueArray } from '../../types/Utils';
+import { APIService } from './api.service';
+import { StorageService } from '../storage/storage.service';
+import { BehaviorSubject } from 'rxjs';
+import { LoginService } from './login.service';
 
 @Injectable({
     providedIn: 'root'

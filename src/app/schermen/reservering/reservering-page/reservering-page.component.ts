@@ -1,34 +1,32 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faAvianex} from "@fortawesome/free-brands-svg-icons";
-import {faCalendarCheck, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {DateTime} from "luxon";
-import {Subscription} from "rxjs";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faAvianex } from '@fortawesome/free-brands-svg-icons';
+import { faCalendarCheck, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { DateTime } from 'luxon';
+import { Subscription } from 'rxjs';
 import {
-    HeliosBehaaldeProgressieDataset,
-    HeliosLedenDataset,
-    HeliosReserveringenDataset,
-    HeliosRoosterDataset,
-    HeliosStartDataset,
-    HeliosVliegtuigenDataset
-} from "../../../types/Helios";
-import {LedenService} from "../../../services/apiservice/leden.service";
-import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
-import {VliegtuigenService} from "../../../services/apiservice/vliegtuigen.service";
-import {RoosterService} from "../../../services/apiservice/rooster.service";
-import {DagVanDeWeek, getBeginEindDatumVanMaand} from "../../../utils/Utils";
+  HeliosBehaaldeProgressieDataset,
+  HeliosLedenDataset,
+  HeliosReserveringenDataset,
+  HeliosRoosterDataset,
+  HeliosVliegtuigenDataset,
+} from '../../../types/Helios';
+import { LedenService } from '../../../services/apiservice/leden.service';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { VliegtuigenService } from '../../../services/apiservice/vliegtuigen.service';
+import { RoosterService } from '../../../services/apiservice/rooster.service';
+import { DagVanDeWeek, getBeginEindDatumVanMaand } from '../../../utils/Utils';
 
-import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
-import {ReserveringService} from "../../../services/apiservice/reservering.service";
-import {KistSelectieComponent} from "../kist-selectie/kist-selectie.component";
-import {StorageService} from "../../../services/storage/storage.service";
-import {BoekingEditorComponent} from "../../../shared/components/editors/boeking-editor/boeking-editor.component";
-import {StartEditorComponent} from "../../../shared/components/editors/start-editor/start-editor.component";
-import {DaginfoService} from "../../../services/apiservice/daginfo.service";
-import * as xlsx from "xlsx";
-import {ProgressieService} from "../../../services/apiservice/progressie.service";
-import {DatatableComponent} from "../../../shared/components/datatable/datatable.component";
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { ReserveringService } from '../../../services/apiservice/reservering.service';
+import { KistSelectieComponent } from '../kist-selectie/kist-selectie.component';
+import { StorageService } from '../../../services/storage/storage.service';
+import { BoekingEditorComponent } from '../../../shared/components/editors/boeking-editor/boeking-editor.component';
+import { StartEditorComponent } from '../../../shared/components/editors/start-editor/start-editor.component';
+import { DaginfoService } from '../../../services/apiservice/daginfo.service';
+import * as xlsx from 'xlsx';
+import { ProgressieService } from '../../../services/apiservice/progressie.service';
 
 export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
     Tonen?: boolean;

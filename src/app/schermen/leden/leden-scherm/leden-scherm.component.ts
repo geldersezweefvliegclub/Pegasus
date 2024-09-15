@@ -4,7 +4,7 @@ import { HeliosLedenDataset, HeliosTrack } from '../../../types/Helios';
 import { ColDef, RowDoubleClickedEvent } from 'ag-grid-community';
 import { ErrorMessage } from '../../../types/Utils';
 import {
-  CheckboxRenderComponent,
+    CheckboxRenderComponent,
 } from '../../../shared/components/datatable/checkbox-render/checkbox-render.component';
 import { DeleteActionComponent } from '../../../shared/components/datatable/delete-action/delete-action.component';
 import { RestoreActionComponent } from '../../../shared/components/datatable/restore-action/restore-action.component';

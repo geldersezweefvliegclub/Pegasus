@@ -1,8 +1,8 @@
-import {Component} from '@angular/core';
-import {NavigationEnd, Router} from "@angular/router";
-import {SharedService} from "../../services/shared/shared.service";
-import {slideInOutLeftAnimation} from "../../utils/animations";
-import {filter} from "rxjs/operators";
+import { Component } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { SharedService } from '../../services/shared/shared.service';
+import { slideInOutLeftAnimation } from '../../utils/animations';
+import { filter } from 'rxjs/operators';
 
 
 @Component({

@@ -1,11 +1,11 @@
-import {Injectable} from '@angular/core';
-import {APIService} from './api.service';
+import { Injectable } from '@angular/core';
+import { APIService } from './api.service';
 
-import {HeliosLeden, HeliosLedenDataset, HeliosLid} from '../../types/Helios';
-import {KeyValueArray} from '../../types/Utils';
-import {BehaviorSubject, Subscription} from "rxjs";
-import {SharedService} from "../shared/shared.service";
-import {LoginService} from "./login.service";
+import { HeliosLeden, HeliosLedenDataset, HeliosLid } from '../../types/Helios';
+import { KeyValueArray } from '../../types/Utils';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { SharedService } from '../shared/shared.service';
+import { LoginService } from './login.service';
 
 @Injectable({
     providedIn: 'root'

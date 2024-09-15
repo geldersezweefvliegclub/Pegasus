@@ -1,18 +1,18 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import {
-    faBookmark,
-    faCaretSquareDown,
-    faCaretSquareUp,
-    faMinusCircle,
-    faPlusCircle,
-    faUndo
-} from "@fortawesome/free-solid-svg-icons";
-import {DocumentEditorComponent} from "../../../../shared/components/editors/document-editor/document-editor.component";
-import {faFile, IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {Subscription} from "rxjs";
-import {HeliosDocument, HeliosDocumentenDataset, HeliosType} from "../../../../types/Helios";
-import {TypesService} from "../../../../services/apiservice/types.service";
-import {DocumentenService} from "../../../../services/apiservice/documenten.service";
+  faCaretSquareDown,
+  faCaretSquareUp,
+  faMinusCircle,
+  faPlusCircle,
+  faUndo,
+} from '@fortawesome/free-solid-svg-icons';
+import {
+  DocumentEditorComponent,
+} from '../../../../shared/components/editors/document-editor/document-editor.component';
+import { faFile, IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { HeliosDocument, HeliosDocumentenDataset } from '../../../../types/Helios';
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { DocumentenService } from '../../../../services/apiservice/documenten.service';
 
 @Component({
     selector: 'app-leden-documenten',

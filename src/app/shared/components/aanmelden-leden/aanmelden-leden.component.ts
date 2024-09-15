@@ -3,10 +3,10 @@ import { ModalComponent } from '../modal/modal.component';
 import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
 import {
-  HeliosAanwezigLedenDataset,
-  HeliosLedenDataset,
-  HeliosType,
-  HeliosVliegtuigenDataset,
+    HeliosAanwezigLedenDataset,
+    HeliosLedenDataset,
+    HeliosType,
+    HeliosVliegtuigenDataset,
 } from '../../../types/Helios';
 import { SharedService } from '../../../services/shared/shared.service';
 import { LedenService } from '../../../services/apiservice/leden.service';

@@ -1,20 +1,20 @@
 import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild,
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    SimpleChanges,
+    ViewChild,
 } from '@angular/core';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import {
-  HeliosBehaaldeProgressieDataset,
-  HeliosCompetentiesDataset,
-  HeliosLid,
-  HeliosType,
+    HeliosBehaaldeProgressieDataset,
+    HeliosCompetentiesDataset,
+    HeliosLid,
+    HeliosType,
 } from '../../../../types/Helios';
 import { ModalComponent } from '../../modal/modal.component';
 import { ProgressieService } from '../../../../services/apiservice/progressie.service';

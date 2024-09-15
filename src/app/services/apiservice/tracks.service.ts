@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {APIService} from "./api.service";
-import {HeliosTrack, HeliosTracks, HeliosTracksDataset} from "../../types/Helios";
-import {KeyValueArray} from "../../types/Utils";
-import {LoginService} from "./login.service";
+import { Injectable } from '@angular/core';
+import { APIService } from './api.service';
+import { HeliosTrack, HeliosTracks, HeliosTracksDataset } from '../../types/Helios';
+import { KeyValueArray } from '../../types/Utils';
+import { LoginService } from './login.service';
 
 @Injectable({
     providedIn: 'root'

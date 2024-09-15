@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../../shared/components/modal/modal.component";
-import {HeliosVliegtuigenDatasetExtended} from "../reservering-page/reservering-page.component";
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ModalComponent } from '../../../shared/components/modal/modal.component';
+import { HeliosVliegtuigenDatasetExtended } from '../reservering-page/reservering-page.component';
 
 
 @Component({

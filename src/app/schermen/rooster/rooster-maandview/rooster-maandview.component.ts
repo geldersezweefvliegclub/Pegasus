@@ -1,32 +1,36 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
-    HeliosLedenDatasetExtended,
-    HeliosRoosterDagExtended,
-    WeergaveData
-} from "../rooster-page/rooster-page.component";
-import {CdkDrag, CdkDragDrop} from "@angular/cdk/drag-drop";
+  HeliosLedenDatasetExtended,
+  HeliosRoosterDagExtended,
+  WeergaveData,
+} from '../rooster-page/rooster-page.component';
+import { CdkDrag, CdkDragDrop } from '@angular/cdk/drag-drop';
 import {
-    HeliosDienst, HeliosDienstenDataset,
-    HeliosLedenDataset,
-    HeliosLid,
-    HeliosLidData, HeliosRoosterDag,
-    HeliosRoosterDataset,
-    HeliosType, HeliosUserinfo
-} from "../../../types/Helios";
-import {JaarTotalenComponent} from "../jaar-totalen/jaar-totalen.component";
-import {DienstenService} from "../../../services/apiservice/diensten.service";
-import {DagVanDeWeek} from "../../../utils/Utils";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {Subscription} from "rxjs";
-import {TypesService} from "../../../services/apiservice/types.service";
-import {RoosterService} from "../../../services/apiservice/rooster.service";
-import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faCalendarCheck, faSortAmountDownAlt, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
-import {DateTime} from "luxon";
-import {SharedService} from "../../../services/shared/shared.service";
-import {DdwvService} from "../../../services/apiservice/ddwv.service";
-import {UitbetalenDdwvCrewEditorComponent} from "../../../shared/components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component";
+  HeliosDienst,
+  HeliosDienstenDataset,
+  HeliosLedenDataset,
+  HeliosLid,
+  HeliosLidData,
+  HeliosRoosterDag,
+  HeliosRoosterDataset,
+  HeliosType,
+} from '../../../types/Helios';
+import { JaarTotalenComponent } from '../jaar-totalen/jaar-totalen.component';
+import { DienstenService } from '../../../services/apiservice/diensten.service';
+import { DagVanDeWeek } from '../../../utils/Utils';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { Subscription } from 'rxjs';
+import { TypesService } from '../../../services/apiservice/types.service';
+import { RoosterService } from '../../../services/apiservice/rooster.service';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faCalendarCheck, faSortAmountDownAlt, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { DateTime } from 'luxon';
+import { SharedService } from '../../../services/shared/shared.service';
+import { DdwvService } from '../../../services/apiservice/ddwv.service';
+import {
+  UitbetalenDdwvCrewEditorComponent,
+} from '../../../shared/components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component';
 
 
 @Component({

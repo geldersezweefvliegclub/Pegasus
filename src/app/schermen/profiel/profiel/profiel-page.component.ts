@@ -1,10 +1,10 @@
-import {Component} from '@angular/core';
-import {NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
-import {NgbDateFRParserFormatter} from '../../../shared/ngb-date-fr-parser-formatter';
-import {ErrorMessage, SuccessMessage} from '../../../types/Utils';
-import {StorageService} from '../../../services/storage/storage.service';
-import {ActivatedRoute} from '@angular/router';
-import {LoginService} from "../../../services/apiservice/login.service";
+import { Component } from '@angular/core';
+import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateFRParserFormatter } from '../../../shared/ngb-date-fr-parser-formatter';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { StorageService } from '../../../services/storage/storage.service';
+import { ActivatedRoute } from '@angular/router';
+import { LoginService } from '../../../services/apiservice/login.service';
 
 @Component({
     selector: 'app-profile',

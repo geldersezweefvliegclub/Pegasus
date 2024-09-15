@@ -1,9 +1,9 @@
-import {Component} from '@angular/core';
-import {ICellRendererParams} from 'ag-grid-community';
-import {AgRendererComponent} from 'ag-grid-angular';
-import {LoginService} from "../../../services/apiservice/login.service";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons";
+import { Component } from '@angular/core';
+import { ICellRendererParams } from 'ag-grid-community';
+import { AgRendererComponent } from 'ag-grid-angular';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({

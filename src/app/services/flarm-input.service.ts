@@ -1,9 +1,9 @@
-import {Injectable, OnInit} from '@angular/core';
-import {PegasusConfigService} from "./shared/pegasus-config.service";
-import {io, Socket} from "socket.io-client";
-import {BehaviorSubject} from "rxjs";
-import {DateTime} from "luxon";
-import {LoginService} from "./apiservice/login.service";
+import { Injectable } from '@angular/core';
+import { PegasusConfigService } from './shared/pegasus-config.service';
+import { io, Socket } from 'socket.io-client';
+import { BehaviorSubject } from 'rxjs';
+import { DateTime } from 'luxon';
+import { LoginService } from './apiservice/login.service';
 
 export interface FlarmData {
   REG_CALL?: string;

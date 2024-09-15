@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {APIService} from './api.service';
-import {HeliosAudit, HeliosAuditDataset} from '../../types/Helios';
-import {StorageService} from '../storage/storage.service';
-import {KeyValueArray} from '../../types/Utils';
-import {LoginService} from "./login.service";
+import { Injectable } from '@angular/core';
+import { APIService } from './api.service';
+import { HeliosAudit, HeliosAuditDataset } from '../../types/Helios';
+import { StorageService } from '../storage/storage.service';
+import { KeyValueArray } from '../../types/Utils';
+import { LoginService } from './login.service';
 
 @Injectable({
     providedIn: 'root'

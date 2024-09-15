@@ -1,20 +1,16 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faCaretSquareDown, faCaretSquareUp, faGraduationCap, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
+import { HeliosCompetentie, HeliosCompetentiesDataset, HeliosProgressieBoom, HeliosType } from '../../../types/Helios';
+import { SharedService } from '../../../services/shared/shared.service';
+import { CompetentieService } from '../../../services/apiservice/competentie.service';
+import { TreeviewConfig, TreeviewItem } from 'ngx-treeview2';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { TypesService } from '../../../services/apiservice/types.service';
 import {
-    faCaretSquareDown,
-    faCaretSquareUp,
-    faGraduationCap,
-    faPlusCircle,
-    faUndo
-} from "@fortawesome/free-solid-svg-icons";
-import {Subscription} from "rxjs";
-import {HeliosCompetentie, HeliosCompetentiesDataset, HeliosProgressieBoom, HeliosType} from "../../../types/Helios";
-import {SharedService} from "../../../services/shared/shared.service";
-import {CompetentieService} from "../../../services/apiservice/competentie.service";
-import {TreeviewConfig, TreeviewItem} from "ngx-treeview2";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {TypesService} from "../../../services/apiservice/types.service";
-import {CompetentieEditorComponent} from "../../../shared/components/editors/competentie-editor/competentie-editor.component";
+  CompetentieEditorComponent,
+} from '../../../shared/components/editors/competentie-editor/competentie-editor.component';
 
 export class CompetentieTreeviewItem extends TreeviewItem {
     leerfaseID: number | undefined;

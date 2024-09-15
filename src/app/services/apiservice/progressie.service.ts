@@ -1,16 +1,17 @@
-import {Injectable} from '@angular/core';
-import {APIService} from "./api.service";
-import {StorageService} from "../storage/storage.service";
+import { Injectable } from '@angular/core';
+import { APIService } from './api.service';
+import { StorageService } from '../storage/storage.service';
 import {
-    HeliosBehaaldeProgressie,
-    HeliosBehaaldeProgressieDataset, HeliosDagRapport, HeliosLid,
-    HeliosProgressie,
-    HeliosProgressieBoom,
-    HeliosProgressieKaart,
-    HeliosProgressieKaartDataset
-} from "../../types/Helios";
-import {KeyValueArray} from "../../types/Utils";
-import {LoginService} from "./login.service";
+  HeliosBehaaldeProgressie,
+  HeliosBehaaldeProgressieDataset,
+  HeliosDagRapport,
+  HeliosProgressie,
+  HeliosProgressieBoom,
+  HeliosProgressieKaart,
+  HeliosProgressieKaartDataset,
+} from '../../types/Helios';
+import { KeyValueArray } from '../../types/Utils';
+import { LoginService } from './login.service';
 
 @Injectable({
     providedIn: 'root'

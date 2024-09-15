@@ -1,25 +1,31 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Subscription} from "rxjs";
-import {ColDef} from "ag-grid-community";
-import {nummerSort} from "../../../utils/Utils";
-import {ErrorMessage} from "../../../types/Utils";
-import {HeliosLedenDataset, HeliosTransactiesDataset, HeliosType} from "../../../types/Helios";
-import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faEuroSign} from "@fortawesome/free-solid-svg-icons";
-import {TransactiesService} from "../../../services/apiservice/transacties.service";
-import {DateTime} from "luxon";
-import {DatumtijdRenderComponent} from "../../../shared/components/datatable/datumtijd-render/datumtijd-render.component";
-import {BedragRenderComponent} from "./bedrag-render/bedrag-render.component";
-import {TransactieEditorComponent} from "../../../shared/components/editors/transactie-editor/transactie-editor.component";
-import * as xlsx from "xlsx";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {LedenService} from "../../../services/apiservice/leden.service";
-import {OmschrijvingRenderComponent} from "./omschrijving-render/omschrijving-render.component";
-import {CheckboxRenderComponent} from "../../../shared/components/datatable/checkbox-render/checkbox-render.component";
-import {DatumRenderComponent} from "../../../shared/components/datatable/datum-render/datum-render.component";
-import {NgbDate, NgbDateParserFormatter} from "@ng-bootstrap/ng-bootstrap";
-import {NgbDateFRParserFormatter} from "../../../shared/ngb-date-fr-parser-formatter";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ColDef } from 'ag-grid-community';
+import { nummerSort } from '../../../utils/Utils';
+import { ErrorMessage } from '../../../types/Utils';
+import { HeliosLedenDataset, HeliosTransactiesDataset } from '../../../types/Helios';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faEuroSign } from '@fortawesome/free-solid-svg-icons';
+import { TransactiesService } from '../../../services/apiservice/transacties.service';
+import { DateTime } from 'luxon';
+import {
+  DatumtijdRenderComponent,
+} from '../../../shared/components/datatable/datumtijd-render/datumtijd-render.component';
+import { BedragRenderComponent } from './bedrag-render/bedrag-render.component';
+import {
+  TransactieEditorComponent,
+} from '../../../shared/components/editors/transactie-editor/transactie-editor.component';
+import * as xlsx from 'xlsx';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { LedenService } from '../../../services/apiservice/leden.service';
+import { OmschrijvingRenderComponent } from './omschrijving-render/omschrijving-render.component';
+import {
+  CheckboxRenderComponent,
+} from '../../../shared/components/datatable/checkbox-render/checkbox-render.component';
+import { DatumRenderComponent } from '../../../shared/components/datatable/datum-render/datum-render.component';
+import { NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateFRParserFormatter } from '../../../shared/ngb-date-fr-parser-formatter';
 
 @Component({
     selector: 'app-transacties-grid',

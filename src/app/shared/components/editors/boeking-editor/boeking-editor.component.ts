@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {
-  HeliosVliegtuigenDatasetExtended,
+    HeliosVliegtuigenDatasetExtended,
 } from '../../../../schermen/reservering/reservering-page/reservering-page.component';
 import { ModalComponent } from '../../modal/modal.component';
 import { Subscription } from 'rxjs';

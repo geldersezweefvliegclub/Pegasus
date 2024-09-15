@@ -1,40 +1,37 @@
 import {
-    Component,
-    EventEmitter,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Output,
-    SimpleChanges,
-    ViewChild
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
 } from '@angular/core';
-import {DagVanDeWeek} from "../../../utils/Utils";
+import { DagVanDeWeek } from '../../../utils/Utils';
 
 import {
-    HeliosLedenDatasetExtended,
-    HeliosRoosterDagExtended,
-    WeergaveData
-} from "../rooster-page/rooster-page.component";
-import {DienstenService} from "../../../services/apiservice/diensten.service";
-import {LoginService} from "../../../services/apiservice/login.service";
+  HeliosLedenDatasetExtended,
+  HeliosRoosterDagExtended,
+  WeergaveData,
+} from '../rooster-page/rooster-page.component';
+import { DienstenService } from '../../../services/apiservice/diensten.service';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { HeliosDienst, HeliosDienstenDataset, HeliosRoosterDag, HeliosType } from '../../../types/Helios';
+import { Subscription } from 'rxjs';
+import { TypesService } from '../../../services/apiservice/types.service';
+import { RoosterService } from '../../../services/apiservice/rooster.service';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faCalendarCheck, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { SharedService } from '../../../services/shared/shared.service';
+import { DateTime } from 'luxon';
+import { DienstEditorComponent } from '../../../shared/components/editors/dienst-editor/dienst-editor.component';
+import { DdwvService } from '../../../services/apiservice/ddwv.service';
 import {
-    HeliosDienst,
-    HeliosDienstenDataset,
-    HeliosRoosterDag,
-    HeliosType,
-} from "../../../types/Helios";
-import {Subscription} from "rxjs";
-import {TypesService} from "../../../services/apiservice/types.service";
-import {RoosterService} from "../../../services/apiservice/rooster.service";
-import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faCalendarCheck, faSortAmountDownAlt, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
-import {SharedService} from "../../../services/shared/shared.service";
-import {DateTime} from "luxon";
-import {DienstEditorComponent} from "../../../shared/components/editors/dienst-editor/dienst-editor.component";
-import {DdwvService} from "../../../services/apiservice/ddwv.service";
-import {UitbetalenDdwvCrewEditorComponent} from "../../../shared/components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component";
+  UitbetalenDdwvCrewEditorComponent,
+} from '../../../shared/components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component';
 
 @Component({
     selector: 'app-rooster-weekview',

@@ -1,12 +1,8 @@
-import {Injectable} from '@angular/core';
-import {APIService} from "./api.service";
-import {
-    HeliosJournaal,
-    HeliosJournaals,
-    HeliosJournaalDataset
-} from "../../types/Helios";
-import {KeyValueArray} from "../../types/Utils";
-import {DateTime} from "luxon";
+import { Injectable } from '@angular/core';
+import { APIService } from './api.service';
+import { HeliosJournaal, HeliosJournaalDataset, HeliosJournaals } from '../../types/Helios';
+import { KeyValueArray } from '../../types/Utils';
+import { DateTime } from 'luxon';
 
 export interface journaalFilter {
     alleenVliegtuigen: boolean;

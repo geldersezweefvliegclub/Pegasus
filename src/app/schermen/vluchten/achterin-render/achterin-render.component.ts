@@ -1,7 +1,7 @@
-import {Component} from '@angular/core';
-import {AgRendererComponent} from 'ag-grid-angular';
-import {ICellRendererParams} from 'ag-grid-community';
-import {LoginService} from "../../../services/apiservice/login.service";
+import { Component } from '@angular/core';
+import { AgRendererComponent } from 'ag-grid-angular';
+import { ICellRendererParams } from 'ag-grid-community';
+import { LoginService } from '../../../services/apiservice/login.service';
 
 
 @Component({

@@ -7,11 +7,11 @@ import { DateTime } from 'luxon';
 import { Observable, of, Subscription } from 'rxjs';
 import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
 import {
-  HeliosDagInfo,
-  HeliosDagRapportenDataset,
-  HeliosDienstenDataset,
-  HeliosRoosterDataset,
-  HeliosType,
+    HeliosDagInfo,
+    HeliosDagRapportenDataset,
+    HeliosDienstenDataset,
+    HeliosRoosterDataset,
+    HeliosType,
 } from '../../../types/Helios';
 import { TypesService } from '../../../services/apiservice/types.service';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
@@ -22,7 +22,7 @@ import { RoosterService } from '../../../services/apiservice/rooster.service';
 import { DienstenService } from '../../../services/apiservice/diensten.service';
 import { DagRapportenService } from '../../../services/apiservice/dag-rapporten.service';
 import {
-  DagRapportEditorComponent,
+    DagRapportEditorComponent,
 } from '../../../shared/components/editors/dag-rapport-editor/dag-rapport-editor.component';
 
 @Component({

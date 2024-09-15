@@ -1,14 +1,11 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../../shared/components/modal/modal.component";
-import {
-    HeliosAanwezigSamenvatting,
-    HeliosDienstenDataset, HeliosRoosterDataset,
-} from "../../../types/Helios";
-import {DateTime} from "luxon";
-import {AanwezigLedenService} from "../../../services/apiservice/aanwezig-leden.service";
-import {SharedService} from "../../../services/shared/shared.service";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ModalComponent } from '../../../shared/components/modal/modal.component';
+import { HeliosAanwezigSamenvatting, HeliosDienstenDataset, HeliosRoosterDataset } from '../../../types/Helios';
+import { DateTime } from 'luxon';
+import { AanwezigLedenService } from '../../../services/apiservice/aanwezig-leden.service';
+import { SharedService } from '../../../services/shared/shared.service';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
 
 @Component({
     selector: 'app-samenvatting',

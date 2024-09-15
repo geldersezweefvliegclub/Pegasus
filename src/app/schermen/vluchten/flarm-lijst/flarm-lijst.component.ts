@@ -1,9 +1,9 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {FlarmData, FlarmInputService} from "../../../services/flarm-input.service";
-import {Subscription} from "rxjs";
-import {DateTime} from "luxon";
-import {StartlijstService} from "../../../services/apiservice/startlijst.service";
-import {StartDetailsComponent} from "../start-details/start-details.component";
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { FlarmData, FlarmInputService } from '../../../services/flarm-input.service';
+import { Subscription } from 'rxjs';
+import { DateTime } from 'luxon';
+import { StartlijstService } from '../../../services/apiservice/startlijst.service';
+import { StartDetailsComponent } from '../start-details/start-details.component';
 
 interface FlarmDataExt extends FlarmData {
     flarmOntvangstStatusClass?: string;

@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
-import {
-  HeliosFacturen, HeliosFacturenDataset,
-  HeliosFactuur,
-} from "../../types/Helios";
-import {APIService} from "./api.service";
-import {KeyValueArray} from "../../types/Utils";
+import { HeliosFacturen, HeliosFacturenDataset, HeliosFactuur } from '../../types/Helios';
+import { APIService } from './api.service';
+import { KeyValueArray } from '../../types/Utils';
 
 
 @Injectable({

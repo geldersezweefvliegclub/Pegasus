@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import {
-  faCaretSquareDown,
-  faCaretSquareUp,
-  faKeyboard,
-  faMinusCircle,
-  faUndo,
+    faCaretSquareDown,
+    faCaretSquareUp,
+    faKeyboard,
+    faMinusCircle,
+    faUndo,
 } from '@fortawesome/free-solid-svg-icons';
 import { TypesGroepenService } from '../../../services/apiservice/types-groepen.service';
 import { HeliosType, HeliosTypesGroep } from '../../../types/Helios';

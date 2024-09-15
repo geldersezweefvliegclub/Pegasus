@@ -1,49 +1,50 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import {
-    faAddressCard,
-    faBookmark,
-    faCalendarAlt,
-    faChartLine,
-    faChartPie,
-    faClipboardList,
-    faExternalLinkSquareAlt,
-    faPlane,
-    faTachometerAlt,
-} from "@fortawesome/free-solid-svg-icons";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {HeliosLid, HeliosLogboekDataset, HeliosType} from "../../../types/Helios";
-import {ActivatedRoute, Router} from "@angular/router";
-import {LedenService} from "../../../services/apiservice/leden.service";
-import {TypesService} from "../../../services/apiservice/types.service";
-import {faAvianex} from "@fortawesome/free-brands-svg-icons";
-import {ModalComponent} from "../../../shared/components/modal/modal.component";
-import {Subscription} from "rxjs";
-import {DateTime} from "luxon";
-import {SharedService} from "../../../services/shared/shared.service";
-import * as xlsx from "xlsx";
-import {StartlijstService} from "../../../services/apiservice/startlijst.service";
-import {ProgressieService} from "../../../services/apiservice/progressie.service";
-import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
-import {StartEditorComponent} from "../../../shared/components/editors/start-editor/start-editor.component";
-import {TracksService} from "../../../services/apiservice/tracks.service";
+  faAddressCard,
+  faBookmark,
+  faCalendarAlt,
+  faChartLine,
+  faChartPie,
+  faClipboardList,
+  faExternalLinkSquareAlt,
+  faPlane,
+  faTachometerAlt,
+} from '@fortawesome/free-solid-svg-icons';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { HeliosLid, HeliosLogboekDataset, HeliosType } from '../../../types/Helios';
+import { ActivatedRoute, Router } from '@angular/router';
+import { LedenService } from '../../../services/apiservice/leden.service';
+import { TypesService } from '../../../services/apiservice/types.service';
+import { faAvianex } from '@fortawesome/free-brands-svg-icons';
+import { ModalComponent } from '../../../shared/components/modal/modal.component';
+import { Subscription } from 'rxjs';
+import { DateTime } from 'luxon';
+import { SharedService } from '../../../services/shared/shared.service';
+import * as xlsx from 'xlsx';
+import { StartlijstService } from '../../../services/apiservice/startlijst.service';
+import { ProgressieService } from '../../../services/apiservice/progressie.service';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { StartEditorComponent } from '../../../shared/components/editors/start-editor/start-editor.component';
+import { TracksService } from '../../../services/apiservice/tracks.service';
 import {
-    AlignmentType,
-    Document,
-    Footer,
-    Header,
-    HeadingLevel, ImageRun,
-    NumberFormat,
-    Packer,
-    PageNumber,
-    Paragraph,
-    TextRun,
-    UnderlineType
+  AlignmentType,
+  Document,
+  Footer,
+  Header,
+  HeadingLevel,
+  ImageRun,
+  NumberFormat,
+  Packer,
+  PageNumber,
+  Paragraph,
+  TextRun,
+  UnderlineType,
 } from 'docx';
-import {saveAs} from "file-saver";
-import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
-import {TransactiesComponent} from "../../../shared/components/transacties/transacties.component";
-import {DdwvService} from "../../../services/apiservice/ddwv.service";
+import { saveAs } from 'file-saver';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { TransactiesComponent } from '../../../shared/components/transacties/transacties.component';
+import { DdwvService } from '../../../services/apiservice/ddwv.service';
 
 @Component({
     selector: 'app-dashboard',

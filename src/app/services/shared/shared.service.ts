@@ -1,9 +1,8 @@
-import {HostListener, Injectable} from '@angular/core';
-import {BehaviorSubject, debounceTime, fromEvent, Observable, Subject} from 'rxjs';
-import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
-import {ErrorMessage, HeliosEvent, KalenderMaand} from '../../types/Utils';
-import {EventManager} from "@angular/platform-browser";
-import {DateTime} from "luxon";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, fromEvent, Observable, Subject } from 'rxjs';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { ErrorMessage, HeliosEvent, KalenderMaand } from '../../types/Utils';
+import { DateTime } from 'luxon';
 
 
 export interface FilterLedenData {

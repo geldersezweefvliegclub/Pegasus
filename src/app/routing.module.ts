@@ -1,30 +1,36 @@
-import {NgModule} from '@angular/core';
-import {Route, RouterModule} from '@angular/router';
+import { NgModule } from '@angular/core';
+import { Route, RouterModule } from '@angular/router';
 
-import {faFile, IconDefinition} from '@fortawesome/free-regular-svg-icons';
+import { faFile, IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import {
-    faCalendar,
-    faAddressCard,
-    faCalendarAlt,
-    faCalendarDay,
-    faChartPie, faFilm, faGraduationCap,
-    faKey, faKeyboard,
-    faPen,
-    faPlane,
-    faPlaneDeparture, faStreetView,
-    faUser,
-    faUsers,
-    faWaveSquare,
-    faEuroSign, faBug, faLayerGroup
+  faAddressCard,
+  faBug,
+  faCalendar,
+  faCalendarAlt,
+  faCalendarDay,
+  faChartPie,
+  faEuroSign,
+  faFilm,
+  faGraduationCap,
+  faKey,
+  faKeyboard,
+  faLayerGroup,
+  faPen,
+  faPlane,
+  faPlaneDeparture,
+  faStreetView,
+  faUser,
+  faUsers,
+  faWaveSquare,
 } from '@fortawesome/free-solid-svg-icons';
-import {AuditPageComponent} from "./schermen/audit/audit-page/audit-page.component";
-import {TypesPageComponent} from "./schermen/types/types-page/types-page.component";
-import {CompetentiesPageComponent} from "./schermen/competenties/competenties-page/competenties-page.component";
-import {faAvianex} from "@fortawesome/free-brands-svg-icons";
-import {RapportSchermComponent} from "./schermen/rapportage/rapport-scherm/rapport-scherm.component";
-import {TransactiesGridComponent} from "./schermen/transacties/transacties-grid/transacties-grid.component";
-import {FacturenSchermComponent} from "./schermen/facturen/facturen-scherm/facturen-scherm.component";
-import {AgendaSchermComponent} from "./schermen/agenda/agenda-scherm/agenda-scherm.component";
+import { AuditPageComponent } from './schermen/audit/audit-page/audit-page.component';
+import { TypesPageComponent } from './schermen/types/types-page/types-page.component';
+import { CompetentiesPageComponent } from './schermen/competenties/competenties-page/competenties-page.component';
+import { faAvianex } from '@fortawesome/free-brands-svg-icons';
+import { RapportSchermComponent } from './schermen/rapportage/rapport-scherm/rapport-scherm.component';
+import { TransactiesGridComponent } from './schermen/transacties/transacties-grid/transacties-grid.component';
+import { FacturenSchermComponent } from './schermen/facturen/facturen-scherm/facturen-scherm.component';
+import { AgendaSchermComponent } from './schermen/agenda/agenda-scherm/agenda-scherm.component';
 
 export interface CustomRoute extends Route {
     excluded: boolean;

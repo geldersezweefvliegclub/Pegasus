@@ -1,18 +1,18 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {faFile, IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {HeliosDocument, HeliosDocumenten, HeliosDocumentenDataset, HeliosType} from "../../../types/Helios";
-import {Subscription} from "rxjs";
-import {TypesService} from "../../../services/apiservice/types.service";
-import {DocumentenService} from "../../../services/apiservice/documenten.service";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { faFile, IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { HeliosDocument, HeliosDocumentenDataset, HeliosType } from '../../../types/Helios';
+import { Subscription } from 'rxjs';
+import { TypesService } from '../../../services/apiservice/types.service';
+import { DocumentenService } from '../../../services/apiservice/documenten.service';
 import {
-    faCaretSquareDown,
-    faCaretSquareUp,
-    faMinusCircle,
-    faPlusCircle,
-    faUndo
-} from "@fortawesome/free-solid-svg-icons";
-import {DocumentEditorComponent} from "../../../shared/components/editors/document-editor/document-editor.component";
-import {LoginService} from "../../../services/apiservice/login.service";
+  faCaretSquareDown,
+  faCaretSquareUp,
+  faMinusCircle,
+  faPlusCircle,
+  faUndo,
+} from '@fortawesome/free-solid-svg-icons';
+import { DocumentEditorComponent } from '../../../shared/components/editors/document-editor/document-editor.component';
+import { LoginService } from '../../../services/apiservice/login.service';
 
 @Component({
     selector: 'app-documenten-scherm',

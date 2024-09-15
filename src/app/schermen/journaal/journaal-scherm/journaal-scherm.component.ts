@@ -1,28 +1,28 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
-import {faBug, faRecycle} from '@fortawesome/free-solid-svg-icons';
-import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
-import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
-import {DeleteActionComponent} from '../../../shared/components/datatable/delete-action/delete-action.component';
-import {RestoreActionComponent} from '../../../shared/components/datatable/restore-action/restore-action.component';
-import {ErrorMessage, SuccessMessage} from '../../../types/Utils';
+import { faBug } from '@fortawesome/free-solid-svg-icons';
+import { ColDef, RowDoubleClickedEvent } from 'ag-grid-community';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { DeleteActionComponent } from '../../../shared/components/datatable/delete-action/delete-action.component';
+import { RestoreActionComponent } from '../../../shared/components/datatable/restore-action/restore-action.component';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
 
 import * as xlsx from 'xlsx';
-import {LoginService} from '../../../services/apiservice/login.service';
-import {nummerSort} from '../../../utils/Utils';
-import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
-import {Subscription} from "rxjs";
-import {journaalFilter, JournaalService} from "../../../services/apiservice/journaal.service";
-import {HeliosJournaalDataset} from "../../../types/Helios";
-import {MaterieelRenderComponent} from "../materieel-render/materieel-render.component";
-import {StatusRenderComponent} from "../status-render/status-render.component";
-import {CategorieRenderComponent} from "../categorie-render/categorie-render.component";
-import {DatumRenderComponent} from "../../../shared/components/datatable/datum-render/datum-render.component";
-import {JournaalFilterComponent} from "../journaal-filter/journaal-filter.component";
-import {DateTime} from "luxon";
-import {TitleRenderComponent} from "../title-render/title-render.component";
-import {JournaalEditorComponent} from "../../../shared/components/editors/journaal-editor/journaal-editor.component";
-import {ActivatedRoute} from "@angular/router";
+import { LoginService } from '../../../services/apiservice/login.service';
+import { nummerSort } from '../../../utils/Utils';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { Subscription } from 'rxjs';
+import { journaalFilter, JournaalService } from '../../../services/apiservice/journaal.service';
+import { HeliosJournaalDataset } from '../../../types/Helios';
+import { MaterieelRenderComponent } from '../materieel-render/materieel-render.component';
+import { StatusRenderComponent } from '../status-render/status-render.component';
+import { CategorieRenderComponent } from '../categorie-render/categorie-render.component';
+import { DatumRenderComponent } from '../../../shared/components/datatable/datum-render/datum-render.component';
+import { JournaalFilterComponent } from '../journaal-filter/journaal-filter.component';
+import { DateTime } from 'luxon';
+import { TitleRenderComponent } from '../title-render/title-render.component';
+import { JournaalEditorComponent } from '../../../shared/components/editors/journaal-editor/journaal-editor.component';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({

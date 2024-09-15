@@ -1,13 +1,13 @@
-import {Injectable} from '@angular/core';
-import {APIService} from './api.service';
-import {DateTime} from 'luxon';
-import {KeyValueArray} from '../../types/Utils';
-import {HeliosDagInfo, HeliosDagInfoDagen, HeliosDagInfosDataset, HeliosRoosterDataset} from '../../types/Helios';
-import {StorageService} from '../storage/storage.service';
-import {BehaviorSubject, Subscription} from 'rxjs';
-import {SharedService} from '../shared/shared.service';
-import {LoginService} from "./login.service";
-import {RoosterService} from "./rooster.service";
+import { Injectable } from '@angular/core';
+import { APIService } from './api.service';
+import { DateTime } from 'luxon';
+import { KeyValueArray } from '../../types/Utils';
+import { HeliosDagInfo, HeliosDagInfoDagen, HeliosDagInfosDataset, HeliosRoosterDataset } from '../../types/Helios';
+import { StorageService } from '../storage/storage.service';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { SharedService } from '../shared/shared.service';
+import { LoginService } from './login.service';
+import { RoosterService } from './rooster.service';
 
 @Injectable({
     providedIn: 'root'

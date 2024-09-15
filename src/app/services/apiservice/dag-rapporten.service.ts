@@ -1,14 +1,14 @@
-import {Injectable} from '@angular/core';
-import {APIService} from "./api.service";
+import { Injectable } from '@angular/core';
+import { APIService } from './api.service';
 import {
-    HeliosDagInfosDataset,
-    HeliosDagRapport,
-    HeliosDagRapporten,
-    HeliosDagRapportenDataset
-} from "../../types/Helios";
-import {KeyValueArray} from "../../types/Utils";
-import {LoginService} from "./login.service";
-import {DateTime} from "luxon";
+  HeliosDagInfosDataset,
+  HeliosDagRapport,
+  HeliosDagRapporten,
+  HeliosDagRapportenDataset,
+} from '../../types/Helios';
+import { KeyValueArray } from '../../types/Utils';
+import { LoginService } from './login.service';
+import { DateTime } from 'luxon';
 
 
 @Injectable({

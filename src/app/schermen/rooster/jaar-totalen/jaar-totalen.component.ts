@@ -1,14 +1,14 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {DateTime} from "luxon";
-import {ColDef} from "ag-grid-community";
-import {Subscription} from "rxjs";
-import {HeliosLedenDataset} from "../../../types/Helios";
-import {nummerSort} from "../../../utils/Utils";
-import {DienstenService} from "../../../services/apiservice/diensten.service";
-import {SharedService} from "../../../services/shared/shared.service";
-import {ModalComponent} from "../../../shared/components/modal/modal.component";
-import {OnderdrukNulComponent} from "../../../shared/components/datatable/onderdruk-nul/onderdruk-nul.component";
-import * as xlsx from "xlsx";
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { DateTime } from 'luxon';
+import { ColDef } from 'ag-grid-community';
+import { Subscription } from 'rxjs';
+import { HeliosLedenDataset } from '../../../types/Helios';
+import { nummerSort } from '../../../utils/Utils';
+import { DienstenService } from '../../../services/apiservice/diensten.service';
+import { SharedService } from '../../../services/shared/shared.service';
+import { ModalComponent } from '../../../shared/components/modal/modal.component';
+import { OnderdrukNulComponent } from '../../../shared/components/datatable/onderdruk-nul/onderdruk-nul.component';
+import * as xlsx from 'xlsx';
 
 interface JaarTotaal {
     ID: number

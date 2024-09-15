@@ -1,30 +1,34 @@
-import {Component, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {VliegtuigenService} from '../../../services/apiservice/vliegtuigen.service';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { VliegtuigenService } from '../../../services/apiservice/vliegtuigen.service';
 
-import {faPlane, faRecycle} from '@fortawesome/free-solid-svg-icons';
-import {VliegtuigEditorComponent} from '../../../shared/components/editors/vliegtuig-editor/vliegtuig-editor.component';
-import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
-import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
-import {DeleteActionComponent} from '../../../shared/components/datatable/delete-action/delete-action.component';
-import {RestoreActionComponent} from '../../../shared/components/datatable/restore-action/restore-action.component';
-import {IconRenderComponent} from "../icon-render/icon-render.component";
-import {ZitplaatsRenderComponent} from '../zitplaats-render/zitplaats-render.component';
-import {HandboekRenderComponent} from '../handboek-render/handboek-render.component';
-import {CheckboxRenderComponent} from '../../../shared/components/datatable/checkbox-render/checkbox-render.component';
+import { faPlane, faRecycle } from '@fortawesome/free-solid-svg-icons';
+import {
+  VliegtuigEditorComponent,
+} from '../../../shared/components/editors/vliegtuig-editor/vliegtuig-editor.component';
+import { ColDef, RowDoubleClickedEvent } from 'ag-grid-community';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { DeleteActionComponent } from '../../../shared/components/datatable/delete-action/delete-action.component';
+import { RestoreActionComponent } from '../../../shared/components/datatable/restore-action/restore-action.component';
+import { IconRenderComponent } from '../icon-render/icon-render.component';
+import { ZitplaatsRenderComponent } from '../zitplaats-render/zitplaats-render.component';
+import { HandboekRenderComponent } from '../handboek-render/handboek-render.component';
+import {
+  CheckboxRenderComponent,
+} from '../../../shared/components/datatable/checkbox-render/checkbox-render.component';
 
-import {HeliosLogboekDataset, HeliosVliegtuigenDataset} from '../../../types/Helios';
-import {ErrorMessage, SuccessMessage} from '../../../types/Utils';
+import { HeliosLogboekDataset, HeliosVliegtuigenDataset } from '../../../types/Helios';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
 
 import * as xlsx from 'xlsx';
-import {LoginService} from '../../../services/apiservice/login.service';
-import {Router} from "@angular/router";
-import {nummerSort} from '../../../utils/Utils';
-import {StartlijstService} from "../../../services/apiservice/startlijst.service";
-import {DateTime} from "luxon";
-import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
-import {Subscription} from "rxjs";
-import {PopupJournaalComponent} from "../../../shared/components/popup-journaal/popup-journaal.component";
-import {VliegtuigLogboekComponent} from "../vliegtuig-logboek/vliegtuig-logboek.component";
+import { LoginService } from '../../../services/apiservice/login.service';
+import { Router } from '@angular/router';
+import { nummerSort } from '../../../utils/Utils';
+import { StartlijstService } from '../../../services/apiservice/startlijst.service';
+import { DateTime } from 'luxon';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { Subscription } from 'rxjs';
+import { PopupJournaalComponent } from '../../../shared/components/popup-journaal/popup-journaal.component';
+import { VliegtuigLogboekComponent } from '../vliegtuig-logboek/vliegtuig-logboek.component';
 
 export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
     toonLogboek?: boolean;

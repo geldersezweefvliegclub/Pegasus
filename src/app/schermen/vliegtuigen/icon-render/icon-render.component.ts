@@ -1,8 +1,8 @@
-import {Component} from '@angular/core';
-import {AgRendererComponent} from "ag-grid-angular";
-import {faBug, faFileAlt} from "@fortawesome/free-solid-svg-icons";
-import {ICellRendererParams} from "ag-grid-community";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import { Component } from '@angular/core';
+import { AgRendererComponent } from 'ag-grid-angular';
+import { faBug, faFileAlt } from '@fortawesome/free-solid-svg-icons';
+import { ICellRendererParams } from 'ag-grid-community';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 
 @Component({
     selector: 'app-icon-render',

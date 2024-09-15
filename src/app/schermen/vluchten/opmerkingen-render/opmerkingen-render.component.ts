@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import {AgRendererComponent} from "ag-grid-angular";
-import {ICellRendererParams} from "ag-grid-community";
-import {HeliosStartDataset} from "../../../types/Helios";
+import { Component } from '@angular/core';
+import { AgRendererComponent } from 'ag-grid-angular';
+import { ICellRendererParams } from 'ag-grid-community';
 
 @Component({
   selector: 'app-opmerkingen-render',

@@ -1,16 +1,16 @@
-import {Injectable} from '@angular/core';
-import {DateTime} from 'luxon';
-import {HeliosActie, KeyValueArray} from '../../types/Utils';
-import {APIService} from './api.service';
+import { Injectable } from '@angular/core';
+import { DateTime } from 'luxon';
+import { KeyValueArray } from '../../types/Utils';
+import { APIService } from './api.service';
 import {
-    HeliosAanwezigVliegtuigen,
-    HeliosAanwezigVliegtuigenDataset,
-    HeliosVliegtuigenDataset
+  HeliosAanwezigVliegtuigen,
+  HeliosAanwezigVliegtuigenDataset,
+  HeliosVliegtuigenDataset,
 } from '../../types/Helios';
-import {BehaviorSubject, Subscription} from "rxjs";
-import {SharedService} from "../shared/shared.service";
-import {debounceTime} from "rxjs/operators";
-import {LoginService} from "./login.service";
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { SharedService } from '../shared/shared.service';
+import { debounceTime } from 'rxjs/operators';
+import { LoginService } from './login.service';
 
 
 @Injectable({

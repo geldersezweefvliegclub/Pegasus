@@ -1,40 +1,42 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {StartlijstService} from '../../../services/apiservice/startlijst.service';
-import {CheckboxRenderComponent} from '../../../shared/components/datatable/checkbox-render/checkbox-render.component';
-import {faChevronRight, faDownload, faPlane} from '@fortawesome/free-solid-svg-icons';
-import {faClipboardList} from '@fortawesome/free-solid-svg-icons/faClipboardList';
-import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
-import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
-import {DeleteActionComponent} from '../../../shared/components/datatable/delete-action/delete-action.component';
-import {RestoreActionComponent} from '../../../shared/components/datatable/restore-action/restore-action.component';
-import {HeliosDienstenDataset, HeliosRoosterDataset, HeliosStartDataset, HeliosType} from '../../../types/Helios';
-import {ErrorMessage, KeyValueArray, SuccessMessage} from '../../../types/Utils';
-import * as xlsx from 'xlsx';
-import {LoginService} from '../../../services/apiservice/login.service';
-import {DateTime, Interval} from 'luxon';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { StartlijstService } from '../../../services/apiservice/startlijst.service';
 import {
-    StarttijdRenderComponent
+  CheckboxRenderComponent,
+} from '../../../shared/components/datatable/checkbox-render/checkbox-render.component';
+import { faChevronRight, faDownload } from '@fortawesome/free-solid-svg-icons';
+import { faClipboardList } from '@fortawesome/free-solid-svg-icons/faClipboardList';
+import { ColDef, RowDoubleClickedEvent } from 'ag-grid-community';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { DeleteActionComponent } from '../../../shared/components/datatable/delete-action/delete-action.component';
+import { RestoreActionComponent } from '../../../shared/components/datatable/restore-action/restore-action.component';
+import { HeliosDienstenDataset, HeliosRoosterDataset, HeliosStartDataset, HeliosType } from '../../../types/Helios';
+import { ErrorMessage, KeyValueArray, SuccessMessage } from '../../../types/Utils';
+import * as xlsx from 'xlsx';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { DateTime, Interval } from 'luxon';
+import {
+  StarttijdRenderComponent,
 } from '../../../shared/components/datatable/starttijd-render/starttijd-render.component';
 import {
-    LandingstijdRenderComponent
+  LandingstijdRenderComponent,
 } from '../../../shared/components/datatable/landingstijd-render/landingstijd-render.component';
-import {TijdInvoerComponent} from '../../../shared/components/editors/tijd-invoer/tijd-invoer.component';
-import {StartEditorComponent} from '../../../shared/components/editors/start-editor/start-editor.component';
-import {Observable, of, Subscription} from 'rxjs';
-import {SchermGrootte, SharedService} from '../../../services/shared/shared.service';
-import {nummerSort, tijdSort} from '../../../utils/Utils';
-import {ExportStartlijstComponent} from "../export-startlijst/export-startlijst.component";
-import {RoosterService} from "../../../services/apiservice/rooster.service";
-import {DienstenService} from "../../../services/apiservice/diensten.service";
-import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
-import {VoorinRenderComponent} from "../voorin-render/voorin-render.component";
-import {AchterinRenderComponent} from "../achterin-render/achterin-render.component";
-import {DagnummerRenderComponent} from "../dagnummer-render/dagnummer-render.component";
-import {TypesService} from "../../../services/apiservice/types.service";
-import {StorageService} from "../../../services/storage/storage.service";
-import {FlarmData, FlarmInputService, FlarmStartData} from "../../../services/flarm-input.service";
-import {DatatableComponent} from "../../../shared/components/datatable/datatable.component";
-import {OpmerkingenRenderComponent} from "../opmerkingen-render/opmerkingen-render.component";
+import { TijdInvoerComponent } from '../../../shared/components/editors/tijd-invoer/tijd-invoer.component';
+import { StartEditorComponent } from '../../../shared/components/editors/start-editor/start-editor.component';
+import { Observable, of, Subscription } from 'rxjs';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { nummerSort, tijdSort } from '../../../utils/Utils';
+import { ExportStartlijstComponent } from '../export-startlijst/export-startlijst.component';
+import { RoosterService } from '../../../services/apiservice/rooster.service';
+import { DienstenService } from '../../../services/apiservice/diensten.service';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { VoorinRenderComponent } from '../voorin-render/voorin-render.component';
+import { AchterinRenderComponent } from '../achterin-render/achterin-render.component';
+import { DagnummerRenderComponent } from '../dagnummer-render/dagnummer-render.component';
+import { TypesService } from '../../../services/apiservice/types.service';
+import { StorageService } from '../../../services/storage/storage.service';
+import { FlarmData, FlarmInputService, FlarmStartData } from '../../../services/flarm-input.service';
+import { DatatableComponent } from '../../../shared/components/datatable/datatable.component';
+import { OpmerkingenRenderComponent } from '../opmerkingen-render/opmerkingen-render.component';
 
 type HeliosStartDatasetExtended = HeliosStartDataset & {
     inTijdspan?: boolean

@@ -1,12 +1,12 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {HeliosVliegtuig, HeliosVliegtuigLogboekDataset,} from '../../../types/Helios';
-import {StartlijstService} from '../../../services/apiservice/startlijst.service';
-import {Subscription} from 'rxjs';
-import {DateTime} from 'luxon';
-import {SharedService} from '../../../services/shared/shared.service';
-import {VliegtuigenService} from '../../../services/apiservice/vliegtuigen.service';
-import {ModalComponent} from '../../../shared/components/modal/modal.component';
-import {ErrorMessage} from '../../../types/Utils';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { HeliosVliegtuig, HeliosVliegtuigLogboekDataset } from '../../../types/Helios';
+import { StartlijstService } from '../../../services/apiservice/startlijst.service';
+import { Subscription } from 'rxjs';
+import { DateTime } from 'luxon';
+import { SharedService } from '../../../services/shared/shared.service';
+import { VliegtuigenService } from '../../../services/apiservice/vliegtuigen.service';
+import { ModalComponent } from '../../../shared/components/modal/modal.component';
+import { ErrorMessage } from '../../../types/Utils';
 
 
 @Component({

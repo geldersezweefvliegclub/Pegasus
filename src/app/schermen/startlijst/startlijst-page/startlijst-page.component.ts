@@ -1,39 +1,39 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faPen, faPenToSquare, faSortAmountDownAlt} from "@fortawesome/free-solid-svg-icons";
-import {Observable, of, Subscription} from "rxjs";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faPen, faPenToSquare, faSortAmountDownAlt } from '@fortawesome/free-solid-svg-icons';
+import { Observable, of, Subscription } from 'rxjs';
 import {
-    HeliosAanwezigLedenDataset,
-    HeliosAanwezigVliegtuigenDataset,
-    HeliosBehaaldeProgressieDataset,
-    HeliosLedenDataset,
-    HeliosStart,
-    HeliosStartDataset,
-    HeliosType,
-    HeliosVliegtuigenDataset
-} from "../../../types/Helios";
-import {DateTime, Interval} from "luxon";
-import {StartlijstService} from "../../../services/apiservice/startlijst.service";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {SharedService} from "../../../services/shared/shared.service";
-import {AanwezigVliegtuigService} from "../../../services/apiservice/aanwezig-vliegtuig.service";
-import {AanwezigLedenService} from "../../../services/apiservice/aanwezig-leden.service";
+  HeliosAanwezigLedenDataset,
+  HeliosAanwezigVliegtuigenDataset,
+  HeliosBehaaldeProgressieDataset,
+  HeliosLedenDataset,
+  HeliosStart,
+  HeliosStartDataset,
+  HeliosType,
+  HeliosVliegtuigenDataset,
+} from '../../../types/Helios';
+import { DateTime, Interval } from 'luxon';
+import { StartlijstService } from '../../../services/apiservice/startlijst.service';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { SharedService } from '../../../services/shared/shared.service';
+import { AanwezigVliegtuigService } from '../../../services/apiservice/aanwezig-vliegtuig.service';
+import { AanwezigLedenService } from '../../../services/apiservice/aanwezig-leden.service';
 import {
-    AanmeldenVliegtuigComponent
-} from "../../../shared/components/aanmelden-vliegtuig/aanmelden-vliegtuig.component";
-import {AanmeldenLedenComponent} from "../../../shared/components/aanmelden-leden/aanmelden-leden.component";
+  AanmeldenVliegtuigComponent,
+} from '../../../shared/components/aanmelden-vliegtuig/aanmelden-vliegtuig.component';
+import { AanmeldenLedenComponent } from '../../../shared/components/aanmelden-leden/aanmelden-leden.component';
 import {
-    LidAanwezigEditorComponent
-} from "../../../shared/components/editors/lid-aanwezig-editor/lid-aanwezig-editor.component";
-import {ErrorMessage, KeyValueArray, SuccessMessage} from "../../../types/Utils";
-import {TijdInvoerComponent} from "../../../shared/components/editors/tijd-invoer/tijd-invoer.component";
-import {StartEditorComponent} from "../../../shared/components/editors/start-editor/start-editor.component";
-import {DaginfoService} from "../../../services/apiservice/daginfo.service";
-import {CdkDrag, CdkDragDrop} from "@angular/cdk/drag-drop";
-import {VliegtuigenService} from "../../../services/apiservice/vliegtuigen.service";
-import {ProgressieService} from "../../../services/apiservice/progressie.service";
-import {TypesService} from "../../../services/apiservice/types.service";
-import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
+  LidAanwezigEditorComponent,
+} from '../../../shared/components/editors/lid-aanwezig-editor/lid-aanwezig-editor.component';
+import { ErrorMessage, KeyValueArray, SuccessMessage } from '../../../types/Utils';
+import { TijdInvoerComponent } from '../../../shared/components/editors/tijd-invoer/tijd-invoer.component';
+import { StartEditorComponent } from '../../../shared/components/editors/start-editor/start-editor.component';
+import { DaginfoService } from '../../../services/apiservice/daginfo.service';
+import { CdkDrag, CdkDragDrop } from '@angular/cdk/drag-drop';
+import { VliegtuigenService } from '../../../services/apiservice/vliegtuigen.service';
+import { ProgressieService } from '../../../services/apiservice/progressie.service';
+import { TypesService } from '../../../services/apiservice/types.service';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
 
 type HeliosStartDatasetExtended = HeliosStartDataset & {
     ZITPLAATSEN?: number,

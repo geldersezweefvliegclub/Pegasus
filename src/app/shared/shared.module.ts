@@ -16,12 +16,12 @@ import { RestoreActionComponent } from './components/datatable/restore-action/re
 import { StartEditorComponent } from './components/editors/start-editor/start-editor.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import {
-  VliegtuigInvoerComponent,
+    VliegtuigInvoerComponent,
 } from './components/editors/start-editor/vliegtuig-invoer/vliegtuig-invoer.component';
 import { LidInvoerComponent } from './components/editors/start-editor/lid-invoer/lid-invoer.component';
 import { TelefoonValidatorDirective } from './components/editors/lid-editor/telefoon-validator.directive';
 import {
-  WachtwoordMatchValidatorDirective,
+    WachtwoordMatchValidatorDirective,
 } from './components/editors/lid-editor/wachtwoord-match-validator.directive';
 import { DatumRenderComponent } from './components/datatable/datum-render/datum-render.component';
 import { AvatarComponent } from './components/avatar/avatar.component';
@@ -33,14 +33,14 @@ import { StatusComponent } from './components/status/status.component';
 import { TijdInvoerComponent } from './components/editors/tijd-invoer/tijd-invoer.component';
 import { NaamRenderComponent } from './components/vlieger-logboek/naam-render/naam-render.component';
 import {
-  WachtwoordSterkteValidatorDirective,
+    WachtwoordSterkteValidatorDirective,
 } from './components/editors/lid-editor/wachtwoord-sterkte-validator.directive';
 import { RecencyGrafiekComponent } from './components/recency/recency-grafiek/recency-grafiek.component';
 import {
-  NgbDatepickerModule,
-  NgbPopoverModule,
-  NgbProgressbarModule,
-  NgbTooltipModule,
+    NgbDatepickerModule,
+    NgbPopoverModule,
+    NgbProgressbarModule,
+    NgbTooltipModule,
 } from '@ng-bootstrap/ng-bootstrap';
 import { ProgressieBoomComponent } from './components/progressie-boom/progressie-boom.component';
 import { TreeviewModule } from 'ngx-treeview2';
@@ -81,13 +81,13 @@ import { DatumtijdRenderComponent } from './components/datatable/datumtijd-rende
 import { DagRapportEditorComponent } from './components/editors/dag-rapport-editor/dag-rapport-editor.component';
 import { ComposeMeteoComponent } from './components/editors/dag-rapport-editor/compose-meteo/compose-meteo.component';
 import {
-  ComposeBedrijfComponent,
+    ComposeBedrijfComponent,
 } from './components/editors/dag-rapport-editor/compose-bedrijf/compose-bedrijf.component';
 import { ProgressieEditorComponent } from './components/editors/progressie-editor/progressie-editor.component';
 import { VoortgangComponent } from './components/voortgang/voortgang.component';
 import { DocumentEditorComponent } from './components/editors/document-editor/document-editor.component';
 import {
-  UitbetalenDdwvCrewEditorComponent,
+    UitbetalenDdwvCrewEditorComponent,
 } from './components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component';
 import { StartGrafiekComponent } from './components/recency/start-grafiek/start-grafiek.component';
 import { VliegdagSelectieComponent } from './components/vliegdag-selectie/vliegdag-selectie.component';

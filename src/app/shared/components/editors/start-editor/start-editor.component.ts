@@ -1,12 +1,12 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import {
-  HeliosAanwezigLedenDataset,
-  HeliosBehaaldeProgressieDataset,
-  HeliosLedenDataset,
-  HeliosStart,
-  HeliosStartDataset,
-  HeliosType,
-  HeliosVliegtuigenDataset,
+    HeliosAanwezigLedenDataset,
+    HeliosBehaaldeProgressieDataset,
+    HeliosLedenDataset,
+    HeliosStart,
+    HeliosStartDataset,
+    HeliosType,
+    HeliosVliegtuigenDataset,
 } from '../../../../types/Helios';
 import { TypesService } from '../../../../services/apiservice/types.service';
 import { ModalComponent } from '../../modal/modal.component';
