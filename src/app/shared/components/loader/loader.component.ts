@@ -7,7 +7,7 @@ import {faCircleNotch} from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./loader.component.scss']
 })
 export class LoaderComponent {
-  @Input() isLoading: boolean = false;
+  @Input() isLoading = false;
   loader = faCircleNotch;
 }
 

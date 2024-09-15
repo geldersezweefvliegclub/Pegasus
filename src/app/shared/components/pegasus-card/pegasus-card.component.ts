@@ -9,12 +9,12 @@ import {faQuestionCircle} from '@fortawesome/free-solid-svg-icons';
 })
 export class PegasusCardComponent implements OnInit{
     @Input() icon: IconDefinition = faQuestionCircle
-    @Input() minimum: boolean = false;
+    @Input() minimum = false;
     @Input() img: string
     @Input() titel: string;
     @Input() subtitel: string;
-    @Input() exportEnabled: boolean = true;
-    @Input() exportImg: string = "/assets/img/excel-logo.png";
+    @Input() exportEnabled = true;
+    @Input() exportImg = "/assets/img/excel-logo.png";
     @Output() Exporting: EventEmitter<void> = new EventEmitter<void>();
 
     hasExportListener: boolean;

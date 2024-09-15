@@ -26,8 +26,8 @@ import {DdwvService} from "../../../../services/apiservice/ddwv.service";
 })
 export class LidEditorComponent implements OnInit, OnDestroy {
     @Input() lidID: number;
-    @Input() isVerwijderMode: boolean = false;
-    @Input() isRestoreMode: boolean = false;
+    @Input() isVerwijderMode = false;
+    @Input() isRestoreMode = false;
 
     @ViewChild(TransactiesComponent) transactieScherm: TransactiesComponent;
 
@@ -41,24 +41,24 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     statusTypes: HeliosType[];
     lid: HeliosLid = {};
 
-    wachtwoordVerborgen: boolean = true;
+    wachtwoordVerborgen = true;
     oogIcon: IconDefinition = faEye;
     readonly informatieIcon: IconDefinition = faInfo;
     readonly infoIcon: IconDefinition = faInfoCircle;
     readonly persoonIcon: IconDefinition = faUser;
 
-    controleWachtwoord: string = '';
-    wachtwoord: string = '';
+    controleWachtwoord = '';
+    wachtwoord = '';
 
-    subtitel: string = 'Instellen van gegevens en voorkeuren';
-    titel: string = 'Aanpassen profiel';
+    subtitel = 'Instellen van gegevens en voorkeuren';
+    titel = 'Aanpassen profiel';
     avatar: string | null | undefined;
 
-    isLoading: boolean = false;
-    isSaving: boolean = false;
-    isMobiel: boolean = true;
+    isLoading = false;
+    isSaving = false;
+    isMobiel = true;
 
-    saldoTonen: boolean = false;
+    saldoTonen = false;
 
     MedicalDatum: NgbDate | null;
     GeboorteDatum: NgbDate | null;

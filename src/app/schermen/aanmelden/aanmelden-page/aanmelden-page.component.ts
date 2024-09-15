@@ -39,7 +39,7 @@ export type HeliosRoosterDatasetExtended = HeliosRoosterDataset & {
     EENHEDEN?: number
 }
 
-export type TrancactiesDDWV = {
+export interface TrancactiesDDWV {
     AANGEMELD: boolean,
     AFGEMELD: boolean,
     STRIPPEN: number
@@ -76,7 +76,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     maandag: DateTime                               // de eerste dag van de week
 
     lid: HeliosLid;                                 // nodig om te checken over nog voldoende DDWV tegoed is
-    saldoTonen: boolean = false;
+    saldoTonen = false;
 
     private typesAbonnement: Subscription;
     ddwvTypes: HeliosType[];
@@ -85,12 +85,12 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     afmeldDatum: DateTime;
 
     ophalenOverslaan = false;                       // Voorkom dat er te veel tegelijk wordt opgevraagd
-    isLoadingRooster: boolean = false;
-    isLoadingDiensten: boolean = false;
-    isLoadingAanwezig: boolean = false;
-    isLoadingGasten: boolean = false;
+    isLoadingRooster = false;
+    isLoadingDiensten = false;
+    isLoadingAanwezig = false;
+    isLoadingGasten = false;
 
-    aanmeldenView: string = "week";
+    aanmeldenView = "week";
     rooster: HeliosRoosterDatasetExtended[];        // rooster voor gekozen periode (dag/week/maand)
     diensten: HeliosDienstenDataset[];              // Wie hebben er dienst
     aanmeldingen: HeliosAanwezigLedenDataset[];     // De aanmeldingen
@@ -98,12 +98,12 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     gasten: HeliosGastenDataset[];                  // De gasten voor de vliegdag
     dagInfo: HeliosDagInfosDataset[];               // De bijhoorende dag info
 
-    toonDatumKnoppen: boolean = false;              // Mag de gebruiker een andere datum kiezen
-    toonGasten: boolean = false;
-    isDDWVer: boolean = false;                      // DDWV'ers mogen geen club dagen zien
-    isBeheerder: boolean = false;                   // Beheerders mogen meer zien
-    isBeheerderDDWV: boolean = false;               // Beheerders mogen meer zien
-    ddwvActief: boolean = true;                     // Doen we aan een DDWV bedrijf
+    toonDatumKnoppen = false;              // Mag de gebruiker een andere datum kiezen
+    toonGasten = false;
+    isDDWVer = false;                      // DDWV'ers mogen geen club dagen zien
+    isBeheerder = false;                   // Beheerders mogen meer zien
+    isBeheerderDDWV = false;               // Beheerders mogen meer zien
+    ddwvActief = true;                     // Doen we aan een DDWV bedrijf
 
     veldTypes$: Observable<HeliosType[]>;
     vliegveld: number | undefined;                      // laat aanmeldingen van een speciek vliegveld zien
@@ -201,7 +201,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         }
     }
 
-    opvragen(force:boolean = false): void {
+    opvragen(force = false): void {
         let beginDatum: DateTime;
         let eindDatum: DateTime;
 
@@ -228,7 +228,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
             }
         }
 
-        let params: KeyValueArray = {};
+        const params: KeyValueArray = {};
         params['VELDEN'] = "DATUM,DDWV,STARTMETHODE_OMS";
         this.daginfoService.getDagInfoDagen(false, beginDatum, eindDatum, undefined, params).then((di) => {
             this.dagInfo = di;
@@ -729,8 +729,8 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         });
 
         const ui = this.loginService.userInfo?.LidData;
-        const toEmail: String = ui!.EMAIL as String;
-        let bcc: String = "";
+        const toEmail: string = ui!.EMAIL as string;
+        let bcc = "";
 
         aanwezig.forEach((lid: HeliosAanwezigLedenDataset) => {
             if (lid.EMAIL?.includes('@')) {

@@ -40,11 +40,11 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
     kalenderEersteDatum: NgbDateStruct;
     kalenderLaatsteDatum: NgbDateStruct;
 
-    isSaving: boolean = false;
-    isLoading: boolean = false;
-    isVerwijderMode: boolean = false;
+    isSaving = false;
+    isLoading = false;
+    isVerwijderMode = false;
 
-    formTitel: string = "";
+    formTitel = "";
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
@@ -163,7 +163,7 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
 
 
     // maak een lange beschrijving van de competentie
-    vullenCompetentieString(id: number, init:boolean = true) : string {
+    vullenCompetentieString(id: number, init = true) : string {
         if (init) {
             this.competentieString = "";
         }

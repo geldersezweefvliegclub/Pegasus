@@ -60,8 +60,8 @@ export class CompetentieService {
     }
 
     async getCompetenties(): Promise<HeliosCompetentiesDataset[]> {
-        let competenties: HeliosCompetenties | null = null;
-        let getParams: KeyValueArray = {};
+        const competenties: HeliosCompetenties | null = null;
+        const getParams: KeyValueArray = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
@@ -91,7 +91,7 @@ export class CompetentieService {
     }
 
     async getBoom(): Promise<HeliosProgressieBoom[]> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {

@@ -32,9 +32,9 @@ export class VliegdagSelectieComponent implements OnInit, OnDestroy {
     kalenderEersteDatum: NgbDateStruct;
     kalenderLaatsteDatum: NgbDateStruct;
 
-    vliegdagen: string = "";        // vliegdagen van deze maand in json formaat
-    diensten: string = "";          // daginfos van deze maand in json formaat
-    daginfo: string = "";           // daginfos van deze maand in json formaat
+    vliegdagen = "";        // vliegdagen van deze maand in json formaat
+    diensten = "";          // daginfos van deze maand in json formaat
+    daginfo = "";           // daginfos van deze maand in json formaat
 
     constructor(readonly loginService: LoginService,
                 private readonly calendar: NgbCalendar,

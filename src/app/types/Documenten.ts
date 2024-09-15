@@ -281,9 +281,7 @@ export interface components {
        */
       LAATSTE_AANPASSING?: string;
     };
-    view_documenten_dataset: components["schemas"]["document"] & {
-      [key: string]: unknown;
-    };
+    view_documenten_dataset: components["schemas"]["document"] & Record<string, unknown>;
     view_documenten: {
       /**
        * Format: int32

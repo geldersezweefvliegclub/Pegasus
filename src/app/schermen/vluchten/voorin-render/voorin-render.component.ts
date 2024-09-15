@@ -15,9 +15,9 @@ export class VoorinRenderComponent implements AgRendererComponent {
     warningIcon:IconDefinition = faExclamationTriangle;
     lidID: string;
     grid_vliegernaam: string;
-    naarDashboard: boolean = false;
+    naarDashboard = false;
 
-    error: boolean = false;          // er is gestart, maar PIC is onbekend
+    error = false;          // er is gestart, maar PIC is onbekend
 
     constructor(private readonly loginService: LoginService) { }
 

@@ -10,7 +10,7 @@ export class ExportStartlijstComponent {
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @Output() exportDataset: EventEmitter<string> = new EventEmitter<string>();
 
-    exportKeuze:  string = "dag"
+    exportKeuze = "dag"
 
     constructor() {
     }

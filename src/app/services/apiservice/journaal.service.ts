@@ -27,8 +27,8 @@ export class JournaalService {
     constructor(private readonly apiService: APIService) {
     }
 
-    async getJournaals(filter: journaalFilter, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, verwijderd: boolean = false): Promise<HeliosJournaalDataset[]> {
-        let getParams: KeyValueArray = {};
+    async getJournaals(filter: journaalFilter, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, verwijderd = false): Promise<HeliosJournaalDataset[]> {
+        const getParams: KeyValueArray = {};
 
         getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
         getParams['EIND_DATUM'] = eindDatum.toISODate() as string;

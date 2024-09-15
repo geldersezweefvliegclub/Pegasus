@@ -40,8 +40,8 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
     competenties: HeliosCompetentiesDataset[];
     boom: CompetentieTreeviewItem[];
 
-    isLoading: boolean = false;
-    isSuspended: boolean = false;
+    isLoading = false;
+    isSuspended = false;
     private typesAbonnement: Subscription;
     leerfaseTypes: HeliosType[];
 
@@ -87,9 +87,9 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
     opvragen(): void {
         this.isLoading = true;
         this.competentieService.getBoom().then((b) => {
-            let tree: CompetentieTreeviewItem[] = [];
+            const tree: CompetentieTreeviewItem[] = [];
             for (let i = 0; i < b.length; i++) {
-                let t = this.TreeView(b[i]);
+                const t = this.TreeView(b[i]);
                 t.blokID = -1;                    // indicatie dat het top level item is
                 tree.push(t)
             }
@@ -99,7 +99,7 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
     }
 
     TreeView(boomTak: HeliosProgressieBoom): CompetentieTreeviewItem {
-        let tekst: string = ''
+        let tekst = ''
 
         if (boomTak.BLOK)
             tekst += boomTak.BLOK.toString();
@@ -108,7 +108,7 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
         if (boomTak.ONDERWERP)
             tekst += boomTak.ONDERWERP.toString()
 
-        let nieuwetak = new CompetentieTreeviewItem({
+        const nieuwetak = new CompetentieTreeviewItem({
             text: (tekst).trim(),
             value: boomTak.COMPETENTIE_ID,
             checked: false,
@@ -147,7 +147,7 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
     nieuweBoomTak(boomTak: CompetentieTreeviewItem, parentID: number) {
         // toevoegen van de tak onder de parent
         if (boomTak.competentieID == parentID) {
-            let nieuwetak = new CompetentieTreeviewItem({
+            const nieuwetak = new CompetentieTreeviewItem({
                 text: "<< nieuwe competentie >>",
                 value: -1,
                 checked: false,

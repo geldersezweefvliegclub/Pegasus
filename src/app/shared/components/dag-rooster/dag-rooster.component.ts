@@ -15,7 +15,7 @@ export class DagRoosterComponent {
     @Output() opslaan: EventEmitter<string> = new EventEmitter<string>();
 
     @Input() Datum: DateTime;
-    @Input() magWijzigen: boolean = false;
+    @Input() magWijzigen = false;
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
     rooster: HeliosRoosterDataset;
@@ -64,9 +64,9 @@ export class DagRoosterComponent {
     }
 
     opslaanData() {
-        let aanwezigString: string = "";
-        let afwezigString: string = "";
-        let onbekendString: string = "";
+        let aanwezigString = "";
+        let afwezigString = "";
+        let onbekendString = "";
 
         this.diensten.forEach((dienst) => {
             if (dienst.ROOSTER_ID! < 0) { // indicatie dat er een aanpassing is gedaan
@@ -91,7 +91,7 @@ export class DagRoosterComponent {
 
         });
 
-        let tekst: string = "";
+        let tekst = "";
 
         if (aanwezigString.length > 0) {
             tekst += 'Afwezig: ' + afwezigString  + '\n\n';

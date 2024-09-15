@@ -111,15 +111,15 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
 
     transacties: HeliosTransactiesDataset[];
     vliegdag: DateTime | undefined;
-    isLoading: boolean = false;
+    isLoading = false;
 
     iconCardIcon: IconDefinition = faEuroSign;
 
     error: ErrorMessage | undefined;
-    magToevoegen: boolean = true;
-    magExporteren: boolean = false;
+    magToevoegen = true;
+    magExporteren = false;
 
-    toonBladwijzer: boolean = false;
+    toonBladwijzer = false;
     lidID: number | undefined;
 
     timerID: number;
@@ -254,7 +254,7 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
 
     // export de huidige dataset naar excel
     exportDataset() {
-        let ws = xlsx.utils.json_to_sheet(this.transacties);
+        const ws = xlsx.utils.json_to_sheet(this.transacties);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
         xlsx.writeFile(wb, 'transacties ' + new Date().toJSON().slice(0, 10) + '.xlsx');

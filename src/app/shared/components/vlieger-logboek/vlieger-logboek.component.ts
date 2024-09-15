@@ -37,14 +37,14 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
     @Input() id: string;
     @Input() VliegerID: number;
     @Input() deleteMode: boolean;
-    @Input() Kolommen: string = "";
-    @Input() MaxItems: number = 1000;
+    @Input() Kolommen = "";
+    @Input() MaxItems = 1000;
 
     @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
     @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
     @ViewChild(StartEditorComponent) startEditor: StartEditorComponent;
 
-    toonLogboekKlein: boolean = false;     // Klein formaat van het vliegerlogboek
+    toonLogboekKlein = false;     // Klein formaat van het vliegerlogboek
 
     data: HeliosLogboekDatasetExtended[] = [];
     private dbEventAbonnement: Subscription;
@@ -55,7 +55,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
-    isLoading: boolean = false;
+    isLoading = false;
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
@@ -235,7 +235,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
             this.isLoading = true;
             this.startlijstService.getLogboek(this.VliegerID, startDatum, eindDatum).then((dataset) => {
                 this.isLoading = false;
-                let data:HeliosLogboekDatasetExtended[] = (dataset) ? dataset : [];
+                const data:HeliosLogboekDatasetExtended[] = (dataset) ? dataset : [];
 
                 const ui = this.loginService.userInfo;
                 const nu:  DateTime = DateTime.now()

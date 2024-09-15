@@ -19,7 +19,7 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDest
     private datumAbonnement: Subscription;          // volg de keuze van de kalender
     datum: DateTime = DateTime.now();               // de gekozen dag
     data: HeliosLogboekTotalen;
-    isLoading: boolean = false;
+    isLoading = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;

@@ -27,14 +27,14 @@ export class ProgressieService {
     }
 
     async getProgressiesLid(lidID:number, comptentiesIDs?: string): Promise<HeliosBehaaldeProgressieDataset[]> {
-        let progressie: HeliosBehaaldeProgressie | null = null;
+        const progressie: HeliosBehaaldeProgressie | null = null;
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
             return [];
         }
 
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
         getParams['LID_ID'] = lidID.toString();
 
         if ((this.progressieCache != undefined)  && (this.progressieCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
@@ -83,7 +83,7 @@ export class ProgressieService {
     }
 
     async getBoom(lidID:number): Promise<HeliosProgressieBoom[]> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
         getParams['LID_ID'] = lidID.toString();
 
         // starttoren heeft geen progressie nodig
@@ -98,7 +98,7 @@ export class ProgressieService {
     }
 
     async getProgressieKaart(lidID:number):Promise<HeliosProgressieKaartDataset[]> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
         getParams['LID_ID'] = lidID.toString();
 
         // starttoren heeft geen progressie nodig

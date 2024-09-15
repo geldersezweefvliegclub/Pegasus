@@ -38,7 +38,7 @@ export class PegasusConfigService {
             */
 
             this.http.get(this.configURL).toPromise().then((response: IPegasusConfig) => {
-                this.pegasusConfig = <IPegasusConfig>response;
+                this.pegasusConfig = response as IPegasusConfig;
 
                 resolve(this.pegasusConfig);
             }).catch(() => {

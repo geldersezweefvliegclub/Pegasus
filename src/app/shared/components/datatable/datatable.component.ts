@@ -23,13 +23,13 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     @Input() rowData = [];
     @Input() frameworkComponents: any;
     @Input() id: string;
-    @Input() loading: boolean = false;
-    @Input() sizeToFit: boolean = true;
-    @Input() autoSizeColumns: boolean = false;
-    @Input() autoHeight: boolean = false;
-    @Input() rowHeight: number = 40;
+    @Input() loading = false;
+    @Input() sizeToFit = true;
+    @Input() autoSizeColumns = false;
+    @Input() autoHeight = false;
+    @Input() rowHeight = 40;
     @Input() multipleSelection = false;
-    @Input() pagination: boolean = true;
+    @Input() pagination = true;
     @Input() rowClassRules: any = null;
     @Output() rowDoubleClicked: EventEmitter<RowDoubleClickedEvent> = new EventEmitter<RowDoubleClickedEvent>();
     @Output() rowSelected: EventEmitter<RowSelectedEvent> = new EventEmitter<RowSelectedEvent>();
@@ -166,7 +166,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     filteredRecords(): any[] {
-        let rowData:any = [];
+        const rowData:any = [];
         if (this.api) {
             this.api.forEachNodeAfterFilter(node => {
                 rowData.push(node.data);

@@ -56,9 +56,9 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
     starts: HeliosStartDatasetExtended[] = [];
     filteredStarts: HeliosStartDatasetExtended[] = [];
-    isLoading: boolean = false;
-    isStarttoren: boolean = false;
-    isExporting: boolean = false;
+    isLoading = false;
+    isStarttoren = false;
+    isExporting = false;
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
@@ -189,23 +189,23 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
     hasFlarmTimer: number;
     refreshTimer: number;
-    deleteMode: boolean = false;        // zitten we in delete mode om starts te kunnen verwijderen
-    trashMode: boolean = false;         // zitten in restore mode om starts te kunnen terughalen
+    deleteMode = false;        // zitten we in delete mode om starts te kunnen verwijderen
+    trashMode = false;         // zitten in restore mode om starts te kunnen terughalen
 
-    filterOn: boolean = false;
-    toonFlarm: boolean = true;
-    toonRefresh: boolean = true;
-    toonVeldFilter: boolean = true;
-    toonStartlijstKlein: boolean = false;     // Klein formaat van de startlijst
+    filterOn = false;
+    toonFlarm = true;
+    toonRefresh = true;
+    toonVeldFilter = true;
+    toonStartlijstKlein = false;     // Klein formaat van de startlijst
 
     private datumAbonnement: Subscription;    // volg de keuze van de kalender
     datum: DateTime = DateTime.now();         // de gekozen dag in de kalender
 
-    magToevoegen: boolean = false;
-    magVerwijderen: boolean = false;
-    magWijzigen: boolean = false;
-    inTijdspan: boolean = false;          //  Mogen we starts aanpassen. Mag niet in de toekomst en ook niet meer dan xx dagen geleden.  xx is geconfigureerd in pegasus.config
-    magExporteren: boolean = false;
+    magToevoegen = false;
+    magVerwijderen = false;
+    magWijzigen = false;
+    inTijdspan = false;          //  Mogen we starts aanpassen. Mag niet in de toekomst en ook niet meer dan xx dagen geleden.  xx is geconfigureerd in pegasus.config
+    magExporteren = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -407,7 +407,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
     // Opvragen van de starts via de api
     opvragen() {
-        let queryParams: KeyValueArray = {};
+        const queryParams: KeyValueArray = {};
         clearTimeout(this.refreshTimer);
 
         if (this.filterOn) {
@@ -491,7 +491,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     async exportDataset(exportDMJ: string) {
         this.isExporting = true;
 
-        let datum: DateTime = DateTime.fromObject({
+        const datum: DateTime = DateTime.fromObject({
             year: this.datum.year,
             month: this.datum.month,
             day: this.datum.day
@@ -508,13 +508,13 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
                 break;
             }
             case "maand": {
-                let vanDatum: DateTime = DateTime.fromObject({
+                const vanDatum: DateTime = DateTime.fromObject({
                     year: this.datum.year,
                     month: this.datum.month,
                     day: 1
                 })
 
-                let totDatum: DateTime = DateTime.fromObject({
+                const totDatum: DateTime = DateTime.fromObject({
                     year: this.datum.year,
                     month: this.datum.month,
                     day: this.datum.daysInMonth
@@ -531,13 +531,13 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
                 break;
             }
             case "jaar": {
-                let vanDatum: DateTime = DateTime.fromObject({
+                const vanDatum: DateTime = DateTime.fromObject({
                     year: this.datum.year,
                     month: 1,
                     day: 1
                 })
 
-                let totDatum: DateTime = DateTime.fromObject({
+                const totDatum: DateTime = DateTime.fromObject({
                     year: this.datum.year,
                     month: 12,
                     day: 31

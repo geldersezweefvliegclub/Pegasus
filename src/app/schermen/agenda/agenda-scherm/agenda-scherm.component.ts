@@ -22,19 +22,19 @@ export class AgendaSchermComponent implements OnInit, OnDestroy {
   @ViewChild(AgendaEditorComponent) editor:AgendaEditorComponent;
 
   data:HeliosAgendaDataset[] = [];
-  isLoading: boolean = false;
+  isLoading = false;
 
   private dbEventAbonnement: Subscription;    // Abonneer op aanpassingen in de database
   private datumAbonnement: Subscription;      // volg de keuze van de kalender
   private maandAbonnement: Subscription;      // volg de keuze van de kalender
   datum: DateTime = DateTime.now();           // de gekozen dag
 
-  deleteMode: boolean = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
-  trashMode: boolean = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
+  deleteMode = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
+  trashMode = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
 
-  magToevoegen: boolean = false;
-  magVerwijderen: boolean = false;
-  magWijzigen: boolean = false;
+  magToevoegen = false;
+  magVerwijderen = false;
+  magWijzigen = false;
 
   success: SuccessMessage | undefined;
   error: ErrorMessage | undefined;
@@ -156,8 +156,8 @@ export class AgendaSchermComponent implements OnInit, OnDestroy {
   opvragen() {
     this.isLoading = true;
 
-    let startDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 1, day: 1});
-    let eindDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 12, day: 31});
+    const startDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 1, day: 1});
+    const eindDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 12, day: 31});
 
 
     this.agendaService.getAgenda(startDatum, eindDatum, 5000, this.trashMode).then((dataset) => {

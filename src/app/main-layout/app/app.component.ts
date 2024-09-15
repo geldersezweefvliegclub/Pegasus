@@ -35,7 +35,7 @@ export class AppComponent {
     heeftStartVerbod = false;
     contactBeheerderDDWV = false
     zusterclubOntbreekDDWV = false;
-    updateAvailable: boolean = false;
+    updateAvailable = false;
     private keepAliveTimer: number;
 
     constructor(readonly router: Router,

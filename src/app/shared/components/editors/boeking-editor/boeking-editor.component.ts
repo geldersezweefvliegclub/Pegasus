@@ -25,7 +25,7 @@ export class BoekingEditorComponent implements OnInit, OnDestroy {
     private ledenAbonnement: Subscription;
     leden: HeliosLedenDataset[] = [];
 
-    isSaving: boolean = false;
+    isSaving = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -110,9 +110,9 @@ export class BoekingEditorComponent implements OnInit, OnDestroy {
             }
 
             let datum: DateTime = DateTime.fromObject({day: this.eersteDag?.day, month: this.eersteDag?.month, year: this.eersteDag?.year});
-            let eind: DateTime = DateTime.fromObject({day: this.laatsteDag?.day, month: this.laatsteDag?.month, year: this.laatsteDag?.year});
+            const eind: DateTime = DateTime.fromObject({day: this.laatsteDag?.day, month: this.laatsteDag?.month, year: this.laatsteDag?.year});
 
-            let reservering: HeliosReservering = {
+            const reservering: HeliosReservering = {
                 IS_GEBOEKT: true,
                 LID_ID: this.lidID,
                 VLIEGTUIG_ID: this.vliegtuigID,

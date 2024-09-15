@@ -70,7 +70,7 @@ export class RoosterService {
     }
 
     async getRooster(startDatum: DateTime, eindDatum: DateTime, velden?: string): Promise<HeliosRoosterDataset[]> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
         getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
         getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
         if (velden) {

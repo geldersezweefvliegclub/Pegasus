@@ -11,8 +11,8 @@ import {LoginService} from "../../../services/apiservice/login.service";
 export class LedenCardComponent implements OnInit {
     @Input() lid: HeliosLedenDataset;
 
-    toonTegoed: boolean = false;        // toon DDWV tegoed
-    naarDashboard: boolean = false;     // toon link naar dashboard van het lid
+    toonTegoed = false;        // toon DDWV tegoed
+    naarDashboard = false;     // toon link naar dashboard van het lid
     constructor(private readonly loginService: LoginService) {
     }
 

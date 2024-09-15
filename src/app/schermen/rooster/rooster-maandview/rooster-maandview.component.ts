@@ -59,9 +59,9 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
     isDDWVCrew: boolean;
     isBeheerder: boolean;
     isBeheerderDDWV: boolean;
-    magWijzigen: boolean = false;
-    ddwvActief: boolean = true;
-    dragDisabled: boolean = true;
+    magWijzigen = false;
+    ddwvActief = true;
+    dragDisabled = true;
 
     opslaanTimer: number;                           // kleine vertraging om starts opslaan te beperken
 

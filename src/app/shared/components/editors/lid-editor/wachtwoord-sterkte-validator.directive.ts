@@ -23,12 +23,12 @@ export class WachtwoordSterkteValidatorDirective {
   // Als regex wel matched, wordt er null teruggegeven. Dan is het wachtwoord sterk
   readonly regex = '(?=^.{4,}$)(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z])';
 
-  validate(control: AbstractControl): { [key: string]: any } | null {
+  validate(control: AbstractControl): Record<string, any> | null {
     return this.regexValidator(new RegExp(this.regex))(control);
   }
 
   regexValidator(nameRe: RegExp): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
+    return (control: AbstractControl): Record<string, any> | null => {
       if (control.value === '' || !control.value) {
         return null;
       }

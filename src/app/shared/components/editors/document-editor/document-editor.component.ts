@@ -17,14 +17,14 @@ export class DocumentEditorComponent {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
-    isLoading: boolean = false;
-    isSaving: boolean = false;
+    isLoading = false;
+    isSaving = false;
 
-    isVerwijderMode: boolean = false;
-    isRestoreMode: boolean = false;
+    isVerwijderMode = false;
+    isRestoreMode = false;
 
-    isDoc: boolean = true;
-    isUrl: boolean = false;
+    isDoc = true;
+    isUrl = false;
 
     document: HeliosDocument;
 

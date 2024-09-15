@@ -7,8 +7,8 @@ import {ModalComponent} from '../modal/modal.component';
   styleUrls: ['./avatar.component.scss']
 })
 export class AvatarComponent {
-  @Input() naam: string = '';
-  @Input() url: string = '';
+  @Input() naam = '';
+  @Input() url = '';
   @Input() vorm: 'cirkel' | 'vierkant' = 'cirkel';
   @ViewChild(ModalComponent) private popup: ModalComponent;
 

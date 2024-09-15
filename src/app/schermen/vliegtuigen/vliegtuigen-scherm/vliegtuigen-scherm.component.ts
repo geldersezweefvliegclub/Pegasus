@@ -44,8 +44,8 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
 
     data:HeliosVliegtuigenDatasetExtended[] = [];
     logboek: HeliosLogboekDataset[] = [];
-    isLoading: boolean = false;
-    toonKlein: boolean = false;                 // Klein formaat van het scherm
+    isLoading = false;
+    toonKlein = false;                 // Klein formaat van het scherm
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
@@ -133,14 +133,14 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
 
     zoekString: string;
     zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
-    deleteMode: boolean = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
-    trashMode: boolean = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
+    deleteMode = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
+    trashMode = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
 
-    magToevoegen: boolean = false;
-    magVerwijderen: boolean = false;
-    magWijzigen: boolean = false;
-    magClubkistWijzigen: boolean = false;
-    magExporten: boolean = false;
+    magToevoegen = false;
+    magVerwijderen = false;
+    magWijzigen = false;
+    magClubkistWijzigen = false;
+    magExporten = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -361,7 +361,7 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
 
     // Export naar excel
     exportDataset() {
-        var ws = xlsx.utils.json_to_sheet(this.data);
+        const ws = xlsx.utils.json_to_sheet(this.data);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
         xlsx.writeFile(wb, 'vliegtuigen ' + new Date().toJSON().slice(0,10) +'.xlsx');

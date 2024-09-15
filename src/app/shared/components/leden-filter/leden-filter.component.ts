@@ -13,7 +13,7 @@ import {LoginService} from "../../../services/apiservice/login.service";
 })
 
 export class LedenFilterComponent {
-    @Input() LedenDDWV:boolean = true;
+    @Input() LedenDDWV = true;
     @Output() filterChanged: EventEmitter<void> = new EventEmitter<void>();
 
     @ViewChild(ModalComponent) private popup: ModalComponent;

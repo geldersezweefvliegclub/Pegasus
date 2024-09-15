@@ -40,8 +40,8 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
 
     leden: HeliosLedenDataset[] = [];
     dataset: HeliosLedenDataset[] = [];
-    isLoading: boolean = false;
-    toonKlein: boolean = false;                 // Klein formaat
+    isLoading = false;
+    toonKlein = false;                 // Klein formaat
 
     private resizeSubscription: Subscription;
 
@@ -181,16 +181,16 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
 
     zoekString: string;
     zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
-    deleteMode: boolean = false;        // zitten we in delete mode om leden te kunnen verwijderen
-    trashMode: boolean = false;         // zitten in restore mode om leden te kunnen terughalen
+    deleteMode = false;        // zitten we in delete mode om leden te kunnen verwijderen
+    trashMode = false;         // zitten in restore mode om leden te kunnen terughalen
 
     error: ErrorMessage | undefined;
-    magToevoegen: boolean = false;
-    magVerwijderen: boolean = false;
-    magWijzigen: boolean = false;
-    magExporteren: boolean = false;
-    toonBulkEmail: boolean = false;
-    toonBladwijzer: boolean = false;
+    magToevoegen = false;
+    magVerwijderen = false;
+    magWijzigen = false;
+    magExporteren = false;
+    toonBulkEmail = false;
+    toonBladwijzer = false;
 
     constructor(private readonly ledenService: LedenService,
                 private readonly loginService: LoginService,
@@ -471,7 +471,7 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
 
     // Export naar excel
     exportDataset() {
-        let ws = xlsx.utils.json_to_sheet(this.leden);
+        const ws = xlsx.utils.json_to_sheet(this.leden);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
         xlsx.writeFile(wb, 'leden ' + new Date().toJSON().slice(0, 10) + '.xlsx');
@@ -479,8 +479,8 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
 
     bulkEmail() {
         const ui = this.loginService.userInfo?.LidData;
-        const toEmail: String  = ui!.EMAIL as String;
-        let bcc: String="";
+        const toEmail: string  = ui!.EMAIL as string;
+        let bcc="";
 
         this.grid.filteredRecords().forEach((lid: HeliosLedenDataset) => {
             bcc += lid.EMAIL + ","

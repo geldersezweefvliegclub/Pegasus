@@ -17,7 +17,7 @@ export class ReserveringService {
     }
 
     async getReserveringen(startDatum: DateTime, eindDatum: DateTime, maxRecords?: number): Promise<HeliosReserveringenDataset[]> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {

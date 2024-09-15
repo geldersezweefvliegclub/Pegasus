@@ -47,12 +47,12 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
-    isSaving: boolean = false;
-    isLoading: boolean = false;
-    isVerwijderMode: boolean = false;
-    isRestoreMode: boolean = false;
+    isSaving = false;
+    isLoading = false;
+    isVerwijderMode = false;
+    isRestoreMode = false;
 
-    formTitel: string = "";
+    formTitel = "";
 
     constructor(private readonly typesService: TypesService,
                 private readonly sharedService: SharedService,

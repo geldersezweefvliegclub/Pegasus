@@ -14,12 +14,12 @@ import {DateTime} from "luxon";
 export class AgendaEditorComponent  {
   @ViewChild(ModalComponent) private popup: ModalComponent;
 
-  isLoading: boolean = false;
-  isSaving: boolean = false;
+  isLoading = false;
+  isSaving = false;
 
-  isVerwijderMode: boolean = false;
-  isRestoreMode: boolean = false;
-  formTitel: string = "";
+  isVerwijderMode = false;
+  isRestoreMode = false;
+  formTitel = "";
 
   activiteit: HeliosAgendaActiviteit = {}
 

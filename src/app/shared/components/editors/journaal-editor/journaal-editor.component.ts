@@ -34,13 +34,13 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
     categorie: HeliosType[];
     status: HeliosType[];
 
-    isLoading: boolean = false;
-    isSaving: boolean = false;
+    isLoading = false;
+    isSaving = false;
 
-    magWijzigen: boolean = true;
-    isVerwijderMode: boolean = false;
-    isRestoreMode: boolean = false;
-    formTitel: string = "";
+    magWijzigen = true;
+    isVerwijderMode = false;
+    isRestoreMode = false;
+    formTitel = "";
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;

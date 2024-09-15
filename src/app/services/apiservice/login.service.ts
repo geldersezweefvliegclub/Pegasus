@@ -119,7 +119,7 @@ export class LoginService  {
     }
 
     async getUserInfo(): Promise<void> {
-        let urlParams: string = "";
+        const urlParams = "";
 
         const response: Response = await this.apiService.get('Login/GetUserInfo' + urlParams);
         if (response.ok) {

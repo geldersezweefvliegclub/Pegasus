@@ -58,10 +58,10 @@ export class DaginfoComponent implements OnInit, OnDestroy{
     baanTypes$: Observable<HeliosType[]>;
     startMethodeTypes$: Observable<HeliosType[]>;
 
-    magOpslaan: boolean = false;
-    toonDagRapport: boolean = false;
-    deleteMode: boolean = false;
-    trashMode: boolean = false;
+    magOpslaan = false;
+    toonDagRapport = false;
+    deleteMode = false;
+    trashMode = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -144,7 +144,7 @@ export class DaginfoComponent implements OnInit, OnDestroy{
             tonen = true;
         } else if (this.rooster) {
             const d = this.datum.toISODate();
-            let rooster: HeliosRoosterDataset | undefined = this.rooster.find((dag) => d == dag.DATUM!)
+            const rooster: HeliosRoosterDataset | undefined = this.rooster.find((dag) => d == dag.DATUM!)
 
             if (rooster) {
                 if (rooster.DDWV)               // het is een DWWV dag, misschien toch alles tonen

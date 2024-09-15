@@ -25,12 +25,12 @@ export class LoginPageComponent implements OnInit {
     privacyUrl : string | undefined;
     privacyOk: boolean;
 
-    gebruikersnaam: string = '';
-    wachtwoord: string = '';
-    wachtwoordVerborgen: boolean = true;
+    gebruikersnaam = '';
+    wachtwoord = '';
+    wachtwoordVerborgen = true;
 
-    showSecret: boolean = false;
-    secret: string = '';
+    showSecret = false;
+    secret = '';
     isLoading = false;
     error: ErrorMessage;
 

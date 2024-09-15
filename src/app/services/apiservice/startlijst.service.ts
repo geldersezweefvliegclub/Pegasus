@@ -18,9 +18,7 @@ import {KeyValueArray} from '../../types/Utils';
 import {DateTime} from 'luxon';
 import {LoginService} from "./login.service";
 
-interface parameters {
-    [key: string]: string;
-}
+type parameters = Record<string, string>;
 
 @Injectable({
     providedIn: 'root'
@@ -40,7 +38,7 @@ export class StartlijstService {
     }
 
     async getVliegdagen(startDatum: DateTime, eindDatum: DateTime): Promise<[]> {
-        let getParams: parameters = {};
+        const getParams: parameters = {};
         getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
         getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
 
@@ -70,7 +68,7 @@ export class StartlijstService {
     }
 
     async getLogboek(id: number, startDatum: DateTime, eindDatum: DateTime, maxRecords?: number): Promise<HeliosLogboekDataset[]> {
-        let getParams: parameters = {};
+        const getParams: parameters = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
@@ -106,9 +104,7 @@ export class StartlijstService {
     }
 
     async getLogboekTotalen(id: number, jaar:number): Promise<HeliosLogboekTotalen> {
-        interface parameters {
-            [key: string]: string;
-        }
+        type parameters = Record<string, string>;
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
@@ -120,7 +116,7 @@ export class StartlijstService {
             return {};
         }
 
-        let getParams: parameters = {};
+        const getParams: parameters = {};
         getParams['LID_ID'] = id.toString();
         getParams['JAAR'] = jaar.toString();
 
@@ -135,7 +131,7 @@ export class StartlijstService {
     }
 
     async getVliegtuigLogboek(id: number, startDatum: DateTime, eindDatum: DateTime, limit?: number): Promise<HeliosVliegtuigLogboekDataset[]> {
-        let getParams: parameters = {};
+        const getParams: parameters = {};
         getParams['ID'] = id.toString();
         getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
         getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
@@ -166,7 +162,7 @@ export class StartlijstService {
     }
 
     async getVliegtuigLogboekTotalen(id: number, jaar:number): Promise<HeliosVliegtuigLogboekTotalen> {
-        let getParams: parameters = {};
+        const getParams: parameters = {};
         getParams['ID'] = id.toString();
         getParams['JAAR'] = jaar.toString();
 
@@ -188,8 +184,8 @@ export class StartlijstService {
         return this.vliegtuigLogboekTotalen;
     }
 
-    async getStarts(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise< HeliosStartDataset[]> {
-        let getParams: KeyValueArray = params;
+    async getStarts(verwijderd = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise< HeliosStartDataset[]> {
+        const getParams: KeyValueArray = params;
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
@@ -223,7 +219,7 @@ export class StartlijstService {
     }
 
     async getStartDetails(id: number): Promise< HeliosStartDataset | undefined> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
@@ -253,7 +249,7 @@ export class StartlijstService {
     }
 
     async getRecency(lidID: number, datum?: DateTime): Promise<HeliosRecency> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
         getParams['VLIEGER_ID'] = lidID.toString();
 
         // kunnen alleen data ophalen als we ingelogd zijn

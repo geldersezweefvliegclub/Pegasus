@@ -11,26 +11,26 @@ import {Subscription} from "rxjs";
     styleUrls: ['./icon-button.component.scss']
 })
 export class IconButtonComponent implements OnInit, OnDestroy {
-    @Input() tekst: string = '';
+    @Input() tekst = '';
     @Input() iconNaam: string;
-    @Input() btnColor: string = 'btn-secondary';
-    @Input() disabled: boolean = false;
-    @Input() toonKlein: boolean = true;
+    @Input() btnColor = 'btn-secondary';
+    @Input() disabled = false;
+    @Input() toonKlein = true;
     @Input() flip: FlipProp;
     @Input() size: SizeProp;
-    @Input() stopPropagation: boolean = false;
+    @Input() stopPropagation = false;
     @Input() type: 'button' | 'submit' = 'button';
     @Output() btnClicked: EventEmitter<void> = new EventEmitter<void>();
 
     faIcon: IconDefinition;
-    toonTekst: boolean = false;
+    toonTekst = false;
 
     private resizeSubscription: Subscription;                           // Abonneer op aanpassing van window grootte (of draaien mobiel)
     constructor(private readonly sharedService: SharedService) {}
 
     ngOnInit(): void {
         if (this.iconNaam) {
-            let parts: string[] = this.iconNaam.split(' ');
+            const parts: string[] = this.iconNaam.split(' ');
 
             if (parts.length != 2) {
                 console.error('iconNaam moet 2 parameters hebben');

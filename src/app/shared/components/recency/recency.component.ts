@@ -14,7 +14,7 @@ import {StartGrafiekComponent} from "./start-grafiek/start-grafiek.component";
 // -1 = niet van toepasssing
 // 0 = niet geldig
 // 1 = geldig
-type brevetEASA = {
+interface brevetEASA {
     aantal: boolean;
     medical: boolean;
 
@@ -23,7 +23,7 @@ type brevetEASA = {
     zelfstarts: number;
     tmgstarts: number;
     pax: number;
-};
+}
 
 @Component({
     selector: 'app-recency',
@@ -46,8 +46,8 @@ export class RecencyComponent implements OnInit, OnChanges {
     aantekeningen: HeliosBehaaldeProgressieDataset[];
 
     recency: HeliosRecency;
-    isLoading: boolean = false;
-    toonEASA: boolean = false;
+    isLoading = false;
+    toonEASA = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;

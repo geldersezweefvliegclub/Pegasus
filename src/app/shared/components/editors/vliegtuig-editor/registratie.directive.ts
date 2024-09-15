@@ -7,12 +7,12 @@ import {AbstractControl, NG_VALIDATORS, Validator, ValidatorFn} from '@angular/f
 })
 export class RegistratieDirective implements Validator {
 
-    validate(control: AbstractControl): { [key: string]: any } | null {
+    validate(control: AbstractControl): Record<string, any> | null {
         return this.regexValidator(new RegExp(/[A-Z]*-[0-Z][0-Z]*/))(control);
     }
 
     regexValidator(nameRe: RegExp): ValidatorFn {
-        return (control: AbstractControl): { [key: string]: any } | null => {
+        return (control: AbstractControl): Record<string, any> | null => {
             if (control.value === '') {
                 return null;
             }

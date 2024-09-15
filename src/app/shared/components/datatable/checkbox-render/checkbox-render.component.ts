@@ -9,7 +9,7 @@ import {faCheck, faTimes} from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./checkbox-render.component.scss']
 })
 export class CheckboxRenderComponent implements AgRendererComponent {
-  boolWaarde: boolean = false;
+  boolWaarde = false;
   check = faCheck;
   cross = faTimes;
 

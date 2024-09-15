@@ -70,9 +70,9 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     private datumAbonnement: Subscription; // volg de keuze van de kalender
     datum: DateTime = DateTime.now();      // de gekozen dag
 
-    isDDWVer: boolean = false;             // is ingelogde gebruiker een DDWV'er
-    saldoTonen: boolean = false;           // Tonen van DDWV saldo
-    toonTracks: boolean = false;           // mogen de tracks vertoond worden
+    isDDWVer = false;             // is ingelogde gebruiker een DDWV'er
+    saldoTonen = false;           // Tonen van DDWV saldo
+    toonTracks = false;           // mogen de tracks vertoond worden
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -82,8 +82,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     @ViewChild(TransactiesComponent) transactieScherm: TransactiesComponent;
     @ViewChild(StartEditorComponent) private startEditor: StartEditorComponent;
 
-    verwijderMode: boolean = false;
-    magVerwijderen: boolean = false;
+    verwijderMode = false;
+    magVerwijderen = false;
 
 
     constructor(private readonly ddwvService: DdwvService,
@@ -124,7 +124,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         // Als lidID is meegegeven in URL, moeten we de lidData ophalen
         this.activatedRoute.queryParams.subscribe(params => {
             const hl= this.loginService.userInfo?.LidData as HeliosLid;
-            var lidID = hl.ID!
+            let lidID = hl.ID!
             if (params['lidID']) {
                 lidID = params['lidID'];
             }
@@ -208,7 +208,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
                     start.DATUM = d.day + "-" + d.month + "-" + d.year
                 })
 
-                let ws = xlsx.utils.json_to_sheet(toExcel);
+                const ws = xlsx.utils.json_to_sheet(toExcel);
                 const wb: xlsx.WorkBook = xlsx.utils.book_new();
                 xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
                 xlsx.writeFile(wb, 'logboek ' + this.datum.year.toString() + '-' + new Date().toJSON().slice(0, 10) + '.xlsx');
@@ -228,7 +228,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
                     dataset[i].BLOK_ID = undefined;
                     dataset[i].PROGRESSIE_ID = undefined;
                 }
-                let ws = xlsx.utils.json_to_sheet(dataset);
+                const ws = xlsx.utils.json_to_sheet(dataset);
                 const wb: xlsx.WorkBook = xlsx.utils.book_new();
                 xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
                 xlsx.writeFile(wb, 'progressiekaart ' + this.lidData.NAAM + '-' + new Date().toJSON().slice(0, 10) + '.xlsx');
@@ -257,7 +257,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
     getMeta(url:string) {
         return new Promise((resolve, reject) => {
-            let img = new Image();
+            const img = new Image();
             img.onload = () => resolve(img);
             img.onerror = () => reject();
             img.src = url;

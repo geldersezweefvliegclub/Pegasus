@@ -26,7 +26,7 @@ export class VluchtCardComponent implements OnInit {
 
     readonly iconEdit: IconDefinition = faPenToSquare;
 
-    inTijdspan: boolean = false;
+    inTijdspan = false;
     datumDM: string;
 
     constructor(private readonly configService: PegasusConfigService,

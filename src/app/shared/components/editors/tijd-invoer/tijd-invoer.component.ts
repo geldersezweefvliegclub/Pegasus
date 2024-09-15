@@ -34,14 +34,14 @@ export class TijdInvoerComponent {
     error: ErrorMessage | undefined;
     start: HeliosStart;
 
-    isLoading: boolean = false;
-    isSaving: boolean = false;
-    formTitel: string = "";
-    label: string = "";
+    isLoading = false;
+    isSaving = false;
+    formTitel = "";
+    label = "";
     overdag: string[];
 
     tijdIngevoerd: string;
-    tijdOK: boolean = true;
+    tijdOK = true;
 
     Invoer: TypeTijdInvoer = TypeTijdInvoer.Starttijd;
 
@@ -237,7 +237,7 @@ export class TijdInvoerComponent {
     totTijd(): Date {
         const airport = this.configService.getAirport();
         const d = new Date(this.start.DATUM as string);
-        let sunset: Date = getSunset(airport.Latitude, airport.Longitude, d);
+        const sunset: Date = getSunset(airport.Latitude, airport.Longitude, d);
         sunset.setHours(sunset.getHours() + 1); // 1 uurtje extra voor landing in schemer
 
         // VELD_ID = xxx Starten op ander veld, dan klopt sunset niet. Dan maar tot 22:00
@@ -251,8 +251,8 @@ export class TijdInvoerComponent {
 
         this.overdag = [];
         for (let min = start; min <= eind; min++) {
-            let uurStr = Math.floor(min / 60).toString().padStart(2, '0');
-            let minStr = (min % 60).toString().padStart(2, '0');
+            const uurStr = Math.floor(min / 60).toString().padStart(2, '0');
+            const minStr = (min % 60).toString().padStart(2, '0');
             this.overdag.push(uurStr + ":" + minStr);
         }
     }
@@ -261,7 +261,7 @@ export class TijdInvoerComponent {
     // Zorg ook dat maximale input 5 tekens is.
     veldInvoer(newValue: string) {
         let output: string;
-        let inputParts = newValue.split(':');
+        const inputParts = newValue.split(':');
 
         if ((+inputParts[0] > 2) && (+inputParts[0] <= 9)) {
             output = inputParts[0].toString().padStart(2, '0');
@@ -322,7 +322,7 @@ export class TijdInvoerComponent {
 
     // Ingevoerde tijd wordt een minuutje later
     timeUp() {
-        let TijdParts = this.tijdInvoerElement.nativeElement.value.split(':');
+        const TijdParts = this.tijdInvoerElement.nativeElement.value.split(':');
 
         // conversie hh:mm naar minuten
         let minuten = +TijdParts[0] * 60;
@@ -331,8 +331,8 @@ export class TijdInvoerComponent {
         minuten++;  // minuutje meer
 
         // en nu van minuten naar hh:mm
-        let uurStr = Math.floor(minuten / 60).toString().padStart(2, '0');
-        let minStr = (minuten % 60).toString().padStart(2, '0');
+        const uurStr = Math.floor(minuten / 60).toString().padStart(2, '0');
+        const minStr = (minuten % 60).toString().padStart(2, '0');
         const tijd: string = (uurStr + ":" + minStr);
 
         if (this.overdag.includes(tijd)) {
@@ -342,7 +342,7 @@ export class TijdInvoerComponent {
 
     // Ingevoerde tijd wordt een minuutje eerder
     timeDown() {
-        let TijdParts = this.tijdInvoerElement.nativeElement.value.split(':');
+        const TijdParts = this.tijdInvoerElement.nativeElement.value.split(':');
 
         // conversie hh:mm naar minuten
         let minuten = +TijdParts[0] * 60;
@@ -351,8 +351,8 @@ export class TijdInvoerComponent {
         minuten--;  // minuutje minder
 
         // en nu van minuten naar hh:mm
-        let uurStr = Math.floor(minuten / 60).toString().padStart(2, '0');
-        let minStr = (minuten % 60).toString().padStart(2, '0');
+        const uurStr = Math.floor(minuten / 60).toString().padStart(2, '0');
+        const minStr = (minuten % 60).toString().padStart(2, '0');
         const tijd: string = (uurStr + ":" + minStr);
 
         if (this.overdag.includes(tijd)) {

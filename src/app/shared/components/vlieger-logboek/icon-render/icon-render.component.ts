@@ -9,9 +9,9 @@ import {ICellRendererParams} from "ag-grid-community";
   styleUrls: ['./icon-render.component.scss']
 })
 export class IconRenderComponent implements AgRendererComponent {
-  toonPax: boolean = false;
-  toonCheckStart: boolean = false;
-  toonInstructieVlucht: boolean = false;
+  toonPax = false;
+  toonCheckStart = false;
+  toonInstructieVlucht = false;
 
   constructor() { }
 

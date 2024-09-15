@@ -33,11 +33,11 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
     documentGroepen: HeliosType[] = [];
     documenten: HeliosDocumentenDataset[];
 
-    editMode: boolean = false;          // zitten we in edit mode om documenten te kunnen aanpassen
-    deleteMode: boolean = false;        // zitten we in delete mode om documenten te kunnen verwijderen
-    trashMode: boolean = false;         // zitten in restore mode om documenten te kunnen terughalen
+    editMode = false;          // zitten we in edit mode om documenten te kunnen aanpassen
+    deleteMode = false;        // zitten we in delete mode om documenten te kunnen verwijderen
+    trashMode = false;         // zitten in restore mode om documenten te kunnen terughalen
 
-    magAanpassen: boolean = false;      // mag de gebruiker documenten aanpassen
+    magAanpassen = false;      // mag de gebruiker documenten aanpassen
 
     constructor(private readonly typesService: TypesService,
                 private readonly loginService: LoginService,

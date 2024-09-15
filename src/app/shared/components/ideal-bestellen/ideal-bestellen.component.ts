@@ -23,8 +23,8 @@ export class IdealBestellenComponent implements OnInit{
     error: ErrorMessage | undefined;
 
     lidID: number;
-    bestelling: number = -1;
-    bank: number = -1;
+    bestelling = -1;
+    bank = -1;
 
     constructor(private readonly ddwvService: DdwvService,
                 private readonly typesService: TypesService,

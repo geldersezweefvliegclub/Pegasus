@@ -34,7 +34,7 @@ import {NgbDateFRParserFormatter} from "../../../shared/ngb-date-fr-parser-forma
 })
 
 export class NavigatieComponent implements OnInit, OnDestroy {
-    @Input() hoofdscherm: boolean = false;
+    @Input() hoofdscherm = false;
     @ViewChild(PopupKalenderComponent) popupKalender: PopupKalenderComponent;
 
     readonly routes = routes;
@@ -43,7 +43,7 @@ export class NavigatieComponent implements OnInit, OnDestroy {
     readonly beheerIcon: IconDefinition = faWrench;
 
     urlMenuItems:any[];
-    showBeheer: boolean = false;
+    showBeheer = false;
 
     vandaag = this.calendar.getToday();
     datumDMY: string = this.vandaag.day + "-" + this.vandaag.month + "-" + this.vandaag.year;
@@ -341,7 +341,7 @@ export class NavigatieComponent implements OnInit, OnDestroy {
     }
 
     toonIcon(iconNaam:string) : IconDefinition {
-        let parts: string[] = iconNaam.split(' ');
+        const parts: string[] = iconNaam.split(' ');
         let faIcon: IconDefinition = fas['faQuestion'];
 
         if (parts.length != 2) {

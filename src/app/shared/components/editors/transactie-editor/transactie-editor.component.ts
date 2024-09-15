@@ -19,7 +19,7 @@ import {NgbDateFRParserFormatter} from "../../../ngb-date-fr-parser-formatter";
 export class TransactieEditorComponent implements OnInit {
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
-    @Input() toonLidSelectie: boolean = true;
+    @Input() toonLidSelectie = true;
     @Output() TransactieGedaan: EventEmitter<void> = new EventEmitter<void>();
 
     private ledenAbonnement: Subscription;

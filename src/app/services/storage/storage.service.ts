@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
   providedIn: 'root'
 })
 export class StorageService {
-  vervalTijd: number = 60;  // 60 min
+  vervalTijd = 60;  // 60 min
 
   public opslaan(key:string, value:any, tijd : number = this.vervalTijd): void {
     const now = new Date()

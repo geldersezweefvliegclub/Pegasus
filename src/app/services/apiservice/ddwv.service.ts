@@ -61,7 +61,7 @@ export class DdwvService {
     }
 
     async betaalCrew(datum: string, IDs: string): Promise<void> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
 
         getParams['DATUM'] = datum;
         getParams['DIENSTEN'] = IDs;

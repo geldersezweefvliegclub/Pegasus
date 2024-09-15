@@ -11,7 +11,7 @@ import {SchermGrootte, SharedService} from "../../../services/shared/shared.serv
     styleUrls: ['./modal.component.scss']
 })
 export class ModalComponent {
-    @Input() titel: string = 'Editor';
+    @Input() titel = 'Editor';
     @Input() popupClass: string;
     @ViewChild('content') content: ElementRef;
 

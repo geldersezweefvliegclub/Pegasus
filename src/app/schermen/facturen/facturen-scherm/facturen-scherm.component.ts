@@ -30,13 +30,13 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
   data:HeliosFacturenDataset[] = [];
   facturenData:HeliosFacturenDataset[] = [];
   teDoenData:HeliosFacturenDataset[] = [];
-  isLoading: boolean = false;
+  isLoading = false;
 
   private dbEventAbonnement: Subscription;    // Abonneer op aanpassingen in de database
   private datumAbonnement: Subscription;      // volg de keuze van de kalender
   private maandAbonnement: Subscription;      // volg de keuze van de kalender
-  jaar: number = 1900;                        // gekozen jaar
-  mode: string = 'facturen';                  // welke mode is actief
+  jaar = 1900;                        // gekozen jaar
+  mode = 'facturen';                  // welke mode is actief
 
   dataColumns: ColDef[] = [
     {field: 'ID', headerName: 'ID',  sortable: true, hide: true, comparator: nummerSort},
@@ -101,12 +101,12 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
 
   zoekString: string;
   zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
-  deleteMode: boolean = false;        // zitten we in delete mode om facturen te kunnen verwijderen
+  deleteMode = false;        // zitten we in delete mode om facturen te kunnen verwijderen
 
-  magToevoegen: boolean = false;
-  magVerwijderen: boolean = false;
-  magWijzigen: boolean = false;
-  magExporten: boolean = false;
+  magToevoegen = false;
+  magVerwijderen = false;
+  magWijzigen = false;
+  magExporten = false;
 
   success: SuccessMessage | undefined;
   error: ErrorMessage | undefined;
@@ -228,7 +228,7 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
 
   // Export naar excel
   exportDataset() {
-    var ws = xlsx.utils.json_to_sheet(this.data);
+    const ws = xlsx.utils.json_to_sheet(this.data);
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
     xlsx.writeFile(wb, 'facturen ' + new Date().toJSON().slice(0,10) +'.xlsx');
@@ -249,7 +249,7 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
   }
 
   maakFacturen() {
-    let IDs: number[] = [];
+    const IDs: number[] = [];
 
     this.grid.selectedRecords().forEach(row => {
         if ((row.LIDNR) && (row.GEFACTUREERD == null || row.GEFACTUREERD == undefined)) {
@@ -267,7 +267,7 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
   }
 
   uploadenFacturen() {
-    let IDs: number[] = [];
+    const IDs: number[] = [];
 
     this.grid.selectedRecords().forEach(row => {
       if (row.ID && !row.FACTUUR_NUMMER) {

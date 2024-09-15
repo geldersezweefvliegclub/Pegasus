@@ -26,8 +26,8 @@ export class AgendaService {
                 private readonly loginService: LoginService,
                 private readonly sharedService: SharedService) {}
 
-    async getAgenda(startDatum: DateTime, eindDatum: DateTime, max?: number, verwijderd:boolean = false): Promise<HeliosAgendaDataset[]> {
-        let getParams: KeyValueArray = {};
+    async getAgenda(startDatum: DateTime, eindDatum: DateTime, max?: number, verwijderd = false): Promise<HeliosAgendaDataset[]> {
+        const getParams: KeyValueArray = {};
         getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
         getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
         if (max) {

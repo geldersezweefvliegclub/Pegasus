@@ -10,7 +10,7 @@ import {ICellRendererParams} from "ag-grid-community";
 export class DagnummerRenderComponent implements AgRendererComponent {
   params: ICellRendererParams;
   dagnummer: number;
-  hasFlarm: boolean = false;
+  hasFlarm = false;
 
   constructor() { }
 

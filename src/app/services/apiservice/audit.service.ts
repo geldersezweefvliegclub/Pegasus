@@ -17,7 +17,7 @@ export class AuditService {
     }
 
     async getAudit(zoekString: string): Promise<HeliosAuditDataset[]> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {

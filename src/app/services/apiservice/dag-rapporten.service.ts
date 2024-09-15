@@ -22,7 +22,7 @@ export class DagRapportenService {
                 private readonly loginService: LoginService) {
     }
 
-    async getDagRapporten(verwijderd: boolean = false, datum: string, max?: number): Promise<HeliosDagRapportenDataset[]> {
+    async getDagRapporten(verwijderd = false, datum: string, max?: number): Promise<HeliosDagRapportenDataset[]> {
         // Alleen als we onderstaande rollen niet hebben, gaan we ook niets ophalen. DDWV crew/beheerder heeft niet altijd
         // toegang, dat wordt afgevangen door HMI en op de server. Onnodig om het hier ook te doen
         const ui = this.loginService.userInfo?.Userinfo;
@@ -30,7 +30,7 @@ export class DagRapportenService {
             throw {beschrijving: "Niet gemachtigd om tracks te laden"};
         }
 
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
 
         if ((this.rapportenCache != undefined) && (this.rapportenCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
             getParams['HASH'] = this.rapportenCache.hash;
@@ -100,7 +100,7 @@ export class DagRapportenService {
             return [];
         }
 
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
         getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
         getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
         getParams['VELDEN'] = "ID,DATUM";

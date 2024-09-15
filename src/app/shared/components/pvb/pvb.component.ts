@@ -24,8 +24,8 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
     private dbEventAbonnement: Subscription;
     private competentiesAbonnement: Subscription;
     competenties: HeliosCompetentiesDataset[];
-    suspend: boolean = false;
-    isLoading: boolean = false;
+    suspend = false;
+    isLoading = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -79,7 +79,7 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
 
         // maak CSV string met de competentie IDs van de PVBs
         const comptentieIDs = this.PVBs.map((p: any) => {
-            var str = "";
+            let str = "";
             if (p.Lokaal != undefined) str += p.Lokaal;
             if (p.Overland != undefined) {
                 str += (str == undefined) ? "" : ",";

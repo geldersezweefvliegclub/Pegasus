@@ -15,8 +15,8 @@ export class GastenService {
                 private readonly loginService: LoginService) {
     }
 
-    async getGasten(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime): Promise<HeliosGastenDataset[]> {
-        let getParams: KeyValueArray = {};
+    async getGasten(verwijderd = false, startDatum: DateTime, eindDatum: DateTime): Promise<HeliosGastenDataset[]> {
+        const getParams: KeyValueArray = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {

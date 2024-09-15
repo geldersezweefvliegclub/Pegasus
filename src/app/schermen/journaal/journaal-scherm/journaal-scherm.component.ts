@@ -36,8 +36,8 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
     @ViewChild(JournaalEditorComponent) editor: JournaalEditorComponent;
 
     data:HeliosJournaalDataset[] = [];
-    isLoading: boolean = false;
-    toonKlein: boolean = false;                 // Klein formaat van het journaal
+    isLoading = false;
+    toonKlein = false;                 // Klein formaat van het journaal
 
     private dbEventAbonnement: Subscription;    // Abonneer op aanpassingen in de database
     private datumAbonnement: Subscription;      // volg de keuze van de kalender
@@ -111,16 +111,16 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
 
     zoekString: string;
     zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
-    deleteMode: boolean = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
-    trashMode: boolean = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
+    deleteMode = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
+    trashMode = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
 
     activeFilter: journaalFilter;      // geavanceerd filter via popup
 
-    magToevoegen: boolean = false;
-    magVerwijderen: boolean = false;
-    magWijzigen: boolean = false;
-    magClubkistWijzigen: boolean = false;
-    magExporten: boolean = false;
+    magToevoegen = false;
+    magVerwijderen = false;
+    magWijzigen = false;
+    magClubkistWijzigen = false;
+    magExporten = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -317,7 +317,7 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
 
     // Export naar excel
     exportDataset() {
-        var ws = xlsx.utils.json_to_sheet(this.data);
+        const ws = xlsx.utils.json_to_sheet(this.data);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
         xlsx.writeFile(wb, 'journaal ' + new Date().toJSON().slice(0,10) +'.xlsx');

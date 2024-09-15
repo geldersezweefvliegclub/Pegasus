@@ -14,8 +14,8 @@ import {LoginService} from "../../../services/apiservice/login.service";
 })
 export class ProfielPageComponent {
     lidID: number;
-    isVerwijderMode: boolean = false;
-    isRestoreMode: boolean = false;
+    isVerwijderMode = false;
+    isRestoreMode = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;

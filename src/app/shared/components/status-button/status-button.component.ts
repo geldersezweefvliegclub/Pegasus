@@ -10,16 +10,16 @@ import {Subscription} from "rxjs";
     styleUrls: ['./status-button.component.scss']
 })
 export class StatusButtonComponent implements OnInit, OnDestroy {
-    @Input() tekst: string = '';
-    @Input() disabled: boolean = false;
-    @Input() toonKlein: boolean = true;
-    @Input() actief: boolean = false;
+    @Input() tekst = '';
+    @Input() disabled = false;
+    @Input() toonKlein = true;
+    @Input() actief = false;
     @Input() iconNaam: string;
 
     @Output() btnClicked: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     faIcon: IconDefinition;
-    toonTekst: boolean = true;
+    toonTekst = true;
 
     private resizeSubscription: Subscription;           // Abonneer op aanpassing van window grootte (of draaien mobiel)
     constructor(private readonly sharedService: SharedService) {
@@ -27,7 +27,7 @@ export class StatusButtonComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         if (this.iconNaam) {
-            let parts: string[] = this.iconNaam.split(' ');
+            const parts: string[] = this.iconNaam.split(' ');
 
             if (parts.length != 2) {
                 console.error('iconNaam moet 2 parameters hebben');

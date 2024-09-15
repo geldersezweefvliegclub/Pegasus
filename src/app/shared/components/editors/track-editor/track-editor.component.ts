@@ -20,12 +20,12 @@ export class TrackEditorComponent implements OnInit{
     leden: HeliosLedenDataset[] = [];
     track: HeliosTrack = {}
 
-    isLoading: boolean = false;
-    isSaving: boolean = false;
+    isLoading = false;
+    isSaving = false;
 
-    isVerwijderMode: boolean = false;
-    isRestoreMode: boolean = false;
-    toonLidSelectie: boolean = false;
+    isVerwijderMode = false;
+    isRestoreMode = false;
+    toonLidSelectie = false;
     formTitel: string;
 
     success: SuccessMessage | undefined;

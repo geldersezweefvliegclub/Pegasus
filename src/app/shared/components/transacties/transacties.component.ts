@@ -27,13 +27,13 @@ export class TransactiesComponent implements OnInit, OnDestroy {
     private datumAbonnement: Subscription;          // volg de keuze van de kalender
     datum: DateTime = DateTime.now();               // de gekozen dag
 
-    magCorrigeren: boolean = false;
-    magBestellen: boolean = false;
+    magCorrigeren = false;
+    magBestellen = false;
     lidID: number;
 
     transacties: HeliosTransactiesDataset[];
-    transactiesView: string = "grid";
-    expandedView: boolean = false;
+    transactiesView = "grid";
+    expandedView = false;
 
     constructor(private readonly sharedService: SharedService,
                 private readonly loginService: LoginService,

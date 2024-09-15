@@ -55,11 +55,11 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     alleLeden: HeliosLedenDataset[];
 
     data: HeliosReserveringenDataset[] = [];
-    reserveringView: string = "maand";            // toon rooster voor maand, week of dag
+    reserveringView = "maand";            // toon rooster voor maand, week of dag
     zoekString: string;
-    isLoading: boolean = false;
-    magBoeken: boolean = false;
-    magNogReserveren: boolean = false;
+    isLoading = false;
+    magBoeken = false;
+    magNogReserveren = false;
 
     private vliegtuigenAbonnement: Subscription;
     clubVliegtuigen: HeliosVliegtuigenDatasetExtended[];
@@ -72,10 +72,10 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     maandag: DateTime                               // de eerste dag van de week
     nu: DateTime = DateTime.now()                   // vandaag
 
-    toonDatumKnoppen: boolean = false;              // Mag de gebruiker een andere datum kiezen
-    toonClubDDWV: number = 2;                       // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
+    toonDatumKnoppen = false;              // Mag de gebruiker een andere datum kiezen
+    toonClubDDWV = 2;                       // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
     behaaldeCompetenties: string;
-    magExporteren: boolean = false;
+    magExporteren = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -258,7 +258,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     applyRoosterFilter() {
         if (!this.rooster) return;      // rooster is nog niet geladen, we kunnen niets doen
 
-        let tmpRooster: HeliosRoosterDataset[] = [];
+        const tmpRooster: HeliosRoosterDataset[] = [];
 
         const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
 

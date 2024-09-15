@@ -146,7 +146,7 @@ export class APIService {
     }
 
     private prepareEndpoint(url: string, params: KeyValueArray): string {
-        let args: string = "";
+        let args = "";
 
         // Loop vervolgens door het key:value object heen
         // Als het object op index 0 is, voeg vraagteken toe. Als object niet op de laatste plek staat, voeg & toe.

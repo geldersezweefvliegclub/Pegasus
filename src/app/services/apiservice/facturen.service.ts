@@ -18,7 +18,7 @@ export class FacturenService {
   }
 
   async getFacturen(Jaar: number, zoekString?: string): Promise<HeliosFacturenDataset[]> {
-    let getParams: KeyValueArray = {};
+    const getParams: KeyValueArray = {};
 
     getParams['JAAR'] = Jaar
 
@@ -47,7 +47,7 @@ export class FacturenService {
   }
 
   async nogTeFactureren(Jaar: number): Promise<HeliosFacturenDataset[]> {
-    let getParams: KeyValueArray = {};
+    const getParams: KeyValueArray = {};
 
     getParams['JAAR'] = Jaar
 

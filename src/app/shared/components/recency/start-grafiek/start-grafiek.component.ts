@@ -32,8 +32,8 @@ export class StartGrafiekComponent implements OnInit {
     zelfstarts: number[] = [];
     tmgstarts: number[] = [];
 
-    bezig: boolean = false;
-    counter: number = 0;
+    bezig = false;
+    counter = 0;
 
 
     // Teken een verticale lijn op de 1e jaargrens zodat je de jaren goed kunt onderscheiden
@@ -148,12 +148,12 @@ export class StartGrafiekComponent implements OnInit {
     }
 
     async opvragen(): Promise<void> {
-        let lineChartLabels = [];
+        const lineChartLabels = [];
 
-        let lierstarts = [];
-        let sleepstarts = [];
-        let zelfstarts = [];
-        let tmgstarts = [];
+        const lierstarts = [];
+        const sleepstarts = [];
+        const zelfstarts = [];
+        const tmgstarts = [];
 
         this.bezig = true               // Indicator dat we aan het ophalen zijn, progress balk is dan zichtbaar
 

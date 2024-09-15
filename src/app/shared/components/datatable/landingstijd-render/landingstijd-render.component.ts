@@ -12,7 +12,7 @@ import {AgRendererComponent} from 'ag-grid-angular';
 export class LandingstijdRenderComponent implements AgRendererComponent {
   params: any;
   landingsTijd: string;         // string met de tijd om te tonen
-  toonButton: boolean = false;
+  toonButton = false;
 
   constructor() {
   }

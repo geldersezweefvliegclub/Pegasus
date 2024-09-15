@@ -13,7 +13,7 @@ import {LoginService} from "./login.service";
 export class LedenService {
     private ledenCache: HeliosLeden  = { dataset: []};       // return waarde van API call
 
-    private overslaan: boolean = false;
+    private overslaan = false;
     private ophaalTimer: number;                                // Iedere 15 min halen we de leden op
     private fallbackTimer: number;                              // Timer om te zorgen dat starts geladen echt is
     private ledenStore = new BehaviorSubject(this.ledenCache.dataset);
@@ -73,8 +73,8 @@ export class LedenService {
         return await this.getLeden();
     }
 
-    async getLeden(verwijderd: boolean = false, zoekString?: string): Promise<HeliosLedenDataset[]> {
-        let getParams: KeyValueArray = {};
+    async getLeden(verwijderd = false, zoekString?: string): Promise<HeliosLedenDataset[]> {
+        const getParams: KeyValueArray = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {

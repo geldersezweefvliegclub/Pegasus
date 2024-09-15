@@ -12,15 +12,15 @@ import {faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 export class LidInvoerComponent implements OnInit, OnChanges {
     @Input() leden: HeliosLedenDataset[] = [];
     @Input() aanwezig: HeliosAanwezigLedenDataset[] = [];
-    @Input() placeholder: string = "";
-    @Input() label: string = "";
+    @Input() placeholder = "";
+    @Input() label = "";
     @Input() uitleg: string;
-    @Input() disabled: boolean = false;
-    @Input() required: boolean = false;
+    @Input() disabled = false;
+    @Input() required = false;
     @Input() veldID: number | undefined;
-    @Input() excludeLidTypes: string = ""
-    @Input() alleenPaxVliegers: boolean = false;
-    @Input() alleenInstructeurs: boolean = false;
+    @Input() excludeLidTypes = ""
+    @Input() alleenPaxVliegers = false;
+    @Input() alleenInstructeurs = false;
     @Input() LID_ID: number | undefined;
     @Input() vliegtuig: HeliosVliegtuigenDataset | undefined = undefined
 
@@ -34,7 +34,7 @@ export class LidInvoerComponent implements OnInit, OnChanges {
     aanwezigFiltered: HeliosAanwezigLedenDataset[] = [];
     ledenSelectie$: Observable<HeliosAanwezigLedenDataset[]>;
 
-    InputChangeEventFired: boolean = false;
+    InputChangeEventFired = false;
 
     constructor() {
     }

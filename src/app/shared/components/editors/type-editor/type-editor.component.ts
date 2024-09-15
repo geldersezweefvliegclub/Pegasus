@@ -12,17 +12,17 @@ import {ExpressionType} from "@angular/compiler";
     styleUrls: ['./type-editor.component.scss']
 })
 export class TypeEditorComponent  {
-    @Input() toonBedragEenheid: boolean = false;
+    @Input() toonBedragEenheid = false;
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
     formTitel: string;
 
     type: HeliosType = {};
-    isLoading: boolean = false;
-    isSaving: boolean = false;
+    isLoading = false;
+    isSaving = false;
 
-    isVerwijderMode: boolean = false;
-    isRestoreMode: boolean = false;
+    isVerwijderMode = false;
+    isRestoreMode = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;

@@ -10,7 +10,7 @@ export class SuccessComponent implements OnChanges {
     @Input() success: SuccessMessage | undefined = undefined;
     @ViewChild('successOverlay') errorOverlay: ElementRef;
 
-    showSuccess: boolean = false;
+    showSuccess = false;
 
     ngOnChanges(changes: SimpleChanges) {
         this.showSuccess = true;

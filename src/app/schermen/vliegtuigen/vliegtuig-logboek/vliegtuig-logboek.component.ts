@@ -20,7 +20,7 @@ export class VliegtuigLogboekComponent implements OnInit {
     data: HeliosVliegtuigLogboekDataset[] = [];
     vliegtuig: HeliosVliegtuig = {};
     private vliegtuigID:  number;
-    isLoading: boolean = false;
+    isLoading = false;
 
     private datumAbonnement: Subscription; // volg de keuze van de kalender
     datum: DateTime = DateTime.now();      // de gekozen dag

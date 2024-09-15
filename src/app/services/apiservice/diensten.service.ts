@@ -76,7 +76,7 @@ export class DienstenService {
     }
 
     async getDiensten(startDatum: DateTime, eindDatum: DateTime, dienstType?: number, lidID?: number): Promise<HeliosDienstenDataset[]> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
         getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
         getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
 
@@ -108,7 +108,7 @@ export class DienstenService {
 
 
     async getTotalen(jaar: number, lidID?: number): Promise<HeliosDienstenTotaal[]> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
         getParams['JAAR'] = jaar.toString();
 
         // kunnen alleen data ophalen als we ingelogd zijn

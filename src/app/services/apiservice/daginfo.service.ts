@@ -51,7 +51,7 @@ export class DaginfoService {
             return [];
         }
 
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
         getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
         getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
         getParams['VELDEN'] = "ID,DATUM";
@@ -71,8 +71,8 @@ export class DaginfoService {
     }
 
 
-    async getDagInfoDagen(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosDagInfosDataset[]> {
-        let getParams: KeyValueArray = params;
+    async getDagInfoDagen(verwijderd = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosDagInfosDataset[]> {
+        const getParams: KeyValueArray = params;
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {

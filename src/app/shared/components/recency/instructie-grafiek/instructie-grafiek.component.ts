@@ -24,8 +24,8 @@ export class InstructieGrafiekComponent implements OnInit {
 
     starts: number[] = [];
     uren: number[] = [];
-    bezig: boolean = false;
-    counter: number = 0;
+    bezig = false;
+    counter = 0;
 
     // Teken een verticale lijn op de 1e jaargrens zodat je de jaren goed kunt onderscheiden
     JaarGrens1: AnnotationOptions =
@@ -182,12 +182,12 @@ export class InstructieGrafiekComponent implements OnInit {
     }
 
     async opvragen(): Promise<void> {
-        let starts = [];
-        let uren = [];
-        let lineChartLabels = [];
+        const starts = [];
+        const uren = [];
+        const lineChartLabels = [];
 
         this.bezig = true               // Indicator dat we aan het ophalen zijn, progress balk is dan zichtbaar
-        let maxWaarde: number = 70;
+        let maxWaarde = 70;
 
         for (this.counter = 0; this.counter < 36; this.counter++) {
             const d = this.datum.plus({months: -1 * (36 - this.counter - 1)});

@@ -14,7 +14,7 @@ import {filter} from "rxjs/operators";
     ]
 })
 export class FooterComponent {
-    toonMenu: boolean = false;
+    toonMenu = false;
 
     constructor(private readonly router: Router,
                 private readonly sharedService: SharedService) {

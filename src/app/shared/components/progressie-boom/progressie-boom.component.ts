@@ -37,8 +37,8 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
 
     competenties: HeliosCompetentiesDataset[];
     values: number[];
-    suspend: boolean = false;
-    isDisabled: boolean = true;
+    suspend = false;
+    isDisabled = true;
 
     config = TreeviewConfig.create({
         hasAllCheckBox: false,
@@ -101,7 +101,7 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
         this.isDisabled = !(ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) || (this.VliegerID == this.loginService.userInfo?.LidData?.ID);
 
         this.progressieService.getBoom(this.VliegerID).then((b) => {
-            let tree: ProgressieTreeviewItem[] = [];
+            const tree: ProgressieTreeviewItem[] = [];
             for (let i = 0; i < b.length; i++) {
                 const tak = this.TreeView(b[i])
 
@@ -129,7 +129,7 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     TreeView(boomTak: HeliosProgressieBoom): ProgressieTreeviewItem {
-        let tekst: string = ''
+        let tekst = ''
 
         if (boomTak.BLOK)
             tekst += boomTak.BLOK.toString();
@@ -139,7 +139,7 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
         if (boomTak.ONDERWERP)
             tekst += boomTak.ONDERWERP.toString()
 
-        let nieuwetak = new ProgressieTreeviewItem({
+        const nieuwetak = new ProgressieTreeviewItem({
             text: (tekst).trim(),
             value: boomTak.COMPETENTIE_ID,
 

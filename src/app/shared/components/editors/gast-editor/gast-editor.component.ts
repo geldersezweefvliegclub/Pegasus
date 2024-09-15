@@ -18,8 +18,8 @@ export class GastEditorComponent implements OnInit, OnDestroy {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
-    isLoading: boolean = false;
-    isSaving: boolean = false;
+    isLoading = false;
+    isSaving = false;
 
     gast: HeliosGast;
 

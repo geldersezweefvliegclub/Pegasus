@@ -55,8 +55,8 @@ export class TypesService {
 
     }
 
-    async getTypes(verwijderd: boolean = false): Promise<HeliosType[]> {
-        let getParams: KeyValueArray = {};
+    async getTypes(verwijderd = false): Promise<HeliosType[]> {
+        const getParams: KeyValueArray = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
@@ -84,7 +84,7 @@ export class TypesService {
     }
 
     async getClubVliegtuigTypes(): Promise<HeliosType[]> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {

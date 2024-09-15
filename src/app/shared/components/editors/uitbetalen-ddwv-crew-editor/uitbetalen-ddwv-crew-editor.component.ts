@@ -18,8 +18,8 @@ export class UitbetalenDdwvCrewEditorComponent  {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
-    isLoading: boolean = false;
-    isSaving: boolean = false;
+    isLoading = false;
+    isSaving = false;
 
     datum: string;
     diensten: HeliosDienstenDataset[];

@@ -50,16 +50,16 @@ export class StartEditorComponent implements OnInit {
     gastIcon: IconDefinition = faStreetView;
 
     start: HeliosStart = {};
-    toonTranactieKnop: boolean = false;        // Moet de transactie editor geopend kunnen worden?
-    toonGastCombobox: boolean = false;
-    toonVliegerNaam: boolean = false;
-    toonInzittendeNaam: number = 0;             // 0, naam hoeft niet ingevoerd te worden
+    toonTranactieKnop = false;        // Moet de transactie editor geopend kunnen worden?
+    toonGastCombobox = false;
+    toonVliegerNaam = false;
+    toonInzittendeNaam = 0;             // 0, naam hoeft niet ingevoerd te worden
                                                 // 1, naam mag ingevoerd worden, maar ook inzittende combobox tonen
                                                 // 2, toon alleen de naam invoer
-    toonStartMethode: boolean = true;
-    toonWaarschuwing: boolean = false;          // mag het lid op die vliegtuig vliegen volgens kruisjeslijst?
-    medicalWaarschuwing: boolean = false;       // Controleer op geldigheid medical
-    startVerbod: boolean = false;               // Vlieger heeft een startverbod
+    toonStartMethode = true;
+    toonWaarschuwing = false;          // mag het lid op die vliegtuig vliegen volgens kruisjeslijst?
+    medicalWaarschuwing = false;       // Controleer op geldigheid medical
+    startVerbod = false;               // Vlieger heeft een startverbod
 
     private typesAbonnement: Subscription;
     startMethodeTypes: HeliosType[];
@@ -79,8 +79,8 @@ export class StartEditorComponent implements OnInit {
     // 613 = systeem gebruiker
     // 620 = Wachtlijst
     // 625 = DDWV'er
-    exclLidtypeAlsInzittende: string = "607,610,612,613,620"
-    exclLidtypeAlsVlieger: string = "613,620"
+    exclLidtypeAlsInzittende = "607,610,612,613,620"
+    exclLidtypeAlsVlieger = "613,620"
 
     private ledenAbonnement: Subscription;
     leden: HeliosLedenDataset[] = [];
@@ -91,14 +91,14 @@ export class StartEditorComponent implements OnInit {
     private datumAbonnement: Subscription;      // volg de keuze van de kalender
     datum: DateTime = DateTime.now();           // de gekozen dag
 
-    isLoading: boolean = false;
-    isSaving: boolean = false;
-    magAltijdWijzigen: boolean = false;
-    magDatumAanpassen: boolean = false;
+    isLoading = false;
+    isSaving = false;
+    magAltijdWijzigen = false;
+    magDatumAanpassen = false;
 
-    isVerwijderMode: boolean = false;
-    isRestoreMode: boolean = false;
-    formTitel: string = "";
+    isVerwijderMode = false;
+    isRestoreMode = false;
+    formTitel = "";
 
     vandaag: DateTime = DateTime.now();
     minDatum: DateTime = DateTime.now();
@@ -667,7 +667,7 @@ export class StartEditorComponent implements OnInit {
             }
         }
 
-        let competentieIDs: string = "";
+        let competentieIDs = "";
         if (this.gekozenVliegtuig.BEVOEGDHEID_LOKAAL_ID) {
             competentieIDs = this.gekozenVliegtuig.BEVOEGDHEID_LOKAAL_ID.toString();
         }

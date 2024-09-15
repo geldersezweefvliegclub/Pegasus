@@ -34,7 +34,7 @@ export class AanmeldenVliegtuigComponent implements OnInit, OnDestroy {
     error: ErrorMessage | undefined;
 
     zoekString: string;
-    bezig: boolean = false;
+    bezig = false;
     bezigTimer: number;
 
     constructor(private readonly sharedService: SharedService,

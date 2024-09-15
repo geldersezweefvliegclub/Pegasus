@@ -45,16 +45,16 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
     private typesAbonnement: Subscription;
     vliegtuigTypes: HeliosType[];
 
-    isLoading: boolean = false;
-    isSaving: boolean = false;
+    isLoading = false;
+    isSaving = false;
 
-    magWijzigen: boolean = false;
+    magWijzigen = false;
 
-    magClubkistWijzigen: boolean = false;
+    magClubkistWijzigen = false;
 
-    isVerwijderMode: boolean = false;
-    isRestoreMode: boolean = false;
-    formTitel: string = "";
+    isVerwijderMode = false;
+    isRestoreMode = false;
+    formTitel = "";
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;

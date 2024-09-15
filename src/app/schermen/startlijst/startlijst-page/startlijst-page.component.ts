@@ -63,9 +63,9 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
 
     SchermGrootte = require("../../../services/shared/shared.service").SchermGrootte;
 
-    isStarttoren: boolean = false;
-    isLoading: boolean = false;
-    filterAan: boolean = true;
+    isStarttoren = false;
+    isLoading = false;
+    filterAan = true;
 
     private dbEventAbonnement: Subscription;
     private aanwezigLedenAbonnement: Subscription;
@@ -82,14 +82,14 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
     private datumAbonnement: Subscription;    // volg de keuze van de kalender
     datum: DateTime = DateTime.now();         // de gekozen dag in de kalender
 
-    inTijdspan: boolean = false;          //  Mogen we starts aanpassen. Mag niet in de toekomst en ook niet meer dan xx dagen geleden.  xx is geconfigureerd in pegasus.config
+    inTijdspan = false;          //  Mogen we starts aanpassen. Mag niet in de toekomst en ook niet meer dan xx dagen geleden.  xx is geconfigureerd in pegasus.config
 
     refreshTimer: number;
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
     klikStart: HeliosStartDataset | undefined;
-    eersteKlik: boolean = false;
+    eersteKlik = false;
 
     private typesAbonnement: Subscription;              // Abonneer op aanpassing van vliegvelden
     veldTypes$: Observable<HeliosType[]>;
@@ -207,7 +207,7 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
         this.aanwezigVliegtuigenService.updateAanwezigCache();
         this.aanwezigLedenService.updateAanwezigCache();
 
-        let queryParams: KeyValueArray = {};
+        const queryParams: KeyValueArray = {};
         queryParams["OPEN_STARTS"] = "true"
 
         this.isLoading = true;

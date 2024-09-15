@@ -11,7 +11,7 @@ import {ICellRendererParams} from "ag-grid-community";
 export class NaamRenderComponent implements AgRendererComponent {
     naam: string;
     lidID: string;
-    naarDashboard: boolean = false;
+    naarDashboard = false;
 
     constructor(private readonly loginService: LoginService) {
     }

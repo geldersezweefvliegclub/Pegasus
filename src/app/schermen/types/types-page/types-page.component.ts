@@ -25,14 +25,14 @@ export class TypesPageComponent implements OnInit, OnDestroy {
     types: HeliosType[];
     filteredTypes: HeliosType[];
     groepen: HeliosTypesGroep[];
-    bedragEenheidActief: boolean = false;
+    bedragEenheidActief = false;
 
     toonGroep: number;
 
-    magToevoegen: boolean = true;
-    magVerwijderen: boolean = true;
-    deleteMode: boolean = false;        // zitten we in delete mode om types te kunnen verwijderen
-    trashMode: boolean = false;         // zitten in restore mode om types te kunnen terughalen
+    magToevoegen = true;
+    magVerwijderen = true;
+    deleteMode = false;        // zitten we in delete mode om types te kunnen verwijderen
+    trashMode = false;         // zitten in restore mode om types te kunnen terughalen
 
     constructor(private readonly typesService: TypesService,
                 private readonly sharedService: SharedService,
@@ -68,7 +68,7 @@ export class TypesPageComponent implements OnInit, OnDestroy {
         });
     }
 
-    filterGroep(toongroep: Number) {
+    filterGroep(toongroep: number) {
         this.toonGroep = toongroep as number;
 
         if (this.groepen) {
@@ -82,7 +82,7 @@ export class TypesPageComponent implements OnInit, OnDestroy {
         });
 
         // zorg dat sortering altijd met 1 begint
-        for (let i:number = 0 ; i < this.filteredTypes.length ; i++) {
+        for (let i = 0 ; i < this.filteredTypes.length ; i++) {
             this.filteredTypes[i].SORTEER_VOLGORDE = i+1;
         }
     }
@@ -114,7 +114,7 @@ export class TypesPageComponent implements OnInit, OnDestroy {
         this.filteredTypes[idx].SORTEER_VOLGORDE!++;
         this.filteredTypes[idx+1].SORTEER_VOLGORDE!--;
 
-        for (let i:number = 0 ; i < this.filteredTypes.length ; i++) {
+        for (let i = 0 ; i < this.filteredTypes.length ; i++) {
             this.typesService.updateType(this.filteredTypes[i]);
         }
 
@@ -127,7 +127,7 @@ export class TypesPageComponent implements OnInit, OnDestroy {
         this.filteredTypes[idx].SORTEER_VOLGORDE!--;
         this.filteredTypes[idx-1].SORTEER_VOLGORDE!++;
 
-        for (let i:number = 0 ; i < this.filteredTypes.length ; i++) {
+        for (let i = 0 ; i < this.filteredTypes.length ; i++) {
             this.typesService.updateType(this.filteredTypes[i]);
         }
         this.filteredTypes.sort(function(a, b) {

@@ -13,11 +13,11 @@ export const tijdSort = (tijdStr1: string | null, tijdStr2: string | null) => {
     tijdStr2 = '00:00';
   }
 
-  let tijdParts1: string[] = tijdStr1.split(':');
-  let tijdParts2: string[] = tijdStr2.split(':');
+  const tijdParts1: string[] = tijdStr1.split(':');
+  const tijdParts2: string[] = tijdStr2.split(':');
 
-  let tijd1: number = Number(tijdParts1[0]) * 60 + Number(tijdParts1[1]);
-  let tijd2: number = Number(tijdParts2[0]) * 60 + Number(tijdParts2[1]);
+  const tijd1: number = Number(tijdParts1[0]) * 60 + Number(tijdParts1[1]);
+  const tijd2: number = Number(tijdParts2[0]) * 60 + Number(tijdParts2[1]);
 
   return (tijd1 > tijd2) ? 1 : -1;
 };

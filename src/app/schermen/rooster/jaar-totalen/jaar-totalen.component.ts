@@ -10,7 +10,7 @@ import {ModalComponent} from "../../../shared/components/modal/modal.component";
 import {OnderdrukNulComponent} from "../../../shared/components/datatable/onderdruk-nul/onderdruk-nul.component";
 import * as xlsx from "xlsx";
 
-type JaarTotaal = {
+interface JaarTotaal {
     ID: number
     NAAM: string
     AVATAR: string
@@ -190,7 +190,7 @@ export class JaarTotalenComponent implements OnInit {
     }
 
     exportJaarRooster() {
-        let ws = xlsx.utils.json_to_sheet(this.jaarTotalen);
+        const ws = xlsx.utils.json_to_sheet(this.jaarTotalen);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
         xlsx.writeFile(wb, 'jaar totalen ' + this.datum.year + '-' + new Date().toJSON().slice(0, 10) + '.xlsx');

@@ -11,10 +11,10 @@ import {NgSelectComponent} from "@ng-select/ng-select";
 export class VliegtuigInvoerComponent implements OnInit, OnChanges {
     @Input() vliegtuigen: HeliosVliegtuigenDataset[] = [];
     @Input() aanwezig: HeliosVliegtuigenDataset[] = [];
-    @Input() label: string = "";
-    @Input() disabled: boolean = false;
-    @Input() Sleep: boolean = false;
-    @Input() verplicht: boolean = true;
+    @Input() label = "";
+    @Input() disabled = false;
+    @Input() Sleep = false;
+    @Input() verplicht = true;
     @Input() VLIEGTUIG_ID: number | undefined;
 
     @Output() VliegtuigChanged: EventEmitter<number> = new EventEmitter<number>();
@@ -25,7 +25,7 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
     vliegtuigInput$ = new Subject<string | null>();
     vliegtuigenSelectie$: Observable<HeliosVliegtuigenDataset[]>;
 
-    inzetbaar: boolean = true;
+    inzetbaar = true;
 
     constructor() {
     }

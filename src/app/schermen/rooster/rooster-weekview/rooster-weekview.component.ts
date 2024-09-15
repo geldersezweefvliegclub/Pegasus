@@ -60,12 +60,12 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
     private typesAbonnement: Subscription;
     dienstTypes: HeliosType[] = [];
 
-    ddwvActief: boolean = true;
+    ddwvActief = true;
     isBeheerderDDWV: boolean;
     isBeheerder: boolean;
-    magWijzigen: boolean = false;
+    magWijzigen = false;
     isCIMT: boolean;
-    dblKlik: boolean = false;
+    dblKlik = false;
 
     maandag: DateTime;                          // De maandag van de gekozen week
     opslaanTimer: number;                       // kleine vertraging om starts opslaan te beperken

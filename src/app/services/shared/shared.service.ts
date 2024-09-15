@@ -56,7 +56,7 @@ export class SharedService {
     private heliosEventSubject: Subject<HeliosEvent> = new Subject<HeliosEvent>();          // starts in de database is aangepast
     private heliosFailedSubject: Subject<ErrorMessage> = new Subject<ErrorMessage>();       // api call heef gefaald
 
-    private resizeSubject: Subject<Window> = new Subject();                                                 // resize window, of draaien mobiel device
+    private resizeSubject = new Subject<Window>();                                                 // resize window, of draaien mobiel device
 
     public readonly ingegevenDatum = this.datumStore.asObservable();                // nieuwe datum gekozen
     public readonly kalenderMaandChange = this.kalenderMaandStore.asObservable();   // nieuwe maand / jaar gekozen in de kalender

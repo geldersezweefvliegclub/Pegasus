@@ -32,7 +32,7 @@ export interface TracksLedenDataset extends HeliosTracksDataset {
 export class TracksComponent implements OnInit, OnDestroy, OnChanges {
     @Input() VliegerID: number;
     @Input() VliegerNaam: string;
-    @Input() toonLid: boolean = false;
+    @Input() toonLid = false;
 
     @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
 
@@ -55,16 +55,16 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
 
     zoekString: string;
     zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
-    deleteMode: boolean = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
-    trashMode: boolean = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
-    isLoading: boolean = false;
+    deleteMode = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
+    trashMode = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
+    isLoading = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
-    magToevoegen: boolean = true;
-    magVerwijderen: boolean = false;
-    magWijzigen: boolean = false;
+    magToevoegen = true;
+    magVerwijderen = false;
+    magWijzigen = false;
 
     geselecteerdLid: HeliosLedenDataset;
 

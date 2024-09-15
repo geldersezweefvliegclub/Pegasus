@@ -21,21 +21,21 @@ export class SamenvattingComponent {
     @Output() bulkEmail: EventEmitter<string> = new EventEmitter<string>();
 
     samenvatting: HeliosAanwezigSamenvatting | undefined;
-    toonBulkEmail: boolean = false;
+    toonBulkEmail = false;
     formTitel: string;
     rooster: HeliosRoosterDataset;
 
-    ochtendDDI: string = "";
-    ochtendInstructeur: string = "";
-    ochtendStartleider: string = "";
-    ochtendLierist: string = "";
-    ochtendSleper: string = "";
+    ochtendDDI = "";
+    ochtendInstructeur = "";
+    ochtendStartleider = "";
+    ochtendLierist = "";
+    ochtendSleper = "";
 
-    middagDDI: string = "";
-    middagInstructeur: string = "";
-    middagStartleider: string = "";
-    middagLierist: string = "";
-    middagSleper: string = "";
+    middagDDI = "";
+    middagInstructeur = "";
+    middagStartleider = "";
+    middagLierist = "";
+    middagSleper = "";
 
     constructor(private readonly sharedService: SharedService,
                 private readonly loginService: LoginService,

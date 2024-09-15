@@ -28,8 +28,8 @@ export class RecencyGrafiekComponent implements OnInit {
     datum: DateTime = DateTime.now();       // de gekozen dag
 
     waardes: number[] = [];
-    bezig: boolean = false;
-    counter: number = 0;
+    bezig = false;
+    counter = 0;
 
     // De rode zone tekenen in de grafiek
     RodeBalk: AnnotationOptions =
@@ -202,11 +202,11 @@ export class RecencyGrafiekComponent implements OnInit {
     }
 
     async opvragen(): Promise<void> {
-        let waardes = [];
-        let lineChartLabels = [];
+        const waardes = [];
+        const lineChartLabels = [];
 
         this.bezig = true               // Indicator dat we aan het ophalen zijn, progress balk is dan zichtbaar
-        let maxWaarde: number = 30;     // indien de vlieger een waarde heeft < 30, dan is 30 minimum, de groene, gele, rode balk zijn dan even hoog
+        let maxWaarde = 30;     // indien de vlieger een waarde heeft < 30, dan is 30 minimum, de groene, gele, rode balk zijn dan even hoog
 
         for (this.counter = 0; this.counter < 24; this.counter++) {
             const d = this.datum.plus({months: -1 * (24 - this.counter - 1)});

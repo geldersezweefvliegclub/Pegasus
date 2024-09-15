@@ -50,12 +50,12 @@ export class RoosterDagviewComponent implements OnInit, OnDestroy {
     private typesAbonnement: Subscription;
     dienstTypes: HeliosType[] = [];
 
-    ddwvActief: boolean = true;
+    ddwvActief = true;
     isBeheerder: boolean;
     isBeheerderDDWV: boolean;
-    magWijzigen: boolean = false;
+    magWijzigen = false;
     isCIMT: boolean;
-    dblKlik: boolean = false;
+    dblKlik = false;
 
     opslaanTimer: number;                       // kleine vertraging om starts opslaan te beperken
 

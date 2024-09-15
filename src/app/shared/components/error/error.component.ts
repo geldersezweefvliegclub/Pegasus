@@ -10,7 +10,7 @@ export class ErrorComponent implements OnChanges{
   @Input() error: ErrorMessage | undefined = undefined;
   @ViewChild('errorOverlay') errorOverlay: ElementRef;
 
-  showError: boolean = false;
+  showError = false;
 
   ngOnChanges(changes: SimpleChanges) {
     this.showError = true;

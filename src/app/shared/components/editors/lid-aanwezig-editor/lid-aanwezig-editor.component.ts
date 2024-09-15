@@ -28,10 +28,10 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
     aanwezig: HeliosAanwezigLedenDataset;
     eenheden: number | undefined;
 
-    isDDWVer: boolean = false;
-    isLoading: boolean = false;
-    isSaving: boolean = false;
-    formTitel: string = "";
+    isDDWVer = false;
+    isLoading = false;
+    isSaving = false;
+    formTitel = "";
 
     veldenTypes$: Observable<HeliosType[]>;
 
@@ -132,9 +132,9 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
     zetVoorkeur(event: Event, id: number) {
         const idx = this.vliegtuigTypes.findIndex(t => t.ID == id)
 
-        this.vliegtuigTypes[idx].Geselecteerd = (<HTMLInputElement>event.target).checked;
+        this.vliegtuigTypes[idx].Geselecteerd = (event.target as HTMLInputElement).checked;
 
-        let voorkeur: string = '';
+        let voorkeur = '';
         for (let i = 0; i < this.vliegtuigTypes.length; i++) {
             if (this.vliegtuigTypes[i].Geselecteerd) {
                 voorkeur += (voorkeur == '') ? '' : ',';

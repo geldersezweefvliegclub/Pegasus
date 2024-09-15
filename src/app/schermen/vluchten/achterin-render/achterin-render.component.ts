@@ -13,10 +13,10 @@ import {LoginService} from "../../../services/apiservice/login.service";
 export class AchterinRenderComponent implements AgRendererComponent {
     grid_inzittendenaam: string;
     lidID: string;
-    naarDashboard: boolean = false;
+    naarDashboard = false;
 
-    warning: boolean = false;        // nog niet gestart, instructeur is onbekend
-    error: boolean = false;          // er is gestart, maar instructeur is onbekend
+    warning = false;        // nog niet gestart, instructeur is onbekend
+    error = false;          // er is gestart, maar instructeur is onbekend
 
     constructor(private readonly loginService: LoginService) {
     }

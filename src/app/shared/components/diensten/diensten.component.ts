@@ -15,7 +15,7 @@ import {LoginService} from "../../../services/apiservice/login.service";
 })
 export class DienstenComponent implements OnInit, OnChanges {
     @Input() Vlieger: HeliosLid;
-    @Input() UitgebreideWeergave: boolean = false;
+    @Input() UitgebreideWeergave = false;
 
     @ViewChild(DagRoosterComponent) popup: DagRoosterComponent;
 
@@ -24,7 +24,7 @@ export class DienstenComponent implements OnInit, OnChanges {
 
     diensten: HeliosDienstenDataset[];
     roosterDatum: DateTime;
-    isLoading: boolean = false;
+    isLoading = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;

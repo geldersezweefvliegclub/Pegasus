@@ -33,7 +33,7 @@ export type HeliosRoosterDagExtended = HeliosRoosterDag & {
     Diensten: HeliosDienstenDataset[];
 }
 
-export type WeergaveData = {
+export interface WeergaveData {
     Startleiders: boolean;
     Instructeurs: boolean;
     Lieristen: boolean;
@@ -58,8 +58,8 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
 
     readonly roosterIcon: IconDefinition = faCalendarDay;
 
-    private ingedeeldMaand: number = 0   // hoeveel is het ingelogde lid al ingedeeld in deze maand
-    roosterView: string = "maand";       // toon rooster voor maand, week of dag
+    private ingedeeldMaand = 0   // hoeveel is het ingelogde lid al ingedeeld in deze maand
+    roosterView = "maand";       // toon rooster voor maand, week of dag
 
     private typesAbonnement: Subscription;
     dienstTypes: HeliosType[] = [];
@@ -80,7 +80,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
     private datumAbonnement: Subscription;          // volg de keuze van de kalender
     datum: DateTime = DateTime.now();               // de gekozen dag
     maandag: DateTime                               // de eerste dag van de week
-    ddwvActief: boolean = true;
+    ddwvActief = true;
 
 
     protected tonen: WeergaveData = {                 // Welke diensten worden wel/niet getoond
@@ -97,13 +97,13 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
 
         toonDienst: {}
     };
-    magExporteren: boolean = true;
+    magExporteren = true;
 
     userInfo: HeliosUserinfo;
     isDDWVer: boolean;
-    magWijzigen: boolean = false;
+    magWijzigen = false;
 
-    isLoading: number = 0;
+    isLoading = 0;
     zoekString: string;
 
     constructor(private readonly ddwvService: DdwvService,
@@ -325,7 +325,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
     // Er is een aanpassing gemaakt in het leden-filter dialoog. We filteren de volledige dataset tot wat nodig is
     // We hoeven dus niet terug naar de server om starts opnieuw op te halen (minder starts verkeer)
     applyLedenFilter() {
-        let toonAlles: boolean = false;
+        let toonAlles = false;
 
         this.tonen.Startleiders = false;
         this.tonen.Instructeurs = false;
@@ -378,7 +378,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         }
 
         // leden-filter de dataset naar de lijst
-        let tmpLeden: HeliosLedenDatasetExtended[] = [];
+        const tmpLeden: HeliosLedenDatasetExtended[] = [];
         for (let i = 0; i < this.alleLeden.length; i++) {
             let tonen = false;
             if (toonAlles) {
@@ -428,7 +428,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             return;
         }
 
-        let tmpRooster: HeliosRoosterDagExtended[] = [];
+        const tmpRooster: HeliosRoosterDagExtended[] = [];
         for (let i = 0; i < this.heleRooster.length; i++) {
             switch (this.tonen.toonClubDDWV) {
                 case 1: // toonClubDDWV, 1 = toon clubdagen
@@ -656,15 +656,15 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
 
     // Export naar excel in pivot view
     exportRooster() {
-        let exportData: any = [];
-        let legeDiensten: any = {};
+        const exportData: any = [];
+        const legeDiensten: any = {};
 
         this.dienstTypes.forEach(dienst => legeDiensten[dienst.OMSCHRIJVING!] = "");
 
         this.filteredRooster.forEach(dag => {
             const d = DateTime.fromSQL(dag.DATUM!);
 
-            let record: any = Object.assign({
+            const record: any = Object.assign({
                 DATUM: d.day + "-" + d.month + "-" + d.year,    // Datum in juiste formaat zetten
                 DDWV: dag.DDWV ? "X" : "-",
                 CLUB_BEDRIJF: dag.CLUB_BEDRIJF ? "X" : "-",
@@ -679,7 +679,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             exportData.push(record)
         });
 
-        let ws = xlsx.utils.json_to_sheet(exportData);
+        const ws = xlsx.utils.json_to_sheet(exportData);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
         xlsx.writeFile(wb, 'rooster ' + this.datum.year + '-' + this.datum.month + ' ' + new Date().toJSON().slice(0, 10) + '.xlsx');

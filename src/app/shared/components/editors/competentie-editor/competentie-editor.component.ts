@@ -6,7 +6,7 @@ import {CompetentieService} from "../../../../services/apiservice/competentie.se
 import {Observable, of, Subscription} from "rxjs";
 import {TypesService} from "../../../../services/apiservice/types.service";
 
-export type CompetentieLijst = {
+export interface CompetentieLijst {
     ID: number | undefined;
     label: string | undefined;
 }
@@ -27,11 +27,11 @@ export class CompetentieEditorComponent implements OnInit, OnDestroy {
     lijst$: Observable<CompetentieLijst[]>;
     competenties: HeliosCompetentiesDataset[] = [];
     competentie: HeliosCompetentie = {};
-    isLoading: boolean = false;
-    isSaving: boolean = false;
+    isLoading = false;
+    isSaving = false;
 
-    isVerwijderMode: boolean = false;
-    isRestoreMode: boolean = false;
+    isVerwijderMode = false;
+    isRestoreMode = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;

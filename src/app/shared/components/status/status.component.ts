@@ -26,8 +26,8 @@ export class StatusComponent implements OnInit, OnChanges, OnDestroy {
     private dbEventAbonnement: Subscription;
     private competentiesAbonnement: Subscription;
     competenties: HeliosCompetentiesDataset[];
-    suspend: boolean = false;
-    isLoading: boolean = false;
+    suspend = false;
+    isLoading = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;

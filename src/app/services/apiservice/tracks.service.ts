@@ -13,7 +13,7 @@ export class TracksService {
     constructor(private readonly apiService: APIService,
                 private readonly loginService: LoginService) {}
 
-    async getTracks(verwijderd: boolean = false, lidID?: number, max?: number): Promise<HeliosTracksDataset[]> {
+    async getTracks(verwijderd = false, lidID?: number, max?: number): Promise<HeliosTracksDataset[]> {
 
         // Alleen als we onderstaande rollen nie hebben, gaan we ook geen starts proberen op te halen
         const ui = this.loginService.userInfo?.Userinfo;
@@ -21,7 +21,7 @@ export class TracksService {
             throw {beschrijving: "Niet gemachtigd om tracks te laden"};
         }
 
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
 
         if ((this.tracksCache != undefined) && (this.tracksCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
             getParams['HASH'] = this.tracksCache.hash;
