@@ -36,7 +36,7 @@ import {PegasusConfigService} from "../../../services/shared/pegasus-config.serv
 import {DaginfoService} from "../../../services/apiservice/daginfo.service";
 import {KeyValueArray} from "../../../types/Utils";
 import {SamenvattingComponent} from "../samenvatting/samenvatting.component";
-import {number} from "ng2-validation/dist/number";
+import {DefaultValidity, IfValid} from "luxon/src/_util";
 
 export type HeliosRoosterDatasetExtended = HeliosRoosterDataset & {
     EENHEDEN?: number
@@ -110,6 +110,9 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
 
     veldTypes$: Observable<HeliosType[]>;
     vliegveld: number | undefined;                      // laat aanmeldingen van een speciek vliegveld zien
+
+    // Expose de functie DagVanDeWeek naar de .html file, want die kan daar niet direct bij.
+    protected readonly DagVanDeWeek = DagVanDeWeek;
 
     constructor(private readonly ddwvService: DdwvService,
                 private readonly typesService: TypesService,
@@ -325,10 +328,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         return d < DateTime.now()
     }
 
-    // Dit is al geimplementeerd in util.ts
-    DagVanDeWeek(Datum: string) {
-        return DagVanDeWeek(Datum);
-    }
+
 
     // Toon datum als dd-mm-yyyy
     datumDMY(dagDatum: string): string {
