@@ -92,7 +92,6 @@ import { AgendaEditorComponent } from './components/editors/agenda-editor/agenda
 import {NgxMaterialTimepickerModule} from "ngx-material-timepicker";
 import {BaseChartDirective} from "ng2-charts";
 import {ImageCropperComponent} from "ngx-image-cropper";
-import {CustomFormsModule} from "ng2-validation";
 
 @NgModule({
     imports: [
