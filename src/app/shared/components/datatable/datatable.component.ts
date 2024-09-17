@@ -1,5 +1,12 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
-import { ColDef, GridApi, GridOptions, RowDoubleClickedEvent, RowSelectedEvent } from 'ag-grid-community';
+import {
+    ColDef,
+    GridApi,
+    GridOptions,
+    GridReadyEvent,
+    RowDoubleClickedEvent,
+    RowSelectedEvent,
+} from 'ag-grid-community';
 import { SharedService } from '../../../services/shared/shared.service';
 import { Subscription } from 'rxjs';
 
@@ -11,7 +18,7 @@ import { Subscription } from 'rxjs';
 export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     @Input() columnDefs = [];
     @Input() rowData = [];
-    @Input() frameworkComponents: any;
+    @Input() frameworkComponents = {};
     @Input() id: string;
     @Input() loading = false;
     @Input() sizeToFit = true;
@@ -20,7 +27,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     @Input() rowHeight = 40;
     @Input() multipleSelection = false;
     @Input() pagination = true;
-    @Input() rowClassRules: any = null;
+    @Input() rowClassRules = null;
     @Output() rowDoubleClicked: EventEmitter<RowDoubleClickedEvent> = new EventEmitter<RowDoubleClickedEvent>();
     @Output() rowSelected: EventEmitter<RowSelectedEvent> = new EventEmitter<RowSelectedEvent>();
 
@@ -118,7 +125,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         this.sizeColumnsToFit();
     }
 
-    gridReady(ready: any) {
+    gridReady(ready: GridReadyEvent) {
         console.log(this.id, "grid ready")
         this.api = ready.api;
 
@@ -155,8 +162,8 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    filteredRecords(): any[] {
-        const rowData:any = [];
+    filteredRecords() {
+        const rowData: unknown[] = [];
         if (this.api) {
             this.api.forEachNodeAfterFilter(node => {
                 rowData.push(node.data);
@@ -165,7 +172,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         return rowData;
     }
 
-    selectedRecords(): any[] {
+    selectedRecords() {
         if (this.api) {
             return this.api.getSelectedRows()
         }

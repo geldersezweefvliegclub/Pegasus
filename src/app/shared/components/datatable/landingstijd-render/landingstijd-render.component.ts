@@ -10,7 +10,7 @@ import { AgRendererComponent } from 'ag-grid-angular';
 
 
 export class LandingstijdRenderComponent implements AgRendererComponent {
-  params: any;
+  params: ICellRendererParams;
   landingsTijd: string;         // string met de tijd om te tonen
   toonButton = false;
 
@@ -27,6 +27,6 @@ export class LandingstijdRenderComponent implements AgRendererComponent {
   }
 
   tijdClicked() {
-    this.params.tijdClicked(this.params.data);
+    this.params.context.tijdClicked(this.params.data);
   }
 }

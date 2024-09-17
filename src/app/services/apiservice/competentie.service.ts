@@ -11,6 +11,7 @@ import { APIService } from './api.service';
 import { StorageService } from '../storage/storage.service';
 import { BehaviorSubject } from 'rxjs';
 import { LoginService } from './login.service';
+import { CustomJsonSerializer } from '../../utils/Utils';
 
 @Injectable({
     providedIn: 'root'
@@ -60,7 +61,6 @@ export class CompetentieService {
     }
 
     async getCompetenties(): Promise<HeliosCompetentiesDataset[]> {
-        const competenties: HeliosCompetenties | null = null;
         const getParams: KeyValueArray = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn
@@ -119,18 +119,12 @@ export class CompetentieService {
     }
 
     async addCompetentie(competentie: HeliosCompetentie) {
-        const replacer = (key: string, value: any) =>
-            typeof value === 'undefined' ? null : value;
-
         const response: Response = await this.apiService.post('Competenties/SaveObject', JSON.stringify(competentie));
         return response.json();
     }
 
     async updateCompetentie(competentie: HeliosCompetentie) {
-        const replacer = (key: string, value: any) =>
-            typeof value === 'undefined' ? null : value;
-
-        const response: Response = await this.apiService.put('Competenties/SaveObject', JSON.stringify(competentie));
+        const response: Response = await this.apiService.put('Competenties/SaveObject', JSON.stringify(competentie, CustomJsonSerializer));
         return response.json();
     }
 

@@ -6,6 +6,7 @@ import { KeyValueArray } from '../../types/Utils';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { SharedService } from '../shared/shared.service';
 import { LoginService } from './login.service';
+import { CustomJsonSerializer } from '../../utils/Utils';
 
 @Injectable({
     providedIn: 'root'
@@ -120,10 +121,7 @@ export class LedenService {
     }
 
     async updateLid(lid: HeliosLid) {
-        const replacer = (key:string, value:any) =>
-            typeof value === 'undefined' ? null : value;
-
-        const response: Response = await this.apiService.put('Leden/SaveObject', JSON.stringify(lid, replacer));
+        const response: Response = await this.apiService.put('Leden/SaveObject', JSON.stringify(lid, CustomJsonSerializer));
         this.syncSynapse(lid.ID!, lid.WACHTWOORD)
         return response.json();
     }

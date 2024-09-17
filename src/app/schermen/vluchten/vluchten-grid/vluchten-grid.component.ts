@@ -5,7 +5,7 @@ import {
 } from '../../../shared/components/datatable/checkbox-render/checkbox-render.component';
 import { faChevronRight, faDownload } from '@fortawesome/free-solid-svg-icons';
 import { faClipboardList } from '@fortawesome/free-solid-svg-icons/faClipboardList';
-import { ColDef, RowDoubleClickedEvent } from 'ag-grid-community';
+import { ColDef, RowClassParams, RowDoubleClickedEvent } from 'ag-grid-community';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { DeleteActionComponent } from '../../../shared/components/datatable/delete-action/delete-action.component';
 import { RestoreActionComponent } from '../../../shared/components/datatable/restore-action/restore-action.component';
@@ -124,7 +124,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     ];
 
     rowClassRules = {
-        'start_niet_wijzigbaar': function(params: any) { return !params.data.inTijdspan; },
+        'start_niet_wijzigbaar': (params: RowClassParams) => !params.data.inTijdspan,
     }
 
     columns: ColDef[] = this.dataColumns;
@@ -422,8 +422,8 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
             this.filterStarts();
 
-            for (let i = 0; i < this.filteredStarts.length; i++) {
-                this.filteredStarts[i].inTijdspan = this.inTijdspan;
+            for (const item of this.filteredStarts) {
+                item.inTijdspan = this.inTijdspan;
             }
             this.updateGrid()
             this.isLoading = false;
@@ -462,21 +462,21 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
     updateGrid() {
         const now = DateTime.fromSQL(DateTime.now().toFormat("HH:mm"));
-        for (let i = 0; i < this.starts.length; i++) {
-            const idx = this.flarmService.flarmCache.findIndex((f) => f.START_ID == this.starts[i].ID);
-            this.starts[i].hasFlarm = (idx >= 0);
+        for (const item of this.starts) {
+            const idx = this.flarmService.flarmCache.findIndex((f) => f.START_ID == item.ID);
+            item.hasFlarm = (idx >= 0);
 
-            if (this.starts[i].STARTTIJD)
+            if (item.STARTTIJD)
             {
-                if (!this.starts[i].LANDINGSTIJD) {
-                    const start = DateTime.fromSQL(this.starts[i].STARTTIJD!);
-                    this.starts[i].DUUR = now.diff(start).toFormat("hh:mm");
+                if (!item.LANDINGSTIJD) {
+                    const start = DateTime.fromSQL(item.STARTTIJD!);
+                    item.DUUR = now.diff(start).toFormat("hh:mm");
                 }
                 else
                 {
-                    const start = DateTime.fromSQL(this.starts[i].STARTTIJD!);
-                    const landing = DateTime.fromSQL(this.starts[i].LANDINGSTIJD!);
-                    this.starts[i].DUUR = landing.diff(start).toFormat("hh:mm");
+                    const start = DateTime.fromSQL(item.STARTTIJD!);
+                    const landing = DateTime.fromSQL(item.LANDINGSTIJD!);
+                    item.DUUR = landing.diff(start).toFormat("hh:mm");
                 }
             }
         }

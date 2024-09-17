@@ -10,7 +10,7 @@ import { AgRendererComponent } from 'ag-grid-angular';
 
 
 export class StarttijdRenderComponent implements AgRendererComponent {
-  params: any;
+  params: ICellRendererParams;
   startTijd: string;         // string met de tijd om te tonen
 
 
@@ -25,6 +25,6 @@ export class StarttijdRenderComponent implements AgRendererComponent {
   }
 
   tijdClicked() {
-    this.params.tijdClicked(this.params.data);
+    this.params.context.tijdClicked(this.params.data);
   }
 }

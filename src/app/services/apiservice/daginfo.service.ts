@@ -8,6 +8,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { SharedService } from '../shared/shared.service';
 import { LoginService } from './login.service';
 import { RoosterService } from './rooster.service';
+import { CustomJsonSerializer } from '../../utils/Utils';
 
 @Injectable({
     providedIn: 'root'
@@ -158,10 +159,7 @@ export class DaginfoService {
 
     // update een bestaand daginfo record
     async updateDagInfo(daginfo: HeliosDagInfo) {
-        const replacer = (key:string, value:any) =>
-            typeof value === 'undefined' ? null : value;
-
-        const response: Response = await this.apiService.put('Daginfo/SaveObject', JSON.stringify(daginfo, replacer));
+        const response: Response = await this.apiService.put('Daginfo/SaveObject', JSON.stringify(daginfo, CustomJsonSerializer));
 
         // opslaan als class variable en fire event
         response.clone().json().then((di) => {

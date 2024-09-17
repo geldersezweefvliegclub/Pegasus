@@ -68,3 +68,14 @@ export const DateDiff = (datum1 : string, datum2: string|undefined = undefined) 
   }
 }
 
+
+/**
+ * Replaces any undefined value with null
+ *
+ * @param _ Key that corrosponds to the key-value pair
+ * @param value Value that corrosponds to the key-value pair
+ * @example
+ * const json = JSON.stringify({a: undefined, b: 2, c: undefined}, CustomJsonSerializer);
+ * console.log(json); // {"a":null,"b":2,"c":null}
+ */
+export const CustomJsonSerializer = (_:string, value:unknown) => typeof value === 'undefined' ? null : value;

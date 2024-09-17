@@ -56,7 +56,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
     private typesAbonnement: Subscription;
     dienstTypes: HeliosType[] = [];
 
-    lidData: HeliosLidData;
+    lidData: HeliosLidData | undefined;
     mijnID: string;
     mijnNaam: string;
     isCIMT: boolean;
@@ -80,14 +80,14 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo;
-        this.lidData = ui!.LidData!;
-        this.isCIMT = ui!.Userinfo?.isCIMT!;
-        this.isDDWVCrew = ui!.LidData?.DDWV_CREW!;
-        this.isBeheerder = ui!.LidData?.BEHEERDER!;
-        this.isBeheerderDDWV = ui!.LidData?.DDWV_BEHEERDER!;
-        this.dragDisabled = (ui!.Userinfo?.isRooster || this.isBeheerder || this.isBeheerderDDWV) ? false : true
-        this.mijnID = (this.lidData.ID) ? this.lidData.ID.toString() : "-1";    // -1 mag nooit voorkomen, maar je weet het nooit
-        this.mijnNaam = this.lidData.NAAM as string;
+        this.lidData = ui?.LidData;
+        this.isCIMT = ui?.Userinfo?.isCIMT ?? false;
+        this.isDDWVCrew = ui?.LidData?.DDWV_CREW ?? false;
+        this.isBeheerder = ui?.LidData?.BEHEERDER ?? false;
+        this.isBeheerderDDWV = ui?.LidData?.DDWV_BEHEERDER ?? false;
+        this.dragDisabled = (ui?.Userinfo?.isRooster || this.isBeheerder || this.isBeheerderDDWV) ? false : true
+        this.mijnID = (this.lidData?.ID) ? this.lidData.ID.toString() : "-1";    // -1 mag nooit voorkomen, maar je weet het nooit
+        this.mijnNaam = this.lidData?.NAAM as string;
 
         this.magWijzigen = (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isRooster) ? true : false;
 
@@ -287,7 +287,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
         }
     }
 
-    onDropInLedenlijst(event: CdkDragDrop<HeliosLedenDataset[], any>): void {
+    onDropInLedenlijst(event: CdkDragDrop<HeliosLedenDataset[]>): void {
         // De nieuwe container is hetzelfde als de vorige, doe dan niks.
         if (event.container === event.previousContainer) {
             return;
@@ -301,7 +301,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
         }
     }
 
-    onDropInRooster(event: CdkDragDrop<HeliosLedenDataset, any>, roosterdag: HeliosRoosterDagExtended, typeDienstID: number): void {
+    onDropInRooster(event: CdkDragDrop<HeliosLedenDataset>, roosterdag: HeliosRoosterDagExtended, typeDienstID: number): void {
         // Haal de nieuwe en oude ID's op. Een id is bijvoorbeeld:
         // 1800,0
         // 0 is de index in het rooster, dus de eerste dag van de maand.
@@ -369,8 +369,6 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
                 }
             }
         } else {    // aanpassen bestaande dienst aanpassen
-            this.rooster[roosterIndex].Diensten[typeDienstID]
-
             const gewijzigdeDienst: HeliosDienst = {
                 ID: roosterdag.Diensten[typeDienstID].ID,
                 DATUM: roosterdag.DATUM,

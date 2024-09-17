@@ -117,17 +117,11 @@ export class TypesService {
     }
 
     async addType(t: HeliosType) {
-        const replacer = (key:string, value:any) =>
-            typeof value === 'undefined' ? null : value;
-
         const response: Response = await this.apiService.post('Types/SaveObject', JSON.stringify(t));
         return response.json();
     }
 
     async updateType(t: HeliosType) {
-        const replacer = (key:string, value:any) =>
-            typeof value === 'undefined' ? null : value;
-
         const response: Response = await this.apiService.put('Types/SaveObject', JSON.stringify(t));
         return response.json();
     }

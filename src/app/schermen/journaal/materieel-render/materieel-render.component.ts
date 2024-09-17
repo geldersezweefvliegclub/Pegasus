@@ -16,7 +16,7 @@ export class MaterieelRenderComponent implements AgRendererComponent {
         this.tekst = (params.data.ROLLEND_ID) ? params.data.ROLLEND : params.data.REG_CALL ;
     }
 
-    refresh(params: ICellRendererParams): boolean {
+    refresh(_: ICellRendererParams): boolean {
         return false;
     }
 }

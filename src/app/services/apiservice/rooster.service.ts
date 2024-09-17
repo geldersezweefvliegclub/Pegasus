@@ -5,7 +5,7 @@ import { KeyValueArray } from '../../types/Utils';
 import { HeliosRooster, HeliosRoosterDag, HeliosRoosterDataset } from '../../types/Helios';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { SharedService } from '../shared/shared.service';
-import { getBeginEindDatumVanMaand } from '../../utils/Utils';
+import { CustomJsonSerializer, getBeginEindDatumVanMaand } from '../../utils/Utils';
 import { LoginService } from './login.service';
 import { debounceTime } from 'rxjs/operators';
 
@@ -140,10 +140,7 @@ export class RoosterService {
     }
 
     async updateRoosterdag(roosterDag: HeliosRoosterDag) {
-        const replacer = (key:string, value:any) =>
-            typeof value === 'undefined' ? null : value;
-
-        const response: Response = await this.apiService.put('Rooster/SaveObject', JSON.stringify(roosterDag, replacer));
+        const response: Response = await this.apiService.put('Rooster/SaveObject', JSON.stringify(roosterDag, CustomJsonSerializer));
 
         return response.json();
     }

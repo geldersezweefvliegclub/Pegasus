@@ -56,7 +56,7 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
 
         // alleen beheerder mag documenten aanpassen
         const ui = this.loginService.userInfo?.Userinfo;
-        this.magAanpassen = ui?.isBeheerder!;
+        this.magAanpassen = (ui?.isBeheerder) ?? false;
     }
 
     ngOnDestroy(): void {
@@ -154,9 +154,9 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
 
                     // opslaan van alle records
                     let bezig = 0;
-                    for (let i = 0; i < lijst.length; i++) {
+                    for (const item of lijst) {
                         bezig++;
-                        this.documentenService.updateDocument(lijst[i]).then(() => {
+                        this.documentenService.updateDocument(item).then(() => {
                             bezig--;
 
                             if (bezig == 0) {   // als alle save acties klaar zijn, dan opnieuw opvragen
@@ -189,9 +189,9 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
 
                     // opslaan van alle records
                     let bezig = 0;
-                    for (let i = 0; i < lijst.length; i++) {
+                    for (const item of lijst) {
                         bezig++;
-                        this.documentenService.updateDocument(lijst[i]).then(() => {
+                        this.documentenService.updateDocument(item).then(() => {
                             bezig--;
 
                             if (bezig == 0) {   // als alle save acties klaar zijn, dan opnieuw opvragen

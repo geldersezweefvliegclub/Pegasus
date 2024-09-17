@@ -11,7 +11,7 @@ import { LoginService } from '../../../../services/apiservice/login.service';
     styleUrls: ['./track-render.component.scss']
 })
 export class TrackRenderComponent implements AgRendererComponent {
-    params: any;
+    params: ICellRendererParams;
     trackIcon: IconDefinition = faAddressCard;
 
     LID_ID: number;
@@ -54,6 +54,6 @@ export class TrackRenderComponent implements AgRendererComponent {
         tekst = tekst.replace(/#STARTTIJD#/, this.params.data.STARTTIJD);
         tekst = tekst.replace(/#DUUR#/, this.params.data.DUUR);
 
-        this.params.onTrackClicked(this.LID_ID, startID, this.NAAM, tekst);
+        this.params.context.onTrackClicked(this.LID_ID, startID, this.NAAM, tekst);
     }
 }

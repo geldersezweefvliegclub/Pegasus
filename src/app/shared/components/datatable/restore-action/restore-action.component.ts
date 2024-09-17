@@ -10,10 +10,8 @@ import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
   styleUrls: ['./restore-action.component.scss']
 })
 export class RestoreActionComponent implements AgRendererComponent {
-  private params: any;
+  private params: ICellRendererParams;
   restoreIcon:IconDefinition = faUndo;
-
-
 
   agInit(params: ICellRendererParams): void {
     this.params = params;
@@ -24,6 +22,6 @@ export class RestoreActionComponent implements AgRendererComponent {
   }
 
   buttonClicked() {
-    this.params.onRestoreClicked(this.params.data.ID);
+    this.params.context.onRestoreClicked(this.params.data.ID);
   }
 }

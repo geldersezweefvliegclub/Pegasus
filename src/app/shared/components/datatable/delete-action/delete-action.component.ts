@@ -10,7 +10,7 @@ import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
     styleUrls: ['./delete-action.component.scss']
 })
 export class DeleteActionComponent implements AgRendererComponent {
-    private params: any;
+    private params: ICellRendererParams;
     deleteIcon:IconDefinition = faMinusCircle;
 
 
@@ -19,11 +19,11 @@ export class DeleteActionComponent implements AgRendererComponent {
         this.params = params;
     }
 
-    refresh(params: ICellRendererParams): boolean {
+    refresh(_: ICellRendererParams): boolean {
         return false;
     }
 
     buttonClicked() {
-        this.params.onDeleteClicked(this.params.data.ID);
+        this.params.context.onDeleteClicked(this.params.data.ID);
     }
 }

@@ -18,8 +18,8 @@ export class LedenCardComponent implements OnInit {
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo?.Userinfo;
-        this.toonTegoed = ui?.isBeheerder! || ui?.isBeheerderDDWV!
-        this.naarDashboard = (ui?.isBeheerder || ui?.isCIMT || ui?.isInstructeur) as boolean;
+        this.toonTegoed = (ui?.isBeheerder || ui?.isBeheerderDDWV) ?? false
+        this.naarDashboard = (ui?.isBeheerder || ui?.isCIMT || ui?.isInstructeur) ?? false;
     }
 
     protected readonly faIcon = faEnvelope;

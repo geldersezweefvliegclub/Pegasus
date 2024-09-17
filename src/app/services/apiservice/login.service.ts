@@ -7,6 +7,7 @@ import { StorageService } from '../storage/storage.service';
 import { SharedService } from '../shared/shared.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { DdwvService } from './ddwv.service';
+import { KeyValueArray } from '../../types/Utils';
 
 interface BearerToken {
     TOKEN: string;
@@ -56,7 +57,7 @@ export class LoginService  {
             'Authorization': 'Basic ' + Base64.encode(`${gebruikersnaam}:${wachtwoord}`)
         });
 
-        let params: any;
+        let params: KeyValueArray = {};
         if ((token) && (token !== "")) {
             params = {'token': token as string}
         }

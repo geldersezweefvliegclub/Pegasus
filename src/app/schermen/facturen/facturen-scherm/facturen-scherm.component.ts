@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { HeliosFacturenDataset } from '../../../types/Helios';
 import { Subscription } from 'rxjs';
-import { ColDef } from 'ag-grid-community';
+import { ColDef, RowClassParams } from 'ag-grid-community';
 import { nummerSort } from '../../../utils/Utils';
 import { DeleteActionComponent } from '../../../shared/components/datatable/delete-action/delete-action.component';
 import { RestoreActionComponent } from '../../../shared/components/datatable/restore-action/restore-action.component';
@@ -87,7 +87,7 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
   columns: ColDef[];
 
   rowClassRules = {
-    'rode_regel_niet_inzetbaar': function(params: any) { return !params.data.LIDNR || params.data.OPGEZEGD; },
+    'rode_regel_niet_inzetbaar': (params: RowClassParams) => !params.data.LIDNR || params.data.OPGEZEGD,
   }
 
   frameworkComponents = {
@@ -205,9 +205,6 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
         if (this.mode === 'facturen') {
             this.data = dataset;
         }
-
-        const ui = this.loginService.userInfo?.Userinfo;
-
       }).catch(e => {
         this.isLoading = false;
         this.error = e;

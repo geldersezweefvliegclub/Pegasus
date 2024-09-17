@@ -121,7 +121,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
 
         const ui = this.loginService.userInfo;
         this.magWijzigen = (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isBeheerderDDWV || ui?.Userinfo?.isRooster) ? true : false;
-        this.isDDWVer = this.loginService.userInfo?.Userinfo?.isDDWV!;
+        this.isDDWVer = this.loginService.userInfo?.Userinfo?.isDDWV ?? false;
 
         this.magExporteren = !ui?.Userinfo?.isDDWV;
 
@@ -188,9 +188,9 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         // abonneer op wijziging van leden
         this.ledenAbonnement = this.ledenService.ledenChange.subscribe(leden => {
             this.alleLeden = (leden) ? leden : [];
-            for (let i = 0; i < this.alleLeden.length; i++) {
-                this.alleLeden[i].INGEDEELD_MAAND = 0;
-                this.alleLeden[i].INGEDEELD_JAAR = 0;
+            for (const item of this.alleLeden) {
+                item.INGEDEELD_MAAND = 0;
+                item.INGEDEELD_JAAR = 0;
             }
             this.applyLedenFilter();
             this.opvragenTotalen();
@@ -314,7 +314,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
     // moeten we de dienst tonen, niet iedere club heeft dezelfde diensten
     // Via config bestand kun je aangeven of dienst getoond moet worden
     public toonDienst(dienstType: number): boolean {
-        const indeelbareDienst = this.configService.getDienstConfig().find((d: any) => (d.TypeDienst == dienstType));
+        const indeelbareDienst = this.configService.getDienstConfig().find((d) => (d.TypeDienst == dienstType));
 
         if (indeelbareDienst) {
             if (indeelbareDienst.Tonen) return true;
@@ -379,42 +379,42 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
 
         // leden-filter de dataset naar de lijst
         const tmpLeden: HeliosLedenDatasetExtended[] = [];
-        for (let i = 0; i < this.alleLeden.length; i++) {
+        for (const item of this.alleLeden) {
             let tonen = false;
             if (toonAlles) {
-                if (this.alleLeden[i].INSTRUCTEUR == true ||
-                    this.alleLeden[i].STARTLEIDER == true ||
-                    this.alleLeden[i].LIERIST == true ||
-                    this.alleLeden[i].LIERIST_IO == true  ||
-                    this.alleLeden[i].SLEEPVLIEGER == true ||
-                    this.alleLeden[i].GASTENVLIEGER == true)
+                if (item.INSTRUCTEUR == true ||
+                    item.STARTLEIDER == true ||
+                    item.LIERIST == true ||
+                    item.LIERIST_IO == true  ||
+                    item.SLEEPVLIEGER == true ||
+                    item.GASTENVLIEGER == true)
                 {
                     tonen = true;
                 }
-            } else if (this.sharedService.ledenlijstFilter.startleiders && this.alleLeden[i].STARTLEIDER == true) {
+            } else if (this.sharedService.ledenlijstFilter.startleiders && item.STARTLEIDER == true) {
                 tonen = true;
-            } else if (this.sharedService.ledenlijstFilter.lieristen && this.alleLeden[i].LIERIST == true) {
+            } else if (this.sharedService.ledenlijstFilter.lieristen && item.LIERIST == true) {
                 tonen = true;
-            } else if (this.sharedService.ledenlijstFilter.lio && this.alleLeden[i].LIERIST_IO == true) {
+            } else if (this.sharedService.ledenlijstFilter.lio && item.LIERIST_IO == true) {
                 tonen = true;
-            } else if (this.sharedService.ledenlijstFilter.instructeurs && this.alleLeden[i].INSTRUCTEUR == true) {
+            } else if (this.sharedService.ledenlijstFilter.instructeurs && item.INSTRUCTEUR == true) {
                 tonen = true;
-            } else if (this.sharedService.ledenlijstFilter.crew && this.alleLeden[i].DDWV_CREW == true) {
+            } else if (this.sharedService.ledenlijstFilter.crew && item.DDWV_CREW == true) {
                 tonen = true;
-            } else if (this.sharedService.ledenlijstFilter.sleepvliegers && this.alleLeden[i].SLEEPVLIEGER == true) {
+            } else if (this.sharedService.ledenlijstFilter.sleepvliegers && item.SLEEPVLIEGER == true) {
                 tonen = true;
-            } else if (this.sharedService.ledenlijstFilter.gastenVliegers && this.alleLeden[i].GASTENVLIEGER == true) {
+            } else if (this.sharedService.ledenlijstFilter.gastenVliegers && item.GASTENVLIEGER == true) {
                 tonen = true;
             }
 
             if (tonen) {
                 // moeten we zoeken naar een lid ?
                 if (this.zoekString && this.zoekString != "") {
-                    const naamStr = this.alleLeden[i].NAAM?.toLowerCase();
+                    const naamStr = item.NAAM?.toLowerCase();
                     if (!naamStr!.includes(this.zoekString.toLowerCase()))
                         continue;
                 }
-                tmpLeden.push(this.alleLeden[i]);
+                tmpLeden.push(item);
             }
         }
         this.filteredLeden = tmpLeden;
@@ -429,19 +429,19 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         }
 
         const tmpRooster: HeliosRoosterDagExtended[] = [];
-        for (let i = 0; i < this.heleRooster.length; i++) {
+        for (const item of this.heleRooster) {
             switch (this.tonen.toonClubDDWV) {
                 case 1: // toonClubDDWV, 1 = toon clubdagen
                 {
-                    if (this.heleRooster[i].CLUB_BEDRIJF) {
-                        tmpRooster.push(this.heleRooster[i]);
+                    if (item.CLUB_BEDRIJF) {
+                        tmpRooster.push(item);
                         continue;
                     }
                     break;
                 }
                 case 2: // toonClubDDWV, 2 = toon DDWV
-                    if (this.heleRooster[i].DDWV) {
-                        tmpRooster.push(this.heleRooster[i]);
+                    if (item.DDWV) {
+                        tmpRooster.push(item);
                         continue;
                     }
                     break;
@@ -581,7 +581,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         }
 
         if (this.configService.getDienstConfig()) {
-            const indeelbareDienst = this.configService.getDienstConfig().find((d: any) => (d.TypeDienst == dienstType));
+            const indeelbareDienst = this.configService.getDienstConfig().find((d) => (d.TypeDienst == dienstType));
 
             // Dienst is bekend in config, return of je jezelf mag Indelen
             if (indeelbareDienst) {
@@ -619,7 +619,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         }
 
         if (this.configService.getDienstConfig()) {
-            const indeelbareDienst = this.configService.getDienstConfig().find((d: any) => (d.TypeDienst == dienstData.TYPE_DIENST_ID));
+            const indeelbareDienst = this.configService.getDienstConfig().find((d) => (d.TypeDienst == dienstData.TYPE_DIENST_ID));
             // Dienst is bekend in config, return of je jezelf mag Indelen
             if (indeelbareDienst) {
                 if (!indeelbareDienst.ZelfIndelen)
@@ -656,15 +656,15 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
 
     // Export naar excel in pivot view
     exportRooster() {
-        const exportData: any = [];
-        const legeDiensten: any = {};
+        const exportData: Record<string, string>[] = [];
+        const legeDiensten: Record<string, string> = {};
 
         this.dienstTypes.forEach(dienst => legeDiensten[dienst.OMSCHRIJVING!] = "");
 
         this.filteredRooster.forEach(dag => {
             const d = DateTime.fromSQL(dag.DATUM!);
 
-            const record: any = Object.assign({
+            const record = Object.assign({
                 DATUM: d.day + "-" + d.month + "-" + d.year,    // Datum in juiste formaat zetten
                 DDWV: dag.DDWV ? "X" : "-",
                 CLUB_BEDRIJF: dag.CLUB_BEDRIJF ? "X" : "-",
@@ -673,7 +673,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
 
             dag.Diensten.forEach(dienst => {
                 if (dienst) {
-                    record[dienst.TYPE_DIENST!] = dienst.NAAM;
+                    record[dienst.TYPE_DIENST!] = dienst.NAAM ?? "Dienst type onbekend";
                 }
             });
             exportData.push(record)

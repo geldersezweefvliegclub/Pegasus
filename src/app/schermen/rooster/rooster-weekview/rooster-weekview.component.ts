@@ -70,7 +70,6 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
     constructor(private readonly ddwvService: DdwvService,
                 private readonly loginService: LoginService,
                 private readonly typesService: TypesService,
-                private readonly sharedService: SharedService,
                 private readonly roosterService: RoosterService,
                 private readonly dienstenService: DienstenService,
                 readonly configService: PegasusConfigService,) {
@@ -78,9 +77,9 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo;
-        this.isCIMT = ui!.Userinfo?.isCIMT!;
-        this.isBeheerder = ui!.LidData?.BEHEERDER!;
-        this.isBeheerderDDWV = ui?.Userinfo?.isBeheerderDDWV!;
+        this.isCIMT = ui?.Userinfo?.isCIMT ?? false;
+        this.isBeheerder = ui?.LidData?.BEHEERDER ?? false;
+        this.isBeheerderDDWV = ui?.Userinfo?.isBeheerderDDWV ?? false;
         this.magWijzigen = (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isRooster) ? true : false;
 
         // abonneer op wijziging van lidTypes
@@ -187,7 +186,7 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
         this.dienstenService.deleteDienst(roosterdag.Diensten[typeDienstID].ID!).then(() => delete this.rooster[roosterIndex].Diensten[typeDienstID]);
     }
 
-    lidInRoosterDagClass(dienst: HeliosDienstenDataset, dag: any) {
+    lidInRoosterDagClass(dienst: HeliosDienstenDataset, dag: HeliosRoosterDag) {
         return (dag.CLUB_BEDRIJF || dag.DDWV) ? this.lidInRoosterClass(dienst) : "blanco";
     }
 

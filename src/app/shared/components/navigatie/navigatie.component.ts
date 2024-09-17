@@ -72,11 +72,11 @@ export class NavigatieComponent implements OnInit, OnDestroy {
             });
 
             const v = this.routes.find(route => route.path == "vliegtuigen") as CustomRoute;
-            v.batch = nietInzetbaar;
+            v.batch = nietInzetbaar.toString();
         });
 
         // abonneer op wijziging van profiel via userInfo
-        this.userInfoAbonnement = this.loginService.userInfoChange.subscribe(userInfo => {
+        this.userInfoAbonnement = this.loginService.userInfoChange.subscribe(() => {
             this.toonMenuItems();
         })
 
@@ -313,11 +313,6 @@ export class NavigatieComponent implements OnInit, OnDestroy {
     Uitloggen(): void {
         this.loginService.uitloggen();
         this.router.navigate(['/login']);
-    }
-
-    //  Er is een nieuwe datum is gekozen
-    NieuweDatum(datum: NgbDate) {
-        this.datumDMY = datum.day + "-" + datum.month + "-" + datum.year;
     }
 
     toonLogo() {

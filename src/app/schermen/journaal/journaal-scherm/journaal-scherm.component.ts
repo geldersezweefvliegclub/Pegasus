@@ -44,19 +44,21 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
     private maandAbonnement: Subscription;      // volg de keuze van de kalender
     datum: DateTime = DateTime.now();           // de gekozen dag
 
+    // Data kolommen voor het grid
+    // Elke kolom kan ene comparator hebben om de kolom juist te kunnen sorteren. Elke comparator functie neemt argumenten (valueA, valueB, nodeA, nodeB, isDescending), zie AG Grid docs.
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
         {field: 'DATUM', headerName: 'Ingevoerd', cellRenderer: 'datumRender', sortable: true},
         {field: 'MELDER', headerName: 'Melder', sortable: true},
         {field: 'STATUS', headerName: 'Status', cellRenderer: 'statusRender', sortable: true, comparator:
-                (valueA, valueB, nodeA, nodeB, isDescending) => {
+                (_, __, nodeA, nodeB, ___) => {
                     if (nodeA.data.STATUS_ID == nodeB.data.STATUS_ID) return 0;
                     return (nodeA.data.STATUS_ID > nodeB.data.STATUS_ID) ? 1 : -1;
                 }},
         {field: 'TITEL', headerName: 'Titel', sortable: true, cellRenderer: 'titleRender'},
         {field: 'REG_CALL', headerName: 'Materieel', cellRenderer: 'materieelRender', sortable: true},
         {field: 'CATEGORIE_CODE', headerName: 'Category', cellRenderer: 'categorieRender', sortable: true, comparator:
-                (valueA, valueB, nodeA, nodeB, isDescending) => {
+                (_, __, nodeA, nodeB, ___) => {
                     if (nodeA.data.CATEGORIE_ID == nodeB.data.CATEGORIE_ID) return 0;
                     return (nodeA.data.CATEGORIE_ID > nodeB.data.CATEGORIE_ID) ? 1 : -1;
                 }},

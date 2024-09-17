@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ColDef, RowSelectedEvent } from 'ag-grid-community';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
-import { HeliosAuditDataset } from '../../../types/Helios';
+import { HeliosAudit, HeliosAuditDataset } from '../../../types/Helios';
 import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
 import * as xlsx from 'xlsx';
 import { LoginService } from '../../../services/apiservice/login.service';
@@ -42,8 +42,7 @@ export class AuditPageComponent implements OnInit {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
-    constructor(private readonly auditService: AuditService,
-                private readonly loginService: LoginService) { }
+    constructor(private readonly auditService: AuditService) { }
 
     ngOnInit(): void {
         this.opvragen();
@@ -76,7 +75,6 @@ export class AuditPageComponent implements OnInit {
     }
 
     selectRow($event: RowSelectedEvent) {
-        console.log($event);
         this.voor = JSON.parse($event.data.VOOR);
         this.wijziging = JSON.parse($event.data.DATA);
         this.resultaat = JSON.parse($event.data.RESULTAAT);

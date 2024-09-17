@@ -18,6 +18,7 @@ import { StorageService } from '../storage/storage.service';
 import { KeyValueArray } from '../../types/Utils';
 import { DateTime } from 'luxon';
 import { LoginService } from './login.service';
+import { CustomJsonSerializer } from '../../utils/Utils';
 
 type parameters = Record<string, string>;
 
@@ -269,9 +270,7 @@ export class StartlijstService {
     }
 
     async updateStart(start: HeliosStart) {
-        const replacer = (_:string, value:unknown) => typeof value === 'undefined' ? null : value;
-
-        const response: Response = await this.apiService.put('Startlijst/SaveObject', JSON.stringify(start, replacer));
+        const response: Response = await this.apiService.put('Startlijst/SaveObject', JSON.stringify(start, CustomJsonSerializer));
 
         return response.json();
     }

@@ -2,9 +2,9 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } 
 import { DagVanDeWeek } from '../../../utils/Utils';
 
 import {
-  HeliosLedenDatasetExtended,
-  HeliosRoosterDagExtended,
-  WeergaveData,
+    HeliosLedenDatasetExtended,
+    HeliosRoosterDagExtended,
+    WeergaveData,
 } from '../rooster-page/rooster-page.component';
 import { DienstenService } from '../../../services/apiservice/diensten.service';
 import { LoginService } from '../../../services/apiservice/login.service';
@@ -15,12 +15,11 @@ import { RoosterService } from '../../../services/apiservice/rooster.service';
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faCalendarCheck, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-import { SharedService } from '../../../services/shared/shared.service';
 import { DateTime } from 'luxon';
 import { DienstEditorComponent } from '../../../shared/components/editors/dienst-editor/dienst-editor.component';
 import { DdwvService } from '../../../services/apiservice/ddwv.service';
 import {
-  UitbetalenDdwvCrewEditorComponent,
+    UitbetalenDdwvCrewEditorComponent,
 } from '../../../shared/components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component';
 
 @Component({
@@ -59,7 +58,6 @@ export class RoosterDagviewComponent implements OnInit, OnDestroy {
     constructor(private readonly ddwvService: DdwvService,
                 private readonly loginService: LoginService,
                 private readonly typesService: TypesService,
-                private readonly sharedService: SharedService,
                 private readonly roosterService: RoosterService,
                 private readonly dienstenService: DienstenService,
                 readonly configService: PegasusConfigService) {
@@ -67,9 +65,9 @@ export class RoosterDagviewComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo;
-        this.isCIMT = ui!.Userinfo?.isCIMT!;
-        this.isBeheerder = ui!.LidData?.BEHEERDER!;
-        this.isBeheerderDDWV = ui!.LidData?.DDWV_BEHEERDER!;
+        this.isCIMT = ui?.Userinfo?.isCIMT ?? false;
+        this.isBeheerder = ui?.LidData?.BEHEERDER ?? false;
+        this.isBeheerderDDWV = ui?.LidData?.DDWV_BEHEERDER ?? false;
         this.magWijzigen = (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isRooster) ? true : false;
 
         // abonneer op wijziging van lidTypes
@@ -166,7 +164,7 @@ export class RoosterDagviewComponent implements OnInit, OnDestroy {
         this.dienstenService.deleteDienst(roosterdag.Diensten[typeDienstID].ID!).then(() => delete this.rooster[roosterIndex].Diensten[typeDienstID]);
     }
 
-    lidInRoosterDagClass(dienst: HeliosDienstenDataset, dag: any) {
+    lidInRoosterDagClass(dienst: HeliosDienstenDataset, dag: HeliosRoosterDag) {
         return (dag.CLUB_BEDRIJF || dag.DDWV) ? this.lidInRoosterClass(dienst) : "blanco";
     }
 

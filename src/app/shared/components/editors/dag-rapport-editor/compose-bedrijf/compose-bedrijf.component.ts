@@ -46,15 +46,15 @@ export class ComposeBedrijfComponent {
     }
 
     // linkerhand circuit, dus niet rechtsom. Of LH = true of RH = true, beide false mag wel
-    zetLH(waarde: any) {
-        if (waarde) {
+    zetLH(isLinkerhand: boolean) {
+        if (isLinkerhand) {
             this.rechterhandCircuit = false;
         }
     }
 
     // rechterhand circuit, dus niet linksom. Of LH = true of RH = true, beide false mag wel
-    zetRH(waarde: any) {
-        if (waarde) {
+    zetRH(isRechterhand: boolean) {
+        if (isRechterhand) {
             this.linkerhandCircuit = false;
         }
     }

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { faUsers } from '@fortawesome/free-solid-svg-icons';
 import { HeliosLedenDataset, HeliosTrack } from '../../../types/Helios';
-import { ColDef, RowDoubleClickedEvent } from 'ag-grid-community';
+import { ColDef, RowClassParams, RowDoubleClickedEvent } from 'ag-grid-community';
 import { ErrorMessage } from '../../../types/Utils';
 import {
     CheckboxRenderComponent,
@@ -163,7 +163,7 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
     columns: ColDef[];
 
     rowClassRules = {
-        'rode_regel_startverbod': function(params: any) {return params.data.STARTVERBOD === true; },
+        'rode_regel_startverbod': (params: RowClassParams) => params.data.STARTVERBOD === true,
     }
 
     frameworkComponents = {
@@ -237,15 +237,15 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
             this.toonBulkEmail = false;
         }
         else {
-            this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
-            this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
-            this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
-            this.magExporteren = (!ui?.isDDWV && !ui?.isStarttoren) ? true : false;
-            this.toonBulkEmail = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT || ui?.isRooster) ? true : false;
+            this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ?? false;
+            this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ?? false;
+            this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ?? false;
+            this.magExporteren = (!ui?.isDDWV && !ui?.isStarttoren) ?? false;
+            this.toonBulkEmail = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT || ui?.isRooster) ?? false;
         }
 
         if ((!ui?.isBeheerder) && (!ui?.isBeheerderDDWV)) {
-            if (this.loginService.userInfo?.Userinfo?.isDDWV!) {
+            if (this.loginService.userInfo?.Userinfo?.isDDWV) {
                 this.sharedService.ledenlijstFilter.leden = false;
                 this.sharedService.ledenlijstFilter.ddwv = true;
             }
@@ -404,7 +404,7 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
     applyFilter() {
         // leden-filter de dataset naar de lijst
         this.leden = [];
-        for (let i = 0; i < this.dataset.length; i++) {
+        for (const item of this.dataset) {
             // 600 = Student
             // 601 = Erelid
             // 602 = Lid
@@ -413,61 +413,55 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
             // 605 = Veteraan
             // 606 = Donateur
             let isLid = false;
-            if ((this.dataset[i].LIDTYPE_ID == 600) ||
-                (this.dataset[i].LIDTYPE_ID == 601) ||
-                (this.dataset[i].LIDTYPE_ID == 602) ||
-                (this.dataset[i].LIDTYPE_ID == 603) ||
-                (this.dataset[i].LIDTYPE_ID == 604) ||
-                (this.dataset[i].LIDTYPE_ID == 605) ||
-                (this.dataset[i].LIDTYPE_ID == 606)) {
+            if ((item.LIDTYPE_ID == 600) ||
+                (item.LIDTYPE_ID == 601) ||
+                (item.LIDTYPE_ID == 602) ||
+                (item.LIDTYPE_ID == 603) ||
+                (item.LIDTYPE_ID == 604) ||
+                (item.LIDTYPE_ID == 605) ||
+                (item.LIDTYPE_ID == 606)) {
                 isLid = true;
             }
 
             if (this.sharedService.ledenlijstFilter.leden && !isLid) {
                 continue;
             }
-            if (this.sharedService.ledenlijstFilter.wachtlijst && this.dataset[i].LIDTYPE_ID != 620) {  // 620 = wachtlijst
+            if (this.sharedService.ledenlijstFilter.wachtlijst && item.LIDTYPE_ID != 620) {  // 620 = wachtlijst
                 continue;
             }
-            if (this.sharedService.ledenlijstFilter.ddwv && this.dataset[i].LIDTYPE_ID != 625) {        // 625 = DDWV'er
-                continue;
-            }
-
-            if (this.sharedService.ledenlijstFilter.startleiders && this.dataset[i].STARTLEIDER == false) {
-                continue;
-            }
-            if (this.sharedService.ledenlijstFilter.lieristen && this.dataset[i].LIERIST == false) {
-                continue;
-            }
-            if (this.sharedService.ledenlijstFilter.lio && this.dataset[i].LIERIST_IO == false) {
-                continue;
-            }
-            if (this.sharedService.ledenlijstFilter.instructeurs && this.dataset[i].INSTRUCTEUR == false) {
-                continue;
-            }
-            if (this.sharedService.ledenlijstFilter.crew && this.dataset[i].DDWV_CREW == false) {
-                continue;
-            }
-            if (this.sharedService.ledenlijstFilter.sleepvliegers && this.dataset[i].SLEEPVLIEGER == false) {
-                continue;
-            }
-            if (this.sharedService.ledenlijstFilter.gastenVliegers && this.dataset[i].GASTENVLIEGER == false) {
+            if (this.sharedService.ledenlijstFilter.ddwv && item.LIDTYPE_ID != 625) {        // 625 = DDWV'er
                 continue;
             }
 
-            this.leden.push(this.dataset[i]);
+            if (this.sharedService.ledenlijstFilter.startleiders && item.STARTLEIDER == false) {
+                continue;
+            }
+            if (this.sharedService.ledenlijstFilter.lieristen && item.LIERIST == false) {
+                continue;
+            }
+            if (this.sharedService.ledenlijstFilter.lio && item.LIERIST_IO == false) {
+                continue;
+            }
+            if (this.sharedService.ledenlijstFilter.instructeurs && item.INSTRUCTEUR == false) {
+                continue;
+            }
+            if (this.sharedService.ledenlijstFilter.crew && item.DDWV_CREW == false) {
+                continue;
+            }
+            if (this.sharedService.ledenlijstFilter.sleepvliegers && item.SLEEPVLIEGER == false) {
+                continue;
+            }
+            if (this.sharedService.ledenlijstFilter.gastenVliegers && item.GASTENVLIEGER == false) {
+                continue;
+            }
+
+            this.leden.push(item);
         }
     }
 
     // open de track editor om nieuwe track toe te voegen. Edit opent als popup
     private openTrackEditor(LID_ID: number, NAAM: string) {
         this.trackEditor.openPopup(null, LID_ID, undefined, NAAM);
-    }
-
-    // Toevoegen van een vlieger track aan de database
-    ToevoegenTrack(track: HeliosTrack): void {
-        this.trackService.addTrack(track).then((t) => {});
-        this.trackEditor.closePopup();
     }
 
     // Export naar excel

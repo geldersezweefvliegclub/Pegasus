@@ -11,7 +11,7 @@ import { KeyValueArray } from '../../types/Utils';
 import { DateTime } from 'luxon';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { SharedService } from '../shared/shared.service';
-import { getBeginEindDatumVanMaand } from '../../utils/Utils';
+import { CustomJsonSerializer, getBeginEindDatumVanMaand } from '../../utils/Utils';
 import { debounceTime } from 'rxjs/operators';
 import { LoginService } from './login.service';
 
@@ -140,11 +140,9 @@ export class DienstenService {
     }
 
     async updateDienst(dienst: HeliosDienst) {
-        const replacer = (_:string, value: unknown) => typeof value === 'undefined' ? null : value;
-
         dienst.ROOSTER_ID = undefined;
         dienst.INGEVOERD_DOOR_ID = undefined;
-        const response: Response = await this.apiService.put('Diensten/SaveObject', JSON.stringify(dienst, replacer));
+        const response: Response = await this.apiService.put('Diensten/SaveObject', JSON.stringify(dienst, CustomJsonSerializer));
 
         return response.json();
     }

@@ -54,7 +54,7 @@ export class UitbetalenDdwvCrewEditorComponent  {
         }).catch((e) => this.error = e)
     }
 
-    selectieChanged($event: any, ID: number) {
-        this.uitbetalenCrew[ID.toString()] = $event.target.checked;
+    selectieChanged($event: Event, ID: number) {
+        this.uitbetalenCrew[ID.toString()] = ($event.target as HTMLInputElement).checked;
     }
 }

@@ -123,11 +123,6 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
                 } else {
                     nieuwetak.children.push(extraTak);  // voeg toe aan bestaand array
                 }
-
-                if (this.competenties) {  // als competentie geladen zijn, zetten we sorteeer volgorde
-                    // todo: dit doet niets??
-                    boomTak.COMPETENTIE_ID
-                }
             }
         }
         return nieuwetak;

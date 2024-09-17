@@ -551,7 +551,7 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
     }
 
     // vanuit de leden aanwezig wordt er een vlieger / inzittende toegekend aan de start
-    onDropInStart(event: CdkDragDrop<HeliosLedenDataset, any>, start: HeliosStartDataset, stoel: string) {
+    onDropInStart(event: CdkDragDrop<HeliosLedenDataset>, start: HeliosStartDataset, stoel: string) {
         if (stoel == "vlieger") {
             const update: HeliosStart = {
                 ID: start.ID,

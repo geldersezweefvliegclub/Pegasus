@@ -5,7 +5,7 @@ import { faPlane, faRecycle } from '@fortawesome/free-solid-svg-icons';
 import {
   VliegtuigEditorComponent,
 } from '../../../shared/components/editors/vliegtuig-editor/vliegtuig-editor.component';
-import { ColDef, RowDoubleClickedEvent } from 'ag-grid-community';
+import { ColDef, RowClassParams, RowDoubleClickedEvent } from 'ag-grid-community';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { DeleteActionComponent } from '../../../shared/components/datatable/delete-action/delete-action.component';
 import { RestoreActionComponent } from '../../../shared/components/datatable/restore-action/restore-action.component';
@@ -119,7 +119,7 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
     }];
 
     rowClassRules = {
-        'rode_regel_niet_inzetbaar': function(params: any) { return params.data.INZETBAAR === false; },
+        'rode_regel_niet_inzetbaar': (params: RowClassParams) => params.data.INZETBAAR === false,
     }
 
     columns: ColDef[];
@@ -339,7 +339,7 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
         if (this.logboek.length == 0) { // als we nog starts hebben, dan halen we ze op
             const ui = this.loginService.userInfo?.LidData;
             try {
-                this.logboek = await this.startlijstService.getLogboek(ui?.ID!, nu.minus({months: 6}), nu)
+                this.logboek = await this.startlijstService.getLogboek(ui?.ID ?? -1, nu.minus({months: 6}), nu)
             }
             catch(e) { this.error = e}
         }

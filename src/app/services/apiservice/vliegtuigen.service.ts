@@ -7,6 +7,7 @@ import { KeyValueArray } from '../../types/Utils';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { SharedService } from '../shared/shared.service';
 import { LoginService } from './login.service';
+import { CustomJsonSerializer } from '../../utils/Utils';
 
 @Injectable({
     providedIn: 'root'
@@ -127,26 +128,15 @@ export class VliegtuigenService {
     }
 
     async updateVliegtuig(vliegtuig: HeliosVliegtuig) {
-        const replacer = (key:string, value:any) =>
-            typeof value === 'undefined' ? null : value;
-
-        const response: Response = await this.apiService.put('Vliegtuigen/SaveObject', JSON.stringify(vliegtuig, replacer));
+        const response: Response = await this.apiService.put('Vliegtuigen/SaveObject', JSON.stringify(vliegtuig, CustomJsonSerializer));
         return response.json();
     }
 
     async deleteVliegtuig(id: number) {
-        try {
-            await this.apiService.delete('Vliegtuigen/DeleteObject', {'ID': id.toString()});
-        } catch (e) {
-            throw(e);
-        }
+        await this.apiService.delete('Vliegtuigen/DeleteObject', {'ID': id.toString()});
     }
 
     async restoreVliegtuig(id: number) {
-        try {
-            await this.apiService.patch('Vliegtuigen/RestoreObject', {'ID': id.toString()});
-        } catch (e) {
-            throw(e);
-        }
+        await this.apiService.patch('Vliegtuigen/RestoreObject', {'ID': id.toString()});
     }
 }

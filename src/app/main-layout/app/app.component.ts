@@ -6,7 +6,7 @@ import { debounceTime } from 'rxjs/operators';
 import { SharedService } from '../../services/shared/shared.service';
 import { StorageService } from '../../services/storage/storage.service';
 import { PopupKalenderComponent } from '../../shared/components/popup-kalender/popup-kalender.component';
-import { NgbCalendar, NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 
 @Component({

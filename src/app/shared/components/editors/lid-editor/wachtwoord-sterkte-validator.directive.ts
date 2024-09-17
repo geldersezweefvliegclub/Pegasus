@@ -1,5 +1,5 @@
 import { Directive } from '@angular/core';
-import { AbstractControl, NG_VALIDATORS, ValidatorFn } from '@angular/forms';
+import { AbstractControl, NG_VALIDATORS, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 @Directive({
   selector: '[appWachtwoordSterkteValidator]',
@@ -23,17 +23,17 @@ export class WachtwoordSterkteValidatorDirective {
   // Als regex wel matched, wordt er null teruggegeven. Dan is het wachtwoord sterk
   readonly regex = '(?=^.{4,}$)(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z])';
 
-  validate(control: AbstractControl): Record<string, any> | null {
+  validate(control: AbstractControl): ValidationErrors | null {
     return this.regexValidator(new RegExp(this.regex))(control);
   }
 
   regexValidator(nameRe: RegExp): ValidatorFn {
-    return (control: AbstractControl): Record<string, any> | null => {
+    return (control: AbstractControl): ValidationErrors | null => {
       if (control.value === '' || !control.value) {
         return null;
       }
       const isStrongPassword = nameRe.test(control.value);
-      return isStrongPassword ? null : {forbiddenPassword: {value: control.value}};
+      return isStrongPassword ? null : { forbiddenPassword: { value: control.value } };
     };
   }
 

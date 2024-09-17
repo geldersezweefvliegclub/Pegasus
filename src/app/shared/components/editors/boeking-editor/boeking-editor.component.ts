@@ -99,10 +99,10 @@ export class BoekingEditorComponent implements OnInit, OnDestroy {
             const kist = this.clubVliegtuigen.find(v => v.ID == this.vliegtuigID)
 
             //controle of kist al gereseveerd is in deze periode
-            for (let i = 0; i < dataset.length; i++) {
-                if (dataset[i].VLIEGTUIG_ID == this.vliegtuigID) {
+            for (const item of dataset) {
+                if (item.VLIEGTUIG_ID == this.vliegtuigID) {
 
-                    const d = DateTime.fromSQL(dataset[i].DATUM!);
+                    const d = DateTime.fromSQL(item.DATUM!);
                     const datum = d.day + "-" + d.month + "-" + d.year
 
                     this.error = { beschrijving: kist!.REG_CALL + " is op " + datum + " reeds gereserveerd" };

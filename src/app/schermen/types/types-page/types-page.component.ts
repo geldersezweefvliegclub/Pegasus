@@ -120,8 +120,8 @@ export class TypesPageComponent implements OnInit, OnDestroy {
         this.filteredTypes[idx].SORTEER_VOLGORDE!++;
         this.filteredTypes[idx+1].SORTEER_VOLGORDE!--;
 
-        for (let i = 0 ; i < this.filteredTypes.length ; i++) {
-            this.typesService.updateType(this.filteredTypes[i]);
+        for (const item of this.filteredTypes) {
+            this.typesService.updateType(item);
         }
 
         this.filteredTypes.sort(function(a, b) {
@@ -133,11 +133,10 @@ export class TypesPageComponent implements OnInit, OnDestroy {
         this.filteredTypes[idx].SORTEER_VOLGORDE!--;
         this.filteredTypes[idx-1].SORTEER_VOLGORDE!++;
 
-        for (let i = 0 ; i < this.filteredTypes.length ; i++) {
-            this.typesService.updateType(this.filteredTypes[i]);
+        for (const item of this.filteredTypes) {
+            this.typesService.updateType(item);
         }
-        this.filteredTypes.sort(function(a, b) {
-            return a.SORTEER_VOLGORDE! - b.SORTEER_VOLGORDE!});
+        this.filteredTypes.sort((a, b) => a.SORTEER_VOLGORDE! - b.SORTEER_VOLGORDE!);
     }
 
     deleteModeJaNee() {

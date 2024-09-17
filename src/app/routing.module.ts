@@ -36,7 +36,7 @@ export interface CustomRoute extends Route {
     excluded: boolean;
     icon: IconDefinition;
     text: string;
-    batch?: any;
+    batch?: string;
 }
 
 export const routes: CustomRoute[] = [

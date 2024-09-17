@@ -73,10 +73,10 @@ export class FlarmLijstComponent implements OnInit, OnDestroy, OnChanges {
       return a.START_ID - b.START_ID;
     });
 
-    for (let i = 0; i < this.flarmData.length; i++) {
-      this.flarmData[i].flarmOntvangstStatusClass = this.flarmOntvangstStatus(this.flarmData[i]);
-      this.flarmData[i].starttijd = this.flarmData[i].starttijd ? this.flarmData[i].starttijd : "--:--";
-      this.flarmData[i].landingstijd = this.flarmData[i].landingstijd ? this.flarmData[i].landingstijd : "--:--";
+    for (const item of this.flarmData) {
+      item.flarmOntvangstStatusClass = this.flarmOntvangstStatus(item);
+      item.starttijd = item.starttijd ? item.starttijd : "--:--";
+      item.landingstijd = item.landingstijd ? item.landingstijd : "--:--";
     }
 
     this.grond = this.flarmData.filter((flarm) => flarm.status === 'On_Ground' && (this.veldID === null || flarm.VELD_ID === this.veldID));
