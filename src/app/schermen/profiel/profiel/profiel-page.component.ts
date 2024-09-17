@@ -5,6 +5,7 @@ import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
 import { StorageService } from '../../../services/storage/storage.service';
 import { ActivatedRoute } from '@angular/router';
 import { LoginService } from '../../../services/apiservice/login.service';
+import { HeliosUserinfo } from '../../../types/Helios';
 
 @Component({
     selector: 'app-profile',
@@ -42,7 +43,7 @@ export class ProfielPageComponent {
                     }
                 }
             } else {
-                this.lidID = this.storageService.ophalen('userInfo').LidData.ID;
+                this.lidID = (this.storageService.ophalen('userInfo') as HeliosUserinfo).LidData?.ID ?? -1;
             }
         });
     }

@@ -12,7 +12,7 @@ export class ErrorComponent implements OnChanges{
 
   showError = false;
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(_: SimpleChanges) {
     this.showError = true;
 
     setTimeout(()=> { this.showError = false;  }, 3000);

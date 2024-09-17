@@ -89,7 +89,7 @@ export class TrackEditorComponent implements OnInit{
                 this.track = trk;
                 this.isLoading = false;
             });
-        } catch (e) {
+        } catch (_) {
             this.isLoading = false;
         }
     }

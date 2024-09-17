@@ -17,7 +17,7 @@ export class DocumentenService {
 
         // We hebben misschien eerder de documenten opgehaald. Die laden we alvast
         if (this.storageService.ophalen('documenten') != null) {
-            this.documentenCache = this.storageService.ophalen('documenten');
+            this.documentenCache = this.storageService.ophalen('documenten') as HeliosDocumenten;
         }
     }
 

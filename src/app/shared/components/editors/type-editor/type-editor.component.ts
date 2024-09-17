@@ -56,7 +56,7 @@ export class TypeEditorComponent  {
                 this.type = t;
                 this.isLoading = false;
             });
-        } catch (e) {
+        } catch (_) {
             this.isLoading = false;
         }
     }

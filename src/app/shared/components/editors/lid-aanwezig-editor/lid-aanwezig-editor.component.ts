@@ -110,13 +110,13 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
 
             // Als we onszelf aanmelden, dan kijken of een default setting hebben
             if (this.aanwezig.LID_ID == ui!.ID) {
-                this.vliegtuigType2Vinkjes(this.storageService.ophalen('aanmeldingVoorkeurVliegtuigsTypes'));
+                this.vliegtuigType2Vinkjes(this.storageService.ophalen('aanmeldingVoorkeurVliegtuigsTypes') as string | undefined);
                 const vID = this.storageService.ophalen('aanmeldingOverlandVliegtuigID')
 
                 if (vID) {
                     this.aanwezig.OVERLAND_VLIEGTUIG_ID = +vID;     // + teken voor conversie van string naar int
                 }
-                this.aanwezig.VELD_ID = this.storageService.ophalen("aanmeldingVeldTypes")
+                this.aanwezig.VELD_ID = this.storageService.ophalen("aanmeldingVeldTypes") as number | undefined
             }
             else {
                 this.vliegtuigType2Vinkjes("");

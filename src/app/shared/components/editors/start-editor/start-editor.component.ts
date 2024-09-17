@@ -225,12 +225,12 @@ export class StartEditorComponent implements OnInit {
             else
             {
                 this.formTitel = `Start aanmaken`;
-                this.toonGastCombobox = this.storageService.ophalen("toonGastenCombo") ? this.storageService.ophalen("toonGastenCombo") : false;
+                this.toonGastCombobox = this.storageService.ophalen("toonGastenCombo") ? this.storageService.ophalen("toonGastenCombo") as boolean : false;
 
             }
         } else {
             this.formTitel = `Start aanmaken`;
-            this.toonGastCombobox = this.storageService.ophalen("toonGastenCombo") ? this.storageService.ophalen("toonGastenCombo") : false;
+            this.toonGastCombobox = this.storageService.ophalen("toonGastenCombo") ? this.storageService.ophalen("toonGastenCombo") as boolean : false;
 
             let veld_id = this.VliegveldID;
             let baan_id = undefined;

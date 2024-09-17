@@ -136,7 +136,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
             });
 
             let bevoegdheden = "";
-            const selectie: HeliosVliegtuigenDatasetExtended[] = this.storageService.ophalen("kistSelectieReservering")
+            const selectie: HeliosVliegtuigenDatasetExtended[] | null = this.storageService.ophalen("kistSelectieReservering") as HeliosVliegtuigenDatasetExtended[] | null
             for (const item of this.clubVliegtuigen) {
                 // opbouwen benodigde overland bevoegdheden als CSV string
                 if (item.BEVOEGDHEID_OVERLAND_ID) {

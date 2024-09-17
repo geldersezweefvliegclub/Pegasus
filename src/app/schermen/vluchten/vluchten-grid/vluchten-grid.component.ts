@@ -288,17 +288,17 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         });
 
         // Roep onWindowResize aan zodra we het event ontvangen hebben
-        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(() => {
             this.onWindowResize()
         });
 
         const ui = this.loginService.userInfo?.Userinfo;
-        this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isDDWV || ui?.isClubVlieger) ? true : false;
+        this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isDDWV || ui?.isClubVlieger) ?? false;
         this.magVerwijderen = (!this.beperkteInvoer()) ? true : false;
-        this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isDDWV || ui?.isClubVlieger) ? true : false;
+        this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isDDWV || ui?.isClubVlieger) ?? false;
         this.magExporteren = (!ui?.isDDWV && !ui?.isStarttoren);
 
-        this.vliegveld = this.storageService.ophalen('VeldFilter');
+        this.vliegveld = this.storageService.ophalen('VeldFilter') as number | undefined;
         this.hasFlarmTimer = window.setInterval(() => this.updateGrid(), 1000 * 60 * 0.5);  // iedere 30 sec
         this.refreshTimer = window.setInterval(() => this.opvragen(), 1000 * 60 * 5);  // iedere 5 minuten
     }

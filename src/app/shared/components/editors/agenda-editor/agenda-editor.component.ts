@@ -77,7 +77,7 @@ export class AgendaEditorComponent  {
         this.eersteDag = DateTime.fromSQL(activiteit.DATUM!)
         this.isLoading = false;
       });
-    } catch (e) {
+    } catch (_) {
       this.isLoading = false;
     }
   }

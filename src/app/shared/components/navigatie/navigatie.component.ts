@@ -3,7 +3,7 @@ import { beheerRoutes, CustomRoute, routes } from '../../../routing.module';
 
 import { Router } from '@angular/router';
 import { fas, faSignOutAlt, faWrench } from '@fortawesome/free-solid-svg-icons';
-import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCalendar, NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 import { DateTime } from 'luxon';
 
@@ -15,7 +15,7 @@ import { far, IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
 import { PopupKalenderComponent } from '../popup-kalender/popup-kalender.component';
-import { NgbDateFRParserFormatter } from '../../../shared/ngb-date-fr-parser-formatter';
+import { NgbDateFRParserFormatter } from '../../ngb-date-fr-parser-formatter';
 import { MenuItem } from '../../../types/IPegasusConfig';
 
 @Component({
@@ -110,7 +110,7 @@ export class NavigatieComponent implements OnInit, OnDestroy {
         });
 
         // Roep onWindowResize aan zodra we het event ontvangen hebben
-        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(() => {
             this.onWindowResize()
         });
         this.onWindowResize();
@@ -242,7 +242,6 @@ export class NavigatieComponent implements OnInit, OnDestroy {
         }
 
         // meldingen voor clubvliegers
-        const meldingen = this.routes.find(route => route.path == "meldingen") as CustomRoute;
         if (verbergen.includes('meldingen') || (!ui?.isClubVlieger && !ui?.isStarttoren)) {
             documenten.excluded = true;
         } else {

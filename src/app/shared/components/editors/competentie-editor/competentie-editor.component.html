@@ -6,8 +6,9 @@
         <fieldset [disabled]="isVerwijderMode || isRestoreMode || isLoading || isSaving">
             <div class="row">
                 <div class="col-12">
-                    <label class="form-label">Leerfase</label>
+                    <label class="form-label" for="LEERFASE">Leerfase</label>
                     <select class="form-select mb-2" [(ngModel)]="competentie.LEERFASE_ID" (change)="filterBovenliggend()" required
+                            id="LEERFASE"
                             name="LEERFASE_ID">
                         <option *ngFor="let top of topLevels"
                                 [value]="top.ID">{{top.OMSCHRIJVING}}</option>
@@ -16,7 +17,7 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <label class="form-label">Bovenliggend</label>
+                    <label class="form-label" for="BOVENLIGGENDE">Bovenliggend</label>
                     <ng-select id="BOVENLIGGENDE" class="mb-2"
                                [items]="lijst$ | async"
                                placeholder="Bovenliggende competentie"

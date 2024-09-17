@@ -150,7 +150,7 @@ export class TijdInvoerComponent {
                 this.start = start;
                 this.isLoading = false;
             });
-        } catch (e) {
+        } catch (_) {
             this.isLoading = false;
         }
     }

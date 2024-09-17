@@ -22,7 +22,7 @@ export class TypesGroepenService {
 
         // We hebben misschien eerder de lidTypes opgehaald. Die gebruiken we totdat de API starts heeft opgehaald
         if (this.storageService.ophalen('types') != null) {
-            this.typesGroepenCache = this.storageService.ophalen('typesGroepen');
+            this.typesGroepenCache = this.storageService.ophalen('typesGroepen') as HeliosTypesGroepen;
             if (this.typesGroepenCache) {
                 this.typesGroepenStore.next(this.typesGroepenCache.dataset!)    // afvuren event met opgeslagen type dataset
             }

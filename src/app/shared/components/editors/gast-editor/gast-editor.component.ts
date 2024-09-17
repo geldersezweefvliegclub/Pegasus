@@ -93,7 +93,7 @@ export class GastEditorComponent implements OnInit, OnDestroy {
                 this.isSaving = false;
             })
         } else {
-            this.gastenService.addGast(this.gast).then((a) => {
+            this.gastenService.addGast(this.gast).then((_) => {
                 this.success = {titel: "Aanmelden gast", beschrijving: "Aanmelding is geslaagd"}
                 this.refresh.emit();
 

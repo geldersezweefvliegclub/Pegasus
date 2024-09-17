@@ -16,7 +16,7 @@ export class DdwvService {
                 private readonly storageService: StorageService) {
         // We hebben misschien eerder de lidTypes opgehaald. Die gebruiken we totdat de API starts heeft opgehaald
         if (this.storageService.ophalen('configDDWV') != null) {
-            this.configDDWV = this.storageService.ophalen('configDDWV');
+            this.configDDWV = this.storageService.ophalen('configDDWV') as HeliosConfigDDWV;
         }
     }
 

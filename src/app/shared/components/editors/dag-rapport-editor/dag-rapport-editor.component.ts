@@ -83,7 +83,7 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
         this.dagRapportenService.getDagRapport(id).then ((dr) => {
             this.dagRapport = dr
             this.isLoading = false;
-        }).catch(e => {
+        }).catch(_ => {
             this.isLoading = false;
         });
     }
@@ -143,15 +143,15 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
 
         if (!this.isVerwijderMode && !this.isRestoreMode) {
             if (this.dagRapport.ID) {
-                this.Aanpassen(this.dagRapport);
+                this.Aanpassen();
             } else {
-                this.Toevoegen(this.dagRapport);
+                this.Toevoegen();
             }
         }
     }
 
     // opslaan van de starts van een nieuwe dag rapport
-    Toevoegen(dr:HeliosDagRapport) {
+    Toevoegen() {
         this.dagRapportenService.addDagRapport(this.dagRapport).then((dr) => {
             this.isSaving = false;
             this.success = {
@@ -167,8 +167,8 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
     }
 
     // bestaande dag rapport is aangepast.
-    Aanpassen(dr:HeliosDagRapport) {
-        this.dagRapportenService.updateDagRapport(this.dagRapport).then((dr) => {
+    Aanpassen() {
+        this.dagRapportenService.updateDagRapport(this.dagRapport).then((_) => {
             this.isSaving = false;
             this.success = {
                 titel: "Dag rapporten",
@@ -219,15 +219,5 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
     // Hoe groot moet de popup worden
     popupClass() {
         return (this.sharedService.getSchermSize() > SchermGrootte.md) ? "popupMedium" : "popupLarge";
-    }
-
-    // Wizard om tekst te genereren voor meteo input. Tekst kan daarna aangepast worden
-    invullenMeteo() {
-        this.meteoWizard.openPopup();
-    }
-
-    // Wizard om tekst te genereren voor vliegbedrijf. Tekst kan daarna aangepast worden
-    invullenVliegbedrijf() {
-        this.bedrijfWizard.openPopup();
     }
 }

@@ -31,7 +31,7 @@ export class CompetentieService {
 
         // We hebben misschien eerder de comptenties opgehaald. Die gebruiken we totdat de API starts heeft opgehaald
         if (this.storageService.ophalen('competenties') != null) {
-            this.competentiesCache = this.storageService.ophalen('competenties');
+            this.competentiesCache = this.storageService.ophalen('competenties') as HeliosCompetenties;
             this.competentiesStore.next(this.competentiesCache.dataset!)    // afvuren event met opgeslagen vliegtuigen dataset
         }
 

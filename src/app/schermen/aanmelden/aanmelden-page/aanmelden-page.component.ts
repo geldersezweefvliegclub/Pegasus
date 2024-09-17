@@ -176,7 +176,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
             this.veldTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));            // vliegvelden
         });
 
-        const toonGasten = this.storageService.ophalen("toonGasten")
+        const toonGasten = this.storageService.ophalen("toonGasten") as boolean;
         if (toonGasten != null) {
             this.toonGasten = toonGasten;
         }

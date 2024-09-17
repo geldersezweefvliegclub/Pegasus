@@ -46,7 +46,7 @@ export class LoginService  {
             if (this.storageService.ophalen("userInfo") == null) {
                 return false;
             }
-            this.userInfo = this.storageService.ophalen("userInfo");
+            this.userInfo = this.storageService.ophalen("userInfo") as HeliosUserinfo;
         }
         return true;
     }

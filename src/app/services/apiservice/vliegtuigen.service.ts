@@ -29,7 +29,7 @@ export class VliegtuigenService {
 
         // We hebben misschien eerder de vliegtuigen opgehaald. Die gebruiken we totdat de API starts heeft opgehaald
         if (this.storageService.ophalen('vliegtuigen') != null) {
-            this.vliegtuigenCache = this.storageService.ophalen('vliegtuigen');
+            this.vliegtuigenCache = this.storageService.ophalen('vliegtuigen') as HeliosVliegtuigen;
             this.vliegtuigenStore.next(this.vliegtuigenCache.dataset!)    // afvuren event met opgeslagen vliegtuigen dataset
         }
 

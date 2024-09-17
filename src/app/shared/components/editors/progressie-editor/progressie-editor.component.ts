@@ -95,7 +95,7 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
         this.progressieService.getProgressie(id).then ((p) => {
             this.progressie = p;
             this.isLoading = false;
-        }).catch(e => {
+        }).catch(_ => {
             this.isLoading = false;
         });
         this.geldigTot = (this.progressie.GELDIG_TOT) ? DateTime.fromSQL(this.progressie.GELDIG_TOT) : undefined;

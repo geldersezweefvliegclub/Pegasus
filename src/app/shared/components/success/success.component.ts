@@ -12,7 +12,7 @@ export class SuccessComponent implements OnChanges {
 
     showSuccess = false;
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(_: SimpleChanges) {
         this.showSuccess = true;
 
         setTimeout(() => {
