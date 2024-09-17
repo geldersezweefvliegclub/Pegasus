@@ -10,7 +10,7 @@ import { ICellRendererParams } from 'ag-grid-community';
   styleUrls: ['./track-render.component.scss']
 })
 export class TrackRenderComponent implements AgRendererComponent {
-  private params: any;
+  private params: ICellRendererParams;
   trackIcon: IconDefinition = faAddressCard;
 
   agInit(params: ICellRendererParams): void {
@@ -22,6 +22,6 @@ export class TrackRenderComponent implements AgRendererComponent {
   }
 
   buttonClicked() {
-    this.params.onTrackClicked(this.params.data.ID, this.params.data.NAAM);
+    this.params.context.onTrackClicked(this.params.data.ID, this.params.data.NAAM);
   }
 }

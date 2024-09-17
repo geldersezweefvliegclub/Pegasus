@@ -4,15 +4,21 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class StorageService {
-  vervalTijd = 60;  // 60 min
+  vervalTijdMinuten = 60;  // 60 min
 
-  public opslaan(key:string, value:any, tijd : number = this.vervalTijd): void {
+  /**
+   * Sla een item op in de local storage, met een tijd wanneer het vervalt.
+   * @param key Key om het item op te slaan in de localstorage
+   * @param value Het item dat opgeslagen moet worden. Kan elk type zijn.
+   * @param vervaltijdInMinuten De tijd in minuten wanneer het item vervalt. Standaard 60 minuten.
+   */
+  public opslaan(key:string, value: unknown, vervaltijdInMinuten: number = this.vervalTijdMinuten): void {
     const now = new Date()
 
-    const tijdMsec = tijd * 1000 * 60 // van minuten naar msec
+    const tijdMsec = vervaltijdInMinuten * 1000 * 60 // van minuten naar msec
     let expireTimestamp = now.getTime() + tijdMsec;
 
-    if (tijd < 0) {
+    if (vervaltijdInMinuten < 0) {
       expireTimestamp = now.setDate(now.getDate() + 5000);  // 5000 dagen vooruit
     }
 
@@ -23,7 +29,7 @@ export class StorageService {
     localStorage.setItem(key, JSON.stringify(item))
   }
 
-  public ophalen(key:string): any {
+  public ophalen(key:string): unknown {
     const jsonString:string | null = localStorage.getItem(key)
 
     if (jsonString == null)

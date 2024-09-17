@@ -10,7 +10,7 @@ import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
     styleUrls: ['./icon-render.component.scss']
 })
 export class IconRenderComponent implements AgRendererComponent {
-    params: any;
+    params: ICellRendererParams;
     logboekIcon: IconDefinition = faFileAlt;
     journaalIcon: IconDefinition = faBug;
 
@@ -20,15 +20,15 @@ export class IconRenderComponent implements AgRendererComponent {
         this.params = params;
     }
 
-    refresh(params: ICellRendererParams): boolean {
+    refresh(_: ICellRendererParams): boolean {
         return false;
     }
 
     logbooekButtonClicked() {
-        this.params.onLogboekClicked(this.params.data.ID);
+        this.params.context.onLogboekClicked(this.params.data.ID);
     }
 
     journaalButtonClicked() {
-        this.params.onJournaalClicked(this.params.data.ID);
+        this.params.context.onJournaalClicked(this.params.data.ID);
     }
 }

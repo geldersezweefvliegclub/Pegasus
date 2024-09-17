@@ -10,8 +10,8 @@ import { faSearchMinus, faSearchPlus, faTimesCircle, faUndoAlt } from '@fortawes
 export class ImageCropComponent {
   @Output() cropped: EventEmitter<string | null | undefined> = new EventEmitter<string | null | undefined>();
   @Output() opslaan: EventEmitter<string> = new EventEmitter<string>();
-  imageChangedEvent: any = '';
-  croppedImage: any = '';
+  imageChangedEvent: Event | null = null;
+  croppedImage: string | undefined;
   canvasRotation = 0;
   rotation = 0;
   scale = 1;
@@ -23,14 +23,13 @@ export class ImageCropComponent {
   zoomUitIcon = faSearchMinus;
   resetIcon = faTimesCircle;
 
-  fileChangeEvent(event: any): void {
+  fileChangeEvent(event: Event): void {
     this.imageChangedEvent = event;
   }
 
   imageCropped(event: ImageCroppedEvent) {
-    this.croppedImage = event.base64;
+    this.croppedImage = event.base64 as string;
     this.cropped.emit(this.croppedImage);
-    console.log(event, base64ToFile(event.base64 as string));
   }
 
   imageLoaded() {
