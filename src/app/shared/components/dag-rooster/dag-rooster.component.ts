@@ -48,14 +48,14 @@ export class DagRoosterComponent {
         return (this.Datum) ? this.Datum.day + "-" + this.Datum.month + "-" + this.Datum.year : "";
     }
 
-    afwezig($event: Event, i: number) {
+    afwezig(i: number) {
         if ((this.diensten[i].AANWEZIG) && (this.diensten[i].AFWEZIG)) {
             this.diensten[i].AANWEZIG = false;
         }
         this.diensten[i].ROOSTER_ID = -1; // indicatie dat afwezigheid is aangepast
     }
 
-    aanwezig($event: Event, i: number) {
+    aanwezig(i: number) {
         if ((this.diensten[i].AANWEZIG) && (this.diensten[i].AFWEZIG)) {
             this.diensten[i].AFWEZIG = false;
         }

@@ -2,8 +2,6 @@ import { Component } from '@angular/core';
 import { ICellRendererParams } from 'ag-grid-community';
 import { AgRendererComponent } from 'ag-grid-angular';
 import { LoginService } from '../../../services/apiservice/login.service';
-import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -12,7 +10,6 @@ import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
     styleUrls: ['./voorin-render.component.scss']
 })
 export class VoorinRenderComponent implements AgRendererComponent {
-    warningIcon:IconDefinition = faExclamationTriangle;
     lidID: string;
     grid_vliegernaam: string;
     naarDashboard = false;
@@ -23,8 +20,6 @@ export class VoorinRenderComponent implements AgRendererComponent {
 
     // Als de vlieger geen clublid is, dan is de naam handmatig ingevoerd
     agInit(params: ICellRendererParams): void {
-        const ui = this.loginService.userInfo?.Userinfo;
-
         if (params.data.VLIEGERNAAM) {
             this.grid_vliegernaam = params.data.VLIEGERNAAM_LID + "(" + params.data.VLIEGERNAAM + ")"
         } else if (params.data.VLIEGERNAAM_LID) {
@@ -44,17 +39,8 @@ export class VoorinRenderComponent implements AgRendererComponent {
         }
     }
 
-    refresh(params: ICellRendererParams): boolean {
+    refresh(_: ICellRendererParams): boolean {
         return false;
-    }
-
-    // Waarschuwing als de vlieger niet is ingevuld
-    cssWarningLevel(): string {
-        if (this.error) {
-            return "animate-flicker geenVliegerError";
-        }
-
-        return "geenVliegerWarning";
     }
 }
 

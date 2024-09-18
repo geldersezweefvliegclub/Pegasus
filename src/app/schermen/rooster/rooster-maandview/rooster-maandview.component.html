@@ -478,13 +478,13 @@
                     </div>
                     <div *ngIf="datumInToekomst(dagInRooster.DATUM) && dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF" class="w-100">
                         <div class="d-flex flex-row">
-                            <label class="form-label me-2">Slepen</label>
-                            <input type="range" class="form-range" min="1" max="25" [(ngModel)]="dagInRooster.MIN_SLEEPSTART" (change)="opslaanRooster(dagInRooster.DATUM)" [disabled]="!magWijzigen && !isBeheerderDDWV">
+                            <label class="form-label me-2" for="SLEEPSTARTS">Slepen</label>
+                            <input id="SLEEPSTARTS" type="range" class="form-range" min="1" max="25" [(ngModel)]="dagInRooster.MIN_SLEEPSTART" (change)="opslaanRooster(dagInRooster.DATUM)" [disabled]="!magWijzigen && !isBeheerderDDWV">
                             <div class="ms-2 me-1">{{dagInRooster.MIN_SLEEPSTART}}</div>
                         </div>
                         <div class="d-flex flex-row">
-                            <label class="form-label me-2">Lierstarts</label>
-                            <input type="range" class="form-range" min="1" max="25" [(ngModel)]="dagInRooster.MIN_LIERSTART" (change)="opslaanRooster(dagInRooster.DATUM)" [disabled]="!magWijzigen && !isBeheerderDDWV">
+                            <label class="form-label me-2" for="LIERSTARTS">Lierstarts</label>
+                            <input id="LIERSTARTS" type="range" class="form-range" min="1" max="25" [(ngModel)]="dagInRooster.MIN_LIERSTART" (change)="opslaanRooster(dagInRooster.DATUM)" [disabled]="!magWijzigen && !isBeheerderDDWV">
                             <div class="ms-2 me-1">{{dagInRooster.MIN_LIERSTART}}</div>
                         </div>
                     </div>

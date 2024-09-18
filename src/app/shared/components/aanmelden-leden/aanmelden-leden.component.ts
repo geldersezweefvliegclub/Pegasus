@@ -5,7 +5,6 @@ import { DateTime } from 'luxon';
 import {
     HeliosAanwezigLedenDataset,
     HeliosLedenDataset,
-    HeliosType,
     HeliosVliegtuigenDataset,
 } from '../../../types/Helios';
 import { SharedService } from '../../../services/shared/shared.service';
@@ -16,10 +15,6 @@ import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
 import { VliegtuigenService } from '../../../services/apiservice/vliegtuigen.service';
 import { LidAanwezigEditorComponent } from '../editors/lid-aanwezig-editor/lid-aanwezig-editor.component';
 import { DaginfoService } from '../../../services/apiservice/daginfo.service';
-
-type HeliosTypeExtended = HeliosType & {
-    Geselecteerd?: boolean;
-}
 
 @Component({
     selector: 'app-aanmelden-leden',

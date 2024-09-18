@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ColDef, RowSelectedEvent } from 'ag-grid-community';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
-import { HeliosAudit, HeliosAuditDataset } from '../../../types/Helios';
+import { HeliosAuditDataset } from '../../../types/Helios';
 import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
 import * as xlsx from 'xlsx';
-import { LoginService } from '../../../services/apiservice/login.service';
 import { nummerSort } from '../../../utils/Utils';
 import { AuditService } from '../../../services/apiservice/audit.service';
 import { faWaveSquare } from '@fortawesome/free-solid-svg-icons';

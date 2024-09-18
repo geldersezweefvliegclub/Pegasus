@@ -50,7 +50,7 @@ export class RoosterService {
             if (ev.tabel == "Rooster") {
                 const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
 
-                this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
+                this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then(() => {
                     this.roosterStore.next(this.roosterCache.dataset)    // afvuren event
                 });
             }

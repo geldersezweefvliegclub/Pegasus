@@ -69,7 +69,7 @@ export class LidInvoerComponent implements OnInit, OnChanges {
         });
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(_: SimpleChanges) {
         // leden komen in ander formaat, dus even goed zetten
         this.ledenFiltered = [];
         if (this.leden) {

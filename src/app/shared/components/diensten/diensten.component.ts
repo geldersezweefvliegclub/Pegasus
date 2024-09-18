@@ -47,7 +47,7 @@ export class DienstenComponent implements OnInit, OnChanges {
         })
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(_: SimpleChanges) {
         this.ophalen()
     }
 

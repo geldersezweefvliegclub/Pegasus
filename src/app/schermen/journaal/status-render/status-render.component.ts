@@ -20,7 +20,7 @@ export class StatusRenderComponent implements AgRendererComponent {
         this.id = params.data.STATUS_ID;
     }
 
-    refresh(params: ICellRendererParams): boolean {
+    refresh(_: ICellRendererParams): boolean {
         return false;
     }
 }

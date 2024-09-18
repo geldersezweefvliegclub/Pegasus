@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
-import { faPen, faPenToSquare, faSortAmountDownAlt } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { Observable, of, Subscription } from 'rxjs';
 import {
   HeliosAanwezigLedenDataset,

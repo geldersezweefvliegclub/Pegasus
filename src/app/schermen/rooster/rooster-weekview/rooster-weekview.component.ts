@@ -25,7 +25,6 @@ import { RoosterService } from '../../../services/apiservice/rooster.service';
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faCalendarCheck, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-import { SharedService } from '../../../services/shared/shared.service';
 import { DateTime } from 'luxon';
 import { DienstEditorComponent } from '../../../shared/components/editors/dienst-editor/dienst-editor.component';
 import { DdwvService } from '../../../services/apiservice/ddwv.service';

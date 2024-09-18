@@ -35,7 +35,7 @@ export class VliegtuigenService {
 
         // nadat we ingelogd zijn kunnen we de vliegtuigen ophalen
         loginService.inloggenSucces.subscribe(() => {
-            this.ophalenVliegtuigen().then((dataset) => {
+            this.ophalenVliegtuigen().then(() => {
                 this.vliegtuigenStore.next(this.vliegtuigenCache.dataset)    // afvuren event
             });
         });
@@ -50,7 +50,7 @@ export class VliegtuigenService {
                     ophalen = true;
                 }
                 if (ophalen) {
-                    this.ophalenVliegtuigen().then((dataset) => {
+                    this.ophalenVliegtuigen().then(() => {
                         this.vliegtuigenStore.next(this.vliegtuigenCache.dataset)    // afvuren event
                     });
                 }
@@ -58,7 +58,7 @@ export class VliegtuigenService {
         }, 1000 * 60);  // iedere minuut
 
         this.ophaalTimer = window.setInterval(() => {
-            this.ophalenVliegtuigen().then((dataset) => {
+            this.ophalenVliegtuigen().then(() => {
                 this.vliegtuigenStore.next(this.vliegtuigenCache.dataset)    // afvuren event
             });
         }, 1000 * 60 * 15);
@@ -66,7 +66,7 @@ export class VliegtuigenService {
         // Als vliegtuigen zijn aangepast, dan moeten we overzicht opnieuw ophalen
         this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Vliegtuigen") {
-                this.ophalenVliegtuigen().then((dataset) => {
+                this.ophalenVliegtuigen().then(() => {
                     this.vliegtuigenStore.next(this.vliegtuigenCache.dataset)    // afvuren event
                 });
             }

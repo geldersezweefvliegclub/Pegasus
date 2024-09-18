@@ -28,8 +28,6 @@ export class ProgressieService {
     }
 
     async getProgressiesLid(lidID:number, comptentiesIDs?: string): Promise<HeliosBehaaldeProgressieDataset[]> {
-        const progressie: HeliosBehaaldeProgressie | null = null;
-
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
             return [];

@@ -130,7 +130,7 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
                 this.melding = melding;
                 this.isLoading = false;
             });
-        } catch (e) {
+        } catch (_) {
             this.isLoading = false;
         }
     }

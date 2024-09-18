@@ -87,7 +87,7 @@ export class CompetentieEditorComponent implements OnInit, OnDestroy {
                 this.competentie = competentie;
                 this.isLoading = false;
             });
-        } catch (e) {
+        } catch (_) {
             this.isLoading = false;
         }
     }

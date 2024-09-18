@@ -45,7 +45,7 @@ export class CompetentieService {
                     ophalen = true;
                 }
                 if (ophalen) {
-                    this.getCompetenties().then((dataset) => {
+                    this.getCompetenties().then(() => {
                         this.competentiesStore.next(this.competentiesCache.dataset!)    // afvuren event
                     });
                 }
@@ -54,7 +54,7 @@ export class CompetentieService {
 
         // nadat we ingelogd zijn kunnen we de comptenties ophalen
         loginService.inloggenSucces.subscribe(() => {
-            this.getCompetenties().then((dataset) => {
+            this.getCompetenties().then((_) => {
                 this.competentiesStore.next(this.competentiesCache.dataset!)    // afvuren event
             });
         });

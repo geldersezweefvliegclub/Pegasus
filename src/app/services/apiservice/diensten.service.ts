@@ -45,7 +45,7 @@ export class DienstenService {
             if (this.loginService.isIngelogd() && (!this.loginService.userInfo?.Userinfo!.isStarttoren)) {
                 const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
 
-                this.getDiensten(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
+                this.getDiensten(beginEindDatum.begindatum, beginEindDatum.einddatum).then(() => {
                     this.dienstenStore.next(this.dienstenCache.dataset)    // afvuren event
                 });
             }
@@ -57,7 +57,7 @@ export class DienstenService {
             if (ev.tabel == "Diensten") {
                 const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
 
-                this.getDiensten(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
+                this.getDiensten(beginEindDatum.begindatum, beginEindDatum.einddatum).then(() => {
                     this.dienstenStore.next(this.dienstenCache.dataset)    // afvuren event
                 });
             }
@@ -68,7 +68,7 @@ export class DienstenService {
             loginService.inloggenSucces.subscribe(() => {
                 const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
 
-                this.getDiensten(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
+                this.getDiensten(beginEindDatum.begindatum, beginEindDatum.einddatum).then(() => {
                     this.dienstenStore.next(this.dienstenCache.dataset)    // afvuren event
                 });
             });

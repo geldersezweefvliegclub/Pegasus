@@ -59,7 +59,7 @@ export class FlarmInputService  {
   Connect() {
     this.socket = io(this.configService.getFlarmURL(), {transports: ['websocket']}).connect();
 
-    this.socket.on("flarm", (message: any) => {
+    this.socket.on("flarm", (message) => {
 
       // afhandelen van de binnenkomende flarm data
       const idx= this.inFlarmCache(message.flarmID);

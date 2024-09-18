@@ -490,8 +490,6 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             return false; // Als leden nog niet geladen zijn, kunnen we onzelf ook niet indelen, DDWVs mogen nooit ingedeeld worden
         }
 
-        const nu: DateTime = DateTime.now();
-        const d: DateTime = DateTime.fromSQL(datum);
 
         if (!this.sharedService.datumInToekomst(datum)) {
             return false;   // datum is in het verleden

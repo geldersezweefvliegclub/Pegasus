@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ICellRendererParams } from 'ag-grid-community';
+import { AgRendererComponent } from 'ag-grid-angular';
 
 
 @Component({
@@ -7,16 +8,14 @@ import { ICellRendererParams } from 'ag-grid-community';
     templateUrl: './omschrijving-render.component.html',
     styleUrls: ['./omschrijving-render.component.scss']
 })
-export class OmschrijvingRenderComponent {
+export class OmschrijvingRenderComponent implements AgRendererComponent{
     gridTekst: string | undefined
-
-
 
     agInit(params: ICellRendererParams): void {
         this.gridTekst = params.data.TYPE + " " + params.data.OMSCHRIJVING;
     }
 
-    refresh(params: ICellRendererParams): boolean {
+    refresh(_: ICellRendererParams): boolean {
         return false;
     }
 }

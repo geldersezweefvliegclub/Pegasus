@@ -44,10 +44,10 @@
 
                     <div class="col-6" [ngClass]="{'mt-2': !activiteit.ID}">
                         <div>
-                            <label class="form-label">Begin tijd</label>
+                            <label class="form-label" for="ACTIVITEIT_BEGINTIJD">Begin tijd</label>
                         </div>
                         <div class="d-flex col-4">
-                                <ngx-timepicker-field class="timepicker"
+                                <ngx-timepicker-field class="timepicker" id="ACTIVITEIT_BEGINTIJD"
                                         [format]="24"
                                         [minutesGap]="5"
                                         [defaultTime]="activiteit.TIJD"

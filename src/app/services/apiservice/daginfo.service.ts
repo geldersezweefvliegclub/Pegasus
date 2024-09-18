@@ -38,7 +38,7 @@ export class DaginfoService {
                 day: datum.day
             });
 
-            this.getDagInfo(undefined, this.datum).then(di => {
+            this.getDagInfo(undefined, this.datum).then(() => {
                 this.dagInfoStore.next(this.dagInfo)    // afvuren event
             });
         });
@@ -125,7 +125,7 @@ export class DaginfoService {
                 this.dagInfo = await response.json();
             }
             return this.dagInfo;
-        } catch (e) {
+        } catch (_) {
             const rooster: HeliosRoosterDataset[] = await this.roosterService.getRooster(this.datum, this.datum);
             this.dagInfo = {
                 DATUM: this.datum.toISODate() as string,

@@ -36,13 +36,13 @@
                     <input type="checkbox"
                            class="form-check-inline"
                            [(ngModel)]="diensten[i].AFWEZIG"
-                           (change)="afwezig($event, i)"
+                           (change)="afwezig(i)"
                            [disabled]="!magWijzigen">
                 </td>
                 <td class="midden"  *ngIf="magWijzigen">
                     <input type="checkbox"
                            class="form-check-inline"
-                           (change)="aanwezig($event, i)"
+                           (change)="aanwezig(i)"
                            [(ngModel)]="diensten[i].AANWEZIG"
                            [disabled]="!magWijzigen">
                 </td>

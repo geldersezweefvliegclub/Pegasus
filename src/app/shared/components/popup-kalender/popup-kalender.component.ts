@@ -16,7 +16,7 @@ export class PopupKalenderComponent implements OnInit, OnDestroy {
   constructor(private readonly sharedService: SharedService) { }
 
   ngOnInit() : void {
-    this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
+    this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(() => {
       if (this.popup !== undefined) {
         this.popup.close();
       }

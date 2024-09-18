@@ -89,7 +89,7 @@ export class LoginService  {
                 this.apiService.setBearerToken(login.TOKEN);
             }
         }
-        catch (e) {
+        catch (_) {
             this.apiService.setBearerToken();
             return false;
         }

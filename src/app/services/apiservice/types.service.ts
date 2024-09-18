@@ -39,7 +39,7 @@ export class TypesService {
                     ophalen = true;
                 }
                 if (ophalen) {
-                    this.getTypes().then((dataset) => {
+                    this.getTypes().then(() => {
                         this.typesStore.next(this.typesCache.dataset!)    // afvuren event
                     });
                 }
@@ -48,7 +48,7 @@ export class TypesService {
 
         // nadat we ingelogd zijn kunnen we de lidTypes ophalen
         loginService.inloggenSucces.subscribe(() => {
-            this.getTypes().then((dataset) => {
+            this.getTypes().then(() => {
                 this.typesStore.next(this.typesCache.dataset!)    // afvuren event
             });
         })

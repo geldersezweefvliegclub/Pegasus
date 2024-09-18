@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { ICellRendererParams } from 'ag-grid-community';
 import { SharedService } from '../../../../services/shared/shared.service';
+import { AgRendererComponent } from 'ag-grid-angular';
 
 @Component({
     selector: 'app-datumtijd-render',
     templateUrl: './datumtijd-render.component.html',
     styleUrls: ['./datumtijd-render.component.scss']
 })
-export class DatumtijdRenderComponent {
+export class DatumtijdRenderComponent implements AgRendererComponent{
     public datumtijd: string;
 
     constructor(private readonly sharedService: SharedService) {
@@ -23,7 +24,7 @@ export class DatumtijdRenderComponent {
         }
     }
 
-    refresh(params: ICellRendererParams): boolean {
+    refresh(_: ICellRendererParams): boolean {
         return false;
     }
 }

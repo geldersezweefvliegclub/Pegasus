@@ -27,13 +27,13 @@ export class LedenService {
 
         // nadat we ingelogd zijn kunnen we de vliegtuigen ophalen
         loginService.inloggenSucces.subscribe(() => {
-            this.ophalenLeden().then((dataset) => {
+            this.ophalenLeden().then(() => {
                 this.ledenStore.next(this.ledenCache.dataset)    // afvuren event
             });
         });
 
         this.ophaalTimer = window.setInterval(() => {
-            this.ophalenLeden().then((dataset) => {
+            this.ophalenLeden().then(() => {
                 this.ledenStore.next(this.ledenCache.dataset)    // afvuren event
             });
         }, 1000 * 60 * 15);
@@ -48,7 +48,7 @@ export class LedenService {
                     ophalen = true;
                 }
                 if (ophalen) {
-                    this.ophalenLeden().then((dataset) => {
+                    this.ophalenLeden().then(() => {
                         this.ledenStore.next(this.ledenCache.dataset)    // afvuren event
                     });
                 }
@@ -58,7 +58,7 @@ export class LedenService {
         // Als leden zijn aangepast, dan moeten we overzicht opnieuw ophalen
         this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Leden") {
-                this.ophalenLeden().then((dataset) => {
+                this.ophalenLeden().then(() => {
                     this.ledenStore.next(this.ledenCache.dataset)    // afvuren event
                 });
             }

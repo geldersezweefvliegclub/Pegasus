@@ -318,7 +318,7 @@ export class StartEditorComponent implements OnInit {
                     this.vliegerGeselecteerd(this.start.VLIEGER_ID);
                 }, 2000);
             });
-        } catch (e) {
+        } catch (_) {
             this.isLoading = false;
         }
     }

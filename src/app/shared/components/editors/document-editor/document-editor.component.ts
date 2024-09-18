@@ -112,7 +112,7 @@ export class DocumentEditorComponent {
     }
 
     verwijderen() {
-        this.documentenService.deleteDocument(this.document!.ID!).then((a) => {
+        this.documentenService.deleteDocument(this.document!.ID!).then(() => {
             this.success = {titel: "Document", beschrijving: "Verwijderen is geslaagd"}
             this.refresh.emit();
 
@@ -157,7 +157,7 @@ export class DocumentEditorComponent {
     toevoegen() {
         this.isSaving = true;
 
-        this.documentenService.addDocument(this.document).then((a) => {
+        this.documentenService.addDocument(this.document).then(() => {
             this.success = {titel: "Document", beschrijving: this.document.TEKST + " is toegevoegd"}
             this.refresh.emit();
 

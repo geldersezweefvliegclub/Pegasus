@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { faUsers } from '@fortawesome/free-solid-svg-icons';
-import { HeliosLedenDataset, HeliosTrack } from '../../../types/Helios';
+import { HeliosLedenDataset } from '../../../types/Helios';
 import { ColDef, RowClassParams, RowDoubleClickedEvent } from 'ag-grid-community';
 import { ErrorMessage } from '../../../types/Utils';
 import {
