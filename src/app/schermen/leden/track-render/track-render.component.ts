@@ -4,16 +4,19 @@ import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
 import { ICellRendererParams } from 'ag-grid-community';
 
+interface onTrackClicked {
+    onTrackClicked(id: string, naam: string): void;
+}
 @Component({
   selector: 'app-track-render',
   templateUrl: './track-render.component.html',
   styleUrls: ['./track-render.component.scss']
 })
 export class TrackRenderComponent implements AgRendererComponent {
-  private params: ICellRendererParams;
+  private params: ICellRendererParams & onTrackClicked;
   trackIcon: IconDefinition = faAddressCard;
 
-  agInit(params: ICellRendererParams): void {
+  agInit(params: ICellRendererParams & onTrackClicked): void {
     this.params = params;
   }
 
@@ -22,6 +25,6 @@ export class TrackRenderComponent implements AgRendererComponent {
   }
 
   buttonClicked() {
-    this.params.context.onTrackClicked(this.params.data.ID, this.params.data.NAAM);
+    this.params.onTrackClicked(this.params.data.ID, this.params.data.NAAM);
   }
 }

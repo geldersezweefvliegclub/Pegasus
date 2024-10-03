@@ -100,7 +100,7 @@ import { VerjaardagenComponent } from './components/verjaardagen/verjaardagen.co
 import { AgendaComponent } from './components/agenda/agenda.component';
 import { AgendaEditorComponent } from './components/editors/agenda-editor/agenda-editor.component';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
-import { BaseChartDirective } from 'ng2-charts';
+import {BaseChartDirective, provideCharts, withDefaultRegisterables} from 'ng2-charts';
 import { ImageCropperComponent } from 'ngx-image-cropper';
 
 @NgModule({
@@ -256,7 +256,8 @@ import { ImageCropperComponent } from 'ngx-image-cropper';
         AgendaComponent,
         AgendaEditorComponent
     ],
-    providers: [],
+    providers: [provideCharts(withDefaultRegisterables())],
+
     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]
 })
 

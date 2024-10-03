@@ -5,13 +5,17 @@ import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { ICellRendererParams } from 'ag-grid-community';
 import { LoginService } from '../../../../services/apiservice/login.service';
 
+export interface buttonClicked {
+    onTrackClicked(lidID: number, startID: number, naam: string, tekst: string): void;
+}
+
 @Component({
     selector: 'app-track-render',
     templateUrl: './track-render.component.html',
     styleUrls: ['./track-render.component.scss']
 })
 export class TrackRenderComponent implements AgRendererComponent {
-    params: ICellRendererParams;
+    params: ICellRendererParams & buttonClicked;
     trackIcon: IconDefinition = faAddressCard;
 
     LID_ID: number;
@@ -20,7 +24,7 @@ export class TrackRenderComponent implements AgRendererComponent {
     constructor(private readonly loginService: LoginService) {
     }
 
-    agInit(params: ICellRendererParams): void {
+    agInit(params: ICellRendererParams & buttonClicked): void {
         this.params = params;
         this.LID_ID = -1;
 
@@ -54,6 +58,6 @@ export class TrackRenderComponent implements AgRendererComponent {
         tekst = tekst.replace(/#STARTTIJD#/, this.params.data.STARTTIJD);
         tekst = tekst.replace(/#DUUR#/, this.params.data.DUUR);
 
-        this.params.context.onTrackClicked(this.LID_ID, startID, this.NAAM, tekst);
+        this.params.onTrackClicked(this.LID_ID, startID, this.NAAM, tekst);
     }
 }

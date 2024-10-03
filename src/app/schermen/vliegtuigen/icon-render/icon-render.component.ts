@@ -4,19 +4,21 @@ import { faBug, faFileAlt } from '@fortawesome/free-solid-svg-icons';
 import { ICellRendererParams } from 'ag-grid-community';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 
+interface ButtonClicked {
+    onLogboekClicked(ID: number): void;
+    onJournaalClicked(ID: number): void;
+}
 @Component({
     selector: 'app-icon-render',
     templateUrl: './icon-render.component.html',
     styleUrls: ['./icon-render.component.scss']
 })
 export class IconRenderComponent implements AgRendererComponent {
-    params: ICellRendererParams;
+    params: ICellRendererParams & ButtonClicked;
     logboekIcon: IconDefinition = faFileAlt;
     journaalIcon: IconDefinition = faBug;
 
-
-
-    agInit(params: ICellRendererParams): void {
+    agInit(params: ICellRendererParams & ButtonClicked): void {
         this.params = params;
     }
 
@@ -24,11 +26,11 @@ export class IconRenderComponent implements AgRendererComponent {
         return false;
     }
 
-    logbooekButtonClicked() {
-        this.params.context.onLogboekClicked(this.params.data.ID);
+    logboekButtonClicked() {
+        this.params.onLogboekClicked(this.params.data.ID);
     }
 
     journaalButtonClicked() {
-        this.params.context.onJournaalClicked(this.params.data.ID);
+        this.params.onJournaalClicked(this.params.data.ID);
     }
 }
