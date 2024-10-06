@@ -1,14 +1,16 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {HeliosVliegtuigenDatasetExtended} from "../../../../schermen/reservering/reservering-page/reservering-page.component";
-import {ModalComponent} from "../../modal/modal.component";
-import {Subscription} from "rxjs";
-import {HeliosLedenDataset, HeliosReservering} from "../../../../types/Helios";
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {LedenService} from "../../../../services/apiservice/leden.service";
-import {NgbDate, NgbDateParserFormatter} from "@ng-bootstrap/ng-bootstrap";
-import {NgbDateFRParserFormatter} from "../../../ngb-date-fr-parser-formatter";
-import {DateTime} from "luxon";
-import {ReserveringService} from "../../../../services/apiservice/reservering.service";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+    HeliosVliegtuigenDatasetExtended,
+} from '../../../../schermen/reservering/reservering-page/reservering-page.component';
+import { ModalComponent } from '../../modal/modal.component';
+import { Subscription } from 'rxjs';
+import { HeliosLedenDataset, HeliosReservering } from '../../../../types/Helios';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { LedenService } from '../../../../services/apiservice/leden.service';
+import { NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateFRParserFormatter } from '../../../ngb-date-fr-parser-formatter';
+import { DateTime } from 'luxon';
+import { ReserveringService } from '../../../../services/apiservice/reservering.service';
 
 @Component({
     selector: 'app-boeking-editor',
@@ -25,7 +27,7 @@ export class BoekingEditorComponent implements OnInit, OnDestroy {
     private ledenAbonnement: Subscription;
     leden: HeliosLedenDataset[] = [];
 
-    isSaving: boolean = false;
+    isSaving = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -97,10 +99,10 @@ export class BoekingEditorComponent implements OnInit, OnDestroy {
             const kist = this.clubVliegtuigen.find(v => v.ID == this.vliegtuigID)
 
             //controle of kist al gereseveerd is in deze periode
-            for (let i = 0; i < dataset.length; i++) {
-                if (dataset[i].VLIEGTUIG_ID == this.vliegtuigID) {
+            for (const item of dataset) {
+                if (item.VLIEGTUIG_ID == this.vliegtuigID) {
 
-                    const d = DateTime.fromSQL(dataset[i].DATUM!);
+                    const d = DateTime.fromSQL(item.DATUM!);
                     const datum = d.day + "-" + d.month + "-" + d.year
 
                     this.error = { beschrijving: kist!.REG_CALL + " is op " + datum + " reeds gereserveerd" };
@@ -110,9 +112,9 @@ export class BoekingEditorComponent implements OnInit, OnDestroy {
             }
 
             let datum: DateTime = DateTime.fromObject({day: this.eersteDag?.day, month: this.eersteDag?.month, year: this.eersteDag?.year});
-            let eind: DateTime = DateTime.fromObject({day: this.laatsteDag?.day, month: this.laatsteDag?.month, year: this.laatsteDag?.year});
+            const eind: DateTime = DateTime.fromObject({day: this.laatsteDag?.day, month: this.laatsteDag?.month, year: this.laatsteDag?.year});
 
-            let reservering: HeliosReservering = {
+            const reservering: HeliosReservering = {
                 IS_GEBOEKT: true,
                 LID_ID: this.lidID,
                 VLIEGTUIG_ID: this.vliegtuigID,

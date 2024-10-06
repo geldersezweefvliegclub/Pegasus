@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {ICellRendererParams} from "ag-grid-community";
+import { Component } from '@angular/core';
+import { ICellRendererParams } from 'ag-grid-community';
 
 @Component({
   selector: 'app-gefactureerd-render',
@@ -9,14 +9,13 @@ import {ICellRendererParams} from "ag-grid-community";
 export class GefactureerdRenderComponent {
   gridTekst: string | undefined
 
-  constructor() {
-  }
+
 
   agInit(params: ICellRendererParams): void {
     this.gridTekst = this.isGetal(params.value) ? "€ " + params.value.toLocaleString(undefined, {minimumFractionDigits: 2}) : params.data.value;
   }
 
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
 

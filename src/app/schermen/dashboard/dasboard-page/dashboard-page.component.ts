@@ -1,49 +1,50 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import {
-    faAddressCard,
-    faBookmark,
-    faCalendarAlt,
-    faChartLine,
-    faChartPie,
-    faClipboardList,
-    faExternalLinkSquareAlt,
-    faPlane,
-    faTachometerAlt,
-} from "@fortawesome/free-solid-svg-icons";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {HeliosLid, HeliosLogboekDataset, HeliosType} from "../../../types/Helios";
-import {ActivatedRoute, Router} from "@angular/router";
-import {LedenService} from "../../../services/apiservice/leden.service";
-import {TypesService} from "../../../services/apiservice/types.service";
-import {faAvianex} from "@fortawesome/free-brands-svg-icons";
-import {ModalComponent} from "../../../shared/components/modal/modal.component";
-import {Subscription} from "rxjs";
-import {DateTime} from "luxon";
-import {SharedService} from "../../../services/shared/shared.service";
-import * as xlsx from "xlsx";
-import {StartlijstService} from "../../../services/apiservice/startlijst.service";
-import {ProgressieService} from "../../../services/apiservice/progressie.service";
-import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
-import {StartEditorComponent} from "../../../shared/components/editors/start-editor/start-editor.component";
-import {TracksService} from "../../../services/apiservice/tracks.service";
+  faAddressCard,
+  faBookmark,
+  faCalendarAlt,
+  faChartLine,
+  faChartPie,
+  faClipboardList,
+  faExternalLinkSquareAlt,
+  faPlane,
+  faTachometerAlt,
+} from '@fortawesome/free-solid-svg-icons';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { HeliosLid, HeliosLogboekDataset, HeliosType } from '../../../types/Helios';
+import { ActivatedRoute, Router } from '@angular/router';
+import { LedenService } from '../../../services/apiservice/leden.service';
+import { TypesService } from '../../../services/apiservice/types.service';
+import { faAvianex } from '@fortawesome/free-brands-svg-icons';
+import { ModalComponent } from '../../../shared/components/modal/modal.component';
+import { Subscription } from 'rxjs';
+import { DateTime } from 'luxon';
+import { SharedService } from '../../../services/shared/shared.service';
+import * as xlsx from 'xlsx';
+import { StartlijstService } from '../../../services/apiservice/startlijst.service';
+import { ProgressieService } from '../../../services/apiservice/progressie.service';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { StartEditorComponent } from '../../../shared/components/editors/start-editor/start-editor.component';
+import { TracksService } from '../../../services/apiservice/tracks.service';
 import {
-    AlignmentType,
-    Document,
-    Footer,
-    Header,
-    HeadingLevel, ImageRun,
-    NumberFormat,
-    Packer,
-    PageNumber,
-    Paragraph,
-    TextRun,
-    UnderlineType
+  AlignmentType,
+  Document,
+  Footer,
+  Header,
+  HeadingLevel,
+  ImageRun,
+  NumberFormat,
+  Packer,
+  PageNumber,
+  Paragraph,
+  TextRun,
+  UnderlineType,
 } from 'docx';
-import {saveAs} from "file-saver";
-import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
-import {TransactiesComponent} from "../../../shared/components/transacties/transacties.component";
-import {DdwvService} from "../../../services/apiservice/ddwv.service";
+import { saveAs } from 'file-saver';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { TransactiesComponent } from '../../../shared/components/transacties/transacties.component';
+import { DdwvService } from '../../../services/apiservice/ddwv.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -70,9 +71,9 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     private datumAbonnement: Subscription; // volg de keuze van de kalender
     datum: DateTime = DateTime.now();      // de gekozen dag
 
-    isDDWVer: boolean = false;             // is ingelogde gebruiker een DDWV'er
-    saldoTonen: boolean = false;           // Tonen van DDWV saldo
-    toonTracks: boolean = false;           // mogen de tracks vertoond worden
+    isDDWVer = false;             // is ingelogde gebruiker een DDWV'er
+    saldoTonen = false;           // Tonen van DDWV saldo
+    toonTracks = false;           // mogen de tracks vertoond worden
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -82,8 +83,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     @ViewChild(TransactiesComponent) transactieScherm: TransactiesComponent;
     @ViewChild(StartEditorComponent) private startEditor: StartEditorComponent;
 
-    verwijderMode: boolean = false;
-    magVerwijderen: boolean = false;
+    verwijderMode = false;
+    magVerwijderen = false;
 
 
     constructor(private readonly ddwvService: DdwvService,
@@ -124,7 +125,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         // Als lidID is meegegeven in URL, moeten we de lidData ophalen
         this.activatedRoute.queryParams.subscribe(params => {
             const hl= this.loginService.userInfo?.LidData as HeliosLid;
-            var lidID = hl.ID!
+            let lidID = hl.ID!
             if (params['lidID']) {
                 lidID = params['lidID'];
             }
@@ -145,8 +146,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
         this.toonTracks = (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) ? true : false;
         this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur) ? true : false;
-
-        const myCarouselElement = document.querySelector('#myCarousel')
     }
 
     ngOnDestroy(): void {
@@ -184,7 +183,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     // mogen we vlieger status aanpassen
     statusWijzigbaar(): boolean {
         const ui = this.loginService.userInfo?.Userinfo;
-        return (ui?.isBeheerder! || ui?.isCIMT!);
+        return (ui?.isBeheerder || ui?.isCIMT) ?? false;
     }
 
     // Toevoegen van een start
@@ -208,7 +207,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
                     start.DATUM = d.day + "-" + d.month + "-" + d.year
                 })
 
-                let ws = xlsx.utils.json_to_sheet(toExcel);
+                const ws = xlsx.utils.json_to_sheet(toExcel);
                 const wb: xlsx.WorkBook = xlsx.utils.book_new();
                 xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
                 xlsx.writeFile(wb, 'logboek ' + this.datum.year.toString() + '-' + new Date().toJSON().slice(0, 10) + '.xlsx');
@@ -222,13 +221,13 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
             this.progressieService.getProgressieKaart(this.lidData.ID).then((dataset) => {
 
                 // velden die voor de gebruiker nutteloos zijn, halen we weg
-                for (let i = 0; i < dataset.length; i++) {
-                    dataset[i].ID = undefined;
-                    dataset[i].LEERFASE_ID = undefined;
-                    dataset[i].BLOK_ID = undefined;
-                    dataset[i].PROGRESSIE_ID = undefined;
+                for (const item of dataset) {
+                    item.ID = undefined;
+                    item.LEERFASE_ID = undefined;
+                    item.BLOK_ID = undefined;
+                    item.PROGRESSIE_ID = undefined;
                 }
-                let ws = xlsx.utils.json_to_sheet(dataset);
+                const ws = xlsx.utils.json_to_sheet(dataset);
                 const wb: xlsx.WorkBook = xlsx.utils.book_new();
                 xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
                 xlsx.writeFile(wb, 'progressiekaart ' + this.lidData.NAAM + '-' + new Date().toJSON().slice(0, 10) + '.xlsx');
@@ -257,7 +256,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
     getMeta(url:string) {
         return new Promise((resolve, reject) => {
-            let img = new Image();
+            const img = new Image();
             img.onload = () => resolve(img);
             img.onerror = () => reject();
             img.src = url;
@@ -297,35 +296,33 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
                     ]
                 })
             )
-            for (let i = 0; i < dataset.length; i++) {
-                const trk = dataset[i];
-                docInhoud.push(
-                    new Paragraph({
-                        children: [
-                            new TextRun({
-                                    text: "Op " + this.datumString(trk.INGEVOERD!) + " om " + this.tijdString(trk.INGEVOERD!) + " schreef " + trk.INSTRUCTEUR_NAAM + ":",
-                                    font: "Calibri",
-                                    underline: {
-                                        type: UnderlineType.SINGLE,
-                                        color: "990011",
-                                    },
-                                }
-                            ),
-                            new TextRun({
-                                text: "",
-                                break: 1,
-                            }),
-                            new TextRun({
-                                text: trk.TEKST,
-                                font: "Calibri",
-                            }),
-                            new TextRun({
-                                text: "",
-                                break: 1,
-                            })
-                        ]
-                    })
-                )
+            for (const trk of dataset) {
+                const paragraph = new Paragraph({
+                    children: [
+                        new TextRun({
+                              text: "Op " + this.datumString(trk.INGEVOERD!) + " om " + this.tijdString(trk.INGEVOERD!) + " schreef " + trk.INSTRUCTEUR_NAAM + ":",
+                              font: "Calibri",
+                              underline: {
+                                  type: UnderlineType.SINGLE,
+                                  color: "990011",
+                              },
+                          }
+                        ),
+                        new TextRun({
+                            text: "",
+                            break: 1,
+                        }),
+                        new TextRun({
+                            text: trk.TEKST,
+                            font: "Calibri",
+                        }),
+                        new TextRun({
+                            text: "",
+                            break: 1,
+                        })
+                    ]
+                });
+                docInhoud.push(paragraph);
             }
 
             const doc = new Document({
@@ -424,7 +421,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
             if (this.lidData.ID == this.loginService.userInfo?.LidData?.ID) {
                 this.saldoTonen = this.configService.saldoActief() && (ui!.isDDWV! || ui!.isClubVlieger!);
             } else {
-                this.saldoTonen = this.configService.saldoActief() && (ui?.isBeheerder! || ui?.isBeheerderDDWV!);
+                this.saldoTonen = this.configService.saldoActief() && ((ui?.isBeheerder || ui?.isBeheerderDDWV) ?? false);
             }
         }
     }

@@ -1,12 +1,12 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {HeliosLedenDataset, HeliosTrack} from "../../../../types/Helios";
-import {ModalComponent} from "../../modal/modal.component";
-import {TracksService} from "../../../../services/apiservice/tracks.service";
-import {LedenService} from "../../../../services/apiservice/leden.service";
-import {LoginService} from "../../../../services/apiservice/login.service";
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {Subscription} from "rxjs";
-import {TracksLedenDataset} from "../../tracks/tracks.component";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { HeliosLedenDataset, HeliosTrack } from '../../../../types/Helios';
+import { ModalComponent } from '../../modal/modal.component';
+import { TracksService } from '../../../../services/apiservice/tracks.service';
+import { LedenService } from '../../../../services/apiservice/leden.service';
+import { LoginService } from '../../../../services/apiservice/login.service';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { Subscription } from 'rxjs';
+import { TracksLedenDataset } from '../../tracks/tracks.component';
 
 @Component({
     selector: 'app-track-editor',
@@ -20,12 +20,12 @@ export class TrackEditorComponent implements OnInit{
     leden: HeliosLedenDataset[] = [];
     track: HeliosTrack = {}
 
-    isLoading: boolean = false;
-    isSaving: boolean = false;
+    isLoading = false;
+    isSaving = false;
 
-    isVerwijderMode: boolean = false;
-    isRestoreMode: boolean = false;
-    toonLidSelectie: boolean = false;
+    isVerwijderMode = false;
+    isRestoreMode = false;
+    toonLidSelectie = false;
     formTitel: string;
 
     success: SuccessMessage | undefined;
@@ -89,7 +89,7 @@ export class TrackEditorComponent implements OnInit{
                 this.track = trk;
                 this.isLoading = false;
             });
-        } catch (e) {
+        } catch (_) {
             this.isLoading = false;
         }
     }

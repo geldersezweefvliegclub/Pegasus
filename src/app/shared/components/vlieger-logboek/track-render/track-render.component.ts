@@ -1,9 +1,13 @@
-import {Component} from '@angular/core';
-import {faAddressCard} from "@fortawesome/free-solid-svg-icons";
-import {AgRendererComponent} from "ag-grid-angular";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {ICellRendererParams} from "ag-grid-community";
-import {LoginService} from "../../../../services/apiservice/login.service";
+import { Component } from '@angular/core';
+import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
+import { AgRendererComponent } from 'ag-grid-angular';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { ICellRendererParams } from 'ag-grid-community';
+import { LoginService } from '../../../../services/apiservice/login.service';
+
+export interface buttonClicked {
+    onTrackClicked(lidID: number, startID: number, naam: string, tekst: string): void;
+}
 
 @Component({
     selector: 'app-track-render',
@@ -11,7 +15,7 @@ import {LoginService} from "../../../../services/apiservice/login.service";
     styleUrls: ['./track-render.component.scss']
 })
 export class TrackRenderComponent implements AgRendererComponent {
-    params: any;
+    params: ICellRendererParams & buttonClicked;
     trackIcon: IconDefinition = faAddressCard;
 
     LID_ID: number;
@@ -20,7 +24,7 @@ export class TrackRenderComponent implements AgRendererComponent {
     constructor(private readonly loginService: LoginService) {
     }
 
-    agInit(params: ICellRendererParams): void {
+    agInit(params: ICellRendererParams & buttonClicked): void {
         this.params = params;
         this.LID_ID = -1;
 
@@ -37,7 +41,7 @@ export class TrackRenderComponent implements AgRendererComponent {
         }
     }
 
-    refresh(params: ICellRendererParams): boolean {
+    refresh(_: ICellRendererParams): boolean {
         return false;
     }
 

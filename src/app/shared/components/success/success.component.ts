@@ -1,5 +1,5 @@
-import {Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
-import {SuccessMessage} from '../../../types/Utils';
+import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { SuccessMessage } from '../../../types/Utils';
 
 @Component({
     selector: 'app-success',
@@ -10,9 +10,9 @@ export class SuccessComponent implements OnChanges {
     @Input() success: SuccessMessage | undefined = undefined;
     @ViewChild('successOverlay') errorOverlay: ElementRef;
 
-    showSuccess: boolean = false;
+    showSuccess = false;
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(_: SimpleChanges) {
         this.showSuccess = true;
 
         setTimeout(() => {

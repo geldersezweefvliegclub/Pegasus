@@ -1,12 +1,13 @@
-import {EventEmitter, Injectable} from '@angular/core';
-import {APIService} from './api.service';
-import {Base64} from 'js-base64';
+import { EventEmitter, Injectable } from '@angular/core';
+import { APIService } from './api.service';
+import { Base64 } from 'js-base64';
 
-import {HeliosUserinfo} from '../../types/Helios';
-import {StorageService} from '../storage/storage.service';
-import {SharedService} from "../shared/shared.service";
-import {BehaviorSubject, Subscription} from "rxjs";
-import {DdwvService} from "./ddwv.service";
+import { HeliosUserinfo } from '../../types/Helios';
+import { StorageService } from '../storage/storage.service';
+import { SharedService } from '../shared/shared.service';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { DdwvService } from './ddwv.service';
+import { KeyValueArray } from '../../types/Utils';
 
 interface BearerToken {
     TOKEN: string;
@@ -45,7 +46,7 @@ export class LoginService  {
             if (this.storageService.ophalen("userInfo") == null) {
                 return false;
             }
-            this.userInfo = this.storageService.ophalen("userInfo");
+            this.userInfo = this.storageService.ophalen("userInfo") as HeliosUserinfo;
         }
         return true;
     }
@@ -56,7 +57,7 @@ export class LoginService  {
             'Authorization': 'Basic ' + Base64.encode(`${gebruikersnaam}:${wachtwoord}`)
         });
 
-        let params: any;
+        let params: KeyValueArray = {};
         if ((token) && (token !== "")) {
             params = {'token': token as string}
         }
@@ -88,7 +89,7 @@ export class LoginService  {
                 this.apiService.setBearerToken(login.TOKEN);
             }
         }
-        catch (e) {
+        catch (_) {
             this.apiService.setBearerToken();
             return false;
         }
@@ -119,7 +120,7 @@ export class LoginService  {
     }
 
     async getUserInfo(): Promise<void> {
-        let urlParams: string = "";
+        const urlParams = "";
 
         const response: Response = await this.apiService.get('Login/GetUserInfo' + urlParams);
         if (response.ok) {

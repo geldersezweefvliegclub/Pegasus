@@ -1,9 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {HeliosJournaalDataset, HeliosVliegtuigenDataset} from "../../../types/Helios";
-import {JournaalEditorComponent} from "../../../shared/components/editors/journaal-editor/journaal-editor.component";
-import {faBug, faFileAlt, faPenToSquare} from "@fortawesome/free-solid-svg-icons";
-import {SharedService} from "../../../services/shared/shared.service";
-import {HeliosVliegtuigenDatasetExtended} from "../vliegtuigen-scherm/vliegtuigen-scherm.component";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { HeliosVliegtuigenDataset } from '../../../types/Helios';
+import { faBug, faFileAlt, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { SharedService } from '../../../services/shared/shared.service';
+import { HeliosVliegtuigenDatasetExtended } from '../vliegtuigen-scherm/vliegtuigen-scherm.component';
 
 @Component({
   selector: 'app-vliegtuig-card',

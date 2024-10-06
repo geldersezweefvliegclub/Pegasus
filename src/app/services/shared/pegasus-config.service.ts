@@ -1,5 +1,6 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Airport, Check, Dienst, IPegasusConfig, MenuItem, Overig, PVB, Rapport } from '../../types/IPegasusConfig';
 
 @Injectable({
     providedIn: 'root'
@@ -38,7 +39,7 @@ export class PegasusConfigService {
             */
 
             this.http.get(this.configURL).toPromise().then((response: IPegasusConfig) => {
-                this.pegasusConfig = <IPegasusConfig>response;
+                this.pegasusConfig = response as IPegasusConfig;
 
                 resolve(this.pegasusConfig);
             }).catch(() => {
@@ -55,23 +56,23 @@ export class PegasusConfigService {
         return this.pegasusConfig.flarm_url;
     }
 
-    public getPVB(): any[] {
+    public getPVB(): PVB[] {
         return this.pegasusConfig.pvb;
     }
 
-    public getChecks(): any {
+    public getChecks(): { Jaren: number[], Check: Check[] } {
         return this.pegasusConfig.checks;
     }
 
-    public getOverig(): any {
+    public getOverig(): Overig[] {
         return this.pegasusConfig.overig;
     }
 
-    public getAirport(): any {
+    public getAirport(): Airport {
         return this.pegasusConfig.airport;
     }
 
-    public getDienstConfig(): any {
+    public getDienstConfig(): Dienst[] {
         return this.pegasusConfig.diensten;
     }
 
@@ -80,84 +81,26 @@ export class PegasusConfigService {
     }
 
     public maxZelfDienstenIndelen(): number {
-        return (this.pegasusConfig.maxZelfDienstenIndelen) ? this.pegasusConfig.maxZelfDienstenIndelen : 2;
+        return this.pegasusConfig.maxZelfDienstenIndelen ?? 2;
     }
 
     public maxZelfEditDagen(): number {
-        return (this.pegasusConfig.maxZelfEditDagen) ? this.pegasusConfig.maxZelfEditDagen : 14;
+        return this.pegasusConfig.maxZelfEditDagen ?? 14;
     }
 
-    public privacyURL(): string | undefined {
+    public privacyURL(): string {
         return this.pegasusConfig.privacy_url;
     }
 
-    public saldoActief() {
-        return (this.pegasusConfig.saldo_actief) ? this.pegasusConfig.saldo_actief : false;
+    public saldoActief(): boolean {
+        return this.pegasusConfig.saldo_actief;
     }
 
-    public getRapporten(): any[] {
+    public getRapporten(): Rapport[] {
         return this.pegasusConfig.rapporten;
     }
 
-    public menuItems(): any[] {
+    public menuItems(): MenuItem[] {
         return this.pegasusConfig.menuItems;
-    }
-}
-
-
-export interface IPegasusConfig {
-    url: string;
-    flarm_url: string;
-    privacy_url: string;
-    saldo_actief: boolean | undefined;
-    maxZelfDienstenIndelen: number | undefined;
-    maxZelfEditDagen: number | undefined;
-
-    menuItemsNietTonen: string[];
-
-    menuItems: [
-        {
-            Titel: string,
-            Url: string,
-            Icon: string,
-            css: string
-        }
-    ]
-
-    diensten: [
-        {
-            Tonen: boolean,
-            TypeDienst: number,
-            ZelfIndelen: boolean,
-        }
-    ]
-
-    pvb: [{
-        Type: string,           // Vliegtuig type
-        Lokaal: number,         // Competentie ID voor lokaal vliegen
-        Overland: number        // Competentie ID voor overland
-    }],
-
-    checks: [{
-        Jaren: [number],            // Voor welk jaren zijn de checks
-        Check: [{
-            Omschrijving: string      // Wat voor een check (checkstart, vragenlijst etc)
-            CompetentieID: [number]  // Competentie ID voor jaarcheck voor het jaar XX
-        }]
-    }],
-
-    overig: [{
-        Omschrijving: string,
-        CompetentieID: number
-    }]
-
-    rapporten: [{
-        MenuItem: string,
-        Url: string
-    }]
-
-    airport: {
-        Latitude: number,
-        Longitude: number
     }
 }

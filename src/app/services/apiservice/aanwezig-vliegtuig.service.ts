@@ -1,16 +1,16 @@
-import {Injectable} from '@angular/core';
-import {DateTime} from 'luxon';
-import {HeliosActie, KeyValueArray} from '../../types/Utils';
-import {APIService} from './api.service';
+import { Injectable } from '@angular/core';
+import { DateTime } from 'luxon';
+import { KeyValueArray } from '../../types/Utils';
+import { APIService } from './api.service';
 import {
-    HeliosAanwezigVliegtuigen,
-    HeliosAanwezigVliegtuigenDataset,
-    HeliosVliegtuigenDataset
+  HeliosAanwezigVliegtuigen,
+  HeliosAanwezigVliegtuigenDataset,
+  HeliosVliegtuigenDataset,
 } from '../../types/Helios';
-import {BehaviorSubject, Subscription} from "rxjs";
-import {SharedService} from "../shared/shared.service";
-import {debounceTime} from "rxjs/operators";
-import {LoginService} from "./login.service";
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { SharedService } from '../shared/shared.service';
+import { debounceTime } from 'rxjs/operators';
+import { LoginService } from './login.service';
 
 
 @Injectable({
@@ -23,7 +23,7 @@ export class AanwezigVliegtuigService {
     private datumAbonnement: Subscription;                      // volg de keuze van de kalender
     private datum: DateTime = DateTime.now();                   // de gekozen dag
 
-    private overslaan: boolean = false;
+    private overslaan = false;
     private ophaalTimer: number;                                // Iedere 15 min halen we de aanwezige vliegtuigen op
     private aanwezigStore = new BehaviorSubject(this.aanwezigCache.dataset);
     public readonly aanwezigChange = this.aanwezigStore.asObservable();      // nieuwe aanwezigheid beschikbaar
@@ -75,7 +75,7 @@ export class AanwezigVliegtuigService {
         });
     }
 
-    async updateAanwezigCache(force: boolean = false) {
+    async updateAanwezigCache(force = false) {
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
             return undefined;
@@ -93,7 +93,7 @@ export class AanwezigVliegtuigService {
     }
 
     async getAanwezig(startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosAanwezigVliegtuigenDataset[]> {
-        let getParams: KeyValueArray = params;
+        const getParams: KeyValueArray = params;
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {

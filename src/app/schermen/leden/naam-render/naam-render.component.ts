@@ -1,7 +1,7 @@
-import {Component} from '@angular/core';
-import {LoginService} from "../../../services/apiservice/login.service";
-import {AgRendererComponent} from "ag-grid-angular";
-import {ICellRendererParams} from "ag-grid-community";
+import { Component } from '@angular/core';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { AgRendererComponent } from 'ag-grid-angular';
+import { ICellRendererParams } from 'ag-grid-community';
 
 @Component({
   selector: 'app-naam-render',
@@ -11,7 +11,7 @@ import {ICellRendererParams} from "ag-grid-community";
 export class NaamRenderComponent implements AgRendererComponent {
   naam: string;
   lidID: string;
-  naarDashboard: boolean = false;
+  naarDashboard = false;
 
   constructor(private readonly loginService: LoginService) { }
 
@@ -23,7 +23,7 @@ export class NaamRenderComponent implements AgRendererComponent {
     this.lidID = params.data.ID;
   }
 
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
 }

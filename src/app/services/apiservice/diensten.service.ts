@@ -1,19 +1,19 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
-    HeliosDienst,
-    HeliosDiensten,
-    HeliosDienstenDataset,
-    HeliosDienstenTotaal,
-    HeliosTracksDataset
-} from "../../types/Helios";
-import {APIService} from "./api.service";
-import {KeyValueArray} from "../../types/Utils";
-import {DateTime} from "luxon";
-import {BehaviorSubject, Subscription} from "rxjs";
-import {SharedService} from "../shared/shared.service";
-import {getBeginEindDatumVanMaand} from "../../utils/Utils";
-import {debounceTime} from "rxjs/operators";
-import {LoginService} from "./login.service";
+  HeliosDienst,
+  HeliosDiensten,
+  HeliosDienstenDataset,
+  HeliosDienstenTotaal,
+  HeliosTracksDataset,
+} from '../../types/Helios';
+import { APIService } from './api.service';
+import { KeyValueArray } from '../../types/Utils';
+import { DateTime } from 'luxon';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { SharedService } from '../shared/shared.service';
+import { CustomJsonSerializer, getBeginEindDatumVanMaand } from '../../utils/Utils';
+import { debounceTime } from 'rxjs/operators';
+import { LoginService } from './login.service';
 
 @Injectable({
     providedIn: 'root'
@@ -45,7 +45,7 @@ export class DienstenService {
             if (this.loginService.isIngelogd() && (!this.loginService.userInfo?.Userinfo!.isStarttoren)) {
                 const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
 
-                this.getDiensten(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
+                this.getDiensten(beginEindDatum.begindatum, beginEindDatum.einddatum).then(() => {
                     this.dienstenStore.next(this.dienstenCache.dataset)    // afvuren event
                 });
             }
@@ -57,7 +57,7 @@ export class DienstenService {
             if (ev.tabel == "Diensten") {
                 const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
 
-                this.getDiensten(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
+                this.getDiensten(beginEindDatum.begindatum, beginEindDatum.einddatum).then(() => {
                     this.dienstenStore.next(this.dienstenCache.dataset)    // afvuren event
                 });
             }
@@ -68,7 +68,7 @@ export class DienstenService {
             loginService.inloggenSucces.subscribe(() => {
                 const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
 
-                this.getDiensten(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
+                this.getDiensten(beginEindDatum.begindatum, beginEindDatum.einddatum).then(() => {
                     this.dienstenStore.next(this.dienstenCache.dataset)    // afvuren event
                 });
             });
@@ -76,7 +76,7 @@ export class DienstenService {
     }
 
     async getDiensten(startDatum: DateTime, eindDatum: DateTime, dienstType?: number, lidID?: number): Promise<HeliosDienstenDataset[]> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
         getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
         getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
 
@@ -108,7 +108,7 @@ export class DienstenService {
 
 
     async getTotalen(jaar: number, lidID?: number): Promise<HeliosDienstenTotaal[]> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
         getParams['JAAR'] = jaar.toString();
 
         // kunnen alleen data ophalen als we ingelogd zijn
@@ -140,12 +140,9 @@ export class DienstenService {
     }
 
     async updateDienst(dienst: HeliosDienst) {
-        const replacer = (key:string, value:any) =>
-            typeof value === 'undefined' ? null : value;
-
         dienst.ROOSTER_ID = undefined;
         dienst.INGEVOERD_DOOR_ID = undefined;
-        const response: Response = await this.apiService.put('Diensten/SaveObject', JSON.stringify(dienst, replacer));
+        const response: Response = await this.apiService.put('Diensten/SaveObject', JSON.stringify(dienst, CustomJsonSerializer));
 
         return response.json();
     }

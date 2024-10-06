@@ -1,13 +1,13 @@
-import {Injectable} from '@angular/core';
-import {DateTime} from 'luxon';
-import {APIService} from './api.service';
-import {KeyValueArray} from '../../types/Utils';
-import {HeliosRooster, HeliosRoosterDag, HeliosRoosterDataset} from '../../types/Helios';
-import {BehaviorSubject, Subscription} from "rxjs";
-import {SharedService} from "../shared/shared.service";
-import {getBeginEindDatumVanMaand} from "../../utils/Utils";
-import {LoginService} from "./login.service";
-import {debounceTime} from "rxjs/operators";
+import { Injectable } from '@angular/core';
+import { DateTime } from 'luxon';
+import { APIService } from './api.service';
+import { KeyValueArray } from '../../types/Utils';
+import { HeliosRooster, HeliosRoosterDag, HeliosRoosterDataset } from '../../types/Helios';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { SharedService } from '../shared/shared.service';
+import { CustomJsonSerializer, getBeginEindDatumVanMaand } from '../../utils/Utils';
+import { LoginService } from './login.service';
+import { debounceTime } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -50,7 +50,7 @@ export class RoosterService {
             if (ev.tabel == "Rooster") {
                 const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
 
-                this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
+                this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then(() => {
                     this.roosterStore.next(this.roosterCache.dataset)    // afvuren event
                 });
             }
@@ -70,7 +70,7 @@ export class RoosterService {
     }
 
     async getRooster(startDatum: DateTime, eindDatum: DateTime, velden?: string): Promise<HeliosRoosterDataset[]> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
         getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
         getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
         if (velden) {
@@ -140,10 +140,7 @@ export class RoosterService {
     }
 
     async updateRoosterdag(roosterDag: HeliosRoosterDag) {
-        const replacer = (key:string, value:any) =>
-            typeof value === 'undefined' ? null : value;
-
-        const response: Response = await this.apiService.put('Rooster/SaveObject', JSON.stringify(roosterDag, replacer));
+        const response: Response = await this.apiService.put('Rooster/SaveObject', JSON.stringify(roosterDag, CustomJsonSerializer));
 
         return response.json();
     }

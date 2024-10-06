@@ -1,34 +1,32 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faAvianex} from "@fortawesome/free-brands-svg-icons";
-import {faCalendarCheck, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {DateTime} from "luxon";
-import {Subscription} from "rxjs";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faAvianex } from '@fortawesome/free-brands-svg-icons';
+import { faCalendarCheck, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { DateTime } from 'luxon';
+import { Subscription } from 'rxjs';
 import {
-    HeliosBehaaldeProgressieDataset,
-    HeliosLedenDataset,
-    HeliosReserveringenDataset,
-    HeliosRoosterDataset,
-    HeliosStartDataset,
-    HeliosVliegtuigenDataset
-} from "../../../types/Helios";
-import {LedenService} from "../../../services/apiservice/leden.service";
-import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
-import {VliegtuigenService} from "../../../services/apiservice/vliegtuigen.service";
-import {RoosterService} from "../../../services/apiservice/rooster.service";
-import {DagVanDeWeek, getBeginEindDatumVanMaand} from "../../../utils/Utils";
+  HeliosBehaaldeProgressieDataset,
+  HeliosLedenDataset,
+  HeliosReserveringenDataset,
+  HeliosRoosterDataset,
+  HeliosVliegtuigenDataset,
+} from '../../../types/Helios';
+import { LedenService } from '../../../services/apiservice/leden.service';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { VliegtuigenService } from '../../../services/apiservice/vliegtuigen.service';
+import { RoosterService } from '../../../services/apiservice/rooster.service';
+import { DagVanDeWeek, getBeginEindDatumVanMaand } from '../../../utils/Utils';
 
-import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
-import {ReserveringService} from "../../../services/apiservice/reservering.service";
-import {KistSelectieComponent} from "../kist-selectie/kist-selectie.component";
-import {StorageService} from "../../../services/storage/storage.service";
-import {BoekingEditorComponent} from "../../../shared/components/editors/boeking-editor/boeking-editor.component";
-import {StartEditorComponent} from "../../../shared/components/editors/start-editor/start-editor.component";
-import {DaginfoService} from "../../../services/apiservice/daginfo.service";
-import * as xlsx from "xlsx";
-import {ProgressieService} from "../../../services/apiservice/progressie.service";
-import {DatatableComponent} from "../../../shared/components/datatable/datatable.component";
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { ReserveringService } from '../../../services/apiservice/reservering.service';
+import { KistSelectieComponent } from '../kist-selectie/kist-selectie.component';
+import { StorageService } from '../../../services/storage/storage.service';
+import { BoekingEditorComponent } from '../../../shared/components/editors/boeking-editor/boeking-editor.component';
+import { StartEditorComponent } from '../../../shared/components/editors/start-editor/start-editor.component';
+import { DaginfoService } from '../../../services/apiservice/daginfo.service';
+import * as xlsx from 'xlsx';
+import { ProgressieService } from '../../../services/apiservice/progressie.service';
 
 export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
     Tonen?: boolean;
@@ -55,11 +53,11 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     alleLeden: HeliosLedenDataset[];
 
     data: HeliosReserveringenDataset[] = [];
-    reserveringView: string = "maand";            // toon rooster voor maand, week of dag
+    reserveringView = "maand";            // toon rooster voor maand, week of dag
     zoekString: string;
-    isLoading: boolean = false;
-    magBoeken: boolean = false;
-    magNogReserveren: boolean = false;
+    isLoading = false;
+    magBoeken = false;
+    magNogReserveren = false;
 
     private vliegtuigenAbonnement: Subscription;
     clubVliegtuigen: HeliosVliegtuigenDatasetExtended[];
@@ -72,10 +70,10 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     maandag: DateTime                               // de eerste dag van de week
     nu: DateTime = DateTime.now()                   // vandaag
 
-    toonDatumKnoppen: boolean = false;              // Mag de gebruiker een andere datum kiezen
-    toonClubDDWV: number = 2;                       // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
+    toonDatumKnoppen = false;              // Mag de gebruiker een andere datum kiezen
+    toonClubDDWV = 2;                       // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
     behaaldeCompetenties: string;
-    magExporteren: boolean = false;
+    magExporteren = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -138,34 +136,34 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
             });
 
             let bevoegdheden = "";
-            const selectie: HeliosVliegtuigenDatasetExtended[] = this.storageService.ophalen("kistSelectieReservering")
-            for (let i = 0; i < this.clubVliegtuigen.length; i++) {
+            const selectie: HeliosVliegtuigenDatasetExtended[] | null = this.storageService.ophalen("kistSelectieReservering") as HeliosVliegtuigenDatasetExtended[] | null
+            for (const item of this.clubVliegtuigen) {
                 // opbouwen benodigde overland bevoegdheden als CSV string
-                if (this.clubVliegtuigen[i].BEVOEGDHEID_OVERLAND_ID) {
+                if (item.BEVOEGDHEID_OVERLAND_ID) {
                     bevoegdheden += (bevoegdheden) ? "," : "";
-                    bevoegdheden += this.clubVliegtuigen[i].BEVOEGDHEID_OVERLAND_ID;
+                    bevoegdheden += item.BEVOEGDHEID_OVERLAND_ID;
                 }
-                if (this.clubVliegtuigen[i].BEVOEGDHEID_LOKAAL_ID) {
+                if (item.BEVOEGDHEID_LOKAAL_ID) {
                     bevoegdheden += (bevoegdheden) ? "," : "";
-                    bevoegdheden += this.clubVliegtuigen[i].BEVOEGDHEID_LOKAAL_ID;
+                    bevoegdheden += item.BEVOEGDHEID_LOKAAL_ID;
                 }
 
                 if (selectie == null) {
-                    this.clubVliegtuigen[i].Tonen = true;
+                    item.Tonen = true;
                 } else {
-                    const idx = selectie.findIndex(v => v.ID == this.clubVliegtuigen[i].ID)
+                    const idx = selectie.findIndex(v => v.ID == item.ID)
 
                     if (idx < 0) {
-                        this.clubVliegtuigen[i].Tonen = true;
+                        item.Tonen = true;
                     } else {
-                        this.clubVliegtuigen[i].Tonen = selectie[idx].Tonen
+                        item.Tonen = selectie[idx].Tonen
                     }
                 }
             }
 
             // haal op welke vliegtuigen het ingelogde lid mag vliegen
-            const ui = this.loginService.userInfo?.LidData!;
-            this.progressieService.getProgressiesLid(ui.ID!, bevoegdheden).then((progressie: HeliosBehaaldeProgressieDataset[]) => {
+            const ui = this.loginService.userInfo?.LidData;
+            this.progressieService.getProgressiesLid(ui?.ID ?? -1, bevoegdheden).then((progressie: HeliosBehaaldeProgressieDataset[]) => {
                 // We hebben nu array met progressie, omzetten naar CSV
                 this.behaaldeCompetenties = progressie.map(function (elem) {
                     return elem.COMPETENTIE_ID;
@@ -184,7 +182,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
         });
 
         // Roep onWindowResize aan zodra we het event ontvangen hebben
-        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(() => {
             this.onWindowResize();
         });
     }
@@ -258,7 +256,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     applyRoosterFilter() {
         if (!this.rooster) return;      // rooster is nog niet geladen, we kunnen niets doen
 
-        let tmpRooster: HeliosRoosterDataset[] = [];
+        const tmpRooster: HeliosRoosterDataset[] = [];
 
         const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
 
@@ -282,29 +280,29 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
             }
         }
 
-        for (let i = 0; i < this.rooster.length; i++) {
+        for (const item of this.rooster) {
 
-            const d: DateTime = DateTime.fromSQL(this.rooster[i].DATUM!)
+            const d: DateTime = DateTime.fromSQL(item.DATUM!)
 
             if ((d < beginDatum) || (d > eindDatum)) continue;      // we hebben starts in geheugen, maar tonen het niet
 
             switch (this.toonClubDDWV) {
                 case 0: // toonClubDDWV, 0 = laat alle dagen zien, dus club dagen en DDWV dagen
                 {
-                    tmpRooster.push(this.rooster[i]);
-                    continue;
+                    tmpRooster.push(item);
+                    break;
                 }
                 case 1: // toonClubDDWV, 1 = toon clubdagen
                 {
-                    if (this.rooster[i].CLUB_BEDRIJF) {
-                        tmpRooster.push(this.rooster[i]);
+                    if (item.CLUB_BEDRIJF) {
+                        tmpRooster.push(item);
                         continue;
                     }
                     break;
                 }
                 case 2: // toonClubDDWV, 2 = toon DDWV
-                    if (this.rooster[i].DDWV) {
-                        tmpRooster.push(this.rooster[i]);
+                    if (item.DDWV) {
+                        tmpRooster.push(item);
                         continue;
                     }
                     break;
@@ -451,7 +449,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
             return true;
         }
 
-        return (ui?.Userinfo?.isBeheerder! || ui?.Userinfo?.isBeheerderDDWV!);
+        return (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isBeheerderDDWV) ?? false;
     }
 
     // Kan er een reservering gemaakt worden voor deze dag / vliegtuig. Reservering is mag maximaal 2 maanden in de toekomst zijn
@@ -511,7 +509,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     // in popup is gekozen om vliegtuig wel of niet te tonen in het grid
     // hiermee worden er minder vligetuigen getoond en past het beter op het scherm
     // Wordt bovendien opgeslagen zodat we het kunnen toepassen wanneer de gebruiker opnieuw inlogt
-    changeTonen(vliegtuigID: any) {
+    changeTonen(vliegtuigID: number) {
         const idx = this.clubVliegtuigen.findIndex(v => v.ID == vliegtuigID);
         this.clubVliegtuigen[idx].Tonen = !this.clubVliegtuigen[idx].Tonen;
         this.storageService.opslaan("kistSelectieReservering", this.clubVliegtuigen);

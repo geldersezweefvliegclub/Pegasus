@@ -1,11 +1,12 @@
-import {Injectable} from '@angular/core';
-import {APIService} from './api.service';
+import { Injectable } from '@angular/core';
+import { APIService } from './api.service';
 
-import {HeliosLeden, HeliosLedenDataset, HeliosLid} from '../../types/Helios';
-import {KeyValueArray} from '../../types/Utils';
-import {BehaviorSubject, Subscription} from "rxjs";
-import {SharedService} from "../shared/shared.service";
-import {LoginService} from "./login.service";
+import { HeliosLeden, HeliosLedenDataset, HeliosLid } from '../../types/Helios';
+import { KeyValueArray } from '../../types/Utils';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { SharedService } from '../shared/shared.service';
+import { LoginService } from './login.service';
+import { CustomJsonSerializer } from '../../utils/Utils';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +14,7 @@ import {LoginService} from "./login.service";
 export class LedenService {
     private ledenCache: HeliosLeden  = { dataset: []};       // return waarde van API call
 
-    private overslaan: boolean = false;
+    private overslaan = false;
     private ophaalTimer: number;                                // Iedere 15 min halen we de leden op
     private fallbackTimer: number;                              // Timer om te zorgen dat starts geladen echt is
     private ledenStore = new BehaviorSubject(this.ledenCache.dataset);
@@ -26,13 +27,13 @@ export class LedenService {
 
         // nadat we ingelogd zijn kunnen we de vliegtuigen ophalen
         loginService.inloggenSucces.subscribe(() => {
-            this.ophalenLeden().then((dataset) => {
+            this.ophalenLeden().then(() => {
                 this.ledenStore.next(this.ledenCache.dataset)    // afvuren event
             });
         });
 
         this.ophaalTimer = window.setInterval(() => {
-            this.ophalenLeden().then((dataset) => {
+            this.ophalenLeden().then(() => {
                 this.ledenStore.next(this.ledenCache.dataset)    // afvuren event
             });
         }, 1000 * 60 * 15);
@@ -47,7 +48,7 @@ export class LedenService {
                     ophalen = true;
                 }
                 if (ophalen) {
-                    this.ophalenLeden().then((dataset) => {
+                    this.ophalenLeden().then(() => {
                         this.ledenStore.next(this.ledenCache.dataset)    // afvuren event
                     });
                 }
@@ -57,7 +58,7 @@ export class LedenService {
         // Als leden zijn aangepast, dan moeten we overzicht opnieuw ophalen
         this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Leden") {
-                this.ophalenLeden().then((dataset) => {
+                this.ophalenLeden().then(() => {
                     this.ledenStore.next(this.ledenCache.dataset)    // afvuren event
                 });
             }
@@ -73,8 +74,8 @@ export class LedenService {
         return await this.getLeden();
     }
 
-    async getLeden(verwijderd: boolean = false, zoekString?: string): Promise<HeliosLedenDataset[]> {
-        let getParams: KeyValueArray = {};
+    async getLeden(verwijderd = false, zoekString?: string): Promise<HeliosLedenDataset[]> {
+        const getParams: KeyValueArray = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
@@ -120,10 +121,7 @@ export class LedenService {
     }
 
     async updateLid(lid: HeliosLid) {
-        const replacer = (key:string, value:any) =>
-            typeof value === 'undefined' ? null : value;
-
-        const response: Response = await this.apiService.put('Leden/SaveObject', JSON.stringify(lid, replacer));
+        const response: Response = await this.apiService.put('Leden/SaveObject', JSON.stringify(lid, CustomJsonSerializer));
         this.syncSynapse(lid.ID!, lid.WACHTWOORD)
         return response.json();
     }

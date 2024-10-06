@@ -1,5 +1,5 @@
-import {Component, Input} from '@angular/core';
-import {faCircleNotch} from '@fortawesome/free-solid-svg-icons';
+import { Component, Input } from '@angular/core';
+import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-loader',
@@ -7,7 +7,7 @@ import {faCircleNotch} from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./loader.component.scss']
 })
 export class LoaderComponent {
-  @Input() isLoading: boolean = false;
+  @Input() isLoading = false;
   loader = faCircleNotch;
 }
 

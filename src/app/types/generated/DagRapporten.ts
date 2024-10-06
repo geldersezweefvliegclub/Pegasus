@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  "/Documenten/CreateTable": {
+  "/DagRapporten/CreateTable": {
     post: {
       parameters: {
         query: {
@@ -20,7 +20,7 @@ export interface paths {
       };
     };
   };
-  "/Documenten/CreateViews": {
+  "/DagRapporten/CreateViews": {
     post: {
       responses: {
         /** Aangemaakt, View toegevoegd */
@@ -30,11 +30,11 @@ export interface paths {
       };
     };
   };
-  "/Documenten/GetObject": {
+  "/DagRapporten/GetObject": {
     get: {
       parameters: {
         query: {
-          /** Database ID van het document record */
+          /** Database ID van het dag rapport record */
           ID?: number;
         };
       };
@@ -42,7 +42,7 @@ export interface paths {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["document"];
+            "application/json": components["schemas"]["oper_dagrapport"];
           };
         };
         /** Data niet gevonden */
@@ -56,11 +56,11 @@ export interface paths {
       };
     };
   };
-  "/Documenten/GetObjects": {
+  "/DagRapporten/GetObjects": {
     get: {
       parameters: {
         query: {
-          /** Database ID van het aanwezig record */
+          /** Database ID van het dag rapport record */
           ID?: number;
           /** Toon welke records verwijderd zijn. Default = false */
           VERWIJDERD?: boolean;
@@ -76,15 +76,19 @@ export interface paths {
           START?: number;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
-          /** Groep ID voor de opvraag (meerdere groupen in CSV formaat) */
-          GROEPEN?: string;
+          /** Zoek op datum */
+          DATUM?: string;
+          /** Begin datum (inclusief deze dag) */
+          BEGIN_DATUM?: string;
+          /** Eind datum (inclusief deze dag) */
+          EIND_DATUM?: string;
         };
       };
       responses: {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["view_documenten"];
+            "application/json": components["schemas"]["view_dagrapporten"];
           };
         };
         /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
@@ -96,18 +100,18 @@ export interface paths {
       };
     };
   };
-  "/Documenten/DeleteObject": {
+  "/DagRapporten/DeleteObject": {
     delete: {
       parameters: {
         query: {
-          /** Database ID van het document record. Meerdere ID's in CSV formaat */
+          /** Database ID van het dag rapport record. Meerdere ID's in CSV formaat */
           ID?: string;
           /** Controleer of record bestaat voordat het verwijderd wordt. Default = true */
           VERIFICATIE?: boolean;
         };
       };
       responses: {
-        /** Document verwijderd */
+        /** Dag rapport verwijderd */
         204: never;
         /** Niet geautoriseerd, geen schrijfrechten */
         401: unknown;
@@ -122,7 +126,7 @@ export interface paths {
       };
     };
   };
-  "/Documenten/RestoreObject": {
+  "/DagRapporten/RestoreObject": {
     patch: {
       parameters: {
         query: {
@@ -146,13 +150,13 @@ export interface paths {
       };
     };
   };
-  "/Documenten/SaveObject": {
+  "/DagRapporten/SaveObject": {
     put: {
       responses: {
         /** OK, data succesvol aangepast */
         200: {
           content: {
-            "application/json": components["schemas"]["document"];
+            "application/json": components["schemas"]["oper_dagrapport"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -163,13 +167,15 @@ export interface paths {
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
         406: unknown;
+        /** Conflict, datum bestaat al */
+        409: unknown;
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** Document meta data */
+      /** Dag rapport data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["document_in"];
+          "application/json": components["schemas"]["oper_dagrapport_in"];
         };
       };
     };
@@ -178,7 +184,7 @@ export interface paths {
         /** OK, data succesvol toegevoegd */
         200: {
           content: {
-            "application/json": components["schemas"]["document"];
+            "application/json": components["schemas"]["oper_dagrapport"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -187,16 +193,15 @@ export interface paths {
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
         406: unknown;
+        /** Conflict, datum bestaat al */
+        409: unknown;
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
+      /** Dag rapport data */
       requestBody: {
         content: {
-          "multipart/form-data": {
-            document?: components["schemas"]["document_in"];
-            /** Format: binary */
-            file?: string;
-          };
+          "application/json": components["schemas"]["oper_dagrapport_in"];
         };
       };
     };
@@ -205,70 +210,63 @@ export interface paths {
 
 export interface components {
   schemas: {
-    document_in: {
+    oper_dagrapport_in: {
       /**
        * Format: int32
-       * @description Database ID van het document record
-       * @example 77
+       * @description Database ID van het dag rapport record
+       * @example 12871
        */
       ID?: number;
       /**
-       * Format: int32
-       * @description Verwijzing naar type tabel (22) in welke groep document behoord
-       * @example 2022
+       * Format: date
+       * @description Datum van het dagrapport
+       * @example 2017-07-21
        */
-      GROEP_ID?: number;
+      DATUM?: string;
       /**
        * Format: int32
-       * @description Volgorde binnen de groep
-       * @example 3
+       * @description Voor welk vliegveld is dit dagrapport van toepassing
+       * @example 901
        */
-      VOLGORDE?: number;
+      VELD_ID?: number;
       /**
-       * @description De tekst die uitlegt wat document behelst
-       * @example Handboek Duo Discuss
+       * @description Incidenten om iets van te leren
+       * @example Scherpe uitstekels aan lierkabel
        */
-      TEKST?: string;
+      INCIDENTEN?: string;
       /**
-       * @description Verwijzing waar het document gevonden kan worden
-       * @example Handboek Duo Discuss
+       * @description Beschrijving van de situatie op het veld
+       * @example Het vliegbedrijf bevatte de volgende aspect(en), lier, sleep en zelfstart op de 22R met een rechterhand circuit. Halverwege de dag omgesteld naar 27C
        */
-      URL?: string;
+      VLIEGBEDRIJF?: string;
       /**
-       * Format: int32
-       * @description Verwijzing naar lid. Document is aan lid gekoppeld
-       * @example 129205
+       * @description Beschrijving van de weerscondities
+       * @example Het zicht was > 10 km. De windrichting was 270 met  windkracht 3.4 - 5.42 m/s. Er was 2/8 bewolking. De wolkenbasis was 800 meter hoog.
        */
-      LID_ID?: number;
+      METEO?: string;
       /**
-       * @description Lege regel om paragraaf te kunnen maken
-       * @example 0
+       * @description Kort veslag van de dag
+       * @example Rustige dag met een klein ploegje mensen ondanks het prachtige weer. Omstellen ging zonder problemen, vliegende kisten konden blijven hangen
        */
-      LEGE_REGEL?: boolean;
+      VERSLAG?: string;
       /**
-       * @description Plaats een horizontale lijn
-       * @example 0
+       * @description Opmerkingen over het rollend materieel
+       * @example De motor van de lier wordt warm
        */
-      ONDERSTREEP?: boolean;
+      ROLLENDMATERIEEL?: string;
       /**
-       * @description Plaats een horizontale lijn aan de bovenkant (true) / onderkant (false)
-       * @example 0
+       * @description Opmerkingen over de vloot
+       * @example De E11 is in de werkplaats gezet ivm lekke band. Wordt maandag opgelost
        */
-      BOVEN?: boolean;
-      /** @description Document in base 64 encoding, heeft DOC_NAAM om gegevens op te slaan */
-      BASE64_DOC?: string;
-      /**
-       * @description Naam van het docuement als bijgevoegd in BASE64_DOC
-       * @example handboek.pdf
-       */
-      DOC_NAAM?: string;
-      /**
-       * @description Mag bestaand bestand overschreven worden
-       * @example 0
-       */
-      OVERSCHRIJVEN?: boolean;
+      VLIEGENDMATERIEEL?: string;
     };
-    document: components["schemas"]["document_in"] & {
+    oper_dagrapport: components["schemas"]["oper_dagrapport_in"] & {
+      /**
+       * Format: int32
+       * @description ID van instructeur die heeft ingevoerd (wordt op de server gezet)
+       * @example 10390
+       */
+      INGEVOERD_ID?: number;
       /**
        * @description Is dit record gemarkeerd als verwijderd?
        * @example 0
@@ -276,15 +274,29 @@ export interface components {
       VERWIJDERD?: boolean;
       /**
        * Format: date-time
-       * @description Tijdstempel van laaste aanpassing in de database
-       * @example 2026-01-31 14:12:56
+       * @description Tijdstempel van laaste aanpassing in de database, laat leeg bij updates
+       * @example 2010-04-13 19:32:17
        */
       LAATSTE_AANPASSING?: string;
     };
-    view_documenten_dataset: components["schemas"]["document"] & {
-      [key: string]: unknown;
+    view_dagrapporten_dataset: components["schemas"]["oper_dagrapport"] & {
+      /**
+       * @description Verkorte naam van het vliegveld
+       * @example EHTL
+       */
+      VELD_CODE?: string;
+      /**
+       * @description Naam van het vliegveld
+       * @example Terlet
+       */
+      VELD_OMS?: string;
+      /**
+       * @description Naam van de instructeur die dagrapport heeft gemaakt
+       * @example Momfert de mol
+       */
+      INGEVOERD?: string;
     };
-    view_documenten: {
+    view_dagrapporten: {
       /**
        * Format: int32
        * @description Aantal records dat voldoet aan de criteria in de database
@@ -294,20 +306,18 @@ export interface components {
       /**
        * Format: date-time
        * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
-       * @example 2001-11-30 11:12:17
+       * @example 2020-09-01 06:00:05
        */
       laatste_aanpassing?: string;
       /**
        * @description hash van de dataset
-       * @example aa9ab4b
+       * @example ddaab00
        */
       hash?: string;
       /** @description De dataset met records */
-      dataset?: components["schemas"]["view_documenten_dataset"][];
+      dataset?: components["schemas"]["view_dagrapporten_dataset"][];
     };
   };
 }
 
-export interface operations {}
 
-export interface external {}

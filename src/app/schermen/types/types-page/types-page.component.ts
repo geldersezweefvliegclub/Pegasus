@@ -1,12 +1,18 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faCaretSquareDown, faCaretSquareUp, faKeyboard, faMinusCircle, faUndo} from "@fortawesome/free-solid-svg-icons";
-import {TypesGroepenService} from "../../../services/apiservice/types-groepen.service";
-import {HeliosType, HeliosTypes, HeliosTypesGroep} from "../../../types/Helios";
-import {TypesService} from "../../../services/apiservice/types.service";
-import {TypeEditorComponent} from "../../../shared/components/editors/type-editor/type-editor.component";
-import {Subscription} from "rxjs";
-import {SharedService} from "../../../services/shared/shared.service";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import {
+    faCaretSquareDown,
+    faCaretSquareUp,
+    faKeyboard,
+    faMinusCircle,
+    faUndo,
+} from '@fortawesome/free-solid-svg-icons';
+import { TypesGroepenService } from '../../../services/apiservice/types-groepen.service';
+import { HeliosType, HeliosTypesGroep } from '../../../types/Helios';
+import { TypesService } from '../../../services/apiservice/types.service';
+import { TypeEditorComponent } from '../../../shared/components/editors/type-editor/type-editor.component';
+import { Subscription } from 'rxjs';
+import { SharedService } from '../../../services/shared/shared.service';
 
 @Component({
     selector: 'app-types-page',
@@ -25,14 +31,14 @@ export class TypesPageComponent implements OnInit, OnDestroy {
     types: HeliosType[];
     filteredTypes: HeliosType[];
     groepen: HeliosTypesGroep[];
-    bedragEenheidActief: boolean = false;
+    bedragEenheidActief = false;
 
     toonGroep: number;
 
-    magToevoegen: boolean = true;
-    magVerwijderen: boolean = true;
-    deleteMode: boolean = false;        // zitten we in delete mode om types te kunnen verwijderen
-    trashMode: boolean = false;         // zitten in restore mode om types te kunnen terughalen
+    magToevoegen = true;
+    magVerwijderen = true;
+    deleteMode = false;        // zitten we in delete mode om types te kunnen verwijderen
+    trashMode = false;         // zitten in restore mode om types te kunnen terughalen
 
     constructor(private readonly typesService: TypesService,
                 private readonly sharedService: SharedService,
@@ -68,7 +74,7 @@ export class TypesPageComponent implements OnInit, OnDestroy {
         });
     }
 
-    filterGroep(toongroep: Number) {
+    filterGroep(toongroep: number) {
         this.toonGroep = toongroep as number;
 
         if (this.groepen) {
@@ -82,7 +88,7 @@ export class TypesPageComponent implements OnInit, OnDestroy {
         });
 
         // zorg dat sortering altijd met 1 begint
-        for (let i:number = 0 ; i < this.filteredTypes.length ; i++) {
+        for (let i = 0 ; i < this.filteredTypes.length ; i++) {
             this.filteredTypes[i].SORTEER_VOLGORDE = i+1;
         }
     }
@@ -114,8 +120,8 @@ export class TypesPageComponent implements OnInit, OnDestroy {
         this.filteredTypes[idx].SORTEER_VOLGORDE!++;
         this.filteredTypes[idx+1].SORTEER_VOLGORDE!--;
 
-        for (let i:number = 0 ; i < this.filteredTypes.length ; i++) {
-            this.typesService.updateType(this.filteredTypes[i]);
+        for (const item of this.filteredTypes) {
+            this.typesService.updateType(item);
         }
 
         this.filteredTypes.sort(function(a, b) {
@@ -127,11 +133,10 @@ export class TypesPageComponent implements OnInit, OnDestroy {
         this.filteredTypes[idx].SORTEER_VOLGORDE!--;
         this.filteredTypes[idx-1].SORTEER_VOLGORDE!++;
 
-        for (let i:number = 0 ; i < this.filteredTypes.length ; i++) {
-            this.typesService.updateType(this.filteredTypes[i]);
+        for (const item of this.filteredTypes) {
+            this.typesService.updateType(item);
         }
-        this.filteredTypes.sort(function(a, b) {
-            return a.SORTEER_VOLGORDE! - b.SORTEER_VOLGORDE!});
+        this.filteredTypes.sort((a, b) => a.SORTEER_VOLGORDE! - b.SORTEER_VOLGORDE!);
     }
 
     deleteModeJaNee() {

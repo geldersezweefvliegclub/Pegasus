@@ -188,7 +188,7 @@ export interface components {
       /** Staat privacy maskering aan voor het lid, Zo ja, dan is NAAM "..." */
       PRIVACY?: boolean;
       /** Naam van het lid dat de reservering gemaakt heeft */
-      INGEVOERD_DOOR?: { [key: string]: any };
+      INGEVOERD_DOOR?: Record<string, any>;
       /** Het registratie nummer van het vliegtuig wat gereserveerd */
       REGISTRATIE?: string;
       /** Optioneel het callsign van het vliegtuig wat gereserveerd */

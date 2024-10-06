@@ -1,18 +1,13 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {ModalComponent} from "../../modal/modal.component";
-import {HeliosRoosterDagExtended} from "../../../../schermen/rooster/rooster-page/rooster-page.component";
-import {Subscription} from "rxjs";
-import {
-    HeliosAanwezigLedenDataset, HeliosDienst,
-    HeliosDienstenDataset,
-    HeliosLedenDataset,
-    HeliosType
-} from "../../../../types/Helios";
-import {TypesService} from "../../../../services/apiservice/types.service";
-import {LedenService} from "../../../../services/apiservice/leden.service";
-import {PegasusConfigService} from "../../../../services/shared/pegasus-config.service";
-import {DienstenService} from "../../../../services/apiservice/diensten.service";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { ModalComponent } from '../../modal/modal.component';
+import { HeliosRoosterDagExtended } from '../../../../schermen/rooster/rooster-page/rooster-page.component';
+import { Subscription } from 'rxjs';
+import { HeliosDienst, HeliosLedenDataset, HeliosType } from '../../../../types/Helios';
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { LedenService } from '../../../../services/apiservice/leden.service';
+import { PegasusConfigService } from '../../../../services/shared/pegasus-config.service';
+import { DienstenService } from '../../../../services/apiservice/diensten.service';
 
 @Component({
     selector: 'app-dienst-editor',

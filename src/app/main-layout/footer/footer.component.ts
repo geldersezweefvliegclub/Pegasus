@@ -1,8 +1,8 @@
-import {Component} from '@angular/core';
-import {NavigationEnd, Router} from "@angular/router";
-import {SharedService} from "../../services/shared/shared.service";
-import {slideInOutLeftAnimation} from "../../utils/animations";
-import {filter} from "rxjs/operators";
+import { Component } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { SharedService } from '../../services/shared/shared.service';
+import { slideInOutLeftAnimation } from '../../utils/animations';
+import { filter } from 'rxjs/operators';
 
 
 @Component({
@@ -14,14 +14,14 @@ import {filter} from "rxjs/operators";
     ]
 })
 export class FooterComponent {
-    toonMenu: boolean = false;
+    toonMenu = false;
 
     constructor(private readonly router: Router,
                 private readonly sharedService: SharedService) {
         this.router.events
             .pipe(filter(event => event instanceof NavigationEnd))
             .subscribe(() => this.toonMenu = false);
-        this.sharedService.ingegevenDatum.subscribe(datum => {
+        this.sharedService.ingegevenDatum.subscribe(() => {
             this.toonMenu = false;
         });
     }

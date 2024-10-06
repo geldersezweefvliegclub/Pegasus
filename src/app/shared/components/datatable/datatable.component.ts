@@ -1,17 +1,14 @@
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import {
-    Component,
-    EventEmitter,
-    HostListener,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Output,
-    SimpleChanges
-} from '@angular/core';
-import {ColDef, GridApi, GridOptions, RowDoubleClickedEvent, RowSelectedEvent} from 'ag-grid-community';
-import {SharedService} from "../../../services/shared/shared.service";
-import {Subscription} from "rxjs";
+    ColDef,
+    GridApi,
+    GridOptions,
+    GridReadyEvent,
+    RowDoubleClickedEvent,
+    RowSelectedEvent,
+} from 'ag-grid-community';
+import { SharedService } from '../../../services/shared/shared.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-datatable',
@@ -21,16 +18,16 @@ import {Subscription} from "rxjs";
 export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     @Input() columnDefs = [];
     @Input() rowData = [];
-    @Input() frameworkComponents: any;
+    @Input() frameworkComponents = {};
     @Input() id: string;
-    @Input() loading: boolean = false;
-    @Input() sizeToFit: boolean = true;
-    @Input() autoSizeColumns: boolean = false;
-    @Input() autoHeight: boolean = false;
-    @Input() rowHeight: number = 40;
+    @Input() loading = false;
+    @Input() sizeToFit = true;
+    @Input() autoSizeColumns = false;
+    @Input() autoHeight = false;
+    @Input() rowHeight = 40;
     @Input() multipleSelection = false;
-    @Input() pagination: boolean = true;
-    @Input() rowClassRules: any = null;
+    @Input() pagination = true;
+    @Input() rowClassRules = null;
     @Output() rowDoubleClicked: EventEmitter<RowDoubleClickedEvent> = new EventEmitter<RowDoubleClickedEvent>();
     @Output() rowSelected: EventEmitter<RowSelectedEvent> = new EventEmitter<RowSelectedEvent>();
 
@@ -81,7 +78,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         // Roep onWindowResize aan zodra we het event ontvangen hebben
-        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(() => {
             this.onWindowResize()
         });
     }
@@ -110,15 +107,11 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         if (this.api) {
-            this.api.setColumnDefs(this.columnDefs);
-            this.api.setRowData(this.rowData);
+            this.api.setGridOption("columnDefs", this.columnDefs);
+            this.api.setGridOption("rowData", this.rowData);
 
-            if (changes.hasOwnProperty("loading")) {
-                if (changes["loading"].currentValue) {
-                    this.api.showLoadingOverlay()
-                } else {
-                    //  is niet nodig, gaat vanzelf
-                }
+            if (Object.prototype.hasOwnProperty.call(changes, "loading")) {
+                this.api.setGridOption("loading", changes["loading"].currentValue);
             }
         }
         else
@@ -132,11 +125,11 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         this.sizeColumnsToFit();
     }
 
-    gridReady(ready: any) {
+    gridReady(ready: GridReadyEvent) {
         console.log(this.id, "grid ready")
         this.api = ready.api;
 
-        this.api!.setColumnDefs(this.columnDefs);
+        this.api!.setGridOption("columnDefs", this.columnDefs);
         this.api!.sizeColumnsToFit()
 
         this.columnStateTimer = window.setInterval(() => {
@@ -150,7 +143,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
                 this.api.sizeColumnsToFit();
             }
             if (this.autoSizeColumns) {
-                this.options!.columnApi!.autoSizeAllColumns(false);
+                this.api.autoSizeAllColumns(false);
             }
         }
     }
@@ -169,8 +162,8 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    filteredRecords(): any[] {
-        let rowData:any = [];
+    filteredRecords() {
+        const rowData: unknown[] = [];
         if (this.api) {
             this.api.forEachNodeAfterFilter(node => {
                 rowData.push(node.data);
@@ -179,7 +172,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         return rowData;
     }
 
-    selectedRecords(): any[] {
+    selectedRecords() {
         if (this.api) {
             return this.api.getSelectedRows()
         }

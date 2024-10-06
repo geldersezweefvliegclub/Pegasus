@@ -1,10 +1,10 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../modal/modal.component";
-import {HeliosAgendaActiviteit, HeliosAgendaDataset, HeliosJournaal} from "../../../../types/Helios";
-import {AgendaService} from "../../../../services/apiservice/agenda";
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {LoginService} from "../../../../services/apiservice/login.service";
-import {DateTime} from "luxon";
+import { Component, ViewChild } from '@angular/core';
+import { ModalComponent } from '../../modal/modal.component';
+import { HeliosAgendaActiviteit, HeliosAgendaDataset, HeliosJournaal } from '../../../../types/Helios';
+import { AgendaService } from '../../../../services/apiservice/agenda';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { LoginService } from '../../../../services/apiservice/login.service';
+import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-agenda-editor',
@@ -14,12 +14,12 @@ import {DateTime} from "luxon";
 export class AgendaEditorComponent  {
   @ViewChild(ModalComponent) private popup: ModalComponent;
 
-  isLoading: boolean = false;
-  isSaving: boolean = false;
+  isLoading = false;
+  isSaving = false;
 
-  isVerwijderMode: boolean = false;
-  isRestoreMode: boolean = false;
-  formTitel: string = "";
+  isVerwijderMode = false;
+  isRestoreMode = false;
+  formTitel = "";
 
   activiteit: HeliosAgendaActiviteit = {}
 
@@ -77,7 +77,7 @@ export class AgendaEditorComponent  {
         this.eersteDag = DateTime.fromSQL(activiteit.DATUM!)
         this.isLoading = false;
       });
-    } catch (e) {
+    } catch (_) {
       this.isLoading = false;
     }
   }

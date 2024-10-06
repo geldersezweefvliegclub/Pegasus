@@ -1,14 +1,14 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../modal/modal.component";
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {TransactiesService} from "../../../../services/apiservice/transacties.service";
-import {HeliosLedenDataset, HeliosTransactie, HeliosType} from "../../../../types/Helios";
-import {Subscription} from "rxjs";
-import {LedenService} from "../../../../services/apiservice/leden.service";
-import {TypesService} from "../../../../services/apiservice/types.service";
-import {NgbDate, NgbDateParserFormatter} from "@ng-bootstrap/ng-bootstrap";
-import {DateTime} from "luxon";
-import {NgbDateFRParserFormatter} from "../../../ngb-date-fr-parser-formatter";
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ModalComponent } from '../../modal/modal.component';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { TransactiesService } from '../../../../services/apiservice/transacties.service';
+import { HeliosLedenDataset, HeliosTransactie, HeliosType } from '../../../../types/Helios';
+import { Subscription } from 'rxjs';
+import { LedenService } from '../../../../services/apiservice/leden.service';
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { DateTime } from 'luxon';
+import { NgbDateFRParserFormatter } from '../../../ngb-date-fr-parser-formatter';
 
 @Component({
     selector: 'app-transactie-editor',
@@ -19,7 +19,7 @@ import {NgbDateFRParserFormatter} from "../../../ngb-date-fr-parser-formatter";
 export class TransactieEditorComponent implements OnInit {
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
-    @Input() toonLidSelectie: boolean = true;
+    @Input() toonLidSelectie = true;
     @Output() TransactieGedaan: EventEmitter<void> = new EventEmitter<void>();
 
     private ledenAbonnement: Subscription;

@@ -1,28 +1,28 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
-import {faBug, faRecycle} from '@fortawesome/free-solid-svg-icons';
-import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
-import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
-import {DeleteActionComponent} from '../../../shared/components/datatable/delete-action/delete-action.component';
-import {RestoreActionComponent} from '../../../shared/components/datatable/restore-action/restore-action.component';
-import {ErrorMessage, SuccessMessage} from '../../../types/Utils';
+import { faBug } from '@fortawesome/free-solid-svg-icons';
+import { ColDef, RowDoubleClickedEvent } from 'ag-grid-community';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { DeleteActionComponent } from '../../../shared/components/datatable/delete-action/delete-action.component';
+import { RestoreActionComponent } from '../../../shared/components/datatable/restore-action/restore-action.component';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
 
 import * as xlsx from 'xlsx';
-import {LoginService} from '../../../services/apiservice/login.service';
-import {nummerSort} from '../../../utils/Utils';
-import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
-import {Subscription} from "rxjs";
-import {journaalFilter, JournaalService} from "../../../services/apiservice/journaal.service";
-import {HeliosJournaalDataset} from "../../../types/Helios";
-import {MaterieelRenderComponent} from "../materieel-render/materieel-render.component";
-import {StatusRenderComponent} from "../status-render/status-render.component";
-import {CategorieRenderComponent} from "../categorie-render/categorie-render.component";
-import {DatumRenderComponent} from "../../../shared/components/datatable/datum-render/datum-render.component";
-import {JournaalFilterComponent} from "../journaal-filter/journaal-filter.component";
-import {DateTime} from "luxon";
-import {TitleRenderComponent} from "../title-render/title-render.component";
-import {JournaalEditorComponent} from "../../../shared/components/editors/journaal-editor/journaal-editor.component";
-import {ActivatedRoute} from "@angular/router";
+import { LoginService } from '../../../services/apiservice/login.service';
+import { nummerSort } from '../../../utils/Utils';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { Subscription } from 'rxjs';
+import { journaalFilter, JournaalService } from '../../../services/apiservice/journaal.service';
+import { HeliosJournaalDataset } from '../../../types/Helios';
+import { MaterieelRenderComponent } from '../materieel-render/materieel-render.component';
+import { StatusRenderComponent } from '../status-render/status-render.component';
+import { CategorieRenderComponent } from '../categorie-render/categorie-render.component';
+import { DatumRenderComponent } from '../../../shared/components/datatable/datum-render/datum-render.component';
+import { JournaalFilterComponent } from '../journaal-filter/journaal-filter.component';
+import { DateTime } from 'luxon';
+import { TitleRenderComponent } from '../title-render/title-render.component';
+import { JournaalEditorComponent } from '../../../shared/components/editors/journaal-editor/journaal-editor.component';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -36,27 +36,29 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
     @ViewChild(JournaalEditorComponent) editor: JournaalEditorComponent;
 
     data:HeliosJournaalDataset[] = [];
-    isLoading: boolean = false;
-    toonKlein: boolean = false;                 // Klein formaat van het journaal
+    isLoading = false;
+    toonKlein = false;                 // Klein formaat van het journaal
 
     private dbEventAbonnement: Subscription;    // Abonneer op aanpassingen in de database
     private datumAbonnement: Subscription;      // volg de keuze van de kalender
     private maandAbonnement: Subscription;      // volg de keuze van de kalender
     datum: DateTime = DateTime.now();           // de gekozen dag
 
+    // Data kolommen voor het grid
+    // Elke kolom kan ene comparator hebben om de kolom juist te kunnen sorteren. Elke comparator functie neemt argumenten (valueA, valueB, nodeA, nodeB, isDescending), zie AG Grid docs.
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
         {field: 'DATUM', headerName: 'Ingevoerd', cellRenderer: 'datumRender', sortable: true},
         {field: 'MELDER', headerName: 'Melder', sortable: true},
         {field: 'STATUS', headerName: 'Status', cellRenderer: 'statusRender', sortable: true, comparator:
-                (valueA, valueB, nodeA, nodeB, isDescending) => {
+                (_, __, nodeA, nodeB, ___) => {
                     if (nodeA.data.STATUS_ID == nodeB.data.STATUS_ID) return 0;
                     return (nodeA.data.STATUS_ID > nodeB.data.STATUS_ID) ? 1 : -1;
                 }},
         {field: 'TITEL', headerName: 'Titel', sortable: true, cellRenderer: 'titleRender'},
         {field: 'REG_CALL', headerName: 'Materieel', cellRenderer: 'materieelRender', sortable: true},
         {field: 'CATEGORIE_CODE', headerName: 'Category', cellRenderer: 'categorieRender', sortable: true, comparator:
-                (valueA, valueB, nodeA, nodeB, isDescending) => {
+                (_, __, nodeA, nodeB, ___) => {
                     if (nodeA.data.CATEGORIE_ID == nodeB.data.CATEGORIE_ID) return 0;
                     return (nodeA.data.CATEGORIE_ID > nodeB.data.CATEGORIE_ID) ? 1 : -1;
                 }},
@@ -111,16 +113,16 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
 
     zoekString: string;
     zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
-    deleteMode: boolean = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
-    trashMode: boolean = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
+    deleteMode = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
+    trashMode = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
 
     activeFilter: journaalFilter;      // geavanceerd filter via popup
 
-    magToevoegen: boolean = false;
-    magVerwijderen: boolean = false;
-    magWijzigen: boolean = false;
-    magClubkistWijzigen: boolean = false;
-    magExporten: boolean = false;
+    magToevoegen = false;
+    magVerwijderen = false;
+    magWijzigen = false;
+    magClubkistWijzigen = false;
+    magExporten = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -199,7 +201,7 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
         this.zetPermissie();
 
         // Roep onWindowResize aan zodra we het event ontvangen hebben
-        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(() => {
             this.onWindowResize()
         });
     }
@@ -265,7 +267,7 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
             this.magWijzigen = false;
         }
         else {
-            this.magClubkistWijzigen = (ui?.isBeheerder! || ui?.isCIMT!);
+            this.magClubkistWijzigen = (ui?.isBeheerder || ui?.isCIMT) ?? false;
 
             this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
             this.magWijzigen = (!ui?.isDDWV) ? true : false;
@@ -305,9 +307,6 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
             this.meldingenService.getJournaals(this.activeFilter, startDatum, eindDatum, this.zoekString, this.trashMode).then((dataset) => {
                 this.isLoading = false;
                 this.data = dataset;
-
-                const ui = this.loginService.userInfo?.Userinfo;
-
             }).catch(e => {
                 this.isLoading = false;
                 this.error = e;
@@ -317,7 +316,7 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
 
     // Export naar excel
     exportDataset() {
-        var ws = xlsx.utils.json_to_sheet(this.data);
+        const ws = xlsx.utils.json_to_sheet(this.data);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
         xlsx.writeFile(wb, 'journaal ' + new Date().toJSON().slice(0,10) +'.xlsx');

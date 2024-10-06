@@ -1,9 +1,9 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../../shared/components/modal/modal.component";
-import {HeliosStartDataset} from "../../../types/Helios";
-import {FlarmData} from "../../../services/flarm-input.service";
-import {StartlijstService} from "../../../services/apiservice/startlijst.service";
-import {DateTime} from "luxon";
+import { Component, ViewChild } from '@angular/core';
+import { ModalComponent } from '../../../shared/components/modal/modal.component';
+import { HeliosStartDataset } from '../../../types/Helios';
+import { FlarmData } from '../../../services/flarm-input.service';
+import { StartlijstService } from '../../../services/apiservice/startlijst.service';
+import { DateTime } from 'luxon';
 
 @Component({
   selector: 'app-start-details',

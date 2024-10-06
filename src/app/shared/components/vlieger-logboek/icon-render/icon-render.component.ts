@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
-import {AgRendererComponent} from "ag-grid-angular";
-import {ICellRendererParams} from "ag-grid-community";
+import { Component } from '@angular/core';
+import { AgRendererComponent } from 'ag-grid-angular';
+import { ICellRendererParams } from 'ag-grid-community';
 
 
 @Component({
@@ -9,11 +9,9 @@ import {ICellRendererParams} from "ag-grid-community";
   styleUrls: ['./icon-render.component.scss']
 })
 export class IconRenderComponent implements AgRendererComponent {
-  toonPax: boolean = false;
-  toonCheckStart: boolean = false;
-  toonInstructieVlucht: boolean = false;
-
-  constructor() { }
+  toonPax = false;
+  toonCheckStart = false;
+  toonInstructieVlucht = false;
 
   agInit(params: ICellRendererParams): void {
     this.toonPax = params.data.PAX;
@@ -21,8 +19,7 @@ export class IconRenderComponent implements AgRendererComponent {
     this.toonInstructieVlucht = params.data.INSTRUCTIEVLUCHT;
   }
 
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
-
 }

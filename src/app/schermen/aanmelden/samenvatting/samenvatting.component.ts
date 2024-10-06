@@ -1,14 +1,11 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../../shared/components/modal/modal.component";
-import {
-    HeliosAanwezigSamenvatting,
-    HeliosDienstenDataset, HeliosRoosterDataset,
-} from "../../../types/Helios";
-import {DateTime} from "luxon";
-import {AanwezigLedenService} from "../../../services/apiservice/aanwezig-leden.service";
-import {SharedService} from "../../../services/shared/shared.service";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ModalComponent } from '../../../shared/components/modal/modal.component';
+import { HeliosAanwezigSamenvatting, HeliosDienstenDataset, HeliosRoosterDataset } from '../../../types/Helios';
+import { DateTime } from 'luxon';
+import { AanwezigLedenService } from '../../../services/apiservice/aanwezig-leden.service';
+import { SharedService } from '../../../services/shared/shared.service';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
 
 @Component({
     selector: 'app-samenvatting',
@@ -21,21 +18,21 @@ export class SamenvattingComponent {
     @Output() bulkEmail: EventEmitter<string> = new EventEmitter<string>();
 
     samenvatting: HeliosAanwezigSamenvatting | undefined;
-    toonBulkEmail: boolean = false;
+    toonBulkEmail = false;
     formTitel: string;
     rooster: HeliosRoosterDataset;
 
-    ochtendDDI: string = "";
-    ochtendInstructeur: string = "";
-    ochtendStartleider: string = "";
-    ochtendLierist: string = "";
-    ochtendSleper: string = "";
+    ochtendDDI = "";
+    ochtendInstructeur = "";
+    ochtendStartleider = "";
+    ochtendLierist = "";
+    ochtendSleper = "";
 
-    middagDDI: string = "";
-    middagInstructeur: string = "";
-    middagStartleider: string = "";
-    middagLierist: string = "";
-    middagSleper: string = "";
+    middagDDI = "";
+    middagInstructeur = "";
+    middagStartleider = "";
+    middagLierist = "";
+    middagSleper = "";
 
     constructor(private readonly sharedService: SharedService,
                 private readonly loginService: LoginService,

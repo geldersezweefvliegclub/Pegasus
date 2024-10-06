@@ -1,15 +1,14 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {LoginService} from '../../../services/apiservice/login.service';
-import {ErrorMessage} from '../../../types/Utils';
-import {Router} from '@angular/router';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { ErrorMessage } from '../../../types/Utils';
+import { Router } from '@angular/router';
 
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
-import {CodeInputComponent} from "angular-code-input";
-import {StorageService} from "../../../services/storage/storage.service";
-import {SharedService} from "../../../services/shared/shared.service";
-import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
-import {LedenService} from "../../../services/apiservice/leden.service";
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { CodeInputComponent } from 'angular-code-input';
+import { StorageService } from '../../../services/storage/storage.service';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { LedenService } from '../../../services/apiservice/leden.service';
 
 @Component({
     selector: 'app-login-page',
@@ -25,12 +24,12 @@ export class LoginPageComponent implements OnInit {
     privacyUrl : string | undefined;
     privacyOk: boolean;
 
-    gebruikersnaam: string = '';
-    wachtwoord: string = '';
-    wachtwoordVerborgen: boolean = true;
+    gebruikersnaam = '';
+    wachtwoord = '';
+    wachtwoordVerborgen = true;
 
-    showSecret: boolean = false;
-    secret: string = '';
+    showSecret = false;
+    secret = '';
     isLoading = false;
     error: ErrorMessage;
 

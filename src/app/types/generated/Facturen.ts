@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  "/Agenda/CreateTable": {
+  "/Facturen/CreateTable": {
     post: {
       parameters: {
         query: {
@@ -20,7 +20,7 @@ export interface paths {
       };
     };
   };
-  "/Agenda/CreateViews": {
+  "/Facturen/CreateViews": {
     post: {
       responses: {
         /** Aangemaakt, View toegevoegd */
@@ -30,7 +30,7 @@ export interface paths {
       };
     };
   };
-  "/Agenda/GetObject": {
+  "/Facturen/GetObject": {
     get: {
       parameters: {
         query: {
@@ -42,7 +42,7 @@ export interface paths {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_agenda"];
+            "application/json": components["schemas"]["oper_facturen"];
           };
         };
         /** Data niet gevonden */
@@ -56,7 +56,7 @@ export interface paths {
       };
     };
   };
-  "/Agenda/GetObjects": {
+  "/Facturen/GetObjects": {
     get: {
       parameters: {
         query: {
@@ -76,13 +76,17 @@ export interface paths {
           START?: number;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
+          /** Haal alle facturen op van een specifiek lid */
+          LID_ID?: string;
+          /** Haal alle facturen op van een bepaald jaar */
+          JAAR?: string;
         };
       };
       responses: {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_agenda"];
+            "application/json": components["schemas"]["oper_facturen"];
           };
         };
         /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
@@ -94,7 +98,33 @@ export interface paths {
       };
     };
   };
-  "/Agenda/DeleteObject": {
+  "/Facturen/NogTeFactureren": {
+    get: {
+      parameters: {
+        query: {
+          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
+          HASH?: string;
+          /** Haal alle facturen op van een bepaald jaar */
+          JAAR?: string;
+        };
+      };
+      responses: {
+        /** OK, data succesvol opgehaald */
+        200: {
+          content: {
+            "application/json": components["schemas"]["oper_facturen"];
+          };
+        };
+        /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
+        304: never;
+        /** Methode niet toegestaan, input validatie error */
+        405: unknown;
+        /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
+        500: unknown;
+      };
+    };
+  };
+  "/Facturen/DeleteObject": {
     delete: {
       parameters: {
         query: {
@@ -105,7 +135,7 @@ export interface paths {
         };
       };
       responses: {
-        /** Agenda verwijderd */
+        /** Factuur verwijderd */
         204: never;
         /** Niet geautoriseerd, geen schrijfrechten */
         401: unknown;
@@ -120,21 +150,13 @@ export interface paths {
       };
     };
   };
-  "/Agenda/RestoreObject": {
-    patch: {
-      parameters: {
-        query: {
-          /** Database ID van het record. Meerdere ID's in CSV formaat */
-          ID: string;
-        };
-      };
+  "/Facturen/AanmakenFacturen": {
+    post: {
       responses: {
-        /** Record(s) hersteld */
-        202: unknown;
+        /** Facturen aangemaakt */
+        201: unknown;
         /** Niet geautoriseerd, geen schrijfrechten */
         401: unknown;
-        /** Data niet gevonden */
-        404: unknown;
         /** Methode niet toegestaan, input validatie error */
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
@@ -142,15 +164,37 @@ export interface paths {
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
+      /** track data */
+      requestBody: {
+        content: {
+          "application/json": {
+            /**
+             * Format: int32
+             * @description Jaar van de factuur
+             * @example 2014
+             */
+            JAAR?: number;
+            /**
+             * @description Lid ID voor de factuur. Verwijzing naar leden tabel
+             * @example [
+             *   10321,
+             *   10201,
+             *   10380
+             * ]
+             */
+            LID_ID?: number[];
+          };
+        };
+      };
     };
   };
-  "/Agenda/SaveObject": {
+  "/Facturen/SaveObject": {
     put: {
       responses: {
         /** OK, data succesvol aangepast */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_agenda"];
+            "application/json": components["schemas"]["oper_facturen"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -167,7 +211,7 @@ export interface paths {
       /** track data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["oper_agenda_in"];
+          "application/json": components["schemas"]["oper_factuur_in"];
         };
       };
     };
@@ -176,7 +220,7 @@ export interface paths {
         /** OK, data succesvol toegevoegd */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_agenda"];
+            "application/json": components["schemas"]["oper_facturen"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -193,7 +237,7 @@ export interface paths {
       /** track data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["oper_agenda_in"];
+          "application/json": components["schemas"]["oper_factuur_in"];
         };
       };
     };
@@ -202,7 +246,7 @@ export interface paths {
 
 export interface components {
   schemas: {
-    oper_agenda_in: {
+    oper_factuur_in: {
       /**
        * Format: int32
        * @description Database ID van het record
@@ -210,33 +254,60 @@ export interface components {
        */
       ID?: number;
       /**
-       * Format: date
-       * @description Datum van de agenda
-       * @example 2016-10-01
+       * Format: int32
+       * @description Jaar van de factuur
+       * @example 2014
        */
-      DATUM?: string;
+      JAAR?: number;
       /**
-       * @description Start tijd (hh:mm:ss)  seconden zijn optioneel
-       * @example 12:30
+       * @description Lid ID voor de factuur. Verwijzing naar leden tabel
+       * @example 10321
        */
-      TIJD?: string;
+      LID_ID?: number;
       /**
-       * @description Is de agenda zichtbaar voor de leden
-       * @example 0
+       * @description Factuur nummer zoals dat door de boekhouding uitgedeeld is
+       * @example F00012
        */
-      OPENBAAR?: boolean;
+      FACTUUR_NUMMER?: string;
       /**
-       * @description Korte beschrijving van de agenda
-       * @example Bestuursvergadering
-       */
-      KORT?: string;
-      /**
-       * @description Uitgebreide beschrijving van de agenda
-       * @example Bestuursvergadering fysiek in de huiskamer, onderwerp: financien
+       * @description Omschrijving van de factuurregel
+       * @example Contributie 2028
        */
       OMSCHRIJVING?: string;
+      /**
+       * @description Contributie in euro voor deze factuur
+       * @example 980
+       */
+      GEFACTUREERD?: number;
     };
-    oper_agenda: components["schemas"]["oper_agenda_in"] & {
+    oper_facturen: components["schemas"]["oper_factuur_in"] & {
+      /**
+       * @description Kopie van lidnr zoals dat in de leden tabel staat
+       * @example 200912
+       */
+      LIDNR?: string;
+      /**
+       * @description Naam van het lid
+       * @example Momfort de Mol
+       */
+      NAAM?: string;
+      /**
+       * Format: int32
+       * @description Het soort lid (jeugdlid, lid, donateur). Verwijzing naar type tabel
+       * @example 603
+       */
+      LIDTYPE_ID?: number;
+      /**
+       * @description Heeft het lid zijn/haar lidmaatschap opgezegd?
+       * @example false
+       */
+      OPGEZEGD?: boolean;
+      /**
+       * Format: int16
+       * @description Leeftijd van het lid op 1 januari van het te factureren jaar
+       * @example 12
+       */
+      LEEFTIJD?: number;
       /**
        * @description Is dit record gemarkeerd als verwijderd?
        * @example 0
@@ -249,8 +320,8 @@ export interface components {
        */
       LAATSTE_AANPASSING?: string;
     };
-    view_agenda_dataset: components["schemas"]["oper_agenda"];
-    view_agenda: {
+    view_facturen_dataset: components["schemas"]["oper_facturen"];
+    view_facturen: {
       /**
        * Format: int32
        * @description Aantal records dat voldoet aan de criteria in de database
@@ -269,11 +340,9 @@ export interface components {
        */
       hash?: string;
       /** @description De dataset met records */
-      dataset?: components["schemas"]["view_agenda_dataset"][];
+      dataset?: components["schemas"]["view_facturen_dataset"][];
     };
   };
 }
 
-export interface operations {}
 
-export interface external {}

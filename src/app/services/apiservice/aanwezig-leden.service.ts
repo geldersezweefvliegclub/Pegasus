@@ -1,17 +1,17 @@
-import {Injectable} from '@angular/core';
-import {DateTime} from 'luxon';
-import {HeliosActie, KeyValueArray} from '../../types/Utils';
-import {APIService} from './api.service';
+import { Injectable } from '@angular/core';
+import { DateTime } from 'luxon';
+import { KeyValueArray } from '../../types/Utils';
+import { APIService } from './api.service';
 import {
-    HeliosAanwezigLeden,
-    HeliosAanwezigLedenDataset,
-    HeliosAanwezigSamenvatting,
-    HeliosAanwezigVliegtuigenDataset
+  HeliosAanwezigLeden,
+  HeliosAanwezigLedenDataset,
+  HeliosAanwezigSamenvatting,
+  HeliosAanwezigVliegtuigenDataset,
 } from '../../types/Helios';
-import {BehaviorSubject, Subscription} from "rxjs";
-import {SharedService} from "../shared/shared.service";
-import {debounceTime} from "rxjs/operators";
-import {LoginService} from "./login.service";
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { SharedService } from '../shared/shared.service';
+import { debounceTime } from 'rxjs/operators';
+import { LoginService } from './login.service';
 
 
 @Injectable({
@@ -23,7 +23,7 @@ export class AanwezigLedenService {
     private datumAbonnement: Subscription;                          // volg de keuze van de kalender
     private datum: DateTime = DateTime.now();                       // de gekozen dag
 
-    private overslaan: boolean = false;
+    private overslaan = false;
     private ophaalTimer: number;                                // Iedere 15 min halen we de aanwezige leden op
     private aanwezigStore = new BehaviorSubject(this.aanwezigCache.dataset);
     public readonly aanwezigChange = this.aanwezigStore.asObservable();      // nieuwe aanwezigheid beschikbaar
@@ -75,7 +75,7 @@ export class AanwezigLedenService {
         });
     }
 
-    async updateAanwezigCache(force: boolean = false) {
+    async updateAanwezigCache(force = false) {
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
             return undefined;
@@ -95,7 +95,7 @@ export class AanwezigLedenService {
 
     // Ophalen van alle leden die zich aangemeld hebben
     async getAanwezig(startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosAanwezigLedenDataset[]> {
-        let getParams: KeyValueArray = params;
+        const getParams: KeyValueArray = params;
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
@@ -125,7 +125,7 @@ export class AanwezigLedenService {
 
     // Ophalen va leden die zich uitgeschreven hebben
     async getAanwezigVerwijderd(startDatum: DateTime, eindDatum: DateTime): Promise<HeliosAanwezigLedenDataset[]> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {

@@ -1,30 +1,22 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {beheerRoutes, CustomRoute, routes} from '../../../routing.module';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { beheerRoutes, CustomRoute, routes } from '../../../routing.module';
 
-import {Router} from '@angular/router';
-import {
-    faGaugeSimpleHigh, fas,
-    faSignOutAlt,
-    faWrench
-} from '@fortawesome/free-solid-svg-icons';
-import {
-    NgbCalendar,
-    NgbDate,
-    NgbDateParserFormatter,
-    NgbDateStruct
-} from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
+import { fas, faSignOutAlt, faWrench } from '@fortawesome/free-solid-svg-icons';
+import { NgbCalendar, NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
-import {DateTime} from 'luxon';
+import { DateTime } from 'luxon';
 
-import {LoginService} from '../../../services/apiservice/login.service';
-import {VliegtuigenService} from "../../../services/apiservice/vliegtuigen.service";
-import {DaginfoService} from '../../../services/apiservice/daginfo.service';
-import {Subscription} from "rxjs";
-import {far, IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {SchermGrootte, SharedService} from '../../../services/shared/shared.service';
-import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
-import {PopupKalenderComponent} from "../popup-kalender/popup-kalender.component";
-import {NgbDateFRParserFormatter} from "../../../shared/ngb-date-fr-parser-formatter";
+import { LoginService } from '../../../services/apiservice/login.service';
+import { VliegtuigenService } from '../../../services/apiservice/vliegtuigen.service';
+import { DaginfoService } from '../../../services/apiservice/daginfo.service';
+import { Subscription } from 'rxjs';
+import { far, IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { PopupKalenderComponent } from '../popup-kalender/popup-kalender.component';
+import { NgbDateFRParserFormatter } from '../../ngb-date-fr-parser-formatter';
+import { MenuItem } from '../../../types/IPegasusConfig';
 
 @Component({
     selector: 'app-navigatie',
@@ -34,7 +26,7 @@ import {NgbDateFRParserFormatter} from "../../../shared/ngb-date-fr-parser-forma
 })
 
 export class NavigatieComponent implements OnInit, OnDestroy {
-    @Input() hoofdscherm: boolean = false;
+    @Input() hoofdscherm = false;
     @ViewChild(PopupKalenderComponent) popupKalender: PopupKalenderComponent;
 
     readonly routes = routes;
@@ -42,8 +34,8 @@ export class NavigatieComponent implements OnInit, OnDestroy {
     readonly logUitIcon: IconDefinition = faSignOutAlt;
     readonly beheerIcon: IconDefinition = faWrench;
 
-    urlMenuItems:any[];
-    showBeheer: boolean = false;
+    urlMenuItems: MenuItem[];
+    showBeheer = false;
 
     vandaag = this.calendar.getToday();
     datumDMY: string = this.vandaag.day + "-" + this.vandaag.month + "-" + this.vandaag.year;
@@ -57,8 +49,6 @@ export class NavigatieComponent implements OnInit, OnDestroy {
     private vliegtuigenAbonnement: Subscription;
     private userInfoAbonnement: Subscription;
     private resizeSubscription: Subscription;       // Abonneer op aanpassing van window grootte (of draaien mobiel)
-
-    readonly activeRouteFilter = {excluded: false};
 
     constructor(readonly loginService: LoginService,
                 private readonly router: Router,
@@ -82,11 +72,11 @@ export class NavigatieComponent implements OnInit, OnDestroy {
             });
 
             const v = this.routes.find(route => route.path == "vliegtuigen") as CustomRoute;
-            v.batch = nietInzetbaar;
+            v.batch = nietInzetbaar.toString();
         });
 
         // abonneer op wijziging van profiel via userInfo
-        this.userInfoAbonnement = this.loginService.userInfoChange.subscribe(userInfo => {
+        this.userInfoAbonnement = this.loginService.userInfoChange.subscribe(() => {
             this.toonMenuItems();
         })
 
@@ -120,7 +110,7 @@ export class NavigatieComponent implements OnInit, OnDestroy {
         });
 
         // Roep onWindowResize aan zodra we het event ontvangen hebben
-        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(() => {
             this.onWindowResize()
         });
         this.onWindowResize();
@@ -132,6 +122,7 @@ export class NavigatieComponent implements OnInit, OnDestroy {
         if (this.datumAbonnement) this.datumAbonnement.unsubscribe();
         if (this.maandAbonnement) this.maandAbonnement.unsubscribe();
         if (this.resizeSubscription) this.resizeSubscription.unsubscribe();
+        if (this.vliegtuigenAbonnement) this.vliegtuigenAbonnement.unsubscribe();
     }
 
     // als scherm dimensie aangepast worden, kunnen we meer/minder menu items tonen
@@ -251,7 +242,6 @@ export class NavigatieComponent implements OnInit, OnDestroy {
         }
 
         // meldingen voor clubvliegers
-        const meldingen = this.routes.find(route => route.path == "meldingen") as CustomRoute;
         if (verbergen.includes('meldingen') || (!ui?.isClubVlieger && !ui?.isStarttoren)) {
             documenten.excluded = true;
         } else {
@@ -324,11 +314,6 @@ export class NavigatieComponent implements OnInit, OnDestroy {
         this.router.navigate(['/login']);
     }
 
-    //  Er is een nieuwe datum is gekozen
-    NieuweDatum(datum: NgbDate) {
-        this.datumDMY = datum.day + "-" + datum.month + "-" + datum.year;
-    }
-
     toonLogo() {
         return (window.innerHeight > 1000)
     }
@@ -341,7 +326,7 @@ export class NavigatieComponent implements OnInit, OnDestroy {
     }
 
     toonIcon(iconNaam:string) : IconDefinition {
-        let parts: string[] = iconNaam.split(' ');
+        const parts: string[] = iconNaam.split(' ');
         let faIcon: IconDefinition = fas['faQuestion'];
 
         if (parts.length != 2) {

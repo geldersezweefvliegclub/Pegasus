@@ -1,9 +1,9 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../modal/modal.component";
-import {ErrorMessage, KeyValueArray, SuccessMessage} from "../../../../types/Utils";
-import {HeliosDienstenDataset, HeliosGast, HeliosType} from "../../../../types/Helios";
-import {HeliosRoosterDagExtended} from "../../../../schermen/rooster/rooster-page/rooster-page.component";
-import {DdwvService} from "../../../../services/apiservice/ddwv.service";
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { ModalComponent } from '../../modal/modal.component';
+import { ErrorMessage, KeyValueArray, SuccessMessage } from '../../../../types/Utils';
+import { HeliosDienstenDataset } from '../../../../types/Helios';
+import { HeliosRoosterDagExtended } from '../../../../schermen/rooster/rooster-page/rooster-page.component';
+import { DdwvService } from '../../../../services/apiservice/ddwv.service';
 
 
 @Component({
@@ -18,8 +18,8 @@ export class UitbetalenDdwvCrewEditorComponent  {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
-    isLoading: boolean = false;
-    isSaving: boolean = false;
+    isLoading = false;
+    isSaving = false;
 
     datum: string;
     diensten: HeliosDienstenDataset[];
@@ -54,7 +54,7 @@ export class UitbetalenDdwvCrewEditorComponent  {
         }).catch((e) => this.error = e)
     }
 
-    selectieChanged($event: any, ID: number) {
-        this.uitbetalenCrew[ID.toString()] = $event.target.checked;
+    selectieChanged($event: Event, ID: number) {
+        this.uitbetalenCrew[ID.toString()] = ($event.target as HTMLInputElement).checked;
     }
 }

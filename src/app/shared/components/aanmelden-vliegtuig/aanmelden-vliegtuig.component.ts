@@ -1,13 +1,13 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {HeliosAanwezigVliegtuigenDataset, HeliosVliegtuigenDataset} from "../../../types/Helios";
-import {ModalComponent} from "../modal/modal.component";
-import {Subscription} from "rxjs";
-import {VliegtuigenService} from "../../../services/apiservice/vliegtuigen.service";
-import {AanwezigVliegtuigService} from "../../../services/apiservice/aanwezig-vliegtuig.service";
-import {DateTime} from "luxon";
-import {SharedService} from "../../../services/shared/shared.service";
-import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
-import {DaginfoService} from "../../../services/apiservice/daginfo.service";
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { HeliosAanwezigVliegtuigenDataset, HeliosVliegtuigenDataset } from '../../../types/Helios';
+import { ModalComponent } from '../modal/modal.component';
+import { Subscription } from 'rxjs';
+import { VliegtuigenService } from '../../../services/apiservice/vliegtuigen.service';
+import { AanwezigVliegtuigService } from '../../../services/apiservice/aanwezig-vliegtuig.service';
+import { DateTime } from 'luxon';
+import { SharedService } from '../../../services/shared/shared.service';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { DaginfoService } from '../../../services/apiservice/daginfo.service';
 
 
 @Component({
@@ -34,7 +34,7 @@ export class AanmeldenVliegtuigComponent implements OnInit, OnDestroy {
     error: ErrorMessage | undefined;
 
     zoekString: string;
-    bezig: boolean = false;
+    bezig = false;
     bezigTimer: number;
 
     constructor(private readonly sharedService: SharedService,

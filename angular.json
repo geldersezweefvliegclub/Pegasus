@@ -15,13 +15,17 @@
             },
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:browser-esbuild",
                     "options": {
                         "outputPath": "dist/pegasus",
                         "index": "src/index.html",
                         "main": "src/main.ts",
-                        "polyfills": "src/polyfills.ts",
+                        "polyfills": [
+                          "zone.js",
+                          "@angular/localize/init"
+                        ],
                         "tsConfig": "tsconfig.app.json",
+                        "inlineStyleLanguage": "scss",
                         "assets": [
                             "src/favicon.ico",
                             "src/assets",
@@ -31,13 +35,13 @@
                             "src/styles.scss"
                         ],
                         "scripts": [
-                            "node_modules/chart.js/dist/chart.js"
+                            "node_modules/chart.js/dist/chart.cjs"
                         ],
                         "serviceWorker": true,
                         "ngswConfigPath": "ngsw-config.json"
                     },
+                    "defaultConfiguration": "production",
                     "configurations": {
-                        "defaultConfiguration": "development",
                         "production": {
                             "fileReplacements": [
                                 {
@@ -73,31 +77,28 @@
                 },
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
-                    "options": {
-                        "browserTarget": "pegasus:build"
-                    },
                     "configurations": {
                         "development": {
-                            "browserTarget": "pegasus:build:development"
+                          "buildTarget": "pegasus:build:development"
                         },
                         "production": {
-                            "browserTarget": "pegasus:build:production"
+                          "buildTarget": "pegasus:build:production"
                         }
                     },
                     "defaultConfiguration": "development"
                 },
                 "extract-i18n": {
-                    "builder": "@angular-devkit/build-angular:extract-i18n",
-                    "options": {
-                        "browserTarget": "pegasus:build"
-                    }
+                    "builder": "@angular-devkit/build-angular:extract-i18n"
                 },
                 "test": {
                     "builder": "@angular-devkit/build-angular:karma",
                     "options": {
-                        "main": "src/test.ts",
-                        "polyfills": "src/polyfills.ts",
+                        "polyfills": [
+                            "zone.js",
+                            "@angular/localize/init"
+                        ],
                         "tsConfig": "tsconfig.spec.json",
+                        "inlineStyleLanguage": "scss",
                         "karmaConfig": "src/karma.conf.js",
                         "styles": [
                             "src/styles.scss"
@@ -117,25 +118,6 @@
                             "src/**/*.ts",
                             "src/**/*.html"
                         ]
-                    }
-                }
-            }
-        },
-        "pegasus-e2e": {
-            "root": "e2e/",
-            "projectType": "application",
-            "prefix": "",
-            "architect": {
-                "e2e": {
-                    "builder": "@angular-devkit/build-angular:protractor",
-                    "options": {
-                        "protractorConfig": "e2e/protractor.conf.js",
-                        "devServerTarget": "pegasus:serve"
-                    },
-                    "configurations": {
-                        "production": {
-                            "devServerTarget": "pegasus:serve:production"
-                        }
                     }
                 }
             }

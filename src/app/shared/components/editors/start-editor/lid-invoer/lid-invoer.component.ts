@@ -1,8 +1,8 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {Observable, of, Subject} from 'rxjs';
-import {HeliosAanwezigLedenDataset, HeliosLedenDataset, HeliosVliegtuigenDataset} from '../../../../../types/Helios';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faInfoCircle} from "@fortawesome/free-solid-svg-icons";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Observable, of, Subject } from 'rxjs';
+import { HeliosAanwezigLedenDataset, HeliosLedenDataset, HeliosVliegtuigenDataset } from '../../../../../types/Helios';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-lid-invoer',
@@ -12,15 +12,15 @@ import {faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 export class LidInvoerComponent implements OnInit, OnChanges {
     @Input() leden: HeliosLedenDataset[] = [];
     @Input() aanwezig: HeliosAanwezigLedenDataset[] = [];
-    @Input() placeholder: string = "";
-    @Input() label: string = "";
+    @Input() placeholder = "";
+    @Input() label = "";
     @Input() uitleg: string;
-    @Input() disabled: boolean = false;
-    @Input() required: boolean = false;
+    @Input() disabled = false;
+    @Input() required = false;
     @Input() veldID: number | undefined;
-    @Input() excludeLidTypes: string = ""
-    @Input() alleenPaxVliegers: boolean = false;
-    @Input() alleenInstructeurs: boolean = false;
+    @Input() excludeLidTypes = ""
+    @Input() alleenPaxVliegers = false;
+    @Input() alleenInstructeurs = false;
     @Input() LID_ID: number | undefined;
     @Input() vliegtuig: HeliosVliegtuigenDataset | undefined = undefined
 
@@ -34,10 +34,7 @@ export class LidInvoerComponent implements OnInit, OnChanges {
     aanwezigFiltered: HeliosAanwezigLedenDataset[] = [];
     ledenSelectie$: Observable<HeliosAanwezigLedenDataset[]>;
 
-    InputChangeEventFired: boolean = false;
-
-    constructor() {
-    }
+    InputChangeEventFired = false;
 
     ngOnInit(): void {
         this.lidInput$.subscribe((newTerm) => {
@@ -72,7 +69,7 @@ export class LidInvoerComponent implements OnInit, OnChanges {
         });
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(_: SimpleChanges) {
         // leden komen in ander formaat, dus even goed zetten
         this.ledenFiltered = [];
         if (this.leden) {

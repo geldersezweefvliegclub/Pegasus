@@ -1,10 +1,10 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {Subscription} from "rxjs";
-import {DateTime} from "luxon";
-import {HeliosLogboekTotalen} from "../../../types/Helios";
-import {StartlijstService} from "../../../services/apiservice/startlijst.service";
-import {SharedService} from "../../../services/shared/shared.service";
-import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { DateTime } from 'luxon';
+import { HeliosLogboekTotalen } from '../../../types/Helios';
+import { StartlijstService } from '../../../services/apiservice/startlijst.service';
+import { SharedService } from '../../../services/shared/shared.service';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
 
 @Component({
     selector: 'app-vlieger-logboek-totalen',
@@ -19,7 +19,7 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDest
     private datumAbonnement: Subscription;          // volg de keuze van de kalender
     datum: DateTime = DateTime.now();               // de gekozen dag
     data: HeliosLogboekTotalen;
-    isLoading: boolean = false;
+    isLoading = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -106,7 +106,7 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDest
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.hasOwnProperty("VliegerID")) {
+        if (Object.prototype.hasOwnProperty.call(changes, "VliegerID")) {
             this.opvragen()
         }
     }

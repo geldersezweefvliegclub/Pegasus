@@ -1,26 +1,26 @@
-import {Component, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {ColDef} from "ag-grid-community";
-import {HeliosLogboekDataset, HeliosTrack} from "../../../types/Helios";
-import {DateTime, Interval} from "luxon";
-import {Subscription} from "rxjs";
-import {StartlijstService} from "../../../services/apiservice/startlijst.service";
-import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
-import {DatumRenderComponent} from "../datatable/datum-render/datum-render.component";
-import {StarttijdRenderComponent} from "../datatable/starttijd-render/starttijd-render.component";
-import {LandingstijdRenderComponent} from "../datatable/landingstijd-render/landingstijd-render.component";
-import {NaamRenderComponent} from "./naam-render/naam-render.component";
-import {TijdInvoerComponent} from "../editors/tijd-invoer/tijd-invoer.component";
-import {nummerSort, tijdSort} from '../../../utils/Utils';
-import {TrackRenderComponent} from "./track-render/track-render.component";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {TrackEditorComponent} from "../editors/track-editor/track-editor.component";
-import {TracksService} from "../../../services/apiservice/tracks.service";
-import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
-import {StartEditorComponent} from "../editors/start-editor/start-editor.component";
-import {DeleteActionComponent} from "../datatable/delete-action/delete-action.component";
-import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
-import {DatumKortRenderComponent} from "../datatable/datum-kort-render/datum-kort-render.component";
-import {IconRenderComponent} from "./icon-render/icon-render.component";
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { ColDef, RowClassParams } from 'ag-grid-community';
+import { HeliosLogboekDataset, HeliosTrack } from '../../../types/Helios';
+import { DateTime, Interval } from 'luxon';
+import { Subscription } from 'rxjs';
+import { StartlijstService } from '../../../services/apiservice/startlijst.service';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { DatumRenderComponent } from '../datatable/datum-render/datum-render.component';
+import { StarttijdRenderComponent } from '../datatable/starttijd-render/starttijd-render.component';
+import { LandingstijdRenderComponent } from '../datatable/landingstijd-render/landingstijd-render.component';
+import { NaamRenderComponent } from './naam-render/naam-render.component';
+import { TijdInvoerComponent } from '../editors/tijd-invoer/tijd-invoer.component';
+import { nummerSort, tijdSort } from '../../../utils/Utils';
+import { TrackRenderComponent } from './track-render/track-render.component';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { TrackEditorComponent } from '../editors/track-editor/track-editor.component';
+import { TracksService } from '../../../services/apiservice/tracks.service';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { StartEditorComponent } from '../editors/start-editor/start-editor.component';
+import { DeleteActionComponent } from '../datatable/delete-action/delete-action.component';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { DatumKortRenderComponent } from '../datatable/datum-kort-render/datum-kort-render.component';
+import { IconRenderComponent } from './icon-render/icon-render.component';
 
 type HeliosLogboekDatasetExtended = HeliosLogboekDataset & {
     inTijdspan?: boolean
@@ -37,14 +37,14 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
     @Input() id: string;
     @Input() VliegerID: number;
     @Input() deleteMode: boolean;
-    @Input() Kolommen: string = "";
-    @Input() MaxItems: number = 1000;
+    @Input() Kolommen = "";
+    @Input() MaxItems = 1000;
 
     @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
     @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
     @ViewChild(StartEditorComponent) startEditor: StartEditorComponent;
 
-    toonLogboekKlein: boolean = false;     // Klein formaat van het vliegerlogboek
+    toonLogboekKlein = false;     // Klein formaat van het vliegerlogboek
 
     data: HeliosLogboekDatasetExtended[] = [];
     private dbEventAbonnement: Subscription;
@@ -55,7 +55,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
-    isLoading: boolean = false;
+    isLoading = false;
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
@@ -135,7 +135,8 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
     }];
 
     rowClassRules = {
-        'start_niet_wijzigbaar': function(params: any) { return !params.data.inTijdspan; },
+        // todo moet deze controleren met RJ of de logica nog klopt! Data is optional, dus wat als data niet bestaat??
+        'start_niet_wijzigbaar': (params: RowClassParams<HeliosLogboekDatasetExtended>) => !params.data?.inTijdspan,
     }
 
     frameworkComponents = {
@@ -200,7 +201,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
         }, 250);
 
         // Roep onWindowResize aan zodra we het event ontvangen hebben
-        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(() => {
             this.onWindowResize()
         });
 
@@ -215,7 +216,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.hasOwnProperty("VliegerID")) {
+        if (Object.prototype.hasOwnProperty.call(changes, "VliegerID")) {
             this.opvragen()
         }
         this.kolomDefinitie();
@@ -235,20 +236,20 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
             this.isLoading = true;
             this.startlijstService.getLogboek(this.VliegerID, startDatum, eindDatum).then((dataset) => {
                 this.isLoading = false;
-                let data:HeliosLogboekDatasetExtended[] = (dataset) ? dataset : [];
+                const data:HeliosLogboekDatasetExtended[] = (dataset) ? dataset : [];
 
                 const ui = this.loginService.userInfo;
                 const nu:  DateTime = DateTime.now()
 
-                for (let i = 0; i < data.length; i++) {
-                    const diff = Interval.fromDateTimes(DateTime.fromSQL(data[i].DATUM!), nu);
+                for (const item of data) {
+                    const diff = Interval.fromDateTimes(DateTime.fromSQL(item.DATUM!), nu);
                     if (Math.floor(diff.length("days")) > this.configService.maxZelfEditDagen()) {
-                        data[i].inTijdspan = ui!.Userinfo!.isBeheerder!;   // alleen beheerder mag na xx dagen wijzigen. xx is geconfigureerd in pegasus.config
+                        item.inTijdspan = ui!.Userinfo!.isBeheerder!;   // alleen beheerder mag na xx dagen wijzigen. xx is geconfigureerd in pegasus.config
                     }
                     else {
-                        data[i].inTijdspan = true; // zitten nog binnen de termijn
+                        item.inTijdspan = true; // zitten nog binnen de termijn
                     }
-                    data[i].DatumDM = this.sharedService.datumDM(data[i].DATUM!)
+                    item.DatumDM = this.sharedService.datumDM(item.DATUM!)
                 }
                 this.data = data;
             }).catch(e => {

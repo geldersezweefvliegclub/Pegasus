@@ -1,18 +1,18 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {faFile, IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {HeliosDocument, HeliosDocumenten, HeliosDocumentenDataset, HeliosType} from "../../../types/Helios";
-import {Subscription} from "rxjs";
-import {TypesService} from "../../../services/apiservice/types.service";
-import {DocumentenService} from "../../../services/apiservice/documenten.service";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { faFile, IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { HeliosDocument, HeliosDocumentenDataset, HeliosType } from '../../../types/Helios';
+import { Subscription } from 'rxjs';
+import { TypesService } from '../../../services/apiservice/types.service';
+import { DocumentenService } from '../../../services/apiservice/documenten.service';
 import {
-    faCaretSquareDown,
-    faCaretSquareUp,
-    faMinusCircle,
-    faPlusCircle,
-    faUndo
-} from "@fortawesome/free-solid-svg-icons";
-import {DocumentEditorComponent} from "../../../shared/components/editors/document-editor/document-editor.component";
-import {LoginService} from "../../../services/apiservice/login.service";
+  faCaretSquareDown,
+  faCaretSquareUp,
+  faMinusCircle,
+  faPlusCircle,
+  faUndo,
+} from '@fortawesome/free-solid-svg-icons';
+import { DocumentEditorComponent } from '../../../shared/components/editors/document-editor/document-editor.component';
+import { LoginService } from '../../../services/apiservice/login.service';
 
 @Component({
     selector: 'app-documenten-scherm',
@@ -33,11 +33,11 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
     documentGroepen: HeliosType[] = [];
     documenten: HeliosDocumentenDataset[];
 
-    editMode: boolean = false;          // zitten we in edit mode om documenten te kunnen aanpassen
-    deleteMode: boolean = false;        // zitten we in delete mode om documenten te kunnen verwijderen
-    trashMode: boolean = false;         // zitten in restore mode om documenten te kunnen terughalen
+    editMode = false;          // zitten we in edit mode om documenten te kunnen aanpassen
+    deleteMode = false;        // zitten we in delete mode om documenten te kunnen verwijderen
+    trashMode = false;         // zitten in restore mode om documenten te kunnen terughalen
 
-    magAanpassen: boolean = false;      // mag de gebruiker documenten aanpassen
+    magAanpassen = false;      // mag de gebruiker documenten aanpassen
 
     constructor(private readonly typesService: TypesService,
                 private readonly loginService: LoginService,
@@ -56,7 +56,7 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
 
         // alleen beheerder mag documenten aanpassen
         const ui = this.loginService.userInfo?.Userinfo;
-        this.magAanpassen = ui?.isBeheerder!;
+        this.magAanpassen = (ui?.isBeheerder) ?? false;
     }
 
     ngOnDestroy(): void {
@@ -154,9 +154,9 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
 
                     // opslaan van alle records
                     let bezig = 0;
-                    for (let i = 0; i < lijst.length; i++) {
+                    for (const item of lijst) {
                         bezig++;
-                        this.documentenService.updateDocument(lijst[i]).then(() => {
+                        this.documentenService.updateDocument(item).then(() => {
                             bezig--;
 
                             if (bezig == 0) {   // als alle save acties klaar zijn, dan opnieuw opvragen
@@ -189,9 +189,9 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
 
                     // opslaan van alle records
                     let bezig = 0;
-                    for (let i = 0; i < lijst.length; i++) {
+                    for (const item of lijst) {
                         bezig++;
-                        this.documentenService.updateDocument(lijst[i]).then(() => {
+                        this.documentenService.updateDocument(item).then(() => {
                             bezig--;
 
                             if (bezig == 0) {   // als alle save acties klaar zijn, dan opnieuw opvragen

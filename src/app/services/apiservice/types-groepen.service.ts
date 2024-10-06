@@ -1,10 +1,10 @@
-import {Injectable} from '@angular/core';
-import {HeliosTypesGroep, HeliosTypesGroepen} from "../../types/Helios";
-import {BehaviorSubject} from "rxjs";
-import {APIService} from "./api.service";
-import {LoginService} from "./login.service";
-import {StorageService} from "../storage/storage.service";
-import {KeyValueArray} from "../../types/Utils";
+import { Injectable } from '@angular/core';
+import { HeliosTypesGroep, HeliosTypesGroepen } from '../../types/Helios';
+import { BehaviorSubject } from 'rxjs';
+import { APIService } from './api.service';
+import { LoginService } from './login.service';
+import { StorageService } from '../storage/storage.service';
+import { KeyValueArray } from '../../types/Utils';
 
 @Injectable({
     providedIn: 'root'
@@ -22,7 +22,7 @@ export class TypesGroepenService {
 
         // We hebben misschien eerder de lidTypes opgehaald. Die gebruiken we totdat de API starts heeft opgehaald
         if (this.storageService.ophalen('types') != null) {
-            this.typesGroepenCache = this.storageService.ophalen('typesGroepen');
+            this.typesGroepenCache = this.storageService.ophalen('typesGroepen') as HeliosTypesGroepen;
             if (this.typesGroepenCache) {
                 this.typesGroepenStore.next(this.typesGroepenCache.dataset!)    // afvuren event met opgeslagen type dataset
             }
@@ -30,7 +30,7 @@ export class TypesGroepenService {
     }
 
     async getTypesGroepen(): Promise<HeliosTypesGroep[]> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {

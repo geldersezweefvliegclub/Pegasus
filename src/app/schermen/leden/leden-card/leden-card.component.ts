@@ -1,7 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {HeliosJournaalDataset, HeliosLedenDataset, HeliosLid, HeliosLidData} from "../../../types/Helios";
-import {faEnvelope} from "@fortawesome/free-solid-svg-icons";
-import {LoginService} from "../../../services/apiservice/login.service";
+import { Component, Input, OnInit } from '@angular/core';
+import { HeliosLedenDataset } from '../../../types/Helios';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { LoginService } from '../../../services/apiservice/login.service';
 
 @Component({
     selector: 'app-leden-card',
@@ -11,15 +11,15 @@ import {LoginService} from "../../../services/apiservice/login.service";
 export class LedenCardComponent implements OnInit {
     @Input() lid: HeliosLedenDataset;
 
-    toonTegoed: boolean = false;        // toon DDWV tegoed
-    naarDashboard: boolean = false;     // toon link naar dashboard van het lid
+    toonTegoed = false;        // toon DDWV tegoed
+    naarDashboard = false;     // toon link naar dashboard van het lid
     constructor(private readonly loginService: LoginService) {
     }
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo?.Userinfo;
-        this.toonTegoed = ui?.isBeheerder! || ui?.isBeheerderDDWV!
-        this.naarDashboard = (ui?.isBeheerder || ui?.isCIMT || ui?.isInstructeur) as boolean;
+        this.toonTegoed = (ui?.isBeheerder || ui?.isBeheerderDDWV) ?? false
+        this.naarDashboard = (ui?.isBeheerder || ui?.isCIMT || ui?.isInstructeur) ?? false;
     }
 
     protected readonly faIcon = faEnvelope;

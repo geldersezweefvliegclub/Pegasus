@@ -1,22 +1,22 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {HeliosFacturenDataset, HeliosJournaalDataset} from "../../../types/Helios";
-import {Subscription} from "rxjs";
-import {ColDef} from "ag-grid-community";
-import {nummerSort} from "../../../utils/Utils";
-import {DeleteActionComponent} from "../../../shared/components/datatable/delete-action/delete-action.component";
-import {RestoreActionComponent} from "../../../shared/components/datatable/restore-action/restore-action.component";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faLayerGroup, faRecycle} from "@fortawesome/free-solid-svg-icons";
-import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
-import {LoginService} from "../../../services/apiservice/login.service";
-import * as xlsx from "xlsx";
-import {FacturenService} from "../../../services/apiservice/facturen.service";
-import {SharedService} from "../../../services/shared/shared.service";
-import {TypeRenderComponent} from "./type-render/type-render.component";
-import {DatatableComponent} from "../../../shared/components/datatable/datatable.component";
-import {LeeftijdRenderComponent} from "./leeftijd-render/leeftijd-render.component";
-import {GefactureerdRenderComponent} from "./gefactureerd-render/gefactureerd-render.component";
-import {UploadenComponent} from "./uploaden/uploaden.component";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { HeliosFacturenDataset } from '../../../types/Helios';
+import { Subscription } from 'rxjs';
+import { ColDef, RowClassParams } from 'ag-grid-community';
+import { nummerSort } from '../../../utils/Utils';
+import { DeleteActionComponent } from '../../../shared/components/datatable/delete-action/delete-action.component';
+import { RestoreActionComponent } from '../../../shared/components/datatable/restore-action/restore-action.component';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faLayerGroup } from '@fortawesome/free-solid-svg-icons';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { LoginService } from '../../../services/apiservice/login.service';
+import * as xlsx from 'xlsx';
+import { FacturenService } from '../../../services/apiservice/facturen.service';
+import { SharedService } from '../../../services/shared/shared.service';
+import { TypeRenderComponent } from './type-render/type-render.component';
+import { DatatableComponent } from '../../../shared/components/datatable/datatable.component';
+import { LeeftijdRenderComponent } from './leeftijd-render/leeftijd-render.component';
+import { GefactureerdRenderComponent } from './gefactureerd-render/gefactureerd-render.component';
+import { UploadenComponent } from './uploaden/uploaden.component';
 
 @Component({
   selector: 'app-facturen-scherm',
@@ -30,13 +30,13 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
   data:HeliosFacturenDataset[] = [];
   facturenData:HeliosFacturenDataset[] = [];
   teDoenData:HeliosFacturenDataset[] = [];
-  isLoading: boolean = false;
+  isLoading = false;
 
   private dbEventAbonnement: Subscription;    // Abonneer op aanpassingen in de database
   private datumAbonnement: Subscription;      // volg de keuze van de kalender
   private maandAbonnement: Subscription;      // volg de keuze van de kalender
-  jaar: number = 1900;                        // gekozen jaar
-  mode: string = 'facturen';                  // welke mode is actief
+  jaar = 1900;                        // gekozen jaar
+  mode = 'facturen';                  // welke mode is actief
 
   dataColumns: ColDef[] = [
     {field: 'ID', headerName: 'ID',  sortable: true, hide: true, comparator: nummerSort},
@@ -87,7 +87,7 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
   columns: ColDef[];
 
   rowClassRules = {
-    'rode_regel_niet_inzetbaar': function(params: any) { return !params.data.LIDNR || params.data.OPGEZEGD; },
+    'rode_regel_niet_inzetbaar': (params: RowClassParams) => !params.data.LIDNR || params.data.OPGEZEGD,
   }
 
   frameworkComponents = {
@@ -101,12 +101,12 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
 
   zoekString: string;
   zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
-  deleteMode: boolean = false;        // zitten we in delete mode om facturen te kunnen verwijderen
+  deleteMode = false;        // zitten we in delete mode om facturen te kunnen verwijderen
 
-  magToevoegen: boolean = false;
-  magVerwijderen: boolean = false;
-  magWijzigen: boolean = false;
-  magExporten: boolean = false;
+  magToevoegen = false;
+  magVerwijderen = false;
+  magWijzigen = false;
+  magExporten = false;
 
   success: SuccessMessage | undefined;
   error: ErrorMessage | undefined;
@@ -205,9 +205,6 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
         if (this.mode === 'facturen') {
             this.data = dataset;
         }
-
-        const ui = this.loginService.userInfo?.Userinfo;
-
       }).catch(e => {
         this.isLoading = false;
         this.error = e;
@@ -228,7 +225,7 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
 
   // Export naar excel
   exportDataset() {
-    var ws = xlsx.utils.json_to_sheet(this.data);
+    const ws = xlsx.utils.json_to_sheet(this.data);
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
     xlsx.writeFile(wb, 'facturen ' + new Date().toJSON().slice(0,10) +'.xlsx');
@@ -249,7 +246,7 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
   }
 
   maakFacturen() {
-    let IDs: number[] = [];
+    const IDs: number[] = [];
 
     this.grid.selectedRecords().forEach(row => {
         if ((row.LIDNR) && (row.GEFACTUREERD == null || row.GEFACTUREERD == undefined)) {
@@ -267,7 +264,7 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
   }
 
   uploadenFacturen() {
-    let IDs: number[] = [];
+    const IDs: number[] = [];
 
     this.grid.selectedRecords().forEach(row => {
       if (row.ID && !row.FACTUUR_NUMMER) {

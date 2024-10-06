@@ -1,19 +1,11 @@
-import {Injectable} from '@angular/core';
-import {DateTime} from 'luxon';
-import {APIService} from './api.service';
-import {KeyValueArray} from '../../types/Utils';
-import {
-    HeliosAgenda,
-    HeliosAgendaActiviteit,
-    HeliosAgendaDataset, HeliosJournaal,
-    HeliosRoosterDataset
-} from '../../types/Helios';
-import {BehaviorSubject, Subscription} from "rxjs";
-import {SharedService} from "../shared/shared.service";
-import {getBeginEindDatumVanMaand} from "../../utils/Utils";
-import {LoginService} from "./login.service";
-import {debounceTime} from "rxjs/operators";
-import * as inspector from "inspector";
+import { Injectable } from '@angular/core';
+import { DateTime } from 'luxon';
+import { APIService } from './api.service';
+import { KeyValueArray } from '../../types/Utils';
+import { HeliosAgenda, HeliosAgendaActiviteit, HeliosAgendaDataset, HeliosRoosterDataset } from '../../types/Helios';
+import { Subscription } from 'rxjs';
+import { SharedService } from '../shared/shared.service';
+import { LoginService } from './login.service';
 
 @Injectable({
     providedIn: 'root'
@@ -26,8 +18,8 @@ export class AgendaService {
                 private readonly loginService: LoginService,
                 private readonly sharedService: SharedService) {}
 
-    async getAgenda(startDatum: DateTime, eindDatum: DateTime, max?: number, verwijderd:boolean = false): Promise<HeliosAgendaDataset[]> {
-        let getParams: KeyValueArray = {};
+    async getAgenda(startDatum: DateTime, eindDatum: DateTime, max?: number, verwijderd = false): Promise<HeliosAgendaDataset[]> {
+        const getParams: KeyValueArray = {};
         getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
         getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
         if (max) {

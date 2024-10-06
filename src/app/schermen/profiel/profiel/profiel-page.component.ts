@@ -1,10 +1,11 @@
-import {Component} from '@angular/core';
-import {NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
-import {NgbDateFRParserFormatter} from '../../../shared/ngb-date-fr-parser-formatter';
-import {ErrorMessage, SuccessMessage} from '../../../types/Utils';
-import {StorageService} from '../../../services/storage/storage.service';
-import {ActivatedRoute} from '@angular/router';
-import {LoginService} from "../../../services/apiservice/login.service";
+import { Component } from '@angular/core';
+import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateFRParserFormatter } from '../../../shared/ngb-date-fr-parser-formatter';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { StorageService } from '../../../services/storage/storage.service';
+import { ActivatedRoute } from '@angular/router';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { HeliosUserinfo } from '../../../types/Helios';
 
 @Component({
     selector: 'app-profile',
@@ -14,8 +15,8 @@ import {LoginService} from "../../../services/apiservice/login.service";
 })
 export class ProfielPageComponent {
     lidID: number;
-    isVerwijderMode: boolean = false;
-    isRestoreMode: boolean = false;
+    isVerwijderMode = false;
+    isRestoreMode = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -42,7 +43,7 @@ export class ProfielPageComponent {
                     }
                 }
             } else {
-                this.lidID = this.storageService.ophalen('userInfo').LidData.ID;
+                this.lidID = (this.storageService.ophalen('userInfo') as HeliosUserinfo).LidData?.ID ?? -1;
             }
         });
     }

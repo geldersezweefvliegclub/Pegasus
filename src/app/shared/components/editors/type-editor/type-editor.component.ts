@@ -1,10 +1,8 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {ModalComponent} from "../../modal/modal.component";
-import {TracksLedenDataset} from "../../tracks/tracks.component";
-import {HeliosTrack, HeliosType} from "../../../../types/Helios";
-import {TypesService} from "../../../../services/apiservice/types.service";
-import {ExpressionType} from "@angular/compiler";
+import { Component, Input, ViewChild } from '@angular/core';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { ModalComponent } from '../../modal/modal.component';
+import { HeliosType } from '../../../../types/Helios';
+import { TypesService } from '../../../../services/apiservice/types.service';
 
 @Component({
     selector: 'app-type-editor',
@@ -12,17 +10,17 @@ import {ExpressionType} from "@angular/compiler";
     styleUrls: ['./type-editor.component.scss']
 })
 export class TypeEditorComponent  {
-    @Input() toonBedragEenheid: boolean = false;
+    @Input() toonBedragEenheid = false;
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
     formTitel: string;
 
     type: HeliosType = {};
-    isLoading: boolean = false;
-    isSaving: boolean = false;
+    isLoading = false;
+    isSaving = false;
 
-    isVerwijderMode: boolean = false;
-    isRestoreMode: boolean = false;
+    isVerwijderMode = false;
+    isRestoreMode = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -58,7 +56,7 @@ export class TypeEditorComponent  {
                 this.type = t;
                 this.isLoading = false;
             });
-        } catch (e) {
+        } catch (_) {
             this.isLoading = false;
         }
     }

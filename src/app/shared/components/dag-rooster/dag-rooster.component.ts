@@ -1,9 +1,9 @@
-import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {DienstenService} from "../../../services/apiservice/diensten.service";
-import {RoosterService} from "../../../services/apiservice/rooster.service";
-import {HeliosDienst, HeliosDienstenDataset, HeliosRoosterDataset} from "../../../types/Helios";
-import {DateTime} from "luxon";
-import {ModalComponent} from "../modal/modal.component";
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { DienstenService } from '../../../services/apiservice/diensten.service';
+import { RoosterService } from '../../../services/apiservice/rooster.service';
+import { HeliosDienst, HeliosDienstenDataset, HeliosRoosterDataset } from '../../../types/Helios';
+import { DateTime } from 'luxon';
+import { ModalComponent } from '../modal/modal.component';
 
 
 @Component({
@@ -15,7 +15,7 @@ export class DagRoosterComponent {
     @Output() opslaan: EventEmitter<string> = new EventEmitter<string>();
 
     @Input() Datum: DateTime;
-    @Input() magWijzigen: boolean = false;
+    @Input() magWijzigen = false;
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
     rooster: HeliosRoosterDataset;
@@ -48,14 +48,14 @@ export class DagRoosterComponent {
         return (this.Datum) ? this.Datum.day + "-" + this.Datum.month + "-" + this.Datum.year : "";
     }
 
-    afwezig($event: Event, i: number) {
+    afwezig(i: number) {
         if ((this.diensten[i].AANWEZIG) && (this.diensten[i].AFWEZIG)) {
             this.diensten[i].AANWEZIG = false;
         }
         this.diensten[i].ROOSTER_ID = -1; // indicatie dat afwezigheid is aangepast
     }
 
-    aanwezig($event: Event, i: number) {
+    aanwezig(i: number) {
         if ((this.diensten[i].AANWEZIG) && (this.diensten[i].AFWEZIG)) {
             this.diensten[i].AFWEZIG = false;
         }
@@ -64,9 +64,9 @@ export class DagRoosterComponent {
     }
 
     opslaanData() {
-        let aanwezigString: string = "";
-        let afwezigString: string = "";
-        let onbekendString: string = "";
+        let aanwezigString = "";
+        let afwezigString = "";
+        let onbekendString = "";
 
         this.diensten.forEach((dienst) => {
             if (dienst.ROOSTER_ID! < 0) { // indicatie dat er een aanpassing is gedaan
@@ -91,7 +91,7 @@ export class DagRoosterComponent {
 
         });
 
-        let tekst: string = "";
+        let tekst = "";
 
         if (aanwezigString.length > 0) {
             tekst += 'Afwezig: ' + afwezigString  + '\n\n';

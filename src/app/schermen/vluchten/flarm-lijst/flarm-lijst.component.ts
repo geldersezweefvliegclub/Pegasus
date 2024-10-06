@@ -1,9 +1,9 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {FlarmData, FlarmInputService} from "../../../services/flarm-input.service";
-import {Subscription} from "rxjs";
-import {DateTime} from "luxon";
-import {StartlijstService} from "../../../services/apiservice/startlijst.service";
-import {StartDetailsComponent} from "../start-details/start-details.component";
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { FlarmData, FlarmInputService } from '../../../services/flarm-input.service';
+import { Subscription } from 'rxjs';
+import { DateTime } from 'luxon';
+import { StartlijstService } from '../../../services/apiservice/startlijst.service';
+import { StartDetailsComponent } from '../start-details/start-details.component';
 
 interface FlarmDataExt extends FlarmData {
     flarmOntvangstStatusClass?: string;
@@ -32,17 +32,21 @@ export class FlarmLijstComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnInit(): void {
     this.classTimer = window.setInterval(() => {
-        for (let i = 0; i < this.flying.length; i++)
-          this.flying[i].flarmOntvangstStatusClass = this.flarmOntvangstStatus(this.flying[i]);
+      for (const item of this.flying) {
+        item.flarmOntvangstStatusClass = this.flarmOntvangstStatus(item);
+      }
 
-        for (let i = 0; i < this.landing.length; i++)
-          this.landing[i].flarmOntvangstStatusClass = this.flarmOntvangstStatus(this.landing[i]);
+      for (const item of this.landing) {
+        item.flarmOntvangstStatusClass = this.flarmOntvangstStatus(item);
+      }
 
-        for (let i = 0; i < this.takeoff.length; i++)
-          this.takeoff[i].flarmOntvangstStatusClass = this.flarmOntvangstStatus(this.takeoff[i]);
+      for (const item of this.takeoff) {
+        item.flarmOntvangstStatusClass = this.flarmOntvangstStatus(item);
+      }
 
-       for (let i = 0; i < this.grond.length; i++)
-         this.grond[i].flarmOntvangstStatusClass = this.flarmOntvangstStatus(this.grond[i]);
+      for (const item of this.grond) {
+        item.flarmOntvangstStatusClass = this.flarmOntvangstStatus(item);
+      }
 
     }, 1000 * 5);
 
@@ -69,10 +73,10 @@ export class FlarmLijstComponent implements OnInit, OnDestroy, OnChanges {
       return a.START_ID - b.START_ID;
     });
 
-    for (let i = 0; i < this.flarmData.length; i++) {
-      this.flarmData[i].flarmOntvangstStatusClass = this.flarmOntvangstStatus(this.flarmData[i]);
-      this.flarmData[i].starttijd = this.flarmData[i].starttijd ? this.flarmData[i].starttijd : "--:--";
-      this.flarmData[i].landingstijd = this.flarmData[i].landingstijd ? this.flarmData[i].landingstijd : "--:--";
+    for (const item of this.flarmData) {
+      item.flarmOntvangstStatusClass = this.flarmOntvangstStatus(item);
+      item.starttijd = item.starttijd ? item.starttijd : "--:--";
+      item.landingstijd = item.landingstijd ? item.landingstijd : "--:--";
     }
 
     this.grond = this.flarmData.filter((flarm) => flarm.status === 'On_Ground' && (this.veldID === null || flarm.VELD_ID === this.veldID));

@@ -1,13 +1,14 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {ModalComponent} from '../../modal/modal.component';
-import {HeliosType, HeliosVliegtuig, HeliosVliegtuigenDataset} from '../../../../types/Helios';
-import {VliegtuigenService} from '../../../../services/apiservice/vliegtuigen.service';
-import {TypesService} from '../../../../services/apiservice/types.service';
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {Subscription} from "rxjs";
-import {LoginService} from "../../../../services/apiservice/login.service";
-import {CompetentieService} from "../../../../services/apiservice/competentie.service";
-import {PegasusConfigService} from "../../../../services/shared/pegasus-config.service";
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ModalComponent } from '../../modal/modal.component';
+import { HeliosType, HeliosVliegtuig, HeliosVliegtuigenDataset } from '../../../../types/Helios';
+import { VliegtuigenService } from '../../../../services/apiservice/vliegtuigen.service';
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { Subscription } from 'rxjs';
+import { LoginService } from '../../../../services/apiservice/login.service';
+import { CompetentieService } from '../../../../services/apiservice/competentie.service';
+import { PegasusConfigService } from '../../../../services/shared/pegasus-config.service';
+import { PVB } from '../../../../types/IPegasusConfig';
 
 @Component({
     selector: 'app-vliegtuig-editor',
@@ -45,21 +46,21 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
     private typesAbonnement: Subscription;
     vliegtuigTypes: HeliosType[];
 
-    isLoading: boolean = false;
-    isSaving: boolean = false;
+    isLoading = false;
+    isSaving = false;
 
-    magWijzigen: boolean = false;
+    magWijzigen = false;
 
-    magClubkistWijzigen: boolean = false;
+    magClubkistWijzigen = false;
 
-    isVerwijderMode: boolean = false;
-    isRestoreMode: boolean = false;
-    formTitel: string = "";
+    isVerwijderMode = false;
+    isRestoreMode = false;
+    formTitel = "";
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
-    PVBs: any[];        // proef van bekwaamheid met kruisjeslijst (lokaal / overland)
+    PVBs: PVB[];        // proef van bekwaamheid met kruisjeslijst (lokaal / overland)
 
     constructor(
         private readonly vliegtuigenService: VliegtuigenService,
@@ -112,7 +113,7 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
             // Foutieve invoer kan opgelost worden in toren of door beheerder
             const ui = this.loginService.userInfo?.Userinfo;
             this.magWijzigen = (ui?.isBeheerder || ui?.isStarttoren) ? true : false;
-            this.magClubkistWijzigen = (ui?.isBeheerder! || ui?.isCIMT!);
+            this.magClubkistWijzigen = (ui?.isBeheerder || ui?.isCIMT) ?? false;
         } else {
             this.formTitel = 'Vliegtuig aanmaken';
             this.vliegtuig = {};
@@ -137,7 +138,7 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
                 this.vliegtuig = vliegtuig;
                 this.isLoading = false;
             });
-        } catch (e) {
+        } catch (_) {
             this.isLoading = false;
         }
     }

@@ -1,14 +1,13 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {ModalComponent} from "../modal/modal.component";
-import {TransactiesService} from "../../../services/apiservice/transacties.service";
-import {HeliosTransactiesDataset} from "../../../types/Helios";
-import {Subscription} from "rxjs";
-import {DateTime} from "luxon";
-import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {TransactieEditorComponent} from "../editors/transactie-editor/transactie-editor.component";
-import {IdealBestellenComponent} from "../ideal-bestellen/ideal-bestellen.component";
-import {ErrorMessage} from "../../../types/Utils";
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ModalComponent } from '../modal/modal.component';
+import { TransactiesService } from '../../../services/apiservice/transacties.service';
+import { HeliosTransactiesDataset } from '../../../types/Helios';
+import { Subscription } from 'rxjs';
+import { DateTime } from 'luxon';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { TransactieEditorComponent } from '../editors/transactie-editor/transactie-editor.component';
+import { IdealBestellenComponent } from '../ideal-bestellen/ideal-bestellen.component';
 
 @Component({
     selector: 'app-transacties',
@@ -27,13 +26,13 @@ export class TransactiesComponent implements OnInit, OnDestroy {
     private datumAbonnement: Subscription;          // volg de keuze van de kalender
     datum: DateTime = DateTime.now();               // de gekozen dag
 
-    magCorrigeren: boolean = false;
-    magBestellen: boolean = false;
+    magCorrigeren = false;
+    magBestellen = false;
     lidID: number;
 
     transacties: HeliosTransactiesDataset[];
-    transactiesView: string = "grid";
-    expandedView: boolean = false;
+    transactiesView = "grid";
+    expandedView = false;
 
     constructor(private readonly sharedService: SharedService,
                 private readonly loginService: LoginService,
@@ -63,7 +62,7 @@ export class TransactiesComponent implements OnInit, OnDestroy {
         });
 
         // Roep onWindowResize aan zodra we het event ontvangen hebben
-        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(() => {
             this.onWindowResize();
         });
 

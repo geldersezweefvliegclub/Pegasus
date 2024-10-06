@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  "/DagRapporten/CreateTable": {
+  "/Agenda/CreateTable": {
     post: {
       parameters: {
         query: {
@@ -20,7 +20,7 @@ export interface paths {
       };
     };
   };
-  "/DagRapporten/CreateViews": {
+  "/Agenda/CreateViews": {
     post: {
       responses: {
         /** Aangemaakt, View toegevoegd */
@@ -30,19 +30,19 @@ export interface paths {
       };
     };
   };
-  "/DagRapporten/GetObject": {
+  "/Agenda/GetObject": {
     get: {
       parameters: {
         query: {
-          /** Database ID van het dag rapport record */
-          ID?: number;
+          /** Database ID van het track record */
+          ID: number;
         };
       };
       responses: {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_dagrapport"];
+            "application/json": components["schemas"]["oper_agenda"];
           };
         };
         /** Data niet gevonden */
@@ -56,11 +56,11 @@ export interface paths {
       };
     };
   };
-  "/DagRapporten/GetObjects": {
+  "/Agenda/GetObjects": {
     get: {
       parameters: {
         query: {
-          /** Database ID van het dag rapport record */
+          /** Database ID van het aanwezig record */
           ID?: number;
           /** Toon welke records verwijderd zijn. Default = false */
           VERWIJDERD?: boolean;
@@ -68,7 +68,7 @@ export interface paths {
           LAATSTE_AANPASSING?: boolean;
           /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
           HASH?: string;
-          /** Sortering van de velden in ORDER BY formaat. Default = DATUM DESC */
+          /** Sortering van de velden in ORDER BY formaat. Default = CLUBKIST DESC, VOLGORDE, REGISTRATIE */
           SORT?: string;
           /** Maximum aantal records in de dataset. Gebruikt in LIMIT query */
           MAX?: number;
@@ -76,19 +76,13 @@ export interface paths {
           START?: number;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
-          /** Zoek op datum */
-          DATUM?: string;
-          /** Begin datum (inclusief deze dag) */
-          BEGIN_DATUM?: string;
-          /** Eind datum (inclusief deze dag) */
-          EIND_DATUM?: string;
         };
       };
       responses: {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["view_dagrapporten"];
+            "application/json": components["schemas"]["oper_agenda"];
           };
         };
         /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
@@ -100,18 +94,18 @@ export interface paths {
       };
     };
   };
-  "/DagRapporten/DeleteObject": {
+  "/Agenda/DeleteObject": {
     delete: {
       parameters: {
         query: {
-          /** Database ID van het dag rapport record. Meerdere ID's in CSV formaat */
-          ID?: string;
+          /** Database ID van het record. Meerdere ID's in CSV formaat */
+          ID: string;
           /** Controleer of record bestaat voordat het verwijderd wordt. Default = true */
           VERIFICATIE?: boolean;
         };
       };
       responses: {
-        /** Dag rapport verwijderd */
+        /** Agenda verwijderd */
         204: never;
         /** Niet geautoriseerd, geen schrijfrechten */
         401: unknown;
@@ -126,7 +120,7 @@ export interface paths {
       };
     };
   };
-  "/DagRapporten/RestoreObject": {
+  "/Agenda/RestoreObject": {
     patch: {
       parameters: {
         query: {
@@ -150,13 +144,13 @@ export interface paths {
       };
     };
   };
-  "/DagRapporten/SaveObject": {
+  "/Agenda/SaveObject": {
     put: {
       responses: {
         /** OK, data succesvol aangepast */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_dagrapport"];
+            "application/json": components["schemas"]["oper_agenda"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -167,15 +161,13 @@ export interface paths {
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
         406: unknown;
-        /** Conflict, datum bestaat al */
-        409: unknown;
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** Dag rapport data */
+      /** track data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["oper_dagrapport_in"];
+          "application/json": components["schemas"]["oper_agenda_in"];
         };
       };
     };
@@ -184,7 +176,7 @@ export interface paths {
         /** OK, data succesvol toegevoegd */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_dagrapport"];
+            "application/json": components["schemas"]["oper_agenda"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -193,15 +185,15 @@ export interface paths {
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
         406: unknown;
-        /** Conflict, datum bestaat al */
+        /** Conflict, record bestaat al */
         409: unknown;
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** Dag rapport data */
+      /** track data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["oper_dagrapport_in"];
+          "application/json": components["schemas"]["oper_agenda_in"];
         };
       };
     };
@@ -210,63 +202,41 @@ export interface paths {
 
 export interface components {
   schemas: {
-    oper_dagrapport_in: {
+    oper_agenda_in: {
       /**
        * Format: int32
-       * @description Database ID van het dag rapport record
-       * @example 12871
+       * @description Database ID van het record
+       * @example 14
        */
       ID?: number;
       /**
        * Format: date
-       * @description Datum van het dagrapport
-       * @example 2017-07-21
+       * @description Datum van de agenda
+       * @example 2016-10-01
        */
       DATUM?: string;
       /**
-       * Format: int32
-       * @description Voor welk vliegveld is dit dagrapport van toepassing
-       * @example 901
+       * @description Start tijd (hh:mm:ss)  seconden zijn optioneel
+       * @example 12:30
        */
-      VELD_ID?: number;
+      TIJD?: string;
       /**
-       * @description Incidenten om iets van te leren
-       * @example Scherpe uitstekels aan lierkabel
+       * @description Is de agenda zichtbaar voor de leden
+       * @example 0
        */
-      INCIDENTEN?: string;
+      OPENBAAR?: boolean;
       /**
-       * @description Beschrijving van de situatie op het veld
-       * @example Het vliegbedrijf bevatte de volgende aspect(en), lier, sleep en zelfstart op de 22R met een rechterhand circuit. Halverwege de dag omgesteld naar 27C
+       * @description Korte beschrijving van de agenda
+       * @example Bestuursvergadering
        */
-      VLIEGBEDRIJF?: string;
+      KORT?: string;
       /**
-       * @description Beschrijving van de weerscondities
-       * @example Het zicht was > 10 km. De windrichting was 270 met  windkracht 3.4 - 5.42 m/s. Er was 2/8 bewolking. De wolkenbasis was 800 meter hoog.
+       * @description Uitgebreide beschrijving van de agenda
+       * @example Bestuursvergadering fysiek in de huiskamer, onderwerp: financien
        */
-      METEO?: string;
-      /**
-       * @description Kort veslag van de dag
-       * @example Rustige dag met een klein ploegje mensen ondanks het prachtige weer. Omstellen ging zonder problemen, vliegende kisten konden blijven hangen
-       */
-      VERSLAG?: string;
-      /**
-       * @description Opmerkingen over het rollend materieel
-       * @example De motor van de lier wordt warm
-       */
-      ROLLENDMATERIEEL?: string;
-      /**
-       * @description Opmerkingen over de vloot
-       * @example De E11 is in de werkplaats gezet ivm lekke band. Wordt maandag opgelost
-       */
-      VLIEGENDMATERIEEL?: string;
+      OMSCHRIJVING?: string;
     };
-    oper_dagrapport: components["schemas"]["oper_dagrapport_in"] & {
-      /**
-       * Format: int32
-       * @description ID van instructeur die heeft ingevoerd (wordt op de server gezet)
-       * @example 10390
-       */
-      INGEVOERD_ID?: number;
+    oper_agenda: components["schemas"]["oper_agenda_in"] & {
       /**
        * @description Is dit record gemarkeerd als verwijderd?
        * @example 0
@@ -274,29 +244,13 @@ export interface components {
       VERWIJDERD?: boolean;
       /**
        * Format: date-time
-       * @description Tijdstempel van laaste aanpassing in de database, laat leeg bij updates
-       * @example 2010-04-13 19:32:17
+       * @description Tijdstempel van laaste aanpassing in de database
+       * @example 2021-05-05 20:13:59Z
        */
       LAATSTE_AANPASSING?: string;
     };
-    view_dagrapporten_dataset: components["schemas"]["oper_dagrapport"] & {
-      /**
-       * @description Verkorte naam van het vliegveld
-       * @example EHTL
-       */
-      VELD_CODE?: string;
-      /**
-       * @description Naam van het vliegveld
-       * @example Terlet
-       */
-      VELD_OMS?: string;
-      /**
-       * @description Naam van de instructeur die dagrapport heeft gemaakt
-       * @example Momfert de mol
-       */
-      INGEVOERD?: string;
-    };
-    view_dagrapporten: {
+    view_agenda_dataset: components["schemas"]["oper_agenda"];
+    view_agenda: {
       /**
        * Format: int32
        * @description Aantal records dat voldoet aan de criteria in de database
@@ -306,20 +260,18 @@ export interface components {
       /**
        * Format: date-time
        * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
-       * @example 2020-09-01 06:00:05
+       * @example 2019-01-05 10:09:53
        */
       laatste_aanpassing?: string;
       /**
        * @description hash van de dataset
-       * @example ddaab00
+       * @example dd00bff
        */
       hash?: string;
       /** @description De dataset met records */
-      dataset?: components["schemas"]["view_dagrapporten_dataset"][];
+      dataset?: components["schemas"]["view_agenda_dataset"][];
     };
   };
 }
 
-export interface operations {}
 
-export interface external {}

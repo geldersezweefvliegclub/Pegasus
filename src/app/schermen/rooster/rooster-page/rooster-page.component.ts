@@ -1,28 +1,28 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {LedenService} from '../../../services/apiservice/leden.service';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { LedenService } from '../../../services/apiservice/leden.service';
 import {
-    HeliosDienst,
-    HeliosDienstenDataset,
-    HeliosLedenDataset, HeliosLidData,
-    HeliosRoosterDag,
-    HeliosRoosterDataset,
-    HeliosType, HeliosUserinfo
+  HeliosDienstenDataset,
+  HeliosLedenDataset,
+  HeliosRoosterDag,
+  HeliosRoosterDataset,
+  HeliosType,
+  HeliosUserinfo,
 } from '../../../types/Helios';
-import {faCalendarDay} from '@fortawesome/free-solid-svg-icons';
-import {SchermGrootte, SharedService} from '../../../services/shared/shared.service';
-import {Subscription} from 'rxjs';
-import {RoosterService} from '../../../services/apiservice/rooster.service';
-import {DateTime} from 'luxon';
-import {LedenFilterComponent} from "../../../shared/components/leden-filter/leden-filter.component";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {DienstenService} from "../../../services/apiservice/diensten.service";
-import * as xlsx from "xlsx";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {TypesService} from "../../../services/apiservice/types.service";
-import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
-import {getBeginEindDatumVanMaand} from "../../../utils/Utils";
-import {HeliosActie, KeyValueArray} from "../../../types/Utils";
-import {DdwvService} from "../../../services/apiservice/ddwv.service";
+import { faCalendarDay } from '@fortawesome/free-solid-svg-icons';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { Subscription } from 'rxjs';
+import { RoosterService } from '../../../services/apiservice/rooster.service';
+import { DateTime } from 'luxon';
+import { LedenFilterComponent } from '../../../shared/components/leden-filter/leden-filter.component';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { DienstenService } from '../../../services/apiservice/diensten.service';
+import * as xlsx from 'xlsx';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { TypesService } from '../../../services/apiservice/types.service';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { getBeginEindDatumVanMaand } from '../../../utils/Utils';
+import { KeyValueArray } from '../../../types/Utils';
+import { DdwvService } from '../../../services/apiservice/ddwv.service';
 
 export type HeliosLedenDatasetExtended = HeliosLedenDataset & {
     INGEDEELD_MAAND?: number
@@ -33,7 +33,7 @@ export type HeliosRoosterDagExtended = HeliosRoosterDag & {
     Diensten: HeliosDienstenDataset[];
 }
 
-export type WeergaveData = {
+export interface WeergaveData {
     Startleiders: boolean;
     Instructeurs: boolean;
     Lieristen: boolean;
@@ -58,8 +58,8 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
 
     readonly roosterIcon: IconDefinition = faCalendarDay;
 
-    private ingedeeldMaand: number = 0   // hoeveel is het ingelogde lid al ingedeeld in deze maand
-    roosterView: string = "maand";       // toon rooster voor maand, week of dag
+    private ingedeeldMaand = 0   // hoeveel is het ingelogde lid al ingedeeld in deze maand
+    roosterView = "maand";       // toon rooster voor maand, week of dag
 
     private typesAbonnement: Subscription;
     dienstTypes: HeliosType[] = [];
@@ -80,10 +80,10 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
     private datumAbonnement: Subscription;          // volg de keuze van de kalender
     datum: DateTime = DateTime.now();               // de gekozen dag
     maandag: DateTime                               // de eerste dag van de week
-    ddwvActief: boolean = true;
+    ddwvActief = true;
 
 
-    private tonen: WeergaveData = {                 // Welke diensten worden wel/niet getoond
+    protected tonen: WeergaveData = {                 // Welke diensten worden wel/niet getoond
         Startleiders: true,
         Instructeurs: true,
         Lieristen: true,
@@ -97,13 +97,13 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
 
         toonDienst: {}
     };
-    magExporteren: boolean = true;
+    magExporteren = true;
 
     userInfo: HeliosUserinfo;
     isDDWVer: boolean;
-    magWijzigen: boolean = false;
+    magWijzigen = false;
 
-    isLoading: number = 0;
+    isLoading = 0;
     zoekString: string;
 
     constructor(private readonly ddwvService: DdwvService,
@@ -121,7 +121,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
 
         const ui = this.loginService.userInfo;
         this.magWijzigen = (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isBeheerderDDWV || ui?.Userinfo?.isRooster) ? true : false;
-        this.isDDWVer = this.loginService.userInfo?.Userinfo?.isDDWV!;
+        this.isDDWVer = this.loginService.userInfo?.Userinfo?.isDDWV ?? false;
 
         this.magExporteren = !ui?.Userinfo?.isDDWV;
 
@@ -188,9 +188,9 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         // abonneer op wijziging van leden
         this.ledenAbonnement = this.ledenService.ledenChange.subscribe(leden => {
             this.alleLeden = (leden) ? leden : [];
-            for (let i = 0; i < this.alleLeden.length; i++) {
-                this.alleLeden[i].INGEDEELD_MAAND = 0;
-                this.alleLeden[i].INGEDEELD_JAAR = 0;
+            for (const item of this.alleLeden) {
+                item.INGEDEELD_MAAND = 0;
+                item.INGEDEELD_JAAR = 0;
             }
             this.applyLedenFilter();
             this.opvragenTotalen();
@@ -204,7 +204,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         });
 
         // Roep onWindowResize aan zodra we het event ontvangen hebben
-        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(() => {
             this.onWindowResize();
             this.opvragen();
         });
@@ -314,7 +314,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
     // moeten we de dienst tonen, niet iedere club heeft dezelfde diensten
     // Via config bestand kun je aangeven of dienst getoond moet worden
     public toonDienst(dienstType: number): boolean {
-        const indeelbareDienst = this.configService.getDienstConfig().find((d: any) => (d.TypeDienst == dienstType));
+        const indeelbareDienst = this.configService.getDienstConfig().find((d) => (d.TypeDienst == dienstType));
 
         if (indeelbareDienst) {
             if (indeelbareDienst.Tonen) return true;
@@ -325,7 +325,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
     // Er is een aanpassing gemaakt in het leden-filter dialoog. We filteren de volledige dataset tot wat nodig is
     // We hoeven dus niet terug naar de server om starts opnieuw op te halen (minder starts verkeer)
     applyLedenFilter() {
-        let toonAlles: boolean = false;
+        let toonAlles = false;
 
         this.tonen.Startleiders = false;
         this.tonen.Instructeurs = false;
@@ -378,43 +378,43 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         }
 
         // leden-filter de dataset naar de lijst
-        let tmpLeden: HeliosLedenDatasetExtended[] = [];
-        for (let i = 0; i < this.alleLeden.length; i++) {
+        const tmpLeden: HeliosLedenDatasetExtended[] = [];
+        for (const item of this.alleLeden) {
             let tonen = false;
             if (toonAlles) {
-                if (this.alleLeden[i].INSTRUCTEUR == true ||
-                    this.alleLeden[i].STARTLEIDER == true ||
-                    this.alleLeden[i].LIERIST == true ||
-                    this.alleLeden[i].LIERIST_IO == true  ||
-                    this.alleLeden[i].SLEEPVLIEGER == true ||
-                    this.alleLeden[i].GASTENVLIEGER == true)
+                if (item.INSTRUCTEUR == true ||
+                    item.STARTLEIDER == true ||
+                    item.LIERIST == true ||
+                    item.LIERIST_IO == true  ||
+                    item.SLEEPVLIEGER == true ||
+                    item.GASTENVLIEGER == true)
                 {
                     tonen = true;
                 }
-            } else if (this.sharedService.ledenlijstFilter.startleiders && this.alleLeden[i].STARTLEIDER == true) {
+            } else if (this.sharedService.ledenlijstFilter.startleiders && item.STARTLEIDER == true) {
                 tonen = true;
-            } else if (this.sharedService.ledenlijstFilter.lieristen && this.alleLeden[i].LIERIST == true) {
+            } else if (this.sharedService.ledenlijstFilter.lieristen && item.LIERIST == true) {
                 tonen = true;
-            } else if (this.sharedService.ledenlijstFilter.lio && this.alleLeden[i].LIERIST_IO == true) {
+            } else if (this.sharedService.ledenlijstFilter.lio && item.LIERIST_IO == true) {
                 tonen = true;
-            } else if (this.sharedService.ledenlijstFilter.instructeurs && this.alleLeden[i].INSTRUCTEUR == true) {
+            } else if (this.sharedService.ledenlijstFilter.instructeurs && item.INSTRUCTEUR == true) {
                 tonen = true;
-            } else if (this.sharedService.ledenlijstFilter.crew && this.alleLeden[i].DDWV_CREW == true) {
+            } else if (this.sharedService.ledenlijstFilter.crew && item.DDWV_CREW == true) {
                 tonen = true;
-            } else if (this.sharedService.ledenlijstFilter.sleepvliegers && this.alleLeden[i].SLEEPVLIEGER == true) {
+            } else if (this.sharedService.ledenlijstFilter.sleepvliegers && item.SLEEPVLIEGER == true) {
                 tonen = true;
-            } else if (this.sharedService.ledenlijstFilter.gastenVliegers && this.alleLeden[i].GASTENVLIEGER == true) {
+            } else if (this.sharedService.ledenlijstFilter.gastenVliegers && item.GASTENVLIEGER == true) {
                 tonen = true;
             }
 
             if (tonen) {
                 // moeten we zoeken naar een lid ?
                 if (this.zoekString && this.zoekString != "") {
-                    const naamStr = this.alleLeden[i].NAAM?.toLowerCase();
+                    const naamStr = item.NAAM?.toLowerCase();
                     if (!naamStr!.includes(this.zoekString.toLowerCase()))
                         continue;
                 }
-                tmpLeden.push(this.alleLeden[i]);
+                tmpLeden.push(item);
             }
         }
         this.filteredLeden = tmpLeden;
@@ -428,20 +428,20 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             return;
         }
 
-        let tmpRooster: HeliosRoosterDagExtended[] = [];
-        for (let i = 0; i < this.heleRooster.length; i++) {
+        const tmpRooster: HeliosRoosterDagExtended[] = [];
+        for (const item of this.heleRooster) {
             switch (this.tonen.toonClubDDWV) {
                 case 1: // toonClubDDWV, 1 = toon clubdagen
                 {
-                    if (this.heleRooster[i].CLUB_BEDRIJF) {
-                        tmpRooster.push(this.heleRooster[i]);
+                    if (item.CLUB_BEDRIJF) {
+                        tmpRooster.push(item);
                         continue;
                     }
                     break;
                 }
                 case 2: // toonClubDDWV, 2 = toon DDWV
-                    if (this.heleRooster[i].DDWV) {
-                        tmpRooster.push(this.heleRooster[i]);
+                    if (item.DDWV) {
+                        tmpRooster.push(item);
                         continue;
                     }
                     break;
@@ -490,8 +490,6 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             return false; // Als leden nog niet geladen zijn, kunnen we onzelf ook niet indelen, DDWVs mogen nooit ingedeeld worden
         }
 
-        const nu: DateTime = DateTime.now();
-        const d: DateTime = DateTime.fromSQL(datum);
 
         if (!this.sharedService.datumInToekomst(datum)) {
             return false;   // datum is in het verleden
@@ -581,7 +579,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         }
 
         if (this.configService.getDienstConfig()) {
-            const indeelbareDienst = this.configService.getDienstConfig().find((d: any) => (d.TypeDienst == dienstType));
+            const indeelbareDienst = this.configService.getDienstConfig().find((d) => (d.TypeDienst == dienstType));
 
             // Dienst is bekend in config, return of je jezelf mag Indelen
             if (indeelbareDienst) {
@@ -619,7 +617,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         }
 
         if (this.configService.getDienstConfig()) {
-            const indeelbareDienst = this.configService.getDienstConfig().find((d: any) => (d.TypeDienst == dienstData.TYPE_DIENST_ID));
+            const indeelbareDienst = this.configService.getDienstConfig().find((d) => (d.TypeDienst == dienstData.TYPE_DIENST_ID));
             // Dienst is bekend in config, return of je jezelf mag Indelen
             if (indeelbareDienst) {
                 if (!indeelbareDienst.ZelfIndelen)
@@ -656,15 +654,15 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
 
     // Export naar excel in pivot view
     exportRooster() {
-        let exportData: any = [];
-        let legeDiensten: any = {};
+        const exportData: Record<string, string>[] = [];
+        const legeDiensten: Record<string, string> = {};
 
         this.dienstTypes.forEach(dienst => legeDiensten[dienst.OMSCHRIJVING!] = "");
 
         this.filteredRooster.forEach(dag => {
             const d = DateTime.fromSQL(dag.DATUM!);
 
-            let record: any = Object.assign({
+            const record = Object.assign({
                 DATUM: d.day + "-" + d.month + "-" + d.year,    // Datum in juiste formaat zetten
                 DDWV: dag.DDWV ? "X" : "-",
                 CLUB_BEDRIJF: dag.CLUB_BEDRIJF ? "X" : "-",
@@ -673,13 +671,13 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
 
             dag.Diensten.forEach(dienst => {
                 if (dienst) {
-                    record[dienst.TYPE_DIENST!] = dienst.NAAM;
+                    record[dienst.TYPE_DIENST!] = dienst.NAAM ?? "Dienst type onbekend";
                 }
             });
             exportData.push(record)
         });
 
-        let ws = xlsx.utils.json_to_sheet(exportData);
+        const ws = xlsx.utils.json_to_sheet(exportData);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
         xlsx.writeFile(wb, 'rooster ' + this.datum.year + '-' + this.datum.month + ' ' + new Date().toJSON().slice(0, 10) + '.xlsx');

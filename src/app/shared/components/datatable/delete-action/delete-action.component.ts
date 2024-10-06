@@ -1,8 +1,12 @@
-import {Component} from '@angular/core';
-import {AgRendererComponent} from 'ag-grid-angular';
-import {ICellRendererParams} from 'ag-grid-community';
-import {faMinusCircle} from '@fortawesome/free-solid-svg-icons';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import { Component } from '@angular/core';
+import { AgRendererComponent } from 'ag-grid-angular';
+import { ICellRendererParams } from 'ag-grid-community';
+import { faMinusCircle } from '@fortawesome/free-solid-svg-icons';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+
+export interface DeleteButton {
+    onDeleteClicked(id: number): void;
+}
 
 @Component({
     selector: 'app-delete-action',
@@ -10,17 +14,14 @@ import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
     styleUrls: ['./delete-action.component.scss']
 })
 export class DeleteActionComponent implements AgRendererComponent {
-    private params: any;
+    private params: ICellRendererParams & DeleteButton;
     deleteIcon:IconDefinition = faMinusCircle;
 
-    constructor() {
-    }
-
-    agInit(params: ICellRendererParams): void {
+    agInit(params: ICellRendererParams & DeleteButton): void {
         this.params = params;
     }
 
-    refresh(params: ICellRendererParams): boolean {
+    refresh(_: ICellRendererParams): boolean {
         return false;
     }
 

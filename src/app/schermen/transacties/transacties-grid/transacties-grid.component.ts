@@ -1,25 +1,31 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Subscription} from "rxjs";
-import {ColDef} from "ag-grid-community";
-import {nummerSort} from "../../../utils/Utils";
-import {ErrorMessage} from "../../../types/Utils";
-import {HeliosLedenDataset, HeliosTransactiesDataset, HeliosType} from "../../../types/Helios";
-import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faEuroSign} from "@fortawesome/free-solid-svg-icons";
-import {TransactiesService} from "../../../services/apiservice/transacties.service";
-import {DateTime} from "luxon";
-import {DatumtijdRenderComponent} from "../../../shared/components/datatable/datumtijd-render/datumtijd-render.component";
-import {BedragRenderComponent} from "./bedrag-render/bedrag-render.component";
-import {TransactieEditorComponent} from "../../../shared/components/editors/transactie-editor/transactie-editor.component";
-import * as xlsx from "xlsx";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {LedenService} from "../../../services/apiservice/leden.service";
-import {OmschrijvingRenderComponent} from "./omschrijving-render/omschrijving-render.component";
-import {CheckboxRenderComponent} from "../../../shared/components/datatable/checkbox-render/checkbox-render.component";
-import {DatumRenderComponent} from "../../../shared/components/datatable/datum-render/datum-render.component";
-import {NgbDate, NgbDateParserFormatter} from "@ng-bootstrap/ng-bootstrap";
-import {NgbDateFRParserFormatter} from "../../../shared/ngb-date-fr-parser-formatter";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ColDef } from 'ag-grid-community';
+import { nummerSort } from '../../../utils/Utils';
+import { ErrorMessage } from '../../../types/Utils';
+import { HeliosLedenDataset, HeliosTransactiesDataset } from '../../../types/Helios';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faEuroSign } from '@fortawesome/free-solid-svg-icons';
+import { TransactiesService } from '../../../services/apiservice/transacties.service';
+import { DateTime } from 'luxon';
+import {
+  DatumtijdRenderComponent,
+} from '../../../shared/components/datatable/datumtijd-render/datumtijd-render.component';
+import { BedragRenderComponent } from './bedrag-render/bedrag-render.component';
+import {
+  TransactieEditorComponent,
+} from '../../../shared/components/editors/transactie-editor/transactie-editor.component';
+import * as xlsx from 'xlsx';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { LedenService } from '../../../services/apiservice/leden.service';
+import { OmschrijvingRenderComponent } from './omschrijving-render/omschrijving-render.component';
+import {
+  CheckboxRenderComponent,
+} from '../../../shared/components/datatable/checkbox-render/checkbox-render.component';
+import { DatumRenderComponent } from '../../../shared/components/datatable/datum-render/datum-render.component';
+import { NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateFRParserFormatter } from '../../../shared/ngb-date-fr-parser-formatter';
 
 @Component({
     selector: 'app-transacties-grid',
@@ -111,15 +117,15 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
 
     transacties: HeliosTransactiesDataset[];
     vliegdag: DateTime | undefined;
-    isLoading: boolean = false;
+    isLoading = false;
 
     iconCardIcon: IconDefinition = faEuroSign;
 
     error: ErrorMessage | undefined;
-    magToevoegen: boolean = true;
-    magExporteren: boolean = false;
+    magToevoegen = true;
+    magExporteren = false;
 
-    toonBladwijzer: boolean = false;
+    toonBladwijzer = false;
     lidID: number | undefined;
 
     timerID: number;
@@ -182,7 +188,7 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
             });
 
             // Roep onWindowResize aan zodra we het event ontvangen hebben
-            this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+            this.resizeSubscription = this.sharedService.onResize$.subscribe(() => {
                 this.onWindowResize();
             });
         }, 250);
@@ -254,7 +260,7 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
 
     // export de huidige dataset naar excel
     exportDataset() {
-        let ws = xlsx.utils.json_to_sheet(this.transacties);
+        const ws = xlsx.utils.json_to_sheet(this.transacties);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
         xlsx.writeFile(wb, 'transacties ' + new Date().toJSON().slice(0, 10) + '.xlsx');

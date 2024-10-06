@@ -1,5 +1,5 @@
-import {Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
-import {ErrorMessage} from '../../../types/Utils';
+import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { ErrorMessage } from '../../../types/Utils';
 
 @Component({
   selector: 'app-error',
@@ -10,9 +10,9 @@ export class ErrorComponent implements OnChanges{
   @Input() error: ErrorMessage | undefined = undefined;
   @ViewChild('errorOverlay') errorOverlay: ElementRef;
 
-  showError: boolean = false;
+  showError = false;
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(_: SimpleChanges) {
     this.showError = true;
 
     setTimeout(()=> { this.showError = false;  }, 3000);

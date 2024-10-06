@@ -18,13 +18,13 @@
 
                 <div class="row my-2">
                     <div class="col-8">
-                        <label class="form-label">Tekst</label>
+                        <label class="form-label" for="TEKST">Tekst</label>
                         <input name="test" type="text" class="form-control" id="TEKST"
                                [(ngModel)]="document.TEKST" [disabled]="document.LEGE_REGEL">
                     </div>
 
                     <div class="col-4">
-                        <label class="form-label">Volgorde</label>
+                        <label class="form-label" for="VOLGORDE">Volgorde</label>
                         <input name="volgorde" type="number" class="form-control" id="VOLGORDE"
                                [(ngModel)]="document.VOLGORDE"
                                min="1" max="25">

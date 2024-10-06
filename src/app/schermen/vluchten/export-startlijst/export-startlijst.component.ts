@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../../shared/components/modal/modal.component";
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { ModalComponent } from '../../../shared/components/modal/modal.component';
 
 @Component({
     selector: 'app-export-startlijst',
@@ -10,10 +10,9 @@ export class ExportStartlijstComponent {
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @Output() exportDataset: EventEmitter<string> = new EventEmitter<string>();
 
-    exportKeuze:  string = "dag"
+    exportKeuze = "dag"
 
-    constructor() {
-    }
+
 
     openPopup() {
         this.popup.open();

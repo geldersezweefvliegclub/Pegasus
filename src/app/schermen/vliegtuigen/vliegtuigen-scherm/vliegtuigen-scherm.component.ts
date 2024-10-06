@@ -1,30 +1,34 @@
-import {Component, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {VliegtuigenService} from '../../../services/apiservice/vliegtuigen.service';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { VliegtuigenService } from '../../../services/apiservice/vliegtuigen.service';
 
-import {faPlane, faRecycle} from '@fortawesome/free-solid-svg-icons';
-import {VliegtuigEditorComponent} from '../../../shared/components/editors/vliegtuig-editor/vliegtuig-editor.component';
-import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
-import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
-import {DeleteActionComponent} from '../../../shared/components/datatable/delete-action/delete-action.component';
-import {RestoreActionComponent} from '../../../shared/components/datatable/restore-action/restore-action.component';
-import {IconRenderComponent} from "../icon-render/icon-render.component";
-import {ZitplaatsRenderComponent} from '../zitplaats-render/zitplaats-render.component';
-import {HandboekRenderComponent} from '../handboek-render/handboek-render.component';
-import {CheckboxRenderComponent} from '../../../shared/components/datatable/checkbox-render/checkbox-render.component';
+import { faPlane, faRecycle } from '@fortawesome/free-solid-svg-icons';
+import {
+  VliegtuigEditorComponent,
+} from '../../../shared/components/editors/vliegtuig-editor/vliegtuig-editor.component';
+import { ColDef, RowClassParams, RowDoubleClickedEvent } from 'ag-grid-community';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { DeleteActionComponent } from '../../../shared/components/datatable/delete-action/delete-action.component';
+import { RestoreActionComponent } from '../../../shared/components/datatable/restore-action/restore-action.component';
+import { IconRenderComponent } from '../icon-render/icon-render.component';
+import { ZitplaatsRenderComponent } from '../zitplaats-render/zitplaats-render.component';
+import { HandboekRenderComponent } from '../handboek-render/handboek-render.component';
+import {
+  CheckboxRenderComponent,
+} from '../../../shared/components/datatable/checkbox-render/checkbox-render.component';
 
-import {HeliosLogboekDataset, HeliosVliegtuigenDataset} from '../../../types/Helios';
-import {ErrorMessage, SuccessMessage} from '../../../types/Utils';
+import { HeliosLogboekDataset, HeliosVliegtuigenDataset } from '../../../types/Helios';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
 
 import * as xlsx from 'xlsx';
-import {LoginService} from '../../../services/apiservice/login.service';
-import {Router} from "@angular/router";
-import {nummerSort} from '../../../utils/Utils';
-import {StartlijstService} from "../../../services/apiservice/startlijst.service";
-import {DateTime} from "luxon";
-import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
-import {Subscription} from "rxjs";
-import {PopupJournaalComponent} from "../../../shared/components/popup-journaal/popup-journaal.component";
-import {VliegtuigLogboekComponent} from "../vliegtuig-logboek/vliegtuig-logboek.component";
+import { LoginService } from '../../../services/apiservice/login.service';
+import { Router } from '@angular/router';
+import { nummerSort } from '../../../utils/Utils';
+import { StartlijstService } from '../../../services/apiservice/startlijst.service';
+import { DateTime } from 'luxon';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { Subscription } from 'rxjs';
+import { PopupJournaalComponent } from '../../../shared/components/popup-journaal/popup-journaal.component';
+import { VliegtuigLogboekComponent } from '../vliegtuig-logboek/vliegtuig-logboek.component';
 
 export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
     toonLogboek?: boolean;
@@ -44,8 +48,8 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
 
     data:HeliosVliegtuigenDatasetExtended[] = [];
     logboek: HeliosLogboekDataset[] = [];
-    isLoading: boolean = false;
-    toonKlein: boolean = false;                 // Klein formaat van het scherm
+    isLoading = false;
+    toonKlein = false;                 // Klein formaat van het scherm
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
@@ -115,7 +119,7 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
     }];
 
     rowClassRules = {
-        'rode_regel_niet_inzetbaar': function(params: any) { return params.data.INZETBAAR === false; },
+        'rode_regel_niet_inzetbaar': (params: RowClassParams) => params.data.INZETBAAR === false,
     }
 
     columns: ColDef[];
@@ -133,14 +137,14 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
 
     zoekString: string;
     zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
-    deleteMode: boolean = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
-    trashMode: boolean = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
+    deleteMode = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
+    trashMode = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
 
-    magToevoegen: boolean = false;
-    magVerwijderen: boolean = false;
-    magWijzigen: boolean = false;
-    magClubkistWijzigen: boolean = false;
-    magExporten: boolean = false;
+    magToevoegen = false;
+    magVerwijderen = false;
+    magWijzigen = false;
+    magClubkistWijzigen = false;
+    magExporten = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -176,7 +180,7 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
         });
 
         // Roep onWindowResize aan zodra we het event ontvangen hebben
-        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(() => {
             this.onWindowResize()
         });
     }
@@ -246,7 +250,7 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
     zetPermissie() {
         const ui = this.loginService.userInfo?.Userinfo;
 
-        this.magClubkistWijzigen = (ui?.isBeheerder! || ui?.isCIMT!);
+        this.magClubkistWijzigen = ((ui?.isBeheerder || ui?.isCIMT) ?? false);
         this.magWijzigen = (!ui?.isDDWV) ? true : false;
 
         if (this.sharedService.getSchermSize() < SchermGrootte.xl) {
@@ -335,7 +339,7 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
         if (this.logboek.length == 0) { // als we nog starts hebben, dan halen we ze op
             const ui = this.loginService.userInfo?.LidData;
             try {
-                this.logboek = await this.startlijstService.getLogboek(ui?.ID!, nu.minus({months: 6}), nu)
+                this.logboek = await this.startlijstService.getLogboek(ui?.ID ?? -1, nu.minus({months: 6}), nu)
             }
             catch(e) { this.error = e}
         }
@@ -361,7 +365,7 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
 
     // Export naar excel
     exportDataset() {
-        var ws = xlsx.utils.json_to_sheet(this.data);
+        const ws = xlsx.utils.json_to_sheet(this.data);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
         xlsx.writeFile(wb, 'vliegtuigen ' + new Date().toJSON().slice(0,10) +'.xlsx');

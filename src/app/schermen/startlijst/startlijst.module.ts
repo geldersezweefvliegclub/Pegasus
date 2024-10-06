@@ -1,13 +1,12 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from "@angular/forms";
-import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
-import {SharedModule} from "../../shared/shared.module";
-import {RouterModule} from "@angular/router";
-import {StartlijstPageComponent} from "./startlijst-page/startlijst-page.component";
-import {DragDropModule} from "@angular/cdk/drag-drop";
-import {ExtendedModule} from "@angular/flex-layout";
-import {NgSelectModule} from "@ng-select/ng-select";
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { SharedModule } from '../../shared/shared.module';
+import { RouterModule } from '@angular/router';
+import { StartlijstPageComponent } from './startlijst-page/startlijst-page.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 
 @NgModule({
@@ -26,7 +25,6 @@ import {NgSelectModule} from "@ng-select/ng-select";
                 component: StartlijstPageComponent
             }
         ]),
-        ExtendedModule,
         NgSelectModule
     ],
     exports: []

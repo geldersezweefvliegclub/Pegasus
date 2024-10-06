@@ -1,22 +1,22 @@
-import {BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {AppComponent} from './main-layout/app/app.component';
-import {SharedModule} from './shared/shared.module';
-import {RoutingModule} from './routing.module';
-import {FooterComponent} from './main-layout/footer/footer.component';
-import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {LazyLoadImageModule} from "ng-lazyload-image";
-import {PegasusConfigService} from "./services/shared/pegasus-config.service";
-import {HttpClientModule} from '@angular/common/http';
-import {ExtendedModule} from "@angular/flex-layout";
-import {ServiceWorkerModule} from '@angular/service-worker';
-import {environment} from '../environments/environment';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AppComponent } from './main-layout/app/app.component';
+import { SharedModule } from './shared/shared.module';
+import { RoutingModule } from './routing.module';
+import { FooterComponent } from './main-layout/footer/footer.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { PegasusConfigService } from './services/shared/pegasus-config.service';
+import { HttpClientModule } from '@angular/common/http';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
+import { IPegasusConfig } from './types/IPegasusConfig';
 
 export function initializeApp(appConfigService: PegasusConfigService) {
-    return (): Promise<any> => {
+    return (): Promise<IPegasusConfig> => {
         return appConfigService.load();
     }
 }
@@ -30,7 +30,6 @@ export function initializeApp(appConfigService: PegasusConfigService) {
         BrowserModule,
         BrowserAnimationsModule,
         RoutingModule,
-
         FormsModule,
         SharedModule,
         ReactiveFormsModule,
@@ -38,7 +37,6 @@ export function initializeApp(appConfigService: PegasusConfigService) {
         LazyLoadImageModule,
         NgbModule,
         HttpClientModule,
-        ExtendedModule,
         ServiceWorkerModule.register('ngsw-worker.js', {
           enabled: environment.production,
           // Register the ServiceWorker as soon as the app is stable

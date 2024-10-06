@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
-import {AgRendererComponent} from 'ag-grid-angular';
-import {ICellRendererParams} from 'ag-grid-community';
+import { Component } from '@angular/core';
+import { AgRendererComponent } from 'ag-grid-angular';
+import { ICellRendererParams } from 'ag-grid-community';
 
 @Component({
   selector: 'app-telefoon-render',
@@ -12,7 +12,7 @@ export class TelefoonRenderComponent implements AgRendererComponent {
   mobiel: string;
   noodnummer: string;
 
-  constructor() { }
+
 
   agInit(params: ICellRendererParams): void {
     this.telefoon = params.data.TELEFOON;
@@ -20,7 +20,7 @@ export class TelefoonRenderComponent implements AgRendererComponent {
     this.noodnummer = params.data.NOODNUMMER;
   }
 
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
 }

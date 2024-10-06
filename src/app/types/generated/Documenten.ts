@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  "/Facturen/CreateTable": {
+  "/Documenten/CreateTable": {
     post: {
       parameters: {
         query: {
@@ -20,7 +20,7 @@ export interface paths {
       };
     };
   };
-  "/Facturen/CreateViews": {
+  "/Documenten/CreateViews": {
     post: {
       responses: {
         /** Aangemaakt, View toegevoegd */
@@ -30,19 +30,19 @@ export interface paths {
       };
     };
   };
-  "/Facturen/GetObject": {
+  "/Documenten/GetObject": {
     get: {
       parameters: {
         query: {
-          /** Database ID van het track record */
-          ID: number;
+          /** Database ID van het document record */
+          ID?: number;
         };
       };
       responses: {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_facturen"];
+            "application/json": components["schemas"]["document"];
           };
         };
         /** Data niet gevonden */
@@ -56,7 +56,7 @@ export interface paths {
       };
     };
   };
-  "/Facturen/GetObjects": {
+  "/Documenten/GetObjects": {
     get: {
       parameters: {
         query: {
@@ -68,7 +68,7 @@ export interface paths {
           LAATSTE_AANPASSING?: boolean;
           /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
           HASH?: string;
-          /** Sortering van de velden in ORDER BY formaat. Default = CLUBKIST DESC, VOLGORDE, REGISTRATIE */
+          /** Sortering van de velden in ORDER BY formaat. Default = DATUM DESC */
           SORT?: string;
           /** Maximum aantal records in de dataset. Gebruikt in LIMIT query */
           MAX?: number;
@@ -76,17 +76,15 @@ export interface paths {
           START?: number;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
-          /** Haal alle facturen op van een specifiek lid */
-          LID_ID?: string;
-          /** Haal alle facturen op van een bepaald jaar */
-          JAAR?: string;
+          /** Groep ID voor de opvraag (meerdere groupen in CSV formaat) */
+          GROEPEN?: string;
         };
       };
       responses: {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_facturen"];
+            "application/json": components["schemas"]["view_documenten"];
           };
         };
         /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
@@ -98,44 +96,18 @@ export interface paths {
       };
     };
   };
-  "/Facturen/NogTeFactureren": {
-    get: {
-      parameters: {
-        query: {
-          /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
-          HASH?: string;
-          /** Haal alle facturen op van een bepaald jaar */
-          JAAR?: string;
-        };
-      };
-      responses: {
-        /** OK, data succesvol opgehaald */
-        200: {
-          content: {
-            "application/json": components["schemas"]["oper_facturen"];
-          };
-        };
-        /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
-        304: never;
-        /** Methode niet toegestaan, input validatie error */
-        405: unknown;
-        /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
-        500: unknown;
-      };
-    };
-  };
-  "/Facturen/DeleteObject": {
+  "/Documenten/DeleteObject": {
     delete: {
       parameters: {
         query: {
-          /** Database ID van het record. Meerdere ID's in CSV formaat */
-          ID: string;
+          /** Database ID van het document record. Meerdere ID's in CSV formaat */
+          ID?: string;
           /** Controleer of record bestaat voordat het verwijderd wordt. Default = true */
           VERIFICATIE?: boolean;
         };
       };
       responses: {
-        /** Factuur verwijderd */
+        /** Document verwijderd */
         204: never;
         /** Niet geautoriseerd, geen schrijfrechten */
         401: unknown;
@@ -150,13 +122,21 @@ export interface paths {
       };
     };
   };
-  "/Facturen/AanmakenFacturen": {
-    post: {
+  "/Documenten/RestoreObject": {
+    patch: {
+      parameters: {
+        query: {
+          /** Database ID van het record. Meerdere ID's in CSV formaat */
+          ID: string;
+        };
+      };
       responses: {
-        /** Facturen aangemaakt */
-        201: unknown;
+        /** Record(s) hersteld */
+        202: unknown;
         /** Niet geautoriseerd, geen schrijfrechten */
         401: unknown;
+        /** Data niet gevonden */
+        404: unknown;
         /** Methode niet toegestaan, input validatie error */
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
@@ -164,37 +144,15 @@ export interface paths {
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** track data */
-      requestBody: {
-        content: {
-          "application/json": {
-            /**
-             * Format: int32
-             * @description Jaar van de factuur
-             * @example 2014
-             */
-            JAAR?: number;
-            /**
-             * @description Lid ID voor de factuur. Verwijzing naar leden tabel
-             * @example [
-             *   10321,
-             *   10201,
-             *   10380
-             * ]
-             */
-            LID_ID?: number[];
-          };
-        };
-      };
     };
   };
-  "/Facturen/SaveObject": {
+  "/Documenten/SaveObject": {
     put: {
       responses: {
         /** OK, data succesvol aangepast */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_facturen"];
+            "application/json": components["schemas"]["document"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -208,10 +166,10 @@ export interface paths {
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** track data */
+      /** Document meta data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["oper_factuur_in"];
+          "application/json": components["schemas"]["document_in"];
         };
       };
     };
@@ -220,7 +178,7 @@ export interface paths {
         /** OK, data succesvol toegevoegd */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_facturen"];
+            "application/json": components["schemas"]["document"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -229,15 +187,16 @@ export interface paths {
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
         406: unknown;
-        /** Conflict, record bestaat al */
-        409: unknown;
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** track data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["oper_factuur_in"];
+          "multipart/form-data": {
+            document?: components["schemas"]["document_in"];
+            /** Format: binary */
+            file?: string;
+          };
         };
       };
     };
@@ -246,68 +205,70 @@ export interface paths {
 
 export interface components {
   schemas: {
-    oper_factuur_in: {
+    document_in: {
       /**
        * Format: int32
-       * @description Database ID van het record
-       * @example 14
+       * @description Database ID van het document record
+       * @example 77
        */
       ID?: number;
       /**
        * Format: int32
-       * @description Jaar van de factuur
-       * @example 2014
+       * @description Verwijzing naar type tabel (22) in welke groep document behoord
+       * @example 2022
        */
-      JAAR?: number;
+      GROEP_ID?: number;
       /**
-       * @description Lid ID voor de factuur. Verwijzing naar leden tabel
-       * @example 10321
+       * Format: int32
+       * @description Volgorde binnen de groep
+       * @example 3
+       */
+      VOLGORDE?: number;
+      /**
+       * @description De tekst die uitlegt wat document behelst
+       * @example Handboek Duo Discuss
+       */
+      TEKST?: string;
+      /**
+       * @description Verwijzing waar het document gevonden kan worden
+       * @example Handboek Duo Discuss
+       */
+      URL?: string;
+      /**
+       * Format: int32
+       * @description Verwijzing naar lid. Document is aan lid gekoppeld
+       * @example 129205
        */
       LID_ID?: number;
       /**
-       * @description Factuur nummer zoals dat door de boekhouding uitgedeeld is
-       * @example F00012
+       * @description Lege regel om paragraaf te kunnen maken
+       * @example 0
        */
-      FACTUUR_NUMMER?: string;
+      LEGE_REGEL?: boolean;
       /**
-       * @description Omschrijving van de factuurregel
-       * @example Contributie 2028
+       * @description Plaats een horizontale lijn
+       * @example 0
        */
-      OMSCHRIJVING?: string;
+      ONDERSTREEP?: boolean;
       /**
-       * @description Contributie in euro voor deze factuur
-       * @example 980
+       * @description Plaats een horizontale lijn aan de bovenkant (true) / onderkant (false)
+       * @example 0
        */
-      GEFACTUREERD?: number;
+      BOVEN?: boolean;
+      /** @description Document in base 64 encoding, heeft DOC_NAAM om gegevens op te slaan */
+      BASE64_DOC?: string;
+      /**
+       * @description Naam van het docuement als bijgevoegd in BASE64_DOC
+       * @example handboek.pdf
+       */
+      DOC_NAAM?: string;
+      /**
+       * @description Mag bestaand bestand overschreven worden
+       * @example 0
+       */
+      OVERSCHRIJVEN?: boolean;
     };
-    oper_facturen: components["schemas"]["oper_factuur_in"] & {
-      /**
-       * @description Kopie van lidnr zoals dat in de leden tabel staat
-       * @example 200912
-       */
-      LIDNR?: string;
-      /**
-       * @description Naam van het lid
-       * @example Momfort de Mol
-       */
-      NAAM?: string;
-      /**
-       * Format: int32
-       * @description Het soort lid (jeugdlid, lid, donateur). Verwijzing naar type tabel
-       * @example 603
-       */
-      LIDTYPE_ID?: number;
-      /**
-       * @description Heeft het lid zijn/haar lidmaatschap opgezegd?
-       * @example false
-       */
-      OPGEZEGD?: boolean;
-      /**
-       * Format: int16
-       * @description Leeftijd van het lid op 1 januari van het te factureren jaar
-       * @example 12
-       */
-      LEEFTIJD?: number;
+    document: components["schemas"]["document_in"] & {
       /**
        * @description Is dit record gemarkeerd als verwijderd?
        * @example 0
@@ -316,12 +277,12 @@ export interface components {
       /**
        * Format: date-time
        * @description Tijdstempel van laaste aanpassing in de database
-       * @example 2021-05-05 20:13:59Z
+       * @example 2026-01-31 14:12:56
        */
       LAATSTE_AANPASSING?: string;
     };
-    view_facturen_dataset: components["schemas"]["oper_facturen"];
-    view_facturen: {
+    view_documenten_dataset: components["schemas"]["document"] & Record<string, unknown>;
+    view_documenten: {
       /**
        * Format: int32
        * @description Aantal records dat voldoet aan de criteria in de database
@@ -331,20 +292,18 @@ export interface components {
       /**
        * Format: date-time
        * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
-       * @example 2019-01-05 10:09:53
+       * @example 2001-11-30 11:12:17
        */
       laatste_aanpassing?: string;
       /**
        * @description hash van de dataset
-       * @example dd00bff
+       * @example aa9ab4b
        */
       hash?: string;
       /** @description De dataset met records */
-      dataset?: components["schemas"]["view_facturen_dataset"][];
+      dataset?: components["schemas"]["view_documenten_dataset"][];
     };
   };
 }
 
-export interface operations {}
 
-export interface external {}

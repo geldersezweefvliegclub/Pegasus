@@ -1,32 +1,36 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
-    HeliosLedenDatasetExtended,
-    HeliosRoosterDagExtended,
-    WeergaveData
-} from "../rooster-page/rooster-page.component";
-import {CdkDrag, CdkDragDrop} from "@angular/cdk/drag-drop";
+  HeliosLedenDatasetExtended,
+  HeliosRoosterDagExtended,
+  WeergaveData,
+} from '../rooster-page/rooster-page.component';
+import { CdkDrag, CdkDragDrop } from '@angular/cdk/drag-drop';
 import {
-    HeliosDienst, HeliosDienstenDataset,
-    HeliosLedenDataset,
-    HeliosLid,
-    HeliosLidData, HeliosRoosterDag,
-    HeliosRoosterDataset,
-    HeliosType, HeliosUserinfo
-} from "../../../types/Helios";
-import {JaarTotalenComponent} from "../jaar-totalen/jaar-totalen.component";
-import {DienstenService} from "../../../services/apiservice/diensten.service";
-import {DagVanDeWeek} from "../../../utils/Utils";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {Subscription} from "rxjs";
-import {TypesService} from "../../../services/apiservice/types.service";
-import {RoosterService} from "../../../services/apiservice/rooster.service";
-import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faCalendarCheck, faSortAmountDownAlt, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
-import {DateTime} from "luxon";
-import {SharedService} from "../../../services/shared/shared.service";
-import {DdwvService} from "../../../services/apiservice/ddwv.service";
-import {UitbetalenDdwvCrewEditorComponent} from "../../../shared/components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component";
+  HeliosDienst,
+  HeliosDienstenDataset,
+  HeliosLedenDataset,
+  HeliosLid,
+  HeliosLidData,
+  HeliosRoosterDag,
+  HeliosRoosterDataset,
+  HeliosType,
+} from '../../../types/Helios';
+import { JaarTotalenComponent } from '../jaar-totalen/jaar-totalen.component';
+import { DienstenService } from '../../../services/apiservice/diensten.service';
+import { DagVanDeWeek } from '../../../utils/Utils';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { Subscription } from 'rxjs';
+import { TypesService } from '../../../services/apiservice/types.service';
+import { RoosterService } from '../../../services/apiservice/rooster.service';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faCalendarCheck, faSortAmountDownAlt, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { DateTime } from 'luxon';
+import { SharedService } from '../../../services/shared/shared.service';
+import { DdwvService } from '../../../services/apiservice/ddwv.service';
+import {
+  UitbetalenDdwvCrewEditorComponent,
+} from '../../../shared/components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component';
 
 
 @Component({
@@ -43,7 +47,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
     @Input() lidInRoosterClass: (dienst: HeliosDienstenDataset) => string;
 
     @ViewChild(JaarTotalenComponent) private jaarTotalen: JaarTotalenComponent;
-    @ViewChild(UitbetalenDdwvCrewEditorComponent) private uitbetalen: UitbetalenDdwvCrewEditorComponent;
+    @ViewChild(UitbetalenDdwvCrewEditorComponent) protected uitbetalen: UitbetalenDdwvCrewEditorComponent;
 
     readonly resetIcon: IconDefinition = faTimesCircle;
     readonly assignIcon: IconDefinition = faCalendarCheck;
@@ -52,23 +56,23 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
     private typesAbonnement: Subscription;
     dienstTypes: HeliosType[] = [];
 
-    lidData: HeliosLidData;
+    lidData: HeliosLidData | undefined;
     mijnID: string;
     mijnNaam: string;
     isCIMT: boolean;
     isDDWVCrew: boolean;
     isBeheerder: boolean;
     isBeheerderDDWV: boolean;
-    magWijzigen: boolean = false;
-    ddwvActief: boolean = true;
-    dragDisabled: boolean = true;
+    magWijzigen = false;
+    ddwvActief = true;
+    dragDisabled = true;
 
     opslaanTimer: number;                           // kleine vertraging om starts opslaan te beperken
 
     constructor(private readonly ddwvService: DdwvService,
                 private readonly loginService: LoginService,
                 private readonly typesService: TypesService,
-                private readonly sharedService: SharedService,
+                protected readonly sharedService: SharedService,
                 private readonly roosterService: RoosterService,
                 private readonly dienstenService: DienstenService,
                 readonly configService: PegasusConfigService) {
@@ -76,14 +80,14 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo;
-        this.lidData = ui!.LidData!;
-        this.isCIMT = ui!.Userinfo?.isCIMT!;
-        this.isDDWVCrew = ui!.LidData?.DDWV_CREW!;
-        this.isBeheerder = ui!.LidData?.BEHEERDER!;
-        this.isBeheerderDDWV = ui!.LidData?.DDWV_BEHEERDER!;
-        this.dragDisabled = (ui!.Userinfo?.isRooster || this.isBeheerder || this.isBeheerderDDWV) ? false : true
-        this.mijnID = (this.lidData.ID) ? this.lidData.ID.toString() : "-1";    // -1 mag nooit voorkomen, maar je weet het nooit
-        this.mijnNaam = this.lidData.NAAM as string;
+        this.lidData = ui?.LidData;
+        this.isCIMT = ui?.Userinfo?.isCIMT ?? false;
+        this.isDDWVCrew = ui?.LidData?.DDWV_CREW ?? false;
+        this.isBeheerder = ui?.LidData?.BEHEERDER ?? false;
+        this.isBeheerderDDWV = ui?.LidData?.DDWV_BEHEERDER ?? false;
+        this.dragDisabled = (ui?.Userinfo?.isRooster || this.isBeheerder || this.isBeheerderDDWV) ? false : true
+        this.mijnID = (this.lidData?.ID) ? this.lidData.ID.toString() : "-1";    // -1 mag nooit voorkomen, maar je weet het nooit
+        this.mijnNaam = this.lidData?.NAAM as string;
 
         this.magWijzigen = (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isRooster) ? true : false;
 
@@ -283,7 +287,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
         }
     }
 
-    onDropInLedenlijst(event: CdkDragDrop<HeliosLedenDataset[], any>): void {
+    onDropInLedenlijst(event: CdkDragDrop<HeliosLedenDataset[]>): void {
         // De nieuwe container is hetzelfde als de vorige, doe dan niks.
         if (event.container === event.previousContainer) {
             return;
@@ -297,7 +301,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
         }
     }
 
-    onDropInRooster(event: CdkDragDrop<HeliosLedenDataset, any>, roosterdag: HeliosRoosterDagExtended, typeDienstID: number): void {
+    onDropInRooster(event: CdkDragDrop<HeliosLedenDataset>, roosterdag: HeliosRoosterDagExtended, typeDienstID: number): void {
         // Haal de nieuwe en oude ID's op. Een id is bijvoorbeeld:
         // 1800,0
         // 0 is de index in het rooster, dus de eerste dag van de maand.
@@ -365,8 +369,6 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
                 }
             }
         } else {    // aanpassen bestaande dienst aanpassen
-            this.rooster[roosterIndex].Diensten[typeDienstID]
-
             const gewijzigdeDienst: HeliosDienst = {
                 ID: roosterdag.Diensten[typeDienstID].ID,
                 DATUM: roosterdag.DATUM,

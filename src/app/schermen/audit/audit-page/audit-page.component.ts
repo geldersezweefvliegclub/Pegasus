@@ -1,14 +1,12 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {ColDef, RowSelectedEvent} from 'ag-grid-community';
-import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
-import {HeliosAuditDataset} from '../../../types/Helios';
-import {ErrorMessage, SuccessMessage} from '../../../types/Utils';
+import { Component, OnInit } from '@angular/core';
+import { ColDef, RowSelectedEvent } from 'ag-grid-community';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { HeliosAuditDataset } from '../../../types/Helios';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
 import * as xlsx from 'xlsx';
-import {LoginService} from '../../../services/apiservice/login.service';
-import {nummerSort} from '../../../utils/Utils';
-import {AuditService} from "../../../services/apiservice/audit.service";
-import {faWaveSquare} from "@fortawesome/free-solid-svg-icons";
-import {DatatableComponent} from "../../../shared/components/datatable/datatable.component";
+import { nummerSort } from '../../../utils/Utils';
+import { AuditService } from '../../../services/apiservice/audit.service';
+import { faWaveSquare } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -34,8 +32,8 @@ export class AuditPageComponent implements OnInit {
     wijziging: any;
     resultaat: any;
 
-    isLoading: boolean = false;
-    magExporten: boolean = false;
+    isLoading = false;
+    magExporten = false;
 
     zoekString: string;
     zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
@@ -43,13 +41,10 @@ export class AuditPageComponent implements OnInit {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
-    constructor(private readonly auditService: AuditService,
-                private readonly loginService: LoginService) { }
+    constructor(private readonly auditService: AuditService) { }
 
     ngOnInit(): void {
         this.opvragen();
-
-        const ui = this.loginService.userInfo?.Userinfo;
         this.magExporten = true
     }
 
@@ -72,14 +67,13 @@ export class AuditPageComponent implements OnInit {
 
     // Export naar excel
     exportDataset() {
-        var ws = xlsx.utils.json_to_sheet(this.data);
+        const ws = xlsx.utils.json_to_sheet(this.data);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
         xlsx.writeFile(wb, 'audit ' + new Date().toJSON().slice(0, 10) + '.xlsx');
     }
 
     selectRow($event: RowSelectedEvent) {
-        console.log($event);
         this.voor = JSON.parse($event.data.VOOR);
         this.wijziging = JSON.parse($event.data.DATA);
         this.resultaat = JSON.parse($event.data.RESULTAAT);

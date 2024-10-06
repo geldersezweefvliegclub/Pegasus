@@ -1,39 +1,39 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faPen, faPenToSquare, faSortAmountDownAlt} from "@fortawesome/free-solid-svg-icons";
-import {Observable, of, Subscription} from "rxjs";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faPen, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { Observable, of, Subscription } from 'rxjs';
 import {
-    HeliosAanwezigLedenDataset,
-    HeliosAanwezigVliegtuigenDataset,
-    HeliosBehaaldeProgressieDataset,
-    HeliosLedenDataset,
-    HeliosStart,
-    HeliosStartDataset,
-    HeliosType,
-    HeliosVliegtuigenDataset
-} from "../../../types/Helios";
-import {DateTime, Interval} from "luxon";
-import {StartlijstService} from "../../../services/apiservice/startlijst.service";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {SharedService} from "../../../services/shared/shared.service";
-import {AanwezigVliegtuigService} from "../../../services/apiservice/aanwezig-vliegtuig.service";
-import {AanwezigLedenService} from "../../../services/apiservice/aanwezig-leden.service";
+  HeliosAanwezigLedenDataset,
+  HeliosAanwezigVliegtuigenDataset,
+  HeliosBehaaldeProgressieDataset,
+  HeliosLedenDataset,
+  HeliosStart,
+  HeliosStartDataset,
+  HeliosType,
+  HeliosVliegtuigenDataset,
+} from '../../../types/Helios';
+import { DateTime, Interval } from 'luxon';
+import { StartlijstService } from '../../../services/apiservice/startlijst.service';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { SharedService } from '../../../services/shared/shared.service';
+import { AanwezigVliegtuigService } from '../../../services/apiservice/aanwezig-vliegtuig.service';
+import { AanwezigLedenService } from '../../../services/apiservice/aanwezig-leden.service';
 import {
-    AanmeldenVliegtuigComponent
-} from "../../../shared/components/aanmelden-vliegtuig/aanmelden-vliegtuig.component";
-import {AanmeldenLedenComponent} from "../../../shared/components/aanmelden-leden/aanmelden-leden.component";
+  AanmeldenVliegtuigComponent,
+} from '../../../shared/components/aanmelden-vliegtuig/aanmelden-vliegtuig.component';
+import { AanmeldenLedenComponent } from '../../../shared/components/aanmelden-leden/aanmelden-leden.component';
 import {
-    LidAanwezigEditorComponent
-} from "../../../shared/components/editors/lid-aanwezig-editor/lid-aanwezig-editor.component";
-import {ErrorMessage, KeyValueArray, SuccessMessage} from "../../../types/Utils";
-import {TijdInvoerComponent} from "../../../shared/components/editors/tijd-invoer/tijd-invoer.component";
-import {StartEditorComponent} from "../../../shared/components/editors/start-editor/start-editor.component";
-import {DaginfoService} from "../../../services/apiservice/daginfo.service";
-import {CdkDrag, CdkDragDrop} from "@angular/cdk/drag-drop";
-import {VliegtuigenService} from "../../../services/apiservice/vliegtuigen.service";
-import {ProgressieService} from "../../../services/apiservice/progressie.service";
-import {TypesService} from "../../../services/apiservice/types.service";
-import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
+  LidAanwezigEditorComponent,
+} from '../../../shared/components/editors/lid-aanwezig-editor/lid-aanwezig-editor.component';
+import { ErrorMessage, KeyValueArray, SuccessMessage } from '../../../types/Utils';
+import { TijdInvoerComponent } from '../../../shared/components/editors/tijd-invoer/tijd-invoer.component';
+import { StartEditorComponent } from '../../../shared/components/editors/start-editor/start-editor.component';
+import { DaginfoService } from '../../../services/apiservice/daginfo.service';
+import { CdkDrag, CdkDragDrop } from '@angular/cdk/drag-drop';
+import { VliegtuigenService } from '../../../services/apiservice/vliegtuigen.service';
+import { ProgressieService } from '../../../services/apiservice/progressie.service';
+import { TypesService } from '../../../services/apiservice/types.service';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
 
 type HeliosStartDatasetExtended = HeliosStartDataset & {
     ZITPLAATSEN?: number,
@@ -55,17 +55,14 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
 
     readonly iconEdit: IconDefinition = faPenToSquare;
     readonly startlijstIcon: IconDefinition = faPen;
-    readonly iconSort: IconDefinition = faSortAmountDownAlt;
 
     starts: HeliosStartDataset[] = [];
     filteredStarts: HeliosStartDatasetExtended[] = [];
     geselecteerdeStart: HeliosStartDataset | undefined;
 
-    SchermGrootte = require("../../../services/shared/shared.service").SchermGrootte;
-
-    isStarttoren: boolean = false;
-    isLoading: boolean = false;
-    filterAan: boolean = true;
+    isStarttoren = false;
+    isLoading = false;
+    filterAan = true;
 
     private dbEventAbonnement: Subscription;
     private aanwezigLedenAbonnement: Subscription;
@@ -82,14 +79,14 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
     private datumAbonnement: Subscription;    // volg de keuze van de kalender
     datum: DateTime = DateTime.now();         // de gekozen dag in de kalender
 
-    inTijdspan: boolean = false;          //  Mogen we starts aanpassen. Mag niet in de toekomst en ook niet meer dan xx dagen geleden.  xx is geconfigureerd in pegasus.config
+    inTijdspan = false;          //  Mogen we starts aanpassen. Mag niet in de toekomst en ook niet meer dan xx dagen geleden.  xx is geconfigureerd in pegasus.config
 
     refreshTimer: number;
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
     klikStart: HeliosStartDataset | undefined;
-    eersteKlik: boolean = false;
+    eersteKlik = false;
 
     private typesAbonnement: Subscription;              // Abonneer op aanpassing van vliegvelden
     veldTypes$: Observable<HeliosType[]>;
@@ -129,7 +126,7 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
             } else {
                 const diff = Interval.fromDateTimes(datum, nu);
                 if (diff.length("days") > this.configService.maxZelfEditDagen()) {
-                    this.inTijdspan = ui?.isBeheerder!;     // alleen beheerder mag na xx dagen wijzigen. xx is geconfigureerd in pegasus.config
+                    this.inTijdspan = ui?.isBeheerder ?? false;     // alleen beheerder mag na xx dagen wijzigen. xx is geconfigureerd in pegasus.config
                 } else {
                     this.inTijdspan = true;                 // zitten nog binnen de termijn
                 }
@@ -176,13 +173,7 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
             this.veldTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));            // vliegvelden
         });
 
-        // Roep onWindowResize aan zodra we het event ontvangen hebben
-        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
-            this.onWindowResize()
-        });
-
         this.opvragen();
-        this.onWindowResize();
     }
 
     ngOnDestroy(): void {
@@ -198,16 +189,11 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
         clearTimeout(this.refreshTimer);
     }
 
-    // Op large schermen tonen we de avatar
-    onWindowResize() {
-
-    }
-
     opvragen() {
         this.aanwezigVliegtuigenService.updateAanwezigCache();
         this.aanwezigLedenService.updateAanwezigCache();
 
-        let queryParams: KeyValueArray = {};
+        const queryParams: KeyValueArray = {};
         queryParams["OPEN_STARTS"] = "true"
 
         this.isLoading = true;
@@ -348,26 +334,26 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
 
     // Voeg aan de extra velden toe
     async startExtendedVelden() {
-        for (let i = 0; i < this.filteredStarts.length; i++) {
-            const idxV = this.aanwezigVliegtuigen.findIndex(v => v.VLIEGTUIG_ID == this.filteredStarts[i].VLIEGTUIG_ID);
+        for (const item of this.filteredStarts) {
+            const idxV = this.aanwezigVliegtuigen.findIndex(v => v.VLIEGTUIG_ID == item.VLIEGTUIG_ID);
 
             if (idxV < 0) {
-                this.filteredStarts[i].ZITPLAATSEN = 0
+                item.ZITPLAATSEN = 0
             } else {
-                this.filteredStarts[i].ZITPLAATSEN = this.aanwezigVliegtuigen[idxV].ZITPLAATSEN;
+                item.ZITPLAATSEN = this.aanwezigVliegtuigen[idxV].ZITPLAATSEN;
             }
 
-            const checkID = this.filteredStarts[i].INSTRUCTIEVLUCHT ? this.filteredStarts[i].INZITTENDE_ID : this.filteredStarts[i].VLIEGER_ID;
+            const checkID = item.INSTRUCTIEVLUCHT ? item.INZITTENDE_ID : item.VLIEGER_ID;
 
             if (!checkID) {  // er is nog geen vlieger / instructeur bekend
-                this.filteredStarts[i].MEDICAL = true;
-                this.filteredStarts[i].BEVOEGD = true;
+                item.MEDICAL = true;
+                item.BEVOEGD = true;
             } else {
                 const gekozenVlieger = this.aanwezigLeden.find(lid => lid.LID_ID == checkID) as HeliosAanwezigLedenDataset;
 
                 if (!gekozenVlieger) { // er is nog geen vlieger geselecteerd
-                    this.filteredStarts[i].MEDICAL = true;
-                    this.filteredStarts[i].BEVOEGD = true;
+                    item.MEDICAL = true;
+                    item.BEVOEGD = true;
                 } else {
                     switch (gekozenVlieger.LIDTYPE_ID) {
                         case 609:   // nieuw lid
@@ -375,25 +361,25 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
                         case 610:   // oprotkabel
                         case 612:   // penningmeester
                         {
-                            this.filteredStarts[i].MEDICAL = true;
+                            item.MEDICAL = true;
                             break;
                         }
                         default: {
                             if (!gekozenVlieger.MEDICAL) {
-                                this.filteredStarts[i].MEDICAL = false;   // medical niet ingevoerd
+                                item.MEDICAL = false;   // medical niet ingevoerd
                             } else {
                                 // is medical verlopen op de vliegdag?
 
                                 const d = DateTime.fromSQL(gekozenVlieger.MEDICAL);
-                                this.filteredStarts[i].MEDICAL = (d >= this.datum);
+                                item.MEDICAL = (d >= this.datum);
                             }
                             break;
                         }
                     }
                 }
 
-                if (!this.filteredStarts[i].CLUBKIST) {
-                    this.filteredStarts[i].BEVOEGD = true;    // op een prive vliegtuig doen we geen controle
+                if (!item.CLUBKIST) {
+                    item.BEVOEGD = true;    // op een prive vliegtuig doen we geen controle
                 } else {
                     // kijk of er al iets de cache staat voor deze vlieger
                     const idxP = this.progressieCache.findIndex(p => p.LID_ID == checkID);
@@ -408,25 +394,25 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
                                 this.progressieCache = this.progressieCache.concat(p);                   // voeg opgehaalde competenties toe aan cache
                             }
                         } catch (e) {
-                            this.filteredStarts[i].BEVOEGD = true;    // ophalen is mislukt, geen controle mogelijk
+                            item.BEVOEGD = true;    // ophalen is mislukt, geen controle mogelijk
                             this.error = e;
                         }
                     }
 
                     // Gaan nu kijken of de bevoegdheid aanwezig is
-                    const vliegtuig = this.clubVliegtuigen.find((v) => v.ID == this.filteredStarts[i].VLIEGTUIG_ID)
+                    const vliegtuig = this.clubVliegtuigen.find((v) => v.ID == item.VLIEGTUIG_ID)
 
                     if (!vliegtuig) { // dit zo niet mogen geberen, maar als het gebeurd dan controleren we niet verder
-                        this.filteredStarts[i].BEVOEGD = true;
+                        item.BEVOEGD = true;
                     } else {
                         if (!vliegtuig.BEVOEGDHEID_OVERLAND_ID && !vliegtuig.BEVOEGDHEID_LOKAAL_ID) { // voor dit vliegtuig is geen competentie nodig
-                            this.filteredStarts[i].BEVOEGD = true;
+                            item.BEVOEGD = true;
                         } else {
                             const progressie = this.progressieCache.find((p) =>
                                 p.LID_ID == checkID &&
                                 (p.COMPETENTIE_ID == vliegtuig.BEVOEGDHEID_LOKAAL_ID || p.COMPETENTIE_ID == vliegtuig.BEVOEGDHEID_OVERLAND_ID));
 
-                            this.filteredStarts[i].BEVOEGD = !!(progressie);
+                            item.BEVOEGD = !!(progressie);
                         }
                     }
                 }
@@ -565,7 +551,7 @@ export class StartlijstPageComponent implements OnInit, OnDestroy {
     }
 
     // vanuit de leden aanwezig wordt er een vlieger / inzittende toegekend aan de start
-    onDropInStart(event: CdkDragDrop<HeliosLedenDataset, any>, start: HeliosStartDataset, stoel: string) {
+    onDropInStart(event: CdkDragDrop<HeliosLedenDataset>, start: HeliosStartDataset, stoel: string) {
         if (stoel == "vlieger") {
             const update: HeliosStart = {
                 ID: start.ID,

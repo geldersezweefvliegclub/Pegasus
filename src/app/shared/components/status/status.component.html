@@ -4,10 +4,10 @@
 <table class="statusTabel">
     <tr class="headerRow">
         <th></th>
-        <th>{{cheks.Jaren[0]}}</th>
-        <th>{{cheks.Jaren[1]}}</th>
+        <th>{{checks.Jaren[0]}}</th>
+        <th>{{checks.Jaren[1]}}</th>
     </tr>
-    <tr *ngFor="let c of cheks.Check;">
+    <tr *ngFor="let c of checks.Check;">
         <td class="kolom1">
             {{c.Omschrijving}}
         </td>
@@ -16,7 +16,7 @@
                    id="L{{c.CompetentieID[0]}}"
                    class="form-check-inline"
 
-                   (change)="zetProgressie($event, c.CompetentieID[0])"
+                   (change)="zetProgressie(c.CompetentieID[0])"
                    [checked]="CheckGehaald(c.CompetentieID[0])"
                    [disabled]="CheckDisabled(c.CompetentieID[0])">       <!-- als checked, dan disable. Verwijderen via progressie boom -->
         </td>
@@ -24,7 +24,7 @@
             <input type="checkbox" *ngIf="competentieBestaat(c.CompetentieID[1])"
                    id="O{{c.CompetentieID[1]}}"
                    class="form-check-inline"
-                   (change)="zetProgressie($event, c.CompetentieID[1])"
+                   (change)="zetProgressie(c.CompetentieID[1])"
                    [checked]="CheckGehaald(c.CompetentieID[1])"
                    [disabled]="CheckDisabled(c.CompetentieID[1])">       <!-- als checked, dan disable. Verwijderen via progressie boom -->
         </td>
@@ -40,7 +40,7 @@
             <input type="checkbox" *ngIf="competentieBestaat(o.CompetentieID)"
                    id="{{o.CompetentieID}}"
                    class="form-check-inline"
-                   (change)="zetProgressie($event, o.CompetentieID)"
+                   (change)="zetProgressie(o.CompetentieID)"
                    [checked]="CheckGehaald(o.CompetentieID)"
                    [disabled]="CheckDisabled(o.CompetentieID)">          <!-- als checked, dan disable. Verwijderen via progressie boom -->
         </td>

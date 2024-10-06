@@ -1,7 +1,7 @@
-import {Component} from '@angular/core';
-import {AgRendererComponent} from "ag-grid-angular";
-import {ICellRendererParams} from "ag-grid-community";
-import {SharedService} from "../../../../services/shared/shared.service";
+import { Component } from '@angular/core';
+import { AgRendererComponent } from 'ag-grid-angular';
+import { ICellRendererParams } from 'ag-grid-community';
+import { SharedService } from '../../../../services/shared/shared.service';
 
 @Component({
   selector: 'app-datum-kort-render',
@@ -23,7 +23,7 @@ export class DatumKortRenderComponent implements AgRendererComponent {
     }
   }
 
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
 }

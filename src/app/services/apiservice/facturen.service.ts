@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
-import {
-  HeliosFacturen, HeliosFacturenDataset,
-  HeliosFactuur,
-} from "../../types/Helios";
-import {APIService} from "./api.service";
-import {KeyValueArray} from "../../types/Utils";
+import { HeliosFacturen, HeliosFacturenDataset, HeliosFactuur } from '../../types/Helios';
+import { APIService } from './api.service';
+import { KeyValueArray } from '../../types/Utils';
 
 
 @Injectable({
@@ -18,7 +15,7 @@ export class FacturenService {
   }
 
   async getFacturen(Jaar: number, zoekString?: string): Promise<HeliosFacturenDataset[]> {
-    let getParams: KeyValueArray = {};
+    const getParams: KeyValueArray = {};
 
     getParams['JAAR'] = Jaar
 
@@ -47,7 +44,7 @@ export class FacturenService {
   }
 
   async nogTeFactureren(Jaar: number): Promise<HeliosFacturenDataset[]> {
-    let getParams: KeyValueArray = {};
+    const getParams: KeyValueArray = {};
 
     getParams['JAAR'] = Jaar
 

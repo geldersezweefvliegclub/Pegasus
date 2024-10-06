@@ -1,18 +1,13 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {
-    HeliosJournaal, HeliosLedenDataset,
-    HeliosType,
-    HeliosVliegtuigenDataset
-} from "../../../../types/Helios";
-import {TypesService} from "../../../../services/apiservice/types.service";
-import {Observable, of, Subscription} from "rxjs";
-import {ModalComponent} from "../../modal/modal.component";
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {JournaalService} from "../../../../services/apiservice/journaal.service";
-import {VliegtuigenService} from "../../../../services/apiservice/vliegtuigen.service";
-import {LedenService} from "../../../../services/apiservice/leden.service";
-import {SharedService} from "../../../../services/shared/shared.service";
-import {LoginService} from "../../../../services/apiservice/login.service";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { HeliosJournaal, HeliosLedenDataset, HeliosType, HeliosVliegtuigenDataset } from '../../../../types/Helios';
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { Observable, of, Subscription } from 'rxjs';
+import { ModalComponent } from '../../modal/modal.component';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { JournaalService } from '../../../../services/apiservice/journaal.service';
+import { VliegtuigenService } from '../../../../services/apiservice/vliegtuigen.service';
+import { LedenService } from '../../../../services/apiservice/leden.service';
+import { LoginService } from '../../../../services/apiservice/login.service';
 
 @Component({
     selector: 'app-melding-editor',
@@ -34,13 +29,13 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
     categorie: HeliosType[];
     status: HeliosType[];
 
-    isLoading: boolean = false;
-    isSaving: boolean = false;
+    isLoading = false;
+    isSaving = false;
 
-    magWijzigen: boolean = true;
-    isVerwijderMode: boolean = false;
-    isRestoreMode: boolean = false;
-    formTitel: string = "";
+    magWijzigen = true;
+    isVerwijderMode = false;
+    isRestoreMode = false;
+    formTitel = "";
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -135,7 +130,7 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
                 this.melding = melding;
                 this.isLoading = false;
             });
-        } catch (e) {
+        } catch (_) {
             this.isLoading = false;
         }
     }

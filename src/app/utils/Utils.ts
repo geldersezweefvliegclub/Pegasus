@@ -1,4 +1,4 @@
-import {DateTime, Interval} from 'luxon';
+import { DateTime, Interval } from 'luxon';
 
 export const nummerSort = (num1: number, num2: number) => {
   return (num1 > num2) ? 1 : -1;
@@ -13,11 +13,11 @@ export const tijdSort = (tijdStr1: string | null, tijdStr2: string | null) => {
     tijdStr2 = '00:00';
   }
 
-  let tijdParts1: string[] = tijdStr1.split(':');
-  let tijdParts2: string[] = tijdStr2.split(':');
+  const tijdParts1: string[] = tijdStr1.split(':');
+  const tijdParts2: string[] = tijdStr2.split(':');
 
-  let tijd1: number = Number(tijdParts1[0]) * 60 + Number(tijdParts1[1]);
-  let tijd2: number = Number(tijdParts2[0]) * 60 + Number(tijdParts2[1]);
+  const tijd1: number = Number(tijdParts1[0]) * 60 + Number(tijdParts1[1]);
+  const tijd2: number = Number(tijdParts2[0]) * 60 + Number(tijdParts2[1]);
 
   return (tijd1 > tijd2) ? 1 : -1;
 };
@@ -68,3 +68,14 @@ export const DateDiff = (datum1 : string, datum2: string|undefined = undefined) 
   }
 }
 
+
+/**
+ * Replaces any undefined value with null
+ *
+ * @param _ Key that corrosponds to the key-value pair
+ * @param value Value that corrosponds to the key-value pair
+ * @example
+ * const json = JSON.stringify({a: undefined, b: 2, c: undefined}, CustomJsonSerializer);
+ * console.log(json); // {"a":null,"b":2,"c":null}
+ */
+export const CustomJsonSerializer = (_:string, value:unknown) => typeof value === 'undefined' ? null : value;

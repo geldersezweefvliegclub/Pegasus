@@ -1,18 +1,12 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {
-    HeliosVliegtuig,
-    HeliosVliegtuigLogboekDataset,
-} from '../../../types/Helios';
-import {LoginService} from '../../../services/apiservice/login.service';
-import {StartlijstService} from '../../../services/apiservice/startlijst.service';
-import {Subscription} from 'rxjs';
-import {DateTime} from 'luxon';
-import {SharedService} from '../../../services/shared/shared.service';
-import {VliegtuigenService} from '../../../services/apiservice/vliegtuigen.service';
-import {ModalComponent} from '../../../shared/components/modal/modal.component';
-import {ActivatedRoute} from '@angular/router';
-import {ErrorMessage} from '../../../types/Utils';
-import {forEachReverse} from "ag-grid-community/dist/lib/utils/array";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { HeliosVliegtuig, HeliosVliegtuigLogboekDataset } from '../../../types/Helios';
+import { StartlijstService } from '../../../services/apiservice/startlijst.service';
+import { Subscription } from 'rxjs';
+import { DateTime } from 'luxon';
+import { SharedService } from '../../../services/shared/shared.service';
+import { VliegtuigenService } from '../../../services/apiservice/vliegtuigen.service';
+import { ModalComponent } from '../../../shared/components/modal/modal.component';
+import { ErrorMessage } from '../../../types/Utils';
 
 
 @Component({
@@ -26,7 +20,7 @@ export class VliegtuigLogboekComponent implements OnInit {
     data: HeliosVliegtuigLogboekDataset[] = [];
     vliegtuig: HeliosVliegtuig = {};
     private vliegtuigID:  number;
-    isLoading: boolean = false;
+    isLoading = false;
 
     private datumAbonnement: Subscription; // volg de keuze van de kalender
     datum: DateTime = DateTime.now();      // de gekozen dag
