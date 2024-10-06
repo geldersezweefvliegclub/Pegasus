@@ -1,12 +1,13 @@
-import {Injectable} from '@angular/core';
-import {APIService} from './api.service';
+import { Injectable } from '@angular/core';
+import { APIService } from './api.service';
 
-import {HeliosVliegtuig, HeliosVliegtuigen, HeliosVliegtuigenDataset} from '../../types/Helios';
-import {StorageService} from '../storage/storage.service';
-import {KeyValueArray} from '../../types/Utils';
-import {BehaviorSubject, Subscription} from "rxjs";
-import {SharedService} from "../shared/shared.service";
-import {LoginService} from "./login.service";
+import { HeliosVliegtuig, HeliosVliegtuigen, HeliosVliegtuigenDataset } from '../../types/Helios';
+import { StorageService } from '../storage/storage.service';
+import { KeyValueArray } from '../../types/Utils';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { SharedService } from '../shared/shared.service';
+import { LoginService } from './login.service';
+import { CustomJsonSerializer } from '../../utils/Utils';
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +15,7 @@ import {LoginService} from "./login.service";
 export class VliegtuigenService {
     private vliegtuigenCache: HeliosVliegtuigen = {dataset: []};     // return waarde van API call
 
-    private overslaan: boolean = false;
+    private overslaan = false;
     private ophaalTimer: number;                                // Iedere 15 min halen we de leden op
     private fallbackTimer: number;                              // Timer om te zorgen dat starts geladen echt is
     private vliegtuigenStore = new BehaviorSubject(this.vliegtuigenCache.dataset);
@@ -28,13 +29,13 @@ export class VliegtuigenService {
 
         // We hebben misschien eerder de vliegtuigen opgehaald. Die gebruiken we totdat de API starts heeft opgehaald
         if (this.storageService.ophalen('vliegtuigen') != null) {
-            this.vliegtuigenCache = this.storageService.ophalen('vliegtuigen');
+            this.vliegtuigenCache = this.storageService.ophalen('vliegtuigen') as HeliosVliegtuigen;
             this.vliegtuigenStore.next(this.vliegtuigenCache.dataset!)    // afvuren event met opgeslagen vliegtuigen dataset
         }
 
         // nadat we ingelogd zijn kunnen we de vliegtuigen ophalen
         loginService.inloggenSucces.subscribe(() => {
-            this.ophalenVliegtuigen().then((dataset) => {
+            this.ophalenVliegtuigen().then(() => {
                 this.vliegtuigenStore.next(this.vliegtuigenCache.dataset)    // afvuren event
             });
         });
@@ -49,7 +50,7 @@ export class VliegtuigenService {
                     ophalen = true;
                 }
                 if (ophalen) {
-                    this.ophalenVliegtuigen().then((dataset) => {
+                    this.ophalenVliegtuigen().then(() => {
                         this.vliegtuigenStore.next(this.vliegtuigenCache.dataset)    // afvuren event
                     });
                 }
@@ -57,7 +58,7 @@ export class VliegtuigenService {
         }, 1000 * 60);  // iedere minuut
 
         this.ophaalTimer = window.setInterval(() => {
-            this.ophalenVliegtuigen().then((dataset) => {
+            this.ophalenVliegtuigen().then(() => {
                 this.vliegtuigenStore.next(this.vliegtuigenCache.dataset)    // afvuren event
             });
         }, 1000 * 60 * 15);
@@ -65,7 +66,7 @@ export class VliegtuigenService {
         // Als vliegtuigen zijn aangepast, dan moeten we overzicht opnieuw ophalen
         this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Vliegtuigen") {
-                this.ophalenVliegtuigen().then((dataset) => {
+                this.ophalenVliegtuigen().then(() => {
                     this.vliegtuigenStore.next(this.vliegtuigenCache.dataset)    // afvuren event
                 });
             }
@@ -81,8 +82,8 @@ export class VliegtuigenService {
         return await this.getVliegtuigen();
     }
 
-    async getVliegtuigen(verwijderd: boolean = false, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosVliegtuigenDataset[]> {
-        let getParams: KeyValueArray = params;
+    async getVliegtuigen(verwijderd = false, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosVliegtuigenDataset[]> {
+        const getParams: KeyValueArray = params;
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
@@ -127,26 +128,15 @@ export class VliegtuigenService {
     }
 
     async updateVliegtuig(vliegtuig: HeliosVliegtuig) {
-        const replacer = (key:string, value:any) =>
-            typeof value === 'undefined' ? null : value;
-
-        const response: Response = await this.apiService.put('Vliegtuigen/SaveObject', JSON.stringify(vliegtuig, replacer));
+        const response: Response = await this.apiService.put('Vliegtuigen/SaveObject', JSON.stringify(vliegtuig, CustomJsonSerializer));
         return response.json();
     }
 
     async deleteVliegtuig(id: number) {
-        try {
-            await this.apiService.delete('Vliegtuigen/DeleteObject', {'ID': id.toString()});
-        } catch (e) {
-            throw(e);
-        }
+        await this.apiService.delete('Vliegtuigen/DeleteObject', {'ID': id.toString()});
     }
 
     async restoreVliegtuig(id: number) {
-        try {
-            await this.apiService.patch('Vliegtuigen/RestoreObject', {'ID': id.toString()});
-        } catch (e) {
-            throw(e);
-        }
+        await this.apiService.patch('Vliegtuigen/RestoreObject', {'ID': id.toString()});
     }
 }

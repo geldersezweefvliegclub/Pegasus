@@ -1,41 +1,42 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {StartlijstService} from '../../../services/apiservice/startlijst.service';
-import {CheckboxRenderComponent} from '../../../shared/components/datatable/checkbox-render/checkbox-render.component';
-import {faChevronRight, faDownload, faPlane} from '@fortawesome/free-solid-svg-icons';
-import {faClipboardList} from '@fortawesome/free-solid-svg-icons/faClipboardList';
-import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
-import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
-import {DeleteActionComponent} from '../../../shared/components/datatable/delete-action/delete-action.component';
-import {RestoreActionComponent} from '../../../shared/components/datatable/restore-action/restore-action.component';
-import {HeliosDienstenDataset, HeliosRoosterDataset, HeliosStartDataset, HeliosType} from '../../../types/Helios';
-import {ErrorMessage, KeyValueArray, SuccessMessage} from '../../../types/Utils';
-import * as xlsx from 'xlsx';
-import {LoginService} from '../../../services/apiservice/login.service';
-import {DateTime, Interval} from 'luxon';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { StartlijstService } from '../../../services/apiservice/startlijst.service';
 import {
-    StarttijdRenderComponent
+  CheckboxRenderComponent,
+} from '../../../shared/components/datatable/checkbox-render/checkbox-render.component';
+import { faChevronRight, faDownload } from '@fortawesome/free-solid-svg-icons';
+import { faClipboardList } from '@fortawesome/free-solid-svg-icons/faClipboardList';
+import { ColDef, RowClassParams, RowDoubleClickedEvent } from 'ag-grid-community';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { DeleteActionComponent } from '../../../shared/components/datatable/delete-action/delete-action.component';
+import { RestoreActionComponent } from '../../../shared/components/datatable/restore-action/restore-action.component';
+import { HeliosDienstenDataset, HeliosRoosterDataset, HeliosStartDataset, HeliosType } from '../../../types/Helios';
+import { ErrorMessage, KeyValueArray, SuccessMessage } from '../../../types/Utils';
+import * as xlsx from 'xlsx';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { DateTime, Interval } from 'luxon';
+import {
+  StarttijdRenderComponent,
 } from '../../../shared/components/datatable/starttijd-render/starttijd-render.component';
 import {
-    LandingstijdRenderComponent
+  LandingstijdRenderComponent,
 } from '../../../shared/components/datatable/landingstijd-render/landingstijd-render.component';
-import {TijdInvoerComponent} from '../../../shared/components/editors/tijd-invoer/tijd-invoer.component';
-import {StartEditorComponent} from '../../../shared/components/editors/start-editor/start-editor.component';
-import {Observable, of, Subscription} from 'rxjs';
-import {SchermGrootte, SharedService} from '../../../services/shared/shared.service';
-import {nummerSort, tijdSort} from '../../../utils/Utils';
-import {ExportStartlijstComponent} from "../export-startlijst/export-startlijst.component";
-import {RoosterService} from "../../../services/apiservice/rooster.service";
-import {DienstenService} from "../../../services/apiservice/diensten.service";
-import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
-import {VoorinRenderComponent} from "../voorin-render/voorin-render.component";
-import {AchterinRenderComponent} from "../achterin-render/achterin-render.component";
-import {DagnummerRenderComponent} from "../dagnummer-render/dagnummer-render.component";
-import {TypesService} from "../../../services/apiservice/types.service";
-import {StorageService} from "../../../services/storage/storage.service";
-import {FlarmData, FlarmInputService, FlarmStartData} from "../../../services/flarm-input.service";
-import EventEmitter2 from "eventemitter2";
-import {DatatableComponent} from "../../../shared/components/datatable/datatable.component";
-import {OpmerkingenRenderComponent} from "../opmerkingen-render/opmerkingen-render.component";
+import { TijdInvoerComponent } from '../../../shared/components/editors/tijd-invoer/tijd-invoer.component';
+import { StartEditorComponent } from '../../../shared/components/editors/start-editor/start-editor.component';
+import { Observable, of, Subscription } from 'rxjs';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { nummerSort, tijdSort } from '../../../utils/Utils';
+import { ExportStartlijstComponent } from '../export-startlijst/export-startlijst.component';
+import { RoosterService } from '../../../services/apiservice/rooster.service';
+import { DienstenService } from '../../../services/apiservice/diensten.service';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { VoorinRenderComponent } from '../voorin-render/voorin-render.component';
+import { AchterinRenderComponent } from '../achterin-render/achterin-render.component';
+import { DagnummerRenderComponent } from '../dagnummer-render/dagnummer-render.component';
+import { TypesService } from '../../../services/apiservice/types.service';
+import { StorageService } from '../../../services/storage/storage.service';
+import { FlarmData, FlarmInputService, FlarmStartData } from '../../../services/flarm-input.service';
+import { DatatableComponent } from '../../../shared/components/datatable/datatable.component';
+import { OpmerkingenRenderComponent } from '../opmerkingen-render/opmerkingen-render.component';
 
 type HeliosStartDatasetExtended = HeliosStartDataset & {
     inTijdspan?: boolean
@@ -57,9 +58,9 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
     starts: HeliosStartDatasetExtended[] = [];
     filteredStarts: HeliosStartDatasetExtended[] = [];
-    isLoading: boolean = false;
-    isStarttoren: boolean = false;
-    isExporting: boolean = false;
+    isLoading = false;
+    isStarttoren = false;
+    isExporting = false;
 
     dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
@@ -123,7 +124,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     ];
 
     rowClassRules = {
-        'start_niet_wijzigbaar': function(params: any) { return !params.data.inTijdspan; },
+        'start_niet_wijzigbaar': (params: RowClassParams) => !params.data.inTijdspan,
     }
 
     columns: ColDef[] = this.dataColumns;
@@ -190,23 +191,23 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
     hasFlarmTimer: number;
     refreshTimer: number;
-    deleteMode: boolean = false;        // zitten we in delete mode om starts te kunnen verwijderen
-    trashMode: boolean = false;         // zitten in restore mode om starts te kunnen terughalen
+    deleteMode = false;        // zitten we in delete mode om starts te kunnen verwijderen
+    trashMode = false;         // zitten in restore mode om starts te kunnen terughalen
 
-    filterOn: boolean = false;
-    toonFlarm: boolean = true;
-    toonRefresh: boolean = true;
-    toonVeldFilter: boolean = true;
-    toonStartlijstKlein: boolean = false;     // Klein formaat van de startlijst
+    filterOn = false;
+    toonFlarm = true;
+    toonRefresh = true;
+    toonVeldFilter = true;
+    toonStartlijstKlein = false;     // Klein formaat van de startlijst
 
     private datumAbonnement: Subscription;    // volg de keuze van de kalender
     datum: DateTime = DateTime.now();         // de gekozen dag in de kalender
 
-    magToevoegen: boolean = false;
-    magVerwijderen: boolean = false;
-    magWijzigen: boolean = false;
-    inTijdspan: boolean = false;          //  Mogen we starts aanpassen. Mag niet in de toekomst en ook niet meer dan xx dagen geleden.  xx is geconfigureerd in pegasus.config
-    magExporteren: boolean = false;
+    magToevoegen = false;
+    magVerwijderen = false;
+    magWijzigen = false;
+    inTijdspan = false;          //  Mogen we starts aanpassen. Mag niet in de toekomst en ook niet meer dan xx dagen geleden.  xx is geconfigureerd in pegasus.config
+    magExporteren = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -248,7 +249,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
             else {
                 const diff = Interval.fromDateTimes(datum, nu);
                 if (diff.length("days") > this.configService.maxZelfEditDagen()) {
-                    this.inTijdspan = ui?.isBeheerder!;     // alleen beheerder mag na xx dagen wijzigen. xx is geconfigureerd in pegasus.config
+                    this.inTijdspan = ui?.isBeheerder ?? false;     // alleen beheerder mag na xx dagen wijzigen. xx is geconfigureerd in pegasus.config
                 }
                 else {
                     this.inTijdspan = true;                 // zitten nog binnen de termijn
@@ -287,17 +288,17 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         });
 
         // Roep onWindowResize aan zodra we het event ontvangen hebben
-        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(() => {
             this.onWindowResize()
         });
 
         const ui = this.loginService.userInfo?.Userinfo;
-        this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isDDWV || ui?.isClubVlieger) ? true : false;
+        this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isDDWV || ui?.isClubVlieger) ?? false;
         this.magVerwijderen = (!this.beperkteInvoer()) ? true : false;
-        this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isDDWV || ui?.isClubVlieger) ? true : false;
+        this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isDDWV || ui?.isClubVlieger) ?? false;
         this.magExporteren = (!ui?.isDDWV && !ui?.isStarttoren);
 
-        this.vliegveld = this.storageService.ophalen('VeldFilter');
+        this.vliegveld = this.storageService.ophalen('VeldFilter') as number | undefined;
         this.hasFlarmTimer = window.setInterval(() => this.updateGrid(), 1000 * 60 * 0.5);  // iedere 30 sec
         this.refreshTimer = window.setInterval(() => this.opvragen(), 1000 * 60 * 5);  // iedere 5 minuten
     }
@@ -408,7 +409,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
     // Opvragen van de starts via de api
     opvragen() {
-        let queryParams: KeyValueArray = {};
+        const queryParams: KeyValueArray = {};
         clearTimeout(this.refreshTimer);
 
         if (this.filterOn) {
@@ -421,8 +422,8 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
             this.filterStarts();
 
-            for (let i = 0; i < this.filteredStarts.length; i++) {
-                this.filteredStarts[i].inTijdspan = this.inTijdspan;
+            for (const item of this.filteredStarts) {
+                item.inTijdspan = this.inTijdspan;
             }
             this.updateGrid()
             this.isLoading = false;
@@ -461,21 +462,21 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
     updateGrid() {
         const now = DateTime.fromSQL(DateTime.now().toFormat("HH:mm"));
-        for (let i = 0; i < this.starts.length; i++) {
-            const idx = this.flarmService.flarmCache.findIndex((f) => f.START_ID == this.starts[i].ID);
-            this.starts[i].hasFlarm = (idx >= 0);
+        for (const item of this.starts) {
+            const idx = this.flarmService.flarmCache.findIndex((f) => f.START_ID == item.ID);
+            item.hasFlarm = (idx >= 0);
 
-            if (this.starts[i].STARTTIJD)
+            if (item.STARTTIJD)
             {
-                if (!this.starts[i].LANDINGSTIJD) {
-                    const start = DateTime.fromSQL(this.starts[i].STARTTIJD!);
-                    this.starts[i].DUUR = now.diff(start).toFormat("hh:mm");
+                if (!item.LANDINGSTIJD) {
+                    const start = DateTime.fromSQL(item.STARTTIJD!);
+                    item.DUUR = now.diff(start).toFormat("hh:mm");
                 }
                 else
                 {
-                    const start = DateTime.fromSQL(this.starts[i].STARTTIJD!);
-                    const landing = DateTime.fromSQL(this.starts[i].LANDINGSTIJD!);
-                    this.starts[i].DUUR = landing.diff(start).toFormat("hh:mm");
+                    const start = DateTime.fromSQL(item.STARTTIJD!);
+                    const landing = DateTime.fromSQL(item.LANDINGSTIJD!);
+                    item.DUUR = landing.diff(start).toFormat("hh:mm");
                 }
             }
         }
@@ -492,7 +493,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     async exportDataset(exportDMJ: string) {
         this.isExporting = true;
 
-        let datum: DateTime = DateTime.fromObject({
+        const datum: DateTime = DateTime.fromObject({
             year: this.datum.year,
             month: this.datum.month,
             day: this.datum.day
@@ -509,13 +510,13 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
                 break;
             }
             case "maand": {
-                let vanDatum: DateTime = DateTime.fromObject({
+                const vanDatum: DateTime = DateTime.fromObject({
                     year: this.datum.year,
                     month: this.datum.month,
                     day: 1
                 })
 
-                let totDatum: DateTime = DateTime.fromObject({
+                const totDatum: DateTime = DateTime.fromObject({
                     year: this.datum.year,
                     month: this.datum.month,
                     day: this.datum.daysInMonth
@@ -532,13 +533,13 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
                 break;
             }
             case "jaar": {
-                let vanDatum: DateTime = DateTime.fromObject({
+                const vanDatum: DateTime = DateTime.fromObject({
                     year: this.datum.year,
                     month: 1,
                     day: 1
                 })
 
-                let totDatum: DateTime = DateTime.fromObject({
+                const totDatum: DateTime = DateTime.fromObject({
                     year: this.datum.year,
                     month: 12,
                     day: 31

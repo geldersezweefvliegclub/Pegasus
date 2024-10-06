@@ -1,14 +1,13 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../modal/modal.component";
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {HeliosAanwezigLedenDataset, HeliosType, HeliosVliegtuigenDataset} from "../../../../types/Helios";
-import {Observable, of, Subscription} from "rxjs";
-import {TypesService} from "../../../../services/apiservice/types.service";
-import {AanwezigLedenService} from "../../../../services/apiservice/aanwezig-leden.service";
-import {VliegtuigenService} from "../../../../services/apiservice/vliegtuigen.service";
-import {LoginService} from "../../../../services/apiservice/login.service";
-import {StorageService} from "../../../../services/storage/storage.service";
-import {DateTime} from "luxon";
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ModalComponent } from '../../modal/modal.component';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { HeliosAanwezigLedenDataset, HeliosType, HeliosVliegtuigenDataset } from '../../../../types/Helios';
+import { Observable, of, Subscription } from 'rxjs';
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { AanwezigLedenService } from '../../../../services/apiservice/aanwezig-leden.service';
+import { VliegtuigenService } from '../../../../services/apiservice/vliegtuigen.service';
+import { LoginService } from '../../../../services/apiservice/login.service';
+import { StorageService } from '../../../../services/storage/storage.service';
 
 type HeliosTypeExtended = HeliosType & {
     Geselecteerd?: boolean;
@@ -28,10 +27,10 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
     aanwezig: HeliosAanwezigLedenDataset;
     eenheden: number | undefined;
 
-    isDDWVer: boolean = false;
-    isLoading: boolean = false;
-    isSaving: boolean = false;
-    formTitel: string = "";
+    isDDWVer = false;
+    isLoading = false;
+    isSaving = false;
+    formTitel = "";
 
     veldenTypes$: Observable<HeliosType[]>;
 
@@ -58,8 +57,8 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
         this.typesService.getClubVliegtuigTypes().then((records) => {
             this.vliegtuigTypes = records;
 
-            for (let i = 0; i < this.vliegtuigTypes.length; i++) {
-                this.vliegtuigTypes[i].Geselecteerd = false;
+            for (const item of this.vliegtuigTypes) {
+                item.Geselecteerd = false;
             }
             this.vliegtuigTypes.sort(function compareFn(a, b) {
                 const vA = (a.SORTEER_VOLGORDE) ? a.SORTEER_VOLGORDE : 100;
@@ -111,13 +110,13 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
 
             // Als we onszelf aanmelden, dan kijken of een default setting hebben
             if (this.aanwezig.LID_ID == ui!.ID) {
-                this.vliegtuigType2Vinkjes(this.storageService.ophalen('aanmeldingVoorkeurVliegtuigsTypes'));
+                this.vliegtuigType2Vinkjes(this.storageService.ophalen('aanmeldingVoorkeurVliegtuigsTypes') as string | undefined);
                 const vID = this.storageService.ophalen('aanmeldingOverlandVliegtuigID')
 
                 if (vID) {
                     this.aanwezig.OVERLAND_VLIEGTUIG_ID = +vID;     // + teken voor conversie van string naar int
                 }
-                this.aanwezig.VELD_ID = this.storageService.ophalen("aanmeldingVeldTypes")
+                this.aanwezig.VELD_ID = this.storageService.ophalen("aanmeldingVeldTypes") as number | undefined
             }
             else {
                 this.vliegtuigType2Vinkjes("");
@@ -132,13 +131,13 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
     zetVoorkeur(event: Event, id: number) {
         const idx = this.vliegtuigTypes.findIndex(t => t.ID == id)
 
-        this.vliegtuigTypes[idx].Geselecteerd = (<HTMLInputElement>event.target).checked;
+        this.vliegtuigTypes[idx].Geselecteerd = (event.target as HTMLInputElement).checked;
 
-        let voorkeur: string = '';
-        for (let i = 0; i < this.vliegtuigTypes.length; i++) {
-            if (this.vliegtuigTypes[i].Geselecteerd) {
+        let voorkeur = '';
+        for (const item of this.vliegtuigTypes) {
+            if (item.Geselecteerd) {
                 voorkeur += (voorkeur == '') ? '' : ',';
-                voorkeur += this.vliegtuigTypes[i].ID!.toString();
+                voorkeur += item.ID!.toString();
             }
         }
         this.aanwezig.VOORKEUR_VLIEGTUIG_TYPE = (voorkeur !== "") ? voorkeur : undefined;

@@ -1,17 +1,17 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {HeliosAgendaDataset, HeliosJournaalDataset} from "../../../types/Helios";
-import {AgendaService} from "../../../services/apiservice/agenda";
-import {Subscription} from "rxjs";
-import {DateTime} from "luxon";
-import {ColDef, RowDoubleClickedEvent} from "ag-grid-community";
-import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {SharedService} from "../../../services/shared/shared.service";
-import {nummerSort} from "../../../utils/Utils";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faCalendar} from "@fortawesome/free-solid-svg-icons";
-import {AgendaEditorComponent} from "../../../shared/components/editors/agenda-editor/agenda-editor.component";
-import {DatumRenderComponent} from "../../../shared/components/datatable/datum-render/datum-render.component";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { HeliosAgendaDataset } from '../../../types/Helios';
+import { AgendaService } from '../../../services/apiservice/agenda';
+import { Subscription } from 'rxjs';
+import { DateTime } from 'luxon';
+import { ColDef, RowDoubleClickedEvent } from 'ag-grid-community';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { SharedService } from '../../../services/shared/shared.service';
+import { nummerSort } from '../../../utils/Utils';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { AgendaEditorComponent } from '../../../shared/components/editors/agenda-editor/agenda-editor.component';
+import { DatumRenderComponent } from '../../../shared/components/datatable/datum-render/datum-render.component';
 
 @Component({
   selector: 'app-agenda-scherm',
@@ -22,19 +22,19 @@ export class AgendaSchermComponent implements OnInit, OnDestroy {
   @ViewChild(AgendaEditorComponent) editor:AgendaEditorComponent;
 
   data:HeliosAgendaDataset[] = [];
-  isLoading: boolean = false;
+  isLoading = false;
 
   private dbEventAbonnement: Subscription;    // Abonneer op aanpassingen in de database
   private datumAbonnement: Subscription;      // volg de keuze van de kalender
   private maandAbonnement: Subscription;      // volg de keuze van de kalender
   datum: DateTime = DateTime.now();           // de gekozen dag
 
-  deleteMode: boolean = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
-  trashMode: boolean = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
+  deleteMode = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
+  trashMode = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
 
-  magToevoegen: boolean = false;
-  magVerwijderen: boolean = false;
-  magWijzigen: boolean = false;
+  magToevoegen = false;
+  magVerwijderen = false;
+  magWijzigen = false;
 
   success: SuccessMessage | undefined;
   error: ErrorMessage | undefined;
@@ -156,16 +156,13 @@ export class AgendaSchermComponent implements OnInit, OnDestroy {
   opvragen() {
     this.isLoading = true;
 
-    let startDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 1, day: 1});
-    let eindDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 12, day: 31});
+    const startDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 1, day: 1});
+    const eindDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 12, day: 31});
 
 
     this.agendaService.getAgenda(startDatum, eindDatum, 5000, this.trashMode).then((dataset) => {
       this.isLoading = false;
       this.data = dataset;
-
-      const ui = this.loginService.userInfo?.Userinfo;
-
     }).catch(e => {
       this.isLoading = false;
       this.error = e;

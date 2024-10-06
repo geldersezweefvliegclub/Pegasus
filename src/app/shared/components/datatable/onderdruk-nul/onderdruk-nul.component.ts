@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
-import {AgRendererComponent} from "ag-grid-angular";
-import {ICellRendererParams} from "ag-grid-community";
+import { Component } from '@angular/core';
+import { AgRendererComponent } from 'ag-grid-angular';
+import { ICellRendererParams } from 'ag-grid-community';
 
 @Component({
   selector: 'app-onderdruk-nul',
@@ -11,14 +11,13 @@ export class OnderdrukNulComponent implements AgRendererComponent {
 
   waarde: number;
 
-  constructor() {
-  }
+
 
   agInit(params: ICellRendererParams): void {
     this.waarde = params.value;
   }
 
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
 }

@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
-import {AgRendererComponent} from 'ag-grid-angular';
-import {ICellRendererParams} from 'ag-grid-community';
+import { Component } from '@angular/core';
+import { AgRendererComponent } from 'ag-grid-angular';
+import { ICellRendererParams } from 'ag-grid-community';
 
 @Component({
   selector: 'app-zitplaats-render',
@@ -9,13 +9,13 @@ import {ICellRendererParams} from 'ag-grid-community';
 })
 export class ZitplaatsRenderComponent implements AgRendererComponent {
   stoelen: number;
-  constructor() { }
+
 
   agInit(params: ICellRendererParams): void {
     this.stoelen = params.value;
   }
 
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
 }

@@ -1,10 +1,9 @@
-import {Injectable} from '@angular/core';
-import {SharedService} from "../shared/shared.service";
-import {APIService} from "./api.service";
-import {HeliosConfigDDWV, HeliosLedenDataset} from "../../types/Helios";
-import {StorageService} from "../storage/storage.service";
-import {DateTime, Interval} from "luxon";
-import {KeyValueArray} from "../../types/Utils";
+import { Injectable } from '@angular/core';
+import { APIService } from './api.service';
+import { HeliosConfigDDWV } from '../../types/Helios';
+import { StorageService } from '../storage/storage.service';
+import { DateTime, Interval } from 'luxon';
+import { KeyValueArray } from '../../types/Utils';
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +16,7 @@ export class DdwvService {
                 private readonly storageService: StorageService) {
         // We hebben misschien eerder de lidTypes opgehaald. Die gebruiken we totdat de API starts heeft opgehaald
         if (this.storageService.ophalen('configDDWV') != null) {
-            this.configDDWV = this.storageService.ophalen('configDDWV');
+            this.configDDWV = this.storageService.ophalen('configDDWV') as HeliosConfigDDWV;
         }
     }
 
@@ -61,7 +60,7 @@ export class DdwvService {
     }
 
     async betaalCrew(datum: string, IDs: string): Promise<void> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
 
         getParams['DATUM'] = datum;
         getParams['DIENSTEN'] = IDs;
@@ -71,10 +70,6 @@ export class DdwvService {
             "DIENSTEN": IDs
         }
 
-        try {
-            const response: Response = await this.apiService.post('DDWV/UitbetalenCrew', JSON.stringify(obj));
-        } catch (e) {
-            throw(e);
-        }
+        await this.apiService.post('DDWV/UitbetalenCrew', JSON.stringify(obj));
     }
 }

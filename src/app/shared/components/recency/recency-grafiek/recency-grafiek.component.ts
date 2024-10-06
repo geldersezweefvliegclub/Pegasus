@@ -1,15 +1,14 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {Subscription} from 'rxjs';
-import {DateTime} from 'luxon';
-import {SharedService} from '../../../../services/shared/shared.service';
-import {StartlijstService} from '../../../../services/apiservice/startlijst.service';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { DateTime } from 'luxon';
+import { SharedService } from '../../../../services/shared/shared.service';
+import { StartlijstService } from '../../../../services/apiservice/startlijst.service';
 
 import * as pluginAnnotations from 'chartjs-plugin-annotation';
-import AnnotationPlugin, {AnnotationOptions, LineAnnotationOptions} from 'chartjs-plugin-annotation';
-import {Chart, ChartConfiguration, ChartDataset, ChartOptions, ChartEvent, ChartType} from 'chart.js';
-import {BaseChartDirective} from 'ng2-charts';
+import AnnotationPlugin, { AnnotationOptions } from 'chartjs-plugin-annotation';
+import { Chart, ChartConfiguration, ChartOptions } from 'chart.js';
 
-import {ModalComponent} from '../../modal/modal.component';
+import { ModalComponent } from '../../modal/modal.component';
 
 
 @Component({
@@ -28,8 +27,8 @@ export class RecencyGrafiekComponent implements OnInit {
     datum: DateTime = DateTime.now();       // de gekozen dag
 
     waardes: number[] = [];
-    bezig: boolean = false;
-    counter: number = 0;
+    bezig = false;
+    counter = 0;
 
     // De rode zone tekenen in de grafiek
     RodeBalk: AnnotationOptions =
@@ -113,14 +112,16 @@ export class RecencyGrafiekComponent implements OnInit {
                     font: {
                         family: 'Roboto, sans-serif',
                         size: 12,
-                        weight: '300'
+                        weight: 300
                     },
                 }
             },
             'y-axis-0': {
                 beginAtZero: true,
+                border: {
+                    dash: [6, 4],
+                },
                 grid: {
-                    borderDash: [6, 4],
                     color: '#548bcd',
                 },
                 ticks: {
@@ -129,7 +130,7 @@ export class RecencyGrafiekComponent implements OnInit {
                     font: {
                         family: 'Roboto, sans-serif',
                         size: 12,
-                        weight: '300',
+                        weight: 300
                     },
 
                 }
@@ -200,11 +201,11 @@ export class RecencyGrafiekComponent implements OnInit {
     }
 
     async opvragen(): Promise<void> {
-        let waardes = [];
-        let lineChartLabels = [];
+        const waardes = [];
+        const lineChartLabels = [];
 
         this.bezig = true               // Indicator dat we aan het ophalen zijn, progress balk is dan zichtbaar
-        let maxWaarde: number = 30;     // indien de vlieger een waarde heeft < 30, dan is 30 minimum, de groene, gele, rode balk zijn dan even hoog
+        let maxWaarde = 30;     // indien de vlieger een waarde heeft < 30, dan is 30 minimum, de groene, gele, rode balk zijn dan even hoog
 
         for (this.counter = 0; this.counter < 24; this.counter++) {
             const d = this.datum.plus({months: -1 * (24 - this.counter - 1)});
@@ -265,7 +266,7 @@ export class RecencyGrafiekComponent implements OnInit {
                 if (recency.WAARDE as number > maxWaarde) {
                     maxWaarde = recency.WAARDE as number;
                 }
-            } catch (e) {
+            } catch (_) {
                 waardes.push(0);
             }
         }
@@ -279,16 +280,5 @@ export class RecencyGrafiekComponent implements OnInit {
 
         this.lineChartData.datasets[0].data = waardes;
         this.lineChartData.labels = lineChartLabels;
-
-        const lineReeks: ChartDataset = {
-
-            borderColor: 'rgba(42,42,42,0.59)',
-            pointBackgroundColor: 'rgba(148,159,177,1)',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgba(148,159,177,0.8)',
-
-            data: this.waardes,
-        }
     }
 }

@@ -1,10 +1,10 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {ModalComponent} from "../../modal/modal.component";
-import {HeliosAanwezigLedenDataset, HeliosGast, HeliosType} from "../../../../types/Helios";
-import {GastenService} from "../../../../services/apiservice/gasten.service";
-import {Observable, of, Subscription} from "rxjs";
-import {TypesService} from "../../../../services/apiservice/types.service";
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { ModalComponent } from '../../modal/modal.component';
+import { HeliosGast, HeliosType } from '../../../../types/Helios';
+import { GastenService } from '../../../../services/apiservice/gasten.service';
+import { Observable, of, Subscription } from 'rxjs';
+import { TypesService } from '../../../../services/apiservice/types.service';
 
 @Component({
     selector: 'app-gast-editor',
@@ -18,8 +18,8 @@ export class GastEditorComponent implements OnInit, OnDestroy {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
-    isLoading: boolean = false;
-    isSaving: boolean = false;
+    isLoading = false;
+    isSaving = false;
 
     gast: HeliosGast;
 
@@ -93,7 +93,7 @@ export class GastEditorComponent implements OnInit, OnDestroy {
                 this.isSaving = false;
             })
         } else {
-            this.gastenService.addGast(this.gast).then((a) => {
+            this.gastenService.addGast(this.gast).then((_) => {
                 this.success = {titel: "Aanmelden gast", beschrijving: "Aanmelding is geslaagd"}
                 this.refresh.emit();
 

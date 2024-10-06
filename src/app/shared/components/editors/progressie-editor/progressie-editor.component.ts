@@ -7,23 +7,23 @@ import {
     OnInit,
     Output,
     SimpleChanges,
-    ViewChild
+    ViewChild,
 } from '@angular/core';
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import {
     HeliosBehaaldeProgressieDataset,
     HeliosCompetentiesDataset,
-    HeliosDagRapport,
-    HeliosLid, HeliosType
-} from "../../../../types/Helios";
-import {ModalComponent} from "../../modal/modal.component";
-import {ProgressieService} from "../../../../services/apiservice/progressie.service";
-import {LoginService} from "../../../../services/apiservice/login.service";
-import {LedenService} from "../../../../services/apiservice/leden.service";
-import {Subscription} from "rxjs";
-import {TypesService} from "../../../../services/apiservice/types.service";
-import {NgbDate, NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
-import {DateTime} from "luxon";
+    HeliosLid,
+    HeliosType,
+} from '../../../../types/Helios';
+import { ModalComponent } from '../../modal/modal.component';
+import { ProgressieService } from '../../../../services/apiservice/progressie.service';
+import { LoginService } from '../../../../services/apiservice/login.service';
+import { LedenService } from '../../../../services/apiservice/leden.service';
+import { Subscription } from 'rxjs';
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { DateTime } from 'luxon';
 
 @Component({
     selector: 'app-progressie-editor',
@@ -40,11 +40,11 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
     kalenderEersteDatum: NgbDateStruct;
     kalenderLaatsteDatum: NgbDateStruct;
 
-    isSaving: boolean = false;
-    isLoading: boolean = false;
-    isVerwijderMode: boolean = false;
+    isSaving = false;
+    isLoading = false;
+    isVerwijderMode = false;
 
-    formTitel: string = "";
+    formTitel = "";
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
@@ -81,7 +81,7 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         // ophalen van lid gegevens
-        if (changes.hasOwnProperty("vliegerID")) {
+        if (Object.prototype.hasOwnProperty.call(changes, "vliegerID")) {
             const ui = this.loginService.userInfo?.Userinfo;
             if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) {
                 this.ledenService.getLid(this.vliegerID).then((l) => this.lid = l)
@@ -95,7 +95,7 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
         this.progressieService.getProgressie(id).then ((p) => {
             this.progressie = p;
             this.isLoading = false;
-        }).catch(e => {
+        }).catch(_ => {
             this.isLoading = false;
         });
         this.geldigTot = (this.progressie.GELDIG_TOT) ? DateTime.fromSQL(this.progressie.GELDIG_TOT) : undefined;
@@ -163,7 +163,7 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
 
 
     // maak een lange beschrijving van de competentie
-    vullenCompetentieString(id: number, init:boolean = true) : string {
+    vullenCompetentieString(id: number, init = true) : string {
         if (init) {
             this.competentieString = "";
         }

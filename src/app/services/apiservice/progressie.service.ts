@@ -1,16 +1,17 @@
-import {Injectable} from '@angular/core';
-import {APIService} from "./api.service";
-import {StorageService} from "../storage/storage.service";
+import { Injectable } from '@angular/core';
+import { APIService } from './api.service';
+import { StorageService } from '../storage/storage.service';
 import {
-    HeliosBehaaldeProgressie,
-    HeliosBehaaldeProgressieDataset, HeliosDagRapport, HeliosLid,
-    HeliosProgressie,
-    HeliosProgressieBoom,
-    HeliosProgressieKaart,
-    HeliosProgressieKaartDataset
-} from "../../types/Helios";
-import {KeyValueArray} from "../../types/Utils";
-import {LoginService} from "./login.service";
+  HeliosBehaaldeProgressie,
+  HeliosBehaaldeProgressieDataset,
+  HeliosDagRapport,
+  HeliosProgressie,
+  HeliosProgressieBoom,
+  HeliosProgressieKaart,
+  HeliosProgressieKaartDataset,
+} from '../../types/Helios';
+import { KeyValueArray } from '../../types/Utils';
+import { LoginService } from './login.service';
 
 @Injectable({
     providedIn: 'root'
@@ -27,14 +28,12 @@ export class ProgressieService {
     }
 
     async getProgressiesLid(lidID:number, comptentiesIDs?: string): Promise<HeliosBehaaldeProgressieDataset[]> {
-        let progressie: HeliosBehaaldeProgressie | null = null;
-
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
             return [];
         }
 
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
         getParams['LID_ID'] = lidID.toString();
 
         if ((this.progressieCache != undefined)  && (this.progressieCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
@@ -83,7 +82,7 @@ export class ProgressieService {
     }
 
     async getBoom(lidID:number): Promise<HeliosProgressieBoom[]> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
         getParams['LID_ID'] = lidID.toString();
 
         // starttoren heeft geen progressie nodig
@@ -98,7 +97,7 @@ export class ProgressieService {
     }
 
     async getProgressieKaart(lidID:number):Promise<HeliosProgressieKaartDataset[]> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
         getParams['LID_ID'] = lidID.toString();
 
         // starttoren heeft geen progressie nodig

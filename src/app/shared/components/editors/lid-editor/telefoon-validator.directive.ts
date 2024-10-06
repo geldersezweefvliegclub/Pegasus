@@ -1,5 +1,5 @@
-import {Directive} from '@angular/core';
-import {AbstractControl, NG_VALIDATORS, ValidatorFn} from '@angular/forms';
+import { Directive } from '@angular/core';
+import { AbstractControl, NG_VALIDATORS, Validator, ValidatorFn, ValidationErrors } from '@angular/forms';
 
 @Directive({
   selector: '[appTelefoonValidator]',
@@ -11,17 +11,16 @@ import {AbstractControl, NG_VALIDATORS, ValidatorFn} from '@angular/forms';
     },
   ],
 })
-export class TelefoonValidatorDirective {
+export class TelefoonValidatorDirective implements Validator {
 
-  readonly regex =
-    '(^\\+[0-9]{2}|^\\+[0-9]{2}\\(0\\)|^\\(\\+[0-9]{2}\\)\\(0\\)|^00[0-9]{2}|^0)([0-9]{9}$|[0-9\\-\\s]{10}$)';
+  readonly regex = '(^\\+[0-9]{2}|^\\+[0-9]{2}\\(0\\)|^\\(\\+[0-9]{2}\\)\\(0\\)|^00[0-9]{2}|^0)([0-9]{9}$|[0-9\\-\\s]{10}$)';
 
-  validate(control: AbstractControl): { [key: string]: any } | null {
+  validate(control: AbstractControl): ValidationErrors | null {
     return this.regexValidator(new RegExp(this.regex, 'i'))(control);
   }
 
   regexValidator(nameRe: RegExp): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
+    return (control: AbstractControl): ValidationErrors | null => {
       if (control.value === '' || !control.value) {
         return null;
       }

@@ -1,18 +1,18 @@
-import {Directive} from '@angular/core';
-import {AbstractControl, NG_VALIDATORS, Validator, ValidatorFn} from '@angular/forms';
+import { Directive } from '@angular/core';
+import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator, ValidatorFn } from '@angular/forms';
 
 @Directive({
     selector: '[appRegistratieDirective]',
-    providers: [[{provide: NG_VALIDATORS, useExisting: RegistratieDirective, multi: true}]]
+    providers: [{ provide: NG_VALIDATORS, useExisting: RegistratieDirective, multi: true }]
 })
 export class RegistratieDirective implements Validator {
 
-    validate(control: AbstractControl): { [key: string]: any } | null {
+    validate(control: AbstractControl): ValidationErrors | null {
         return this.regexValidator(new RegExp(/[A-Z]*-[0-Z][0-Z]*/))(control);
     }
 
     regexValidator(nameRe: RegExp): ValidatorFn {
-        return (control: AbstractControl): { [key: string]: any } | null => {
+        return (control: AbstractControl): ValidationErrors | null => {
             if (control.value === '') {
                 return null;
             }

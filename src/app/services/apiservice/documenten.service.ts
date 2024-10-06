@@ -1,12 +1,9 @@
-import {Injectable} from '@angular/core';
-import {APIService} from "./api.service";
-import {
-    HeliosDocumenten,
-    HeliosDocumentenDataset, HeliosDocument
-} from "../../types/Helios";
-import {KeyValueArray} from "../../types/Utils";
-import {StorageService} from "../storage/storage.service";
-import {LoginService} from "./login.service";
+import { Injectable } from '@angular/core';
+import { APIService } from './api.service';
+import { HeliosDocument, HeliosDocumenten, HeliosDocumentenDataset } from '../../types/Helios';
+import { KeyValueArray } from '../../types/Utils';
+import { StorageService } from '../storage/storage.service';
+import { LoginService } from './login.service';
 
 @Injectable({
     providedIn: 'root'
@@ -20,12 +17,12 @@ export class DocumentenService {
 
         // We hebben misschien eerder de documenten opgehaald. Die laden we alvast
         if (this.storageService.ophalen('documenten') != null) {
-            this.documentenCache = this.storageService.ophalen('documenten');
+            this.documentenCache = this.storageService.ophalen('documenten') as HeliosDocumenten;
         }
     }
 
-    async getDocumenten(verwijderd: boolean = false, lid_id: number | undefined = undefined, groep: number | undefined = undefined): Promise<HeliosDocumentenDataset[]> {
-        let getParams: KeyValueArray = {};
+    async getDocumenten(verwijderd = false, lid_id: number | undefined = undefined, groep: number | undefined = undefined): Promise<HeliosDocumentenDataset[]> {
+        const getParams: KeyValueArray = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {

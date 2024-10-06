@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  "/Gasten/CreateTable": {
+  "/Diensten/CreateTable": {
     post: {
       parameters: {
         query: {
@@ -20,7 +20,7 @@ export interface paths {
       };
     };
   };
-  "/Gasten/CreateViews": {
+  "/Diensten/CreateViews": {
     post: {
       responses: {
         /** Aangemaakt, View toegevoegd */
@@ -30,11 +30,11 @@ export interface paths {
       };
     };
   };
-  "/Gasten/GetObject": {
+  "/Diensten/GetObject": {
     get: {
       parameters: {
         query: {
-          /** Database ID van het gast record */
+          /** Database ID van het dienst record */
           ID: number;
         };
       };
@@ -42,7 +42,7 @@ export interface paths {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_gast"];
+            "application/json": components["schemas"]["oper_diensten"];
           };
         };
         /** Data niet gevonden */
@@ -56,11 +56,11 @@ export interface paths {
       };
     };
   };
-  "/Gasten/GetObjects": {
+  "/Diensten/GetObjects": {
     get: {
       parameters: {
         query: {
-          /** Database ID van het aanwezig record */
+          /** Database ID van het diensten record */
           ID?: number;
           /** Toon welke records verwijderd zijn. Default = false */
           VERWIJDERD?: boolean;
@@ -68,7 +68,7 @@ export interface paths {
           LAATSTE_AANPASSING?: boolean;
           /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
           HASH?: string;
-          /** Sortering van de velden in ORDER BY formaat. Default = NAAM */
+          /** Sortering van de velden in ORDER BY formaat. Default = DATUM */
           SORT?: string;
           /** Maximum aantal records in de dataset. Gebruikt in LIMIT query */
           MAX?: number;
@@ -76,17 +76,27 @@ export interface paths {
           START?: number;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
+          /** Diensten van een bepaald lid */
+          LID_ID?: string;
+          /** Zoek op datum */
+          DATUM?: string;
           /** Begin datum (inclusief deze dag) */
           BEGIN_DATUM?: string;
           /** Eind datum (inclusief deze dag) */
           EIND_DATUM?: string;
+          /** Zoek op een of meerder type diensten. Types als CSV formaat */
+          TYPES?: string;
+          /** Haal alle diensten op waar lid aanwezig was */
+          AANWEZIG?: boolean;
+          /** Haal alle diensten op waar lid NIET aanwezig was */
+          AFWEZIG?: boolean;
         };
       };
       responses: {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["view_gasten"];
+            "application/json": components["schemas"]["view_diensten"];
           };
         };
         /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
@@ -98,18 +108,44 @@ export interface paths {
       };
     };
   };
-  "/Gasten/DeleteObject": {
+  "/Diensten/TotaalDiensten": {
+    get: {
+      parameters: {
+        query: {
+          /** Voor welk jaar wordt de data opgevraagd */
+          JAAR: number;
+          /** Voor welk lid wordt de data opgevraagd */
+          LID_ID: number;
+        };
+      };
+      responses: {
+        /** OK, data succesvol opgehaald */
+        200: {
+          content: {
+            "application/json": components["schemas"]["diensten_totaal"];
+          };
+        };
+        /** Methode niet toegestaan, input validatie error */
+        405: unknown;
+        /** Niet aanvaardbaar, input ontbreekt */
+        406: unknown;
+        /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
+        500: unknown;
+      };
+    };
+  };
+  "/Diensten/DeleteObject": {
     delete: {
       parameters: {
         query: {
-          /** Database ID van het gast record. Meerdere ID's in CSV formaat */
+          /** Database ID van het diensten record. Meerdere ID's in CSV formaat */
           ID: string;
           /** Controleer of record bestaat voordat het verwijderd wordt. Default = true */
           VERIFICATIE?: boolean;
         };
       };
       responses: {
-        /** Gast verwijderd */
+        /** Dienst verwijderd */
         204: never;
         /** Niet geautoriseerd, geen schrijfrechten */
         401: unknown;
@@ -124,7 +160,7 @@ export interface paths {
       };
     };
   };
-  "/Gasten/RestoreObject": {
+  "/Diensten/RestoreObject": {
     patch: {
       parameters: {
         query: {
@@ -148,13 +184,13 @@ export interface paths {
       };
     };
   };
-  "/Gasten/SaveObject": {
+  "/Diensten/SaveObject": {
     put: {
       responses: {
         /** OK, data succesvol aangepast */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_gast"];
+            "application/json": components["schemas"]["oper_diensten"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -165,15 +201,15 @@ export interface paths {
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
         406: unknown;
-        /** Conflict, lidnummer bestaat al */
+        /** Conflict, dienst is al ingevuld */
         409: unknown;
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** gast data */
+      /** Dienst data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["oper_gast_in"];
+          "application/json": components["schemas"]["oper_diensten_in"];
         };
       };
     };
@@ -182,7 +218,7 @@ export interface paths {
         /** OK, data succesvol toegevoegd */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_gast"];
+            "application/json": components["schemas"]["oper_diensten"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -191,15 +227,15 @@ export interface paths {
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
         406: unknown;
-        /** Conflict, lidnummer bestaat al */
+        /** Conflict, dienst is al ingevuld */
         409: unknown;
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** gast data */
+      /** Dienst data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["oper_gast_in"];
+          "application/json": components["schemas"]["oper_diensten_in"];
         };
       };
     };
@@ -208,36 +244,57 @@ export interface paths {
 
 export interface components {
   schemas: {
-    oper_gast_in: {
+    oper_diensten_in: {
       /**
        * Format: int32
-       * @description Database ID van het gast record
+       * @description Database ID van het dienten record
        * @example 12871
        */
       ID?: number;
       /**
        * Format: date
-       * @description Datum van de vliegdag
-       * @example 2022-07-31
+       * @description Datum van de rooster
+       * @example 2017-07-21
        */
       DATUM?: string;
       /**
-       * @description Naam van de gast
-       * @example Gekko
+       * @description Voor wie is deze dienst. Verwijzing naar leden tabel
+       * @example 10412
        */
-      NAAM?: string;
+      LID_ID?: number;
       /**
-       * @description Extra text om opmerkingen toe te voegen voor start
-       * @example BR-1234
+       * Format: int32
+       * @description Link naar type tabel. Geeft aan wat voor type dienst
+       * @example 12
        */
-      OPMERKINGEN?: string;
+      TYPE_DIENST_ID?: number;
       /**
-       * @description Op welk veld is deze gast aangemeld
-       * @example 901
+       * @description Is lid aanwezig geweest
+       * @example 1
        */
-      VELD_ID?: number;
+      AANWEZIG?: boolean;
+      /**
+       * @description Lid is niet komen opdagen
+       * @example 0
+       */
+      AFWEZIG?: boolean;
+      /**
+       * @description Is de DDWV crew uitbetaald?
+       * @example 1
+       */
+      UITBETAALD?: boolean;
     };
-    oper_gast: components["schemas"]["oper_gast_in"] & {
+    oper_diensten: components["schemas"]["oper_diensten_in"] & {
+      /**
+       * @description Verwijzing naar rooster tabel
+       * @example 10900
+       */
+      ROOSTER_ID?: number;
+      /**
+       * @description Diegene die de dienst heeft ingevoerd. Verwijzing naar leden tabel
+       * @example 10900
+       */
+      INGEVOERD_DOOR_ID?: number;
       /**
        * @description Is dit record gemarkeerd als verwijderd?
        * @example 0
@@ -246,41 +303,76 @@ export interface components {
       /**
        * Format: date-time
        * @description Tijdstempel van laaste aanpassing in de database
-       * @example 2020-09-01 20:21:33
+       * @example 2020-03-03 17:14:50Z
        */
       LAATSTE_AANPASSING?: string;
     };
-    view_gasten_dataset: components["schemas"]["oper_gast"] & {
+    view_diensten_dataset: components["schemas"]["oper_diensten"] & {
       /**
-       * @description Vliegveld waar gast aangemeld is
-       * @example Terlet
+       * @description Naam van het lid
+       * @example Juffrouw Ooievaar
        */
-      VELD?: string;
+      NAAM?: string;
+      /**
+       * @description Naam van diegene die de dienst heeft ingevoerd
+       * @example Meneer Ooievaar
+       */
+      INGEVOERD_DOOR?: string;
+      /**
+       * @description Beschrijving van de dienst
+       * @example Ochtend lierist
+       */
+      TYPE_DIENST?: string;
     };
-    view_gasten: {
+    view_diensten: {
       /**
        * Format: int32
        * @description Aantal records dat voldoet aan de criteria in de database
-       * @example 287
+       * @example 51
        */
       totaal?: number;
       /**
        * Format: date-time
        * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
-       * @example 2016-08-30 17:04:07
+       * @example 2016-12-07 09:10:19
        */
       laatste_aanpassing?: string;
       /**
        * @description hash van de dataset
-       * @example 1190732
+       * @example 40ab00b
        */
       hash?: string;
       /** @description De dataset met records */
-      dataset?: components["schemas"]["view_gasten_dataset"][];
+      dataset?: components["schemas"]["view_diensten_dataset"][];
+    };
+    diensten_totaal: {
+      /**
+       * @description Verwijzing naar leden tabel
+       * @example 10900
+       */
+      LID_ID?: number;
+      /**
+       * @description Naam van het lid
+       * @example Juffrouw Ooievaar
+       */
+      NAAM?: string;
+      /**
+       * @description Jaar
+       * @example 2021
+       */
+      JAAR?: number;
+      /**
+       * @description Maand 1..12, null voor jaar totaal
+       * @example 12
+       */
+      MAAND?: number;
+      /**
+       * @description Aantal diensten
+       * @example 39
+       */
+      AANTAL?: number;
     };
   };
 }
 
-export interface operations {}
 
-export interface external {}

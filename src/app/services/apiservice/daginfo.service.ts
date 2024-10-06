@@ -1,13 +1,14 @@
-import {Injectable} from '@angular/core';
-import {APIService} from './api.service';
-import {DateTime} from 'luxon';
-import {KeyValueArray} from '../../types/Utils';
-import {HeliosDagInfo, HeliosDagInfoDagen, HeliosDagInfosDataset, HeliosRoosterDataset} from '../../types/Helios';
-import {StorageService} from '../storage/storage.service';
-import {BehaviorSubject, Subscription} from 'rxjs';
-import {SharedService} from '../shared/shared.service';
-import {LoginService} from "./login.service";
-import {RoosterService} from "./rooster.service";
+import { Injectable } from '@angular/core';
+import { APIService } from './api.service';
+import { DateTime } from 'luxon';
+import { KeyValueArray } from '../../types/Utils';
+import { HeliosDagInfo, HeliosDagInfoDagen, HeliosDagInfosDataset, HeliosRoosterDataset } from '../../types/Helios';
+import { StorageService } from '../storage/storage.service';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { SharedService } from '../shared/shared.service';
+import { LoginService } from './login.service';
+import { RoosterService } from './rooster.service';
+import { CustomJsonSerializer } from '../../utils/Utils';
 
 @Injectable({
     providedIn: 'root'
@@ -37,7 +38,7 @@ export class DaginfoService {
                 day: datum.day
             });
 
-            this.getDagInfo(undefined, this.datum).then(di => {
+            this.getDagInfo(undefined, this.datum).then(() => {
                 this.dagInfoStore.next(this.dagInfo)    // afvuren event
             });
         });
@@ -51,7 +52,7 @@ export class DaginfoService {
             return [];
         }
 
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
         getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
         getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
         getParams['VELDEN'] = "ID,DATUM";
@@ -71,8 +72,8 @@ export class DaginfoService {
     }
 
 
-    async getDagInfoDagen(verwijderd: boolean = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosDagInfosDataset[]> {
-        let getParams: KeyValueArray = params;
+    async getDagInfoDagen(verwijderd = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosDagInfosDataset[]> {
+        const getParams: KeyValueArray = params;
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
@@ -124,7 +125,7 @@ export class DaginfoService {
                 this.dagInfo = await response.json();
             }
             return this.dagInfo;
-        } catch (e) {
+        } catch (_) {
             const rooster: HeliosRoosterDataset[] = await this.roosterService.getRooster(this.datum, this.datum);
             this.dagInfo = {
                 DATUM: this.datum.toISODate() as string,
@@ -158,10 +159,7 @@ export class DaginfoService {
 
     // update een bestaand daginfo record
     async updateDagInfo(daginfo: HeliosDagInfo) {
-        const replacer = (key:string, value:any) =>
-            typeof value === 'undefined' ? null : value;
-
-        const response: Response = await this.apiService.put('Daginfo/SaveObject', JSON.stringify(daginfo, replacer));
+        const response: Response = await this.apiService.put('Daginfo/SaveObject', JSON.stringify(daginfo, CustomJsonSerializer));
 
         // opslaan als class variable en fire event
         response.clone().json().then((di) => {

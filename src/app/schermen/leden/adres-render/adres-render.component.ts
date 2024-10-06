@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
-import {ICellRendererParams} from 'ag-grid-community';
-import {AgRendererComponent} from 'ag-grid-angular';
+import { Component } from '@angular/core';
+import { ICellRendererParams } from 'ag-grid-community';
+import { AgRendererComponent } from 'ag-grid-angular';
 
 @Component({
   selector: 'app-adres-render',
@@ -11,7 +11,7 @@ export class AdresRenderComponent implements AgRendererComponent {
   regel1: string;
   regel2: string;
 
-  constructor() { }
+
 
   agInit(params: ICellRendererParams): void {
     this.regel1 = (params.data.ADRES) ? params.data.ADRES : '';
@@ -32,7 +32,7 @@ export class AdresRenderComponent implements AgRendererComponent {
     }
   }
 
-  refresh(params: ICellRendererParams): boolean {
+  refresh(_: ICellRendererParams): boolean {
     return false;
   }
 }

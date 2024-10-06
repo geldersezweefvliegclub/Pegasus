@@ -1,8 +1,7 @@
-import {Component, ElementRef, Input, ViewChild} from '@angular/core';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {faTimes} from '@fortawesome/free-solid-svg-icons';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 
 
 @Component({
@@ -11,18 +10,17 @@ import {SchermGrootte, SharedService} from "../../../services/shared/shared.serv
     styleUrls: ['./modal.component.scss']
 })
 export class ModalComponent {
-    @Input() titel: string = 'Editor';
+    @Input() titel = 'Editor';
     @Input() popupClass: string;
     @ViewChild('content') content: ElementRef;
 
     cross: IconDefinition = faTimes;
-    private modalRef: any;
+    private modalRef: NgbModalRef;
 
     constructor(private modalService: NgbModal) {
     }
 
     open() {
-        // this.content.nativeEle   // TODO
         this.modalRef = this.modalService.open(this.content, {
             ariaLabelledBy: 'modal-basic-title',
             backdrop: "static",

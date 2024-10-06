@@ -1,12 +1,12 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {DienstenService} from "../../../services/apiservice/diensten.service";
-import {Subscription} from "rxjs";
-import {DateTime} from "luxon";
-import {SharedService} from "../../../services/shared/shared.service";
-import {HeliosDienstenDataset, HeliosLid} from "../../../types/Helios";
-import {DagRoosterComponent} from "../dag-rooster/dag-rooster.component";
-import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
-import {LoginService} from "../../../services/apiservice/login.service";
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { DienstenService } from '../../../services/apiservice/diensten.service';
+import { Subscription } from 'rxjs';
+import { DateTime } from 'luxon';
+import { SharedService } from '../../../services/shared/shared.service';
+import { HeliosDienstenDataset, HeliosLid } from '../../../types/Helios';
+import { DagRoosterComponent } from '../dag-rooster/dag-rooster.component';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { LoginService } from '../../../services/apiservice/login.service';
 
 @Component({
     selector: 'app-diensten',
@@ -15,7 +15,7 @@ import {LoginService} from "../../../services/apiservice/login.service";
 })
 export class DienstenComponent implements OnInit, OnChanges {
     @Input() Vlieger: HeliosLid;
-    @Input() UitgebreideWeergave: boolean = false;
+    @Input() UitgebreideWeergave = false;
 
     @ViewChild(DagRoosterComponent) popup: DagRoosterComponent;
 
@@ -24,7 +24,7 @@ export class DienstenComponent implements OnInit, OnChanges {
 
     diensten: HeliosDienstenDataset[];
     roosterDatum: DateTime;
-    isLoading: boolean = false;
+    isLoading = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -47,7 +47,7 @@ export class DienstenComponent implements OnInit, OnChanges {
         })
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    ngOnChanges(_: SimpleChanges) {
         this.ophalen()
     }
 

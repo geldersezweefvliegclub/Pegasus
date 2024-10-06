@@ -1,8 +1,8 @@
-import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../modal/modal.component";
-import {HeliosDocument} from "../../../../types/Helios";
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {DocumentenService} from "../../../../services/apiservice/documenten.service";
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { ModalComponent } from '../../modal/modal.component';
+import { HeliosDocument } from '../../../../types/Helios';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { DocumentenService } from '../../../../services/apiservice/documenten.service';
 
 @Component({
     selector: 'app-document-editor',
@@ -17,14 +17,14 @@ export class DocumentEditorComponent {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
-    isLoading: boolean = false;
-    isSaving: boolean = false;
+    isLoading = false;
+    isSaving = false;
 
-    isVerwijderMode: boolean = false;
-    isRestoreMode: boolean = false;
+    isVerwijderMode = false;
+    isRestoreMode = false;
 
-    isDoc: boolean = true;
-    isUrl: boolean = false;
+    isDoc = true;
+    isUrl = false;
 
     document: HeliosDocument;
 
@@ -112,7 +112,7 @@ export class DocumentEditorComponent {
     }
 
     verwijderen() {
-        this.documentenService.deleteDocument(this.document!.ID!).then((a) => {
+        this.documentenService.deleteDocument(this.document!.ID!).then(() => {
             this.success = {titel: "Document", beschrijving: "Verwijderen is geslaagd"}
             this.refresh.emit();
 
@@ -157,7 +157,7 @@ export class DocumentEditorComponent {
     toevoegen() {
         this.isSaving = true;
 
-        this.documentenService.addDocument(this.document).then((a) => {
+        this.documentenService.addDocument(this.document).then(() => {
             this.success = {titel: "Document", beschrijving: this.document.TEKST + " is toegevoegd"}
             this.refresh.emit();
 

@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  "/Daginfo/CreateTable": {
+  "/Journaal/CreateTable": {
     post: {
       parameters: {
         query: {
@@ -20,7 +20,7 @@ export interface paths {
       };
     };
   };
-  "/Daginfo/CreateViews": {
+  "/Journaal/CreateViews": {
     post: {
       responses: {
         /** Aangemaakt, View toegevoegd */
@@ -30,21 +30,19 @@ export interface paths {
       };
     };
   };
-  "/Daginfo/GetObject": {
+  "/Journaal/GetObject": {
     get: {
       parameters: {
         query: {
-          /** Database ID van het daginfo record */
-          ID?: number;
-          /** Datum van de daginfo */
-          DATUM?: string;
+          /** Database ID van het track record */
+          ID: number;
         };
       };
       responses: {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_daginfo"];
+            "application/json": components["schemas"]["oper_journaal"];
           };
         };
         /** Data niet gevonden */
@@ -58,7 +56,7 @@ export interface paths {
       };
     };
   };
-  "/Daginfo/GetObjects": {
+  "/Journaal/GetObjects": {
     get: {
       parameters: {
         query: {
@@ -70,7 +68,7 @@ export interface paths {
           LAATSTE_AANPASSING?: boolean;
           /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
           HASH?: string;
-          /** Sortering van de velden in ORDER BY formaat. Default = DATUM DESC */
+          /** Sortering van de velden in ORDER BY formaat. Default = CLUBKIST DESC, VOLGORDE, REGISTRATIE */
           SORT?: string;
           /** Maximum aantal records in de dataset. Gebruikt in LIMIT query */
           MAX?: number;
@@ -78,19 +76,17 @@ export interface paths {
           START?: number;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
-          /** Zoek op datum */
-          DATUM?: string;
-          /** Begin datum (inclusief deze dag) */
-          BEGIN_DATUM?: string;
-          /** Eind datum (inclusief deze dag) */
-          EIND_DATUM?: string;
+          /** Haal alle tracks op van een specifiek lid */
+          LID_ID?: string;
+          /** Haal alle tracks op die door deze instrcuteur zijn toegevoegd */
+          INSTRUCTEUR_ID?: string;
         };
       };
       responses: {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["view_daginfo"];
+            "application/json": components["schemas"]["oper_journaal"];
           };
         };
         /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
@@ -102,20 +98,18 @@ export interface paths {
       };
     };
   };
-  "/Daginfo/DeleteObject": {
+  "/Journaal/DeleteObject": {
     delete: {
       parameters: {
         query: {
-          /** Database ID van het daginfo record. Meerdere ID's in CSV formaat */
-          ID?: string;
-          /** Datum van de daginfo */
-          DATUM?: string;
+          /** Database ID van het record. Meerdere ID's in CSV formaat */
+          ID: string;
           /** Controleer of record bestaat voordat het verwijderd wordt. Default = true */
           VERIFICATIE?: boolean;
         };
       };
       responses: {
-        /** Daginfo verwijderd */
+        /** Track verwijderd */
         204: never;
         /** Niet geautoriseerd, geen schrijfrechten */
         401: unknown;
@@ -130,7 +124,7 @@ export interface paths {
       };
     };
   };
-  "/Daginfo/RestoreObject": {
+  "/Journaal/RestoreObject": {
     patch: {
       parameters: {
         query: {
@@ -154,13 +148,13 @@ export interface paths {
       };
     };
   };
-  "/Daginfo/SaveObject": {
+  "/Journaal/SaveObject": {
     put: {
       responses: {
         /** OK, data succesvol aangepast */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_daginfo"];
+            "application/json": components["schemas"]["oper_journaal"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -171,15 +165,13 @@ export interface paths {
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
         406: unknown;
-        /** Conflict, datum bestaat al */
-        409: unknown;
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** Daginfo data */
+      /** track data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["oper_daginfo_in"];
+          "application/json": components["schemas"]["oper_journaal_in"];
         };
       };
     };
@@ -188,7 +180,7 @@ export interface paths {
         /** OK, data succesvol toegevoegd */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_daginfo"];
+            "application/json": components["schemas"]["oper_journaal"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -197,15 +189,15 @@ export interface paths {
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
         406: unknown;
-        /** Conflict, datum bestaat al */
+        /** Conflict, record bestaat al */
         409: unknown;
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** Daginfo data */
+      /** track data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["oper_daginfo_in"];
+          "application/json": components["schemas"]["oper_journaal_in"];
         };
       };
     };
@@ -214,102 +206,66 @@ export interface paths {
 
 export interface components {
   schemas: {
-    oper_daginfo_in: {
+    oper_journaal_in: {
       /**
        * Format: int32
-       * @description Database ID van het daginfo record
-       * @example 12871
+       * @description Database ID van het record
+       * @example 14
        */
       ID?: number;
       /**
        * Format: date
-       * @description Datum van de vliegdag
-       * @example 2017-07-21
+       * @description Datum van de melding
+       * @example 2022-03-14
        */
       DATUM?: string;
       /**
-       * Format: int32
-       * @description Welke vliegveld vliegen we vandaag als de thuis basis
-       * @example 901
+       * @description Het vliegtuig ID. Verwijzing naar vliegtuigen tabel
+       * @example 203
        */
-      VELD_ID?: number;
+      VLIEGTUIG_ID?: number;
       /**
-       * Format: int32
-       * @description Welke baan is nu actief
-       * @example 102
+       * @description Om welk rollend materieel gaat het. Verwijzing naar type tabel
+       * @example 506
        */
-      BAAN_ID?: number;
+      ROLLEND_ID?: number;
       /**
-       * Format: int32
-       * @description De standard startmethode voor deze dag
-       * @example 550
+       * @description Titel van melding / klacht / defect
+       * @example Variometer defect
        */
-      STARTMETHODE_ID?: number;
+      TITEL?: string;
       /**
-       * Format: int32
-       * @description Welke vliegveld vliegen we vandaag voor een (buitenland) kamp
-       * @example 901
+       * @description Omschrijving van de melding / klacht / defect
+       * @example Variometer blijft hangen op +5
        */
-      VELD_ID2?: number;
+      OMSCHRIJVING?: string;
       /**
-       * Format: int32
-       * @description Welke baan is nu actief
-       * @example 102
+       * @description Soort melding. Klacht / Defect. Verwijzing naar type tabel
+       * @example 2305
        */
-      BAAN_ID2?: number;
+      CATEGORIE_ID?: number;
       /**
-       * Format: int32
-       * @description De standard startmethode voor deze dag
-       * @example 550
+       * @description Status van de meliding (open, in behandeling, opgelost). Verwijzing naar type tabel
+       * @example 2401
        */
-      STARTMETHODE_ID2?: number;
+      STATUS_ID?: number;
       /**
-       * @description Is het een DDWV dag?
-       * @example 0
+       * @description Lid ID van diegene die melding heeft ingevoerd. Verwijzing naar leden tabel
+       * @example 20123
        */
-      DDWV?: boolean;
+      MELDER_ID?: number;
       /**
-       * @description Is er een clubbedrijf
-       * @example 1
+       * @description Techneut die naar het probleem gekeken heeft. Verwijzing naar leden tabel
+       * @example 10331
        */
-      CLUB_BEDRIJF?: boolean;
+      TECHNICUS_ID?: number;
       /**
-       * @description Incidenten om iets van te leren
-       * @example Scherpe uitstekels aan lierkabel
+       * @description Techneut die afgetekend heeft dat melding verholpen is. Verwijzing naar leden tabel
+       * @example 10552
        */
-      INCIDENTEN?: string;
-      /**
-       * @description Beschrijving van de situatie op het veld
-       * @example Het vliegbedrijf bevatte de volgende aspect(en), lier, sleep en zelfstart op de 22R met een rechterhand circuit. Halverwege de dag omgesteld naar 27C
-       */
-      VLIEGBEDRIJF?: string;
-      /**
-       * @description Beschrijving van de weerscondities
-       * @example Het zicht was > 10 km. De windrichting was 270 met  windkracht 3.4 - 5.42 m/s. Er was 2/8 bewolking. De wolkenbasis was 800 meter hoog.
-       */
-      METEO?: string;
-      /**
-       * @description Aanwezigheid van functionarissen
-       * @example Jan, Maartje, Mohammed aanwezig. Klaas had zich verslapen en kwam om 11:00
-       */
-      DIENSTEN?: string;
-      /**
-       * @description Kort veslag van de dag
-       * @example Rustige dag met een klein ploegje mensen ondanks het prachtige weer. Omstellen ging zonder problemen, vliegende kisten konden blijven hangen
-       */
-      VERSLAG?: string;
-      /**
-       * @description Opmerkingen over het rollend materieel
-       * @example De motor van de lier wordt warm
-       */
-      ROLLENDMATERIEEL?: string;
-      /**
-       * @description Opmerkingen over de vloot
-       * @example De E11 is in de werkplaats gezet ivm lekke band. Wordt maandag opgelost
-       */
-      VLIEGENDMATERIEEL?: string;
+      AFGETEKEND_ID?: number;
     };
-    oper_daginfo: components["schemas"]["oper_daginfo_in"] & {
+    oper_journaal: components["schemas"]["oper_journaal_in"] & {
       /**
        * @description Is dit record gemarkeerd als verwijderd?
        * @example 0
@@ -317,74 +273,59 @@ export interface components {
       VERWIJDERD?: boolean;
       /**
        * Format: date-time
-       * @description Tijdstempel van laaste aanpassing in de database, laat leeg bij updates
-       * @example 2010-04-13 19:32:17
+       * @description Tijdstempel van laaste aanpassing in de database
+       * @example 2021-05-05 20:13:59Z
        */
       LAATSTE_AANPASSING?: string;
     };
-    view_daginfo_dataset: components["schemas"]["oper_daginfo"] & {
+    view_journaal_dataset: components["schemas"]["oper_journaal"] & {
       /**
-       * @description Verkorte naam van het vliegveld
-       * @example EHTL
+       * @description Omschrijving uit type tabel mbt rollend materieel
+       * @example Gele Bully
        */
-      VELD_CODE?: string;
+      ROLLEND?: string;
       /**
-       * @description Naam van het vliegveld
-       * @example Terlet
+       * @description Omschrijving uit type tabel over de actuele status
+       * @example Opgelost
        */
-      VELD_OMS?: string;
+      STATUS?: string;
       /**
-       * @description Verkorte beschrijving start strip
-       * @example 22R
+       * @description Omschrijving uit type tabel over de actuele status
+       * @example Opgelost
        */
-      BAAN_CODE?: string;
+      STATUS_CODE?: string;
       /**
-       * @description beschrijving start strip
-       * @example RWY 22
+       * @description Omschrijving uit type tabel over de categorie
+       * @example Defect
        */
-      BAAN_OMS?: string;
+      CATEGORIE?: string;
       /**
-       * @description Verkorte naam van het vliegveld
-       * @example EHTL
+       * @description Code uit type tabel over de categorie
+       * @example Defect
        */
-      VELD_CODE2?: string;
+      CATEGORIE_CODE?: string;
       /**
-       * @description Naam van het vliegveld
-       * @example Terlet
+       * @description Naam van de melder
+       * @example Juffrouw Ooievaar
        */
-      VELD_OMS2?: string;
+      MELDER?: string;
       /**
-       * @description Verkorte beschrijving start strip
-       * @example 22R
+       * @description Naam van de technicus die eerste inspectie heeft gedaan
+       * @example Willem Bever
        */
-      BAAN_CODE2?: string;
+      TECHNICUS?: string;
       /**
-       * @description beschrijving start strip
-       * @example RWY 22R
+       * @description Naam van de technicus die melding heeft afgetekend als afgehandeld
+       * @example Meneer de Uil
        */
-      BAAN_OMS2?: string;
+      AFGETEKEND?: string;
       /**
-       * @description Verkorte naam van de club die leiding heeft over vliegbedrijf
-       * @example gezc
+       * @description Registratie en Callsign van het vliegtuig
+       * @example PH-721 (E4)
        */
-      BEDRIJF_CODE?: string;
-      /**
-       * @description Club die leiding heeft over vliegbedrijf
-       * @example GeZC
-       */
-      BEDRIJF_OMS?: string;
-      /**
-       * @description De verkorte beschrijving van de meest gebruikte startmethode
-       * @example Lier
-       */
-      STARTMETHODE_CODE?: string;
-      /**
-       * @description Beschrijving van de meest gebruikte startmethode
-       * @example Lierstart
-       */
-      STARTMETHODE_OMS?: string;
+      REG_CALL?: string;
     };
-    view_daginfo: {
+    view_journaal: {
       /**
        * Format: int32
        * @description Aantal records dat voldoet aan de criteria in de database
@@ -394,20 +335,18 @@ export interface components {
       /**
        * Format: date-time
        * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
-       * @example 2020-09-01 06:00:05
+       * @example 2019-01-05 10:09:53
        */
       laatste_aanpassing?: string;
       /**
        * @description hash van de dataset
-       * @example ddaab00
+       * @example dd00bff
        */
       hash?: string;
       /** @description De dataset met records */
-      dataset?: components["schemas"]["view_daginfo_dataset"][];
+      dataset?: components["schemas"]["view_journaal_dataset"][];
     };
   };
 }
 
-export interface operations {}
 
-export interface external {}

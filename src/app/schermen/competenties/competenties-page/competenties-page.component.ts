@@ -1,21 +1,16 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faCaretSquareDown, faCaretSquareUp, faGraduationCap, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
+import { HeliosCompetentie, HeliosCompetentiesDataset, HeliosProgressieBoom, HeliosType } from '../../../types/Helios';
+import { SharedService } from '../../../services/shared/shared.service';
+import { CompetentieService } from '../../../services/apiservice/competentie.service';
+import { TreeviewConfig, TreeviewItem } from 'ngx-treeview2';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { TypesService } from '../../../services/apiservice/types.service';
 import {
-    faCaretSquareDown,
-    faCaretSquareUp,
-    faGraduationCap,
-    faPlusCircle,
-    faUndo
-} from "@fortawesome/free-solid-svg-icons";
-import {Subscription} from "rxjs";
-import {HeliosCompetentie, HeliosCompetentiesDataset, HeliosProgressieBoom, HeliosType} from "../../../types/Helios";
-import {ProgressieTreeviewItem} from "../../../shared/components/progressie-boom/progressie-boom.component";
-import {SharedService} from "../../../services/shared/shared.service";
-import {CompetentieService} from "../../../services/apiservice/competentie.service";
-import {TreeviewConfig, TreeviewItem} from "ngx-treeview";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {TypesService} from "../../../services/apiservice/types.service";
-import {CompetentieEditorComponent} from "../../../shared/components/editors/competentie-editor/competentie-editor.component";
+  CompetentieEditorComponent,
+} from '../../../shared/components/editors/competentie-editor/competentie-editor.component';
 
 export class CompetentieTreeviewItem extends TreeviewItem {
     leerfaseID: number | undefined;
@@ -41,8 +36,8 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
     competenties: HeliosCompetentiesDataset[];
     boom: CompetentieTreeviewItem[];
 
-    isLoading: boolean = false;
-    isSuspended: boolean = false;
+    isLoading = false;
+    isSuspended = false;
     private typesAbonnement: Subscription;
     leerfaseTypes: HeliosType[];
 
@@ -87,10 +82,10 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
 
     opvragen(): void {
         this.isLoading = true;
-        this.competentieService.getBoom().then((b) => {
-            let tree: CompetentieTreeviewItem[] = [];
-            for (let i = 0; i < b.length; i++) {
-                let t = this.TreeView(b[i]);
+        this.competentieService.getBoom().then((boom) => {
+            const tree: CompetentieTreeviewItem[] = [];
+            for (const item of boom) {
+                const t = this.TreeView(item);
                 t.blokID = -1;                    // indicatie dat het top level item is
                 tree.push(t)
             }
@@ -100,7 +95,7 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
     }
 
     TreeView(boomTak: HeliosProgressieBoom): CompetentieTreeviewItem {
-        let tekst: string = ''
+        let tekst = ''
 
         if (boomTak.BLOK)
             tekst += boomTak.BLOK.toString();
@@ -109,7 +104,7 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
         if (boomTak.ONDERWERP)
             tekst += boomTak.ONDERWERP.toString()
 
-        let nieuwetak = new CompetentieTreeviewItem({
+        const nieuwetak = new CompetentieTreeviewItem({
             text: (tekst).trim(),
             value: boomTak.COMPETENTIE_ID,
             checked: false,
@@ -120,17 +115,13 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
         nieuwetak.competentieID = boomTak.COMPETENTIE_ID;
 
         if (boomTak.children) {
-            for (let i = 0; i < boomTak.children.length; i++) {
-                const extraTak: CompetentieTreeviewItem  = this.TreeView(boomTak.children[i]);   // recursion
+            for (const item of boomTak.children) {
+                const extraTak: CompetentieTreeviewItem  = this.TreeView(item);   // recursion
 
                 if (!nieuwetak.children) {
                     nieuwetak.children = [extraTak];  // creeer object en vullen
                 } else {
                     nieuwetak.children.push(extraTak);  // voeg toe aan bestaand array
-                }
-
-                if (this.competenties) {  // als competentie geladen zijn, zetten we sorteeer volgorde
-                    boomTak.COMPETENTIE_ID
                 }
             }
         }
@@ -148,7 +139,7 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
     nieuweBoomTak(boomTak: CompetentieTreeviewItem, parentID: number) {
         // toevoegen van de tak onder de parent
         if (boomTak.competentieID == parentID) {
-            let nieuwetak = new CompetentieTreeviewItem({
+            const nieuwetak = new CompetentieTreeviewItem({
                 text: "<< nieuwe competentie >>",
                 value: -1,
                 checked: false,
@@ -169,8 +160,8 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
 
         // We gaan dieper de boom in om te kijken of daar toegevoegd moet worden
         if (boomTak.children) {
-            for (let i = 0; i < boomTak.children.length; i++) {
-                this.nieuweBoomTak(boomTak.children[i] as CompetentieTreeviewItem, parentID);
+            for (const item of boomTak.children) {
+                this.nieuweBoomTak(item as CompetentieTreeviewItem, parentID);
             }
         }
     }
@@ -221,8 +212,8 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
                 children[idx + 1].VOLGORDE!--;
 
                 this.suspend();
-                for (let i=0 ; i < children.length ; i++) {
-                    this.competentieService.updateCompetentie(children[i]);
+                for (const item1 of children) {
+                    this.competentieService.updateCompetentie(item1);
                 }
                 this.opvragen();
             }
@@ -251,8 +242,8 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
                 children[idx - 1].VOLGORDE!++;
 
                 this.suspend();
-                for (let i=0 ; i < children.length ; i++) {
-                    this.competentieService.updateCompetentie(children[i]);
+                for (const item1 of children) {
+                    this.competentieService.updateCompetentie(item1).then();
                 }
                 this.opvragen();
             }

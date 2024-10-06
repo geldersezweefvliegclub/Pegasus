@@ -1,12 +1,12 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {ModalComponent} from '../../modal/modal.component';
-import {Subscription} from 'rxjs';
-import {DateTime} from 'luxon';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ModalComponent } from '../../modal/modal.component';
+import { Subscription } from 'rxjs';
+import { DateTime } from 'luxon';
 import * as pluginAnnotations from 'chartjs-plugin-annotation';
-import {AnnotationOptions} from 'chartjs-plugin-annotation';
-import {ChartDataset, ChartOptions, ChartType} from 'chart.js';
-import {StartlijstService} from '../../../../services/apiservice/startlijst.service';
-import {SharedService} from '../../../../services/shared/shared.service';
+import { AnnotationOptions } from 'chartjs-plugin-annotation';
+import { ChartDataset, ChartOptions } from 'chart.js';
+import { StartlijstService } from '../../../../services/apiservice/startlijst.service';
+import { SharedService } from '../../../../services/shared/shared.service';
 
 @Component({
     selector: 'app-instructie-grafiek',
@@ -24,8 +24,8 @@ export class InstructieGrafiekComponent implements OnInit {
 
     starts: number[] = [];
     uren: number[] = [];
-    bezig: boolean = false;
-    counter: number = 0;
+    bezig = false;
+    counter = 0;
 
     // Teken een verticale lijn op de 1e jaargrens zodat je de jaren goed kunt onderscheiden
     JaarGrens1: AnnotationOptions =
@@ -102,13 +102,15 @@ export class InstructieGrafiekComponent implements OnInit {
                     font: {
                         family:  'Roboto, sans-serif',
                         size: 12,
-                        weight: '300'
+                        weight: 300
                     }
                 }
             },
             "y-axis-0": {
+                border: {
+                    dash: [6, 4]
+                },
                 grid: {
-                    borderDash: [6, 4],
                     color: '#9b9b9b',
                 },
                 ticks: {
@@ -117,7 +119,7 @@ export class InstructieGrafiekComponent implements OnInit {
                     font: {
                         family: 'Roboto, sans-serif',
                         size: 12,
-                        weight: '300'
+                        weight: 300
                     },
                 },
                 beginAtZero: true
@@ -180,12 +182,12 @@ export class InstructieGrafiekComponent implements OnInit {
     }
 
     async opvragen(): Promise<void> {
-        let starts = [];
-        let uren = [];
-        let lineChartLabels = [];
+        const starts = [];
+        const uren = [];
+        const lineChartLabels = [];
 
         this.bezig = true               // Indicator dat we aan het ophalen zijn, progress balk is dan zichtbaar
-        let maxWaarde: number = 70;
+        let maxWaarde = 70;
 
         for (this.counter = 0; this.counter < 36; this.counter++) {
             const d = this.datum.plus({months: -1 * (36 - this.counter - 1)});
@@ -257,7 +259,7 @@ export class InstructieGrafiekComponent implements OnInit {
                 if (hours+1 > maxWaarde) {
                     maxWaarde = hours+1;
                 }
-            } catch (e) {
+            } catch (_) {
                 starts.push(0);
                 uren.push(0);
             }

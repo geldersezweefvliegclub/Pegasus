@@ -1,10 +1,10 @@
-import {Injectable} from '@angular/core';
-import {APIService} from './api.service';
-import {HeliosStart, HeliosTrack, HeliosType, HeliosTypes} from '../../types/Helios';
-import {StorageService} from '../storage/storage.service';
-import {KeyValueArray} from '../../types/Utils';
-import {BehaviorSubject} from "rxjs";
-import {LoginService} from "./login.service";
+import { Injectable } from '@angular/core';
+import { APIService } from './api.service';
+import { HeliosType, HeliosTypes } from '../../types/Helios';
+import { StorageService } from '../storage/storage.service';
+import { KeyValueArray } from '../../types/Utils';
+import { BehaviorSubject } from 'rxjs';
+import { LoginService } from './login.service';
 
 @Injectable({
     providedIn: 'root'
@@ -23,7 +23,7 @@ export class TypesService {
 
         // We hebben misschien eerder de lidTypes opgehaald. Die gebruiken we totdat de API starts heeft opgehaald
         if (this.storageService.ophalen('types') != null) {
-            this.typesCache = this.storageService.ophalen('types');
+            this.typesCache = this.storageService.ophalen('types') as HeliosTypes;
             if (this.typesCache) {
                 this.typesStore.next(this.typesCache.dataset!)    // afvuren event met opgeslagen type dataset
             }
@@ -39,7 +39,7 @@ export class TypesService {
                     ophalen = true;
                 }
                 if (ophalen) {
-                    this.getTypes().then((dataset) => {
+                    this.getTypes().then(() => {
                         this.typesStore.next(this.typesCache.dataset!)    // afvuren event
                     });
                 }
@@ -48,15 +48,15 @@ export class TypesService {
 
         // nadat we ingelogd zijn kunnen we de lidTypes ophalen
         loginService.inloggenSucces.subscribe(() => {
-            this.getTypes().then((dataset) => {
+            this.getTypes().then(() => {
                 this.typesStore.next(this.typesCache.dataset!)    // afvuren event
             });
         })
 
     }
 
-    async getTypes(verwijderd: boolean = false): Promise<HeliosType[]> {
-        let getParams: KeyValueArray = {};
+    async getTypes(verwijderd = false): Promise<HeliosType[]> {
+        const getParams: KeyValueArray = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
@@ -84,7 +84,7 @@ export class TypesService {
     }
 
     async getClubVliegtuigTypes(): Promise<HeliosType[]> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
@@ -117,17 +117,11 @@ export class TypesService {
     }
 
     async addType(t: HeliosType) {
-        const replacer = (key:string, value:any) =>
-            typeof value === 'undefined' ? null : value;
-
         const response: Response = await this.apiService.post('Types/SaveObject', JSON.stringify(t));
         return response.json();
     }
 
     async updateType(t: HeliosType) {
-        const replacer = (key:string, value:any) =>
-            typeof value === 'undefined' ? null : value;
-
         const response: Response = await this.apiService.put('Types/SaveObject', JSON.stringify(t));
         return response.json();
     }

@@ -1,9 +1,9 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {HeliosLedenDataset, HeliosTrack, HeliosTracksDataset} from "../../../types/Helios";
-import {TracksService} from "../../../services/apiservice/tracks.service";
-import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
-import {TrackEditorComponent} from "../editors/track-editor/track-editor.component";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { HeliosLedenDataset, HeliosTrack, HeliosTracksDataset } from '../../../types/Helios';
+import { TracksService } from '../../../services/apiservice/tracks.service';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { TrackEditorComponent } from '../editors/track-editor/track-editor.component';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import {
     faAddressCard,
     faBookmark,
@@ -11,14 +11,14 @@ import {
     faPlane,
     faRecycle,
     faTachometerAlt,
-    faUndo
-} from "@fortawesome/free-solid-svg-icons";
-import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
-import {LedenService} from "../../../services/apiservice/leden.service";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {faAvianex} from "@fortawesome/free-brands-svg-icons";
-import {DateTime} from "luxon";
-import {Subscription} from "rxjs";
+    faUndo,
+} from '@fortawesome/free-solid-svg-icons';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { LedenService } from '../../../services/apiservice/leden.service';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { faAvianex } from '@fortawesome/free-brands-svg-icons';
+import { DateTime } from 'luxon';
+import { Subscription } from 'rxjs';
 
 export interface TracksLedenDataset extends HeliosTracksDataset {
     lid: HeliosLedenDataset;
@@ -32,7 +32,7 @@ export interface TracksLedenDataset extends HeliosTracksDataset {
 export class TracksComponent implements OnInit, OnDestroy, OnChanges {
     @Input() VliegerID: number;
     @Input() VliegerNaam: string;
-    @Input() toonLid: boolean = false;
+    @Input() toonLid = false;
 
     @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
 
@@ -55,16 +55,16 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
 
     zoekString: string;
     zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
-    deleteMode: boolean = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
-    trashMode: boolean = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
-    isLoading: boolean = false;
+    deleteMode = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
+    trashMode = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
+    isLoading = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
-    magToevoegen: boolean = true;
-    magVerwijderen: boolean = false;
-    magWijzigen: boolean = false;
+    magToevoegen = true;
+    magVerwijderen = false;
+    magWijzigen = false;
 
     geselecteerdLid: HeliosLedenDataset;
 
@@ -195,14 +195,14 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     lidToevoegenAanTrack() {
-        for (let i = 0; i < this.data.length; i++) {
-            this.data[i].lid = this.leden.find(l => l.ID == this.data[i].LID_ID) as HeliosLedenDataset;
+        for (const item of this.data) {
+            item.lid = this.leden.find(l => l.ID == item.LID_ID) as HeliosLedenDataset;
         }
     }
 
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.hasOwnProperty("VliegerID")) {
+        if (Object.prototype.hasOwnProperty.call(changes, "VliegerID")) {
             this.opvragen()
         }
     }

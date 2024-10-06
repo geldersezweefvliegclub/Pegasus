@@ -1,15 +1,14 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {Subscription} from 'rxjs';
-import {DateTime} from 'luxon';
-import {SharedService} from '../../../../services/shared/shared.service';
-import {StartlijstService} from '../../../../services/apiservice/startlijst.service';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { DateTime } from 'luxon';
+import { SharedService } from '../../../../services/shared/shared.service';
+import { StartlijstService } from '../../../../services/apiservice/startlijst.service';
 
 import * as pluginAnnotations from 'chartjs-plugin-annotation';
-import AnnotationPlugin, {AnnotationOptions, LineAnnotationOptions} from 'chartjs-plugin-annotation';
-import {Chart, ChartConfiguration, ChartDataset, ChartOptions, ChartEvent, ChartType} from 'chart.js';
-import {BaseChartDirective} from 'ng2-charts';
+import AnnotationPlugin, { AnnotationOptions } from 'chartjs-plugin-annotation';
+import { Chart, ChartDataset, ChartOptions } from 'chart.js';
 
-import {ModalComponent} from '../../modal/modal.component';
+import { ModalComponent } from '../../modal/modal.component';
 
 
 @Component({
@@ -32,8 +31,8 @@ export class StartGrafiekComponent implements OnInit {
     zelfstarts: number[] = [];
     tmgstarts: number[] = [];
 
-    bezig: boolean = false;
-    counter: number = 0;
+    bezig = false;
+    counter = 0;
 
 
     // Teken een verticale lijn op de 1e jaargrens zodat je de jaren goed kunt onderscheiden
@@ -83,13 +82,15 @@ export class StartGrafiekComponent implements OnInit {
                     font: {
                         family: 'Roboto, sans-serif',
                         size: 12,
-                        weight: '300'
+                        weight: 300
                     }
                 }
             },
             "y-axis-0": {
+                border: {
+                    dash: [6, 4],
+                },
                 grid: {
-                    borderDash: [6, 4],
                     color: '#9b9b9b',
                 },
                 ticks: {
@@ -98,7 +99,7 @@ export class StartGrafiekComponent implements OnInit {
                     font: {
                         family: 'Roboto, sans-serif',
                         size: 12,
-                        weight: '300'
+                        weight: 300
                     },
                 },
                 beginAtZero: true
@@ -146,12 +147,12 @@ export class StartGrafiekComponent implements OnInit {
     }
 
     async opvragen(): Promise<void> {
-        let lineChartLabels = [];
+        const lineChartLabels = [];
 
-        let lierstarts = [];
-        let sleepstarts = [];
-        let zelfstarts = [];
-        let tmgstarts = [];
+        const lierstarts = [];
+        const sleepstarts = [];
+        const zelfstarts = [];
+        const tmgstarts = [];
 
         this.bezig = true               // Indicator dat we aan het ophalen zijn, progress balk is dan zichtbaar
 
@@ -214,7 +215,7 @@ export class StartGrafiekComponent implements OnInit {
                 zelfstarts.push(recency.ZELFSTARTS as number);
                 tmgstarts.push(recency.TMGSTARTS as number);
 
-            } catch (e) {
+            } catch (_) {
                 lierstarts.push(0);
                 sleepstarts.push(0);
                 zelfstarts.push(0);

@@ -1,15 +1,14 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {TreeviewConfig, TreeviewItem} from 'ngx-treeview';
-import {ProgressieService} from "../../../services/apiservice/progressie.service";
-import {HeliosCompetentiesDataset, HeliosProgressie, HeliosProgressieBoom, HeliosType} from "../../../types/Helios";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {ModalComponent} from "../modal/modal.component";
-import {ErrorMessage, HeliosActie, SuccessMessage} from "../../../types/Utils";
-import {SharedService} from "../../../services/shared/shared.service";
-import {CompetentieService} from "../../../services/apiservice/competentie.service";
-import {Observable, of, Subscription} from "rxjs";
-import {ProgressieEditorComponent} from "../editors/progressie-editor/progressie-editor.component";
-import {TypesService} from "../../../services/apiservice/types.service";
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { TreeviewConfig, TreeviewItem } from 'ngx-treeview2';
+import { ProgressieService } from '../../../services/apiservice/progressie.service';
+import { HeliosCompetentiesDataset, HeliosProgressieBoom, HeliosType } from '../../../types/Helios';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { ErrorMessage, HeliosActie, SuccessMessage } from '../../../types/Utils';
+import { SharedService } from '../../../services/shared/shared.service';
+import { CompetentieService } from '../../../services/apiservice/competentie.service';
+import { Subscription } from 'rxjs';
+import { ProgressieEditorComponent } from '../editors/progressie-editor/progressie-editor.component';
+import { TypesService } from '../../../services/apiservice/types.service';
 
 export class ProgressieTreeviewItem extends TreeviewItem {
     ProgresssieID: number | undefined;
@@ -38,8 +37,8 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
 
     competenties: HeliosCompetentiesDataset[];
     values: number[];
-    suspend: boolean = false;
-    isDisabled: boolean = true;
+    suspend = false;
+    isDisabled = true;
 
     config = TreeviewConfig.create({
         hasAllCheckBox: false,
@@ -92,7 +91,7 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes.hasOwnProperty("VliegerID")) {
+        if (Object.prototype.hasOwnProperty.call(changes, "VliegerID")) {
             this.ophalen();
         }
     }
@@ -102,7 +101,7 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
         this.isDisabled = !(ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) || (this.VliegerID == this.loginService.userInfo?.LidData?.ID);
 
         this.progressieService.getBoom(this.VliegerID).then((b) => {
-            let tree: ProgressieTreeviewItem[] = [];
+            const tree: ProgressieTreeviewItem[] = [];
             for (let i = 0; i < b.length; i++) {
                 const tak = this.TreeView(b[i])
 
@@ -130,7 +129,7 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     TreeView(boomTak: HeliosProgressieBoom): ProgressieTreeviewItem {
-        let tekst: string = ''
+        let tekst = ''
 
         if (boomTak.BLOK)
             tekst += boomTak.BLOK.toString();
@@ -140,7 +139,7 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
         if (boomTak.ONDERWERP)
             tekst += boomTak.ONDERWERP.toString()
 
-        let nieuwetak = new ProgressieTreeviewItem({
+        const nieuwetak = new ProgressieTreeviewItem({
             text: (tekst).trim(),
             value: boomTak.COMPETENTIE_ID,
 
@@ -159,8 +158,8 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
                 nieuwetak.GeldigTot = (boomTak.GELDIG_TOT) ? this.sharedService.datumDMJ(boomTak.GELDIG_TOT) : undefined;
             }
         } else {
-            for (let i = 0; i < boomTak.children.length; i++) {
-                const extraTak: TreeviewItem = this.TreeView(boomTak.children[i]);   // recursion
+            for (const item of boomTak.children) {
+                const extraTak: TreeviewItem = this.TreeView(item);   // recursion
 
                 if (!nieuwetak.children) {
                     nieuwetak.children = [extraTak];  // creeer object en vullen

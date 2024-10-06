@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
-import {ActivatedRoute} from "@angular/router";
+import { Component, OnInit } from '@angular/core';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Rapport } from '../../../types/IPegasusConfig';
 
 @Component({
     selector: 'app-rapport-scherm',
@@ -9,7 +10,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
     styleUrls: ['./rapport-scherm.component.scss']
 })
 export class RapportSchermComponent implements OnInit {
-    rapporten: any[] = [];
+    rapporten: Rapport[] = [];
 
     url: SafeResourceUrl | undefined;
 

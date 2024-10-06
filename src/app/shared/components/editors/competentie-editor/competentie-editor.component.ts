@@ -1,12 +1,12 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../modal/modal.component";
-import {HeliosCompetentie, HeliosCompetentiesDataset, HeliosType} from "../../../../types/Helios";
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {CompetentieService} from "../../../../services/apiservice/competentie.service";
-import {Observable, of, Subscription} from "rxjs";
-import {TypesService} from "../../../../services/apiservice/types.service";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ModalComponent } from '../../modal/modal.component';
+import { HeliosCompetentie, HeliosCompetentiesDataset, HeliosType } from '../../../../types/Helios';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { CompetentieService } from '../../../../services/apiservice/competentie.service';
+import { Observable, of, Subscription } from 'rxjs';
+import { TypesService } from '../../../../services/apiservice/types.service';
 
-export type CompetentieLijst = {
+export interface CompetentieLijst {
     ID: number | undefined;
     label: string | undefined;
 }
@@ -27,11 +27,11 @@ export class CompetentieEditorComponent implements OnInit, OnDestroy {
     lijst$: Observable<CompetentieLijst[]>;
     competenties: HeliosCompetentiesDataset[] = [];
     competentie: HeliosCompetentie = {};
-    isLoading: boolean = false;
-    isSaving: boolean = false;
+    isLoading = false;
+    isSaving = false;
 
-    isVerwijderMode: boolean = false;
-    isRestoreMode: boolean = false;
+    isVerwijderMode = false;
+    isRestoreMode = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -87,7 +87,7 @@ export class CompetentieEditorComponent implements OnInit, OnDestroy {
                 this.competentie = competentie;
                 this.isLoading = false;
             });
-        } catch (e) {
+        } catch (_) {
             this.isLoading = false;
         }
     }

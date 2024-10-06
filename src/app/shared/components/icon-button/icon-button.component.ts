@@ -1,9 +1,9 @@
-import {Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {fas} from '@fortawesome/free-solid-svg-icons';
-import {far, IconDefinition} from '@fortawesome/free-regular-svg-icons';
-import {FlipProp, SizeProp} from '@fortawesome/fontawesome-svg-core';
-import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
-import {Subscription} from "rxjs";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { far, IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { FlipProp, SizeProp } from '@fortawesome/fontawesome-svg-core';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-icon-button',
@@ -11,26 +11,26 @@ import {Subscription} from "rxjs";
     styleUrls: ['./icon-button.component.scss']
 })
 export class IconButtonComponent implements OnInit, OnDestroy {
-    @Input() tekst: string = '';
+    @Input() tekst = '';
     @Input() iconNaam: string;
-    @Input() btnColor: string = 'btn-secondary';
-    @Input() disabled: boolean = false;
-    @Input() toonKlein: boolean = true;
+    @Input() btnColor = 'btn-secondary';
+    @Input() disabled = false;
+    @Input() toonKlein = true;
     @Input() flip: FlipProp;
     @Input() size: SizeProp;
-    @Input() stopPropagation: boolean = false;
+    @Input() stopPropagation = false;
     @Input() type: 'button' | 'submit' = 'button';
     @Output() btnClicked: EventEmitter<void> = new EventEmitter<void>();
 
     faIcon: IconDefinition;
-    toonTekst: boolean = false;
+    toonTekst = false;
 
     private resizeSubscription: Subscription;                           // Abonneer op aanpassing van window grootte (of draaien mobiel)
     constructor(private readonly sharedService: SharedService) {}
 
     ngOnInit(): void {
         if (this.iconNaam) {
-            let parts: string[] = this.iconNaam.split(' ');
+            const parts: string[] = this.iconNaam.split(' ');
 
             if (parts.length != 2) {
                 console.error('iconNaam moet 2 parameters hebben');
@@ -53,7 +53,7 @@ export class IconButtonComponent implements OnInit, OnDestroy {
         }
 
         // Roep onWindowResize aan zodra we het event ontvangen hebben
-        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(() => {
             this.onWindowResize()
         });
         this.onWindowResize();

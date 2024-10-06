@@ -1,10 +1,10 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ModalComponent} from "../modal/modal.component";
-import {journaalFilter, JournaalService} from "../../../services/apiservice/journaal.service";
-import {HeliosJournaalDataset} from "../../../types/Helios";
-import {DateTime} from "luxon";
-import {Subscription} from "rxjs";
-import {SharedService} from "../../../services/shared/shared.service";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ModalComponent } from '../modal/modal.component';
+import { journaalFilter, JournaalService } from '../../../services/apiservice/journaal.service';
+import { HeliosJournaalDataset } from '../../../types/Helios';
+import { DateTime } from 'luxon';
+import { Subscription } from 'rxjs';
+import { SharedService } from '../../../services/shared/shared.service';
 
 @Component({
   selector: 'app-popup-journaal',
@@ -20,7 +20,7 @@ export class PopupJournaalComponent implements OnInit, OnDestroy {
   private maandAbonnement: Subscription;      // volg de keuze van de kalender
   private vliegtuigID:  number;
   datum: DateTime = DateTime.now();           // de gekozen dag
-  isLoading: boolean = false;
+  isLoading = false;
 
   constructor(private readonly sharedService: SharedService,
               private readonly journaalService: JournaalService) {
@@ -69,8 +69,8 @@ export class PopupJournaalComponent implements OnInit, OnDestroy {
 
   opvragen() : void {
     if (this.vliegtuigID) {
-      let startDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 1, day: 1});
-      let eindDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 12, day: 31});
+      const startDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 1, day: 1});
+      const eindDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 12, day: 31});
       this.isLoading = true;
 
       const filter: journaalFilter = {

@@ -1,22 +1,20 @@
 
-export interface KeyValueArray {
-  [key: string]: string | number | boolean
-};
+export type KeyValueArray = Record<string, string | number | boolean>;;
 
-export type ErrorMessage = {
+export interface ErrorMessage {
     responseCode?: number | null,
     beschrijving: string | null
-};
+}
 
-export type SuccessMessage = {
+export interface SuccessMessage {
     titel: string| null,
     beschrijving: string | null
-};
+}
 
-export type KalenderMaand = {
+export interface KalenderMaand {
     year: number,
     month: number
-};
+}
 
 // type event naar het Helios backend
 export enum HeliosActie {

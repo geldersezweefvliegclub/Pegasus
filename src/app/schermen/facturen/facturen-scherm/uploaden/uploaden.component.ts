@@ -1,7 +1,7 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../../../shared/components/modal/modal.component";
-import {FacturenService} from "../../../../services/apiservice/facturen.service";
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+import { FacturenService } from '../../../../services/apiservice/facturen.service';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 
 @Component({
   selector: 'app-uploaden',

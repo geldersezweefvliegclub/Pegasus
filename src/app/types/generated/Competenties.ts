@@ -491,6 +491,4 @@ export interface components {
   };
 }
 
-export interface operations {}
 
-export interface external {}

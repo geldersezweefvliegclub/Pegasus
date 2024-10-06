@@ -1,17 +1,17 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {NgbCalendar, NgbDate, NgbDatepickerNavigateEvent, NgbDateStruct} from "@ng-bootstrap/ng-bootstrap";
-import {DateTime} from "luxon";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {HeliosActie, KalenderMaand} from "../../../types/Utils";
-import {delay} from "rxjs/operators";
-import {SharedService} from "../../../services/shared/shared.service";
-import {Subscription} from "rxjs";
-import {StartlijstService} from "../../../services/apiservice/startlijst.service";
-import {getBeginEindDatumVanMaand} from "../../../utils/Utils";
-import {DaginfoService} from "../../../services/apiservice/daginfo.service";
-import {RoosterService} from "../../../services/apiservice/rooster.service";
-import {DagRapportenService} from "../../../services/apiservice/dag-rapporten.service";
-import {DienstenService} from "../../../services/apiservice/diensten.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NgbCalendar, NgbDate, NgbDatepickerNavigateEvent, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { DateTime } from 'luxon';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { HeliosActie, KalenderMaand } from '../../../types/Utils';
+import { delay } from 'rxjs/operators';
+import { SharedService } from '../../../services/shared/shared.service';
+import { Subscription } from 'rxjs';
+import { StartlijstService } from '../../../services/apiservice/startlijst.service';
+import { getBeginEindDatumVanMaand } from '../../../utils/Utils';
+import { DaginfoService } from '../../../services/apiservice/daginfo.service';
+import { RoosterService } from '../../../services/apiservice/rooster.service';
+import { DagRapportenService } from '../../../services/apiservice/dag-rapporten.service';
+import { DienstenService } from '../../../services/apiservice/diensten.service';
 
 @Component({
     selector: 'app-vliegdag-selectie',
@@ -32,9 +32,9 @@ export class VliegdagSelectieComponent implements OnInit, OnDestroy {
     kalenderEersteDatum: NgbDateStruct;
     kalenderLaatsteDatum: NgbDateStruct;
 
-    vliegdagen: string = "";        // vliegdagen van deze maand in json formaat
-    diensten: string = "";          // daginfos van deze maand in json formaat
-    daginfo: string = "";           // daginfos van deze maand in json formaat
+    vliegdagen = "";        // vliegdagen van deze maand in json formaat
+    diensten = "";          // daginfos van deze maand in json formaat
+    daginfo = "";           // daginfos van deze maand in json formaat
 
     constructor(readonly loginService: LoginService,
                 private readonly calendar: NgbCalendar,
@@ -152,7 +152,7 @@ export class VliegdagSelectieComponent implements OnInit, OnDestroy {
         return classes;
     }
 
-    nieuweDatumGeselecteerd($event: NgbDate) {
+    nieuweDatumGeselecteerd() {
         this.sharedService.zetKalenderDatum({
             year: this.kalenderIngave.year,
             month: this.kalenderIngave.month,

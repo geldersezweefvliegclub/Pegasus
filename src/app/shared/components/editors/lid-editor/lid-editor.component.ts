@@ -1,22 +1,22 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {NgbDate, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
-import {DateTime} from 'luxon';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faEye, faEyeSlash, faInfo, faInfoCircle, faUser} from '@fortawesome/free-solid-svg-icons';
-import {TypesService} from '../../../../services/apiservice/types.service';
-import {HeliosLedenDataset, HeliosLid, HeliosType} from '../../../../types/Helios';
-import {LedenService} from '../../../../services/apiservice/leden.service';
-import {LoginService} from "../../../../services/apiservice/login.service";
-import {NgbDateFRParserFormatter} from "../../../ngb-date-fr-parser-formatter";
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {ImageService} from "../../../../services/apiservice/image.service";
-import {Router} from "@angular/router";
-import {StorageService} from "../../../../services/storage/storage.service";
-import {Subscription} from "rxjs";
-import {SchermGrootte, SharedService} from "../../../../services/shared/shared.service";
-import {TransactiesComponent} from "../../transacties/transacties.component";
-import {PegasusConfigService} from "../../../../services/shared/pegasus-config.service";
-import {DdwvService} from "../../../../services/apiservice/ddwv.service";
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { DateTime } from 'luxon';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faEye, faEyeSlash, faInfo, faInfoCircle, faUser } from '@fortawesome/free-solid-svg-icons';
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { HeliosLedenDataset, HeliosLid, HeliosType } from '../../../../types/Helios';
+import { LedenService } from '../../../../services/apiservice/leden.service';
+import { LoginService } from '../../../../services/apiservice/login.service';
+import { NgbDateFRParserFormatter } from '../../../ngb-date-fr-parser-formatter';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { ImageService } from '../../../../services/apiservice/image.service';
+import { Router } from '@angular/router';
+import { StorageService } from '../../../../services/storage/storage.service';
+import { Subscription } from 'rxjs';
+import { SchermGrootte, SharedService } from '../../../../services/shared/shared.service';
+import { TransactiesComponent } from '../../transacties/transacties.component';
+import { PegasusConfigService } from '../../../../services/shared/pegasus-config.service';
+import { DdwvService } from '../../../../services/apiservice/ddwv.service';
 
 @Component({
     selector: 'app-lid-editor',
@@ -26,8 +26,8 @@ import {DdwvService} from "../../../../services/apiservice/ddwv.service";
 })
 export class LidEditorComponent implements OnInit, OnDestroy {
     @Input() lidID: number;
-    @Input() isVerwijderMode: boolean = false;
-    @Input() isRestoreMode: boolean = false;
+    @Input() isVerwijderMode = false;
+    @Input() isRestoreMode = false;
 
     @ViewChild(TransactiesComponent) transactieScherm: TransactiesComponent;
 
@@ -41,24 +41,24 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     statusTypes: HeliosType[];
     lid: HeliosLid = {};
 
-    wachtwoordVerborgen: boolean = true;
+    wachtwoordVerborgen = true;
     oogIcon: IconDefinition = faEye;
     readonly informatieIcon: IconDefinition = faInfo;
     readonly infoIcon: IconDefinition = faInfoCircle;
     readonly persoonIcon: IconDefinition = faUser;
 
-    controleWachtwoord: string = '';
-    wachtwoord: string = '';
+    controleWachtwoord = '';
+    wachtwoord = '';
 
-    subtitel: string = 'Instellen van gegevens en voorkeuren';
-    titel: string = 'Aanpassen profiel';
+    subtitel = 'Instellen van gegevens en voorkeuren';
+    titel = 'Aanpassen profiel';
     avatar: string | null | undefined;
 
-    isLoading: boolean = false;
-    isSaving: boolean = false;
-    isMobiel: boolean = true;
+    isLoading = false;
+    isSaving = false;
+    isMobiel = true;
 
-    saldoTonen: boolean = false;
+    saldoTonen = false;
 
     MedicalDatum: NgbDate | null;
     GeboorteDatum: NgbDate | null;
@@ -106,7 +106,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
         })
 
         // Roep onWindowResize aan zodra we het event ontvangen hebben
-        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(() => {
             this.onWindowResize();
         });
 
@@ -153,10 +153,10 @@ export class LidEditorComponent implements OnInit, OnDestroy {
                         this.saldoTonen = this.configService.saldoActief() && (ui!.isDDWV! || ui!.isClubVlieger!);
                     }
                     else {
-                        this.saldoTonen = this.configService.saldoActief() && (ui?.isBeheerder! || ui?.isBeheerderDDWV!);
+                        this.saldoTonen = this.configService.saldoActief() && ((ui?.isBeheerder || ui?.isBeheerderDDWV) ?? false);
                     }
                 });
-            } catch (e) {
+            } catch (_) {
                 this.isLoading = false;
             }
         } else {

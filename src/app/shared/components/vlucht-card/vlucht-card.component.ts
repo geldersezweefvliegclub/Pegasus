@@ -1,14 +1,14 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {HeliosLogboekDataset, HeliosStartDataset} from "../../../types/Helios";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {TijdInvoerComponent} from "../editors/tijd-invoer/tijd-invoer.component";
-import {TrackEditorComponent} from "../editors/track-editor/track-editor.component";
-import {StartEditorComponent} from "../editors/start-editor/start-editor.component";
-import {DateTime, Interval} from "luxon";
-import {SharedService} from "../../../services/shared/shared.service";
-import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faAngleLeft, faAngleRight, faPenToSquare} from "@fortawesome/free-solid-svg-icons";
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { HeliosLogboekDataset, HeliosStartDataset } from '../../../types/Helios';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { TijdInvoerComponent } from '../editors/tijd-invoer/tijd-invoer.component';
+import { TrackEditorComponent } from '../editors/track-editor/track-editor.component';
+import { StartEditorComponent } from '../editors/start-editor/start-editor.component';
+import { DateTime, Interval } from 'luxon';
+import { SharedService } from '../../../services/shared/shared.service';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -26,7 +26,7 @@ export class VluchtCardComponent implements OnInit {
 
     readonly iconEdit: IconDefinition = faPenToSquare;
 
-    inTijdspan: boolean = false;
+    inTijdspan = false;
     datumDM: string;
 
     constructor(private readonly configService: PegasusConfigService,

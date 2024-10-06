@@ -15,7 +15,7 @@
             <input type="checkbox" *ngIf="competentieBestaat(p.Lokaal)"
                    id="L{{p.Type}}"
                    class="form-check-inline"
-                   (change)="zetProgressie($event, p.Lokaal)"
+                   (change)="zetProgressie(p.Lokaal)"
                    [checked]="PVBgehaald(p.Lokaal)"
                    [disabled]="CheckDisabled(p.Lokaal)">
             <!-- als checked, dan disable. Verwijderen via progressie boom -->
@@ -24,7 +24,7 @@
             <input type="checkbox" *ngIf="competentieBestaat(p.Overland)"
                    id="O{{p.Type}}"
                    class="form-check-inline"
-                   (change)="zetProgressie($event, p.Overland)"
+                   (change)="zetProgressie(p.Overland)"
                    [checked]="PVBgehaald(p.Overland)"
                    [disabled]="CheckDisabled(p.Overland)">
             <!-- als checked, dan disable. Verwijderen via progressie boom -->

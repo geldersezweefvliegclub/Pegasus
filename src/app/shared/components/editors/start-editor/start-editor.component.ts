@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import {
     HeliosAanwezigLedenDataset,
     HeliosBehaaldeProgressieDataset,
@@ -6,32 +6,32 @@ import {
     HeliosStart,
     HeliosStartDataset,
     HeliosType,
-    HeliosVliegtuigenDataset
+    HeliosVliegtuigenDataset,
 } from '../../../../types/Helios';
-import {TypesService} from '../../../../services/apiservice/types.service';
-import {ModalComponent} from '../../modal/modal.component';
-import {StartlijstService} from '../../../../services/apiservice/startlijst.service';
-import {VliegtuigenService} from '../../../../services/apiservice/vliegtuigen.service';
-import {AanwezigVliegtuigService} from '../../../../services/apiservice/aanwezig-vliegtuig.service';
-import {Observable, of, Subscription} from 'rxjs';
-import {DateTime, Interval} from 'luxon';
-import {LedenService} from '../../../../services/apiservice/leden.service';
-import {AanwezigLedenService} from '../../../../services/apiservice/aanwezig-leden.service';
-import {SharedService} from '../../../../services/shared/shared.service';
-import {DaginfoService} from '../../../../services/apiservice/daginfo.service';
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {VliegtuigInvoerComponent} from "./vliegtuig-invoer/vliegtuig-invoer.component";
-import {ProgressieService} from "../../../../services/apiservice/progressie.service";
-import {LoginService} from "../../../../services/apiservice/login.service";
-import {PegasusConfigService} from "../../../../services/shared/pegasus-config.service";
-import {NgbDate, NgbDateParserFormatter} from "@ng-bootstrap/ng-bootstrap";
-import {NgbDateFRParserFormatter} from "../../../ngb-date-fr-parser-formatter";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faStreetView} from "@fortawesome/free-solid-svg-icons";
-import {StorageService} from "../../../../services/storage/storage.service";
-import {TransactieEditorComponent} from "../transactie-editor/transactie-editor.component";
-import {DienstenService} from "../../../../services/apiservice/diensten.service";
-import {RoosterService} from "../../../../services/apiservice/rooster.service";
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { ModalComponent } from '../../modal/modal.component';
+import { StartlijstService } from '../../../../services/apiservice/startlijst.service';
+import { VliegtuigenService } from '../../../../services/apiservice/vliegtuigen.service';
+import { AanwezigVliegtuigService } from '../../../../services/apiservice/aanwezig-vliegtuig.service';
+import { Observable, of, Subscription } from 'rxjs';
+import { DateTime, Interval } from 'luxon';
+import { LedenService } from '../../../../services/apiservice/leden.service';
+import { AanwezigLedenService } from '../../../../services/apiservice/aanwezig-leden.service';
+import { SharedService } from '../../../../services/shared/shared.service';
+import { DaginfoService } from '../../../../services/apiservice/daginfo.service';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { VliegtuigInvoerComponent } from './vliegtuig-invoer/vliegtuig-invoer.component';
+import { ProgressieService } from '../../../../services/apiservice/progressie.service';
+import { LoginService } from '../../../../services/apiservice/login.service';
+import { PegasusConfigService } from '../../../../services/shared/pegasus-config.service';
+import { NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateFRParserFormatter } from '../../../ngb-date-fr-parser-formatter';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faStreetView } from '@fortawesome/free-solid-svg-icons';
+import { StorageService } from '../../../../services/storage/storage.service';
+import { TransactieEditorComponent } from '../transactie-editor/transactie-editor.component';
+import { DienstenService } from '../../../../services/apiservice/diensten.service';
+import { RoosterService } from '../../../../services/apiservice/rooster.service';
 
 @Component({
     selector: 'app-start-editor',
@@ -50,16 +50,16 @@ export class StartEditorComponent implements OnInit {
     gastIcon: IconDefinition = faStreetView;
 
     start: HeliosStart = {};
-    toonTranactieKnop: boolean = false;        // Moet de transactie editor geopend kunnen worden?
-    toonGastCombobox: boolean = false;
-    toonVliegerNaam: boolean = false;
-    toonInzittendeNaam: number = 0;             // 0, naam hoeft niet ingevoerd te worden
+    toonTranactieKnop = false;        // Moet de transactie editor geopend kunnen worden?
+    toonGastCombobox = false;
+    toonVliegerNaam = false;
+    toonInzittendeNaam = 0;             // 0, naam hoeft niet ingevoerd te worden
                                                 // 1, naam mag ingevoerd worden, maar ook inzittende combobox tonen
                                                 // 2, toon alleen de naam invoer
-    toonStartMethode: boolean = true;
-    toonWaarschuwing: boolean = false;          // mag het lid op die vliegtuig vliegen volgens kruisjeslijst?
-    medicalWaarschuwing: boolean = false;       // Controleer op geldigheid medical
-    startVerbod: boolean = false;               // Vlieger heeft een startverbod
+    toonStartMethode = true;
+    toonWaarschuwing = false;          // mag het lid op die vliegtuig vliegen volgens kruisjeslijst?
+    medicalWaarschuwing = false;       // Controleer op geldigheid medical
+    startVerbod = false;               // Vlieger heeft een startverbod
 
     private typesAbonnement: Subscription;
     startMethodeTypes: HeliosType[];
@@ -79,8 +79,8 @@ export class StartEditorComponent implements OnInit {
     // 613 = systeem gebruiker
     // 620 = Wachtlijst
     // 625 = DDWV'er
-    exclLidtypeAlsInzittende: string = "607,610,612,613,620"
-    exclLidtypeAlsVlieger: string = "613,620"
+    exclLidtypeAlsInzittende = "607,610,612,613,620"
+    exclLidtypeAlsVlieger = "613,620"
 
     private ledenAbonnement: Subscription;
     leden: HeliosLedenDataset[] = [];
@@ -91,14 +91,14 @@ export class StartEditorComponent implements OnInit {
     private datumAbonnement: Subscription;      // volg de keuze van de kalender
     datum: DateTime = DateTime.now();           // de gekozen dag
 
-    isLoading: boolean = false;
-    isSaving: boolean = false;
-    magAltijdWijzigen: boolean = false;
-    magDatumAanpassen: boolean = false;
+    isLoading = false;
+    isSaving = false;
+    magAltijdWijzigen = false;
+    magDatumAanpassen = false;
 
-    isVerwijderMode: boolean = false;
-    isRestoreMode: boolean = false;
-    formTitel: string = "";
+    isVerwijderMode = false;
+    isRestoreMode = false;
+    formTitel = "";
 
     vandaag: DateTime = DateTime.now();
     minDatum: DateTime = DateTime.now();
@@ -171,20 +171,21 @@ export class StartEditorComponent implements OnInit {
             // Als er starts is, even in juiste formaat zetten. Aanwezig moet hetzelfde formaat hebben als vliegtuigen
             this.aanwezigVliegtuigen = [];
 
-            for (let i = 0; i < dataset!.length; i++) {
+            for (const item of (dataset ?? [])) {
                 this.aanwezigVliegtuigen.push(
-                    {
-                        ID: dataset![i].VLIEGTUIG_ID,
-                        REGISTRATIE: dataset![i].REGISTRATIE,
-                        REG_CALL: dataset![i].REG_CALL,
-                        CALLSIGN: dataset![i].CALLSIGN,
-                        TYPE_ID: dataset![i].TYPE_ID,
-                        SLEEPKIST: dataset![i].SLEEPKIST,
-                        TMG: dataset![i].TMG,
-                        ZELFSTART: dataset![i].ZELFSTART,
-                        CLUBKIST: dataset![i].CLUBKIST,
-                        ZITPLAATSEN: dataset![i].ZITPLAATSEN
-                    });
+                  {
+                      ID: item.ID,
+                      REGISTRATIE: item.REGISTRATIE,
+                      REG_CALL: item.REG_CALL,
+                      CALLSIGN: item.CALLSIGN,
+                      TYPE_ID: item.TYPE_ID,
+                      SLEEPKIST: item.SLEEPKIST,
+                      TMG: item.TMG,
+                      ZELFSTART: item.ZELFSTART,
+                      CLUBKIST: item.CLUBKIST,
+                      ZITPLAATSEN: item.ZITPLAATSEN
+                  });
+
             }
         });
     }
@@ -224,12 +225,12 @@ export class StartEditorComponent implements OnInit {
             else
             {
                 this.formTitel = `Start aanmaken`;
-                this.toonGastCombobox = this.storageService.ophalen("toonGastenCombo") ? this.storageService.ophalen("toonGastenCombo") : false;
+                this.toonGastCombobox = this.storageService.ophalen("toonGastenCombo") ? this.storageService.ophalen("toonGastenCombo") as boolean : false;
 
             }
         } else {
             this.formTitel = `Start aanmaken`;
-            this.toonGastCombobox = this.storageService.ophalen("toonGastenCombo") ? this.storageService.ophalen("toonGastenCombo") : false;
+            this.toonGastCombobox = this.storageService.ophalen("toonGastenCombo") ? this.storageService.ophalen("toonGastenCombo") as boolean : false;
 
             let veld_id = this.VliegveldID;
             let baan_id = undefined;
@@ -317,7 +318,7 @@ export class StartEditorComponent implements OnInit {
                     this.vliegerGeselecteerd(this.start.VLIEGER_ID);
                 }, 2000);
             });
-        } catch (e) {
+        } catch (_) {
             this.isLoading = false;
         }
     }
@@ -667,7 +668,7 @@ export class StartEditorComponent implements OnInit {
             }
         }
 
-        let competentieIDs: string = "";
+        let competentieIDs = "";
         if (this.gekozenVliegtuig.BEVOEGDHEID_LOKAAL_ID) {
             competentieIDs = this.gekozenVliegtuig.BEVOEGDHEID_LOKAAL_ID.toString();
         }

@@ -1,18 +1,18 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import {
-    faBookmark,
-    faCaretSquareDown,
-    faCaretSquareUp,
-    faMinusCircle,
-    faPlusCircle,
-    faUndo
-} from "@fortawesome/free-solid-svg-icons";
-import {DocumentEditorComponent} from "../../../../shared/components/editors/document-editor/document-editor.component";
-import {faFile, IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {Subscription} from "rxjs";
-import {HeliosDocument, HeliosDocumentenDataset, HeliosType} from "../../../../types/Helios";
-import {TypesService} from "../../../../services/apiservice/types.service";
-import {DocumentenService} from "../../../../services/apiservice/documenten.service";
+  faCaretSquareDown,
+  faCaretSquareUp,
+  faMinusCircle,
+  faPlusCircle,
+  faUndo,
+} from '@fortawesome/free-solid-svg-icons';
+import {
+  DocumentEditorComponent,
+} from '../../../../shared/components/editors/document-editor/document-editor.component';
+import { faFile, IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { HeliosDocument, HeliosDocumentenDataset } from '../../../../types/Helios';
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { DocumentenService } from '../../../../services/apiservice/documenten.service';
 
 @Component({
     selector: 'app-leden-documenten',
@@ -32,9 +32,9 @@ export class LedenDocumentenComponent implements OnInit {
 
     documenten: HeliosDocumentenDataset[];
 
-    editMode: boolean = false;          // zitten we in edit mode om documenten te kunnen aanpassen
-    deleteMode: boolean = false;        // zitten we in delete mode om documenten te kunnen verwijderen
-    trashMode: boolean = false;         // zitten in restore mode om documenten te kunnen terughalen
+    editMode = false;          // zitten we in edit mode om documenten te kunnen aanpassen
+    deleteMode = false;        // zitten we in delete mode om documenten te kunnen verwijderen
+    trashMode = false;         // zitten in restore mode om documenten te kunnen terughalen
 
     constructor(private readonly typesService: TypesService,
                 private readonly documentenService: DocumentenService) {

@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  "/Types/CreateTable": {
+  "/Gasten/CreateTable": {
     post: {
       parameters: {
         query: {
@@ -20,7 +20,7 @@ export interface paths {
       };
     };
   };
-  "/Types/CreateViews": {
+  "/Gasten/CreateViews": {
     post: {
       responses: {
         /** Aangemaakt, View toegevoegd */
@@ -30,11 +30,11 @@ export interface paths {
       };
     };
   };
-  "/Types/GetObject": {
+  "/Gasten/GetObject": {
     get: {
       parameters: {
         query: {
-          /** Database ID van het type record */
+          /** Database ID van het gast record */
           ID: number;
         };
       };
@@ -42,7 +42,7 @@ export interface paths {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["ref_types"];
+            "application/json": components["schemas"]["oper_gast"];
           };
         };
         /** Data niet gevonden */
@@ -56,7 +56,7 @@ export interface paths {
       };
     };
   };
-  "/Types/GetObjects": {
+  "/Gasten/GetObjects": {
     get: {
       parameters: {
         query: {
@@ -68,7 +68,7 @@ export interface paths {
           LAATSTE_AANPASSING?: boolean;
           /** HASH van laatste GetObjects aanroep. Indien bij nieuwe aanroep dezelfde data bevat, dan volgt http status code 304. In geval dataset niet hetzelfde is, dan komt de nieuwe dataset terug. Ook bedoeld om dataverbruik te vermindereren. Er wordt alleen data verzonden als het nodig is. */
           HASH?: string;
-          /** Sortering van de velden in ORDER BY formaat. Default = CLUBKIST DESC, VOLGORDE, REGISTRATIE */
+          /** Sortering van de velden in ORDER BY formaat. Default = NAAM */
           SORT?: string;
           /** Maximum aantal records in de dataset. Gebruikt in LIMIT query */
           MAX?: number;
@@ -76,15 +76,17 @@ export interface paths {
           START?: number;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
-          /** Haal alle types op van een specieke groep */
-          GROEP?: number;
+          /** Begin datum (inclusief deze dag) */
+          BEGIN_DATUM?: string;
+          /** Eind datum (inclusief deze dag) */
+          EIND_DATUM?: string;
         };
       };
       responses: {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["view_types"];
+            "application/json": components["schemas"]["view_gasten"];
           };
         };
         /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
@@ -96,36 +98,18 @@ export interface paths {
       };
     };
   };
-  "/Types/GetClubVliegtuigenTypes": {
-    get: {
-      responses: {
-        /** OK, data succesvol opgehaald */
-        200: {
-          content: {
-            "application/json": components["schemas"]["view_types"];
-          };
-        };
-        /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
-        304: never;
-        /** Methode niet toegestaan, input validatie error */
-        405: unknown;
-        /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
-        500: unknown;
-      };
-    };
-  };
-  "/Types/DeleteObject": {
+  "/Gasten/DeleteObject": {
     delete: {
       parameters: {
         query: {
-          /** Database ID van het record. Meerdere ID's in CSV formaat */
-          ID: number;
+          /** Database ID van het gast record. Meerdere ID's in CSV formaat */
+          ID: string;
           /** Controleer of record bestaat voordat het verwijderd wordt. Default = true */
           VERIFICATIE?: boolean;
         };
       };
       responses: {
-        /** Type verwijderd */
+        /** Gast verwijderd */
         204: never;
         /** Niet geautoriseerd, geen schrijfrechten */
         401: unknown;
@@ -140,12 +124,12 @@ export interface paths {
       };
     };
   };
-  "/Types/RestoreObject": {
+  "/Gasten/RestoreObject": {
     patch: {
       parameters: {
         query: {
           /** Database ID van het record. Meerdere ID's in CSV formaat */
-          ID: number;
+          ID: string;
         };
       };
       responses: {
@@ -164,13 +148,13 @@ export interface paths {
       };
     };
   };
-  "/Types/SaveObject": {
+  "/Gasten/SaveObject": {
     put: {
       responses: {
         /** OK, data succesvol aangepast */
         200: {
           content: {
-            "application/json": components["schemas"]["ref_types"];
+            "application/json": components["schemas"]["oper_gast"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -181,13 +165,15 @@ export interface paths {
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
         406: unknown;
+        /** Conflict, lidnummer bestaat al */
+        409: unknown;
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** type data */
+      /** gast data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["ref_types_in"];
+          "application/json": components["schemas"]["oper_gast_in"];
         };
       };
     };
@@ -196,7 +182,7 @@ export interface paths {
         /** OK, data succesvol toegevoegd */
         200: {
           content: {
-            "application/json": components["schemas"]["ref_types"];
+            "application/json": components["schemas"]["oper_gast"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -205,15 +191,15 @@ export interface paths {
         405: unknown;
         /** Niet aanvaardbaar, input ontbreekt */
         406: unknown;
-        /** Conflict, record bestaat al */
+        /** Conflict, lidnummer bestaat al */
         409: unknown;
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** type data */
+      /** gast data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["ref_types_in"];
+          "application/json": components["schemas"]["oper_gast_in"];
         };
       };
     };
@@ -222,56 +208,36 @@ export interface paths {
 
 export interface components {
   schemas: {
-    ref_types_in: {
+    oper_gast_in: {
       /**
        * Format: int32
-       * @description Database ID van het record
+       * @description Database ID van het gast record
        * @example 12871
        */
       ID?: number;
       /**
-       * Format: int32
-       * @description Type groep
-       * @example 101
+       * Format: date
+       * @description Datum van de vliegdag
+       * @example 2022-07-31
        */
-      GROEP?: number;
+      DATUM?: string;
       /**
-       * @description Zeer korte beschrijving van de code
-       * @example 14R
+       * @description Naam van de gast
+       * @example Gekko
        */
-      CODE?: string;
-      /** @description Hoe kennen andere systemen / organisatie deze code */
-      EXT_REF?: string;
+      NAAM?: string;
       /**
-       * @description Volledige omschrijving van het type
-       * @example Windkracht 3 (7-10 kn)
+       * @description Extra text om opmerkingen toe te voegen voor start
+       * @example BR-1234
        */
-      OMSCHRIJVING?: string;
+      OPMERKINGEN?: string;
       /**
-       * Format: int32
-       * @description Volgorde in de HMI
-       * @example 7
+       * @description Op welk veld is deze gast aangemeld
+       * @example 901
        */
-      SORTEER_VOLGORDE?: number;
-      /**
-       * @description Is dit record (met ID) hard gecodeerd in de source code. Zo ja, dan niet aanpassen.
-       * @example 0
-       */
-      READ_ONLY?: boolean;
-      /**
-       * Format: double
-       * @description Het bedrag in Euro's
-       * @example 0
-       */
-      BEDRAG?: number;
-      /**
-       * Format: numeric
-       * @description Bij bestellen van strippen, of afschrijven strippen
-       * @example 10115
-       */
-      EENHEDEN?: number;
+      VELD_ID?: number;
     };
-    ref_types: components["schemas"]["ref_types_in"] & {
+    oper_gast: components["schemas"]["oper_gast_in"] & {
       /**
        * @description Is dit record gemarkeerd als verwijderd?
        * @example 0
@@ -280,11 +246,18 @@ export interface components {
       /**
        * Format: date-time
        * @description Tijdstempel van laaste aanpassing in de database
-       * @example 2020-09-28 14:12:00
+       * @example 2020-09-01 20:21:33
        */
       LAATSTE_AANPASSING?: string;
     };
-    view_types: {
+    view_gasten_dataset: components["schemas"]["oper_gast"] & {
+      /**
+       * @description Vliegveld waar gast aangemeld is
+       * @example Terlet
+       */
+      VELD?: string;
+    };
+    view_gasten: {
       /**
        * Format: int32
        * @description Aantal records dat voldoet aan de criteria in de database
@@ -294,20 +267,18 @@ export interface components {
       /**
        * Format: date-time
        * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
-       * @example 2020-07-022 16:39:25
+       * @example 2016-08-30 17:04:07
        */
       laatste_aanpassing?: string;
       /**
        * @description hash van de dataset
-       * @example 4d00b3f
+       * @example 1190732
        */
       hash?: string;
       /** @description De dataset met records */
-      dataset?: components["schemas"]["ref_types"][];
+      dataset?: components["schemas"]["view_gasten_dataset"][];
     };
   };
 }
 
-export interface operations {}
 
-export interface external {}

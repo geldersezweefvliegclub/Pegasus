@@ -1,5 +1,5 @@
-import {Directive} from '@angular/core';
-import {FormGroup, NG_VALIDATORS, ValidationErrors} from '@angular/forms';
+import { Directive } from '@angular/core';
+import { FormGroup, NG_VALIDATORS, ValidationErrors } from '@angular/forms';
 
 @Directive({
     selector: '[appWachtwoordMatchValidator]',

@@ -1,20 +1,20 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {StartlijstService} from "../../../services/apiservice/startlijst.service";
-import {HeliosBehaaldeProgressieDataset, HeliosLid, HeliosRecency} from "../../../types/Helios";
-import {RecencyGrafiekComponent} from "./recency-grafiek/recency-grafiek.component";
-import {ErrorMessage, SuccessMessage} from "../../../types/Utils";
-import {InstructieGrafiekComponent} from "./instructie-grafiek/instructie-grafiek.component";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faCircleCheck, faCircleXmark, faEnvelope, faInfoCircle} from "@fortawesome/free-solid-svg-icons";
-import {ProgressieService} from "../../../services/apiservice/progressie.service";
-import {DateTime} from "luxon";
-import {StartGrafiekComponent} from "./start-grafiek/start-grafiek.component";
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { StartlijstService } from '../../../services/apiservice/startlijst.service';
+import { HeliosBehaaldeProgressieDataset, HeliosLid, HeliosRecency } from '../../../types/Helios';
+import { RecencyGrafiekComponent } from './recency-grafiek/recency-grafiek.component';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { InstructieGrafiekComponent } from './instructie-grafiek/instructie-grafiek.component';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faCircleCheck, faCircleXmark, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { ProgressieService } from '../../../services/apiservice/progressie.service';
+import { DateTime } from 'luxon';
+import { StartGrafiekComponent } from './start-grafiek/start-grafiek.component';
 
 // is EASA brevet geldig,
 // -1 = niet van toepasssing
 // 0 = niet geldig
 // 1 = geldig
-type brevetEASA = {
+interface brevetEASA {
     aantal: boolean;
     medical: boolean;
 
@@ -23,7 +23,7 @@ type brevetEASA = {
     zelfstarts: number;
     tmgstarts: number;
     pax: number;
-};
+}
 
 @Component({
     selector: 'app-recency',
@@ -46,8 +46,8 @@ export class RecencyComponent implements OnInit, OnChanges {
     aantekeningen: HeliosBehaaldeProgressieDataset[];
 
     recency: HeliosRecency;
-    isLoading: boolean = false;
-    toonEASA: boolean = false;
+    isLoading = false;
+    toonEASA = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -144,7 +144,7 @@ export class RecencyComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.hasOwnProperty("Vlieger")) {
+        if (Object.prototype.hasOwnProperty.call(changes, "Vlieger")) {
             this.ophalen();
         }
     }

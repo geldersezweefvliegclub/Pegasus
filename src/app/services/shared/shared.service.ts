@@ -1,9 +1,8 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
-import {ErrorMessage, HeliosEvent, KalenderMaand} from '../../types/Utils';
-import {EventManager} from "@angular/platform-browser";
-import {DateTime} from "luxon";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, fromEvent, Observable, Subject } from 'rxjs';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { ErrorMessage, HeliosEvent, KalenderMaand } from '../../types/Utils';
+import { DateTime } from 'luxon';
 
 
 export interface FilterLedenData {
@@ -56,7 +55,7 @@ export class SharedService {
     private heliosEventSubject: Subject<HeliosEvent> = new Subject<HeliosEvent>();          // starts in de database is aangepast
     private heliosFailedSubject: Subject<ErrorMessage> = new Subject<ErrorMessage>();       // api call heef gefaald
 
-    private resizeSubject: Subject<Window>;                                                 // resize window, of draaien mobiel device
+    private resizeSubject = new Subject<Window>();                                                 // resize window, of draaien mobiel device
 
     public readonly ingegevenDatum = this.datumStore.asObservable();                // nieuwe datum gekozen
     public readonly kalenderMaandChange = this.kalenderMaandStore.asObservable();   // nieuwe maand / jaar gekozen in de kalender
@@ -81,10 +80,11 @@ export class SharedService {
     // laat andere component weten dat er iets in de database is aangepast
     public readonly heliosEventFailed: Observable<ErrorMessage> = this.heliosFailedSubject.asObservable();
 
-    constructor(private eventManager: EventManager) {
-        this.resizeSubject = new Subject();
-        this.eventManager.addGlobalEventListener('window', 'resize', this.onResize.bind(this));
+
+    constructor() {
+        fromEvent(window, 'resize').subscribe((x: Event) => this.resizeSubject.next(x.target as Window));
     }
+
 
     // afvuren event dat een andere maand / jaar gekozen is in de kalender
     zetKalenderMaand(kalenderMaand: KalenderMaand) {
@@ -139,10 +139,6 @@ export class SharedService {
         return this.resizeSubject.asObservable();
     }
 
-    private onResize(event: UIEvent) {
-        this.resizeSubject.next(<Window>event.target);
-    }
-
     // Wat is scherm grootte
     public getSchermSize() : SchermGrootte {
         if (window.innerWidth >= 1400) {
@@ -163,3 +159,4 @@ export class SharedService {
         return SchermGrootte.xs;
     }
 }
+

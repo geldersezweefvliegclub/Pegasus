@@ -1,40 +1,36 @@
 import {
-    Component,
-    EventEmitter,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Output,
-    SimpleChanges,
-    ViewChild
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
 } from '@angular/core';
-import {DagVanDeWeek} from "../../../utils/Utils";
+import { DagVanDeWeek } from '../../../utils/Utils';
 
 import {
-    HeliosLedenDatasetExtended,
-    HeliosRoosterDagExtended,
-    WeergaveData
-} from "../rooster-page/rooster-page.component";
-import {DienstenService} from "../../../services/apiservice/diensten.service";
-import {LoginService} from "../../../services/apiservice/login.service";
+  HeliosLedenDatasetExtended,
+  HeliosRoosterDagExtended,
+  WeergaveData,
+} from '../rooster-page/rooster-page.component';
+import { DienstenService } from '../../../services/apiservice/diensten.service';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { HeliosDienst, HeliosDienstenDataset, HeliosRoosterDag, HeliosType } from '../../../types/Helios';
+import { Subscription } from 'rxjs';
+import { TypesService } from '../../../services/apiservice/types.service';
+import { RoosterService } from '../../../services/apiservice/rooster.service';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faCalendarCheck, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { DateTime } from 'luxon';
+import { DienstEditorComponent } from '../../../shared/components/editors/dienst-editor/dienst-editor.component';
+import { DdwvService } from '../../../services/apiservice/ddwv.service';
 import {
-    HeliosDienst,
-    HeliosDienstenDataset,
-    HeliosRoosterDag,
-    HeliosType,
-} from "../../../types/Helios";
-import {Subscription} from "rxjs";
-import {TypesService} from "../../../services/apiservice/types.service";
-import {RoosterService} from "../../../services/apiservice/rooster.service";
-import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faCalendarCheck, faSortAmountDownAlt, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
-import {SharedService} from "../../../services/shared/shared.service";
-import {DateTime} from "luxon";
-import {DienstEditorComponent} from "../../../shared/components/editors/dienst-editor/dienst-editor.component";
-import {DdwvService} from "../../../services/apiservice/ddwv.service";
-import {UitbetalenDdwvCrewEditorComponent} from "../../../shared/components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component";
+  UitbetalenDdwvCrewEditorComponent,
+} from '../../../shared/components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component';
 
 @Component({
     selector: 'app-rooster-weekview',
@@ -52,7 +48,7 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
     @Output() nieuweDatum: EventEmitter<DateTime> = new EventEmitter<DateTime>();
 
     @ViewChild(DienstEditorComponent) dienstEditor: DienstEditorComponent;
-    @ViewChild(UitbetalenDdwvCrewEditorComponent) private uitbetalen: UitbetalenDdwvCrewEditorComponent;
+    @ViewChild(UitbetalenDdwvCrewEditorComponent) protected uitbetalen: UitbetalenDdwvCrewEditorComponent;
 
     readonly resetIcon: IconDefinition = faTimesCircle;
     readonly assignIcon: IconDefinition = faCalendarCheck;
@@ -60,12 +56,12 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
     private typesAbonnement: Subscription;
     dienstTypes: HeliosType[] = [];
 
-    ddwvActief: boolean = true;
+    ddwvActief = true;
     isBeheerderDDWV: boolean;
     isBeheerder: boolean;
-    magWijzigen: boolean = false;
+    magWijzigen = false;
     isCIMT: boolean;
-    dblKlik: boolean = false;
+    dblKlik = false;
 
     maandag: DateTime;                          // De maandag van de gekozen week
     opslaanTimer: number;                       // kleine vertraging om starts opslaan te beperken
@@ -73,7 +69,6 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
     constructor(private readonly ddwvService: DdwvService,
                 private readonly loginService: LoginService,
                 private readonly typesService: TypesService,
-                private readonly sharedService: SharedService,
                 private readonly roosterService: RoosterService,
                 private readonly dienstenService: DienstenService,
                 readonly configService: PegasusConfigService,) {
@@ -81,9 +76,9 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo;
-        this.isCIMT = ui!.Userinfo?.isCIMT!;
-        this.isBeheerder = ui!.LidData?.BEHEERDER!;
-        this.isBeheerderDDWV = ui?.Userinfo?.isBeheerderDDWV!;
+        this.isCIMT = ui?.Userinfo?.isCIMT ?? false;
+        this.isBeheerder = ui?.LidData?.BEHEERDER ?? false;
+        this.isBeheerderDDWV = ui?.Userinfo?.isBeheerderDDWV ?? false;
         this.magWijzigen = (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isRooster) ? true : false;
 
         // abonneer op wijziging van lidTypes
@@ -101,7 +96,7 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.hasOwnProperty("datum")) {
+        if (Object.prototype.hasOwnProperty.call(changes, "datum")) {
             this.maandag = this.datum.startOf('week');     // de eerste dag van de gekozen week
         }
     }
@@ -190,7 +185,7 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
         this.dienstenService.deleteDienst(roosterdag.Diensten[typeDienstID].ID!).then(() => delete this.rooster[roosterIndex].Diensten[typeDienstID]);
     }
 
-    lidInRoosterDagClass(dienst: HeliosDienstenDataset, dag: any) {
+    lidInRoosterDagClass(dienst: HeliosDienstenDataset, dag: HeliosRoosterDag) {
         return (dag.CLUB_BEDRIJF || dag.DDWV) ? this.lidInRoosterClass(dienst) : "blanco";
     }
 

@@ -1,21 +1,18 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../modal/modal.component";
-import {ErrorMessage, SuccessMessage} from "../../../../types/Utils";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
-import {faCloudSunRain, faFlagCheckered, faFrown, faTruck} from "@fortawesome/free-solid-svg-icons";
-import {faPaperPlane} from "@fortawesome/free-solid-svg-icons/faPaperPlane";
-import {ComposeMeteoComponent} from "./compose-meteo/compose-meteo.component";
-import {ComposeBedrijfComponent} from "./compose-bedrijf/compose-bedrijf.component";
-import {faArtstation} from "@fortawesome/free-brands-svg-icons";
-import {DateTime} from "luxon";
-import {Observable, of, Subscription} from "rxjs";
-import {SchermGrootte, SharedService} from "../../../../services/shared/shared.service";
-import {
-    HeliosDagRapport, HeliosTrack,
-    HeliosType
-} from "../../../../types/Helios";
-import {TypesService} from "../../../../services/apiservice/types.service";
-import {DagRapportenService} from "../../../../services/apiservice/dag-rapporten.service";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ModalComponent } from '../../modal/modal.component';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faCloudSunRain, faFlagCheckered, faFrown, faTruck } from '@fortawesome/free-solid-svg-icons';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';
+import { ComposeMeteoComponent } from './compose-meteo/compose-meteo.component';
+import { ComposeBedrijfComponent } from './compose-bedrijf/compose-bedrijf.component';
+import { faArtstation } from '@fortawesome/free-brands-svg-icons';
+import { DateTime } from 'luxon';
+import { Observable, of, Subscription } from 'rxjs';
+import { SchermGrootte, SharedService } from '../../../../services/shared/shared.service';
+import { HeliosDagRapport, HeliosType } from '../../../../types/Helios';
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { DagRapportenService } from '../../../../services/apiservice/dag-rapporten.service';
 
 @Component({
     selector: 'app-dag-rapport-editor',
@@ -31,10 +28,10 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
     @Output() aangepast: EventEmitter<number> = new EventEmitter<number>();
 
     private readonly iconMeteo: IconDefinition = faCloudSunRain;
-    private readonly iconVliegend: IconDefinition = faPaperPlane;
-    private readonly iconRollend: IconDefinition = faTruck;
-    private readonly iconVerslag: IconDefinition = faFlagCheckered;
-    private readonly iconIncident: IconDefinition = faFrown;
+    protected readonly iconVliegend: IconDefinition = faPaperPlane;
+    protected readonly iconRollend: IconDefinition = faTruck;
+    protected readonly iconVerslag: IconDefinition = faFlagCheckered;
+    protected readonly iconIncident: IconDefinition = faFrown;
     private readonly iconBedrijf: IconDefinition = faArtstation;
 
     private datumAbonnement: Subscription;         // volg de keuze van de kalender
@@ -47,12 +44,12 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
-    isSaving: boolean = false;
-    isLoading: boolean = false;
-    isVerwijderMode: boolean = false;
-    isRestoreMode: boolean = false;
+    isSaving = false;
+    isLoading = false;
+    isVerwijderMode = false;
+    isRestoreMode = false;
 
-    formTitel: string = "";
+    formTitel = "";
 
     constructor(private readonly typesService: TypesService,
                 private readonly sharedService: SharedService,
@@ -86,7 +83,7 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
         this.dagRapportenService.getDagRapport(id).then ((dr) => {
             this.dagRapport = dr
             this.isLoading = false;
-        }).catch(e => {
+        }).catch(_ => {
             this.isLoading = false;
         });
     }
@@ -146,15 +143,15 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
 
         if (!this.isVerwijderMode && !this.isRestoreMode) {
             if (this.dagRapport.ID) {
-                this.Aanpassen(this.dagRapport);
+                this.Aanpassen();
             } else {
-                this.Toevoegen(this.dagRapport);
+                this.Toevoegen();
             }
         }
     }
 
     // opslaan van de starts van een nieuwe dag rapport
-    Toevoegen(dr:HeliosDagRapport) {
+    Toevoegen() {
         this.dagRapportenService.addDagRapport(this.dagRapport).then((dr) => {
             this.isSaving = false;
             this.success = {
@@ -170,8 +167,8 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
     }
 
     // bestaande dag rapport is aangepast.
-    Aanpassen(dr:HeliosDagRapport) {
-        this.dagRapportenService.updateDagRapport(this.dagRapport).then((dr) => {
+    Aanpassen() {
+        this.dagRapportenService.updateDagRapport(this.dagRapport).then((_) => {
             this.isSaving = false;
             this.success = {
                 titel: "Dag rapporten",
@@ -222,15 +219,5 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
     // Hoe groot moet de popup worden
     popupClass() {
         return (this.sharedService.getSchermSize() > SchermGrootte.md) ? "popupMedium" : "popupLarge";
-    }
-
-    // Wizard om tekst te genereren voor meteo input. Tekst kan daarna aangepast worden
-    invullenMeteo() {
-        this.meteoWizard.openPopup();
-    }
-
-    // Wizard om tekst te genereren voor vliegbedrijf. Tekst kan daarna aangepast worden
-    invullenVliegbedrijf() {
-        this.bedrijfWizard.openPopup();
     }
 }

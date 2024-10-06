@@ -1,48 +1,46 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faChevronDown, faChevronUp, faInfoCircle, faStreetView } from '@fortawesome/free-solid-svg-icons';
+import { Observable, of, Subscription } from 'rxjs';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { DagVanDeWeek, DateDiff } from '../../../utils/Utils';
+import { DateTime } from 'luxon';
 import {
-    faChevronDown,
-    faChevronUp,
-    faEnvelope,
-    faInfoCircle,
-    faMailBulk,
-    faStreetView
-} from "@fortawesome/free-solid-svg-icons";
-import {Observable, of, Subscription} from "rxjs";
-import {SchermGrootte, SharedService} from "../../../services/shared/shared.service";
-import {DateDiff, getBeginEindDatumVanMaand} from "../../../utils/Utils";
-import {DateTime} from "luxon";
-import {
-    HeliosAanwezigLedenDataset, HeliosAanwezigVliegtuigenDataset, HeliosDagInfosDataset, HeliosDienstenDataset,
+    HeliosAanwezigLedenDataset,
+    HeliosDagInfosDataset,
+    HeliosDienstenDataset,
     HeliosGast,
-    HeliosGastenDataset, HeliosLedenDataset, HeliosLid,
-    HeliosRoosterDataset, HeliosType
-} from "../../../types/Helios";
-import {RoosterService} from "../../../services/apiservice/rooster.service";
-import {ModalComponent} from "../../../shared/components/modal/modal.component";
-import {LidAanwezigEditorComponent} from "../../../shared/components/editors/lid-aanwezig-editor/lid-aanwezig-editor.component";
-import {LoginService} from "../../../services/apiservice/login.service";
-import {AanwezigLedenService} from "../../../services/apiservice/aanwezig-leden.service";
-import {GastenService} from "../../../services/apiservice/gasten.service";
-import {GastEditorComponent} from "../../../shared/components/editors/gast-editor/gast-editor.component";
-import {DienstenService} from "../../../services/apiservice/diensten.service";
-import {StorageService} from "../../../services/storage/storage.service";
-import {DagVanDeWeek} from "../../../utils/Utils";
-import {TypesService} from "../../../services/apiservice/types.service";
-import {DdwvService} from "../../../services/apiservice/ddwv.service";
-import {LedenService} from "../../../services/apiservice/leden.service";
-import {TransactiesComponent} from "../../../shared/components/transacties/transacties.component";
-import {PegasusConfigService} from "../../../services/shared/pegasus-config.service";
-import {DaginfoService} from "../../../services/apiservice/daginfo.service";
-import {KeyValueArray} from "../../../types/Utils";
-import {SamenvattingComponent} from "../samenvatting/samenvatting.component";
-import {number} from "ng2-validation/dist/number";
+    HeliosGastenDataset,
+    HeliosLedenDataset,
+    HeliosLid,
+    HeliosRoosterDataset,
+    HeliosType,
+} from '../../../types/Helios';
+import { RoosterService } from '../../../services/apiservice/rooster.service';
+import { ModalComponent } from '../../../shared/components/modal/modal.component';
+import {
+    LidAanwezigEditorComponent,
+} from '../../../shared/components/editors/lid-aanwezig-editor/lid-aanwezig-editor.component';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { AanwezigLedenService } from '../../../services/apiservice/aanwezig-leden.service';
+import { GastenService } from '../../../services/apiservice/gasten.service';
+import { GastEditorComponent } from '../../../shared/components/editors/gast-editor/gast-editor.component';
+import { DienstenService } from '../../../services/apiservice/diensten.service';
+import { StorageService } from '../../../services/storage/storage.service';
+import { TypesService } from '../../../services/apiservice/types.service';
+import { DdwvService } from '../../../services/apiservice/ddwv.service';
+import { LedenService } from '../../../services/apiservice/leden.service';
+import { TransactiesComponent } from '../../../shared/components/transacties/transacties.component';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { DaginfoService } from '../../../services/apiservice/daginfo.service';
+import { KeyValueArray } from '../../../types/Utils';
+import { SamenvattingComponent } from '../samenvatting/samenvatting.component';
 
 export type HeliosRoosterDatasetExtended = HeliosRoosterDataset & {
     EENHEDEN?: number
 }
 
-export type TrancactiesDDWV = {
+export interface TrancactiesDDWV {
     AANGEMELD: boolean,
     AFGEMELD: boolean,
     STRIPPEN: number
@@ -79,7 +77,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     maandag: DateTime                               // de eerste dag van de week
 
     lid: HeliosLid;                                 // nodig om te checken over nog voldoende DDWV tegoed is
-    saldoTonen: boolean = false;
+    saldoTonen = false;
 
     private typesAbonnement: Subscription;
     ddwvTypes: HeliosType[];
@@ -88,12 +86,12 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     afmeldDatum: DateTime;
 
     ophalenOverslaan = false;                       // Voorkom dat er te veel tegelijk wordt opgevraagd
-    isLoadingRooster: boolean = false;
-    isLoadingDiensten: boolean = false;
-    isLoadingAanwezig: boolean = false;
-    isLoadingGasten: boolean = false;
+    isLoadingRooster = false;
+    isLoadingDiensten = false;
+    isLoadingAanwezig = false;
+    isLoadingGasten = false;
 
-    aanmeldenView: string = "week";
+    aanmeldenView = "week";
     rooster: HeliosRoosterDatasetExtended[];        // rooster voor gekozen periode (dag/week/maand)
     diensten: HeliosDienstenDataset[];              // Wie hebben er dienst
     aanmeldingen: HeliosAanwezigLedenDataset[];     // De aanmeldingen
@@ -101,15 +99,18 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     gasten: HeliosGastenDataset[];                  // De gasten voor de vliegdag
     dagInfo: HeliosDagInfosDataset[];               // De bijhoorende dag info
 
-    toonDatumKnoppen: boolean = false;              // Mag de gebruiker een andere datum kiezen
-    toonGasten: boolean = false;
-    isDDWVer: boolean = false;                      // DDWV'ers mogen geen club dagen zien
-    isBeheerder: boolean = false;                   // Beheerders mogen meer zien
-    isBeheerderDDWV: boolean = false;               // Beheerders mogen meer zien
-    ddwvActief: boolean = true;                     // Doen we aan een DDWV bedrijf
+    toonDatumKnoppen = false;              // Mag de gebruiker een andere datum kiezen
+    toonGasten = false;
+    isDDWVer = false;                      // DDWV'ers mogen geen club dagen zien
+    isBeheerder = false;                   // Beheerders mogen meer zien
+    isBeheerderDDWV = false;               // Beheerders mogen meer zien
+    ddwvActief = true;                     // Doen we aan een DDWV bedrijf
 
     veldTypes$: Observable<HeliosType[]>;
     vliegveld: number | undefined;                      // laat aanmeldingen van een speciek vliegveld zien
+
+    // Expose de functie DagVanDeWeek naar de .html file, want die kan daar niet direct bij.
+    protected readonly DagVanDeWeek = DagVanDeWeek;
 
     constructor(private readonly ddwvService: DdwvService,
                 private readonly typesService: TypesService,
@@ -127,9 +128,9 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.ddwvActief = this.ddwvService.actief();
-        this.isDDWVer = this.loginService.userInfo?.Userinfo?.isDDWV!;
-        this.isBeheerder = this.loginService.userInfo?.Userinfo?.isBeheerder!;
-        this.isBeheerderDDWV = this.loginService.userInfo?.Userinfo?.isBeheerderDDWV!;
+        this.isDDWVer = this.loginService.userInfo?.Userinfo?.isDDWV ?? false;
+        this.isBeheerder = this.loginService.userInfo?.Userinfo?.isBeheerder ?? false;
+        this.isBeheerderDDWV = this.loginService.userInfo?.Userinfo?.isBeheerderDDWV ?? false;
 
         const ui = this.loginService.userInfo?.Userinfo;
         this.saldoTonen = this.configService.saldoActief() && (ui!.isDDWV! || ui!.isClubVlieger!);
@@ -157,12 +158,12 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         });
 
         // abonneer op wijziging van aanwezige leden
-        this.aanwezigLedenAbonnement = this.aanwezigLedenService.aanwezigChange.subscribe(dataset => {
-            this.opvragen();        // kunnen dataset niet gebruiken omdat we hier ander tijdspanne gebruiken
+        this.aanwezigLedenAbonnement = this.aanwezigLedenService.aanwezigChange.subscribe((_) => {
+            this.opvragen();        // kunnen dataset die normaal in subscribe payload zit niet gebruiken omdat we hier ander tijdspanne gebruiken
         });
 
         // Roep onWindowResize aan zodra we het event ontvangen hebben
-        this.resizeSubscription = this.sharedService.onResize$.subscribe(size => {
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(() => {
             this.opvragen();
         });
 
@@ -175,7 +176,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
             this.veldTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));            // vliegvelden
         });
 
-        const toonGasten = this.storageService.ophalen("toonGasten")
+        const toonGasten = this.storageService.ophalen("toonGasten") as boolean;
         if (toonGasten != null) {
             this.toonGasten = toonGasten;
         }
@@ -186,6 +187,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         if (this.datumAbonnement) this.datumAbonnement.unsubscribe();
         if (this.maandAbonnement) this.maandAbonnement.unsubscribe();
         if (this.resizeSubscription) this.resizeSubscription.unsubscribe();
+        if (this.aanwezigLedenAbonnement) this.aanwezigLedenAbonnement.unsubscribe();
     }
 
     onWindowResize() {
@@ -201,7 +203,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         }
     }
 
-    opvragen(force:boolean = false): void {
+    opvragen(force = false): void {
         let beginDatum: DateTime;
         let eindDatum: DateTime;
 
@@ -228,7 +230,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
             }
         }
 
-        let params: KeyValueArray = {};
+        const params: KeyValueArray = {};
         params['VELDEN'] = "DATUM,DDWV,STARTMETHODE_OMS";
         this.daginfoService.getDagInfoDagen(false, beginDatum, eindDatum, undefined, params).then((di) => {
             this.dagInfo = di;
@@ -282,16 +284,13 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         const ui = this.loginService.userInfo!;
 
         // voor beheerders moeten we meer data ophalen
-        if (!ui!.Userinfo?.isBeheerderDDWV && !ui!.Userinfo?.isBeheerder!) {
+        if (!ui!.Userinfo?.isBeheerderDDWV && !ui!.Userinfo?.isBeheerder) {
             this.isLoadingAanwezig = false;
         }
         else {
             this.aanwezigLedenService.getAanwezigVerwijderd(beginDatum, eindDatum).then((afmeldingen) => {
-                for (let i=0 ; i < afmeldingen.length ; i++)
-                {
-                    const afmelding: HeliosAanwezigLedenDataset = afmeldingen[i];
+                for (const afmelding of afmeldingen) {
                     const dag: HeliosRoosterDatasetExtended = this.rooster.find(d => d.DATUM == afmelding.DATUM) as HeliosLedenDataset;
-
                     // we zijn niet geintresseerd in afmeldingen bij club dagen
                     if (!dag.DDWV && dag.CLUB_BEDRIJF)
                         continue
@@ -325,10 +324,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         return d < DateTime.now()
     }
 
-    // Dit is al geimplementeerd in util.ts
-    DagVanDeWeek(Datum: string) {
-        return DagVanDeWeek(Datum);
-    }
+
 
     // Toon datum als dd-mm-yyyy
     datumDMY(dagDatum: string): string {
@@ -338,12 +334,12 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
 
     berekenStrippen() {
         if (this.isLoadingRooster || this.isLoadingAanwezig) {
-            for (let i = 0; i < this.rooster.length; i++) {
-                this.rooster[i].EENHEDEN = -1;
+            for (const item of this.rooster) {
+                item.EENHEDEN = -1;
             }
         } else {
-            for (let i = 0; i < this.rooster.length; i++) {
-                this.rooster[i].EENHEDEN = this.dagStrip(this.rooster[i].DATUM!);
+            for (const item of this.rooster) {
+                item.EENHEDEN = this.dagStrip(item.DATUM!);
             }
         }
     }
@@ -393,11 +389,11 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
 
             console.log(aanmeldingen)
 
-            for (let i = 0; i < aanmeldingen.length; i++) {
-                if (aanmeldingen[i].DATUM == DateTime.now().toISODate() && aanmeldingen[i].AANKOMST) {
-                    this.aanwezigLedenService.afmelden(aanmeldingen[i].LID_ID!).then(() => this.opvragen());
-                } else if (!aanmeldingen[i].VERWIJDERD) {
-                    this.aanwezigLedenService.aanmeldingVerwijderen(aanmeldingen[i].ID!).then(() => this.opvragen());
+            for (const item of aanmeldingen) {
+                if (item.DATUM == DateTime.now().toISODate() && item.AANKOMST) {
+                    this.aanwezigLedenService.afmelden(item.LID_ID!).then(() => this.opvragen());
+                } else if (!item.VERWIJDERD) {
+                    this.aanwezigLedenService.aanmeldingVerwijderen(item.ID!).then(() => this.opvragen());
                 }
             }
             this.isLoadingAanwezig = false;
@@ -522,17 +518,18 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     }
 
     isAangemeld(dagDatum: string): boolean {
-        const ui = this.loginService.userInfo?.LidData!;
+        const ui = this.loginService.userInfo?.LidData;
 
         if (!this.aanmeldingen) {
             return false;
         }
 
+        // findIndex geeft -1 als het niet gevonden is
         const aanwezig = this.aanmeldingen.findIndex((a: HeliosAanwezigLedenDataset) => {
-            return (a.DATUM == dagDatum && a.LID_ID == ui.ID && a.VERWIJDERD == false);
+            return (a.DATUM == dagDatum && a.LID_ID == ui?.ID && a.VERWIJDERD == false);
         });
 
-        return aanwezig < 0 ? false : true;
+        return aanwezig >= 0;
     }
 
     magAanmelden(dagDatum: string): boolean {
@@ -656,7 +653,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         return false;
     }
 
-    toonBarometer(lid: HeliosAanwezigLedenDataset) {
+    toonBarometer(_: HeliosAanwezigLedenDataset) {
         const ui = this.loginService.userInfo?.Userinfo;
         if (ui?.isBeheerder || ui?.isCIMT || ui?.isInstructeur) {
             return true;
@@ -709,22 +706,6 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         }
     }
 
-    magBulkMailen(datum: string) {
-        const ui = this.loginService.userInfo;
-        if (ui!.Userinfo!.isBeheerder || ui?.Userinfo!.isCIMT)
-            return true;
-        else {
-            if (!this.diensten) {
-                return false;
-            }
-            // als de ingelode gebruiker dienst heeft, dan toegang tot bulk email
-            const idx = this.diensten.findIndex((d) => {
-                return (d.DATUM == datum && d.LID_ID == ui!.LidData!.ID)
-            });
-            return (idx >= 0);
-        }
-    }
-
     // stuur email naar iedereen die is aangemeld
     bulkEmail(dagDatum: string) {
         const aanwezig = this.aanmeldingen.filter((a: HeliosAanwezigLedenDataset) => {
@@ -732,8 +713,8 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         });
 
         const ui = this.loginService.userInfo?.LidData;
-        const toEmail: String = ui!.EMAIL as String;
-        let bcc: String = "";
+        const toEmail: string = ui!.EMAIL as string;
+        let bcc = "";
 
         aanwezig.forEach((lid: HeliosAanwezigLedenDataset) => {
             if (lid.EMAIL?.includes('@')) {

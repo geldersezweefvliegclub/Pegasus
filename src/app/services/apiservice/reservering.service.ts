@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {APIService} from "./api.service";
-import {HeliosReservering, HeliosReserveringen, HeliosReserveringenDataset, HeliosTrack} from "../../types/Helios";
-import {KeyValueArray} from "../../types/Utils";
-import {DateTime} from "luxon";
-import {LoginService} from "./login.service";
+import { Injectable } from '@angular/core';
+import { APIService } from './api.service';
+import { HeliosReservering, HeliosReserveringen, HeliosReserveringenDataset } from '../../types/Helios';
+import { KeyValueArray } from '../../types/Utils';
+import { DateTime } from 'luxon';
+import { LoginService } from './login.service';
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +17,7 @@ export class ReserveringService {
     }
 
     async getReserveringen(startDatum: DateTime, eindDatum: DateTime, maxRecords?: number): Promise<HeliosReserveringenDataset[]> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
@@ -47,14 +47,8 @@ export class ReserveringService {
     }
 
     async addReservering(reservering: HeliosReservering) {
-        try {
-            const response: Response = await this.apiService.post('Reservering/SaveObject', JSON.stringify(reservering));
-            return response.json();
-        }
-        catch (e) {
-            throw (e);
-        }
-        return undefined;
+        const response: Response = await this.apiService.post('Reservering/SaveObject', JSON.stringify(reservering));
+        return response.json();
     }
 
     async deleteReservering(id: number) {

@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
-import {Observable, of, Subject} from 'rxjs';
-import {HeliosVliegtuigenDataset} from '../../../../../types/Helios';
-import {NgSelectComponent} from "@ng-select/ng-select";
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Observable, of, Subject } from 'rxjs';
+import { HeliosVliegtuigenDataset } from '../../../../../types/Helios';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
     selector: 'app-vliegtuig-invoer',
@@ -11,10 +11,10 @@ import {NgSelectComponent} from "@ng-select/ng-select";
 export class VliegtuigInvoerComponent implements OnInit, OnChanges {
     @Input() vliegtuigen: HeliosVliegtuigenDataset[] = [];
     @Input() aanwezig: HeliosVliegtuigenDataset[] = [];
-    @Input() label: string = "";
-    @Input() disabled: boolean = false;
-    @Input() Sleep: boolean = false;
-    @Input() verplicht: boolean = true;
+    @Input() label = "";
+    @Input() disabled = false;
+    @Input() Sleep = false;
+    @Input() verplicht = true;
     @Input() VLIEGTUIG_ID: number | undefined;
 
     @Output() VliegtuigChanged: EventEmitter<number> = new EventEmitter<number>();
@@ -25,10 +25,7 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
     vliegtuigInput$ = new Subject<string | null>();
     vliegtuigenSelectie$: Observable<HeliosVliegtuigenDataset[]>;
 
-    inzetbaar: boolean = true;
-
-    constructor() {
-    }
+    inzetbaar = true;
 
     ngOnInit(): void {
         this.vliegtuigInput$.subscribe((newTerm) => {
@@ -71,7 +68,7 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
     // De Input datasets zijn gewijzigd, zorg dat combobox goede starts krijgt via vliegtuigenSelectie$
     ngOnChanges(changes: SimpleChanges) {
         // bij update van VLIEGTUIG_ID kijken we alleen of waarde geldig is
-        if ((changes.hasOwnProperty("VLIEGTUIG_ID")) &&  this.vliegtuigenSelectie$) {
+        if ((Object.prototype.hasOwnProperty.call(changes, "VLIEGTUIG_ID")) &&  this.vliegtuigenSelectie$) {
             return;
         }
 

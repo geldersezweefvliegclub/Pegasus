@@ -1,29 +1,29 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
-import {LoginService} from '../../../services/apiservice/login.service';
-import {DaginfoService} from '../../../services/apiservice/daginfo.service';
-import {SharedService} from '../../../services/shared/shared.service';
-import {DateTime} from 'luxon';
-import {Observable, of, Subscription} from 'rxjs';
-import {ErrorMessage, SuccessMessage} from '../../../types/Utils';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { DaginfoService } from '../../../services/apiservice/daginfo.service';
+import { SharedService } from '../../../services/shared/shared.service';
+import { DateTime } from 'luxon';
+import { Observable, of, Subscription } from 'rxjs';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
 import {
     HeliosDagInfo,
-    HeliosDagRapport,
     HeliosDagRapportenDataset,
     HeliosDienstenDataset,
     HeliosRoosterDataset,
-    HeliosType
+    HeliosType,
 } from '../../../types/Helios';
-import {TypesService} from '../../../services/apiservice/types.service';
-import {IconDefinition} from '@fortawesome/free-regular-svg-icons';
-import {faFileImport, faInfo, faMinusCircle, faPlane, faUndo, faUsers} from '@fortawesome/free-solid-svg-icons';
-import {StorageService} from '../../../services/storage/storage.service';
-import {DagRoosterComponent} from "../../../shared/components/dag-rooster/dag-rooster.component";
-import {RoosterService} from "../../../services/apiservice/rooster.service";
-import {DienstenService} from "../../../services/apiservice/diensten.service";
-import {DagRapportenService} from "../../../services/apiservice/dag-rapporten.service";
-import {DagRapportEditorComponent} from "../../../shared/components/editors/dag-rapport-editor/dag-rapport-editor.component";
-import {TracksLedenDataset} from "../../../shared/components/tracks/tracks.component";
+import { TypesService } from '../../../services/apiservice/types.service';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faFileImport, faInfo, faMinusCircle, faPlane, faUndo, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { StorageService } from '../../../services/storage/storage.service';
+import { DagRoosterComponent } from '../../../shared/components/dag-rooster/dag-rooster.component';
+import { RoosterService } from '../../../services/apiservice/rooster.service';
+import { DienstenService } from '../../../services/apiservice/diensten.service';
+import { DagRapportenService } from '../../../services/apiservice/dag-rapporten.service';
+import {
+    DagRapportEditorComponent,
+} from '../../../shared/components/editors/dag-rapport-editor/dag-rapport-editor.component';
 
 @Component({
     selector: 'app-daginfo',
@@ -58,10 +58,10 @@ export class DaginfoComponent implements OnInit, OnDestroy{
     baanTypes$: Observable<HeliosType[]>;
     startMethodeTypes$: Observable<HeliosType[]>;
 
-    magOpslaan: boolean = false;
-    toonDagRapport: boolean = false;
-    deleteMode: boolean = false;
-    trashMode: boolean = false;
+    magOpslaan = false;
+    toonDagRapport = false;
+    deleteMode = false;
+    trashMode = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -144,7 +144,7 @@ export class DaginfoComponent implements OnInit, OnDestroy{
             tonen = true;
         } else if (this.rooster) {
             const d = this.datum.toISODate();
-            let rooster: HeliosRoosterDataset | undefined = this.rooster.find((dag) => d == dag.DATUM!)
+            const rooster: HeliosRoosterDataset | undefined = this.rooster.find((dag) => d == dag.DATUM!)
 
             if (rooster) {
                 if (rooster.DDWV)               // het is een DWWV dag, misschien toch alles tonen

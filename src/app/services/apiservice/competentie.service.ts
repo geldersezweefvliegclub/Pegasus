@@ -1,16 +1,17 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
-    HeliosCompetentie,
-    HeliosCompetenties,
-    HeliosCompetentiesDataset,
-    HeliosProgressieBoom,
-    HeliosType,
-} from "../../types/Helios";
-import {KeyValueArray} from "../../types/Utils";
-import {APIService} from "./api.service";
-import {StorageService} from "../storage/storage.service";
-import {BehaviorSubject} from "rxjs";
-import {LoginService} from "./login.service";
+  HeliosCompetentie,
+  HeliosCompetenties,
+  HeliosCompetentiesDataset,
+  HeliosProgressieBoom,
+  HeliosType,
+} from '../../types/Helios';
+import { KeyValueArray } from '../../types/Utils';
+import { APIService } from './api.service';
+import { StorageService } from '../storage/storage.service';
+import { BehaviorSubject } from 'rxjs';
+import { LoginService } from './login.service';
+import { CustomJsonSerializer } from '../../utils/Utils';
 
 @Injectable({
     providedIn: 'root'
@@ -30,7 +31,7 @@ export class CompetentieService {
 
         // We hebben misschien eerder de comptenties opgehaald. Die gebruiken we totdat de API starts heeft opgehaald
         if (this.storageService.ophalen('competenties') != null) {
-            this.competentiesCache = this.storageService.ophalen('competenties');
+            this.competentiesCache = this.storageService.ophalen('competenties') as HeliosCompetenties;
             this.competentiesStore.next(this.competentiesCache.dataset!)    // afvuren event met opgeslagen vliegtuigen dataset
         }
 
@@ -44,7 +45,7 @@ export class CompetentieService {
                     ophalen = true;
                 }
                 if (ophalen) {
-                    this.getCompetenties().then((dataset) => {
+                    this.getCompetenties().then(() => {
                         this.competentiesStore.next(this.competentiesCache.dataset!)    // afvuren event
                     });
                 }
@@ -53,15 +54,14 @@ export class CompetentieService {
 
         // nadat we ingelogd zijn kunnen we de comptenties ophalen
         loginService.inloggenSucces.subscribe(() => {
-            this.getCompetenties().then((dataset) => {
+            this.getCompetenties().then((_) => {
                 this.competentiesStore.next(this.competentiesCache.dataset!)    // afvuren event
             });
         });
     }
 
     async getCompetenties(): Promise<HeliosCompetentiesDataset[]> {
-        let competenties: HeliosCompetenties | null = null;
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
@@ -91,7 +91,7 @@ export class CompetentieService {
     }
 
     async getBoom(): Promise<HeliosProgressieBoom[]> {
-        let getParams: KeyValueArray = {};
+        const getParams: KeyValueArray = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
@@ -119,18 +119,12 @@ export class CompetentieService {
     }
 
     async addCompetentie(competentie: HeliosCompetentie) {
-        const replacer = (key: string, value: any) =>
-            typeof value === 'undefined' ? null : value;
-
         const response: Response = await this.apiService.post('Competenties/SaveObject', JSON.stringify(competentie));
         return response.json();
     }
 
     async updateCompetentie(competentie: HeliosCompetentie) {
-        const replacer = (key: string, value: any) =>
-            typeof value === 'undefined' ? null : value;
-
-        const response: Response = await this.apiService.put('Competenties/SaveObject', JSON.stringify(competentie));
+        const response: Response = await this.apiService.put('Competenties/SaveObject', JSON.stringify(competentie, CustomJsonSerializer));
         return response.json();
     }
 

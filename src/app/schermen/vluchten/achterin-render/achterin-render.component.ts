@@ -1,7 +1,7 @@
-import {Component} from '@angular/core';
-import {AgRendererComponent} from 'ag-grid-angular';
-import {ICellRendererParams} from 'ag-grid-community';
-import {LoginService} from "../../../services/apiservice/login.service";
+import { Component } from '@angular/core';
+import { AgRendererComponent } from 'ag-grid-angular';
+import { ICellRendererParams } from 'ag-grid-community';
+import { LoginService } from '../../../services/apiservice/login.service';
 
 
 @Component({
@@ -13,10 +13,10 @@ import {LoginService} from "../../../services/apiservice/login.service";
 export class AchterinRenderComponent implements AgRendererComponent {
     grid_inzittendenaam: string;
     lidID: string;
-    naarDashboard: boolean = false;
+    naarDashboard = false;
 
-    warning: boolean = false;        // nog niet gestart, instructeur is onbekend
-    error: boolean = false;          // er is gestart, maar instructeur is onbekend
+    warning = false;        // nog niet gestart, instructeur is onbekend
+    error = false;          // er is gestart, maar instructeur is onbekend
 
     constructor(private readonly loginService: LoginService) {
     }
@@ -55,7 +55,7 @@ export class AchterinRenderComponent implements AgRendererComponent {
         }
     }
 
-    refresh(params: ICellRendererParams): boolean {
+    refresh(_: ICellRendererParams): boolean {
         return false;
     }
 }

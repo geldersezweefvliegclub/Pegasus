@@ -1,10 +1,10 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {ModalComponent} from "../../../shared/components/modal/modal.component";
-import {Subscription} from "rxjs";
-import {HeliosType, HeliosVliegtuigenDataset} from "../../../types/Helios";
-import {TypesService} from "../../../services/apiservice/types.service";
-import {VliegtuigenService} from "../../../services/apiservice/vliegtuigen.service";
-import {journaalFilter} from "../../../services/apiservice/journaal.service";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ModalComponent } from '../../../shared/components/modal/modal.component';
+import { Subscription } from 'rxjs';
+import { HeliosType, HeliosVliegtuigenDataset } from '../../../types/Helios';
+import { TypesService } from '../../../services/apiservice/types.service';
+import { VliegtuigenService } from '../../../services/apiservice/vliegtuigen.service';
+import { journaalFilter } from '../../../services/apiservice/journaal.service';
 
 
 @Component({

@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  "/Journaal/CreateTable": {
+  "/Types/CreateTable": {
     post: {
       parameters: {
         query: {
@@ -20,7 +20,7 @@ export interface paths {
       };
     };
   };
-  "/Journaal/CreateViews": {
+  "/Types/CreateViews": {
     post: {
       responses: {
         /** Aangemaakt, View toegevoegd */
@@ -30,11 +30,11 @@ export interface paths {
       };
     };
   };
-  "/Journaal/GetObject": {
+  "/Types/GetObject": {
     get: {
       parameters: {
         query: {
-          /** Database ID van het track record */
+          /** Database ID van het type record */
           ID: number;
         };
       };
@@ -42,7 +42,7 @@ export interface paths {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_journaal"];
+            "application/json": components["schemas"]["ref_types"];
           };
         };
         /** Data niet gevonden */
@@ -56,7 +56,7 @@ export interface paths {
       };
     };
   };
-  "/Journaal/GetObjects": {
+  "/Types/GetObjects": {
     get: {
       parameters: {
         query: {
@@ -76,17 +76,15 @@ export interface paths {
           START?: number;
           /** Welke velden moet opgenomen worden in de dataset */
           VELDEN?: string;
-          /** Haal alle tracks op van een specifiek lid */
-          LID_ID?: string;
-          /** Haal alle tracks op die door deze instrcuteur zijn toegevoegd */
-          INSTRUCTEUR_ID?: string;
+          /** Haal alle types op van een specieke groep */
+          GROEP?: number;
         };
       };
       responses: {
         /** OK, data succesvol opgehaald */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_journaal"];
+            "application/json": components["schemas"]["view_types"];
           };
         };
         /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
@@ -98,18 +96,36 @@ export interface paths {
       };
     };
   };
-  "/Journaal/DeleteObject": {
+  "/Types/GetClubVliegtuigenTypes": {
+    get: {
+      responses: {
+        /** OK, data succesvol opgehaald */
+        200: {
+          content: {
+            "application/json": components["schemas"]["view_types"];
+          };
+        };
+        /** Data niet gemodificeerd, HASH in aanroep == hash in dataset */
+        304: never;
+        /** Methode niet toegestaan, input validatie error */
+        405: unknown;
+        /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
+        500: unknown;
+      };
+    };
+  };
+  "/Types/DeleteObject": {
     delete: {
       parameters: {
         query: {
           /** Database ID van het record. Meerdere ID's in CSV formaat */
-          ID: string;
+          ID: number;
           /** Controleer of record bestaat voordat het verwijderd wordt. Default = true */
           VERIFICATIE?: boolean;
         };
       };
       responses: {
-        /** Track verwijderd */
+        /** Type verwijderd */
         204: never;
         /** Niet geautoriseerd, geen schrijfrechten */
         401: unknown;
@@ -124,12 +140,12 @@ export interface paths {
       };
     };
   };
-  "/Journaal/RestoreObject": {
+  "/Types/RestoreObject": {
     patch: {
       parameters: {
         query: {
           /** Database ID van het record. Meerdere ID's in CSV formaat */
-          ID: string;
+          ID: number;
         };
       };
       responses: {
@@ -148,13 +164,13 @@ export interface paths {
       };
     };
   };
-  "/Journaal/SaveObject": {
+  "/Types/SaveObject": {
     put: {
       responses: {
         /** OK, data succesvol aangepast */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_journaal"];
+            "application/json": components["schemas"]["ref_types"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -168,10 +184,10 @@ export interface paths {
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** track data */
+      /** type data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["oper_journaal_in"];
+          "application/json": components["schemas"]["ref_types_in"];
         };
       };
     };
@@ -180,7 +196,7 @@ export interface paths {
         /** OK, data succesvol toegevoegd */
         200: {
           content: {
-            "application/json": components["schemas"]["oper_journaal"];
+            "application/json": components["schemas"]["ref_types"];
           };
         };
         /** Niet geautoriseerd, geen schrijfrechten */
@@ -194,10 +210,10 @@ export interface paths {
         /** Data verwerkingsfout, bijv onjuiste veldwaarde (string ipv integer) */
         500: unknown;
       };
-      /** track data */
+      /** type data */
       requestBody: {
         content: {
-          "application/json": components["schemas"]["oper_journaal_in"];
+          "application/json": components["schemas"]["ref_types_in"];
         };
       };
     };
@@ -206,66 +222,56 @@ export interface paths {
 
 export interface components {
   schemas: {
-    oper_journaal_in: {
+    ref_types_in: {
       /**
        * Format: int32
        * @description Database ID van het record
-       * @example 14
+       * @example 12871
        */
       ID?: number;
       /**
-       * Format: date
-       * @description Datum van de melding
-       * @example 2022-03-14
+       * Format: int32
+       * @description Type groep
+       * @example 101
        */
-      DATUM?: string;
+      GROEP?: number;
       /**
-       * @description Het vliegtuig ID. Verwijzing naar vliegtuigen tabel
-       * @example 203
+       * @description Zeer korte beschrijving van de code
+       * @example 14R
        */
-      VLIEGTUIG_ID?: number;
+      CODE?: string;
+      /** @description Hoe kennen andere systemen / organisatie deze code */
+      EXT_REF?: string;
       /**
-       * @description Om welk rollend materieel gaat het. Verwijzing naar type tabel
-       * @example 506
-       */
-      ROLLEND_ID?: number;
-      /**
-       * @description Titel van melding / klacht / defect
-       * @example Variometer defect
-       */
-      TITEL?: string;
-      /**
-       * @description Omschrijving van de melding / klacht / defect
-       * @example Variometer blijft hangen op +5
+       * @description Volledige omschrijving van het type
+       * @example Windkracht 3 (7-10 kn)
        */
       OMSCHRIJVING?: string;
       /**
-       * @description Soort melding. Klacht / Defect. Verwijzing naar type tabel
-       * @example 2305
+       * Format: int32
+       * @description Volgorde in de HMI
+       * @example 7
        */
-      CATEGORIE_ID?: number;
+      SORTEER_VOLGORDE?: number;
       /**
-       * @description Status van de meliding (open, in behandeling, opgelost). Verwijzing naar type tabel
-       * @example 2401
+       * @description Is dit record (met ID) hard gecodeerd in de source code. Zo ja, dan niet aanpassen.
+       * @example 0
        */
-      STATUS_ID?: number;
+      READ_ONLY?: boolean;
       /**
-       * @description Lid ID van diegene die melding heeft ingevoerd. Verwijzing naar leden tabel
-       * @example 20123
+       * Format: double
+       * @description Het bedrag in Euro's
+       * @example 0
        */
-      MELDER_ID?: number;
+      BEDRAG?: number;
       /**
-       * @description Techneut die naar het probleem gekeken heeft. Verwijzing naar leden tabel
-       * @example 10331
+       * Format: numeric
+       * @description Bij bestellen van strippen, of afschrijven strippen
+       * @example 10115
        */
-      TECHNICUS_ID?: number;
-      /**
-       * @description Techneut die afgetekend heeft dat melding verholpen is. Verwijzing naar leden tabel
-       * @example 10552
-       */
-      AFGETEKEND_ID?: number;
+      EENHEDEN?: number;
     };
-    oper_journaal: components["schemas"]["oper_journaal_in"] & {
+    ref_types: components["schemas"]["ref_types_in"] & {
       /**
        * @description Is dit record gemarkeerd als verwijderd?
        * @example 0
@@ -274,58 +280,11 @@ export interface components {
       /**
        * Format: date-time
        * @description Tijdstempel van laaste aanpassing in de database
-       * @example 2021-05-05 20:13:59Z
+       * @example 2020-09-28 14:12:00
        */
       LAATSTE_AANPASSING?: string;
     };
-    view_journaal_dataset: components["schemas"]["oper_journaal"] & {
-      /**
-       * @description Omschrijving uit type tabel mbt rollend materieel
-       * @example Gele Bully
-       */
-      ROLLEND?: string;
-      /**
-       * @description Omschrijving uit type tabel over de actuele status
-       * @example Opgelost
-       */
-      STATUS?: string;
-      /**
-       * @description Omschrijving uit type tabel over de actuele status
-       * @example Opgelost
-       */
-      STATUS_CODE?: string;
-      /**
-       * @description Omschrijving uit type tabel over de categorie
-       * @example Defect
-       */
-      CATEGORIE?: string;
-      /**
-       * @description Code uit type tabel over de categorie
-       * @example Defect
-       */
-      CATEGORIE_CODE?: string;
-      /**
-       * @description Naam van de melder
-       * @example Juffrouw Ooievaar
-       */
-      MELDER?: string;
-      /**
-       * @description Naam van de technicus die eerste inspectie heeft gedaan
-       * @example Willem Bever
-       */
-      TECHNICUS?: string;
-      /**
-       * @description Naam van de technicus die melding heeft afgetekend als afgehandeld
-       * @example Meneer de Uil
-       */
-      AFGETEKEND?: string;
-      /**
-       * @description Registratie en Callsign van het vliegtuig
-       * @example PH-721 (E4)
-       */
-      REG_CALL?: string;
-    };
-    view_journaal: {
+    view_types: {
       /**
        * Format: int32
        * @description Aantal records dat voldoet aan de criteria in de database
@@ -335,20 +294,16 @@ export interface components {
       /**
        * Format: date-time
        * @description Tijdstempel van laaste aanpassing in de database van de records dat voldoet aan de criteria
-       * @example 2019-01-05 10:09:53
+       * @example 2020-07-022 16:39:25
        */
       laatste_aanpassing?: string;
       /**
        * @description hash van de dataset
-       * @example dd00bff
+       * @example 4d00b3f
        */
       hash?: string;
       /** @description De dataset met records */
-      dataset?: components["schemas"]["view_journaal_dataset"][];
+      dataset?: components["schemas"]["ref_types"][];
     };
   };
 }
-
-export interface operations {}
-
-export interface external {}
