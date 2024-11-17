@@ -560,6 +560,15 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
             console.log(dagDatum, "DDWV'er en geen zusterclub");
             return false;
         }
+        if (this.rooster[idx].WINTER_WERK)
+        {
+            if (ui!.LidData!.LIDTYPE_ID == 625)     // 625 = DDWV vlieger
+            {
+                console.log(dagDatum, "DDWV'er en winterwerk, dat past niet");
+                return false;
+            }
+            return true;
+        }
         if (!this.rooster[idx].CLUB_BEDRIJF)    // welke lidtypes mogen aanmelden als we geen club bedrijf hebben
         {
             switch (ui!.LidData!.LIDTYPE_ID) {
