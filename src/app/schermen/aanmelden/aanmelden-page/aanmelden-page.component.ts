@@ -231,7 +231,6 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         }
 
         const params: KeyValueArray = {};
-        params['VELDEN'] = "DATUM,DDWV,STARTMETHODE_OMS";
         this.daginfoService.getDagInfoDagen(false, beginDatum, eindDatum, undefined, params).then((di) => {
             this.dagInfo = di;
         })
