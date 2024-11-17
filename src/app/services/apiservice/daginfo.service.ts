@@ -55,7 +55,6 @@ export class DaginfoService {
         const getParams: KeyValueArray = {};
         getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
         getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
-        getParams['VELDEN'] = "ID,DATUM";
 
         try {
             const response: Response = await this.apiService.get('Daginfo/GetObjects', getParams);
