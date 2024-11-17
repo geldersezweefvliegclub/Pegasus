@@ -1,6 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { APIService } from './api.service';
-import { Base64 } from 'js-base64';
 
 import { HeliosUserinfo } from '../../types/Helios';
 import { StorageService } from '../storage/storage.service';
@@ -53,8 +52,8 @@ export class LoginService  {
 
     async login(gebruikersnaam: string, wachtwoord: string, token?: string): Promise<number | undefined> {
         const headers = new Headers(
-    {
-            'Authorization': 'Basic ' + Base64.encode(`${gebruikersnaam}:${wachtwoord}`)
+        {
+            'Authorization': 'Basic ' + btoa(`${gebruikersnaam}:${wachtwoord}`)
         });
 
         let params: KeyValueArray = {};
@@ -99,7 +98,7 @@ export class LoginService  {
     // Verstuur een mail met het nieuwe wachtwoord
     async resetWachtwoord(gebruikersnaam: string) {
         const headers = new Headers();
-        const base64encoded = Base64.encode(`${gebruikersnaam}:""`);
+        const base64encoded = btoa(`${gebruikersnaam}:""`);
         headers.append('Authorization', `Basic ${base64encoded}`);
 
         await this.apiService.get('Login/ResetWachtwoord', undefined, headers);
@@ -113,7 +112,7 @@ export class LoginService  {
 
     async sendSMS(gebruikersnaam: string, wachtwoord: string): Promise<void> {
         const headers = new Headers();
-        const base64encoded = Base64.encode(`${gebruikersnaam}:${wachtwoord}`);
+        const base64encoded = btoa(`${gebruikersnaam}:${wachtwoord}`);
         headers.append('Authorization', `Basic ${base64encoded}`);
 
         await this.apiService.get('Login/SendSMS', undefined, headers);
