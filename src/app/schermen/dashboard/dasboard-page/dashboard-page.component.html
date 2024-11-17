@@ -164,7 +164,7 @@
                                   class="kleineKaart"
                                   titel="Progressiekaart"
                                   subtitel="Behaalde competenties"
-                                  exportEnabled=" true"
+                                  exportEnabled="true"
                                   (Exporting)="exportProgressieKaart()"
                                   [icon]="iconProgressie">
                     <app-progressie-boom
@@ -233,7 +233,7 @@
 <app-modal #dienstenPopup titel="Diensten van {{lidData.NAAM}}" *ngIf="lidData">
     <div body>
         <div>
-            <app-diensten [VliegerID]="lidData.ID" UitgebreideWeergave="true" *ngIf="lidData"></app-diensten>
+            <app-diensten [Vlieger]="lidData" UitgebreideWeergave="true" *ngIf="lidData"></app-diensten>
         </div>
     </div>
 </app-modal>
