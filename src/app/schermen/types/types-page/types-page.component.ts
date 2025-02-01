@@ -120,9 +120,8 @@ export class TypesPageComponent implements OnInit, OnDestroy {
         this.filteredTypes[idx].SORTEER_VOLGORDE!++;
         this.filteredTypes[idx+1].SORTEER_VOLGORDE!--;
 
-        for (const item of this.filteredTypes) {
-            this.typesService.updateType(item);
-        }
+        this.typesService.updateType(this.filteredTypes[idx]);
+        this.typesService.updateType(this.filteredTypes[idx+1]);
 
         this.filteredTypes.sort(function(a, b) {
             return a.SORTEER_VOLGORDE! - b.SORTEER_VOLGORDE!});
@@ -133,9 +132,9 @@ export class TypesPageComponent implements OnInit, OnDestroy {
         this.filteredTypes[idx].SORTEER_VOLGORDE!--;
         this.filteredTypes[idx-1].SORTEER_VOLGORDE!++;
 
-        for (const item of this.filteredTypes) {
-            this.typesService.updateType(item);
-        }
+        this.typesService.updateType(this.filteredTypes[idx]);
+        this.typesService.updateType(this.filteredTypes[idx-1]);
+
         this.filteredTypes.sort((a, b) => a.SORTEER_VOLGORDE! - b.SORTEER_VOLGORDE!);
     }
 
