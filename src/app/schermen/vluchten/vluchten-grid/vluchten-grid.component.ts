@@ -37,6 +37,7 @@ import { StorageService } from '../../../services/storage/storage.service';
 import { FlarmData, FlarmInputService, FlarmStartData } from '../../../services/flarm-input.service';
 import { DatatableComponent } from '../../../shared/components/datatable/datatable.component';
 import { OpmerkingenRenderComponent } from '../opmerkingen-render/opmerkingen-render.component';
+import {isDecoratorDeclaration} from "@angular/compiler-cli/src/ngtsc/docs/src/decorator_extractor";
 
 type HeliosStartDatasetExtended = HeliosStartDataset & {
     inTijdspan?: boolean
@@ -203,6 +204,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     private datumAbonnement: Subscription;    // volg de keuze van de kalender
     datum: DateTime = DateTime.now();         // de gekozen dag in de kalender
 
+    maakTransacties = false;
     magToevoegen = false;
     magVerwijderen = false;
     magWijzigen = false;
@@ -257,6 +259,13 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
             }
             this.opvragen();
             this.magVerwijderen = (!this.beperkteInvoer()) ? true : false;
+
+            const beheerder = (ui?.isBeheerder || ui?.isBeheerderDDWV) ?? false;
+            const d = (this.datum.toSQL() as string).substring(0, 10);
+            const rooster: HeliosRoosterDataset | undefined = this.rooster.find((dag) => d== dag.DATUM)
+            const dagDDWV = (rooster) ? rooster.DDWV : false;
+
+            this.maakTransacties = (beheerder && dagDDWV) ? true : false;
         });
 
         // abonneer op wijziging van diensten
@@ -575,5 +584,10 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     filter(actief: boolean) {
         this.filterOn = actief;
         this.opvragen();
+    }
+
+
+    maakTransactie() {
+        console.log("Maak transactie")
     }
 }

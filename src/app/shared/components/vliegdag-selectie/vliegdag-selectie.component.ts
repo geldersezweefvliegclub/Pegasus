@@ -56,7 +56,7 @@ export class VliegdagSelectieComponent implements OnInit, OnDestroy {
             this.kalenderEersteDatum = {year: this.vandaag.year, month: this.vandaag.month, day: this.vandaag.day}
             this.kalenderLaatsteDatum = {year: this.vandaag.year, month: this.vandaag.month, day: this.vandaag.day}
         } else {
-            this.kalenderEersteDatum = {year: 2015, month: 1, day: 1}
+            this.kalenderEersteDatum = {year: 2000, month: 1, day: 1}
             this.kalenderLaatsteDatum = {year: this.vandaag.year + 1, month: 12, day: 31}
         }
 

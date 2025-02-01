@@ -463,3 +463,25 @@ canvas.recencyGrafiek.chartjs-render-monitor {
 .overflow-x-clip {
   overflow-x: clip;
 }
+
+.vluchten_transactie_button button {
+  background-color: brown;
+}
+
+
+.unChecked {
+}
+
+.halfChecked {
+  --bs-form-check-bg-image: none !important;
+  background-color: #2871ff !important;
+}
+
+.fullChecked
+{
+
+}
+
+.form-check-input[disabled] ~ .form-check-label, .form-check-input:disabled ~ .form-check-label {
+  opacity: 1 !important;
+}

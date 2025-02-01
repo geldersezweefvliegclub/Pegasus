@@ -16,6 +16,7 @@ export class ProgressieTreeviewItem extends TreeviewItem {
     Behaald: string | undefined;
     Score: number | undefined;
     GeldigTot: string | undefined;
+    IsBehaald: number | undefined;
 }
 
 @Component({
@@ -142,23 +143,24 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
         const nieuwetak = new ProgressieTreeviewItem({
             text: (tekst).trim(),
             value: boomTak.COMPETENTIE_ID,
-
             collapsed: true
         });
 
-        if (!boomTak.children) {
-            nieuwetak.checked = boomTak.IS_BEHAALD == 2
-            if (nieuwetak.checked) {
-                const datum = this.sharedService.datumDMJ(boomTak.INGEVOERD!.substring(0, 10))
+        nieuwetak.IsBehaald = boomTak.IS_BEHAALD;
 
-                nieuwetak.Instructeur = boomTak.INSTRUCTEUR_NAAM!;
-                nieuwetak.ProgresssieID = boomTak.PROGRESSIE_ID!;
-                nieuwetak.Behaald = datum;
-                nieuwetak.Score = boomTak.SCORE;
-                nieuwetak.GeldigTot = (boomTak.GELDIG_TOT) ? this.sharedService.datumDMJ(boomTak.GELDIG_TOT) : undefined;
-            }
-        } else {
-            for (const item of boomTak.children) {
+        if (!boomTak.children)
+        {
+            const datum = boomTak.INGEVOERD ? this.sharedService.datumDMJ(boomTak.INGEVOERD!.substring(0, 10)) : undefined;
+
+            nieuwetak.Instructeur = boomTak.INSTRUCTEUR_NAAM!;
+            nieuwetak.ProgresssieID = boomTak.PROGRESSIE_ID!;
+            nieuwetak.Behaald = datum;
+            nieuwetak.Score = boomTak.SCORE;
+            nieuwetak.GeldigTot = (boomTak.GELDIG_TOT) ? this.sharedService.datumDMJ(boomTak.GELDIG_TOT) : undefined;
+        }
+        else {
+            for (const item of boomTak.children)
+            {
                 const extraTak: TreeviewItem = this.TreeView(item);   // recursion
 
                 if (!nieuwetak.children) {
@@ -168,7 +170,6 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
                 }
             }
         }
-        nieuwetak.correctChecked();
         return nieuwetak;
     }
 

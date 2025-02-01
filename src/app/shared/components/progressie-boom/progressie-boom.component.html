@@ -18,7 +18,7 @@
             </svg>
         </i>
         <div class="form-check w-100">
-            <input type="checkbox" class="form-check-input" [(ngModel)]="item.checked"
+            <input type="checkbox" class="form-check-input" [ngModel]="item.IsBehaald > 0"  [ngClass]="{'unChecked': item.IsBehaald === 0, 'halfChecked': item.IsBehaald === 1, 'fullChecked': item.IsBehaald === 2 }"
                    (ngModelChange)="onProgressieChange(item)"
                    [disabled]="item.children || isDisabled" [indeterminate]="item.indeterminate"/>
             <label class="form-check-label" (click)="onProgressieChange(item)">

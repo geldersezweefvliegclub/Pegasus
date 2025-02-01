@@ -49,6 +49,13 @@
                                          iconNaam="far PlusSquare" (btnClicked)="addStart()"
                                          btnColor="btn-primary"
                                          *ngIf="!deleteMode && magToevoegen && inTijdspan"></app-icon-button>
+<!-- TODO
+                        <app-icon-button class="toolbarBtn vluchten_transactie_button"
+                                         tekst="Tranacties"
+                                         iconNaam="fas EuroSign" (btnClicked)="maakTransacties()"
+                                         btnColor="btn-primary"
+                                         *ngIf="!deleteMode && maakTransacties && inTijdspan"></app-icon-button>
+-->
 
                         <div *ngIf="this.deleteMode">
                             <app-status-button
