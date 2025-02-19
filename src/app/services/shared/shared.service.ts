@@ -93,8 +93,15 @@ export class SharedService {
 
     // De gebruiker heeft een andere datum gekozen in de kalender
     zetKalenderDatum(datum: NgbDateStruct) {
-        this.datum = datum;
-        this.datumStore.next(datum)
+        if (this.datum != datum && datum != null)
+        {
+            this.datum = datum;
+            this.datumStore.next(datum)
+        }
+    }
+
+    getKalenderDatum(): NgbDateStruct {
+         return this.datum;
     }
 
     // Er is iets in de database gewijzigd
