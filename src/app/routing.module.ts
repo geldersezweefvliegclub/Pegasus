@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
-
 import { faFile, IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import {
   faAddressCard,
@@ -15,7 +14,6 @@ import {
   faKey,
   faKeyboard,
   faLayerGroup,
-  faPen,
   faPlane,
   faPlaneDeparture,
   faStreetView,
@@ -82,13 +80,6 @@ export const routes: CustomRoute[] = [
         excluded: false,
         icon: faPlaneDeparture,
         text: 'Vluchten'
-    },
-    {
-        path: 'startlijst',
-        loadChildren: () => import('./schermen/startlijst/startlijst.module').then(m => m.StartlijstModule),
-        excluded: false,
-        icon: faPen,
-        text: 'Start indeling'
     },
     {
         path: 'daginfo',

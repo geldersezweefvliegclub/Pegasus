@@ -19,7 +19,7 @@
       "Titel": "Melding KNVvL",
       "Url": "https://melden.zweefvliegen.vliegveiligheid.nl/report",
       "Icon": "far Flag",
-      "css":  "background-color: lightblue;"
+      "css":  "background-color: lightgreen; font-weight: bold;"
     }
   ],
   "diensten": [
