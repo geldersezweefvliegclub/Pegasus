@@ -159,14 +159,6 @@ export class NavigatieComponent implements OnInit, OnDestroy {
             dashboard.excluded = false;
         }
 
-        // alleen starttoren heeft een startlijst
-        const startlijst = this.routes.find(route => route.path == "startlijst") as CustomRoute;
-        if (verbergen.includes('startlijst') || (!ui?.isStarttoren && !ui?.isBeheerder)) {
-            startlijst.excluded = true;
-        } else {
-            startlijst.excluded = false;
-        }
-
         // alleen echte gebruiker hebben profiel, starttoren, zusterclubs, etc dus niet
         const profiel = this.routes.find(route => route.path == "profiel") as CustomRoute;
         profiel.excluded = false;
