@@ -38,6 +38,8 @@ import { FlarmData, FlarmInputService, FlarmStartData } from '../../../services/
 import { DatatableComponent } from '../../../shared/components/datatable/datatable.component';
 import { OpmerkingenRenderComponent } from '../opmerkingen-render/opmerkingen-render.component';
 import {isDecoratorDeclaration} from "@angular/compiler-cli/src/ngtsc/docs/src/decorator_extractor";
+import {TransactiesService} from "../../../services/apiservice/transacties.service";
+import {DdwvService} from "../../../services/apiservice/ddwv.service";
 
 type HeliosStartDatasetExtended = HeliosStartDataset & {
     inTijdspan?: boolean
@@ -204,12 +206,14 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     private datumAbonnement: Subscription;    // volg de keuze van de kalender
     datum: DateTime = DateTime.now();         // de gekozen dag in de kalender
 
-    maakTransacties = false;
+    magFactureren = false;
     magToevoegen = false;
     magVerwijderen = false;
     magWijzigen = false;
     inTijdspan = false;          //  Mogen we starts aanpassen. Mag niet in de toekomst en ook niet meer dan xx dagen geleden.  xx is geconfigureerd in pegasus.config
     magExporteren = false;
+
+    transactiesBezig = false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -217,6 +221,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     VliegerID: number | undefined = undefined;
 
     constructor(private readonly startlijstService: StartlijstService,
+                private readonly ddwvService: DdwvService,
                 private readonly loginService: LoginService,
                 private readonly typesService: TypesService,
                 private readonly roosterService: RoosterService,
@@ -265,7 +270,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
             const rooster: HeliosRoosterDataset | undefined = this.rooster.find((dag) => d== dag.DATUM)
             const dagDDWV = (rooster) ? rooster.DDWV : false;
 
-            this.maakTransacties = (beheerder && dagDDWV) ? true : false;
+            this.magFactureren = (beheerder && dagDDWV) ? true : false;
         });
 
         // abonneer op wijziging van diensten
@@ -587,7 +592,17 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     }
 
 
-    maakTransactie() {
-        console.log("Maak transactie")
+    maakTransacties() {
+        this.transactiesBezig = true;
+        this.ddwvService.maakTransacties(this.datum).then(() => {
+            this.transactiesBezig = false;
+            this.success = {
+                titel: "Transacties",
+                beschrijving: "Starts zijn omgezet naar transacties"
+            }
+        }).catch(e => {
+            this.transactiesBezig = false;
+            this.error = e;
+        });
     }
 }

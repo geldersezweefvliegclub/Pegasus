@@ -49,13 +49,12 @@
                                          iconNaam="far PlusSquare" (btnClicked)="addStart()"
                                          btnColor="btn-primary"
                                          *ngIf="!deleteMode && magToevoegen && inTijdspan"></app-icon-button>
-<!-- TODO
+
                         <app-icon-button class="toolbarBtn vluchten_transactie_button"
-                                         tekst="Tranacties"
+                                         tekst="Factureren"
                                          iconNaam="fas EuroSign" (btnClicked)="maakTransacties()"
                                          btnColor="btn-primary"
-                                         *ngIf="!deleteMode && maakTransacties && inTijdspan"></app-icon-button>
--->
+                                         *ngIf="!deleteMode && magFactureren"></app-icon-button>
 
                         <div *ngIf="this.deleteMode">
                             <app-status-button
@@ -132,3 +131,11 @@
         </div>
     </div>
 </app-pegasus-card>
+
+<div *ngIf="transactiesBezig" class="maakTransacties">
+    <div>
+        <video autoplay loop>
+            <source src="assets/videos/paper-stack-13599812-10967732.mp4" type="video/mp4">
+        </video>
+    </div>
+</div>

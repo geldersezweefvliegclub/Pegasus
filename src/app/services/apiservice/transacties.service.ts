@@ -48,7 +48,6 @@ export class TransactiesService {
         if ((max) && (max > 0)) {
             getParams['MAX'] = max.toString();
         }
-        getParams['SORT'] = 'DATUM DESC';
 
         try {
             const response: Response = await this.apiService.get('Transacties/GetObjects', getParams);

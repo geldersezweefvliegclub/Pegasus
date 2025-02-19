@@ -88,7 +88,7 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
             comparator: nummerSort},
         {
             field: 'EENHEDEN',
-            headerName: 'Strippen',
+            headerName: 'Eenheden',
             width: 100,
             resizable: false,
             sortable: true,
@@ -116,7 +116,6 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
     };
 
     transacties: HeliosTransactiesDataset[];
-    vliegdag: DateTime | undefined;
     isLoading = false;
 
     iconCardIcon: IconDefinition = faEuroSign;
@@ -126,6 +125,7 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
     magExporteren = false;
 
     toonBladwijzer = false;
+    toonAlles= false;
     lidID: number | undefined;
 
     timerID: number;
@@ -140,38 +140,26 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
         setTimeout(() => {
             // de datum zoals die in de kalender gekozen is
             this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
-                if (datum.year != 1900) {
-                    // ophalen is alleen nodig als er een ander jaar gekozen is in de kalendar
-                    const ophalen = ((this.transacties == undefined) || (this.datum.year != datum.year))
-                    this.datum = DateTime.fromObject({
-                        year: datum.year,
-                        month: datum.month,
-                        day: datum.day
-                    })
+                this.datum = DateTime.fromObject({
+                    year: datum.year,
+                    month: datum.month,
+                    day: datum.day
+                })
 
-                    if (ophalen) {
-                        this.lidID = undefined;         // zet filter uit voor nieuwe datum
-                        this.opvragen();
-                    }
-                }
+                this.lidID = undefined;         // zet filter uit voor nieuwe datum
+                this.opvragen();
             })
 
             // de datum zoals die in de kalender gekozen is
             this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(datum => {
-                if (datum.year != 1900) {
-                    // ophalen is alleen nodig als er een ander jaar gekozen is in de kalendar
-                    const ophalen = ((this.transacties == undefined) || (this.datum.year != datum.year))
-                    this.datum = DateTime.fromObject({
-                        year: datum.year,
-                        month: datum.month,
-                        day: 1
-                    })
+                this.datum = DateTime.fromObject({
+                    year: datum.year,
+                    month: datum.month,
+                    day: 1
+                })
 
-                    if (ophalen) {
-                        this.lidID = undefined;         // zet filter uit voor nieuwe datum
-                        this.opvragen();
-                    }
-                }
+                this.lidID = undefined;         // zet filter uit voor nieuwe datum
+                this.opvragen();
             })
 
             // Als in de startlijst tabel is aangepast, moet we onze dataset ook aanpassen
@@ -219,19 +207,23 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
     opvragen() {
         this.isLoading = true;
 
-        const vanDatum: DateTime = DateTime.fromObject({
+        const vanDatum= (!this.toonAlles) ? undefined :
+           DateTime.fromObject({
             year: this.datum.year,
             month: 1,
             day: 1
         })
 
-        const totDatum: DateTime = DateTime.fromObject({
+        const totDatum = (!this.toonAlles) ? undefined:
+           DateTime.fromObject({
             year: this.datum.year,
             month: 12,
             day: 31
         })
 
-        this.transactiesService.getTransacties(this.lidID, vanDatum, totDatum, this.vliegdag).then((dataset) => {
+        const vliegdag = (!this.toonAlles) ? this.datum : undefined;
+
+        this.transactiesService.getTransacties(this.lidID, vanDatum, totDatum, vliegdag).then((dataset) => {
             this.transacties = dataset;
             this.isLoading = false;
 
@@ -274,11 +266,8 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
         this.timerID = window.setTimeout(() => this.opvragen(), 500);
     }
 
-    // Datum van de start aanpassen
-    vliegdagAanpassen($datum: NgbDate) {
-        this.vliegdag = DateTime.fromObject({year: $datum.year, month: $datum.month, day: $datum.day});
-
-        clearTimeout(this.timerID)
-        this.timerID = window.setTimeout(() => this.opvragen(), 500);
+    switchToonAlles() {
+        this.toonAlles = !this.toonAlles;
+        this.opvragen();
     }
 }

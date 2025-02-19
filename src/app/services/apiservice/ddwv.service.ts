@@ -72,4 +72,10 @@ export class DdwvService {
 
         await this.apiService.post('DDWV/UitbetalenCrew', JSON.stringify(obj));
     }
+
+    async maakTransacties(datum: DateTime) {
+        const response: Response = await this.apiService.post('DDWV/MaakTransacties', JSON.stringify({DATUM: datum.toISODate()}));
+
+        return response.json();
+    }
 }
