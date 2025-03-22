@@ -234,10 +234,11 @@ export class NavigatieComponent implements OnInit, OnDestroy {
         }
 
         // meldingen voor clubvliegers
-        if (verbergen.includes('meldingen') || (!ui?.isClubVlieger && !ui?.isStarttoren)) {
-            documenten.excluded = true;
+        const journaal = this.routes.find(route => route.path == "journaal") as CustomRoute;
+        if (verbergen.includes('journaal') || (!ui?.isClubVlieger && !ui?.isStarttoren)) {
+            journaal.excluded = true;
         } else {
-            documenten.excluded = false;
+            journaal.excluded = false;
         }
 
         if (verbergen.includes('beheer') || (this.sharedService.getSchermSize() < SchermGrootte.lg) || (window.innerHeight < 600)) {
