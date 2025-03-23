@@ -174,7 +174,7 @@ export class StartEditorComponent implements OnInit {
             for (const item of (dataset ?? [])) {
                 this.aanwezigVliegtuigen.push(
                   {
-                      ID: item.ID,
+                      ID: item.VLIEGTUIG_ID,
                       REGISTRATIE: item.REGISTRATIE,
                       REG_CALL: item.REG_CALL,
                       CALLSIGN: item.CALLSIGN,
