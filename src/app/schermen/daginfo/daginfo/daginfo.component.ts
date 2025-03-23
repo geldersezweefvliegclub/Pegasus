@@ -149,18 +149,8 @@ export class DaginfoComponent implements OnInit, OnDestroy{
             if (rooster) {
                 if (rooster.DDWV)               // het is een DWWV dag, misschien toch alles tonen
                 {
-                    if (ui?.isBeheerderDDWV) {  // Beheerder DDWV mag op DDWV dag alles inzien
+                    if ((ui?.isBeheerderDDWV) || (ui?.isDDWVCrew)) {  // Beheerder DDWV mag op DDWV dag alles inzien
                         tonen = true;
-                    } else {
-                        const diensten: HeliosDienstenDataset[] | undefined = this.diensten.filter((dag) => d == dag.DATUM!)
-
-                        if (diensten) {
-                            diensten.forEach(dienst => {
-                                if (dienst.LID_ID == this.loginService.userInfo?.LidData?.ID) { // de ingelode gebruiker had dienst, toon alles
-                                    tonen = true;
-                                }
-                            });
-                        }
                     }
                 }
             }
