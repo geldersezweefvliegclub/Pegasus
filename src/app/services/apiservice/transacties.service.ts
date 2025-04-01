@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 import { APIService } from './api.service';
 import { LoginService } from './login.service';
 import {
-  HeliosTransactie,
-  HeliosTransacties,
-  HeliosTransactiesBanken,
-  HeliosTransactiesDataset,
+    HeliosLid, HeliosStart,
+    HeliosTransactie,
+    HeliosTransacties,
+    HeliosTransactiesBanken,
+    HeliosTransactiesDataset,
 } from '../../types/Helios';
 import { KeyValueArray } from '../../types/Utils';
 import { DateTime } from 'luxon';
+import {CustomJsonSerializer} from "../../utils/Utils";
 
 @Injectable({
     providedIn: 'root'
@@ -60,6 +62,15 @@ export class TransactiesService {
         return this.transactiesCache?.dataset as HeliosTransactiesDataset[];
     }
 
+    async getTransactie(id: number): Promise<HeliosTransactie> {
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return {};
+        }
+        const response: Response = await this.apiService.get('Transacties/GetObject', {'ID': id.toString()});
+        return response.json();
+    }
+
     async getBanken(): Promise<HeliosTransactiesBanken[]> {
         let banken:HeliosTransactiesBanken[] = [];
 
@@ -93,5 +104,15 @@ export class TransactiesService {
     async addTransactie(transactie: HeliosTransactie) {
         const response: Response = await this.apiService.post('Transacties/SaveObject', JSON.stringify(transactie));
         return response.json();
+    }
+
+    async updateTransactie(transactie: HeliosTransactie) {
+        const response: Response = await this.apiService.put('Transacties/SaveObject', JSON.stringify(transactie, CustomJsonSerializer));
+
+        return response.json();
+    }
+
+    async deleteTransactie(id: number) {
+        await this.apiService.delete('Transacties/DeleteObject', {'ID': id.toString()});
     }
 }

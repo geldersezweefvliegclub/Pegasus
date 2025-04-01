@@ -9,7 +9,7 @@ import { RouterModule } from '@angular/router';
 import { TypeRenderComponent } from './facturen-scherm/type-render/type-render.component';
 import { LeeftijdRenderComponent } from './facturen-scherm/leeftijd-render/leeftijd-render.component';
 import { GefactureerdRenderComponent } from './facturen-scherm/gefactureerd-render/gefactureerd-render.component';
-import { UploadenComponent } from './facturen-scherm/uploaden/uploaden.component';
+import { FactuurUploadenComponent } from '../../shared/components/factuur-uploaden/uploaden.component';
 import { BaseChartDirective } from 'ng2-charts';
 import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -20,7 +20,6 @@ import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
     TypeRenderComponent,
     LeeftijdRenderComponent,
     GefactureerdRenderComponent,
-    UploadenComponent
   ],
     imports: [
         CommonModule,

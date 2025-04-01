@@ -42,6 +42,9 @@ export interface IPegasusConfig {
   flarm_url: string;
   privacy_url: string;
   passagiersAantekeningID: number;
+  DDWVtoestemmingID: number;
+  DDWVvragenlijstID: number;
+
   saldo_actief: boolean;
   maxZelfDienstenIndelen: number;
   maxZelfEditDagen: number;

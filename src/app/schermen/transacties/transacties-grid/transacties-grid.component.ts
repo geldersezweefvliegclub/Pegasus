@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ColDef } from 'ag-grid-community';
+import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
 import { nummerSort } from '../../../utils/Utils';
 import { ErrorMessage } from '../../../types/Utils';
 import { HeliosLedenDataset, HeliosTransactiesDataset } from '../../../types/Helios';
@@ -9,23 +9,20 @@ import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faEuroSign } from '@fortawesome/free-solid-svg-icons';
 import { TransactiesService } from '../../../services/apiservice/transacties.service';
 import { DateTime } from 'luxon';
-import {
-  DatumtijdRenderComponent,
-} from '../../../shared/components/datatable/datumtijd-render/datumtijd-render.component';
+import { DatumtijdRenderComponent } from '../../../shared/components/datatable/datumtijd-render/datumtijd-render.component';
 import { BedragRenderComponent } from './bedrag-render/bedrag-render.component';
-import {
-  TransactieEditorComponent,
-} from '../../../shared/components/editors/transactie-editor/transactie-editor.component';
+import { TransactieEditorComponent } from '../../../shared/components/editors/transactie-editor/transactie-editor.component';
 import * as xlsx from 'xlsx';
 import { LoginService } from '../../../services/apiservice/login.service';
 import { LedenService } from '../../../services/apiservice/leden.service';
 import { OmschrijvingRenderComponent } from './omschrijving-render/omschrijving-render.component';
-import {
-  CheckboxRenderComponent,
-} from '../../../shared/components/datatable/checkbox-render/checkbox-render.component';
+import { CheckboxRenderComponent } from '../../../shared/components/datatable/checkbox-render/checkbox-render.component';
 import { DatumRenderComponent } from '../../../shared/components/datatable/datum-render/datum-render.component';
-import { NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateFRParserFormatter } from '../../../shared/ngb-date-fr-parser-formatter';
+import {FactuurUploadenComponent} from "../../../shared/components/factuur-uploaden/uploaden.component";
+import {DeleteActionComponent} from "../../../shared/components/datatable/delete-action/delete-action.component";
+
 
 @Component({
     selector: 'app-transacties-grid',
@@ -35,6 +32,7 @@ import { NgbDateFRParserFormatter } from '../../../shared/ngb-date-fr-parser-for
 })
 export class TransactiesGridComponent implements OnInit, OnDestroy {
     @ViewChild(TransactieEditorComponent) private editor: TransactieEditorComponent;
+    @ViewChild(FactuurUploadenComponent) private uploaden: FactuurUploadenComponent;
 
     private ledenAbonnement: Subscription;
     leden: HeliosLedenDataset[] = [];
@@ -46,7 +44,7 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
     private datumAbonnement: Subscription;          // volg de keuze van de kalender
     private datum: DateTime = DateTime.now();       // de gekozen dag
 
-    columns: ColDef[] = [
+    dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
         {
             field: 'NAAM',
@@ -77,7 +75,7 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
         {
             field: 'EXT_REF',
             headerName: 'Referentie',
-            width: 120,
+            width: 180,
             sortable: false},
         {
             field: 'SALDO_VOOR',
@@ -107,7 +105,44 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
             sortable: true},
     ];
 
+    // kolom om record te verwijderen
+    deleteColumn: ColDef[] = [{
+        pinned: 'left',
+        maxWidth: 100,
+        initialWidth: 100,
+        resizable: false,
+        suppressSizeToFit: true,
+        hide: false,
+        cellRenderer: 'deleteAction', headerName: '', sortable: false,
+        cellRendererParams: {
+            onDeleteClicked: (ID: number) => {
+                const t = this.transacties.find(t => t.ID == ID);
+
+                if (t)
+                {
+                    if (t.EXT_REF === null)
+                    {
+                        this.transactiesService.deleteTransactie(ID).then(() => {
+                            this.opvragen();
+                        }).catch(e => {
+                            this.error = e;
+                        });
+                    }
+                    else
+                    {
+                        this.error = {
+                            beschrijving: "Kan alleen transacties verwijderen die niet aan een factuur gekoppeld zijn"
+                        }
+                    }
+                }
+            }
+        },
+    }];
+
+    columns: ColDef[];
+
     frameworkComponents = {
+        deleteAction: DeleteActionComponent,
         checkboxRender: CheckboxRenderComponent,
         bedragRender: BedragRenderComponent,
         omschrijvingRender: OmschrijvingRenderComponent,
@@ -116,6 +151,8 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
     };
 
     transacties: HeliosTransactiesDataset[];
+    titel = "Overzicht transacties in geld en strippen";
+    deleteMode = false;        // zitten we in delete mode om leden te kunnen verwijderen
     isLoading = false;
 
     iconCardIcon: IconDefinition = faEuroSign;
@@ -123,6 +160,8 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
     error: ErrorMessage | undefined;
     magToevoegen = true;
     magExporteren = false;
+    magVerwijderen = false;
+    magUploaden = false;
 
     toonBladwijzer = false;
     toonAlles= false;
@@ -184,7 +223,10 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
         const ui = this.loginService.userInfo?.Userinfo;
 
         this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV) ? true : false;
+        this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV) ? true : false;
         this.magExporteren = (ui?.isBeheerder || ui?.isBeheerderDDWV) ? true : false;
+
+        this.kolomDefinitie()
     }
 
     ngOnDestroy() {
@@ -223,6 +265,16 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
 
         const vliegdag = (!this.toonAlles) ? this.datum : undefined;
 
+        this.titel = "Overzicht transacties in geld en strippen voor ";
+        if (this.toonAlles)
+        {
+            this.titel += "het jaar " + this.datum.year;
+        }
+        else
+        {
+            this.titel += "de datum " + this.datum.toLocaleString(DateTime.DATE_SHORT);
+        }
+
         this.transactiesService.getTransacties(this.lidID, vanDatum, totDatum, vliegdag).then((dataset) => {
             this.transacties = dataset;
             this.isLoading = false;
@@ -230,6 +282,8 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
             if (this.lidID === undefined) {
                 this.filterLeden();
             }
+
+            this.magUploaden = this.transacties.filter(t => t.BEDRAG != undefined && t.EXT_REF === null).length > 0;
         }).catch(e => {
             this.isLoading = false;
             this.error = e;
@@ -244,6 +298,27 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
             return (idx >= 0)
         });
     }
+
+    // schakelen tussen deleteMode JA/NEE. In deleteMode kun je leden verwijderen
+    deleteModeJaNee() {
+        this.deleteMode = !this.deleteMode;
+        this.kolomDefinitie();
+    }
+
+    kolomDefinitie()
+    {
+        const ui = this.loginService.userInfo?.Userinfo;
+
+        if (!this.deleteMode)
+        {
+            this.columns = this.dataColumns;
+        }
+        else
+        {
+            this.columns = this.deleteColumn.concat(this.dataColumns);
+        }
+    }
+
 
     // Openen van editor
     addTransactie() {
@@ -266,8 +341,33 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
         this.timerID = window.setTimeout(() => this.opvragen(), 500);
     }
 
+    // Wordt aangeroepen bij een dubbel klik op een rij.
+    bewerkTransactie($event: RowDoubleClickedEvent) {
+        const ui = this.loginService.userInfo?.Userinfo;
+        if (ui?.isBeheerder || ui?.isBeheerderDDWV) {
+            this.editor.openPopup(undefined, undefined, $event.data.ID);
+        }
+    }
+
     switchToonAlles() {
         this.toonAlles = !this.toonAlles;
         this.opvragen();
+    }
+
+    async deleteAlles() {
+        for (const t of this.transacties)
+        {
+            if (t.EXT_REF === null)
+            {
+                await this.transactiesService.deleteTransactie(t.ID!);
+            }
+        }
+        this.opvragen();
+    }
+
+    uploadenFacturen()
+    {
+        const transacties = this.transacties.filter(t => t.VLIEGDAG == this.datum.toISODate() && t.BEDRAG != undefined && t.EXT_REF === null);
+        this.uploaden.showPopupAndUploadTransacties(transacties, this.datum);
     }
 }

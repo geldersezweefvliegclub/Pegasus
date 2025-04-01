@@ -1,3 +1,4 @@
+<app-error [error]="error"></app-error>
 <app-pegasus-card titel="Aanmelden"
                   subtitel="Aanmelden voor de vliegdag"
                   [icon]="aanmeldenIcon">
@@ -99,10 +100,12 @@
                                 <fa-icon class="infoIcon clickable" [icon]="infoIcon" placement="right" (click)="samenvatting(dagInRooster)" *ngIf="!isDDWVer && (dagInRooster.DDWV && ddwvActief) || dagInRooster.CLUB_BEDRIJF"></fa-icon>
                             </div>
 
+                            <!--
                             <div *ngIf="dagInRooster.EENHEDEN > 0" class="strip d-flex justify-content-end w-100">
                                 <img src="assets/img/strip.png" class="stripImg"/>
                                 <div class="stripTxt">{{dagInRooster.EENHEDEN}}</div>
                             </div>
+                            -->
                         </div>
                         <div *ngIf="magTonen(dagInRooster.DATUM)">
                             <div *ngIf="dagInRooster.CLUB_BEDRIJF" class="me-2">Clubbedrijf</div>
@@ -172,10 +175,6 @@
                                             <div *ngIf="staf(dagInRooster.DATUM) && lid.STATUSTYPE_ID && DateDiff(dagInRooster.DATUM) >= 0 && !dagInRooster.WINTER_WERK" class="icoontje"
                                                  style="white-space: pre;">{{lid.STATUS}}
                                             </div>
-                                            <div class="fas fa-exclamation-triangle niet-betaald ms-1" data-toggle="tooltip" title="DDWV nog niet betaald"
-                                                *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && (isBeheerder || isBeheerderDDWV) && !lid.ZELFSTART_ABONNEMENT && !lid.TRANSACTIE_ID && dagInRooster.DDWV && (lid.LIDTYPE_ID === 625 || !dagInRooster.CLUB_BEDRIJF) && !dagInRooster.WINTER_WERK ">
-                                            </div>
-                                            <div *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && lid.ZELFSTART_ABONNEMENT && (isBeheerder || isBeheerderDDWV) && !dagInRooster.WINTER_WERK ">&nbsp;ZSA</div>
                                         </div>
                                     </td>
                                 </tr>
@@ -258,12 +257,14 @@
             </div>
         </div>
 
+        <!--
         <div class="dagInRooster d-flex w-100 justify-content-end" *ngIf="rooster.length > 0 && rooster[0].EENHEDEN > 0">
             <div class="strip stripDagview">
                 <img src="assets/img/strip.png" class="stripImg"/>
                 <div class="stripTxt">{{rooster[0].EENHEDEN}}</div>
             </div>
         </div>
+        -->
 
         <div class="roosterTabel volSchermDagView">
             <table class="table" style="width: calc(100% - 15px);">

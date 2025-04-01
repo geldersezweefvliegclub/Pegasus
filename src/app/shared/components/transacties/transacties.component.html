@@ -50,23 +50,20 @@
                 {{datumDMY(transactie.VLIEGDAG).substring(0, 5)}}
             </td>
             <td>
-                {{transactie.TYPE}} {{transactie.OMSCHRIJVING}}
+                {{transactie.OMSCHRIJVING}}
             </td>
             <td style="text-align: right;white-space: nowrap;" class="ps-2">
-                <div *ngIf="transactie.BEDRAG && transactie.BETAALD ">
+                <div>
                     &euro; {{transactie.BEDRAG | number : '1.2-2'}}
-                </div>
-                <div *ngIf="transactie.BEDRAG && !transactie.BETAALD " class="nietBetaald">
-                    Niet betaald
                 </div>
             </td>
             <td style="text-align: right;" class="ps-2">
-                <div *ngIf="transactie.BETAALD || !transactie.BEDRAG">
+                <div>
                     {{transactie.SALDO_VOOR}}
                 </div>
             </td>
             <td style="text-align: right;" class="ps-2">
-                <div *ngIf="transactie.BETAALD || !transactie.BEDRAG">
+                <div>
                     {{transactie.EENHEDEN}}
                 </div>
             </td>

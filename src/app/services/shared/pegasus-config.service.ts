@@ -103,4 +103,12 @@ export class PegasusConfigService {
     public menuItems(): MenuItem[] {
         return this.pegasusConfig.menuItems;
     }
+
+    public DDWVtoestemmingID(): number {
+        return this.pegasusConfig.DDWVtoestemmingID;
+    }
+
+    public DDWVvragenlijstID(): number {
+        return this.pegasusConfig.DDWVvragenlijstID;
+    }
 }

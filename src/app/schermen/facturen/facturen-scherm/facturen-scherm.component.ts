@@ -16,7 +16,7 @@ import { TypeRenderComponent } from './type-render/type-render.component';
 import { DatatableComponent } from '../../../shared/components/datatable/datatable.component';
 import { LeeftijdRenderComponent } from './leeftijd-render/leeftijd-render.component';
 import { GefactureerdRenderComponent } from './gefactureerd-render/gefactureerd-render.component';
-import { UploadenComponent } from './uploaden/uploaden.component';
+import { FactuurUploadenComponent } from '../../../shared/components/factuur-uploaden/uploaden.component';
 
 @Component({
   selector: 'app-facturen-scherm',
@@ -25,7 +25,7 @@ import { UploadenComponent } from './uploaden/uploaden.component';
 })
 export class FacturenSchermComponent implements OnInit, OnDestroy {
   @ViewChild(DatatableComponent) grid: DatatableComponent;
-  @ViewChild(UploadenComponent) private uploaden: UploadenComponent;
+  @ViewChild(FactuurUploadenComponent) private uploaden: FactuurUploadenComponent;
 
   data:HeliosFacturenDataset[] = [];
   facturenData:HeliosFacturenDataset[] = [];
@@ -273,7 +273,7 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
     })
 
     if (IDs.length > 0) {
-      this.uploaden.showPopupAndUpload(IDs);
+      this.uploaden.showPopupAndUploadFacturen(IDs);
     }
   }
 }

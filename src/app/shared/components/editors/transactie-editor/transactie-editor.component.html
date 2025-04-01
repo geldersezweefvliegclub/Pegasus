@@ -7,7 +7,7 @@
         <app-lid-invoer id="LID" *ngIf="toonLidSelectie"
                         placeholder="Selecteer lid"
                         label="Lid"
-                        [LID_ID]="nieuweTransactie.LID_ID"
+                        [LID_ID]="transactie.LID_ID"
                         excludeLidTypes="600,607,609,610,612,613,620,625"
                         [required] = true
                         [leden]="leden"
@@ -19,7 +19,7 @@
                 <div class="col-12">
                     <label for="TYPE_ID" class="form-label">Type</label>
                     <select class="form-select" required name="TYPE_ID" id="TYPE_ID"
-                            [(ngModel)]="nieuweTransactie.TYPE_ID" (change)="typeAangepast()">
+                            [(ngModel)]="transactie.TYPE_ID" (change)="typeAangepast()">
                         <option *ngFor="let tType of transactieTypes"
                                 [value]="tType.ID">{{tType.OMSCHRIJVING}}</option>
                     </select>
@@ -30,12 +30,12 @@
                 <div class="col-12 col-md-3">
                     <label for="EENHEDEN" class="form-label">Strippen</label>
                     <input name="callsign" type="number" class="form-control" id="EENHEDEN"
-                           [(ngModel)]="nieuweTransactie.EENHEDEN">
+                           [(ngModel)]="transactie.EENHEDEN">
                 </div>
                 <div class="col-12 col-md-3">
                     <label for="BEDRAG" class="form-label">Bedrag</label>
                     <input name="BEDRAG" type="number" class="form-control" id="BEDRAG"
-                           [(ngModel)]="nieuweTransactie.BEDRAG">
+                           [(ngModel)]="transactie.BEDRAG">
                 </div>
                 <div class="col-md-1">&nbsp;</div>
                 <div class="col-12 col-md-5">
@@ -58,7 +58,7 @@
             <div class="row mt-3">
                 <div class="col-12">
                     <label for="OMSCHRIJVING" class="form-label">Omschijving</label>
-                    <input [(ngModel)]="nieuweTransactie.OMSCHRIJVING" name="OMSCHRIJVING" id="OMSCHRIJVING"
+                    <input [(ngModel)]="transactie.OMSCHRIJVING" name="OMSCHRIJVING" id="OMSCHRIJVING"
                               class="form-control w-100" required>
                 </div>
             </div>
@@ -75,7 +75,7 @@
         <app-icon-button
                 iconNaam="fas Plus" btnColor="btn-primary"
                 tekst="Opslaan"
-                [disabled]="!nieuweTransactie.OMSCHRIJVING || !nieuweTransactie.LID_ID || !nieuweTransactie.TYPE_ID"
+                [disabled]="!transactie.OMSCHRIJVING || !transactie.LID_ID || !transactie.TYPE_ID"
                 [toonKlein]="false"
                 (btnClicked)="opslaan()">
         </app-icon-button>

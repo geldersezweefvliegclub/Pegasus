@@ -12,7 +12,7 @@ export class OmschrijvingRenderComponent implements AgRendererComponent{
     gridTekst: string | undefined
 
     agInit(params: ICellRendererParams): void {
-        this.gridTekst = params.data.TYPE + " " + params.data.OMSCHRIJVING;
+        this.gridTekst = params.data.OMSCHRIJVING;
     }
 
     refresh(_: ICellRendererParams): boolean {

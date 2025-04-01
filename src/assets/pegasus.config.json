@@ -3,6 +3,8 @@
   "flarm_url": "http://localhost:3000/",
   "privacy_url": "https://www.gezc.org/contact/privacy-statement-gezc/",
   "passagiersAantekeningID": 271,
+  "DDWVtoestemmingID": 287,
+  "DDWVvragenlijstID": 402,
   "maxZelfDienstenIndelen": 5,
   "maxZelfEditDagen": 14,
   "saldo_actief": true,

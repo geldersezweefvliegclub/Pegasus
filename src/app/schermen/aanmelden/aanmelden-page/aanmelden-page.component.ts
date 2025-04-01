@@ -6,7 +6,7 @@ import { SchermGrootte, SharedService } from '../../../services/shared/shared.se
 import { DagVanDeWeek, DateDiff } from '../../../utils/Utils';
 import { DateTime } from 'luxon';
 import {
-    HeliosAanwezigLedenDataset,
+    HeliosAanwezigLedenDataset, HeliosBehaaldeProgressieDataset,
     HeliosDagInfosDataset,
     HeliosDienstenDataset,
     HeliosGast,
@@ -33,8 +33,9 @@ import { LedenService } from '../../../services/apiservice/leden.service';
 import { TransactiesComponent } from '../../../shared/components/transacties/transacties.component';
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
 import { DaginfoService } from '../../../services/apiservice/daginfo.service';
-import { KeyValueArray } from '../../../types/Utils';
+import {ErrorMessage, KeyValueArray} from '../../../types/Utils';
 import { SamenvattingComponent } from '../samenvatting/samenvatting.component';
+import {ProgressieService} from "../../../services/apiservice/progressie.service";
 
 export type HeliosRoosterDatasetExtended = HeliosRoosterDataset & {
     EENHEDEN?: number
@@ -79,7 +80,10 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     lid: HeliosLid;                                 // nodig om te checken over nog voldoende DDWV tegoed is
     saldoTonen = false;
 
+    error: ErrorMessage | undefined;
+
     private typesAbonnement: Subscription;
+    private magAanmeldenDDWV: boolean;
     ddwvTypes: HeliosType[];
 
     afmeldDatumDMY: string;                         // De datum waarop we ons afmelden
@@ -123,16 +127,17 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
                 private readonly daginfoService: DaginfoService,
                 private readonly dienstenService: DienstenService,
                 private readonly configService: PegasusConfigService,
+                private readonly progressieService: ProgressieService,
                 private readonly aanwezigLedenService: AanwezigLedenService) {
     }
 
     ngOnInit(): void {
-        this.ddwvActief = this.ddwvService.actief();
-        this.isDDWVer = this.loginService.userInfo?.Userinfo?.isDDWV ?? false;
-        this.isBeheerder = this.loginService.userInfo?.Userinfo?.isBeheerder ?? false;
-        this.isBeheerderDDWV = this.loginService.userInfo?.Userinfo?.isBeheerderDDWV ?? false;
-
         const ui = this.loginService.userInfo?.Userinfo;
+        this.ddwvActief = this.ddwvService.actief();
+        this.isDDWVer = ui!.isDDWV ?? false;
+        this.isBeheerder = ui!.isBeheerder ?? false;
+        this.isBeheerderDDWV = ui!.isBeheerderDDWV ?? false;
+
         this.saldoTonen = this.configService.saldoActief() && (ui!.isDDWV! || ui!.isClubVlieger!);
         this.toonDatumKnoppen = (ui!.isDDWV! || ui!.isClubVlieger!);
 
@@ -180,6 +185,21 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         if (toonGasten != null) {
             this.toonGasten = toonGasten;
         }
+
+        const competentieIDs = (this.configService.DDWVtoestemmingID() !== undefined) ? this.configService.DDWVtoestemmingID().toString() + "," + this.configService.DDWVvragenlijstID().toString() :this.configService.DDWVvragenlijstID().toString();
+        this.progressieService.getProgressiesLid(this.loginService.userInfo!.LidData?.ID!, competentieIDs).then((progressie:  HeliosBehaaldeProgressieDataset[]) => {
+            const toestemming = progressie.findIndex(p => p.COMPETENTIE_ID == this.configService.DDWVtoestemmingID()) >= 0 ? true : false;
+            const vragenlijst = progressie.findIndex(p => p.COMPETENTIE_ID == this.configService.DDWVvragenlijstID()) >= 0 ? true : false;
+
+            if (ui?.isClubVlieger)
+            {
+                this.magAanmeldenDDWV = toestemming && vragenlijst;
+            }
+            else
+            {
+                this.magAanmeldenDDWV = vragenlijst;
+            }
+        });
     }
 
     ngOnDestroy(): void {
@@ -392,12 +412,17 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
                 if (item.DATUM == DateTime.now().toISODate() && item.AANKOMST) {
                     this.aanwezigLedenService.afmelden(item.LID_ID!).then(() => this.opvragen());
                 } else if (!item.VERWIJDERD) {
-                    this.aanwezigLedenService.aanmeldingVerwijderen(item.ID!).then(() => this.opvragen());
+                    this.aanwezigLedenService.aanmeldingVerwijderen(item.ID!).then(() => this.opvragen())
+                       .catch((e) => {this.error = e;});
                 }
             }
             this.isLoadingAanwezig = false;
             this.bevestigAfmeldenPopup.close();
-        }).catch((e) => { console.error (e); this.isLoadingAanwezig = false})
+        }).catch((e) => {
+            this.error = e;
+            console.error (e);
+            this.isLoadingAanwezig = false
+        })
     }
 
     // openen van windows voor aanmelden vlieger
@@ -568,6 +593,11 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
             }
             return true;
         }
+        if ((ui!.LidData?.LIDTYPE_ID == 625) && (!this.magAanmeldenDDWV)) // 625 = DDWV vlieger en geen toestemming
+        {
+            console.log(dagDatum, "DDWV vragenlijs is niet ingevuld, of geen DDWV toestemming");
+            return false;
+        }
         if (!this.rooster[idx].CLUB_BEDRIJF)    // welke lidtypes mogen aanmelden als we geen club bedrijf hebben
         {
             switch (ui!.LidData!.LIDTYPE_ID) {
@@ -592,6 +622,13 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
                 default:
                     console.log(dagDatum, "Lidtype mag niet aanmelden");
                     return false;          // andere lidtypes dus niet
+            }
+
+
+            if (!this.magAanmeldenDDWV)
+            {
+                console.log(dagDatum, "DDWV vragenlijs is niet ingevuld, of geen DDWV toestemming");
+                return false;
             }
         }
 

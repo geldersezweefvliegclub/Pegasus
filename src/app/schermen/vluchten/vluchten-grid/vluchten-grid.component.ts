@@ -250,7 +250,8 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
             this.isStarttoren = ui!.isStarttoren as boolean;
 
-            if (datum.year*10000+datum.month*100+datum.day > nu.year*10000+nu.month*100+nu.day) {
+            const inToekomst = (datum.year*10000+datum.month*100+datum.day > nu.year*10000+nu.month*100+nu.day);
+            if (inToekomst) {
                 this.inTijdspan = false;    // datum is in de toekomst
             }
             else {
@@ -264,13 +265,6 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
             }
             this.opvragen();
             this.magVerwijderen = (!this.beperkteInvoer()) ? true : false;
-
-            const beheerder = (ui?.isBeheerder || ui?.isBeheerderDDWV) ?? false;
-            const d = (this.datum.toSQL() as string).substring(0, 10);
-            const rooster: HeliosRoosterDataset | undefined = this.rooster.find((dag) => d== dag.DATUM)
-            const dagDDWV = (rooster) ? rooster.DDWV : false;
-
-            this.magFactureren = (beheerder && dagDDWV) ? true : false;
         });
 
         // abonneer op wijziging van diensten
@@ -282,6 +276,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         // abonneer op wijziging van rooster
         this.roosterAbonnement = this.roosterService.roosterChange.subscribe(maandRooster => {
             this.rooster = (maandRooster) ? maandRooster : [];
+            this.toonFacturenKnop()
             this.beperkteInvoer();
         });
 
@@ -305,6 +300,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         this.resizeSubscription = this.sharedService.onResize$.subscribe(() => {
             this.onWindowResize()
         });
+
 
         const ui = this.loginService.userInfo?.Userinfo;
         this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isDDWV || ui?.isClubVlieger) ?? false;
@@ -431,7 +427,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         }
 
         this.isLoading = true;
-        this.startlijstService.getStarts(this.trashMode, this.datum, this.datum, this.zoekString, queryParams).then((dataset) => {
+        this.startlijstService.getStarts(this.trashMode, this.datum, this.datum, this.zoekString, queryParams).then(async (dataset) => {
             this.starts = (dataset) ? dataset : [];
 
             this.filterStarts();
@@ -441,10 +437,27 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
             }
             this.updateGrid()
             this.isLoading = false;
+
+            this.toonFacturenKnop()
         }).catch(e => {
             this.error = e;
             this.isLoading = false;
+            this.magFactureren = false;
         });
+    }
+
+    private toonFacturenKnop()
+    {
+        const nu:  DateTime = DateTime.now()
+        const ui = this.loginService.userInfo?.Userinfo;
+
+        const inToekomst = (this.datum.year*10000+this.datum.month*100+this.datum.day > nu.year*10000+nu.month*100+nu.day);
+        const beheerder = (ui?.isBeheerder || ui?.isBeheerderDDWV) ?? false;
+        const d = (this.datum.toSQL() as string).substring(0, 10);
+        const rooster: HeliosRoosterDataset | undefined = this.rooster.find((dag) => d== dag.DATUM)
+        const dagDDWV = (rooster) ? rooster.DDWV && !inToekomst : false;
+
+        this.magFactureren = (beheerder && dagDDWV) ? true : false;
     }
 
     private updateStartByFlarm(start: FlarmStartData) {

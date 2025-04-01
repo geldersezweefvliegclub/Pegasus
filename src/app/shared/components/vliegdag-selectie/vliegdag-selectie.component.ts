@@ -39,8 +39,6 @@ export class VliegdagSelectieComponent implements OnInit, OnDestroy {
     constructor(readonly loginService: LoginService,
                 private readonly calendar: NgbCalendar,
                 private readonly sharedService: SharedService,
-                private readonly daginfoService: DaginfoService,
-                private readonly roosterService: RoosterService,
                 private readonly dienstenService: DienstenService,
                 private readonly startlijstService: StartlijstService,
                 private readonly dagRapportenService: DagRapportenService,)

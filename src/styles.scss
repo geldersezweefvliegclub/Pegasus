@@ -420,6 +420,18 @@ canvas.recencyGrafiek.chartjs-render-monitor {
   cursor: not-allowed;
 }
 
+.deleteAlles > button {
+  border: 1px solid #dc3545; ;
+  color: #dc3545;;
+  background-color: #ffcac8eb;
+}
+
+.deleteAlles > button:hover{
+  border: 1px solid #ffcac8eb;
+  color: white;
+  background-color: #dc3545;
+}
+
 .tracksReplyIcon {
   fa-icon.ng-fa-icon {
     font-size: 14px;

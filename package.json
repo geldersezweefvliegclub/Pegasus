@@ -30,7 +30,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@ng-bootstrap/ng-bootstrap": "^17.0.1",
-    "@ng-select/ng-select": "^13.7.1",
+    "@ng-select/ng-select": "^13.9.1",
     "@popperjs/core": "^2.11.8",
     "ag-grid-angular": "^32.1.0",
     "ag-grid-community": "^32.1.0",

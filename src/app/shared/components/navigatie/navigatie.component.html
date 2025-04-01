@@ -151,7 +151,8 @@
                     </div>
                 </a>
 
-                <div class="w-100 overflow-auto" *ngIf="!kleineDatum() && !showBeheer">
+                <div class="w-100 overflow-auto"  [ngClass]="{'verbergDatum': kleineDatum() || showBeheer}">
+
                     <app-vliegdag-selectie
                     ></app-vliegdag-selectie>
                 </div>

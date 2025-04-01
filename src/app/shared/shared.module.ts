@@ -102,6 +102,7 @@ import { AgendaEditorComponent } from './components/editors/agenda-editor/agenda
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import {BaseChartDirective, provideCharts, withDefaultRegisterables} from 'ng2-charts';
 import { ImageCropperComponent } from 'ngx-image-cropper';
+import {FactuurUploadenComponent} from "./components/factuur-uploaden/uploaden.component";
 
 @NgModule({
     imports: [
@@ -200,6 +201,7 @@ import { ImageCropperComponent } from 'ngx-image-cropper';
         VerjaardagenComponent,
         AgendaComponent,
         AgendaEditorComponent,
+        FactuurUploadenComponent,
     ],
     exports: [
         LidEditorComponent,
@@ -254,7 +256,8 @@ import { ImageCropperComponent } from 'ngx-image-cropper';
         PopupJournaalComponent,
         VerjaardagenComponent,
         AgendaComponent,
-        AgendaEditorComponent
+        AgendaEditorComponent,
+        FactuurUploadenComponent,
     ],
     providers: [provideCharts(withDefaultRegisterables())],
 

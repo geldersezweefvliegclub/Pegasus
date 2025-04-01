@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HeliosFacturen, HeliosFacturenDataset, HeliosFactuur } from '../../types/Helios';
 import { APIService } from './api.service';
 import { KeyValueArray } from '../../types/Utils';
+import {DateTime} from "luxon";
 
 
 @Injectable({
@@ -94,6 +95,12 @@ export class FacturenService {
   async uploadFactuur(factuurID: number) {
     const f = {ID: factuurID}
     const response: Response = await this.apiService.post('Facturen/UploadFactuur', JSON.stringify(f));
+    return response.json();
+  }
+
+  async uploadTransactieFactuur(LidID: number, datum: DateTime) {
+    const f = {LID_ID: LidID, DATUM: datum.toISODate()}
+    const response: Response = await this.apiService.post('Facturen/UploadTransactieFactuur', JSON.stringify(f));
     return response.json();
   }
 }

@@ -1,7 +1,7 @@
 <app-error [error]="error"></app-error>
 
 <app-pegasus-card titel="Transacties"
-                  subtitel="Overzicht transacties in geld en strippen"
+                  subtitel={{titel}}
                   [icon]="iconCardIcon"
                   [exportEnabled]="this.magExporteren"
                   (Exporting)="exportDataset()">
@@ -15,6 +15,7 @@
                     [loading]="isLoading"
                     [sizeToFit]="false"
                     [frameworkComponents]="frameworkComponents"
+                    (rowDoubleClicked)="bewerkTransactie($event)"
                     class="h-100 mt-n8"></app-datatable>
         </div>
         <div class="row justify-content-start mt-2" id="toolbar">
@@ -24,6 +25,8 @@
                                      tekst="Toevoegen"
                                      iconNaam="far PlusSquare" (btnClicked)="addTransactie()"
                                      btnColor="btn-primary"></app-icon-button>
+                    <app-icon-button class="toolbarBtn" tekst="Uploaden" iconNaam="fas BasketShopping" *ngIf="this.magUploaden"
+                                     btnColor="btn btn-outline-primary" (btnClicked)="uploadenFacturen()"></app-icon-button>
                 </div>
             </div>
             <div class="col-3">
@@ -38,17 +41,26 @@
                 <app-icon-button class="toolbarBtn" iconNaam="fas Redo" (btnClicked)="opvragen()"
                                  btnColor="btn-primary"></app-icon-button>
             </div>
-            <div class="col-5 d-flex justify-content-end pe-3">
-                <div>
-                    <input class="form-check-inline" type="checkbox" id="startverbod" name="startverbod"
+            <div class="col-5 d-flex justify-content-end align-items-center">
+                <div class="pe-4"  *ngIf="!deleteMode">
+                    <input class="form-check-inline" type="checkbox" id="toonAlles" name="startverbod"
                            [ngModel]="toonAlles" (click)="switchToonAlles()">
-                    <label class="form-check-label" for="startverbod">
+                    <label class="form-check-label" for="toonAlles">
                         Toon alles
                     </label>
                 </div>
+                <app-icon-button class="toolbarBtn" tekst="Alles verwijderen" iconNaam="fas MinusCircle"
+                                 btnColor="btn" class="deleteAlles" *ngIf="deleteMode" (btnClicked)="deleteAlles()"></app-icon-button>
+                <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
+                                 btnColor="btn-secondary" *ngIf="this.magVerwijderen && !deleteMode"
+                                 (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
+                                 btnColor="btn btn-outline-primary" *ngIf="deleteMode"
+                                 (btnClicked)="deleteModeJaNee()"></app-icon-button>
             </div>
         </div>
     </div>
 </app-pegasus-card>
 
 <app-transactie-editor (TransactieGedaan)="opvragen()"></app-transactie-editor>
+<app-factuur-uploaden></app-factuur-uploaden>

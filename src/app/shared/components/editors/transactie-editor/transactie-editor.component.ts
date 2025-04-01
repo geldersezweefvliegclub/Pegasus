@@ -30,7 +30,7 @@ export class TransactieEditorComponent implements OnInit {
     private typesAbonnement: Subscription;
     transactieTypes: HeliosType[];
 
-    nieuweTransactie:HeliosTransactie = {}
+    transactie:HeliosTransactie = {}
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -54,70 +54,108 @@ export class TransactieEditorComponent implements OnInit {
         });
     }
 
-    openPopup(lidID: number | undefined, vliegdag: string | undefined = undefined) {
-        if (lidID) {
-            this.lidID = lidID;
-            this.nieuweTransactie.LID_ID = lidID;
+    openPopup(lidID: number | undefined, vliegdag: string | undefined = undefined, ID: number | undefined = undefined) {
+        if (ID) {
+            this.transactiesService.getTransactie(ID).then((t) => {
+                this.transactie = t;
+                this.vliegdag = DateTime.fromSQL(t.VLIEGDAG!);
+            })
         }
+        else
+        {
+            if (lidID)
+            {
+                this.lidID = lidID;
+                this.transactie.LID_ID = lidID;
+            }
 
-        if (vliegdag) {
-            this.vliegdag = DateTime.fromSQL(vliegdag);
-            this.nieuweTransactie.VLIEGDAG = this.vliegdag.toISODate() ?? undefined;
-        }
+            if (vliegdag)
+            {
+                this.vliegdag = DateTime.fromSQL(vliegdag);
+                this.transactie.VLIEGDAG = this.vliegdag.toISODate() ?? undefined;
+            }
 
-        if (this.toonLidSelectie) {
-            this.lidNaam =""
-        }
-        else {
-            const Lid = this.leden.find((l) => l.ID == lidID)
-            this.lidNaam = (Lid) ? Lid.NAAM! : "";
+            if (this.toonLidSelectie)
+            {
+                this.lidNaam = ""
+            }
+            else
+            {
+                const Lid = this.leden.find((l) => l.ID == lidID)
+                this.lidNaam = (Lid) ? Lid.NAAM! : "";
+            }
         }
         this.popup.open();
     }
 
     // opslaan van de transactie
     opslaan() {
-        this.transactiesService.addTransactie(this.nieuweTransactie).then((t) => {
-            let beschrijving =""
-            if (t.BEDRAG) {
-                const bijaf = (t.BEDRAG < 0) ? "af" : "bij";
-                beschrijving =  new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(Math.abs(t.BEDRAG)) + " is succesvol " + bijaf + "geboekt"
-            }
-            if (t.EENHEDEN) {
-                const bijaf = (t.EENHEDEN < 0) ? "af" : "bij";
-                beschrijving = Math.abs(t.EENHEDEN) + " strippen is succesvol " + bijaf + "geboekt"
-            }
+        if (this.transactie.ID)
+        {
+            this.transactiesService.updateTransactie(this.transactie).then(() => {
+                this.success = {
+                    titel: "Transactie",
+                    beschrijving: "Transactie is succesvol aangepast"
+                }
+                this.TransactieGedaan.emit()
+            })
+           .catch(e =>
+           {
+               this.error = e;
+           })
+        }
+        else
+        {
+            this.transactiesService.addTransactie(this.transactie).then((t) =>
+            {
+                let beschrijving = ""
+                if (t.BEDRAG)
+                {
+                    const bijaf = (t.BEDRAG < 0) ? "af" : "bij";
+                    beschrijving = new Intl.NumberFormat('nl-NL', {
+                        style: 'currency',
+                        currency: 'EUR'
+                    }).format(Math.abs(t.BEDRAG)) + " is succesvol " + bijaf + "geboekt"
+                }
+                if (t.EENHEDEN)
+                {
+                    const bijaf = (t.EENHEDEN < 0) ? "af" : "bij";
+                    beschrijving = Math.abs(t.EENHEDEN) + " strippen is succesvol " + bijaf + "geboekt"
+                }
 
-            if (beschrijving === "") {
-                beschrijving = "Geen mutatie, opmerking toegevoegd";
-            }
+                if (beschrijving === "")
+                {
+                    beschrijving = "Geen mutatie, opmerking toegevoegd";
+                }
 
-            this.success = {
-                titel: "Transactie",
-                beschrijving: beschrijving
-            }
-            this.TransactieGedaan.emit()
-        })
-        .catch(e => {
-            this.error = e;
-        })
+                this.success = {
+                    titel: "Transactie",
+                    beschrijving: beschrijving
+                }
+                this.TransactieGedaan.emit()
+            })
+           .catch(e =>
+           {
+               this.error = e;
+           })
+        }
         this.popup.close();
     }
 
     // Over welke vlieger gaat deze track
     lidGeselecteerd(id: number | undefined) {
-        this.nieuweTransactie.LID_ID = id;
+        this.transactie.LID_ID = id;
     }
 
     typeAangepast() {
-        const ttype = this.transactieTypes.find (t => t.ID == this.nieuweTransactie.TYPE_ID)
+        const ttype = this.transactieTypes.find (t => t.ID == this.transactie.TYPE_ID)
 
         if (ttype) {
-            if ((!this.nieuweTransactie.EENHEDEN) && (ttype!.EENHEDEN)) {
-                this.nieuweTransactie.EENHEDEN = ttype!.EENHEDEN;
+            if ((!this.transactie.EENHEDEN) && (ttype!.EENHEDEN)) {
+                this.transactie.EENHEDEN = ttype!.EENHEDEN;
             }
-            if ((!this.nieuweTransactie.BEDRAG) && (ttype!.BEDRAG)) {
-                this.nieuweTransactie.BEDRAG = ttype!.BEDRAG;
+            if ((!this.transactie.BEDRAG) && (ttype!.BEDRAG)) {
+                this.transactie.BEDRAG = ttype!.BEDRAG;
             }
         }
     }
@@ -125,11 +163,11 @@ export class TransactieEditorComponent implements OnInit {
     // Datum van de start aanpassen
     vliegdagAanpassen($datum: NgbDate) {
         this.vliegdag = DateTime.fromObject({year: $datum.year, month: $datum.month, day: $datum.day});
-        this.nieuweTransactie.VLIEGDAG = this.vliegdag.toISODate() ?? undefined;
+        this.transactie.VLIEGDAG = this.vliegdag.toISODate() ?? undefined;
     }
 
     leegMaken() {
         this.vliegdag = undefined;
-        this.nieuweTransactie = {LID_ID: this.lidID}
+        this.transactie = {LID_ID: this.lidID}
     }
 }
