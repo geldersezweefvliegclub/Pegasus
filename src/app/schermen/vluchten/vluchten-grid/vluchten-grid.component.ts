@@ -214,7 +214,6 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     magExporteren = false;
 
     transactiesBezig = false;
-
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
@@ -274,6 +273,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         });
 
         // abonneer op wijziging van rooster
+        this.rooster = this.roosterService.getDataset();        // haal rooster op uit cache
         this.roosterAbonnement = this.roosterService.roosterChange.subscribe(maandRooster => {
             this.rooster = (maandRooster) ? maandRooster : [];
             this.toonFacturenKnop()

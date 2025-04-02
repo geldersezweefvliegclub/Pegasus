@@ -100,6 +100,13 @@ export class RoosterService {
         return this.roosterCache!.dataset as HeliosRoosterDataset[];
     }
 
+    getDataset(): HeliosRoosterDataset[] {
+        if (this.roosterCache)
+            return this.roosterCache.dataset as HeliosRoosterDataset[];
+        else
+            return [];
+    }
+
     /**
      * Het opgehaalde rooster kan dagen in de maand missen. Deze functie vult alle starts aan zodat elke dag in de maand getoond wordt.
      * @private

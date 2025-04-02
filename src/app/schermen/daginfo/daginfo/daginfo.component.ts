@@ -114,6 +114,7 @@ export class DaginfoComponent implements OnInit, OnDestroy{
         });
 
         // abonneer op wijziging van rooster
+        this.rooster = this.roosterService.getDataset();        // haal rooster op uit cache
         this.roosterAbonnement = this.roosterService.roosterChange.subscribe(maandRooster => {
             this.rooster = (maandRooster) ? maandRooster : [];
             this.heeftToegangDagRapport();
