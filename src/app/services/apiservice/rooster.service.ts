@@ -33,7 +33,7 @@ export class RoosterService {
             });
 
             // we kunnen alleen rooster ophalen als we ingelogd zijn, en starttoren heeft niets nodig
-            if (this.loginService.isIngelogd()) {
+            if (this.loginService.isIngelogd() && (datum.year > 1900)) {
                 const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
 
                 this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
@@ -57,8 +57,9 @@ export class RoosterService {
         });
 
         // nadat we ingelogd zijn kunnen we de rooster ophalen, starttoren heeft niets nodig
-        if ((!this.loginService.userInfo?.Userinfo!.isStarttoren)) {
+        if (!this.loginService.userInfo?.Userinfo!.isStarttoren) {
             loginService.inloggenSucces.subscribe(() => {
+                this.datum = DateTime.now();
                 const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
 
                 this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
