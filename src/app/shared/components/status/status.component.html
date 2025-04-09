@@ -12,7 +12,7 @@
             {{c.Omschrijving}}
         </td>
         <td class="kolom2">
-            <input type="checkbox" *ngIf="competenties > 0 && competentieBestaat(c.CompetentieID[0])"
+            <input type="checkbox" *ngIf="competenties && competentieBestaat(c.CompetentieID[0])"
                    id="L{{c.CompetentieID[0]}}"
                    class="form-check-inline"
 
