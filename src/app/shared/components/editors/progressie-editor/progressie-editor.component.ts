@@ -72,7 +72,7 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
 
         const nu = new Date()
         this.kalenderEersteDatum = {year: nu.getFullYear(), month: nu.getMonth()+1, day: nu.getDay()+1}
-        this.kalenderLaatsteDatum = {year: nu.getFullYear() + 4, month: 12, day: 31}
+        this.kalenderLaatsteDatum = {year: nu.getFullYear() + 9, month: 12, day: 31}
     }
 
     ngOnDestroy() {
