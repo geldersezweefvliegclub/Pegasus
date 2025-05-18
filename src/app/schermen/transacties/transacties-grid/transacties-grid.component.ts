@@ -190,12 +190,16 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
             })
 
             // de datum zoals die in de kalender gekozen is
-            this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(datum => {
-                this.datum = DateTime.fromObject({
-                    year: datum.year,
-                    month: datum.month,
-                    day: 1
-                })
+            this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(datum =>
+            {
+                if (this.toonAlles)
+                {
+                    this.datum = DateTime.fromObject({
+                        year: datum.year,
+                        month: datum.month,
+                        day: 1
+                    })
+                }
 
                 this.lidID = undefined;         // zet filter uit voor nieuwe datum
                 this.opvragen();
@@ -293,10 +297,14 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
     // laat in de dropdown alleen de leden zien die een transactie hebben
     filterLeden() {
         // TODO:  Check performance als transactie array gevuld is met veel records
-        this.filteredLeden = this.leden.filter((l:HeliosLedenDataset) => {
-            const idx = this.transacties.findIndex((t => t.LID_ID == l.ID))
-            return (idx >= 0)
-        });
+        if (this.leden && this.transacties)
+        {
+            this.filteredLeden = this.leden.filter((l: HeliosLedenDataset) =>
+            {
+                const idx = this.transacties.findIndex((t => t.LID_ID == l.ID))
+                return (idx >= 0)
+            });
+        }
     }
 
     // schakelen tussen deleteMode JA/NEE. In deleteMode kun je leden verwijderen
