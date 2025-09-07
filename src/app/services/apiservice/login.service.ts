@@ -132,6 +132,6 @@ export class LoginService {
     uitloggen(): void {
         this.userInfo = null;
         this.storageService.verwijder("userInfo");
-        this.storageService.verwijder("bearer");
+        sessionStorage.removeItem("access_token");
     }
 }
