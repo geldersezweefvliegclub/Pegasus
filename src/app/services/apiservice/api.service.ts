@@ -18,7 +18,7 @@ export class APIService {
     }
 
     // opslaan van de token die we met inloggen hebben vekregen
-    async setBearerToken(token?: string) {
+    setBearerToken(token?: string) {
         this.BearerToken = (token) ? token : null;
     }
 
@@ -57,8 +57,8 @@ export class APIService {
             body: body,
             credentials: 'include'
         });
-        //todo response heeft een .ok property. Mogelijk beter te gebruiken? (Zoals get())
-        if (response.status != 200) {  // 200 is normaal voor post
+
+        if (!response.ok) {
             this.handleError(response);
         }
         try {

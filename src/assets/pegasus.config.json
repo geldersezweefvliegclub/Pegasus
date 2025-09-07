@@ -1,6 +1,6 @@
 {
-  "url": "http://localhost:8082/",
-  "flarm_url": "http://localhost:3000/",
+  "url": "http://localhost:3000/",
+  "flarm_url": "http://localhost:3001/",
   "privacy_url": "https://www.gezc.org/contact/privacy-statement-gezc/",
   "passagiersAantekeningID": 271,
   "DDWVtoestemmingID": 287,

@@ -1,22 +1,29 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { APIService } from './api.service';
+import {EventEmitter, Injectable} from '@angular/core';
+import {APIService} from './api.service';
 
-import { HeliosUserinfo } from '../../types/Helios';
-import { StorageService } from '../storage/storage.service';
-import { SharedService } from '../shared/shared.service';
-import { BehaviorSubject, Subscription } from 'rxjs';
-import { DdwvService } from './ddwv.service';
-import { KeyValueArray } from '../../types/Utils';
+import {HeliosUserinfo} from '../../types/Helios';
+import {StorageService} from '../storage/storage.service';
+import {SharedService} from '../shared/shared.service';
+import {BehaviorSubject, Subscription} from 'rxjs';
+import {DdwvService} from './ddwv.service';
+import {KeyValueArray} from '../../types/Utils';
 
-interface BearerToken {
-    TOKEN: string;
+interface LoginResponse {
+    Authentication: {
+        AccessToken: string,
+        ExpiresInMs: number
+    },
+    Refresh: {
+        AccessToken: string,
+        ExpiresInMs: number
+    }
 }
 
 @Injectable({
     providedIn: 'root'
 })
 
-export class LoginService  {
+export class LoginService {
     userInfo: HeliosUserinfo | null = null;
     private userInfoStore = new BehaviorSubject(this.userInfo);
     public readonly userInfoChange = this.userInfoStore.asObservable();      // nieuwe userInfo beschikbaar
@@ -51,25 +58,20 @@ export class LoginService  {
     }
 
     async login(gebruikersnaam: string, wachtwoord: string, token?: string): Promise<number | undefined> {
-        const headers = new Headers(
-        {
-            'Authorization': 'Basic ' + btoa(`${gebruikersnaam}:${wachtwoord}`)
-        });
+        const headers = new Headers();
+        headers.append("Content-Type", "application/json");
 
-        let params: KeyValueArray = {};
-        if ((token) && (token !== "")) {
-            params = {'token': token as string}
-        }
-
-        const response: Response = await this.apiService.get('Login/Login', params, headers);
+        const response: Response = await this.apiService.post('Login/Login', JSON.stringify({
+            Inlognaam: gebruikersnaam,
+            Wachtwoord: wachtwoord
+        }), headers);
 
         if (response.ok) {
-            const login: BearerToken = await response.json();
-            this.storageService.opslaan("bearer", login.TOKEN);
-            this.apiService.setBearerToken(login.TOKEN);
+            const login: LoginResponse = await response.json();
+            this.apiService.setBearerToken(login.Authentication.AccessToken);
 
             await this.getUserInfo();
-            this.ddwwService.loadConfigDDWV();
+            await this.ddwwService.loadConfigDDWV();
             this.successEmit();
 
             return this.userInfo!.LidData!.ID;
@@ -82,10 +84,9 @@ export class LoginService  {
         try {
             const response: Response = await this.apiService.get('Login/Relogin');
             if (response.ok) {
-                const login: BearerToken = await response.json();
+                const login: LoginResponse = await response.json();
 
-                this.storageService.opslaan("bearer", login.TOKEN);
-                this.apiService.setBearerToken(login.TOKEN);
+                this.apiService.setBearerToken(login.Authentication.AccessToken);
             }
         }
         catch (_) {
