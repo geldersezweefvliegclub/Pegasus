@@ -110,7 +110,7 @@ export class AanwezigVliegtuigService {
             getParams['SELECTIE'] = zoekString;
         }
 
-        getParams['NIET_VERTROKKEN'] = 'true';      // We zijn niet geintresseerd in vliegtuigen die al vertrokken zijn
+        getParams['NIET_VERTROKKEN'] = true;      // We zijn niet geïnteresseerd in vliegtuigen die al vertrokken zijn
         try {
             const response: Response = await this.apiService.get('AanwezigVliegtuigen/GetObjects', getParams);
             this.aanwezigCache = await response.json();
