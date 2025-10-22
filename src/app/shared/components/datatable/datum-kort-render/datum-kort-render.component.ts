@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
-import { AgRendererComponent } from 'ag-grid-angular';
-import { ICellRendererParams } from 'ag-grid-community';
-import { SharedService } from '../../../../services/shared/shared.service';
+import {Component} from '@angular/core';
+import {AgRendererComponent} from 'ag-grid-angular';
+import {ICellRendererParams} from 'ag-grid-community';
+import {SharedService} from '../../../../services/shared/shared.service';
+import {PegasusDateFormat, PegasusDatePipe} from "../../../pipes/date/pegasus-date.pipe";
 
 @Component({
   selector: 'app-datum-kort-render',
@@ -11,16 +12,12 @@ import { SharedService } from '../../../../services/shared/shared.service';
 export class DatumKortRenderComponent implements AgRendererComponent {
   public datum: string;
 
-  constructor(private readonly sharedService: SharedService) {
+  constructor(private readonly sharedService: SharedService, private readonly pegasusDatePipe: PegasusDatePipe) {
   }
 
   agInit(params: ICellRendererParams): void {
-
-    if (params.value) {
-      this.datum = this.sharedService.datumDM(params.value)
-    } else {
-      this.datum = "";
-    }
+    console.log("Als je dit ziet, moet deze regel getest worden!");
+    this.datum = this.pegasusDatePipe.transform(params.value, PegasusDateFormat.DateTimeShort);
   }
 
   refresh(_: ICellRendererParams): boolean {

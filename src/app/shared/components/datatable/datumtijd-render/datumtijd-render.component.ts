@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { ICellRendererParams } from 'ag-grid-community';
-import { SharedService } from '../../../../services/shared/shared.service';
-import { AgRendererComponent } from 'ag-grid-angular';
+import {Component} from '@angular/core';
+import {ICellRendererParams} from 'ag-grid-community';
+import {AgRendererComponent} from 'ag-grid-angular';
+import {PegasusDateFormat, PegasusDatePipe} from "../../../pipes/date/pegasus-date.pipe";
 
 @Component({
     selector: 'app-datumtijd-render',
@@ -11,17 +11,11 @@ import { AgRendererComponent } from 'ag-grid-angular';
 export class DatumtijdRenderComponent implements AgRendererComponent{
     public datumtijd: string;
 
-    constructor(private readonly sharedService: SharedService) {
+    constructor(private readonly dateFormatter: PegasusDatePipe) {
     }
 
     agInit(params: ICellRendererParams): void {
-
-        if (params.value) {
-            const datetimePart = params.value.split(' ');
-            this.datumtijd = this.sharedService.datumDMJ(datetimePart[0]) + " " + datetimePart[1];
-        } else {
-            this.datumtijd = "";
-        }
+        this.datumtijd = this.dateFormatter.transform(params.value,  PegasusDateFormat.DateTimeShort)
     }
 
     refresh(_: ICellRendererParams): boolean {
