@@ -100,10 +100,6 @@ export class SharedService {
         }
     }
 
-    getKalenderDatum(): NgbDateStruct {
-         return this.datum;
-    }
-
     // Er is iets in de database gewijzigd
     fireHeliosEvent(event: HeliosEvent) {
         this.heliosEventSubject.next(event);
@@ -114,6 +110,9 @@ export class SharedService {
         this.heliosFailedSubject.next(error);
     }
 
+    /**
+     * @deprecated Should be replaced by PegasusDate pipe!
+     */
     datumDMJ(ISOdatum: string): string {
         if (ISOdatum.includes(":"))     // er zit ook een tijd in
         {
@@ -124,6 +123,9 @@ export class SharedService {
         return datum[2] + '-' + datum[1] + '-' + datum[0];
     }
 
+    /**
+     * @deprecated Should be replaced by PegasusDate pipe, shortDate
+     */
     datumDM(ISOdatum: string): string {
         if (ISOdatum.includes(":"))     // er zit ook een tijd in
         {
