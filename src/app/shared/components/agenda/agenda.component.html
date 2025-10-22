@@ -6,7 +6,7 @@
     <tr *ngFor="let a of agenda">
         <ng-template #tipContent><span class="oms">{{a.OMSCHRIJVING}}</span></ng-template>
 
-        <td>{{datumDM(a.DATUM)}}</td>
+        <td>{{a.DATUM | pegasusdate }}</td>
         <td>
             <div class="d-flex flex-row">
                 <div *ngIf="a.TIJD">{{a.TIJD}}&nbsp;</div>

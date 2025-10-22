@@ -24,11 +24,5 @@ export class AgendaComponent implements OnInit {
     })
   }
 
-  datumDM(dagDatum: string) {
-    const dt = dagDatum.split(' ');
-    const d = dt[0].split('-');
-    return d[2] + '-' + d[1]
-  }
-
-    protected readonly infoIcon = faInfoCircle;
+  protected readonly infoIcon = faInfoCircle;
 }
