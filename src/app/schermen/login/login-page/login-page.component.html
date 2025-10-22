@@ -58,8 +58,7 @@
                     <div class="row mt-4">
                         <div class="col d-flex"
                              [ngClass]="{'justify-content-end': !showSecret && !showLostPassword(), 'justify-content-between': showSecret || showLostPassword() }">
-                            <a *ngIf="showLostPassword()" class="lostPassword" (click)="recoverEmail()">Wachtwoord
-                                vergeten</a>
+                            <a *ngIf="showLostPassword()" class="lostPassword" (click)="recoverEmail()">Wachtwoord vergeten</a>
                             <button class="btn btn-secondary mr-2" type="button" (click)="sendSMS()"
                                     [disabled]="form.invalid" *ngIf="showSecret && !isLoading">
                                 <span *ngIf="!isLoading">SMS</span>
@@ -67,8 +66,11 @@
                             </button>
                             <button class="btn btn-primary" type="submit"
                                     [disabled]="form.invalid || (!privacyOk && privacyUrl) || isLoading">
-                                <span *ngIf="!isLoading">Login</span>
-                                <span *ngIf="isLoading"><app-loader></app-loader></span>
+                                @if (isLoading) {
+                                    <app-loader></app-loader>
+                                } @else {
+                                    <span>Login</span>
+                                }
                             </button>
                         </div>
                     </div>
