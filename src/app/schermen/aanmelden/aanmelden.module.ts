@@ -7,6 +7,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SharedModule } from '../../shared/shared.module';
 import { SamenvattingComponent } from './samenvatting/samenvatting.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import {PegasusDatePipe} from "../../shared/pipes/date/pegasus-date.pipe";
 
 @NgModule({
     declarations: [
@@ -26,6 +27,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
             }
         ]),
         NgSelectModule,
+        PegasusDatePipe,
     ]
 })
 export class AanmeldenModule {

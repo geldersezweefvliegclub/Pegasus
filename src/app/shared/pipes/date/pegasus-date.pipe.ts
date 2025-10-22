@@ -2,9 +2,10 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {formatDate} from "@angular/common";
 
 export enum PegasusDateFormat {
-    Default,          // 15 Jan 2025
-    DateTimeShort,    // 15 Jan 2025 14:30
-    Time,             // 14:30
+    Default = "Default",            // 15 Jan 2025
+    DateTimeShort = "DateTimeShort",      // 15 Jan 2025 14:30
+    DayOfWeek = "DayOfWeek",              // Monday
+    Time = "Time",               // 14:30
 }
 
 /**
@@ -42,6 +43,8 @@ export class PegasusDatePipe implements PipeTransform {
                 return 'd MMM y HH:mm';
             case PegasusDateFormat.Time:
                 return 'HH:mm';
+            case PegasusDateFormat.DayOfWeek:
+                return 'EEEE';
             default:
                 return 'd MMM y';
         }

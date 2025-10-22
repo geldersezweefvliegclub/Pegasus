@@ -569,19 +569,15 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         const idx = this.rooster.findIndex((r: HeliosRoosterDataset) => r.DATUM == dagDatum);
 
         if (ui!.LidData!.STARTVERBOD) { // tja ....
-            console.log(dagDatum, "start verbod");
             return false;
         }
         if (!this.rooster[idx].DDWV && !this.rooster[idx].CLUB_BEDRIJF && !this.rooster[idx].WINTER_WERK) {   // geen vliegdag, geen winterwerk
-            console.log(dagDatum, "geen vliegdag");
             return false;
         }
         if (!this.rooster[idx].DDWV && ui!.LidData!.LIDTYPE_ID == 625) {    // 625 = DDWV vlieger
-            console.log(dagDatum, "DDWV'er en geen DDWV dag");
             return false;
         }
         if (ui!.LidData!.LIDTYPE_ID == 625 && ui!.LidData!.ZUSTERCLUB_ID == undefined) {      // alleen aanmelden als je lid bent bij een zusterclub
-            console.log(dagDatum, "DDWV'er en geen zusterclub");
             return false;
         }
         if (this.rooster[idx].WINTER_WERK)
@@ -610,7 +606,6 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
                 case 606: // donateur
                 {
                     if (!this.rooster[idx].CLUB_BEDRIJF && ui!.LidData!.STATUSTYPE_ID !== 1903) {  // 1903 = Brevethouder
-                        console.log(dagDatum, "Geen clubdag, geen brevethouder");
                         return false;
                     }
                     break;
@@ -620,14 +615,12 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
                     break;
                 }
                 default:
-                    console.log(dagDatum, "Lidtype mag niet aanmelden");
                     return false;          // andere lidtypes dus niet
             }
 
 
             if (!this.magAanmeldenDDWV)
             {
-                console.log(dagDatum, "DDWV vragenlijs is niet ingevuld, of geen DDWV toestemming");
                 return false;
             }
         }
@@ -635,13 +628,11 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         // Bij een DDWV bedrijf moeten we ook naar het tegoed van de vlieger kijken
         if (this.ddwvService.actief()) {
             if (!this.lid) { // we weten niet hoeveel saldo het lid heeft om dat lid data onbekend is
-                console.log(dagDatum, "lid onbekend");
                 return false;
             }
 
             if (!this.rooster[idx].CLUB_BEDRIJF) {
                 if ((this.rooster[idx].EENHEDEN! > 0) && (this.rooster[idx].EENHEDEN! > this.lid.TEGOED!)) {
-                    console.log(dagDatum, "onvoldoende saldo");
                     return false;
                 }
             }
