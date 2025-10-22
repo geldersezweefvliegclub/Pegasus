@@ -42,12 +42,12 @@
             <th class="text-nowrap ps-2">Mutatie</th>
             <th class="text-nowrap ps-2 pe-1">Saldo na</th>
         </tr>
-        <tr *ngFor="let transactie of transacties;let i = index" style="vertical-align: top;" [ngClass]="{'nietBetaaldRow': !transactie.BETAALD && transactie.BEDRAG}">
+        <tr *ngFor="let transactie of transacties;" style="vertical-align: top;" [ngClass]="{'nietBetaaldRow': !transactie.BETAALD && transactie.BEDRAG}">
             <td style="white-space: nowrap;" class="pe-2">
-                {{datumDMY(transactie.DATUM)}}
+                {{transactie.DATUM | pegasusdate}}
             </td>
             <td style="white-space: nowrap;" class="pe-2">
-                {{datumDMY(transactie.VLIEGDAG).substring(0, 5)}}
+                {{transactie.VLIEGDAG | pegasusdate}}
             </td>
             <td>
                 {{transactie.OMSCHRIJVING}}
@@ -83,7 +83,7 @@
                 <td class="w-100">
                     <div class="w-100 d-flex justify-content-between">
                         <div><b>Datum:</b> {{transactie.DATUM}} </div>
-                        <div><div *ngIf="transactie.VLIEGDAG"><b>Vliegdag:</b> {{datumDMY(transactie.VLIEGDAG).substring(0, 5)}}</div></div>
+                        <div><div *ngIf="transactie.VLIEGDAG"><b>Vliegdag:</b> {{transactie.VLIEGDAG | pegasusdate}}</div></div>
                     </div>
                 </td>
             </tr>
@@ -97,15 +97,11 @@
                     <div *ngIf="!transactie.BETAALD" class="nietBetaald"> Niet betaald</div>
                 </td>
             </tr>
-            <tr *ngIf="expandedView">
+            @if (expandedView) {
                 <td><b>Saldo voor:</b> {{transactie.SALDO_VOOR}}</td>
-            </tr>
-            <tr *ngIf="expandedView">
                 <td><b>Strippen:</b> {{transactie.EENHEDEN}}</td>
-            </tr>
-            <tr *ngIf="expandedView">
                 <td><b>Saldo na:</b> {{transactie.SALDO_NA}}</td>
-            </tr>
+            }
         </table>
     </div>
 </ng-template>

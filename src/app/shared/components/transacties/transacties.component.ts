@@ -101,18 +101,6 @@ export class TransactiesComponent implements OnInit, OnDestroy {
         this.editor.openPopup(this.lidID)
     }
 
-    // Dit is al geimplementeerd in util.ts
-    datumDMY(dagDatum: string) {
-
-        if (dagDatum === null || dagDatum === undefined) return "";
-
-        const dt = dagDatum.split(' ');
-        const d = dt[0].split('-');
-
-        const tijd = (dt.length > 1) ? " " + dt[1].substring(0, 5) : '';
-        return d[2] + '-' + d[1] + '-' + d[0] + tijd
-    }
-
     // Opvragen van de starts via de api
     opvragen(lidID: number): void {
         const beginDatum = DateTime.fromObject({
