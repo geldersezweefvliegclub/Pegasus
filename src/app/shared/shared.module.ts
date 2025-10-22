@@ -103,6 +103,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import {BaseChartDirective, provideCharts, withDefaultRegisterables} from 'ng2-charts';
 import { ImageCropperComponent } from 'ngx-image-cropper';
 import {FactuurUploadenComponent} from "./components/factuur-uploaden/uploaden.component";
+import {PegasusDatePipe} from "./pipes/date/pegasus-date.pipe";
 
 @NgModule({
     imports: [
@@ -122,7 +123,8 @@ import {FactuurUploadenComponent} from "./components/factuur-uploaden/uploaden.c
         DragDropModule,
         NgbTooltipModule,
         NgxMaterialTimepickerModule,
-        ImageCropperComponent
+        ImageCropperComponent,
+        PegasusDatePipe
     ],
     declarations: [
         PegasusCardComponent,

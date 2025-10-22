@@ -98,27 +98,6 @@ export class DienstenComponent implements OnInit, OnChanges {
         }
     }
 
-    toonDatum(datum: string): string {
-        const d:DateTime = DateTime.fromSQL(datum)
-        let retValue: string = d.day + " ";
-
-        switch (d.month) {
-            case 1: retValue += "Jan"; break;
-            case 2: retValue += "Feb"; break;
-            case 3: retValue += "Mrt"; break;
-            case 4: retValue += "Apr"; break;
-            case 5: retValue += "Mei"; break;
-            case 6: retValue += "Juni"; break;
-            case 7: retValue += "Juli"; break;
-            case 8: retValue += "Aug"; break;
-            case 9: retValue += "Sept"; break;
-            case 10: retValue += "Okt"; break;
-            case 11: retValue += "Nov"; break;
-            case 12: retValue += "Dec"; break;
-        }
-        return retValue;
-    }
-
     toonDagRooster(DATUM: string) {
         this.roosterDatum = DateTime.fromSQL(DATUM);
         setTimeout(() => this.popup.openPopup(), 100); // kleine delay datum moet syncen

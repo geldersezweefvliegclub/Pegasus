@@ -2,25 +2,29 @@
     <tr class="headerRow">
     <th scope="col" class="datum">Datum</th>
     <th scope="col">Dienst</th>
-    <th scope="col" *ngIf="UitgebreideWeergave">Afwezig</th>
-    <th scope="col" *ngIf="UitgebreideWeergave">Aanwezig</th>
+    @if (UitgebreideWeergave) {
+        <th scope="col">Afwezig</th>
+        <th scope="col">Aanwezig</th>
+    }
     </tr>
 
     <tr *ngFor="let dienst of diensten;let i = index">
-        <td class="datum clickable"><a aria-label="Toon diensten van de dag" (click)="toonDagRooster(dienst.DATUM)" class="clickable">{{toonDatum(dienst.DATUM)}}</a></td>
+        <td class="datum clickable"><a aria-label="Toon diensten van de dag" (click)="toonDagRooster(dienst.DATUM)" class="clickable">{{dienst.DATUM | pegasusdate}}</a></td>
         <td>{{dienst.TYPE_DIENST}}</td>
-        <td class="midden" *ngIf="UitgebreideWeergave">
-            <input type="checkbox"
-                   class="form-check-inline"
-                   [checked]="dienst.AFWEZIG"
-                   disabled>
-        </td>
-        <td class="midden" *ngIf="UitgebreideWeergave">
-            <input type="checkbox"
-                   class="form-check-inline"
-                   [checked]="dienst.AANWEZIG"
-                   disabled>
-        </td>
+        @if (UitgebreideWeergave) {
+            <td class="midden">
+                <input type="checkbox"
+                       class="form-check-inline"
+                       [checked]="dienst.AFWEZIG"
+                       disabled>
+            </td>
+            <td class="midden">
+                <input type="checkbox"
+                       class="form-check-inline"
+                       [checked]="dienst.AANWEZIG"
+                       disabled>
+            </td>
+        }
     </tr>
 </table>
 
