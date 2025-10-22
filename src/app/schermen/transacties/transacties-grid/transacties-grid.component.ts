@@ -230,10 +230,11 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        if (this.dbEventAbonnement) this.dbEventAbonnement.unsubscribe();
-        if (this.datumAbonnement) this.datumAbonnement.unsubscribe();
-        if (this.maandAbonnement) this.maandAbonnement.unsubscribe();
-        if (this.resizeSubscription) this.resizeSubscription.unsubscribe();
+        this.dbEventAbonnement?.unsubscribe();
+        this.datumAbonnement?.unsubscribe();
+        this.maandAbonnement?.unsubscribe();
+        this.resizeSubscription?.unsubscribe();
+        this.ledenAbonnement?.unsubscribe();
     }
 
     // aanpassen wat we op het scherm kwijt kunnen nadat scherm groote gewijzigd is
