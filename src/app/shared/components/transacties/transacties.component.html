@@ -54,12 +54,12 @@
             </td>
             <td style="text-align: right;white-space: nowrap;" class="ps-2">
                 <div>
-                    &euro; {{transactie.BEDRAG | number : '1.2-2'}}
+                    {{transactie.BEDRAG | currency: 'EUR':'symbol':'1.2-2'}}
                 </div>
             </td>
             <td style="text-align: right;" class="ps-2">
                 <div>
-                    {{transactie.SALDO_VOOR}}
+                    {{transactie.SALDO_VOOR | currency: 'EUR':'symbol':'1.2-2'}}
                 </div>
             </td>
             <td style="text-align: right;" class="ps-2">
@@ -68,7 +68,7 @@
                 </div>
             </td>
             <td style="text-align: right;" class="ps-2">
-                {{transactie.SALDO_NA}}
+                {{transactie.SALDO_VOOR | currency: 'EUR':'symbol':'1.2-2'}}
             </td>
         </tr>
     </table>
@@ -92,15 +92,15 @@
             </tr>
             <tr *ngIf="transactie.BEDRAG && expandedView">
                 <td>
-                    <b>Bedrag:</b> {{transactie.BEDRAG}}
+                    <b>Bedrag:</b> {{transactie.BEDRAG | currency: 'EUR':'symbol':'1.2-2'}}
                     <div *ngIf="transactie.BETAALD"> Betaald</div>
                     <div *ngIf="!transactie.BETAALD" class="nietBetaald"> Niet betaald</div>
                 </td>
             </tr>
             @if (expandedView) {
-                <td><b>Saldo voor:</b> {{transactie.SALDO_VOOR}}</td>
+                <td><b>Saldo voor:</b> {{transactie.SALDO_VOOR | currency: 'EUR':'symbol':'1.2-2' }}</td>
                 <td><b>Strippen:</b> {{transactie.EENHEDEN}}</td>
-                <td><b>Saldo na:</b> {{transactie.SALDO_NA}}</td>
+                <td><b>Saldo na:</b> {{transactie.SALDO_NA | currency: 'EUR':'symbol':'1.2-2'}}</td>
             }
         </table>
     </div>
