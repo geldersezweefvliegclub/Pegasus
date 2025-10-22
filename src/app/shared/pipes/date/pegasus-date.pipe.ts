@@ -5,12 +5,6 @@ export enum PegasusDateFormat {
     Default,          // 15 Jan 2025
     DateTimeShort,    // 15 Jan 2025 14:30
     Time,             // 14:30
-    Long,             // Wednesday, 15 January 2025
-    ISO,              // 2025-01-15
-    ISODateTime,      // 2025-01-15T14:30:00
-    MonthYear,        // Jan 2025
-    Numeric,          // 15/01/2025
-    Compact,          // 15Jan2025
 }
 
 /**
@@ -31,7 +25,7 @@ export class PegasusDatePipe implements PipeTransform {
      */
     private readonly locale = 'en-GB';
 
-    transform(value: Date | string | number | null | undefined, format: PegasusDateFormat = PegasusDateFormat.Default): unknown {
+    transform(value: Date | string | number | null | undefined, format: PegasusDateFormat = PegasusDateFormat.Default): string {
         if (!value) {
             return '';
         }
@@ -48,18 +42,6 @@ export class PegasusDatePipe implements PipeTransform {
                 return 'd MMM y HH:mm';
             case PegasusDateFormat.Time:
                 return 'HH:mm';
-            case PegasusDateFormat.Long:
-                return 'EEEE, d MMMM y';
-            case PegasusDateFormat.ISO:
-                return 'yyyy-MM-dd';
-            case PegasusDateFormat.ISODateTime:
-                return "yyyy-MM-dd'T'HH:mm:ss";
-            case PegasusDateFormat.MonthYear:
-                return 'MMM y';
-            case PegasusDateFormat.Numeric:
-                return 'dd/MM/yyyy';
-            case PegasusDateFormat.Compact:
-                return 'ddMMMyyyy';
             default:
                 return 'd MMM y';
         }
