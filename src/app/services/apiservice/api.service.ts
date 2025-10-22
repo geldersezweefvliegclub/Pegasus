@@ -8,10 +8,9 @@ import { PegasusConfigService } from '../shared/pegasus-config.service';
 })
 export class APIService {
     private readonly URL:string = 'http://localhost:4200/api/'
-    private BearerToken: string | null = null;
+    private BearerToken: string | null = sessionStorage.getItem("access_token") ? JSON.parse(sessionStorage.getItem("access_token")!) : null;
 
-    constructor(private readonly sharedService: SharedService,
-                private readonly configService: PegasusConfigService) {
+    constructor(private readonly sharedService: SharedService, configService: PegasusConfigService) {
 
         const url = configService.getURL();
         if (url) this.URL = url;
@@ -20,6 +19,7 @@ export class APIService {
     // opslaan van de token die we met inloggen hebben vekregen
     setBearerToken(token?: string) {
         this.BearerToken = (token) ? token : null;
+        sessionStorage.setItem("access_token", JSON.stringify(this.BearerToken));
     }
 
     async get(url: string, params?: KeyValueArray, headers?: Headers): Promise<Response> {
