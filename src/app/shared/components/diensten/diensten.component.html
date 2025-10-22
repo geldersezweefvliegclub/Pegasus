@@ -8,7 +8,7 @@
     }
     </tr>
 
-    <tr *ngFor="let dienst of diensten;let i = index">
+    <tr *ngFor="let dienst of diensten;">
         <td class="datum clickable"><a aria-label="Toon diensten van de dag" (click)="toonDagRooster(dienst.DATUM)" class="clickable">{{dienst.DATUM | pegasusdate}}</a></td>
         <td>{{dienst.TYPE_DIENST}}</td>
         @if (UitgebreideWeergave) {
