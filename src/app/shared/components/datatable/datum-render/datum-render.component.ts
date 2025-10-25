@@ -11,16 +11,8 @@ import { SharedService } from '../../../../services/shared/shared.service';
 export class DatumRenderComponent implements AgRendererComponent {
     public datum: string;
 
-    constructor(private readonly sharedService: SharedService) {
-    }
-
     agInit(params: ICellRendererParams): void {
-
-        if (params.value) {
-            this.datum = this.sharedService.datumDMJ(params.value);
-        } else {
-            this.datum = "";
-        }
+        this.datum = params.value;
     }
 
     refresh(_: ICellRendererParams): boolean {
