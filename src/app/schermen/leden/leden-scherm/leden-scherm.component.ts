@@ -195,7 +195,6 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
 
     constructor(private readonly ledenService: LedenService,
                 private readonly loginService: LoginService,
-                private readonly trackService: TracksService,
                 private readonly sharedService: SharedService,
                 private readonly router: Router
     ) {
