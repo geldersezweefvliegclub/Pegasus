@@ -16,8 +16,8 @@ import { Subscription } from 'rxjs';
     styleUrls: ['./datatable.component.scss']
 })
 export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
-    @Input() columnDefs = [];
-    @Input() rowData = [];
+    @Input() columnDefs: ColDef[]= [];
+    @Input() rowData: unknown[] = [];
     @Input() frameworkComponents = {};
     @Input() id: string;
     @Input() loading = false;
