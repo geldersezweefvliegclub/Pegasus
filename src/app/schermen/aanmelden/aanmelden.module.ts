@@ -26,8 +26,7 @@ import {PegasusDatePipe} from "../../shared/pipes/date/pegasus-date.pipe";
                 component: AanmeldenPageComponent
             }
         ]),
-        NgSelectModule,
-        PegasusDatePipe,
+        NgSelectModule
     ]
 })
 export class AanmeldenModule {

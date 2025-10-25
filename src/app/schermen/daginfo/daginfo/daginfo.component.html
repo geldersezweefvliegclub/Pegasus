@@ -156,7 +156,7 @@
 
                         <td style="width: 100%;">
                             <div class="rapportHeader">
-                                Op {{datumString(dr.LAATSTE_AANPASSING)}} om {{tijdString(dr.LAATSTE_AANPASSING)}}
+                                Op {{dr.LAATSTE_AANPASSING | pegasusdate }} om {{dr.LAATSTE_AANPASSING | pegasusdate: 'Time'}}
                                 schreef {{dr.INGEVOERD}} dagrapport voor vliegveld {{dr.VELD_OMS}}
                             </div>
                             <div class="tekstbox">

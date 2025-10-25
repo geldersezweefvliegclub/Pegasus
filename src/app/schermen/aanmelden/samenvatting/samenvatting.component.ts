@@ -6,6 +6,9 @@ import { AanwezigLedenService } from '../../../services/apiservice/aanwezig-lede
 import { SharedService } from '../../../services/shared/shared.service';
 import { LoginService } from '../../../services/apiservice/login.service';
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import {PegasusDatePipe} from "../../../shared/pipes/date/pegasus-date.pipe";
+import {NgForOf, NgIf} from "@angular/common";
+import {SharedModule} from "../../../shared/shared.module";
 
 @Component({
     selector: 'app-samenvatting',
@@ -34,7 +37,7 @@ export class SamenvattingComponent {
     middagLierist = "";
     middagSleper = "";
 
-    constructor(private readonly sharedService: SharedService,
+    constructor(private readonly pegasusDatePipe: PegasusDatePipe,
                 private readonly loginService: LoginService,
                 private readonly configService: PegasusConfigService,
                 private readonly aanwezigLedenService: AanwezigLedenService) {
@@ -55,7 +58,7 @@ export class SamenvattingComponent {
             this.toonBulkEmail = (idx >= 0);
         }
 
-        this.formTitel = "Samenvatting " + this.sharedService.datumDMJ(rooster.DATUM!)
+        this.formTitel = "Samenvatting " + this.pegasusDatePipe.transform(rooster.DATUM);
 
         this.rooster = rooster;
         this.samenvatting = undefined;

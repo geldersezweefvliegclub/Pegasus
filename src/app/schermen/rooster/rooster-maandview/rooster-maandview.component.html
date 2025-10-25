@@ -54,10 +54,10 @@
             <tbody>
 
             <tr *ngFor="let dagInRooster of rooster;let i = index">
-                <td class="WeekdagKolom" [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
+                <td class="WeekdagKolom" [ngClass]="dagInRooster.DATUM | pegasusdate: 'DayOfWeek'">
                     <div class="rotation-wrapper">
                         <div class="dayOfTheWeek">
-                            {{DagVanDeWeek(dagInRooster.DATUM)}}
+                            {{dagInRooster.DATUM | pegasusdate: 'DayOfWeek'}}
                         </div>
                     </div>
                 </td>

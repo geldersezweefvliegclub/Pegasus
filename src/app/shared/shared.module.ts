@@ -123,8 +123,7 @@ import {PegasusDatePipe} from "./pipes/date/pegasus-date.pipe";
         DragDropModule,
         NgbTooltipModule,
         NgxMaterialTimepickerModule,
-        ImageCropperComponent,
-        PegasusDatePipe
+        ImageCropperComponent
     ],
     declarations: [
         PegasusCardComponent,
@@ -204,6 +203,7 @@ import {PegasusDatePipe} from "./pipes/date/pegasus-date.pipe";
         AgendaComponent,
         AgendaEditorComponent,
         FactuurUploadenComponent,
+        PegasusDatePipe
     ],
     exports: [
         LidEditorComponent,
@@ -261,7 +261,7 @@ import {PegasusDatePipe} from "./pipes/date/pegasus-date.pipe";
         AgendaEditorComponent,
         FactuurUploadenComponent,
     ],
-    providers: [provideCharts(withDefaultRegisterables())],
+    providers: [provideCharts(withDefaultRegisterables()), PegasusDatePipe],
 
     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]
 })

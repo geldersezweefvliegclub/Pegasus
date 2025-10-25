@@ -10,6 +10,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { RoosterMaandviewComponent } from './rooster-maandview/rooster-maandview.component';
 import { RoosterWeekviewComponent } from './rooster-weekview/rooster-weekview.component';
 import { RoosterDagviewComponent } from './rooster-dagview/rooster-dagview.component';
+import {PegasusDatePipe} from "../../shared/pipes/date/pegasus-date.pipe";
 
 
 @NgModule({

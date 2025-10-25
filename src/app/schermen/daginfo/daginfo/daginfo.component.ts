@@ -240,11 +240,6 @@ export class DaginfoComponent implements OnInit, OnDestroy{
         return datumtijd.toFormat("HH:mm")
     }
 
-    datumString(dt: string): string {
-        const datumtijd = DateTime.fromSQL(dt);
-        return datumtijd.day + "-" + datumtijd.month + "-" + datumtijd.year;
-    }
-
     // Hebben we een datum in de toekomst, vandaag is geen toekomst
     datumInToekomst(): boolean {
         const datum = this.datum.toISODate() as string;

@@ -80,10 +80,10 @@
 
             <tr *ngFor="let dagInRooster of filteredRooster;let r = index"
                 [ngClass]="isClubBedrijf(dagInRooster.DATUM) ? 'clubBedrijf' : ''">
-                <td class="WeekdagKolom" [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
+                <td class="WeekdagKolom" [ngClass]="dagInRooster.DATUM | pegasusdate: 'DayOfWeek'">
                     <div class="rotation-wrapper">
                         <div class="dayOfTheWeek">
-                            {{DagVanDeWeek(dagInRooster.DATUM)}}
+                            {{dagInRooster.DATUM | pegasusdate: 'DayOfWeek'}}
                         </div>
                     </div>
                 </td>

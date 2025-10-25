@@ -6,6 +6,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { RouterModule } from '@angular/router';
 import { DaginfoComponent } from './daginfo/daginfo.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import {PegasusDatePipe} from "../../shared/pipes/date/pegasus-date.pipe";
 
 @NgModule({
   declarations: [
