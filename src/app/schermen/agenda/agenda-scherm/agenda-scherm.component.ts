@@ -43,7 +43,7 @@ export class AgendaSchermComponent implements OnInit, OnDestroy {
     {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
     {field: 'DATUM', headerName: 'Datum', cellRenderer: 'datumRender', sortable: true, maxWidth: 100},
     {field: 'TIJD', headerName: 'Tijd', maxWidth: 60},
-    {field: 'KORT', headerName: 'Aktiviteit', sortable: true, width:200 , suppressSizeToFit: true, suppressAutoSize: true},
+    {field: 'KORT', headerName: 'Activiteit', sortable: true, width:200 , suppressSizeToFit: true, suppressAutoSize: true},
     {field: 'OMSCHRIJVING', headerName: 'Beschrijving', sortable: true},
   ];
 
