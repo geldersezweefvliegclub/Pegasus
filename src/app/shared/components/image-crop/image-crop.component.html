@@ -1,5 +1,5 @@
 <form #form='ngForm' (ngSubmit)="submit()">
-    <input name="FILE" class="form-control my-3" type="file" (change)="fileChangeEvent($event)"/>
+    <input name="FILE" class="form-control my-3" type="file" (change)="fileChangeEvent($event)" accept='image/png, image/jpeg'/>
     <div>
         <image-cropper
                 [imageChangedEvent]="imageChangedEvent"
@@ -42,6 +42,6 @@
                 <fa-icon [icon]="resetIcon"></fa-icon>
             </button>
         </div>
-        <app-icon-button class="ms-2" type="submit" iconNaam="fas Upload" tekst="Uploaden"></app-icon-button>
+        <app-icon-button [disabled]='!croppedImage' class="ms-2" type="submit" iconNaam="fas Upload" tekst="Uploaden"></app-icon-button>
     </div>
 </form>
