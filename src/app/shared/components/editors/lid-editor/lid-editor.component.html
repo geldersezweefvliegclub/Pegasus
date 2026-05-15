@@ -333,6 +333,16 @@
                     </div>
                     <div class="row mt-2">
                         <div class="col-5">
+                            <label for="gmail" class="form-label"
+                                   [ngClass]="disabledClass('GMAIL')">GMail</label>
+                            <div class="d-flex align-items-center" >
+                                <input type="text" name="gmail" class="form-control" id="gebruiker" style="text-align: right;"
+                                       [disabled]="isDisabled('GMAIL')"
+                                       [(ngModel)]="lid.GMAIL">
+                                &#64;gezc.org
+                            </div>
+                        </div>
+                        <div class="col-5">
                             <label for="STATUS" class="form-label"
                                    [ngClass]="disabledClass('STATUS')">Vlieg status</label>
                             <select class="form-select" id="STATUS" name="STATUS"
@@ -346,25 +356,27 @@
 
                             </select>
                         </div>
-                        <div class="col-7 mt-7">
-                            <div>
-                                <app-lid-invoer id="BUDDY"
-                                                placeholder="Selecteer buddy"
-                                                label="Buddy"
-                                                [LID_ID]="lid.BUDDY_ID"
-                                                [disabled]="isDisabled('BUDDY')"
-                                                [leden]="instructeurs"
-                                                (LidChanged)="lid.BUDDY_ID = $event"
-                                ></app-lid-invoer>
-                                <div class="mt-2"></div>
-                                <app-lid-invoer id="BUDDY2"
-                                                placeholder="Selecteer buddy"
-                                                [LID_ID]="lid.BUDDY_ID2"
-                                                [disabled]="isDisabled('BUDDY')"
-                                                [leden]="instructeurs"
-                                                (LidChanged)="lid.BUDDY_ID2 = $event"
-                                ></app-lid-invoer>
-                            </div>
+                    </div>
+                    <div class="d-flex mt-2">
+                        <div class="col-5 me-3">
+                            <app-lid-invoer id="BUDDY"
+                                            placeholder="Selecteer buddy"
+                                            label="Buddy 1"
+                                            [LID_ID]="lid.BUDDY_ID"
+                                            [disabled]="isDisabled('BUDDY')"
+                                            [leden]="instructeurs"
+                                            (LidChanged)="lid.BUDDY_ID = $event"
+                            ></app-lid-invoer>
+                        </div>
+                        <div class="col-5">
+                            <app-lid-invoer id="BUDDY2"
+                                            placeholder="Selecteer buddy"
+                                            label="Buddy 1"
+                                            [LID_ID]="lid.BUDDY_ID2"
+                                            [disabled]="isDisabled('BUDDY')"
+                                            [leden]="instructeurs"
+                                            (LidChanged)="lid.BUDDY_ID2 = $event"
+                            ></app-lid-invoer>
                         </div>
                     </div>
                     <hr>
@@ -505,24 +517,6 @@
                             </div>
                         </div>
                     </div>
-                    <!--
-                    <div class="row mt-2">
-                        <div class="col-6">
-                            <div *ngIf="isVisible('ZELFSTART_ABONNEMENT')">
-                                <input class="form-check-inline" type="checkbox" id="zelfstartAbonnement"
-                                       name="zelfstartAbonnement"
-                                       [disabled]="isDisabled('zelfstartAbonnement')"
-                                       [(ngModel)]="lid.ZELFSTART_ABONNEMENT">
-                                <label class="form-check-label" for="zelfstartAbonnement"
-                                       [ngClass]="disabledClass('zelfstartAbonnement')">
-                                    Zelfstart abonnement
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                        </div>
-                    </div>
-                    -->
                     <hr>
                     <div class="row my-0">
                         <div class="col-5">
@@ -573,6 +567,15 @@
                             <textarea class="form-control" id="opmerkingen" name="opmerkingen"
                                       [disabled]="isDisabled('OPMERKINGEN')"
                                       [(ngModel)]="lid.OPMERKINGEN"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mt-3" *ngIf="isVisible('DIENSTEN')">
+                        <div class="col-12">
+                            <label class="form-label" for="diensten"
+                                   [ngClass]="disabledClass('DIENSTEN')">Dienst info</label>
+                            <textarea class="form-control" id="diensten" name="diensten"
+                                      [disabled]="isDisabled('DIENSTEN')"
+                                      [(ngModel)]="lid.DIENSTEN"></textarea>
                         </div>
                     </div>
                 </div>

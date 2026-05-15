@@ -349,14 +349,13 @@ export class LidEditorComponent implements OnInit, OnDestroy {
 
         switch (veld) {
             case 'BASIS' : {
-                if (ui?.isBeheerder || ui?.isBeheerderDDWV || this.ikBenHetZelf())
+                if (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isRooster || this.ikBenHetZelf())
                     return false;
                 break;
             }
             case 'googleAuth': {
                 return this.isgoogleAuthNodig();
             }
-            case 'zelfstartAbonnement':
             case 'gebruiker':
             case 'lidnummer':
             case 'lidmaatschap': {
@@ -380,6 +379,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
                 }
                 break;
             }
+            case 'GMAIL':
             case 'CIMT':
             case 'TECHNICUS':
             case 'STARTTOREN':
@@ -414,6 +414,12 @@ export class LidEditorComponent implements OnInit, OnDestroy {
             }
             case 'OPMERKINGEN': {
                 if (ui?.isBeheerder || ui?.isCIMT || ui?.isRooster) {
+                    return false;
+                }
+                break;
+            }
+            case 'DIENSTEN': {
+                if (ui?.isBeheerder || ui?.isRooster) {
                     return false;
                 }
                 break;
@@ -462,8 +468,8 @@ export class LidEditorComponent implements OnInit, OnDestroy {
                 break;
             }
 
-            case 'ZELFSTART_ABONNEMENT': {
-                if (ui?.isBeheerder || ui?.isBeheerderDDWV || this.ikBenHetZelf()) {
+            case 'DIENSTEN': {
+                if (ui?.isBeheerder || ui?.isRooster) {
                     return true;
                 }
                 break;
