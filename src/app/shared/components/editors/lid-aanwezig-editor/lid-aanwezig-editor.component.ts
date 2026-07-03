@@ -168,7 +168,13 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
         if (this.aanwezig.LID_ID == ui!.ID) {
             this.storageService.opslaan("aanmeldingVeldTypes", this.aanwezig.VELD_ID, -1);
             this.storageService.opslaan("aanmeldingVoorkeurVliegtuigsTypes", this.aanwezig.VOORKEUR_VLIEGTUIG_TYPE, -1);
-            this.storageService.opslaan("aanmeldingOverlandVliegtuigID", this.aanwezig!.OVERLAND_VLIEGTUIG_ID ? this.aanwezig!.OVERLAND_VLIEGTUIG_ID.toString() : null, -1);
+
+            const overlandVliegtuig = this.vliegtuigen.find(v => v.ID == this.aanwezig!.OVERLAND_VLIEGTUIG_ID);
+            if (overlandVliegtuig?.CLUBKIST) {
+                this.storageService.verwijder("aanmeldingOverlandVliegtuigID");
+            } else {
+                this.storageService.opslaan("aanmeldingOverlandVliegtuigID", this.aanwezig!.OVERLAND_VLIEGTUIG_ID ? this.aanwezig!.OVERLAND_VLIEGTUIG_ID.toString() : null, -1);
+            }
         }
 
         // update of nieuwe aanmelding
