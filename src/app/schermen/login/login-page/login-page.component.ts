@@ -132,6 +132,6 @@ export class LoginPageComponent implements OnInit {
 
     // stuur een email met nieuw wachtwoord
     recoverEmail() {
-        this.loginService.resetWachtwoord(this.gebruikersnaam).then(() => alert("Een email met het nieuwe wachtwoord is verstuurd"));
+        this.loginService.resetWachtwoord(this.gebruikersnaam).then(() => alert("Een SMS met het nieuwe wachtwoord is verstuurd"));
     }
 }
