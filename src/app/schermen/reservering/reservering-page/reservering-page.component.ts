@@ -432,7 +432,8 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
 
     // is er een reserving die verwijderd mag worden
     magVerwijderen(datum: string, vliegtuigID: number): boolean {
-        if (this.isVerleden(datum)) {      // datum is in het verleden, verwijderen is niet meer mogelijk
+        const ui = this.loginService.userInfo;
+        if (this.isVerleden(datum) && !ui?.Userinfo?.isBeheerder) {      // datum is in het verleden, verwijderen is niet meer mogelijk, behalve voor beheerder
             return false;
         }
 
@@ -444,7 +445,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        const ui = this.loginService.userInfo;
+
         if (reservering.LID_ID == ui!.LidData!.ID) {
             return true;
         }
