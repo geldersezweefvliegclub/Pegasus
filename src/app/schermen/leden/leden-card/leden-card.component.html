@@ -70,9 +70,9 @@
                     <!-- 3e rij -->
                     <div class="d-flex w-100 justify-content-between">
                         <div *ngIf="!lid.TELEFOON"></div>
-                        <div *ngIf="lid.TELEFOON"><b>T:</b>{{ lid.TELEFOON }}</div>
+                        <div *ngIf="lid.TELEFOON"><b>T:</b><a aria-label="Bel telefoonnummer" href="tel:{{ lid.TELEFOON }}">{{ lid.TELEFOON }}</a></div>
                         <div *ngIf="!lid.MOBIEL"></div>
-                        <div *ngIf="lid.MOBIEL"><b>M:</b>{{ lid.MOBIEL }}</div>
+                        <div *ngIf="lid.MOBIEL"><b>M:</b><a aria-label="Bel mobiel nummer" href="tel:{{ lid.MOBIEL }}">{{ lid.MOBIEL }}</a></div>
                     </div>
                 </div>
             </td>
