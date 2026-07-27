@@ -1,7 +1,13 @@
 #zoekLabel {
-  margin-right: 2em;
+  margin-right: 0.5rem;
 }
 
+// breedte:100% (uit .form-control) botst met flex-wrap zodra er een label
+// of ander element voor het invoerveld staat: het veld eist dan altijd de
+// hele regel op en duwt zichzelf (en alles erna) naar een nieuwe regel.
+// Door zelf de flex-basis te bepalen deelt het veld netjes de rij met de rest.
 #zoekInput {
-  min-width: 120px;
+  width: auto;
+  flex: 1 1 120px;
+  min-width: 90px;
 }

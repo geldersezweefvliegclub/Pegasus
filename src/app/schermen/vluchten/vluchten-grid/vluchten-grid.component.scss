@@ -30,6 +30,17 @@
   margin-top: 1rem;
 }
 
+.veldSelect {
+  width: 160px;
+}
+
+// smaller op tablet/mobiel zodat Zoeken + Vliegveld op 1 regel passen
+@media (max-width: 1199.98px) {
+  .veldSelect {
+    width: 120px;
+  }
+}
+
 .downloadIcon {
   font-size: 30px;
 }
