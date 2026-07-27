@@ -1,6 +1,6 @@
 {
     "/api": {
-      "target": "http://helios.local/",
+      "target": "http://localhost:8082/php/",
       "secure": false,
       "changeOrigin": true,
       "pathRewrite": {

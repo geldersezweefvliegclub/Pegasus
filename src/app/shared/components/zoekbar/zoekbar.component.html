@@ -1,0 +1,17 @@
+<div class="d-flex justify-content-begin align-items-end flex-wrap">
+    <label id="zoekLabel" for="zoekInput" class="form-label d-none d-sm-inline">Zoeken : </label>
+    <input id="zoekInput"
+           type="search"
+           class="form-control flex-grow-1"
+           placeholder="Zoeken"
+           [ngModel]="zoekString"
+           (ngModelChange)="onInputChange($event)"
+           name="zoekString"
+           (keyup)="zoeken.emit()"
+           (search)="zoeken.emit()"
+    >
+    <app-icon-button class="toolbarBtn d-none d-md-block" iconNaam="fas Redo" (btnClicked)="zoeken.emit()"
+                     *ngIf="toonRefresh"
+                     btnColor="btn-primary"></app-icon-button>
+    <ng-content></ng-content>
+</div>

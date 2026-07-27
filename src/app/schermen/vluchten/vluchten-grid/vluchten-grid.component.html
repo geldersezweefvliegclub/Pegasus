@@ -33,8 +33,8 @@
             </div>
         </div>
 
-        <div class="d-flex flex-row justify-content-between mt-2 w-100" id="toolbar">
-            <div>
+        <div class="row justify-content-start mt-2" id="toolbar">
+            <div class="col-4">
                 <div class="d-flex flex-row">
                     <app-status-button
                             class="toolbarBtn"
@@ -69,25 +69,13 @@
                 </div>
             </div>
 
-            <div class="d-flex flex-row justify-content-between" id="zoekbar">
-                <div>
-                    <div class="d-flex justify-content-begin align-items-end text-nowrap">
-                        <div class="d-flex flex-row justify-content-between zoeken">
-                            <label id="zoekLabel" for="zoekInput" class="mt-2 form-label">Zoeken: </label>
-                            <input id="zoekInput"
-                                   type="search"
-                                   class="form-control"
-                                   [(ngModel)]="zoekString"
-                                   name="zoekString"
-                                   (keyup)="opvragen()"
-                                   (search)="opvragen()"
-                            >
-                            <app-icon-button class="toolbarBtn" iconNaam="fas Redo" (btnClicked)="opvragen()"
-                                             *ngIf="toonRefresh"
-                                             btnColor="btn-primary"></app-icon-button>
-                        </div>
-
-                        <div class="ms-2 d-flex justify-content-begin align-items-end text-nowrap"
+            <div class="col-8">
+                <div class="row justify-content-between" id="zoekbar">
+                    <app-zoekbar class="col-12 col-md-8 flex-grow-1"
+                                 [(zoekString)]="zoekString"
+                                 (zoeken)="opvragen()"
+                                 [toonRefresh]="toonRefresh">
+                        <div class="ms-2 d-flex justify-content-begin align-items-end flex-wrap"
                              *ngIf="toonVeldFilter">
 
                             <label for="VELD" class="form-label me-2">Vliegveld:</label>
@@ -103,18 +91,18 @@
                                        [(ngModel)]="vliegveld">
                             </ng-select>
                         </div>
-                    </div>
-                </div>
+                    </app-zoekbar>
 
-                <div *ngIf="!toonStartlijstKlein">
-                    <div class="d-flex justify-content-end">
-                        <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
-                                         btnColor="btn-secondary"
-                                         *ngIf="magVerwijderen && !deleteMode && inTijdspan"
-                                         (btnClicked)="deleteModeJaNee()"></app-icon-button>
-                        <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
-                                         btnColor="btn btn-outline-primary" *ngIf="deleteMode"
-                                         (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                    <div class="col-4" *ngIf="!toonStartlijstKlein">
+                        <div class="d-flex justify-content-end">
+                            <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
+                                             btnColor="btn-secondary"
+                                             *ngIf="magVerwijderen && !deleteMode && inTijdspan"
+                                             (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                            <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
+                                             btnColor="btn btn-outline-primary" *ngIf="deleteMode"
+                                             (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -57,18 +57,10 @@
                                          btnColor="btn-primary"></app-icon-button>
                     </div>
                     <div class="col-xl-8 col-sm-7">
-                        <div class="d-flex align-items-end text-nowrap" id="zoekbar" *ngIf="magWijzigen && roosterView === 'maand'">
-
-                            <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>
-                            <input id="zoekInput"
-                                   type="search"
-                                   class="form-control"
-                                   [(ngModel)]="zoekString"
-                                   name="zoekString"
-                                   (keyup)="applyLedenFilter()"
-                                   (search)="applyLedenFilter()"
-                            >
-                        </div>
+                        <app-zoekbar id="zoekbar" *ngIf="magWijzigen && roosterView === 'maand'"
+                                     [(zoekString)]="zoekString"
+                                     (zoeken)="applyLedenFilter()"
+                                     [toonRefresh]="false"></app-zoekbar>
                     </div>
                 </div>
             </div>

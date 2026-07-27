@@ -39,23 +39,11 @@
             </div>
             <div class="col-8">
                 <div class="row justify-content-between" id="zoekbar">
-                    <div class="col-12 col-sm-8 flex-grow-1" *ngIf="mode === 'nogTeDoen'"></div>
-                    <div class="col-12 col-sm-8 flex-grow-1" *ngIf="mode === 'facturen'">
-                        <div class="d-flex justify-content-begin align-items-end text-nowrap">
-                            <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>
-                            <input id="zoekInput"
-                                   type="search"
-                                   class="form-control"
-                                   [(ngModel)]="zoekString"
-                                   name="zoekString"
-                                   (keyup)="opvragen()"
-                                   (search)="opvragen()"
-                            >
-                            <app-icon-button class="toolbarBtn d-none d-md-block" iconNaam="fas Redo"
-                                             (btnClicked)="opvragen()"
-                                             btnColor="btn-primary"></app-icon-button>
-                        </div>
-                    </div>
+                    <div class="col-12 col-md-8 flex-grow-1" *ngIf="mode === 'nogTeDoen'"></div>
+                    <app-zoekbar class="col-12 col-md-8 flex-grow-1"
+                                 *ngIf="mode === 'facturen'"
+                                 [(zoekString)]="zoekString"
+                                 (zoeken)="opvragen()"></app-zoekbar>
                     <div class="col-4" *ngIf="this.magVerwijderen && this.mode === 'facturen'">
                         <div class="d-flex justify-content-end">
                             <app-icon-button class="toolbarBtn" tekst="Uploaden" iconNaam="fas BasketShopping"

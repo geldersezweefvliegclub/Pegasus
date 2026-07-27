@@ -10,6 +10,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { VliegtuigEditorComponent } from './components/editors/vliegtuig-editor/vliegtuig-editor.component';
 import { FormsModule } from '@angular/forms';
 import { IconButtonComponent } from './components/icon-button/icon-button.component';
+import { ZoekbarComponent } from './components/zoekbar/zoekbar.component';
 import { RegistratieDirective } from './components/editors/vliegtuig-editor/registratie.directive';
 import { DeleteActionComponent } from './components/datatable/delete-action/delete-action.component';
 import { RestoreActionComponent } from './components/datatable/restore-action/restore-action.component';
@@ -133,6 +134,7 @@ import {FactuurUploadenComponent} from "./components/factuur-uploaden/uploaden.c
         LoaderComponent,
         VliegtuigEditorComponent,
         IconButtonComponent,
+        ZoekbarComponent,
         RegistratieDirective,
         DeleteActionComponent,
         RestoreActionComponent,
@@ -214,6 +216,7 @@ import {FactuurUploadenComponent} from "./components/factuur-uploaden/uploaden.c
         LoaderComponent,
         VliegtuigEditorComponent,
         IconButtonComponent,
+        ZoekbarComponent,
         StartEditorComponent,
         TelefoonValidatorDirective,
         WachtwoordMatchValidatorDirective,

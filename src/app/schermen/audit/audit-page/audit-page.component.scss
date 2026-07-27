@@ -4,7 +4,7 @@
   flex-direction: column;
   justify-content: space-around;
   align-items: stretch;
-  height: calc(100vh - 195px);
+  height: calc(100dvh - 195px);
 }
 
 .row {
@@ -17,19 +17,16 @@
 }
 
 
-#zoekLabel {
-  margin-right: 2em;
-}
-#zoekInput {
-  width: 30%;
-}
-
 .data {
   flex-grow: 100;
 }
 
 #toolbar {
   flex-grow: 1;
+  position: sticky;
+  bottom: 0;
+  background-color: #fff;
+  z-index: 3;
 }
 
 .kolomRechts {

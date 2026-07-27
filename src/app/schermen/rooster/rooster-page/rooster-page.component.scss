@@ -11,6 +11,10 @@
   margin-bottom: 0;
   flex-grow: 1;
   flex-direction: column;
+  position: sticky;
+  bottom: 0;
+  background-color: #fff;
+  z-index: 3;
 }
 
 .toolbarBtn {
@@ -18,19 +22,11 @@
   margin-right: 0.4em;
 }
 
-#zoekLabel {
-  margin-right: 2em;
-}
-
-#zoekInput {
-  width: 30%;
-}
-
 #data {
   flex-grow: 100;
   flex-direction: column;
   overflow: hidden;
-  max-height: calc(100vh - 235px);
+  max-height: calc(100dvh - 235px);
 }
 .dataContent {
   display: flex;

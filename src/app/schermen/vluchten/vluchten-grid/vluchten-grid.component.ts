@@ -471,7 +471,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
                 this.starts[idx].OPMERKINGEN = start.OPMERKINGEN;
                 this.filterStarts();
-                this.grid.refreshGrid()
+                if (!this.toonStartlijstKlein) { this.grid.refreshGrid() }
             }
         }
     }
@@ -508,7 +508,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
             }
         }
         this.filterStarts();
-        this.grid.refreshGrid()
+        if (!this.toonStartlijstKlein) { this.grid.refreshGrid(); }
     }
     // keuze voor startlijst export
     exporteerStartlijst() {
