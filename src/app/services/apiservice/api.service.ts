@@ -51,6 +51,10 @@ export class APIService {
         if (!apiHeaders?.has('Authorization') && this.BearerToken) {
             apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
         }
+        // Content-Type niet zetten voor FormData - de browser moet zelf de multipart boundary bepalen
+        if (!apiHeaders?.has('Content-Type') && typeof body === 'string') {
+            apiHeaders.append('Content-Type', 'application/json');
+        }
         const response = await fetch(`${this.URL}${url}`, {
             method: 'POST',
             headers: apiHeaders,
@@ -81,6 +85,9 @@ export class APIService {
         const apiHeaders: Headers =  (headers) ? headers : new Headers();
         if (!apiHeaders?.has('Authorization') && this.BearerToken) {
             apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
+        }
+        if (!apiHeaders?.has('Content-Type')) {
+            apiHeaders.append('Content-Type', 'application/json');
         }
         const response = await fetch(`${this.URL}${url}`, {
             method: 'PUT',
