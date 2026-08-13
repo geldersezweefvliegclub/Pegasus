@@ -12,6 +12,13 @@ interface BearerToken {
     TOKEN: string;
 }
 
+interface HeliosJsLoginResponse {
+    Refresh: { AccessToken: string, ExpiresInMs: number };
+    Authentication: { AccessToken: string, ExpiresInMs: number };
+}
+
+type LoginResponse = BearerToken | HeliosJsLoginResponse;
+
 @Injectable({
     providedIn: 'root'
 })
@@ -64,9 +71,11 @@ export class LoginService  {
         const response: Response = await this.apiService.get('Login/Login', params, headers);
 
         if (response.ok) {
-            const login: BearerToken = await response.json();
-            this.storageService.opslaan("bearer", login.TOKEN);
-            this.apiService.setBearerToken(login.TOKEN);
+            const login: LoginResponse = await response.json();
+            const bearerToken = this.getAccessToken(login);
+
+            this.storageService.opslaan("bearer", bearerToken);
+            this.apiService.setBearerToken(bearerToken);
 
             await this.getUserInfo();
             this.ddwwService.loadConfigDDWV();
@@ -77,15 +86,25 @@ export class LoginService  {
         return undefined;
     }
 
+    // Bepaal de bearer token uit de login response, ongeacht of deze van de php helios backend
+    // ({TOKEN}) of van de helios.js backend ({Authentication, Refresh}) afkomstig is
+    private getAccessToken(login: LoginResponse): string {
+        if ('Authentication' in login) {
+            return login.Authentication.AccessToken;
+        }
+        return login.TOKEN;
+    }
+
     // Haal nieuw token op zodat de sessie alive blijft
     async relogin(): Promise<boolean> {
         try {
             const response: Response = await this.apiService.get('Login/Relogin');
             if (response.ok) {
-                const login: BearerToken = await response.json();
+                const login: LoginResponse = await response.json();
+                const bearerToken = this.getAccessToken(login);
 
-                this.storageService.opslaan("bearer", login.TOKEN);
-                this.apiService.setBearerToken(login.TOKEN);
+                this.storageService.opslaan("bearer", bearerToken);
+                this.apiService.setBearerToken(bearerToken);
             }
         }
         catch (_) {
