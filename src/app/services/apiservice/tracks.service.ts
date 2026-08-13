@@ -67,7 +67,6 @@ export class TracksService {
     }
 
     async updateTrack(trk: HeliosTrack) {
-        trk.LINK_ID = undefined;
         trk.INGEVOERD = undefined;
         const response: Response = await this.apiService.put('Tracks/SaveObject', JSON.stringify(trk));
 

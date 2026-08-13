@@ -102,14 +102,25 @@ export class TransactiesService {
 
 
     async addTransactie(transactie: HeliosTransactie) {
-        const response: Response = await this.apiService.post('Transacties/SaveObject', JSON.stringify(transactie));
+        const response: Response = await this.apiService.post('Transacties/SaveObject', JSON.stringify(this.naarApiFormaat(transactie)));
         return response.json();
     }
 
     async updateTransactie(transactie: HeliosTransactie) {
-        const response: Response = await this.apiService.put('Transacties/SaveObject', JSON.stringify(transactie, CustomJsonSerializer));
+        const response: Response = await this.apiService.put('Transacties/SaveObject', JSON.stringify(this.naarApiFormaat(transactie), CustomJsonSerializer));
 
         return response.json();
+    }
+
+    // TYPE_ID is een integer FK en moet als getal verstuurd worden (een <select> levert via ngModel altijd een
+    // string op). BEDRAG en EENHEDEN zijn Decimal velden in de API en moeten als string verstuurd worden,
+    // anders faalt de @IsDecimal() validatie op de server (die geen JSON-getal accepteert)
+    private naarApiFormaat(transactie: HeliosTransactie): HeliosTransactie {
+        const result: Record<string, unknown> = {...transactie};
+        if (transactie.TYPE_ID !== undefined && transactie.TYPE_ID !== null) result['TYPE_ID'] = Number(transactie.TYPE_ID);
+        if (transactie.BEDRAG !== undefined && transactie.BEDRAG !== null) result['BEDRAG'] = transactie.BEDRAG.toString();
+        if (transactie.EENHEDEN !== undefined && transactie.EENHEDEN !== null) result['EENHEDEN'] = Number(transactie.EENHEDEN);
+        return result as HeliosTransactie;
     }
 
     async deleteTransactie(id: number) {

@@ -117,13 +117,22 @@ export class TypesService {
     }
 
     async addType(t: HeliosType) {
-        const response: Response = await this.apiService.post('Types/SaveObject', JSON.stringify(t));
+        const response: Response = await this.apiService.post('Types/SaveObject', JSON.stringify(this.decimalVeldenAlsString(t)));
         return response.json();
     }
 
     async updateType(t: HeliosType) {
-        const response: Response = await this.apiService.put('Types/SaveObject', JSON.stringify(t));
+        const response: Response = await this.apiService.put('Types/SaveObject', JSON.stringify(this.decimalVeldenAlsString(t)));
         return response.json();
+    }
+
+    // BEDRAG en EENHEDEN zijn Decimal velden in de API en moeten als string verstuurd worden,
+    // anders faalt de @IsDecimal() validatie op de server (die geen JSON-getal accepteert)
+    private decimalVeldenAlsString(t: HeliosType): HeliosType {
+        const result: Record<string, unknown> = {...t};
+        if (t.BEDRAG !== undefined && t.BEDRAG !== null) result['BEDRAG'] = t.BEDRAG.toString();
+        if (t.EENHEDEN !== undefined && t.EENHEDEN !== null) result['EENHEDEN'] = t.EENHEDEN.toString();
+        return result as HeliosType;
     }
 
     async deleteType(id: number) {
