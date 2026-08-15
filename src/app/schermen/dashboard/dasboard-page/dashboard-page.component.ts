@@ -350,6 +350,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
                                         children: [
                                             new ImageRun({
                                                 data: image,
+                                                type: "png",
                                                 transformation: {
                                                     width: imgHoogte,
                                                     height: imgBreedte,
