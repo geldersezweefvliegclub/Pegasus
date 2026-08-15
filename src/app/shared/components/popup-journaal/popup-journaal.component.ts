@@ -7,9 +7,10 @@ import { Subscription } from 'rxjs';
 import { SharedService } from '../../../services/shared/shared.service';
 
 @Component({
-  selector: 'app-popup-journaal',
-  templateUrl: './popup-journaal.component.html',
-  styleUrls: ['./popup-journaal.component.scss']
+    selector: 'app-popup-journaal',
+    templateUrl: './popup-journaal.component.html',
+    styleUrls: ['./popup-journaal.component.scss'],
+    standalone: false
 })
 export class PopupJournaalComponent implements OnInit, OnDestroy {
   @ViewChild(ModalComponent) private popup: ModalComponent;

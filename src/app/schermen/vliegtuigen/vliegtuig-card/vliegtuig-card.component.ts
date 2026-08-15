@@ -5,9 +5,10 @@ import { SharedService } from '../../../services/shared/shared.service';
 import { HeliosVliegtuigenDatasetExtended } from '../vliegtuigen-scherm/vliegtuigen-scherm.component';
 
 @Component({
-  selector: 'app-vliegtuig-card',
-  templateUrl: './vliegtuig-card.component.html',
-  styleUrls: ['./vliegtuig-card.component.scss']
+    selector: 'app-vliegtuig-card',
+    templateUrl: './vliegtuig-card.component.html',
+    styleUrls: ['./vliegtuig-card.component.scss'],
+    standalone: false
 })
 export class VliegtuigCardComponent  {
   @Input() vliegtuig: HeliosVliegtuigenDatasetExtended;

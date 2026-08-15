@@ -12,7 +12,8 @@ import { DienstenService } from '../../../../services/apiservice/diensten.servic
 @Component({
     selector: 'app-dienst-editor',
     templateUrl: './dienst-editor.component.html',
-    styleUrls: ['./dienst-editor.component.scss']
+    styleUrls: ['./dienst-editor.component.scss'],
+    standalone: false
 })
 export class DienstEditorComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private popup: ModalComponent;

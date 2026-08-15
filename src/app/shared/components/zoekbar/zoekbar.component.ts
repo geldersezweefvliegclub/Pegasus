@@ -3,7 +3,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 @Component({
     selector: 'app-zoekbar',
     templateUrl: './zoekbar.component.html',
-    styleUrls: ['./zoekbar.component.scss']
+    styleUrls: ['./zoekbar.component.scss'],
+    standalone: false
 })
 export class ZoekbarComponent {
     @Input() zoekString: string;

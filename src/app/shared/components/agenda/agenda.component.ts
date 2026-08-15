@@ -5,9 +5,10 @@ import { DateTime } from 'luxon';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-agenda',
-  templateUrl: './agenda.component.html',
-  styleUrls: ['./agenda.component.scss']
+    selector: 'app-agenda',
+    templateUrl: './agenda.component.html',
+    styleUrls: ['./agenda.component.scss'],
+    standalone: false
 })
 export class AgendaComponent implements OnInit {
 

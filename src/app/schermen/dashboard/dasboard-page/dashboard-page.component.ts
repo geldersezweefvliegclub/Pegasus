@@ -49,7 +49,8 @@ import { DdwvService } from '../../../services/apiservice/ddwv.service';
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard-page.component.html',
-    styleUrls: ['./dashboard-page.component.scss']
+    styleUrls: ['./dashboard-page.component.scss'],
+    standalone: false
 })
 export class DashboardPageComponent implements OnInit, OnDestroy {
     readonly iconCardIcon: IconDefinition = faChartPie;

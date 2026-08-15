@@ -14,7 +14,8 @@ import { ModalComponent } from '../../modal/modal.component';
 @Component({
     selector: 'app-recency-grafiek',
     templateUrl: './recency-grafiek.component.html',
-    styleUrls: ['./recency-grafiek.component.scss']
+    styleUrls: ['./recency-grafiek.component.scss'],
+    standalone: false
 })
 
 export class RecencyGrafiekComponent implements OnInit {

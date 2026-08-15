@@ -4,9 +4,10 @@ import { ICellRendererParams } from 'ag-grid-community';
 
 
 @Component({
-  selector: 'app-icon-render',
-  templateUrl: './icon-render.component.html',
-  styleUrls: ['./icon-render.component.scss']
+    selector: 'app-icon-render',
+    templateUrl: './icon-render.component.html',
+    styleUrls: ['./icon-render.component.scss'],
+    standalone: false
 })
 export class IconRenderComponent implements AgRendererComponent {
   toonPax = false;

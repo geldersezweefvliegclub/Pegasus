@@ -16,7 +16,8 @@ type HeliosTypeExtended = HeliosType & {
 @Component({
     selector: 'app-lid-aanwezig-editor',
     templateUrl: './lid-aanwezig-editor.component.html',
-    styleUrls: ['./lid-aanwezig-editor.component.scss']
+    styleUrls: ['./lid-aanwezig-editor.component.scss'],
+    standalone: false
 })
 export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private popup: ModalComponent;

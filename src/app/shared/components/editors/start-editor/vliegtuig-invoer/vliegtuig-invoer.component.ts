@@ -6,7 +6,8 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 @Component({
     selector: 'app-vliegtuig-invoer',
     templateUrl: './vliegtuig-invoer.component.html',
-    styleUrls: ['./vliegtuig-invoer.component.scss']
+    styleUrls: ['./vliegtuig-invoer.component.scss'],
+    standalone: false
 })
 export class VliegtuigInvoerComponent implements OnInit, OnChanges {
     @Input() vliegtuigen: HeliosVliegtuigenDataset[] = [];

@@ -11,7 +11,8 @@ import { HeliosUserinfo } from '../../../types/Helios';
     selector: 'app-profile',
     templateUrl: './profiel-page.component.html',
     styleUrls: ['./profiel-page.component.scss'],
-    providers: [{provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter}]
+    providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
+    standalone: false
 })
 export class ProfielPageComponent {
     lidID: number;

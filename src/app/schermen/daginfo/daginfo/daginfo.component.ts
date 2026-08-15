@@ -28,7 +28,8 @@ import {
 @Component({
     selector: 'app-daginfo',
     templateUrl: './daginfo.component.html',
-    styleUrls: ['./daginfo.component.scss']
+    styleUrls: ['./daginfo.component.scss'],
+    standalone: false
 })
 export class DaginfoComponent implements OnInit, OnDestroy{
     @ViewChild(DagRoosterComponent) dienstenWizard: DagRoosterComponent;

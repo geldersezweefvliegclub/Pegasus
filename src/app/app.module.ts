@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA, inject, provideAppInitializer } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './main-layout/app/app.component';
 import { SharedModule } from './shared/shared.module';
@@ -46,7 +46,10 @@ export function initializeApp(appConfigService: PegasusConfigService) {
     ],
     providers: [
         PegasusConfigService,
-        {provide: APP_INITIALIZER, useFactory: initializeApp, deps: [PegasusConfigService], multi: true}
+        provideAppInitializer(() => {
+        const initializerFn = (initializeApp)(inject(PegasusConfigService));
+        return initializerFn();
+      })
     ],
     bootstrap: [AppComponent],
 

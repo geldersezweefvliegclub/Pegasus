@@ -10,7 +10,8 @@ import { PegasusConfigService } from '../../../services/shared/pegasus-config.se
 @Component({
     selector: 'app-samenvatting',
     templateUrl: './samenvatting.component.html',
-    styleUrls: ['./samenvatting.component.scss']
+    styleUrls: ['./samenvatting.component.scss'],
+    standalone: false
 })
 export class SamenvattingComponent {
     @ViewChild(ModalComponent) private popup: ModalComponent;

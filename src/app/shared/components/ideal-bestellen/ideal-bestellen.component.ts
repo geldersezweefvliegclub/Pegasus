@@ -10,7 +10,8 @@ import { TypesService } from '../../../services/apiservice/types.service';
 @Component({
     selector: 'app-ideal-bestellen',
     templateUrl: './ideal-bestellen.component.html',
-    styleUrls: ['./ideal-bestellen.component.scss']
+    styleUrls: ['./ideal-bestellen.component.scss'],
+    standalone: false
 })
 export class IdealBestellenComponent implements OnInit{
     @ViewChild(ModalComponent) private popup: ModalComponent;

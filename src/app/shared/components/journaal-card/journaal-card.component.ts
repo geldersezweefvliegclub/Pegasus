@@ -7,7 +7,8 @@ import { JournaalEditorComponent } from '../editors/journaal-editor/journaal-edi
 @Component({
     selector: 'app-journaal-card',
     templateUrl: './journaal-card.component.html',
-    styleUrls: ['./journaal-card.component.scss']
+    styleUrls: ['./journaal-card.component.scss'],
+    standalone: false
 })
 export class JournaalCardComponent implements OnInit {
     @Input() melding: HeliosJournaalDataset;

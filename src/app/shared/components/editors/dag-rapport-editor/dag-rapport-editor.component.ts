@@ -17,7 +17,8 @@ import { DagRapportenService } from '../../../../services/apiservice/dag-rapport
 @Component({
     selector: 'app-dag-rapport-editor',
     templateUrl: './dag-rapport-editor.component.html',
-    styleUrls: ['./dag-rapport-editor.component.scss']
+    styleUrls: ['./dag-rapport-editor.component.scss'],
+    standalone: false
 })
 export class DagRapportEditorComponent implements OnInit, OnDestroy {
     @Input() veld_id: number | undefined;

@@ -34,7 +34,8 @@ interface JaarTotaal {
 @Component({
     selector: 'app-jaar-totalen',
     templateUrl: './jaar-totalen.component.html',
-    styleUrls: ['./jaar-totalen.component.scss']
+    styleUrls: ['./jaar-totalen.component.scss'],
+    standalone: false
 })
 export class JaarTotalenComponent implements OnInit {
     @Input() leden: HeliosLedenDataset[];

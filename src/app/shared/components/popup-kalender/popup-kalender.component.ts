@@ -4,9 +4,10 @@ import { Subscription } from 'rxjs';
 import { SharedService } from '../../../services/shared/shared.service';
 
 @Component({
-  selector: 'app-popup-kalender',
-  templateUrl: './popup-kalender.component.html',
-  styleUrls: ['./popup-kalender.component.scss']
+    selector: 'app-popup-kalender',
+    templateUrl: './popup-kalender.component.html',
+    styleUrls: ['./popup-kalender.component.scss'],
+    standalone: false
 })
 export class PopupKalenderComponent implements OnInit, OnDestroy {
   @ViewChild(ModalComponent) private popup: ModalComponent;

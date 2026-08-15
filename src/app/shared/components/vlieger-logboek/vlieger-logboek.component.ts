@@ -30,7 +30,8 @@ type HeliosLogboekDatasetExtended = HeliosLogboekDataset & {
 @Component({
     selector: 'app-vlieger-logboek',
     templateUrl: './vlieger-logboek.component.html',
-    styleUrls: ['./vlieger-logboek.component.scss']
+    styleUrls: ['./vlieger-logboek.component.scss'],
+    standalone: false
 })
 
 export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {

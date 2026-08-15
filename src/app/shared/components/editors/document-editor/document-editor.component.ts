@@ -7,7 +7,8 @@ import { DocumentenService } from '../../../../services/apiservice/documenten.se
 @Component({
     selector: 'app-document-editor',
     templateUrl: './document-editor.component.html',
-    styleUrls: ['./document-editor.component.scss']
+    styleUrls: ['./document-editor.component.scss'],
+    standalone: false
 })
 export class DocumentEditorComponent {
     @ViewChild(ModalComponent) private popup: ModalComponent;

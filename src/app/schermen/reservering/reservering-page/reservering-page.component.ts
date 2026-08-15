@@ -35,7 +35,8 @@ export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
 @Component({
     selector: 'app-reservering-page',
     templateUrl: './reservering-page.component.html',
-    styleUrls: ['./reservering-page.component.scss']
+    styleUrls: ['./reservering-page.component.scss'],
+    standalone: false
 })
 export class ReserveringPageComponent implements OnInit, OnDestroy {
     @ViewChild(KistSelectieComponent) kistSelector: KistSelectieComponent;

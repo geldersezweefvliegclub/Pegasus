@@ -9,7 +9,8 @@ import { DdwvService } from '../../../../services/apiservice/ddwv.service';
 @Component({
     selector: 'app-uitbetalen-ddwv-crew-editor',
     templateUrl: './uitbetalen-ddwv-crew-editor.component.html',
-    styleUrls: ['./uitbetalen-ddwv-crew-editor.component.scss']
+    styleUrls: ['./uitbetalen-ddwv-crew-editor.component.scss'],
+    standalone: false
 })
 export class UitbetalenDdwvCrewEditorComponent  {
     @ViewChild(ModalComponent) private popup: ModalComponent;

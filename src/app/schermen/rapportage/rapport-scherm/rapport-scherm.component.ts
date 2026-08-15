@@ -7,7 +7,8 @@ import { Rapport } from '../../../types/IPegasusConfig';
 @Component({
     selector: 'app-rapport-scherm',
     templateUrl: './rapport-scherm.component.html',
-    styleUrls: ['./rapport-scherm.component.scss']
+    styleUrls: ['./rapport-scherm.component.scss'],
+    standalone: false
 })
 export class RapportSchermComponent implements OnInit {
     rapporten: Rapport[] = [];

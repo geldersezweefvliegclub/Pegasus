@@ -19,9 +19,10 @@ import { GefactureerdRenderComponent } from './gefactureerd-render/gefactureerd-
 import { FactuurUploadenComponent } from '../../../shared/components/factuur-uploaden/uploaden.component';
 
 @Component({
-  selector: 'app-facturen-scherm',
-  templateUrl: './facturen-scherm.component.html',
-  styleUrls: ['./facturen-scherm.component.scss']
+    selector: 'app-facturen-scherm',
+    templateUrl: './facturen-scherm.component.html',
+    styleUrls: ['./facturen-scherm.component.scss'],
+    standalone: false
 })
 export class FacturenSchermComponent implements OnInit, OnDestroy {
   @ViewChild(DatatableComponent) grid: DatatableComponent;

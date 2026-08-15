@@ -27,7 +27,8 @@ export interface TracksLedenDataset extends HeliosTracksDataset {
 @Component({
     selector: 'app-tracks',
     templateUrl: './tracks.component.html',
-    styleUrls: ['./tracks.component.scss']
+    styleUrls: ['./tracks.component.scss'],
+    standalone: false
 })
 export class TracksComponent implements OnInit, OnDestroy, OnChanges {
     @Input() VliegerID: number;

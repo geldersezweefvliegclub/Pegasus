@@ -12,7 +12,8 @@ import { IdealBestellenComponent } from '../ideal-bestellen/ideal-bestellen.comp
 @Component({
     selector: 'app-transacties',
     templateUrl: './transacties.component.html',
-    styleUrls: ['./transacties.component.scss']
+    styleUrls: ['./transacties.component.scss'],
+    standalone: false
 })
 export class TransactiesComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private popup: ModalComponent;

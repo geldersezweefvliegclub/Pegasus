@@ -2,9 +2,10 @@ import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } fro
 import { ErrorMessage } from '../../../types/Utils';
 
 @Component({
-  selector: 'app-error',
-  templateUrl: './error.component.html',
-  styleUrls: ['./error.component.scss']
+    selector: 'app-error',
+    templateUrl: './error.component.html',
+    styleUrls: ['./error.component.scss'],
+    standalone: false
 })
 export class ErrorComponent implements OnChanges{
   @Input() error: ErrorMessage | undefined = undefined;

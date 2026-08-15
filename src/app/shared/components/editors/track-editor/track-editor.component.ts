@@ -11,7 +11,8 @@ import { TracksLedenDataset } from '../../tracks/tracks.component';
 @Component({
     selector: 'app-track-editor',
     templateUrl: './track-editor.component.html',
-    styleUrls: ['./track-editor.component.scss']
+    styleUrls: ['./track-editor.component.scss'],
+    standalone: false
 })
 export class TrackEditorComponent implements OnInit{
     @ViewChild(ModalComponent) private popup: ModalComponent;

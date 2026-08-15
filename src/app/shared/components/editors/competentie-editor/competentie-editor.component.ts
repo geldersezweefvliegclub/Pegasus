@@ -14,7 +14,8 @@ export interface CompetentieLijst {
 @Component({
     selector: 'app-competentie-editor',
     templateUrl: './competentie-editor.component.html',
-    styleUrls: ['./competentie-editor.component.scss']
+    styleUrls: ['./competentie-editor.component.scss'],
+    standalone: false
 })
 export class CompetentieEditorComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private popup: ModalComponent;

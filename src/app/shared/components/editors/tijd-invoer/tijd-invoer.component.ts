@@ -21,6 +21,8 @@ enum TypeTijdInvoer {
     templateUrl: './tijd-invoer.component.html',
     styleUrls: ['./tijd-invoer.component.scss'],
     providers: [NgbTypeaheadConfig] // add NgbTypeaheadConfig to the component providers
+    ,
+    standalone: false
 })
 
 export class TijdInvoerComponent {

@@ -5,7 +5,8 @@ import { ICellRendererParams } from 'ag-grid-community';
 @Component({
     selector: 'app-status-render',
     templateUrl: './status-render.component.html',
-    styleUrls: ['./status-render.component.scss']
+    styleUrls: ['./status-render.component.scss'],
+    standalone: false
 })
 
 

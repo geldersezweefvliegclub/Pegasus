@@ -28,7 +28,8 @@ import { DateTime } from 'luxon';
 @Component({
     selector: 'app-progressie-editor',
     templateUrl: './progressie-editor.component.html',
-    styleUrls: ['./progressie-editor.component.scss']
+    styleUrls: ['./progressie-editor.component.scss'],
+    standalone: false
 })
 export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
     @ViewChild(ModalComponent) private popup: ModalComponent;

@@ -14,7 +14,8 @@ import { ModalComponent } from '../../modal/modal.component';
 @Component({
     selector: 'app-start-grafiek',
     templateUrl: './start-grafiek.component.html',
-    styleUrls: ['./start-grafiek.component.scss']
+    styleUrls: ['./start-grafiek.component.scss'],
+    standalone: false
 })
 
 export class StartGrafiekComponent implements OnInit {

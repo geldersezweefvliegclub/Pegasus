@@ -7,7 +7,8 @@ import { Subscription } from 'rxjs';
 @Component({
     selector: 'app-status-button',
     templateUrl: './status-button.component.html',
-    styleUrls: ['./status-button.component.scss']
+    styleUrls: ['./status-button.component.scss'],
+    standalone: false
 })
 export class StatusButtonComponent implements OnInit, OnDestroy {
     @Input() tekst = '';

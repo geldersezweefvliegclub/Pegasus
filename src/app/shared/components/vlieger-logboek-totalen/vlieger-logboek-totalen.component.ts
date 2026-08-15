@@ -9,7 +9,8 @@ import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
 @Component({
     selector: 'app-vlieger-logboek-totalen',
     templateUrl: './vlieger-logboek-totalen.component.html',
-    styleUrls: ['./vlieger-logboek-totalen.component.scss']
+    styleUrls: ['./vlieger-logboek-totalen.component.scss'],
+    standalone: false
 })
 export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDestroy {
     @Input() VliegerID: number;

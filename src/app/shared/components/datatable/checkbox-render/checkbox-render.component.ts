@@ -4,9 +4,10 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-checkbox-render',
-  templateUrl: './checkbox-render.component.html',
-  styleUrls: ['./checkbox-render.component.scss']
+    selector: 'app-checkbox-render',
+    templateUrl: './checkbox-render.component.html',
+    styleUrls: ['./checkbox-render.component.scss'],
+    standalone: false
 })
 export class CheckboxRenderComponent implements AgRendererComponent {
   boolWaarde = false;

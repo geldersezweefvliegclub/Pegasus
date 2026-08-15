@@ -7,7 +7,8 @@ import { LoginService } from '../../../services/apiservice/login.service';
 @Component({
     selector: 'app-leden-filter',
     templateUrl: './leden-filter.component.html',
-    styleUrls: ['./leden-filter.component.scss']
+    styleUrls: ['./leden-filter.component.scss'],
+    standalone: false
 })
 
 export class LedenFilterComponent {

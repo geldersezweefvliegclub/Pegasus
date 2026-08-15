@@ -6,7 +6,8 @@ import { LoginService } from '../../../services/apiservice/login.service';
 @Component({
     selector: 'app-leden-card',
     templateUrl: './leden-card.component.html',
-    styleUrls: ['./leden-card.component.scss']
+    styleUrls: ['./leden-card.component.scss'],
+    standalone: false
 })
 export class LedenCardComponent implements OnInit {
     @Input() lid: HeliosLedenDataset;

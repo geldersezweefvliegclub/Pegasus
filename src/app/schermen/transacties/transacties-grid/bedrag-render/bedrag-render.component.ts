@@ -5,7 +5,8 @@ import { AgRendererComponent } from 'ag-grid-angular';
 @Component({
     selector: 'app-bedrag-render',
     templateUrl: './bedrag-render.component.html',
-    styleUrls: ['./bedrag-render.component.scss']
+    styleUrls: ['./bedrag-render.component.scss'],
+    standalone: false
 })
 export class BedragRenderComponent implements AgRendererComponent {
     bedrag: number | undefined;

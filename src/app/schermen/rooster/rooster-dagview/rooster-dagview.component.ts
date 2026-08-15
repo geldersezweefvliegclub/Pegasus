@@ -25,7 +25,8 @@ import {
 @Component({
     selector: 'app-rooster-dagview',
     templateUrl: './rooster-dagview.component.html',
-    styleUrls: ['./rooster-dagview.component.scss']
+    styleUrls: ['./rooster-dagview.component.scss'],
+    standalone: false
 })
 export class RoosterDagviewComponent implements OnInit, OnDestroy {
     @Input() rooster: HeliosRoosterDagExtended[];

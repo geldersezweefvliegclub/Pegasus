@@ -4,9 +4,10 @@ import { AgRendererComponent } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 
 @Component({
-  selector: 'app-naam-render',
-  templateUrl: './naam-render.component.html',
-  styleUrls: ['./naam-render.component.scss']
+    selector: 'app-naam-render',
+    templateUrl: './naam-render.component.html',
+    styleUrls: ['./naam-render.component.scss'],
+    standalone: false
 })
 export class NaamRenderComponent implements AgRendererComponent {
   naam: string;

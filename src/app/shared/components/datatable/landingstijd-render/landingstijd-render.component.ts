@@ -8,9 +8,10 @@ export interface TijdButton {
 }
 
 @Component({
-  selector: 'app-landingstijd-render',
-  templateUrl: './landingstijd-render.component.html',
-  styleUrls: ['./landingstijd-render.component.scss']
+    selector: 'app-landingstijd-render',
+    templateUrl: './landingstijd-render.component.html',
+    styleUrls: ['./landingstijd-render.component.scss'],
+    standalone: false
 })
 
 

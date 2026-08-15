@@ -13,7 +13,8 @@ import { LedenService } from '../../../services/apiservice/leden.service';
 @Component({
     selector: 'app-login-page',
     templateUrl: './login-page.component.html',
-    styleUrls: ['./login-page.component.scss']
+    styleUrls: ['./login-page.component.scss'],
+    standalone: false
 })
 
 export class LoginPageComponent implements OnInit {

@@ -17,7 +17,8 @@ import { LoginService } from '../../../services/apiservice/login.service';
 @Component({
     selector: 'app-documenten-scherm',
     templateUrl: './documenten-scherm.component.html',
-    styleUrls: ['./documenten-scherm.component.scss']
+    styleUrls: ['./documenten-scherm.component.scss'],
+    standalone: false
 })
 export class DocumentenSchermComponent implements OnInit, OnDestroy {
     @ViewChild(DocumentEditorComponent) editor: DocumentEditorComponent;

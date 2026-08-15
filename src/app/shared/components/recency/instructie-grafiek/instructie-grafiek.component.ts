@@ -11,7 +11,8 @@ import { SharedService } from '../../../../services/shared/shared.service';
 @Component({
     selector: 'app-instructie-grafiek',
     templateUrl: './instructie-grafiek.component.html',
-    styleUrls: ['./instructie-grafiek.component.scss']
+    styleUrls: ['./instructie-grafiek.component.scss'],
+    standalone: false
 })
 export class InstructieGrafiekComponent implements OnInit {
     @Input() VliegerID: number;

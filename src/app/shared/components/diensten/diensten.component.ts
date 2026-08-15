@@ -11,7 +11,8 @@ import { LoginService } from '../../../services/apiservice/login.service';
 @Component({
     selector: 'app-diensten',
     templateUrl: './diensten.component.html',
-    styleUrls: ['./diensten.component.scss']
+    styleUrls: ['./diensten.component.scss'],
+    standalone: false
 })
 export class DienstenComponent implements OnInit, OnChanges {
     @Input() Vlieger: HeliosLid;

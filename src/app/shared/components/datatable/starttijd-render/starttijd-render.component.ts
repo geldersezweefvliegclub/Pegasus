@@ -8,9 +8,10 @@ export interface TijdButton {
 }
 
 @Component({
-  selector: 'app-starttijd-render',
-  templateUrl: './starttijd-render.component.html',
-  styleUrls: ['./starttijd-render.component.scss']
+    selector: 'app-starttijd-render',
+    templateUrl: './starttijd-render.component.html',
+    styleUrls: ['./starttijd-render.component.scss'],
+    standalone: false
 })
 
 export class StarttijdRenderComponent implements AgRendererComponent {

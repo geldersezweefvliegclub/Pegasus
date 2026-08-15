@@ -7,9 +7,10 @@ import {HeliosTransactiesDataset} from "../../../types/Helios";
 import {DateTime} from "luxon";
 
 @Component({
-  selector: 'app-factuur-uploaden',
-  templateUrl: './uploaden.component.html',
-  styleUrls: ['./uploaden.component.scss']
+    selector: 'app-factuur-uploaden',
+    templateUrl: './uploaden.component.html',
+    styleUrls: ['./uploaden.component.scss'],
+    standalone: false
 })
 export class FactuurUploadenComponent implements OnInit {
   @ViewChild(ModalComponent) private popup: ModalComponent;

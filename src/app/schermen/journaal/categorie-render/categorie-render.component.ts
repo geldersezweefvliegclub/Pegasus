@@ -5,7 +5,8 @@ import { ICellRendererParams } from 'ag-grid-community';
 @Component({
     selector: 'app-categorie-render',
     templateUrl: './categorie-render.component.html',
-    styleUrls: ['./categorie-render.component.scss']
+    styleUrls: ['./categorie-render.component.scss'],
+    standalone: false
 })
 
 export class CategorieRenderComponent implements AgRendererComponent {

@@ -7,7 +7,8 @@ import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 @Component({
     selector: 'app-modal',
     templateUrl: './modal.component.html',
-    styleUrls: ['./modal.component.scss']
+    styleUrls: ['./modal.component.scss'],
+    standalone: false
 })
 export class ModalComponent {
     @Input() titel = 'Editor';

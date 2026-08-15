@@ -14,7 +14,8 @@ import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 @Component({
     selector: 'app-vlucht-card',
     templateUrl: './vlucht-card.component.html',
-    styleUrls: ['./vlucht-card.component.scss']
+    styleUrls: ['./vlucht-card.component.scss'],
+    standalone: false
 })
 export class VluchtCardComponent implements OnInit {
     @Input() logboek: HeliosLogboekDataset;

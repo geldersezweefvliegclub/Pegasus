@@ -3,9 +3,10 @@ import { AgRendererComponent } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 
 @Component({
-  selector: 'app-handboek-render',
-  templateUrl: './handboek-render.component.html',
-  styleUrls: ['./handboek-render.component.scss']
+    selector: 'app-handboek-render',
+    templateUrl: './handboek-render.component.html',
+    styleUrls: ['./handboek-render.component.scss'],
+    standalone: false
 })
 export class HandboekRenderComponent implements AgRendererComponent {
   url: string | undefined;

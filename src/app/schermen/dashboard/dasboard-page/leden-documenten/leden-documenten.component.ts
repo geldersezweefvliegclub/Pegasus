@@ -17,7 +17,8 @@ import { DocumentenService } from '../../../../services/apiservice/documenten.se
 @Component({
     selector: 'app-leden-documenten',
     templateUrl: './leden-documenten.component.html',
-    styleUrls: ['./leden-documenten.component.scss']
+    styleUrls: ['./leden-documenten.component.scss'],
+    standalone: false
 })
 export class LedenDocumentenComponent implements OnInit {
     @Input() LidID: number;

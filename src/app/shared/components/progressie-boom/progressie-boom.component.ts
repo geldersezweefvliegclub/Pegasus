@@ -22,7 +22,8 @@ export class ProgressieTreeviewItem extends TreeviewItem {
 @Component({
     selector: 'app-progressie-boom',
     templateUrl: './progressie-boom.component.html',
-    styleUrls: ['./progressie-boom.component.scss']
+    styleUrls: ['./progressie-boom.component.scss'],
+    standalone: false
 })
 
 export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {

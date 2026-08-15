@@ -51,7 +51,8 @@ export interface WeergaveData {
 @Component({
     selector: 'app-rooster-page',
     templateUrl: './rooster-page.component.html',
-    styleUrls: ['./rooster-page.component.scss']
+    styleUrls: ['./rooster-page.component.scss'],
+    standalone: false
 })
 export class RoosterPageComponent implements OnInit, OnDestroy {
     @ViewChild(LedenFilterComponent) ledenFilter: LedenFilterComponent;

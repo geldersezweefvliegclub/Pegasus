@@ -7,7 +7,8 @@ import { LoginService } from '../../../services/apiservice/login.service';
 @Component({
     selector: 'app-inzittende-render',
     templateUrl: './achterin-render.component.html',
-    styleUrls: ['./achterin-render.component.scss']
+    styleUrls: ['./achterin-render.component.scss'],
+    standalone: false
 })
 
 export class AchterinRenderComponent implements AgRendererComponent {

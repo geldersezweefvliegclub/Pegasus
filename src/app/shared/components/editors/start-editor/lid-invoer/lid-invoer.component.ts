@@ -7,7 +7,8 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 @Component({
     selector: 'app-lid-invoer',
     templateUrl: './lid-invoer.component.html',
-    styleUrls: ['./lid-invoer.component.scss']
+    styleUrls: ['./lid-invoer.component.scss'],
+    standalone: false
 })
 export class LidInvoerComponent implements OnInit, OnChanges {
     @Input() leden: HeliosLedenDataset[] = [];

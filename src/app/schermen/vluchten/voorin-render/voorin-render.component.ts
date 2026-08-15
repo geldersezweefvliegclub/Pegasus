@@ -7,7 +7,8 @@ import { LoginService } from '../../../services/apiservice/login.service';
 @Component({
     selector: 'app-vlieger-render',
     templateUrl: './voorin-render.component.html',
-    styleUrls: ['./voorin-render.component.scss']
+    styleUrls: ['./voorin-render.component.scss'],
+    standalone: false
 })
 export class VoorinRenderComponent implements AgRendererComponent {
     lidID: string;

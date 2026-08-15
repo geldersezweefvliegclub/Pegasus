@@ -9,9 +9,10 @@ interface FlarmDataExt extends FlarmData {
     flarmOntvangstStatusClass?: string;
 }
 @Component({
-  selector: 'app-flarm-lijst',
-  templateUrl: './flarm-lijst.component.html',
-  styleUrls: ['./flarm-lijst.component.scss']
+    selector: 'app-flarm-lijst',
+    templateUrl: './flarm-lijst.component.html',
+    styleUrls: ['./flarm-lijst.component.scss'],
+    standalone: false
 })
 export class FlarmLijstComponent implements OnInit, OnDestroy, OnChanges {
   @Input() veldID: number | undefined

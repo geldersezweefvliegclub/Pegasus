@@ -3,9 +3,10 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { AgRendererComponent } from 'ag-grid-angular';
 
 @Component({
-  selector: 'app-type-render',
-  templateUrl: './type-render.component.html',
-  styleUrls: ['./type-render.component.scss']
+    selector: 'app-type-render',
+    templateUrl: './type-render.component.html',
+    styleUrls: ['./type-render.component.scss'],
+    standalone: false
 })
 export class TypeRenderComponent implements AgRendererComponent {
   gridTekst: string | undefined

@@ -12,7 +12,8 @@ export interface buttonClicked {
 @Component({
     selector: 'app-track-render',
     templateUrl: './track-render.component.html',
-    styleUrls: ['./track-render.component.scss']
+    styleUrls: ['./track-render.component.scss'],
+    standalone: false
 })
 export class TrackRenderComponent implements AgRendererComponent {
     params: ICellRendererParams & buttonClicked;

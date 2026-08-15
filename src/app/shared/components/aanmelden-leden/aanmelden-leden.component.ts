@@ -19,7 +19,8 @@ import { DaginfoService } from '../../../services/apiservice/daginfo.service';
 @Component({
     selector: 'app-aanmelden-leden',
     templateUrl: './aanmelden-leden.component.html',
-    styleUrls: ['./aanmelden-leden.component.scss']
+    styleUrls: ['./aanmelden-leden.component.scss'],
+    standalone: false
 })
 
 export class AanmeldenLedenComponent implements OnInit, OnDestroy {

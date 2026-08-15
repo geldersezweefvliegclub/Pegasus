@@ -3,9 +3,10 @@ import { AgRendererComponent } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 
 @Component({
-  selector: 'app-title-render',
-  templateUrl: './title-render.component.html',
-  styleUrls: ['./title-render.component.scss']
+    selector: 'app-title-render',
+    templateUrl: './title-render.component.html',
+    styleUrls: ['./title-render.component.scss'],
+    standalone: false
 })
 export class TitleRenderComponent implements AgRendererComponent {
   omschrijving: string

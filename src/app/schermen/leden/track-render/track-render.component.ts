@@ -8,9 +8,10 @@ interface onTrackClicked {
     onTrackClicked(id: string, naam: string): void;
 }
 @Component({
-  selector: 'app-track-render',
-  templateUrl: './track-render.component.html',
-  styleUrls: ['./track-render.component.scss']
+    selector: 'app-track-render',
+    templateUrl: './track-render.component.html',
+    styleUrls: ['./track-render.component.scss'],
+    standalone: false
 })
 export class TrackRenderComponent implements AgRendererComponent {
   private params: ICellRendererParams & onTrackClicked;

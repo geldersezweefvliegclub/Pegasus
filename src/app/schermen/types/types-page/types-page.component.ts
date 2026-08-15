@@ -17,7 +17,8 @@ import { SharedService } from '../../../services/shared/shared.service';
 @Component({
     selector: 'app-types-page',
     templateUrl: './types-page.component.html',
-    styleUrls: ['./types-page.component.scss']
+    styleUrls: ['./types-page.component.scss'],
+    standalone: false
 })
 export class TypesPageComponent implements OnInit, OnDestroy {
     @ViewChild(TypeEditorComponent) editor: TypeEditorComponent;

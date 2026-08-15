@@ -7,7 +7,8 @@ import { ModalComponent } from '../../../modal/modal.component';
 @Component({
     selector: 'app-compose-meteo',
     templateUrl: './compose-meteo.component.html',
-    styleUrls: ['./compose-meteo.component.scss']
+    styleUrls: ['./compose-meteo.component.scss'],
+    standalone: false
 })
 export class ComposeMeteoComponent {
     @Output() opslaan: EventEmitter<string> = new EventEmitter<string>();

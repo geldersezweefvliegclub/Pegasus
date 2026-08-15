@@ -10,7 +10,8 @@ import { journaalFilter } from '../../../services/apiservice/journaal.service';
 @Component({
     selector: 'app-meldingen-filter',
     templateUrl: './journaal-filter.component.html',
-    styleUrls: ['./journaal-filter.component.scss']
+    styleUrls: ['./journaal-filter.component.scss'],
+    standalone: false
 })
 export class JournaalFilterComponent implements OnInit, OnDestroy {
     @Input() activeFilter: journaalFilter;

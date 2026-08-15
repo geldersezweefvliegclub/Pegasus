@@ -13,7 +13,8 @@ import { DaginfoService } from '../../../services/apiservice/daginfo.service';
 @Component({
     selector: 'app-aanmelden-vliegtuig',
     templateUrl: './aanmelden-vliegtuig.component.html',
-    styleUrls: ['./aanmelden-vliegtuig.component.scss']
+    styleUrls: ['./aanmelden-vliegtuig.component.scss'],
+    standalone: false
 })
 export class AanmeldenVliegtuigComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private popup: ModalComponent;

@@ -13,7 +13,8 @@ import { Check, Overig } from '../../../types/IPegasusConfig';
 @Component({
     selector: 'app-status',
     templateUrl: './status.component.html',
-    styleUrls: ['./status.component.scss']
+    styleUrls: ['./status.component.scss'],
+    standalone: false
 })
 
 export class StatusComponent implements OnInit, OnChanges, OnDestroy {

@@ -36,7 +36,8 @@ import {
 @Component({
     selector: 'app-rooster-maandview',
     templateUrl: './rooster-maandview.component.html',
-    styleUrls: ['./rooster-maandview.component.scss']
+    styleUrls: ['./rooster-maandview.component.scss'],
+    standalone: false
 })
 export class RoosterMaandviewComponent implements OnInit, OnDestroy {
     @Input() rooster: HeliosRoosterDagExtended[];

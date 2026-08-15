@@ -3,9 +3,10 @@ import { AgRendererComponent } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 
 @Component({
-  selector: 'app-telefoon-render',
-  templateUrl: './telefoon-render.component.html',
-  styleUrls: ['./telefoon-render.component.scss']
+    selector: 'app-telefoon-render',
+    templateUrl: './telefoon-render.component.html',
+    styleUrls: ['./telefoon-render.component.scss'],
+    standalone: false
 })
 export class TelefoonRenderComponent implements AgRendererComponent {
   telefoon: string;

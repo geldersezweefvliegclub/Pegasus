@@ -4,7 +4,8 @@ import { SuccessMessage } from '../../../types/Utils';
 @Component({
     selector: 'app-success',
     templateUrl: './success.component.html',
-    styleUrls: ['./success.component.scss']
+    styleUrls: ['./success.component.scss'],
+    standalone: false
 })
 export class SuccessComponent implements OnChanges {
     @Input() success: SuccessMessage | undefined = undefined;

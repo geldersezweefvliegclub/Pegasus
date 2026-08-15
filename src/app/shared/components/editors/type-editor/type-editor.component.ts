@@ -7,7 +7,8 @@ import { TypesService } from '../../../../services/apiservice/types.service';
 @Component({
     selector: 'app-type-editor',
     templateUrl: './type-editor.component.html',
-    styleUrls: ['./type-editor.component.scss']
+    styleUrls: ['./type-editor.component.scss'],
+    standalone: false
 })
 export class TypeEditorComponent  {
     @Input() toonBedragEenheid = false;

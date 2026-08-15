@@ -4,9 +4,10 @@ import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
 import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
 
 @Component({
-  selector: 'app-tracks-grid',
-  templateUrl: './tracks-grid.component.html',
-  styleUrls: ['./tracks-grid.component.scss']
+    selector: 'app-tracks-grid',
+    templateUrl: './tracks-grid.component.html',
+    styleUrls: ['./tracks-grid.component.scss'],
+    standalone: false
 })
 export class TracksGridComponent {
   iconCardIcon: IconDefinition = faAddressCard;

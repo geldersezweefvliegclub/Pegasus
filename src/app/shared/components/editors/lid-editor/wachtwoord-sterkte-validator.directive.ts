@@ -2,14 +2,15 @@ import { Directive } from '@angular/core';
 import { AbstractControl, NG_VALIDATORS, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 @Directive({
-  selector: '[appWachtwoordSterkteValidator]',
-  providers: [
-    {
-      provide: NG_VALIDATORS,
-      useExisting: WachtwoordSterkteValidatorDirective,
-      multi: true,
-    },
-  ],
+    selector: '[appWachtwoordSterkteValidator]',
+    providers: [
+        {
+            provide: NG_VALIDATORS,
+            useExisting: WachtwoordSterkteValidatorDirective,
+            multi: true,
+        },
+    ],
+    standalone: false
 })
 export class WachtwoordSterkteValidatorDirective {
   // todo controleer regex

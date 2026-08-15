@@ -3,9 +3,10 @@ import { AgRendererComponent } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 
 @Component({
-  selector: 'app-avatar-render',
-  templateUrl: './avatar-render.component.html',
-  styleUrls: ['./avatar-render.component.scss']
+    selector: 'app-avatar-render',
+    templateUrl: './avatar-render.component.html',
+    styleUrls: ['./avatar-render.component.scss'],
+    standalone: false
 })
 export class AvatarRenderComponent implements AgRendererComponent {
   url: string;

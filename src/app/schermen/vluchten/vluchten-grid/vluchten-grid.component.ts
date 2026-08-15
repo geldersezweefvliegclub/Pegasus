@@ -49,7 +49,8 @@ type HeliosStartDatasetExtended = HeliosStartDataset & {
 @Component({
     selector: 'app-startlijst-grid',
     templateUrl: './vluchten-grid.component.html',
-    styleUrls: ['./vluchten-grid.component.scss']
+    styleUrls: ['./vluchten-grid.component.scss'],
+    standalone: false
 })
 export class VluchtenGridComponent implements OnInit, OnDestroy {
     @ViewChild(StartEditorComponent) editor: StartEditorComponent;

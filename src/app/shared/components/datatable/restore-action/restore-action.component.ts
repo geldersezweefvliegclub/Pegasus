@@ -9,9 +9,10 @@ export interface RestoreButton {
 }
 
 @Component({
-  selector: 'app-restore-action',
-  templateUrl: './restore-action.component.html',
-  styleUrls: ['./restore-action.component.scss']
+    selector: 'app-restore-action',
+    templateUrl: './restore-action.component.html',
+    styleUrls: ['./restore-action.component.scss'],
+    standalone: false
 })
 export class RestoreActionComponent implements AgRendererComponent {
   private params: ICellRendererParams & RestoreButton;

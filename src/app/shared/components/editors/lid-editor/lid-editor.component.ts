@@ -22,7 +22,8 @@ import { DdwvService } from '../../../../services/apiservice/ddwv.service';
     selector: 'app-lid-editor',
     templateUrl: './lid-editor.component.html',
     styleUrls: ['./lid-editor.component.scss'],
-    providers: [{provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter}]
+    providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
+    standalone: false
 })
 export class LidEditorComponent implements OnInit, OnDestroy {
     @Input() lidID: number;

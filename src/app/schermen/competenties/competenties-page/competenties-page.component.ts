@@ -21,7 +21,8 @@ export class CompetentieTreeviewItem extends TreeviewItem {
 @Component({
     selector: 'app-competenties-page',
     templateUrl: './competenties-page.component.html',
-    styleUrls: ['./competenties-page.component.scss']
+    styleUrls: ['./competenties-page.component.scss'],
+    standalone: false
 })
 export class CompetentiesPageComponent implements OnInit, OnDestroy {
     @ViewChild(CompetentieEditorComponent) editor: CompetentieEditorComponent;

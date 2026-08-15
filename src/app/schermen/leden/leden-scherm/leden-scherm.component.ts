@@ -32,7 +32,8 @@ import { DatatableComponent } from '../../../shared/components/datatable/datatab
 @Component({
     selector: 'app-leden-grid',
     templateUrl: './leden-scherm.component.html',
-    styleUrls: ['./leden-scherm.component.scss']
+    styleUrls: ['./leden-scherm.component.scss'],
+    standalone: false
 })
 export class LedenSchermComponent implements OnInit, OnDestroy {
     @ViewChild(LedenFilterComponent) ledenFilter: LedenFilterComponent;

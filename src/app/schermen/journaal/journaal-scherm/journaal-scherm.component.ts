@@ -28,7 +28,8 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
     selector: 'app-meldingen-scherm',
     templateUrl: './journaal-scherm.component.html',
-    styleUrls: ['./journaal-scherm.component.scss']
+    styleUrls: ['./journaal-scherm.component.scss'],
+    standalone: false
 })
 
 export class JournaalSchermComponent implements OnInit, OnDestroy {

@@ -3,9 +3,10 @@ import { AgRendererComponent } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 
 @Component({
-  selector: 'app-zitplaats-render',
-  templateUrl: './zitplaats-render.component.html',
-  styleUrls: ['./zitplaats-render.component.scss']
+    selector: 'app-zitplaats-render',
+    templateUrl: './zitplaats-render.component.html',
+    styleUrls: ['./zitplaats-render.component.scss'],
+    standalone: false
 })
 export class ZitplaatsRenderComponent implements AgRendererComponent {
   stoelen: number;

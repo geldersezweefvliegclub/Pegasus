@@ -13,7 +13,8 @@ import { Subscription } from 'rxjs';
 @Component({
     selector: 'app-datatable',
     templateUrl: './datatable.component.html',
-    styleUrls: ['./datatable.component.scss']
+    styleUrls: ['./datatable.component.scss'],
+    standalone: false
 })
 export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     @Input() columnDefs = [];

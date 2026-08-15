@@ -28,7 +28,8 @@ import {DeleteActionComponent} from "../../../shared/components/datatable/delete
     selector: 'app-transacties-grid',
     templateUrl: './transacties-grid.component.html',
     styleUrls: ['./transacties-grid.component.scss'],
-    providers: [{provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter}]
+    providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
+    standalone: false
 })
 export class TransactiesGridComponent implements OnInit, OnDestroy {
     @ViewChild(TransactieEditorComponent) private editor: TransactieEditorComponent;

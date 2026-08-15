@@ -15,11 +15,12 @@
             },
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser-esbuild",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist/pegasus",
+                        "outputPath": {
+                          "base": "dist/pegasus"
+                        },
                         "index": "src/index.html",
-                        "main": "src/main.ts",
                         "polyfills": [
                           "zone.js",
                           "@angular/localize/init"
@@ -37,8 +38,8 @@
                         "scripts": [
                             "node_modules/chart.js/dist/chart.cjs"
                         ],
-                        "serviceWorker": true,
-                        "ngswConfigPath": "ngsw-config.json"
+                        "serviceWorker": "ngsw-config.json",
+                        "browser": "src/main.ts"
                     },
                     "defaultConfiguration": "production",
                     "configurations": {
@@ -55,8 +56,6 @@
                             "namedChunks": false,
                             "aot": true,
                             "extractLicenses": true,
-                            "vendorChunk": false,
-                            "buildOptimizer": true,
                             "budgets": [
                                 {
                                     "type": "initial",
@@ -66,9 +65,7 @@
                             ]
                         },
                         "development": {
-                            "buildOptimizer": false,
-                            "optimization": false,
-                            "vendorChunk": true,
+                          "optimization": false,
                             "extractLicenses": false,
                             "sourceMap": true,
                             "namedChunks": true

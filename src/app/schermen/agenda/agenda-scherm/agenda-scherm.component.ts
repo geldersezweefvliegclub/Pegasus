@@ -14,9 +14,10 @@ import { AgendaEditorComponent } from '../../../shared/components/editors/agenda
 import { DatumRenderComponent } from '../../../shared/components/datatable/datum-render/datum-render.component';
 
 @Component({
-  selector: 'app-agenda-scherm',
-  templateUrl: './agenda-scherm.component.html',
-  styleUrls: ['./agenda-scherm.component.scss']
+    selector: 'app-agenda-scherm',
+    templateUrl: './agenda-scherm.component.html',
+    styleUrls: ['./agenda-scherm.component.scss'],
+    standalone: false
 })
 export class AgendaSchermComponent implements OnInit, OnDestroy {
   @ViewChild(AgendaEditorComponent) editor:AgendaEditorComponent;

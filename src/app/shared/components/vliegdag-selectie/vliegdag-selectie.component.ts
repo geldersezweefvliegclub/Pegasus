@@ -16,7 +16,8 @@ import { DienstenService } from '../../../services/apiservice/diensten.service';
 @Component({
     selector: 'app-vliegdag-selectie',
     templateUrl: './vliegdag-selectie.component.html',
-    styleUrls: ['./vliegdag-selectie.component.scss']
+    styleUrls: ['./vliegdag-selectie.component.scss'],
+    standalone: false
 })
 export class VliegdagSelectieComponent implements OnInit, OnDestroy {
     private dbEventAbonnement: Subscription;

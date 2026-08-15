@@ -6,7 +6,8 @@ import { HeliosVliegtuigenDatasetExtended } from '../reservering-page/reserverin
 @Component({
     selector: 'app-kist-selectie',
     templateUrl: './kist-selectie.component.html',
-    styleUrls: ['./kist-selectie.component.scss']
+    styleUrls: ['./kist-selectie.component.scss'],
+    standalone: false
 })
 export class KistSelectieComponent  {
     @Input() clubVliegtuigen: HeliosVliegtuigenDatasetExtended[];

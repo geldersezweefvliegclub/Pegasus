@@ -6,9 +6,10 @@ import { StartlijstService } from '../../../services/apiservice/startlijst.servi
 import { DateTime } from 'luxon';
 
 @Component({
-  selector: 'app-start-details',
-  templateUrl: './start-details.component.html',
-  styleUrls: ['./start-details.component.scss']
+    selector: 'app-start-details',
+    templateUrl: './start-details.component.html',
+    styleUrls: ['./start-details.component.scss'],
+    standalone: false
 })
 export class StartDetailsComponent  {
   @ViewChild(ModalComponent) private popup: ModalComponent;

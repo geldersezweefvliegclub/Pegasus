@@ -12,7 +12,8 @@ import { faWaveSquare } from '@fortawesome/free-solid-svg-icons';
 @Component({
     selector: 'app-audit-page',
     templateUrl: './audit-page.component.html',
-    styleUrls: ['./audit-page.component.scss']
+    styleUrls: ['./audit-page.component.scss'],
+    standalone: false
 })
 
 export class AuditPageComponent implements OnInit {

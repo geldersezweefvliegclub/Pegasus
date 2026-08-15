@@ -14,7 +14,8 @@ import { NgbDateFRParserFormatter } from '../../../ngb-date-fr-parser-formatter'
     selector: 'app-transactie-editor',
     templateUrl: './transactie-editor.component.html',
     styleUrls: ['./transactie-editor.component.scss'],
-    providers: [{provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter}]
+    providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
+    standalone: false
 })
 export class TransactieEditorComponent implements OnInit {
     @ViewChild(ModalComponent) private popup: ModalComponent;

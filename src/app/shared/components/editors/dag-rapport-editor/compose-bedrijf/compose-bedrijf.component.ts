@@ -8,7 +8,8 @@ import { DateTime } from 'luxon';
 @Component({
     selector: 'app-compose-bedrijf',
     templateUrl: './compose-bedrijf.component.html',
-    styleUrls: ['./compose-bedrijf.component.scss']
+    styleUrls: ['./compose-bedrijf.component.scss'],
+    standalone: false
 })
 export class ComposeBedrijfComponent {
     @Input() datum: DateTime;

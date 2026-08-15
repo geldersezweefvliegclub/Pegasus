@@ -16,7 +16,8 @@ import { ReserveringService } from '../../../../services/apiservice/reservering.
     selector: 'app-boeking-editor',
     templateUrl: './boeking-editor.component.html',
     styleUrls: ['./boeking-editor.component.scss'],
-    providers: [{provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter}]
+    providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
+    standalone: false
 })
 export class BoekingEditorComponent implements OnInit, OnDestroy {
     @Input() clubVliegtuigen: HeliosVliegtuigenDatasetExtended[];

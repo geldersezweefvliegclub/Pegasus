@@ -4,7 +4,8 @@ import { ModalComponent } from '../../../shared/components/modal/modal.component
 @Component({
     selector: 'app-export-startlijst',
     templateUrl: './export-startlijst.component.html',
-    styleUrls: ['./export-startlijst.component.scss']
+    styleUrls: ['./export-startlijst.component.scss'],
+    standalone: false
 })
 export class ExportStartlijstComponent {
     @ViewChild(ModalComponent) private popup: ModalComponent;

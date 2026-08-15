@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { ICellRendererParams } from 'ag-grid-community';
 
 @Component({
-  selector: 'app-gefactureerd-render',
-  templateUrl: './gefactureerd-render.component.html',
-  styleUrls: ['./gefactureerd-render.component.scss']
+    selector: 'app-gefactureerd-render',
+    templateUrl: './gefactureerd-render.component.html',
+    styleUrls: ['./gefactureerd-render.component.scss'],
+    standalone: false
 })
 export class GefactureerdRenderComponent {
   gridTekst: string | undefined

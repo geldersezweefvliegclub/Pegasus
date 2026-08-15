@@ -9,7 +9,8 @@ import { TypesService } from '../../../../services/apiservice/types.service';
 @Component({
     selector: 'app-gast-editor',
     templateUrl: './gast-editor.component.html',
-    styleUrls: ['./gast-editor.component.scss']
+    styleUrls: ['./gast-editor.component.scss'],
+    standalone: false
 })
 export class GastEditorComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private popup: ModalComponent;

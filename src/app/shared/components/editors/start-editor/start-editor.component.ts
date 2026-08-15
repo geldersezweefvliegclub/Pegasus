@@ -37,7 +37,8 @@ import { RoosterService } from '../../../../services/apiservice/rooster.service'
     selector: 'app-start-editor',
     templateUrl: './start-editor.component.html',
     styleUrls: ['./start-editor.component.scss'],
-    providers: [{provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter}]
+    providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
+    standalone: false
 })
 
 export class StartEditorComponent implements OnInit {

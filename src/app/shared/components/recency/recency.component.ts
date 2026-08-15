@@ -28,7 +28,8 @@ interface brevetEASA {
 @Component({
     selector: 'app-recency',
     templateUrl: './recency.component.html',
-    styleUrls: ['./recency.component.scss']
+    styleUrls: ['./recency.component.scss'],
+    standalone: false
 })
 
 export class RecencyComponent implements OnInit, OnChanges {

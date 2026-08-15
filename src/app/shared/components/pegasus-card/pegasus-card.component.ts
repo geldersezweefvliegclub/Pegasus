@@ -5,7 +5,8 @@ import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 @Component({
     selector: 'app-pegasus-card',
     templateUrl: './pegasus-card.component.html',
-    styleUrls: ['./pegasus-card.component.scss']
+    styleUrls: ['./pegasus-card.component.scss'],
+    standalone: false
 })
 export class PegasusCardComponent implements OnInit{
     @Input() icon: IconDefinition = faQuestionCircle

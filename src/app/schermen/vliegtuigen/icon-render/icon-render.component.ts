@@ -11,7 +11,8 @@ interface ButtonClicked {
 @Component({
     selector: 'app-icon-render',
     templateUrl: './icon-render.component.html',
-    styleUrls: ['./icon-render.component.scss']
+    styleUrls: ['./icon-render.component.scss'],
+    standalone: false
 })
 export class IconRenderComponent implements AgRendererComponent {
     params: ICellRendererParams & ButtonClicked;

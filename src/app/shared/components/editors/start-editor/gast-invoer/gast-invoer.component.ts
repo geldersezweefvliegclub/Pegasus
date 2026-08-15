@@ -6,7 +6,8 @@ import { HeliosGastenDataset } from '../../../../../types/Helios';
 @Component({
     selector: 'app-gast-invoer',
     templateUrl: './gast-invoer.component.html',
-    styleUrls: ['./gast-invoer.component.scss']
+    styleUrls: ['./gast-invoer.component.scss'],
+    standalone: false
 })
 export class GastInvoerComponent implements OnInit, OnChanges {
     @Input() DATUM: DateTime;

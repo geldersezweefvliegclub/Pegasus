@@ -22,7 +22,8 @@ import { MenuItem } from '../../../types/IPegasusConfig';
     selector: 'app-navigatie',
     templateUrl: './navigatie.component.html',
     styleUrls: ['./navigatie.component.scss'],
-    providers: [{provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter}]
+    providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
+    standalone: false
 })
 
 export class NavigatieComponent implements OnInit, OnDestroy {

@@ -13,7 +13,8 @@ import { PVB } from '../../../types/IPegasusConfig';
 @Component({
     selector: 'app-pvb',
     templateUrl: './pvb.component.html',
-    styleUrls: ['./pvb.component.scss']
+    styleUrls: ['./pvb.component.scss'],
+    standalone: false
 })
 export class PvbComponent implements OnInit, OnChanges, OnDestroy {
     @Input() Vlieger: HeliosLid;

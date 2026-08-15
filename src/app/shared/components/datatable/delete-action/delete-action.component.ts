@@ -11,7 +11,8 @@ export interface DeleteButton {
 @Component({
     selector: 'app-delete-action',
     templateUrl: './delete-action.component.html',
-    styleUrls: ['./delete-action.component.scss']
+    styleUrls: ['./delete-action.component.scss'],
+    standalone: false
 })
 export class DeleteActionComponent implements AgRendererComponent {
     private params: ICellRendererParams & DeleteButton;

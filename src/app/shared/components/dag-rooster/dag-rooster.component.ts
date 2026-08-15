@@ -9,7 +9,8 @@ import { ModalComponent } from '../modal/modal.component';
 @Component({
     selector: 'app-dag-rooster',
     templateUrl: './dag-rooster.component.html',
-    styleUrls: ['./dag-rooster.component.scss']
+    styleUrls: ['./dag-rooster.component.scss'],
+    standalone: false
 })
 export class DagRoosterComponent {
     @Output() opslaan: EventEmitter<string> = new EventEmitter<string>();

@@ -39,7 +39,8 @@ export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
 @Component({
     selector: 'app-vliegtuigen-grid',
     templateUrl: './vliegtuigen-scherm.component.html',
-    styleUrls: ['./vliegtuigen-scherm.component.scss']
+    styleUrls: ['./vliegtuigen-scherm.component.scss'],
+    standalone: false
 })
 export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
     @ViewChild(VliegtuigEditorComponent) editor: VliegtuigEditorComponent;

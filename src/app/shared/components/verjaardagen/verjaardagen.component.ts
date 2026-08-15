@@ -3,9 +3,10 @@ import { LedenService } from '../../../services/apiservice/leden.service';
 import { HeliosLedenDataset } from '../../../types/Helios';
 
 @Component({
-  selector: 'app-verjaardagen',
-  templateUrl: './verjaardagen.component.html',
-  styleUrls: ['./verjaardagen.component.scss']
+    selector: 'app-verjaardagen',
+    templateUrl: './verjaardagen.component.html',
+    styleUrls: ['./verjaardagen.component.scss'],
+    standalone: false
 })
 export class VerjaardagenComponent implements OnInit {
 

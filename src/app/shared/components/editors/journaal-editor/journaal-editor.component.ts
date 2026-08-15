@@ -12,7 +12,8 @@ import { LoginService } from '../../../../services/apiservice/login.service';
 @Component({
     selector: 'app-melding-editor',
     templateUrl: './journaal-editor.component.html',
-    styleUrls: ['./journaal-editor.component.scss']
+    styleUrls: ['./journaal-editor.component.scss'],
+    standalone: false
 })
 export class JournaalEditorComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private popup: ModalComponent;

@@ -3,9 +3,10 @@ import { ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
 import { faSearchMinus, faSearchPlus, faTimesCircle, faUndoAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-image-crop',
-  templateUrl: './image-crop.component.html',
-  styleUrls: ['./image-crop.component.scss']
+    selector: 'app-image-crop',
+    templateUrl: './image-crop.component.html',
+    styleUrls: ['./image-crop.component.scss'],
+    standalone: false
 })
 export class ImageCropComponent {
   @Output() cropped: EventEmitter<string | null | undefined> = new EventEmitter<string | null | undefined>();

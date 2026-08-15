@@ -55,7 +55,8 @@ export type HeliosAanwezigLedenDatasetExtended = HeliosAanwezigLedenDataset & {
 @Component({
     selector: 'app-aanmelden-page',
     templateUrl: './aanmelden-page.component.html',
-    styleUrls: ['./aanmelden-page.component.scss']
+    styleUrls: ['./aanmelden-page.component.scss'],
+    standalone: false
 })
 export class AanmeldenPageComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private bevestigAfmeldenPopup: ModalComponent;

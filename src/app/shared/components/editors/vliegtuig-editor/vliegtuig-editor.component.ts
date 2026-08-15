@@ -13,7 +13,8 @@ import { PVB } from '../../../../types/IPegasusConfig';
 @Component({
     selector: 'app-vliegtuig-editor',
     templateUrl: './vliegtuig-editor.component.html',
-    styleUrls: ['./vliegtuig-editor.component.scss']
+    styleUrls: ['./vliegtuig-editor.component.scss'],
+    standalone: false
 })
 export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
     @Output() add: EventEmitter<HeliosVliegtuig> = new EventEmitter<HeliosVliegtuig>();

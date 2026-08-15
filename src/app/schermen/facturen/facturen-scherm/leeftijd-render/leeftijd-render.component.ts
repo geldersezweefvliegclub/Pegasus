@@ -3,9 +3,10 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { AgRendererComponent } from 'ag-grid-angular';
 
 @Component({
-  selector: 'app-leeftijd-render',
-  templateUrl: './leeftijd-render.component.html',
-  styleUrls: ['./leeftijd-render.component.scss']
+    selector: 'app-leeftijd-render',
+    templateUrl: './leeftijd-render.component.html',
+    styleUrls: ['./leeftijd-render.component.scss'],
+    standalone: false
 })
 export class LeeftijdRenderComponent implements AgRendererComponent {
   value: string;

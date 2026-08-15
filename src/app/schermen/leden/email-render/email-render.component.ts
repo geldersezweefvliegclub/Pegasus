@@ -5,9 +5,10 @@ import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-email-render',
-  templateUrl: './email-render.component.html',
-  styleUrls: ['./email-render.component.scss']
+    selector: 'app-email-render',
+    templateUrl: './email-render.component.html',
+    styleUrls: ['./email-render.component.scss'],
+    standalone: false
 })
 export class EmailRenderComponent implements AgRendererComponent {
   email: string;

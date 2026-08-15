@@ -3,9 +3,10 @@ import { AgRendererComponent } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 
 @Component({
-  selector: 'app-onderdruk-nul',
-  templateUrl: './onderdruk-nul.component.html',
-  styleUrls: ['./onderdruk-nul.component.scss']
+    selector: 'app-onderdruk-nul',
+    templateUrl: './onderdruk-nul.component.html',
+    styleUrls: ['./onderdruk-nul.component.scss'],
+    standalone: false
 })
 export class OnderdrukNulComponent implements AgRendererComponent {
 

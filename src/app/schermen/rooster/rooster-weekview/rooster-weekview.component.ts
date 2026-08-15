@@ -35,7 +35,8 @@ import {
 @Component({
     selector: 'app-rooster-weekview',
     templateUrl: './rooster-weekview.component.html',
-    styleUrls: ['./rooster-weekview.component.scss']
+    styleUrls: ['./rooster-weekview.component.scss'],
+    standalone: false
 })
 export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
     @Input() rooster: HeliosRoosterDagExtended[];

@@ -12,7 +12,8 @@ import { ErrorMessage } from '../../../types/Utils';
 @Component({
     selector: 'app-vliegtuig-logboek',
     templateUrl: './vliegtuig-logboek.component.html',
-    styleUrls: ['./vliegtuig-logboek.component.scss']
+    styleUrls: ['./vliegtuig-logboek.component.scss'],
+    standalone: false
 })
 export class VliegtuigLogboekComponent implements OnInit {
     @ViewChild(ModalComponent) private popup: ModalComponent;

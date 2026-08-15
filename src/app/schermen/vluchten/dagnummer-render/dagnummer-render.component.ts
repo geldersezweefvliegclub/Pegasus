@@ -3,9 +3,10 @@ import { AgRendererComponent } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 
 @Component({
-  selector: 'app-dagnummer-render',
-  templateUrl: './dagnummer-render.component.html',
-  styleUrls: ['./dagnummer-render.component.scss']
+    selector: 'app-dagnummer-render',
+    templateUrl: './dagnummer-render.component.html',
+    styleUrls: ['./dagnummer-render.component.scss'],
+    standalone: false
 })
 export class DagnummerRenderComponent implements AgRendererComponent {
   params: ICellRendererParams;

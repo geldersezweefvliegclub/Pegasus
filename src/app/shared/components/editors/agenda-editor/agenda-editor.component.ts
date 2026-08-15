@@ -7,9 +7,10 @@ import { LoginService } from '../../../../services/apiservice/login.service';
 import { DateTime } from 'luxon';
 
 @Component({
-  selector: 'app-agenda-editor',
-  templateUrl: './agenda-editor.component.html',
-  styleUrls: ['./agenda-editor.component.scss']
+    selector: 'app-agenda-editor',
+    templateUrl: './agenda-editor.component.html',
+    styleUrls: ['./agenda-editor.component.scss'],
+    standalone: false
 })
 export class AgendaEditorComponent  {
   @ViewChild(ModalComponent) private popup: ModalComponent;
