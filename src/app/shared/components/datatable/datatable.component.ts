@@ -35,6 +35,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
 
 
     options: GridOptions = {
+        theme: 'legacy',
         rowHeight: 40,
         headerHeight: 20,
         paginationAutoPageSize: true,
