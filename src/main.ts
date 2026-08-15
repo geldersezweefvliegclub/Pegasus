@@ -9,6 +9,19 @@ import {AppComponent} from './app/main-layout/app/app.component';
 import {PegasusConfigService} from './app/services/shared/pegasus-config.service';
 import {routes} from './app/routing.module';
 import {environment} from './environments/environment';
+import {
+  CellStyleModule,
+  ClientSideRowModelApiModule,
+  ClientSideRowModelModule,
+  ColumnAutoSizeModule,
+  ModuleRegistry,
+  PaginationModule,
+  RenderApiModule,
+  RowAutoHeightModule,
+  RowSelectionModule,
+  RowStyleModule,
+  TextFilterModule,
+} from 'ag-grid-community';
 
 /*
 import {LicenseManager} from 'ag-grid-enterprise';
@@ -21,6 +34,19 @@ LicenseManager.setLicenseKey(aggridLicense);
 if (environment.production) {
   enableProdMode();
 }
+
+ModuleRegistry.registerModules([
+  CellStyleModule,
+  ClientSideRowModelApiModule,
+  ClientSideRowModelModule,
+  ColumnAutoSizeModule,
+  PaginationModule,
+  RenderApiModule,
+  RowAutoHeightModule,
+  RowSelectionModule,
+  RowStyleModule,
+  TextFilterModule,
+]);
 
 bootstrapApplication(AppComponent, {
   providers: [
