@@ -7,12 +7,13 @@ import { HeliosDienstenDataset, HeliosLid } from '../../../types/Helios';
 import { DagRoosterComponent } from '../dag-rooster/dag-rooster.component';
 import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
 import { LoginService } from '../../../services/apiservice/login.service';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
     selector: 'app-diensten',
     templateUrl: './diensten.component.html',
     styleUrls: ['./diensten.component.scss'],
-    standalone: false
+    imports: [LoaderComponent, DagRoosterComponent]
 })
 export class DienstenComponent implements OnInit, OnChanges {
     @Input() Vlieger: HeliosLid;

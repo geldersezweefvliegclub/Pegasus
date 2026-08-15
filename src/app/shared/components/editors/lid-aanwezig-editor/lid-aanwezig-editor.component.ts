@@ -8,6 +8,14 @@ import { AanwezigLedenService } from '../../../../services/apiservice/aanwezig-l
 import { VliegtuigenService } from '../../../../services/apiservice/vliegtuigen.service';
 import { LoginService } from '../../../../services/apiservice/login.service';
 import { StorageService } from '../../../../services/storage/storage.service';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { VliegtuigInvoerComponent } from '../start-editor/vliegtuig-invoer/vliegtuig-invoer.component';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { LoaderComponent } from '../../loader/loader.component';
+import { AsyncPipe } from '@angular/common';
 
 type HeliosTypeExtended = HeliosType & {
     Geselecteerd?: boolean;
@@ -17,7 +25,7 @@ type HeliosTypeExtended = HeliosType & {
     selector: 'app-lid-aanwezig-editor',
     templateUrl: './lid-aanwezig-editor.component.html',
     styleUrls: ['./lid-aanwezig-editor.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, NgSelectComponent, FormsModule, VliegtuigInvoerComponent, IconButtonComponent, LoaderComponent, AsyncPipe]
 })
 export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private popup: ModalComponent;

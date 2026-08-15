@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { ICellRendererParams } from 'ag-grid-community';
 import { AgRendererComponent } from 'ag-grid-angular';
+import { NgClass, DecimalPipe } from '@angular/common';
 
 @Component({
     selector: 'app-bedrag-render',
     templateUrl: './bedrag-render.component.html',
     styleUrls: ['./bedrag-render.component.scss'],
-    standalone: false
+    imports: [NgClass, DecimalPipe]
 })
 export class BedragRenderComponent implements AgRendererComponent {
     bedrag: number | undefined;

@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { AgRendererComponent } from 'ag-grid-angular';
 import { LoginService } from '../../../../services/apiservice/login.service';
 import { ICellRendererParams } from 'ag-grid-community';
+import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-naam-render',
     templateUrl: './naam-render.component.html',
     styleUrls: ['./naam-render.component.scss'],
-    standalone: false
+    imports: [RouterLink]
 })
 export class NaamRenderComponent implements AgRendererComponent {
     naam: string;

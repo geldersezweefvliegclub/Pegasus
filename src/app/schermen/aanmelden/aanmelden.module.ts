@@ -9,16 +9,11 @@ import { SamenvattingComponent } from './samenvatting/samenvatting.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
-    declarations: [
-        AanmeldenPageComponent,
-        SamenvattingComponent,
-    ],
     imports: [
         CommonModule,
         FormsModule,
         FontAwesomeModule,
         SharedModule,
-
         RouterModule.forChild([
             {
                 path: '',
@@ -26,6 +21,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
             }
         ]),
         NgSelectModule,
+        AanmeldenPageComponent,
+        SamenvattingComponent,
     ]
 })
 export class AanmeldenModule {

@@ -3,12 +3,17 @@ import { Observable, of, Subject } from 'rxjs';
 import { HeliosAanwezigLedenDataset, HeliosLedenDataset, HeliosVliegtuigenDataset } from '../../../../../types/Helios';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { NgClass, AsyncPipe } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-lid-invoer',
     templateUrl: './lid-invoer.component.html',
     styleUrls: ['./lid-invoer.component.scss'],
-    standalone: false
+    imports: [NgClass, FaIconComponent, NgbPopover, NgSelectComponent, FormsModule, AsyncPipe]
 })
 export class LidInvoerComponent implements OnInit, OnChanges {
     @Input() leden: HeliosLedenDataset[] = [];

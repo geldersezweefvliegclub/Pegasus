@@ -6,8 +6,7 @@ import { AgRendererComponent } from 'ag-grid-angular';
 @Component({
     selector: 'app-datumtijd-render',
     templateUrl: './datumtijd-render.component.html',
-    styleUrls: ['./datumtijd-render.component.scss'],
-    standalone: false
+    styleUrls: ['./datumtijd-render.component.scss']
 })
 export class DatumtijdRenderComponent implements AgRendererComponent{
     public datumtijd: string;

@@ -3,6 +3,7 @@ import { AgRendererComponent } from 'ag-grid-angular';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
 import { ICellRendererParams } from 'ag-grid-community';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 interface onTrackClicked {
     onTrackClicked(id: string, naam: string): void;
@@ -11,7 +12,7 @@ interface onTrackClicked {
     selector: 'app-track-render',
     templateUrl: './track-render.component.html',
     styleUrls: ['./track-render.component.scss'],
-    standalone: false
+    imports: [FaIconComponent]
 })
 export class TrackRenderComponent implements AgRendererComponent {
   private params: ICellRendererParams & onTrackClicked;

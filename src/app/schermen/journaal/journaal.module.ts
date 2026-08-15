@@ -13,20 +13,11 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { TitleRenderComponent } from './title-render/title-render.component';
 
 @NgModule({
-    declarations: [
-        JournaalSchermComponent,
-        MaterieelRenderComponent,
-        StatusRenderComponent,
-        CategorieRenderComponent,
-        JournaalFilterComponent,
-        TitleRenderComponent
-    ],
     imports: [
         CommonModule,
         FormsModule,
         FontAwesomeModule,
         SharedModule,
-
         RouterModule.forChild([
             {
                 path: '',
@@ -34,6 +25,12 @@ import { TitleRenderComponent } from './title-render/title-render.component';
             }
         ]),
         NgSelectModule,
+        JournaalSchermComponent,
+        MaterieelRenderComponent,
+        StatusRenderComponent,
+        CategorieRenderComponent,
+        JournaalFilterComponent,
+        TitleRenderComponent,
     ]
 })
 export class JournaalModule {

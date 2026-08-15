@@ -5,8 +5,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 @Component({
     selector: 'app-opmerkingen-render',
     templateUrl: './opmerkingen-render.component.html',
-    styleUrls: ['./opmerkingen-render.component.scss'],
-    standalone: false
+    styleUrls: ['./opmerkingen-render.component.scss']
 })
 export class OpmerkingenRenderComponent implements AgRendererComponent  {
 

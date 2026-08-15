@@ -13,12 +13,18 @@ import { TypesService } from '../../../services/apiservice/types.service';
 import { TypeEditorComponent } from '../../../shared/components/editors/type-editor/type-editor.component';
 import { Subscription } from 'rxjs';
 import { SharedService } from '../../../services/shared/shared.service';
+import { PegasusCardComponent } from '../../../shared/components/pegasus-card/pegasus-card.component';
+import { FormsModule } from '@angular/forms';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
+import { StatusButtonComponent } from '../../../shared/components/status-button/status-button.component';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
     selector: 'app-types-page',
     templateUrl: './types-page.component.html',
     styleUrls: ['./types-page.component.scss'],
-    standalone: false
+    imports: [PegasusCardComponent, FormsModule, FaIconComponent, IconButtonComponent, StatusButtonComponent, TypeEditorComponent, DecimalPipe]
 })
 export class TypesPageComponent implements OnInit, OnDestroy {
     @ViewChild(TypeEditorComponent) editor: TypeEditorComponent;

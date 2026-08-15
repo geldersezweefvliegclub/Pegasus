@@ -1,12 +1,15 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { NgClass } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { AvatarComponent } from '../avatar/avatar.component';
 
 @Component({
     selector: 'app-pegasus-card',
     templateUrl: './pegasus-card.component.html',
     styleUrls: ['./pegasus-card.component.scss'],
-    standalone: false
+    imports: [NgClass, FaIconComponent, AvatarComponent]
 })
 export class PegasusCardComponent implements OnInit{
     @Input() icon: IconDefinition = faQuestionCircle

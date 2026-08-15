@@ -7,20 +7,17 @@ import { RouterModule } from '@angular/router';
 
 
 @NgModule({
-  declarations: [
-    RapportSchermComponent
-  ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    FormsModule,
-
-    RouterModule.forChild([
-      {
-        path: '',
-        component: RapportSchermComponent
-      }
-    ]),
-  ]
+    imports: [
+        CommonModule,
+        SharedModule,
+        FormsModule,
+        RouterModule.forChild([
+            {
+                path: '',
+                component: RapportSchermComponent
+            }
+        ]),
+        RapportSchermComponent,
+    ]
 })
 export class RapportageModule { }

@@ -3,8 +3,7 @@ import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator, ValidatorF
 
 @Directive({
     selector: '[appRegistratieDirective]',
-    providers: [{ provide: NG_VALIDATORS, useExisting: RegistratieDirective, multi: true }],
-    standalone: false
+    providers: [{ provide: NG_VALIDATORS, useExisting: RegistratieDirective, multi: true }]
 })
 export class RegistratieDirective implements Validator {
 

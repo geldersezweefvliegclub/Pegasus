@@ -36,6 +36,12 @@ import { DaginfoService } from '../../../services/apiservice/daginfo.service';
 import {ErrorMessage, KeyValueArray} from '../../../types/Utils';
 import { SamenvattingComponent } from '../samenvatting/samenvatting.component';
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
+import { SharedModule } from '../../../shared/shared.module';
+import { NgIf, NgClass, NgTemplateOutlet, NgFor, AsyncPipe } from '@angular/common';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { RouterLink } from '@angular/router';
 
 export type HeliosRoosterDatasetExtended = HeliosRoosterDataset & {
     EENHEDEN?: number
@@ -56,7 +62,7 @@ export type HeliosAanwezigLedenDatasetExtended = HeliosAanwezigLedenDataset & {
     selector: 'app-aanmelden-page',
     templateUrl: './aanmelden-page.component.html',
     styleUrls: ['./aanmelden-page.component.scss'],
-    standalone: false
+    imports: [SharedModule, NgIf, NgClass, NgSelectComponent, FormsModule, NgTemplateOutlet, SamenvattingComponent, NgFor, FaIconComponent, RouterLink, AsyncPipe]
 })
 export class AanmeldenPageComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private bevestigAfmeldenPopup: ModalComponent;

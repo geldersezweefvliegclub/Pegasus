@@ -16,16 +16,6 @@ import { OpmerkingenRenderComponent } from './opmerkingen-render/opmerkingen-ren
 
 
 @NgModule({
-    declarations: [
-        VluchtenGridComponent,
-        ExportStartlijstComponent,
-        AchterinRenderComponent,
-        VoorinRenderComponent,
-        DagnummerRenderComponent,
-        FlarmLijstComponent,
-        StartDetailsComponent,
-        OpmerkingenRenderComponent
-    ],
     imports: [
         CommonModule,
         FormsModule,
@@ -37,7 +27,15 @@ import { OpmerkingenRenderComponent } from './opmerkingen-render/opmerkingen-ren
                 component: VluchtenGridComponent
             }
         ]),
-        NgSelectModule
+        NgSelectModule,
+        VluchtenGridComponent,
+        ExportStartlijstComponent,
+        AchterinRenderComponent,
+        VoorinRenderComponent,
+        DagnummerRenderComponent,
+        FlarmLijstComponent,
+        StartDetailsComponent,
+        OpmerkingenRenderComponent
     ],
     exports: [
         VluchtenGridComponent,

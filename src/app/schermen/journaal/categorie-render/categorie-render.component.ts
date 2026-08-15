@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { AgRendererComponent } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
+import { NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-categorie-render',
     templateUrl: './categorie-render.component.html',
     styleUrls: ['./categorie-render.component.scss'],
-    standalone: false
+    imports: [NgClass]
 })
 
 export class CategorieRenderComponent implements AgRendererComponent {

@@ -2,12 +2,13 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { GastenService } from '../../../../../services/apiservice/gasten.service';
 import { DateTime } from 'luxon';
 import { HeliosGastenDataset } from '../../../../../types/Helios';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-gast-invoer',
     templateUrl: './gast-invoer.component.html',
     styleUrls: ['./gast-invoer.component.scss'],
-    standalone: false
+    imports: [FormsModule]
 })
 export class GastInvoerComponent implements OnInit, OnChanges {
     @Input() DATUM: DateTime;

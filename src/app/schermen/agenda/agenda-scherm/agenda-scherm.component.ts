@@ -12,12 +12,13 @@ import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { AgendaEditorComponent } from '../../../shared/components/editors/agenda-editor/agenda-editor.component';
 import { DatumRenderComponent } from '../../../shared/components/datatable/datum-render/datum-render.component';
+import { SharedModule } from '../../../shared/shared.module';
 
 @Component({
     selector: 'app-agenda-scherm',
     templateUrl: './agenda-scherm.component.html',
     styleUrls: ['./agenda-scherm.component.scss'],
-    standalone: false
+    imports: [SharedModule]
 })
 export class AgendaSchermComponent implements OnInit, OnDestroy {
   @ViewChild(AgendaEditorComponent) editor:AgendaEditorComponent;

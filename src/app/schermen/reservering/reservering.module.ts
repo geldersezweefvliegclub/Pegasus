@@ -9,26 +9,23 @@ import { KistSelectieComponent } from './kist-selectie/kist-selectie.component';
 
 
 @NgModule({
-  declarations: [
-    ReserveringPageComponent,
-      KistSelectieComponent,
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    FontAwesomeModule,
-    SharedModule,
-
-    RouterModule.forChild([
-      {
-        path: '',
-        component: ReserveringPageComponent
-      }
-    ])
-  ],
-  exports: [
-    ReserveringPageComponent
-  ]
+    imports: [
+        CommonModule,
+        FormsModule,
+        FontAwesomeModule,
+        SharedModule,
+        RouterModule.forChild([
+            {
+                path: '',
+                component: ReserveringPageComponent
+            }
+        ]),
+        ReserveringPageComponent,
+        KistSelectieComponent
+    ],
+    exports: [
+        ReserveringPageComponent
+    ]
 })
 
 export class ReserveringModule { }

@@ -1,12 +1,15 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
+import { ImageCroppedEvent, ImageTransform, ImageCropperComponent } from 'ngx-image-cropper';
 import { faSearchMinus, faSearchPlus, faTimesCircle, faUndoAlt } from '@fortawesome/free-solid-svg-icons';
+import { FormsModule } from '@angular/forms';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { IconButtonComponent } from '../icon-button/icon-button.component';
 
 @Component({
     selector: 'app-image-crop',
     templateUrl: './image-crop.component.html',
     styleUrls: ['./image-crop.component.scss'],
-    standalone: false
+    imports: [FormsModule, ImageCropperComponent, FaIconComponent, IconButtonComponent]
 })
 export class ImageCropComponent {
   @Output() cropped: EventEmitter<string | null | undefined> = new EventEmitter<string | null | undefined>();

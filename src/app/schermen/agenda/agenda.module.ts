@@ -7,21 +7,18 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RouterModule } from '@angular/router';
 
 @NgModule({
-    declarations: [
-        AgendaSchermComponent
-    ],
     imports: [
         CommonModule,
         FormsModule,
         FontAwesomeModule,
         SharedModule,
-
         RouterModule.forChild([
             {
                 path: '',
                 component: AgendaSchermComponent
             }
-        ])
+        ]),
+        AgendaSchermComponent
     ],
     exports: [
         AgendaSchermComponent

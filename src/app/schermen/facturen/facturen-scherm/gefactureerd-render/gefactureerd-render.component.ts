@@ -4,8 +4,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 @Component({
     selector: 'app-gefactureerd-render',
     templateUrl: './gefactureerd-render.component.html',
-    styleUrls: ['./gefactureerd-render.component.scss'],
-    standalone: false
+    styleUrls: ['./gefactureerd-render.component.scss']
 })
 export class GefactureerdRenderComponent {
   gridTekst: string | undefined

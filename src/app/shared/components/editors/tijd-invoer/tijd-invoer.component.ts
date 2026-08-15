@@ -10,6 +10,11 @@ import { getSunrise, getSunset } from 'sunrise-sunset-js';
 import { DateTime } from 'luxon';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { PegasusConfigService } from '../../../../services/shared/pegasus-config.service';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { FormsModule } from '@angular/forms';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { LoaderComponent } from '../../loader/loader.component';
 
 enum TypeTijdInvoer {
     Starttijd,
@@ -22,7 +27,7 @@ enum TypeTijdInvoer {
     styleUrls: ['./tijd-invoer.component.scss'],
     providers: [NgbTypeaheadConfig] // add NgbTypeaheadConfig to the component providers
     ,
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, IconButtonComponent, LoaderComponent]
 })
 
 export class TijdInvoerComponent {

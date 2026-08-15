@@ -3,6 +3,7 @@ import { AgRendererComponent } from 'ag-grid-angular';
 import { faBug, faFileAlt } from '@fortawesome/free-solid-svg-icons';
 import { ICellRendererParams } from 'ag-grid-community';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 interface ButtonClicked {
     onLogboekClicked(ID: number): void;
@@ -12,7 +13,7 @@ interface ButtonClicked {
     selector: 'app-icon-render',
     templateUrl: './icon-render.component.html',
     styleUrls: ['./icon-render.component.scss'],
-    standalone: false
+    imports: [FaIconComponent]
 })
 export class IconRenderComponent implements AgRendererComponent {
     params: ICellRendererParams & ButtonClicked;

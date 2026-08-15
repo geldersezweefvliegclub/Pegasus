@@ -1,11 +1,12 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
 
 @Component({
     selector: 'app-avatar',
     templateUrl: './avatar.component.html',
     styleUrls: ['./avatar.component.scss'],
-    standalone: false
+    imports: [LazyLoadImageModule, ModalComponent]
 })
 export class AvatarComponent {
   @Input() naam = '';

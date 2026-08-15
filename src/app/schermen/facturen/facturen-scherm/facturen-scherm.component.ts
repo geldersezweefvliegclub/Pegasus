@@ -17,12 +17,13 @@ import { DatatableComponent } from '../../../shared/components/datatable/datatab
 import { LeeftijdRenderComponent } from './leeftijd-render/leeftijd-render.component';
 import { GefactureerdRenderComponent } from './gefactureerd-render/gefactureerd-render.component';
 import { FactuurUploadenComponent } from '../../../shared/components/factuur-uploaden/uploaden.component';
+import { SharedModule } from '../../../shared/shared.module';
 
 @Component({
     selector: 'app-facturen-scherm',
     templateUrl: './facturen-scherm.component.html',
     styleUrls: ['./facturen-scherm.component.scss'],
-    standalone: false
+    imports: [SharedModule]
 })
 export class FacturenSchermComponent implements OnInit, OnDestroy {
   @ViewChild(DatatableComponent) grid: DatatableComponent;

@@ -4,13 +4,15 @@ import { RoosterService } from '../../../services/apiservice/rooster.service';
 import { HeliosDienst, HeliosDienstenDataset, HeliosRoosterDataset } from '../../../types/Helios';
 import { DateTime } from 'luxon';
 import { ModalComponent } from '../modal/modal.component';
+import { FormsModule } from '@angular/forms';
+import { IconButtonComponent } from '../icon-button/icon-button.component';
 
 
 @Component({
     selector: 'app-dag-rooster',
     templateUrl: './dag-rooster.component.html',
     styleUrls: ['./dag-rooster.component.scss'],
-    standalone: false
+    imports: [ModalComponent, FormsModule, IconButtonComponent]
 })
 export class DagRoosterComponent {
     @Output() opslaan: EventEmitter<string> = new EventEmitter<string>();

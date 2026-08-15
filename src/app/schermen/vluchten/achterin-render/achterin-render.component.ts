@@ -2,13 +2,15 @@ import { Component } from '@angular/core';
 import { AgRendererComponent } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 import { LoginService } from '../../../services/apiservice/login.service';
+import { RouterLink } from '@angular/router';
+import { NgClass } from '@angular/common';
 
 
 @Component({
     selector: 'app-inzittende-render',
     templateUrl: './achterin-render.component.html',
     styleUrls: ['./achterin-render.component.scss'],
-    standalone: false
+    imports: [RouterLink, NgClass]
 })
 
 export class AchterinRenderComponent implements AgRendererComponent {

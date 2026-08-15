@@ -5,8 +5,7 @@ import { AgRendererComponent } from 'ag-grid-angular';
 @Component({
     selector: 'app-type-render',
     templateUrl: './type-render.component.html',
-    styleUrls: ['./type-render.component.scss'],
-    standalone: false
+    styleUrls: ['./type-render.component.scss']
 })
 export class TypeRenderComponent implements AgRendererComponent {
   gridTekst: string | undefined

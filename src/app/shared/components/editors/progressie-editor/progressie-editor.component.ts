@@ -22,14 +22,20 @@ import { LoginService } from '../../../../services/apiservice/login.service';
 import { LedenService } from '../../../../services/apiservice/leden.service';
 import { Subscription } from 'rxjs';
 import { TypesService } from '../../../../services/apiservice/types.service';
-import { NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDate, NgbDateStruct, NgbDatepicker } from '@ng-bootstrap/ng-bootstrap';
 import { DateTime } from 'luxon';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { FormsModule } from '@angular/forms';
+import { VoortgangComponent } from '../../voortgang/voortgang.component';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { LoaderComponent } from '../../loader/loader.component';
 
 @Component({
     selector: 'app-progressie-editor',
     templateUrl: './progressie-editor.component.html',
     styleUrls: ['./progressie-editor.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, NgbDatepicker, VoortgangComponent, IconButtonComponent, LoaderComponent]
 })
 export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
     @ViewChild(ModalComponent) private popup: ModalComponent;

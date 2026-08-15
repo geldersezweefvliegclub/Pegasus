@@ -8,14 +8,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TreeModule } from '@ali-hm/angular-tree-component';
 
 @NgModule({
-  declarations: [
-    CompetentiesPageComponent
-  ],
     imports: [
         CommonModule,
         FormsModule,
         SharedModule,
-
         RouterModule.forChild([
             {
                 path: '',
@@ -24,6 +20,7 @@ import { TreeModule } from '@ali-hm/angular-tree-component';
         ]),
         TreeModule,
         FontAwesomeModule,
+        CompetentiesPageComponent,
     ]
 })
 export class CompetentiesModule { }

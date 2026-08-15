@@ -38,6 +38,12 @@ import { FlarmData, FlarmInputService, FlarmStartData } from '../../../services/
 import { DatatableComponent } from '../../../shared/components/datatable/datatable.component';
 import { OpmerkingenRenderComponent } from '../opmerkingen-render/opmerkingen-render.component';
 import {DdwvService} from "../../../services/apiservice/ddwv.service";
+import { SharedModule } from '../../../shared/shared.module';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { NgClass, AsyncPipe } from '@angular/common';
+import { FlarmLijstComponent } from '../flarm-lijst/flarm-lijst.component';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
 
 type HeliosStartDatasetExtended = HeliosStartDataset & {
     inTijdspan?: boolean
@@ -48,7 +54,7 @@ type HeliosStartDatasetExtended = HeliosStartDataset & {
     selector: 'app-startlijst-grid',
     templateUrl: './vluchten-grid.component.html',
     styleUrls: ['./vluchten-grid.component.scss'],
-    standalone: false
+    imports: [SharedModule, FaIconComponent, NgClass, FlarmLijstComponent, NgSelectComponent, FormsModule, ExportStartlijstComponent, AsyncPipe]
 })
 export class VluchtenGridComponent implements OnInit, OnDestroy {
     @ViewChild(StartEditorComponent) editor: StartEditorComponent;

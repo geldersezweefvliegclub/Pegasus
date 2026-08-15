@@ -4,13 +4,16 @@ import { ErrorMessage, KeyValueArray, SuccessMessage } from '../../../../types/U
 import { HeliosDienstenDataset } from '../../../../types/Helios';
 import { HeliosRoosterDagExtended } from '../../../../schermen/rooster/rooster-page/rooster-page.component';
 import { DdwvService } from '../../../../services/apiservice/ddwv.service';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
 
 
 @Component({
     selector: 'app-uitbetalen-ddwv-crew-editor',
     templateUrl: './uitbetalen-ddwv-crew-editor.component.html',
     styleUrls: ['./uitbetalen-ddwv-crew-editor.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, IconButtonComponent]
 })
 export class UitbetalenDdwvCrewEditorComponent  {
     @ViewChild(ModalComponent) private popup: ModalComponent;

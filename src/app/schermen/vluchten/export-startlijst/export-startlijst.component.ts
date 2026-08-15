@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
+import { SharedModule } from '../../../shared/shared.module';
 
 @Component({
     selector: 'app-export-startlijst',
     templateUrl: './export-startlijst.component.html',
     styleUrls: ['./export-startlijst.component.scss'],
-    standalone: false
+    imports: [SharedModule]
 })
 export class ExportStartlijstComponent {
     @ViewChild(ModalComponent) private popup: ModalComponent;

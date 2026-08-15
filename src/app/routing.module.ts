@@ -1,5 +1,4 @@
-import { NgModule } from '@angular/core';
-import { Route, RouterModule } from '@angular/router';
+import { Route } from '@angular/router';
 import { faFile, IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import {
   faAddressCard,
@@ -219,11 +218,3 @@ export const beheerRoutes: CustomRoute[] = [
     {path: 'rapportage', component: RapportSchermComponent, excluded: false, icon: faFilm, text: 'Rapportage'},
     {path: 'facturen', component: FacturenSchermComponent, excluded: false, icon: faLayerGroup, text: 'Facturen'},
 ];
-
-
-@NgModule({
-    imports: [RouterModule.forRoot(routes)],
-    exports: [RouterModule]
-})
-export class RoutingModule {
-}

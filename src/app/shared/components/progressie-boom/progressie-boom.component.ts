@@ -9,6 +9,11 @@ import { CompetentieService } from '../../../services/apiservice/competentie.ser
 import { Subscription } from 'rxjs';
 import { ProgressieEditorComponent } from '../editors/progressie-editor/progressie-editor.component';
 import { TypesService } from '../../../services/apiservice/types.service';
+import { ErrorComponent } from '../error/error.component';
+import { SuccessComponent } from '../success/success.component';
+import { FormsModule } from '@angular/forms';
+import { NgClass } from '@angular/common';
+import { VoortgangComponent } from '../voortgang/voortgang.component';
 
 export interface ProgressieTreeviewItem {
     nodeId: string;
@@ -28,7 +33,7 @@ export interface ProgressieTreeviewItem {
     selector: 'app-progressie-boom',
     templateUrl: './progressie-boom.component.html',
     styleUrls: ['./progressie-boom.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, FormsModule, TreeComponent, NgClass, VoortgangComponent, ProgressieEditorComponent]
 })
 
 export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {

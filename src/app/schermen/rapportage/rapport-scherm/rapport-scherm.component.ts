@@ -3,12 +3,13 @@ import { PegasusConfigService } from '../../../services/shared/pegasus-config.se
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Rapport } from '../../../types/IPegasusConfig';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
 
 @Component({
     selector: 'app-rapport-scherm',
     templateUrl: './rapport-scherm.component.html',
     styleUrls: ['./rapport-scherm.component.scss'],
-    standalone: false
+    imports: [IconButtonComponent]
 })
 export class RapportSchermComponent implements OnInit {
     rapporten: Rapport[] = [];

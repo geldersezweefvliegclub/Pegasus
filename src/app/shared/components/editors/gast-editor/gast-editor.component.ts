@@ -5,12 +5,19 @@ import { HeliosGast, HeliosType } from '../../../../types/Helios';
 import { GastenService } from '../../../../services/apiservice/gasten.service';
 import { Observable, of, Subscription } from 'rxjs';
 import { TypesService } from '../../../../services/apiservice/types.service';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { LoaderComponent } from '../../loader/loader.component';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-gast-editor',
     templateUrl: './gast-editor.component.html',
     styleUrls: ['./gast-editor.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, NgSelectComponent, FormsModule, IconButtonComponent, LoaderComponent, AsyncPipe]
 })
 export class GastEditorComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private popup: ModalComponent;

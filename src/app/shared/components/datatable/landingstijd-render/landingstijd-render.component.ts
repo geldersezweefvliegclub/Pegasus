@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ICellRendererParams } from 'ag-grid-community';
 import { AgRendererComponent } from 'ag-grid-angular';
 import {HeliosStartDataset} from "../../../../types/Helios";
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
 
 export interface TijdButton {
   tijdClicked(data: HeliosStartDataset): void;
@@ -11,7 +12,7 @@ export interface TijdButton {
     selector: 'app-landingstijd-render',
     templateUrl: './landingstijd-render.component.html',
     styleUrls: ['./landingstijd-render.component.scss'],
-    standalone: false
+    imports: [IconButtonComponent]
 })
 
 

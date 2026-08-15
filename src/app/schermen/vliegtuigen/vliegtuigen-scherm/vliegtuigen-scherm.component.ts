@@ -29,6 +29,14 @@ import { SchermGrootte, SharedService } from '../../../services/shared/shared.se
 import { Subscription } from 'rxjs';
 import { PopupJournaalComponent } from '../../../shared/components/popup-journaal/popup-journaal.component';
 import { VliegtuigLogboekComponent } from '../vliegtuig-logboek/vliegtuig-logboek.component';
+import { ErrorComponent } from '../../../shared/components/error/error.component';
+import { SuccessComponent } from '../../../shared/components/success/success.component';
+import { PegasusCardComponent } from '../../../shared/components/pegasus-card/pegasus-card.component';
+import { DatatableComponent } from '../../../shared/components/datatable/datatable.component';
+import { VliegtuigCardComponent } from '../vliegtuig-card/vliegtuig-card.component';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
+import { StatusButtonComponent } from '../../../shared/components/status-button/status-button.component';
+import { ZoekbarComponent } from '../../../shared/components/zoekbar/zoekbar.component';
 
 export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
     toonLogboek?: boolean;
@@ -40,7 +48,7 @@ export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
     selector: 'app-vliegtuigen-grid',
     templateUrl: './vliegtuigen-scherm.component.html',
     styleUrls: ['./vliegtuigen-scherm.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, PegasusCardComponent, DatatableComponent, VliegtuigCardComponent, IconButtonComponent, StatusButtonComponent, ZoekbarComponent, VliegtuigEditorComponent, PopupJournaalComponent, VliegtuigLogboekComponent]
 })
 export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
     @ViewChild(VliegtuigEditorComponent) editor: VliegtuigEditorComponent;

@@ -4,7 +4,7 @@ import {
   HeliosRoosterDagExtended,
   WeergaveData,
 } from '../rooster-page/rooster-page.component';
-import { CdkDrag, CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDropList, CdkDragPreview, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
 import {
   HeliosDienst,
   HeliosDienstenDataset,
@@ -31,13 +31,18 @@ import { DdwvService } from '../../../services/apiservice/ddwv.service';
 import {
   UitbetalenDdwvCrewEditorComponent,
 } from '../../../shared/components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component';
+import { NgClass, NgTemplateOutlet, DecimalPipe, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { AvatarComponent } from '../../../shared/components/avatar/avatar.component';
 
 
 @Component({
     selector: 'app-rooster-maandview',
     templateUrl: './rooster-maandview.component.html',
     styleUrls: ['./rooster-maandview.component.scss'],
-    standalone: false
+    imports: [JaarTotalenComponent, UitbetalenDdwvCrewEditorComponent, NgClass, FormsModule, CdkDropList, CdkDrag, NgTemplateOutlet, IconButtonComponent, FaIconComponent, CdkDragPreview, CdkDragPlaceholder, AvatarComponent, DecimalPipe, DatePipe]
 })
 export class RoosterMaandviewComponent implements OnInit, OnDestroy {
     @Input() rooster: HeliosRoosterDagExtended[];

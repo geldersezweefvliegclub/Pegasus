@@ -9,22 +9,19 @@ import { RouterModule } from '@angular/router';
 
 
 @NgModule({
-    declarations: [
-        DocumentenSchermComponent
-    ],
     imports: [
         CommonModule,
         FormsModule,
         FontAwesomeModule,
         NgSelectModule,
         SharedModule,
-
         RouterModule.forChild([
             {
                 path: '',
                 component: DocumentenSchermComponent
             }
-        ])
+        ]),
+        DocumentenSchermComponent
     ],
     exports: [
         DocumentenSchermComponent

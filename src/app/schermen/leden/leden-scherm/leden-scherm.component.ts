@@ -27,13 +27,19 @@ import { TrackRenderComponent } from '../track-render/track-render.component';
 import { DatumRenderComponent } from '../../../shared/components/datatable/datum-render/datum-render.component';
 import { Subscription } from 'rxjs';
 import { DatatableComponent } from '../../../shared/components/datatable/datatable.component';
+import { ErrorComponent } from '../../../shared/components/error/error.component';
+import { PegasusCardComponent } from '../../../shared/components/pegasus-card/pegasus-card.component';
+import { LedenCardComponent } from '../leden-card/leden-card.component';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
+import { StatusButtonComponent } from '../../../shared/components/status-button/status-button.component';
+import { ZoekbarComponent } from '../../../shared/components/zoekbar/zoekbar.component';
 
 
 @Component({
     selector: 'app-leden-grid',
     templateUrl: './leden-scherm.component.html',
     styleUrls: ['./leden-scherm.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, PegasusCardComponent, DatatableComponent, LedenCardComponent, IconButtonComponent, StatusButtonComponent, ZoekbarComponent, LedenFilterComponent, TrackEditorComponent]
 })
 export class LedenSchermComponent implements OnInit, OnDestroy {
     @ViewChild(LedenFilterComponent) ledenFilter: LedenFilterComponent;

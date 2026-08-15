@@ -7,17 +7,25 @@ import { Subscription } from 'rxjs';
 import { HeliosLedenDataset, HeliosReservering } from '../../../../types/Helios';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { LedenService } from '../../../../services/apiservice/leden.service';
-import { NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDate, NgbDateParserFormatter, NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateFRParserFormatter } from '../../../ngb-date-fr-parser-formatter';
 import { DateTime } from 'luxon';
 import { ReserveringService } from '../../../../services/apiservice/reservering.service';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { FormsModule } from '@angular/forms';
+import { LidInvoerComponent } from '../start-editor/lid-invoer/lid-invoer.component';
+import { VliegtuigInvoerComponent } from '../start-editor/vliegtuig-invoer/vliegtuig-invoer.component';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { NgClass } from '@angular/common';
+import { LoaderComponent } from '../../loader/loader.component';
 
 @Component({
     selector: 'app-boeking-editor',
     templateUrl: './boeking-editor.component.html',
     styleUrls: ['./boeking-editor.component.scss'],
     providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, LidInvoerComponent, VliegtuigInvoerComponent, NgbInputDatepicker, IconButtonComponent, NgClass, LoaderComponent]
 })
 export class BoekingEditorComponent implements OnInit, OnDestroy {
     @Input() clubVliegtuigen: HeliosVliegtuigenDatasetExtended[];

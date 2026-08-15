@@ -5,8 +5,7 @@ import { AgRendererComponent } from 'ag-grid-angular';
 @Component({
     selector: 'app-adres-render',
     templateUrl: './adres-render.component.html',
-    styleUrls: ['./adres-render.component.scss'],
-    standalone: false
+    styleUrls: ['./adres-render.component.scss']
 })
 export class AdresRenderComponent implements AgRendererComponent {
   regel1: string;

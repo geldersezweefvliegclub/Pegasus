@@ -3,12 +3,15 @@ import { HeliosVliegtuigenDataset } from '../../../types/Helios';
 import { faBug, faFileAlt, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { SharedService } from '../../../services/shared/shared.service';
 import { HeliosVliegtuigenDatasetExtended } from '../vliegtuigen-scherm/vliegtuigen-scherm.component';
+import { NgClass } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { VliegtuigEditorComponent } from '../../../shared/components/editors/vliegtuig-editor/vliegtuig-editor.component';
 
 @Component({
     selector: 'app-vliegtuig-card',
     templateUrl: './vliegtuig-card.component.html',
     styleUrls: ['./vliegtuig-card.component.scss'],
-    standalone: false
+    imports: [NgClass, FaIconComponent, VliegtuigEditorComponent]
 })
 export class VliegtuigCardComponent  {
   @Input() vliegtuig: HeliosVliegtuigenDatasetExtended;

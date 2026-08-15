@@ -23,6 +23,13 @@ import { PegasusConfigService } from '../../../services/shared/pegasus-config.se
 import { getBeginEindDatumVanMaand } from '../../../utils/Utils';
 import { KeyValueArray } from '../../../types/Utils';
 import { DdwvService } from '../../../services/apiservice/ddwv.service';
+import { PegasusCardComponent } from '../../../shared/components/pegasus-card/pegasus-card.component';
+import { CdkDropListGroup } from '@angular/cdk/drag-drop';
+import { RoosterMaandviewComponent } from '../rooster-maandview/rooster-maandview.component';
+import { RoosterWeekviewComponent } from '../rooster-weekview/rooster-weekview.component';
+import { RoosterDagviewComponent } from '../rooster-dagview/rooster-dagview.component';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
+import { ZoekbarComponent } from '../../../shared/components/zoekbar/zoekbar.component';
 
 export type HeliosLedenDatasetExtended = HeliosLedenDataset & {
     INGEDEELD_MAAND?: number
@@ -52,7 +59,7 @@ export interface WeergaveData {
     selector: 'app-rooster-page',
     templateUrl: './rooster-page.component.html',
     styleUrls: ['./rooster-page.component.scss'],
-    standalone: false
+    imports: [PegasusCardComponent, CdkDropListGroup, RoosterMaandviewComponent, RoosterWeekviewComponent, RoosterDagviewComponent, IconButtonComponent, ZoekbarComponent, LedenFilterComponent]
 })
 export class RoosterPageComponent implements OnInit, OnDestroy {
     @ViewChild(LedenFilterComponent) ledenFilter: LedenFilterComponent;

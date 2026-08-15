@@ -6,12 +6,13 @@ import { AanwezigLedenService } from '../../../services/apiservice/aanwezig-lede
 import { SharedService } from '../../../services/shared/shared.service';
 import { LoginService } from '../../../services/apiservice/login.service';
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { SharedModule } from '../../../shared/shared.module';
 
 @Component({
     selector: 'app-samenvatting',
     templateUrl: './samenvatting.component.html',
     styleUrls: ['./samenvatting.component.scss'],
-    standalone: false
+    imports: [SharedModule]
 })
 export class SamenvattingComponent {
     @ViewChild(ModalComponent) private popup: ModalComponent;

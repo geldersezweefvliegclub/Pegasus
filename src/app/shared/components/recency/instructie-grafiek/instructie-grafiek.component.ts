@@ -7,12 +7,14 @@ import { AnnotationOptions } from 'chartjs-plugin-annotation';
 import { ChartDataset, ChartOptions } from 'chart.js';
 import { StartlijstService } from '../../../../services/apiservice/startlijst.service';
 import { SharedService } from '../../../../services/shared/shared.service';
+import { NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
+import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
     selector: 'app-instructie-grafiek',
     templateUrl: './instructie-grafiek.component.html',
     styleUrls: ['./instructie-grafiek.component.scss'],
-    standalone: false
+    imports: [ModalComponent, NgbProgressbar, BaseChartDirective]
 })
 export class InstructieGrafiekComponent implements OnInit {
     @Input() VliegerID: number;

@@ -3,6 +3,7 @@ import { AgRendererComponent } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 export interface DeleteButton {
     onDeleteClicked(id: number): void;
@@ -12,7 +13,7 @@ export interface DeleteButton {
     selector: 'app-delete-action',
     templateUrl: './delete-action.component.html',
     styleUrls: ['./delete-action.component.scss'],
-    standalone: false
+    imports: [FaIconComponent]
 })
 export class DeleteActionComponent implements AgRendererComponent {
     private params: ICellRendererParams & DeleteButton;

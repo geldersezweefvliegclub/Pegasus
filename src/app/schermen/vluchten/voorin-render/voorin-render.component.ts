@@ -2,13 +2,14 @@ import { Component } from '@angular/core';
 import { ICellRendererParams } from 'ag-grid-community';
 import { AgRendererComponent } from 'ag-grid-angular';
 import { LoginService } from '../../../services/apiservice/login.service';
+import { RouterLink } from '@angular/router';
 
 
 @Component({
     selector: 'app-vlieger-render',
     templateUrl: './voorin-render.component.html',
     styleUrls: ['./voorin-render.component.scss'],
-    standalone: false
+    imports: [RouterLink]
 })
 export class VoorinRenderComponent implements AgRendererComponent {
     lidID: string;

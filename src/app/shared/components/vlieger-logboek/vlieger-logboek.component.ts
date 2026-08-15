@@ -21,6 +21,10 @@ import { DeleteActionComponent } from '../datatable/delete-action/delete-action.
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
 import { DatumKortRenderComponent } from '../datatable/datum-kort-render/datum-kort-render.component';
 import { IconRenderComponent } from './icon-render/icon-render.component';
+import { ErrorComponent } from '../error/error.component';
+import { SuccessComponent } from '../success/success.component';
+import { DatatableComponent } from '../datatable/datatable.component';
+import { VluchtCardComponent } from '../vlucht-card/vlucht-card.component';
 
 type HeliosLogboekDatasetExtended = HeliosLogboekDataset & {
     inTijdspan?: boolean
@@ -31,7 +35,7 @@ type HeliosLogboekDatasetExtended = HeliosLogboekDataset & {
     selector: 'app-vlieger-logboek',
     templateUrl: './vlieger-logboek.component.html',
     styleUrls: ['./vlieger-logboek.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, DatatableComponent, VluchtCardComponent, TijdInvoerComponent, StartEditorComponent, TrackEditorComponent]
 })
 
 export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {

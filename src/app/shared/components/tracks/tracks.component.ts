@@ -19,6 +19,18 @@ import { LoginService } from '../../../services/apiservice/login.service';
 import { faAvianex } from '@fortawesome/free-brands-svg-icons';
 import { DateTime } from 'luxon';
 import { Subscription } from 'rxjs';
+import { ErrorComponent } from '../error/error.component';
+import { SuccessComponent } from '../success/success.component';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { AvatarComponent } from '../avatar/avatar.component';
+import { RouterLink } from '@angular/router';
+import { IconButtonComponent } from '../icon-button/icon-button.component';
+import { StatusButtonComponent } from '../status-button/status-button.component';
+import { PegasusCardComponent } from '../pegasus-card/pegasus-card.component';
+import { StatusComponent } from '../status/status.component';
+import { PvbComponent } from '../pvb/pvb.component';
+import { RecencyComponent } from '../recency/recency.component';
+import { VliegerLogboekTotalenComponent } from '../vlieger-logboek-totalen/vlieger-logboek-totalen.component';
 
 export interface TracksLedenDataset extends HeliosTracksDataset {
     lid: HeliosLedenDataset;
@@ -28,7 +40,7 @@ export interface TracksLedenDataset extends HeliosTracksDataset {
     selector: 'app-tracks',
     templateUrl: './tracks.component.html',
     styleUrls: ['./tracks.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, FaIconComponent, AvatarComponent, RouterLink, IconButtonComponent, StatusButtonComponent, PegasusCardComponent, StatusComponent, PvbComponent, RecencyComponent, VliegerLogboekTotalenComponent, TrackEditorComponent]
 })
 export class TracksComponent implements OnInit, OnDestroy, OnChanges {
     @Input() VliegerID: number;

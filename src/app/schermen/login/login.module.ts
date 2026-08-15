@@ -9,26 +9,23 @@ import { CodeInputModule } from 'angular-code-input';
 
 
 @NgModule({
-  declarations: [
-    LoginPageComponent,
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    FontAwesomeModule,
-    CodeInputModule,
-    SharedModule,
-
-    RouterModule.forChild([
-      {
-        path: '',
-        component: LoginPageComponent
-      }
-    ])
-  ],
-  exports: [
-    LoginPageComponent
-  ]
+    imports: [
+        CommonModule,
+        FormsModule,
+        FontAwesomeModule,
+        CodeInputModule,
+        SharedModule,
+        RouterModule.forChild([
+            {
+                path: '',
+                component: LoginPageComponent
+            }
+        ]),
+        LoginPageComponent
+    ],
+    exports: [
+        LoginPageComponent
+    ]
 })
 
 export class LoginModule { }

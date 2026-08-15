@@ -7,14 +7,10 @@ import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
-    declarations: [
-        TypesPageComponent
-    ],
     imports: [
         CommonModule,
         SharedModule,
         FormsModule,
-
         RouterModule.forChild([
             {
                 path: '',
@@ -22,6 +18,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
             }
         ]),
         FontAwesomeModule,
+        TypesPageComponent,
     ]
 })
 export class TypesModule {

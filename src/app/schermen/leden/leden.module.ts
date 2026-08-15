@@ -14,15 +14,6 @@ import { TrackRenderComponent } from './track-render/track-render.component';
 import { LedenCardComponent } from './leden-card/leden-card.component';
 
 @NgModule({
-    declarations: [
-        LedenSchermComponent,
-        AvatarRenderComponent,
-        AdresRenderComponent,
-        TelefoonRenderComponent,
-        EmailRenderComponent,
-        NaamRenderComponent,
-        TrackRenderComponent,
-        LedenCardComponent,],
     imports: [
         CommonModule,
         FormsModule,
@@ -34,6 +25,14 @@ import { LedenCardComponent } from './leden-card/leden-card.component';
                 component: LedenSchermComponent
             }
         ]),
+        LedenSchermComponent,
+        AvatarRenderComponent,
+        AdresRenderComponent,
+        TelefoonRenderComponent,
+        EmailRenderComponent,
+        NaamRenderComponent,
+        TrackRenderComponent,
+        LedenCardComponent,
     ],
     exports: [LedenSchermComponent]
 })

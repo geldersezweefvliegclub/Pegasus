@@ -6,13 +6,14 @@ import { StorageService } from '../../../services/storage/storage.service';
 import { ActivatedRoute } from '@angular/router';
 import { LoginService } from '../../../services/apiservice/login.service';
 import { HeliosUserinfo } from '../../../types/Helios';
+import { LidEditorComponent } from '../../../shared/components/editors/lid-editor/lid-editor.component';
 
 @Component({
     selector: 'app-profile',
     templateUrl: './profiel-page.component.html',
     styleUrls: ['./profiel-page.component.scss'],
     providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
-    standalone: false
+    imports: [LidEditorComponent]
 })
 export class ProfielPageComponent {
     lidID: number;

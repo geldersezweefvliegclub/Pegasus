@@ -5,16 +5,21 @@ import { Router } from '@angular/router';
 
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { CodeInputComponent } from 'angular-code-input';
+import { CodeInputComponent, CodeInputModule } from 'angular-code-input';
 import { StorageService } from '../../../services/storage/storage.service';
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
 import { LedenService } from '../../../services/apiservice/leden.service';
+import { ErrorComponent } from '../../../shared/components/error/error.component';
+import { FormsModule } from '@angular/forms';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { NgClass } from '@angular/common';
+import { LoaderComponent } from '../../../shared/components/loader/loader.component';
 
 @Component({
     selector: 'app-login-page',
     templateUrl: './login-page.component.html',
     styleUrls: ['./login-page.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, FormsModule, FaIconComponent, CodeInputModule, NgClass, LoaderComponent]
 })
 
 export class LoginPageComponent implements OnInit {

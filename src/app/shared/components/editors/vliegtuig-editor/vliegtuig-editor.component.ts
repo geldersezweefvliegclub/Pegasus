@@ -9,12 +9,18 @@ import { LoginService } from '../../../../services/apiservice/login.service';
 import { CompetentieService } from '../../../../services/apiservice/competentie.service';
 import { PegasusConfigService } from '../../../../services/shared/pegasus-config.service';
 import { PVB } from '../../../../types/IPegasusConfig';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { FormsModule } from '@angular/forms';
+import { RegistratieDirective } from './registratie.directive';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { LoaderComponent } from '../../loader/loader.component';
 
 @Component({
     selector: 'app-vliegtuig-editor',
     templateUrl: './vliegtuig-editor.component.html',
     styleUrls: ['./vliegtuig-editor.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, RegistratieDirective, IconButtonComponent, LoaderComponent]
 })
 export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
     @Output() add: EventEmitter<HeliosVliegtuig> = new EventEmitter<HeliosVliegtuig>();

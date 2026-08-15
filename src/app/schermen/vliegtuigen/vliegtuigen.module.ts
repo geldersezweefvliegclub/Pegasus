@@ -13,27 +13,24 @@ import { BaseChartDirective } from 'ng2-charts';
 import { VliegtuigCardComponent } from './vliegtuig-card/vliegtuig-card.component';
 
 @NgModule({
-    declarations: [
-        VliegtuigenSchermComponent,
-        VliegtuigLogboekComponent,
-        ZitplaatsRenderComponent,
-        HandboekRenderComponent,
-        IconRenderComponent,
-        VliegtuigCardComponent
-    ],
     imports: [
         CommonModule,
         FormsModule,
         FontAwesomeModule,
         BaseChartDirective,
         SharedModule,
-
         RouterModule.forChild([
             {
                 path: '',
                 component: VliegtuigenSchermComponent
             }
-        ])
+        ]),
+        VliegtuigenSchermComponent,
+        VliegtuigLogboekComponent,
+        ZitplaatsRenderComponent,
+        HandboekRenderComponent,
+        IconRenderComponent,
+        VliegtuigCardComponent
     ],
     exports: [
         VliegtuigenSchermComponent,

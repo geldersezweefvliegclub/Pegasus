@@ -122,9 +122,7 @@ import {FactuurUploadenComponent} from "./components/factuur-uploaden/uploaden.c
         DragDropModule,
         NgbTooltipModule,
         NgxMaterialTimepickerModule,
-        ImageCropperComponent
-    ],
-    declarations: [
+        ImageCropperComponent,
         PegasusCardComponent,
         ModalComponent,
         ErrorComponent,
@@ -202,7 +200,7 @@ import {FactuurUploadenComponent} from "./components/factuur-uploaden/uploaden.c
         VerjaardagenComponent,
         AgendaComponent,
         AgendaEditorComponent,
-        FactuurUploadenComponent,
+        FactuurUploadenComponent
     ],
     exports: [
         LidEditorComponent,
@@ -262,7 +260,6 @@ import {FactuurUploadenComponent} from "./components/factuur-uploaden/uploaden.c
         FactuurUploadenComponent,
     ],
     providers: [provideCharts(withDefaultRegisterables())],
-
     schemas: [NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]
 })
 

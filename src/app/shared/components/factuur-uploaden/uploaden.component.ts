@@ -5,12 +5,15 @@ import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
 import {TransactiesService} from "../../../services/apiservice/transacties.service";
 import {HeliosTransactiesDataset} from "../../../types/Helios";
 import {DateTime} from "luxon";
+import { ErrorComponent } from '../error/error.component';
+import { NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
+import { IconButtonComponent } from '../icon-button/icon-button.component';
 
 @Component({
     selector: 'app-factuur-uploaden',
     templateUrl: './uploaden.component.html',
     styleUrls: ['./uploaden.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, ModalComponent, NgbProgressbar, IconButtonComponent]
 })
 export class FactuurUploadenComponent implements OnInit {
   @ViewChild(ModalComponent) private popup: ModalComponent;

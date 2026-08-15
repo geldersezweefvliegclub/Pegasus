@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
 import { StartlijstService } from '../../../services/apiservice/startlijst.service';
 import { StartDetailsComponent } from '../start-details/start-details.component';
+import { NgClass } from '@angular/common';
 
 interface FlarmDataExt extends FlarmData {
     flarmOntvangstStatusClass?: string;
@@ -12,7 +13,7 @@ interface FlarmDataExt extends FlarmData {
     selector: 'app-flarm-lijst',
     templateUrl: './flarm-lijst.component.html',
     styleUrls: ['./flarm-lijst.component.scss'],
-    standalone: false
+    imports: [NgClass, StartDetailsComponent]
 })
 export class FlarmLijstComponent implements OnInit, OnDestroy, OnChanges {
   @Input() veldID: number | undefined

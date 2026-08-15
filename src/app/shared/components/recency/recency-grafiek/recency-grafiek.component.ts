@@ -9,13 +9,15 @@ import AnnotationPlugin, { AnnotationOptions } from 'chartjs-plugin-annotation';
 import { Chart, ChartConfiguration, ChartOptions } from 'chart.js';
 
 import { ModalComponent } from '../../modal/modal.component';
+import { NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
+import { BaseChartDirective } from 'ng2-charts';
 
 
 @Component({
     selector: 'app-recency-grafiek',
     templateUrl: './recency-grafiek.component.html',
     styleUrls: ['./recency-grafiek.component.scss'],
-    standalone: false
+    imports: [ModalComponent, NgbProgressbar, BaseChartDirective]
 })
 
 export class RecencyGrafiekComponent implements OnInit {

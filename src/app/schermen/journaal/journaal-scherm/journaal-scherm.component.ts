@@ -23,13 +23,22 @@ import { DateTime } from 'luxon';
 import { TitleRenderComponent } from '../title-render/title-render.component';
 import { JournaalEditorComponent } from '../../../shared/components/editors/journaal-editor/journaal-editor.component';
 import { ActivatedRoute } from '@angular/router';
+import { ErrorComponent } from '../../../shared/components/error/error.component';
+import { SuccessComponent } from '../../../shared/components/success/success.component';
+import { PegasusCardComponent } from '../../../shared/components/pegasus-card/pegasus-card.component';
+import { DatatableComponent } from '../../../shared/components/datatable/datatable.component';
+import { JournaalCardComponent } from '../../../shared/components/journaal-card/journaal-card.component';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
+import { StatusButtonComponent } from '../../../shared/components/status-button/status-button.component';
+import { ZoekbarComponent } from '../../../shared/components/zoekbar/zoekbar.component';
+import { PopupJournaalComponent } from '../../../shared/components/popup-journaal/popup-journaal.component';
 
 
 @Component({
     selector: 'app-meldingen-scherm',
     templateUrl: './journaal-scherm.component.html',
     styleUrls: ['./journaal-scherm.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, PegasusCardComponent, DatatableComponent, JournaalCardComponent, IconButtonComponent, StatusButtonComponent, ZoekbarComponent, JournaalEditorComponent, JournaalFilterComponent, PopupJournaalComponent]
 })
 
 export class JournaalSchermComponent implements OnInit, OnDestroy {

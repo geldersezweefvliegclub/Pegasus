@@ -7,21 +7,18 @@ import { RouterModule } from '@angular/router';
 import { AuditPageComponent } from './audit-page/audit-page.component';
 
 @NgModule({
-    declarations: [
-        AuditPageComponent,
-    ],
     imports: [
         CommonModule,
         FormsModule,
         FontAwesomeModule,
         SharedModule,
-
         RouterModule.forChild([
             {
                 path: '',
                 component: AuditPageComponent
             }
-        ])
+        ]),
+        AuditPageComponent
     ],
     exports: [
         AuditPageComponent

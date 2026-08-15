@@ -2,13 +2,14 @@ import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core
 import { ModalComponent } from '../modal/modal.component';
 import { SharedService } from '../../../services/shared/shared.service';
 import { LoginService } from '../../../services/apiservice/login.service';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
     selector: 'app-leden-filter',
     templateUrl: './leden-filter.component.html',
     styleUrls: ['./leden-filter.component.scss'],
-    standalone: false
+    imports: [ModalComponent, FormsModule]
 })
 
 export class LedenFilterComponent {

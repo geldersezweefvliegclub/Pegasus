@@ -3,12 +3,13 @@ import { AgRendererComponent } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-email-render',
     templateUrl: './email-render.component.html',
     styleUrls: ['./email-render.component.scss'],
-    standalone: false
+    imports: [FaIconComponent]
 })
 export class EmailRenderComponent implements AgRendererComponent {
   email: string;

@@ -15,12 +15,17 @@ import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
 import { VliegtuigenService } from '../../../services/apiservice/vliegtuigen.service';
 import { LidAanwezigEditorComponent } from '../editors/lid-aanwezig-editor/lid-aanwezig-editor.component';
 import { DaginfoService } from '../../../services/apiservice/daginfo.service';
+import { ErrorComponent } from '../error/error.component';
+import { SuccessComponent } from '../success/success.component';
+import { IconButtonComponent } from '../icon-button/icon-button.component';
+import { NgClass } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-aanmelden-leden',
     templateUrl: './aanmelden-leden.component.html',
     styleUrls: ['./aanmelden-leden.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, IconButtonComponent, NgClass, FormsModule, LidAanwezigEditorComponent]
 })
 
 export class AanmeldenLedenComponent implements OnInit, OnDestroy {

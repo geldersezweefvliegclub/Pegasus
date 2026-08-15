@@ -3,12 +3,17 @@ import { ModalComponent } from '../../modal/modal.component';
 import { HeliosDocument } from '../../../../types/Helios';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { DocumentenService } from '../../../../services/apiservice/documenten.service';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { FormsModule } from '@angular/forms';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { LoaderComponent } from '../../loader/loader.component';
 
 @Component({
     selector: 'app-document-editor',
     templateUrl: './document-editor.component.html',
     styleUrls: ['./document-editor.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, IconButtonComponent, LoaderComponent]
 })
 export class DocumentEditorComponent {
     @ViewChild(ModalComponent) private popup: ModalComponent;

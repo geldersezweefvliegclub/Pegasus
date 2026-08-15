@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NgbCalendar, NgbDate, NgbDatepickerNavigateEvent, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCalendar, NgbDate, NgbDatepickerNavigateEvent, NgbDateStruct, NgbDatepicker, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { DateTime } from 'luxon';
 import { LoginService } from '../../../services/apiservice/login.service';
 import { HeliosActie, KalenderMaand } from '../../../types/Utils';
@@ -12,12 +12,14 @@ import { DaginfoService } from '../../../services/apiservice/daginfo.service';
 import { RoosterService } from '../../../services/apiservice/rooster.service';
 import { DagRapportenService } from '../../../services/apiservice/dag-rapporten.service';
 import { DienstenService } from '../../../services/apiservice/diensten.service';
+import { FormsModule } from '@angular/forms';
+import { NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-vliegdag-selectie',
     templateUrl: './vliegdag-selectie.component.html',
     styleUrls: ['./vliegdag-selectie.component.scss'],
-    standalone: false
+    imports: [NgbDatepicker, FormsModule, NgbTooltip, NgClass]
 })
 export class VliegdagSelectieComponent implements OnInit, OnDestroy {
     private dbEventAbonnement: Subscription;

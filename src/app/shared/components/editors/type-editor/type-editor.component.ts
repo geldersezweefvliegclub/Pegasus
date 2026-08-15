@@ -3,12 +3,17 @@ import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosType } from '../../../../types/Helios';
 import { TypesService } from '../../../../services/apiservice/types.service';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { FormsModule } from '@angular/forms';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { LoaderComponent } from '../../loader/loader.component';
 
 @Component({
     selector: 'app-type-editor',
     templateUrl: './type-editor.component.html',
     styleUrls: ['./type-editor.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, IconButtonComponent, LoaderComponent]
 })
 export class TypeEditorComponent  {
     @Input() toonBedragEenheid = false;

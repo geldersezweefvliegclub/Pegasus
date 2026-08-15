@@ -5,12 +5,20 @@ import { AgendaService } from '../../../../services/apiservice/agenda';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { LoginService } from '../../../../services/apiservice/login.service';
 import { DateTime } from 'luxon';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { NgClass } from '@angular/common';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { LoaderComponent } from '../../loader/loader.component';
 
 @Component({
     selector: 'app-agenda-editor',
     templateUrl: './agenda-editor.component.html',
     styleUrls: ['./agenda-editor.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, NgbInputDatepicker, FormsModule, IconButtonComponent, NgClass, NgxMaterialTimepickerModule, LoaderComponent]
 })
 export class AgendaEditorComponent  {
   @ViewChild(ModalComponent) private popup: ModalComponent;

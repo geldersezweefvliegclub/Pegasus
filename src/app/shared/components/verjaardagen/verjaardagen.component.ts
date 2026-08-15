@@ -5,8 +5,7 @@ import { HeliosLedenDataset } from '../../../types/Helios';
 @Component({
     selector: 'app-verjaardagen',
     templateUrl: './verjaardagen.component.html',
-    styleUrls: ['./verjaardagen.component.scss'],
-    standalone: false
+    styleUrls: ['./verjaardagen.component.scss']
 })
 export class VerjaardagenComponent implements OnInit {
 

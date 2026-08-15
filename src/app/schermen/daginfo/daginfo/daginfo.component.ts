@@ -24,12 +24,17 @@ import { DagRapportenService } from '../../../services/apiservice/dag-rapporten.
 import {
     DagRapportEditorComponent,
 } from '../../../shared/components/editors/dag-rapport-editor/dag-rapport-editor.component';
+import { SharedModule } from '../../../shared/shared.module';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-daginfo',
     templateUrl: './daginfo.component.html',
     styleUrls: ['./daginfo.component.scss'],
-    standalone: false
+    imports: [SharedModule, NgSelectComponent, FormsModule, FaIconComponent, AsyncPipe]
 })
 export class DaginfoComponent implements OnInit, OnDestroy{
     @ViewChild(DagRoosterComponent) dienstenWizard: DagRoosterComponent;

@@ -24,7 +24,7 @@ import { VliegtuigInvoerComponent } from './vliegtuig-invoer/vliegtuig-invoer.co
 import { ProgressieService } from '../../../../services/apiservice/progressie.service';
 import { LoginService } from '../../../../services/apiservice/login.service';
 import { PegasusConfigService } from '../../../../services/shared/pegasus-config.service';
-import { NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDate, NgbDateParserFormatter, NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateFRParserFormatter } from '../../../ngb-date-fr-parser-formatter';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faStreetView } from '@fortawesome/free-solid-svg-icons';
@@ -32,13 +32,23 @@ import { StorageService } from '../../../../services/storage/storage.service';
 import { TransactieEditorComponent } from '../transactie-editor/transactie-editor.component';
 import { DienstenService } from '../../../../services/apiservice/diensten.service';
 import { RoosterService } from '../../../../services/apiservice/rooster.service';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { FormsModule } from '@angular/forms';
+import { NgClass, AsyncPipe } from '@angular/common';
+import { LidInvoerComponent } from './lid-invoer/lid-invoer.component';
+import { GastInvoerComponent } from './gast-invoer/gast-invoer.component';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { LoaderComponent } from '../../loader/loader.component';
 
 @Component({
     selector: 'app-start-editor',
     templateUrl: './start-editor.component.html',
     styleUrls: ['./start-editor.component.scss'],
     providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, TransactieEditorComponent, ModalComponent, IconButtonComponent, NgbInputDatepicker, FormsModule, NgClass, VliegtuigInvoerComponent, LidInvoerComponent, GastInvoerComponent, FaIconComponent, NgSelectComponent, LoaderComponent, AsyncPipe]
 })
 
 export class StartEditorComponent implements OnInit {

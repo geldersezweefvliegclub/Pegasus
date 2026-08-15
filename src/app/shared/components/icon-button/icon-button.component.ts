@@ -4,12 +4,14 @@ import { far, IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { FlipProp, SizeProp } from '@fortawesome/fontawesome-svg-core';
 import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
 import { Subscription } from 'rxjs';
+import { NgClass } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-icon-button',
     templateUrl: './icon-button.component.html',
     styleUrls: ['./icon-button.component.scss'],
-    standalone: false
+    imports: [NgClass, FaIconComponent]
 })
 export class IconButtonComponent implements OnInit, OnDestroy {
     @Input() tekst = '';

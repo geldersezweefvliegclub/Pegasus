@@ -3,12 +3,16 @@ import { Observable, of, Subscription } from 'rxjs';
 import { TypesService } from '../../../../../services/apiservice/types.service';
 import { HeliosType } from '../../../../../types/Helios';
 import { ModalComponent } from '../../../modal/modal.component';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { IconButtonComponent } from '../../../icon-button/icon-button.component';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-compose-meteo',
     templateUrl: './compose-meteo.component.html',
     styleUrls: ['./compose-meteo.component.scss'],
-    standalone: false
+    imports: [ModalComponent, NgSelectComponent, FormsModule, IconButtonComponent, AsyncPipe]
 })
 export class ComposeMeteoComponent {
     @Output() opslaan: EventEmitter<string> = new EventEmitter<string>();

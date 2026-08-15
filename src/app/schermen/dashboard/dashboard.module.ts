@@ -9,23 +9,20 @@ import { LedenDocumentenComponent } from './dasboard-page/leden-documenten/leden
 import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
-    declarations: [
-        DashboardPageComponent,
-        LedenDocumentenComponent,
-    ],
     imports: [
         CommonModule,
         FormsModule,
         FontAwesomeModule,
         SharedModule,
-
         RouterModule.forChild([
             {
                 path: '',
                 component: DashboardPageComponent
             }
         ]),
-        NgbCarouselModule
+        NgbCarouselModule,
+        DashboardPageComponent,
+        LedenDocumentenComponent
     ],
     exports: [
         DashboardPageComponent

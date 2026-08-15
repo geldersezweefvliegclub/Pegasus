@@ -6,12 +6,15 @@ import { DdwvService } from '../../../services/apiservice/ddwv.service';
 import { ErrorMessage } from '../../../types/Utils';
 import { Subscription } from 'rxjs';
 import { TypesService } from '../../../services/apiservice/types.service';
+import { ErrorComponent } from '../error/error.component';
+import { FormsModule } from '@angular/forms';
+import { IconButtonComponent } from '../icon-button/icon-button.component';
 
 @Component({
     selector: 'app-ideal-bestellen',
     templateUrl: './ideal-bestellen.component.html',
     styleUrls: ['./ideal-bestellen.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, ModalComponent, FormsModule, IconButtonComponent]
 })
 export class IdealBestellenComponent implements OnInit{
     @ViewChild(ModalComponent) private popup: ModalComponent;

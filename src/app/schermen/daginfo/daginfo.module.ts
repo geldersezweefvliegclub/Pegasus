@@ -8,26 +8,23 @@ import { DaginfoComponent } from './daginfo/daginfo.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
-  declarations: [
-    DaginfoComponent
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    FontAwesomeModule,
-    NgSelectModule,
-    SharedModule,
-
-    RouterModule.forChild([
-      {
-        path: '',
-        component: DaginfoComponent
-      }
-    ])
-  ],
-  exports: [
-    DaginfoComponent
-  ]
+    imports: [
+        CommonModule,
+        FormsModule,
+        FontAwesomeModule,
+        NgSelectModule,
+        SharedModule,
+        RouterModule.forChild([
+            {
+                path: '',
+                component: DaginfoComponent
+            }
+        ]),
+        DaginfoComponent
+    ],
+    exports: [
+        DaginfoComponent
+    ]
 })
 
 export class DaginfoModule { }

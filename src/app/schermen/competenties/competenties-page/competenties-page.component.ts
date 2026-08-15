@@ -5,12 +5,15 @@ import { Subscription } from 'rxjs';
 import { HeliosCompetentie, HeliosCompetentiesDataset, HeliosProgressieBoom, HeliosType } from '../../../types/Helios';
 import { SharedService } from '../../../services/shared/shared.service';
 import { CompetentieService } from '../../../services/apiservice/competentie.service';
-import { ITreeOptions } from '@ali-hm/angular-tree-component';
+import { ITreeOptions, TreeComponent, TreeNodeExpanderComponent, TreeDragDirective, TreeDropDirective, TreeNodeContent } from '@ali-hm/angular-tree-component';
 import { LoginService } from '../../../services/apiservice/login.service';
 import { TypesService } from '../../../services/apiservice/types.service';
 import {
   CompetentieEditorComponent,
 } from '../../../shared/components/editors/competentie-editor/competentie-editor.component';
+import { SharedModule } from '../../../shared/shared.module';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { NgStyle } from '@angular/common';
 
 export interface CompetentieTreeviewItem {
     nodeId: string;
@@ -28,7 +31,7 @@ export interface CompetentieTreeviewItem {
     selector: 'app-competenties-page',
     templateUrl: './competenties-page.component.html',
     styleUrls: ['./competenties-page.component.scss'],
-    standalone: false
+    imports: [SharedModule, TreeComponent, TreeNodeExpanderComponent, TreeDragDirective, TreeDropDirective, TreeNodeContent, FaIconComponent, NgStyle]
 })
 export class CompetentiesPageComponent implements OnInit, OnDestroy {
     @ViewChild(CompetentieEditorComponent) editor: CompetentieEditorComponent;

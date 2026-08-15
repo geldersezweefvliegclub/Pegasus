@@ -5,12 +5,13 @@ import { HeliosJournaalDataset } from '../../../types/Helios';
 import { DateTime } from 'luxon';
 import { Subscription } from 'rxjs';
 import { SharedService } from '../../../services/shared/shared.service';
+import { JournaalCardComponent } from '../journaal-card/journaal-card.component';
 
 @Component({
     selector: 'app-popup-journaal',
     templateUrl: './popup-journaal.component.html',
     styleUrls: ['./popup-journaal.component.scss'],
-    standalone: false
+    imports: [ModalComponent, JournaalCardComponent]
 })
 export class PopupJournaalComponent implements OnInit, OnDestroy {
   @ViewChild(ModalComponent) private popup: ModalComponent;

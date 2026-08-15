@@ -6,16 +6,21 @@ import { HeliosLedenDataset, HeliosTransactie, HeliosType } from '../../../../ty
 import { Subscription } from 'rxjs';
 import { LedenService } from '../../../../services/apiservice/leden.service';
 import { TypesService } from '../../../../services/apiservice/types.service';
-import { NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDate, NgbDateParserFormatter, NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap';
 import { DateTime } from 'luxon';
 import { NgbDateFRParserFormatter } from '../../../ngb-date-fr-parser-formatter';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { LidInvoerComponent } from '../start-editor/lid-invoer/lid-invoer.component';
+import { FormsModule } from '@angular/forms';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
 
 @Component({
     selector: 'app-transactie-editor',
     templateUrl: './transactie-editor.component.html',
     styleUrls: ['./transactie-editor.component.scss'],
     providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, LidInvoerComponent, FormsModule, NgbInputDatepicker, IconButtonComponent]
 })
 export class TransactieEditorComponent implements OnInit {
     @ViewChild(ModalComponent) private popup: ModalComponent;

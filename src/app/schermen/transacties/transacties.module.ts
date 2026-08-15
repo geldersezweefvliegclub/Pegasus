@@ -11,11 +11,6 @@ import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
-    declarations: [
-        TransactiesGridComponent,
-        BedragRenderComponent,
-        OmschrijvingRenderComponent
-    ],
     imports: [
         CommonModule,
         FormsModule,
@@ -27,7 +22,10 @@ import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
                 component: TransactiesGridComponent
             }
         ]),
-        NgbDatepickerModule
+        NgbDatepickerModule,
+        TransactiesGridComponent,
+        BedragRenderComponent,
+        OmschrijvingRenderComponent
     ],
     exports: [TransactiesGridComponent]
 })

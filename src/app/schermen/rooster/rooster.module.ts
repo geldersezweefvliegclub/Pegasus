@@ -13,26 +13,23 @@ import { RoosterDagviewComponent } from './rooster-dagview/rooster-dagview.compo
 
 
 @NgModule({
-    declarations: [
-        RoosterPageComponent,
-        JaarTotalenComponent,
-        RoosterMaandviewComponent,
-        RoosterWeekviewComponent,
-        RoosterDagviewComponent
-    ],
     imports: [
         CommonModule,
         FormsModule,
         FontAwesomeModule,
         SharedModule,
-
         RouterModule.forChild([
             {
                 path: '',
                 component: RoosterPageComponent
             }
         ]),
-        DragDropModule
+        DragDropModule,
+        RoosterPageComponent,
+        JaarTotalenComponent,
+        RoosterMaandviewComponent,
+        RoosterWeekviewComponent,
+        RoosterDagviewComponent
     ],
     exports: [
         RoosterPageComponent

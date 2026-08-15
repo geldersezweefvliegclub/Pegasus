@@ -5,8 +5,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 @Component({
     selector: 'app-handboek-render',
     templateUrl: './handboek-render.component.html',
-    styleUrls: ['./handboek-render.component.scss'],
-    standalone: false
+    styleUrls: ['./handboek-render.component.scss']
 })
 export class HandboekRenderComponent implements AgRendererComponent {
   url: string | undefined;

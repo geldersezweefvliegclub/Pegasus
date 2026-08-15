@@ -3,12 +3,14 @@ import { HeliosJournaalDataset } from '../../../types/Helios';
 import { SharedService } from '../../../services/shared/shared.service';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { JournaalEditorComponent } from '../editors/journaal-editor/journaal-editor.component';
+import { NgClass } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-journaal-card',
     templateUrl: './journaal-card.component.html',
     styleUrls: ['./journaal-card.component.scss'],
-    standalone: false
+    imports: [NgClass, FaIconComponent, JournaalEditorComponent]
 })
 export class JournaalCardComponent implements OnInit {
     @Input() melding: HeliosJournaalDataset;

@@ -7,12 +7,18 @@ import { LoginService } from '../../../../services/apiservice/login.service';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { Subscription } from 'rxjs';
 import { TracksLedenDataset } from '../../tracks/tracks.component';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { LidInvoerComponent } from '../start-editor/lid-invoer/lid-invoer.component';
+import { FormsModule } from '@angular/forms';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { LoaderComponent } from '../../loader/loader.component';
 
 @Component({
     selector: 'app-track-editor',
     templateUrl: './track-editor.component.html',
     styleUrls: ['./track-editor.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, LidInvoerComponent, FormsModule, IconButtonComponent, LoaderComponent]
 })
 export class TrackEditorComponent implements OnInit{
     @ViewChild(ModalComponent) private popup: ModalComponent;

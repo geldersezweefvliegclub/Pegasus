@@ -1,4 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { DatePipe, NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faAvianex } from '@fortawesome/free-brands-svg-icons';
 import { faCalendarCheck, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
@@ -27,6 +30,7 @@ import { StartEditorComponent } from '../../../shared/components/editors/start-e
 import { DaginfoService } from '../../../services/apiservice/daginfo.service';
 import * as xlsx from 'xlsx';
 import { ProgressieService } from '../../../services/apiservice/progressie.service';
+import { SharedModule } from '../../../shared/shared.module';
 
 export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
     Tonen?: boolean;
@@ -36,7 +40,18 @@ export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
     selector: 'app-reservering-page',
     templateUrl: './reservering-page.component.html',
     styleUrls: ['./reservering-page.component.scss'],
-    standalone: false
+    imports: [
+        SharedModule,
+        KistSelectieComponent,
+        BoekingEditorComponent,
+        StartEditorComponent,
+        FormsModule,
+        NgClass,
+        NgStyle,
+        NgTemplateOutlet,
+        DatePipe,
+        FaIconComponent
+    ]
 })
 export class ReserveringPageComponent implements OnInit, OnDestroy {
     @ViewChild(KistSelectieComponent) kistSelector: KistSelectieComponent;

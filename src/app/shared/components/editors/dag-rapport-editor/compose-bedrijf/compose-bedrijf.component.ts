@@ -4,12 +4,16 @@ import { Observable, of, Subscription } from 'rxjs';
 import { HeliosType } from '../../../../../types/Helios';
 import { TypesService } from '../../../../../services/apiservice/types.service';
 import { DateTime } from 'luxon';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { IconButtonComponent } from '../../../icon-button/icon-button.component';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-compose-bedrijf',
     templateUrl: './compose-bedrijf.component.html',
     styleUrls: ['./compose-bedrijf.component.scss'],
-    standalone: false
+    imports: [ModalComponent, NgSelectComponent, FormsModule, IconButtonComponent, AsyncPipe]
 })
 export class ComposeBedrijfComponent {
     @Input() datum: DateTime;

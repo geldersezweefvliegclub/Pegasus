@@ -9,8 +9,7 @@ import { AbstractControl, NG_VALIDATORS, ValidationErrors, ValidatorFn } from '@
             useExisting: WachtwoordSterkteValidatorDirective,
             multi: true,
         },
-    ],
-    standalone: false
+    ]
 })
 export class WachtwoordSterkteValidatorDirective {
   // todo controleer regex

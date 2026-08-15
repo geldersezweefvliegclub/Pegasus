@@ -31,12 +31,16 @@ import { DdwvService } from '../../../services/apiservice/ddwv.service';
 import {
   UitbetalenDdwvCrewEditorComponent,
 } from '../../../shared/components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
+import { NgClass, NgTemplateOutlet, SlicePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-rooster-weekview',
     templateUrl: './rooster-weekview.component.html',
     styleUrls: ['./rooster-weekview.component.scss'],
-    standalone: false
+    imports: [UitbetalenDdwvCrewEditorComponent, IconButtonComponent, NgClass, FormsModule, NgTemplateOutlet, FaIconComponent, DienstEditorComponent, SlicePipe]
 })
 export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
     @Input() rooster: HeliosRoosterDagExtended[];

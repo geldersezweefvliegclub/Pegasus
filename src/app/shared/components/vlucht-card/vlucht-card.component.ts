@@ -9,13 +9,16 @@ import { SharedService } from '../../../services/shared/shared.service';
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { RouterLink } from '@angular/router';
+import { IconButtonComponent } from '../icon-button/icon-button.component';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 
 @Component({
     selector: 'app-vlucht-card',
     templateUrl: './vlucht-card.component.html',
     styleUrls: ['./vlucht-card.component.scss'],
-    standalone: false
+    imports: [RouterLink, IconButtonComponent, FaIconComponent, TijdInvoerComponent, StartEditorComponent, TrackEditorComponent]
 })
 export class VluchtCardComponent implements OnInit {
     @Input() logboek: HeliosLogboekDataset;

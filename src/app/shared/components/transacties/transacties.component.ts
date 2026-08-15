@@ -8,12 +8,14 @@ import { SchermGrootte, SharedService } from '../../../services/shared/shared.se
 import { LoginService } from '../../../services/apiservice/login.service';
 import { TransactieEditorComponent } from '../editors/transactie-editor/transactie-editor.component';
 import { IdealBestellenComponent } from '../ideal-bestellen/ideal-bestellen.component';
+import { NgTemplateOutlet, NgClass, DecimalPipe } from '@angular/common';
+import { IconButtonComponent } from '../icon-button/icon-button.component';
 
 @Component({
     selector: 'app-transacties',
     templateUrl: './transacties.component.html',
     styleUrls: ['./transacties.component.scss'],
-    standalone: false
+    imports: [ModalComponent, NgTemplateOutlet, IconButtonComponent, NgClass, TransactieEditorComponent, IdealBestellenComponent, DecimalPipe]
 })
 export class TransactiesComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private popup: ModalComponent;

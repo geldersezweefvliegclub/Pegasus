@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { beheerRoutes, CustomRoute, routes } from '../../../routing.module';
 
-import { Router } from '@angular/router';
+import { Router, RouterLinkActive, RouterLink } from '@angular/router';
 import { fas, faSignOutAlt, faWrench } from '@fortawesome/free-solid-svg-icons';
 import { NgbCalendar, NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
@@ -17,13 +17,17 @@ import { PegasusConfigService } from '../../../services/shared/pegasus-config.se
 import { PopupKalenderComponent } from '../popup-kalender/popup-kalender.component';
 import { NgbDateFRParserFormatter } from '../../ngb-date-fr-parser-formatter';
 import { MenuItem } from '../../../types/IPegasusConfig';
+import { NgTemplateOutlet, NgClass } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { IconButtonComponent } from '../icon-button/icon-button.component';
+import { VliegdagSelectieComponent } from '../vliegdag-selectie/vliegdag-selectie.component';
 
 @Component({
     selector: 'app-navigatie',
     templateUrl: './navigatie.component.html',
     styleUrls: ['./navigatie.component.scss'],
     providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
-    standalone: false
+    imports: [NgTemplateOutlet, RouterLinkActive, RouterLink, FaIconComponent, IconButtonComponent, VliegdagSelectieComponent, NgClass, PopupKalenderComponent]
 })
 
 export class NavigatieComponent implements OnInit, OnDestroy {

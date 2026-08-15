@@ -5,8 +5,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 @Component({
     selector: 'app-zitplaats-render',
     templateUrl: './zitplaats-render.component.html',
-    styleUrls: ['./zitplaats-render.component.scss'],
-    standalone: false
+    styleUrls: ['./zitplaats-render.component.scss']
 })
 export class ZitplaatsRenderComponent implements AgRendererComponent {
   stoelen: number;

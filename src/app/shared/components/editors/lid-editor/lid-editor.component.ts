@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDate, NgbDateParserFormatter, NgbInputDatepicker, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { DateTime } from 'luxon';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faEye, faEyeSlash, faInfo, faInfoCircle, faUser } from '@fortawesome/free-solid-svg-icons';
@@ -17,13 +17,26 @@ import { SchermGrootte, SharedService } from '../../../../services/shared/shared
 import { TransactiesComponent } from '../../transacties/transacties.component';
 import { PegasusConfigService } from '../../../../services/shared/pegasus-config.service';
 import { DdwvService } from '../../../../services/apiservice/ddwv.service';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { FormsModule } from '@angular/forms';
+import { PegasusCardComponent } from '../../pegasus-card/pegasus-card.component';
+import { ImageCropComponent } from '../../image-crop/image-crop.component';
+import { WachtwoordMatchValidatorDirective } from './wachtwoord-match-validator.directive';
+import { TelefoonValidatorDirective } from './telefoon-validator.directive';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { NgClass } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { WachtwoordSterkteValidatorDirective } from './wachtwoord-sterkte-validator.directive';
+import { LidInvoerComponent } from '../start-editor/lid-invoer/lid-invoer.component';
+import { LoaderComponent } from '../../loader/loader.component';
 
 @Component({
     selector: 'app-lid-editor',
     templateUrl: './lid-editor.component.html',
     styleUrls: ['./lid-editor.component.scss'],
     providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, FormsModule, PegasusCardComponent, ImageCropComponent, WachtwoordMatchValidatorDirective, TelefoonValidatorDirective, NgbInputDatepicker, IconButtonComponent, NgClass, FaIconComponent, NgbPopover, WachtwoordSterkteValidatorDirective, LidInvoerComponent, LoaderComponent, TransactiesComponent]
 })
 export class LidEditorComponent implements OnInit, OnDestroy {
     @Input() lidID: number;

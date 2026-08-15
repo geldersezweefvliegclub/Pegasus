@@ -9,9 +9,8 @@ describe('LoaderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LoaderComponent ],
-      imports: [ FontAwesomeModule ]
-    })
+    imports: [FontAwesomeModule, LoaderComponent]
+})
     .compileComponents();
   });
 

@@ -3,12 +3,14 @@ import { SchermGrootte, SharedService } from '../../../services/shared/shared.se
 import { far, IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
+import { NgClass } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-status-button',
     templateUrl: './status-button.component.html',
     styleUrls: ['./status-button.component.scss'],
-    standalone: false
+    imports: [NgClass, FaIconComponent]
 })
 export class StatusButtonComponent implements OnInit, OnDestroy {
     @Input() tekst = '';

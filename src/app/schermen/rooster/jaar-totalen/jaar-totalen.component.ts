@@ -9,6 +9,7 @@ import { SharedService } from '../../../services/shared/shared.service';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
 import { OnderdrukNulComponent } from '../../../shared/components/datatable/onderdruk-nul/onderdruk-nul.component';
 import * as xlsx from 'xlsx';
+import { DatatableComponent } from '../../../shared/components/datatable/datatable.component';
 
 interface JaarTotaal {
     ID: number
@@ -35,7 +36,7 @@ interface JaarTotaal {
     selector: 'app-jaar-totalen',
     templateUrl: './jaar-totalen.component.html',
     styleUrls: ['./jaar-totalen.component.scss'],
-    standalone: false
+    imports: [ModalComponent, DatatableComponent]
 })
 export class JaarTotalenComponent implements OnInit {
     @Input() leden: HeliosLedenDataset[];

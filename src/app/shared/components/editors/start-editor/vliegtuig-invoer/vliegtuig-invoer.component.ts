@@ -2,12 +2,14 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { Observable, of, Subject } from 'rxjs';
 import { HeliosVliegtuigenDataset } from '../../../../../types/Helios';
 import { NgSelectComponent } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-vliegtuig-invoer',
     templateUrl: './vliegtuig-invoer.component.html',
     styleUrls: ['./vliegtuig-invoer.component.scss'],
-    standalone: false
+    imports: [NgSelectComponent, FormsModule, AsyncPipe]
 })
 export class VliegtuigInvoerComponent implements OnInit, OnChanges {
     @Input() vliegtuigen: HeliosVliegtuigenDataset[] = [];

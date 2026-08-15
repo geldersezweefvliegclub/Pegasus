@@ -3,8 +3,7 @@ import { FormGroup, NG_VALIDATORS, ValidationErrors } from '@angular/forms';
 
 @Directive({
     selector: '[appWachtwoordMatchValidator]',
-    providers: [{ provide: NG_VALIDATORS, useExisting: WachtwoordMatchValidatorDirective, multi: true }],
-    standalone: false
+    providers: [{ provide: NG_VALIDATORS, useExisting: WachtwoordMatchValidatorDirective, multi: true }]
 })
 export class WachtwoordMatchValidatorDirective {
 

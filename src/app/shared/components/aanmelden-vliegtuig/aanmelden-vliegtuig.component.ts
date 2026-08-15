@@ -8,13 +8,17 @@ import { DateTime } from 'luxon';
 import { SharedService } from '../../../services/shared/shared.service';
 import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
 import { DaginfoService } from '../../../services/apiservice/daginfo.service';
+import { ErrorComponent } from '../error/error.component';
+import { SuccessComponent } from '../success/success.component';
+import { IconButtonComponent } from '../icon-button/icon-button.component';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
     selector: 'app-aanmelden-vliegtuig',
     templateUrl: './aanmelden-vliegtuig.component.html',
     styleUrls: ['./aanmelden-vliegtuig.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, IconButtonComponent, FormsModule]
 })
 export class AanmeldenVliegtuigComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private popup: ModalComponent;

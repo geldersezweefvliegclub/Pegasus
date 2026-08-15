@@ -11,8 +11,7 @@ import { filter } from 'rxjs/operators';
     styleUrls: ['./footer.component.scss'],
     animations: [
         slideInOutLeftAnimation
-    ],
-    standalone: false
+    ]
 })
 export class FooterComponent {
     toonMenu = false;

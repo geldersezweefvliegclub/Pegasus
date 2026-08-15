@@ -2,13 +2,14 @@ import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 
 @Component({
     selector: 'app-modal',
     templateUrl: './modal.component.html',
     styleUrls: ['./modal.component.scss'],
-    standalone: false
+    imports: [FaIconComponent]
 })
 export class ModalComponent {
     @Input() titel = 'Editor';

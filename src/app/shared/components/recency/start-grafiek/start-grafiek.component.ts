@@ -9,13 +9,15 @@ import AnnotationPlugin, { AnnotationOptions } from 'chartjs-plugin-annotation';
 import { Chart, ChartDataset, ChartOptions } from 'chart.js';
 
 import { ModalComponent } from '../../modal/modal.component';
+import { NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
+import { BaseChartDirective } from 'ng2-charts';
 
 
 @Component({
     selector: 'app-start-grafiek',
     templateUrl: './start-grafiek.component.html',
     styleUrls: ['./start-grafiek.component.scss'],
-    standalone: false
+    imports: [ModalComponent, NgbProgressbar, BaseChartDirective]
 })
 
 export class StartGrafiekComponent implements OnInit {

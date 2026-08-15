@@ -1,4 +1,5 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { NavigationEnd, Router } from '@angular/router';
 import { LoginService } from '../../services/apiservice/login.service';
 import { SwUpdate } from '@angular/service-worker';
@@ -6,6 +7,7 @@ import { debounceTime } from 'rxjs/operators';
 import { SharedService } from '../../services/shared/shared.service';
 import { StorageService } from '../../services/storage/storage.service';
 import { PopupKalenderComponent } from '../../shared/components/popup-kalender/popup-kalender.component';
+import { SharedModule } from '../../shared/shared.module';
 import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 
@@ -13,7 +15,7 @@ import { Subscription } from 'rxjs';
     selector: 'app-root',
     templateUrl: 'app.component.html',
     styleUrls: ['app.component.scss'],
-    standalone: false
+    imports: [SharedModule, RouterOutlet]
 })
 
 export class AppComponent implements OnDestroy{

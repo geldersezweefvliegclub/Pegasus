@@ -7,13 +7,15 @@ import * as xlsx from 'xlsx';
 import { nummerSort } from '../../../utils/Utils';
 import { AuditService } from '../../../services/apiservice/audit.service';
 import { faWaveSquare } from '@fortawesome/free-solid-svg-icons';
+import { SharedModule } from '../../../shared/shared.module';
+import { KeyValuePipe } from '@angular/common';
 
 
 @Component({
     selector: 'app-audit-page',
     templateUrl: './audit-page.component.html',
     styleUrls: ['./audit-page.component.scss'],
-    standalone: false
+    imports: [SharedModule, KeyValuePipe]
 })
 
 export class AuditPageComponent implements OnInit {

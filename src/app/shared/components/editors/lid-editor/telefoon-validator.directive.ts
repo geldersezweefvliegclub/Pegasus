@@ -9,8 +9,7 @@ import { AbstractControl, NG_VALIDATORS, Validator, ValidatorFn, ValidationError
             useExisting: TelefoonValidatorDirective,
             multi: true,
         },
-    ],
-    standalone: false
+    ]
 })
 export class TelefoonValidatorDirective implements Validator {
 

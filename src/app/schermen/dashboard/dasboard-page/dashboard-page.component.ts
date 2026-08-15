@@ -45,12 +45,17 @@ import { saveAs } from 'file-saver';
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
 import { TransactiesComponent } from '../../../shared/components/transacties/transacties.component';
 import { DdwvService } from '../../../services/apiservice/ddwv.service';
+import { SharedModule } from '../../../shared/shared.module';
+import { FormsModule } from '@angular/forms';
+import { NgbCarousel, NgbSlide } from '@ng-bootstrap/ng-bootstrap/carousel';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { LedenDocumentenComponent } from './leden-documenten/leden-documenten.component';
 
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard-page.component.html',
     styleUrls: ['./dashboard-page.component.scss'],
-    standalone: false
+    imports: [SharedModule, FormsModule, NgbCarousel, NgbSlide, FaIconComponent, LedenDocumentenComponent]
 })
 export class DashboardPageComponent implements OnInit, OnDestroy {
     readonly iconCardIcon: IconDefinition = faChartPie;

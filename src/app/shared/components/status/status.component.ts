@@ -9,12 +9,15 @@ import { CompetentieService } from '../../../services/apiservice/competentie.ser
 import { Subscription } from 'rxjs';
 import { ProgressieEditorComponent } from '../editors/progressie-editor/progressie-editor.component';
 import { Check, Overig } from '../../../types/IPegasusConfig';
+import { ErrorComponent } from '../error/error.component';
+import { SuccessComponent } from '../success/success.component';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
     selector: 'app-status',
     templateUrl: './status.component.html',
     styleUrls: ['./status.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, LoaderComponent, ProgressieEditorComponent]
 })
 
 export class StatusComponent implements OnInit, OnChanges, OnDestroy {

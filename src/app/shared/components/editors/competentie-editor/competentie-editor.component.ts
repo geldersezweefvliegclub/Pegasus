@@ -5,6 +5,13 @@ import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { CompetentieService } from '../../../../services/apiservice/competentie.service';
 import { Observable, of, Subscription } from 'rxjs';
 import { TypesService } from '../../../../services/apiservice/types.service';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { FormsModule } from '@angular/forms';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { LoaderComponent } from '../../loader/loader.component';
+import { AsyncPipe } from '@angular/common';
 
 export interface CompetentieLijst {
     ID: number | undefined;
@@ -15,7 +22,7 @@ export interface CompetentieLijst {
     selector: 'app-competentie-editor',
     templateUrl: './competentie-editor.component.html',
     styleUrls: ['./competentie-editor.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, NgSelectComponent, IconButtonComponent, LoaderComponent, AsyncPipe]
 })
 export class CompetentieEditorComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private popup: ModalComponent;

@@ -5,13 +5,16 @@ import { HeliosType, HeliosVliegtuigenDataset } from '../../../types/Helios';
 import { TypesService } from '../../../services/apiservice/types.service';
 import { VliegtuigenService } from '../../../services/apiservice/vliegtuigen.service';
 import { journaalFilter } from '../../../services/apiservice/journaal.service';
+import { FormsModule } from '@angular/forms';
+import { NgSelectComponent, NgOptionComponent } from '@ng-select/ng-select';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
 
 
 @Component({
     selector: 'app-meldingen-filter',
     templateUrl: './journaal-filter.component.html',
     styleUrls: ['./journaal-filter.component.scss'],
-    standalone: false
+    imports: [ModalComponent, FormsModule, NgSelectComponent, NgOptionComponent, IconButtonComponent]
 })
 export class JournaalFilterComponent implements OnInit, OnDestroy {
     @Input() activeFilter: journaalFilter;

@@ -13,12 +13,15 @@ import { faFile, IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { HeliosDocument, HeliosDocumentenDataset } from '../../../../types/Helios';
 import { TypesService } from '../../../../services/apiservice/types.service';
 import { DocumentenService } from '../../../../services/apiservice/documenten.service';
+import { SharedModule } from '../../../../shared/shared.module';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-leden-documenten',
     templateUrl: './leden-documenten.component.html',
     styleUrls: ['./leden-documenten.component.scss'],
-    standalone: false
+    imports: [SharedModule, FaIconComponent, NgClass]
 })
 export class LedenDocumentenComponent implements OnInit {
     @Input() LidID: number;

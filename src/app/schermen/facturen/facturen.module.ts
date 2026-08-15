@@ -15,19 +15,12 @@ import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
-  declarations: [
-    FacturenSchermComponent,
-    TypeRenderComponent,
-    LeeftijdRenderComponent,
-    GefactureerdRenderComponent,
-  ],
     imports: [
         CommonModule,
         FormsModule,
         FontAwesomeModule,
         NgSelectModule,
         SharedModule,
-
         RouterModule.forChild([
             {
                 path: '',
@@ -35,10 +28,14 @@ import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
             }
         ]),
         BaseChartDirective,
-        NgbProgressbarModule
+        NgbProgressbarModule,
+        FacturenSchermComponent,
+        TypeRenderComponent,
+        LeeftijdRenderComponent,
+        GefactureerdRenderComponent
     ],
-  exports: [
-    FacturenSchermComponent
-  ]
+    exports: [
+        FacturenSchermComponent
+    ]
 })
 export class FacturenModule { }

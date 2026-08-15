@@ -13,12 +13,20 @@ import { SchermGrootte, SharedService } from '../../../../services/shared/shared
 import { HeliosDagRapport, HeliosType } from '../../../../types/Helios';
 import { TypesService } from '../../../../services/apiservice/types.service';
 import { DagRapportenService } from '../../../../services/apiservice/dag-rapporten.service';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { PegasusCardComponent } from '../../pegasus-card/pegasus-card.component';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { LoaderComponent } from '../../loader/loader.component';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-dag-rapport-editor',
     templateUrl: './dag-rapport-editor.component.html',
     styleUrls: ['./dag-rapport-editor.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, NgSelectComponent, FormsModule, PegasusCardComponent, IconButtonComponent, LoaderComponent, ComposeMeteoComponent, ComposeBedrijfComponent, AsyncPipe]
 })
 export class DagRapportEditorComponent implements OnInit, OnDestroy {
     @Input() veld_id: number | undefined;

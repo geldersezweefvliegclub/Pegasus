@@ -21,12 +21,16 @@ import { DdwvService } from '../../../services/apiservice/ddwv.service';
 import {
     UitbetalenDdwvCrewEditorComponent,
 } from '../../../shared/components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
+import { FormsModule } from '@angular/forms';
+import { NgTemplateOutlet, NgClass } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-rooster-dagview',
     templateUrl: './rooster-dagview.component.html',
     styleUrls: ['./rooster-dagview.component.scss'],
-    standalone: false
+    imports: [UitbetalenDdwvCrewEditorComponent, IconButtonComponent, FormsModule, NgTemplateOutlet, NgClass, FaIconComponent, DienstEditorComponent]
 })
 export class RoosterDagviewComponent implements OnInit, OnDestroy {
     @Input() rooster: HeliosRoosterDagExtended[];

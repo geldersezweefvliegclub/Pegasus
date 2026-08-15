@@ -7,21 +7,18 @@ import { RouterModule } from '@angular/router';
 import { ProfielPageComponent } from './profiel/profiel-page.component';
 
 @NgModule({
-    declarations: [
-        ProfielPageComponent,
-    ],
     imports: [
         CommonModule,
         FormsModule,
         FontAwesomeModule,
         SharedModule,
-
         RouterModule.forChild([
             {
                 path: '',
                 component: ProfielPageComponent
             }
-        ])
+        ]),
+        ProfielPageComponent
     ],
     exports: [
         ProfielPageComponent

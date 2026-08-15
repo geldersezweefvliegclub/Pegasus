@@ -5,12 +5,15 @@ import { HeliosLogboekTotalen } from '../../../types/Helios';
 import { StartlijstService } from '../../../services/apiservice/startlijst.service';
 import { SharedService } from '../../../services/shared/shared.service';
 import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { ErrorComponent } from '../error/error.component';
+import { SuccessComponent } from '../success/success.component';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
     selector: 'app-vlieger-logboek-totalen',
     templateUrl: './vlieger-logboek-totalen.component.html',
     styleUrls: ['./vlieger-logboek-totalen.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, LoaderComponent]
 })
 export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDestroy {
     @Input() VliegerID: number;

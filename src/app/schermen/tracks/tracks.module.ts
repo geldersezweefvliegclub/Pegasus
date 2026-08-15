@@ -7,25 +7,22 @@ import { RouterModule } from '@angular/router';
 import { TracksGridComponent } from './tracks-grid/tracks-grid.component';
 
 @NgModule({
-  declarations: [
-    TracksGridComponent,
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    FontAwesomeModule,
-    SharedModule,
-
-    RouterModule.forChild([
-      {
-        path: '',
-        component: TracksGridComponent
-      }
-    ])
-  ],
-  exports: [
-    TracksGridComponent
-  ]
+    imports: [
+        CommonModule,
+        FormsModule,
+        FontAwesomeModule,
+        SharedModule,
+        RouterModule.forChild([
+            {
+                path: '',
+                component: TracksGridComponent
+            }
+        ]),
+        TracksGridComponent
+    ],
+    exports: [
+        TracksGridComponent
+    ]
 })
 
 export class TracksModule { }

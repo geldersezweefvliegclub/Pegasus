@@ -22,6 +22,12 @@ import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateFRParserFormatter } from '../../../shared/ngb-date-fr-parser-formatter';
 import {FactuurUploadenComponent} from "../../../shared/components/factuur-uploaden/uploaden.component";
 import {DeleteActionComponent} from "../../../shared/components/datatable/delete-action/delete-action.component";
+import { ErrorComponent } from '../../../shared/components/error/error.component';
+import { PegasusCardComponent } from '../../../shared/components/pegasus-card/pegasus-card.component';
+import { DatatableComponent } from '../../../shared/components/datatable/datatable.component';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
+import { LidInvoerComponent } from '../../../shared/components/editors/start-editor/lid-invoer/lid-invoer.component';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
@@ -29,7 +35,7 @@ import {DeleteActionComponent} from "../../../shared/components/datatable/delete
     templateUrl: './transacties-grid.component.html',
     styleUrls: ['./transacties-grid.component.scss'],
     providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
-    standalone: false
+    imports: [ErrorComponent, PegasusCardComponent, DatatableComponent, IconButtonComponent, LidInvoerComponent, FormsModule, TransactieEditorComponent, FactuurUploadenComponent]
 })
 export class TransactiesGridComponent implements OnInit, OnDestroy {
     @ViewChild(TransactieEditorComponent) private editor: TransactieEditorComponent;

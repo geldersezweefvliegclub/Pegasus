@@ -2,12 +2,13 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { Subscription } from 'rxjs';
 import { SharedService } from '../../../services/shared/shared.service';
+import { VliegdagSelectieComponent } from '../vliegdag-selectie/vliegdag-selectie.component';
 
 @Component({
     selector: 'app-popup-kalender',
     templateUrl: './popup-kalender.component.html',
     styleUrls: ['./popup-kalender.component.scss'],
-    standalone: false
+    imports: [ModalComponent, VliegdagSelectieComponent]
 })
 export class PopupKalenderComponent implements OnInit, OnDestroy {
   @ViewChild(ModalComponent) private popup: ModalComponent;

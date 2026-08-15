@@ -6,8 +6,7 @@ import { SharedService } from '../../../../services/shared/shared.service';
 @Component({
     selector: 'app-datum-render',
     templateUrl: './datum-render.component.html',
-    styleUrls: ['./datum-render.component.scss'],
-    standalone: false
+    styleUrls: ['./datum-render.component.scss']
 })
 export class DatumRenderComponent implements AgRendererComponent {
     public datum: string;

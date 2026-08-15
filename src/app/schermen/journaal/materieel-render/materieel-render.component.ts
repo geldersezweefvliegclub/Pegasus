@@ -5,8 +5,7 @@ import { ICellRendererParams } from 'ag-grid-community';
 @Component({
     selector: 'app-materieel-render',
     templateUrl: './materieel-render.component.html',
-    styleUrls: ['./materieel-render.component.scss'],
-    standalone: false
+    styleUrls: ['./materieel-render.component.scss']
 })
 export class MaterieelRenderComponent implements AgRendererComponent {
     tekst: string | undefined;

@@ -9,12 +9,15 @@ import { CompetentieService } from '../../../services/apiservice/competentie.ser
 import { Subscription } from 'rxjs';
 import { ProgressieEditorComponent } from '../editors/progressie-editor/progressie-editor.component';
 import { PVB } from '../../../types/IPegasusConfig';
+import { ErrorComponent } from '../error/error.component';
+import { SuccessComponent } from '../success/success.component';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
     selector: 'app-pvb',
     templateUrl: './pvb.component.html',
     styleUrls: ['./pvb.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, LoaderComponent, ProgressieEditorComponent]
 })
 export class PvbComponent implements OnInit, OnChanges, OnDestroy {
     @Input() Vlieger: HeliosLid;

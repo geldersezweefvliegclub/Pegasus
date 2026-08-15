@@ -7,13 +7,14 @@ import { SharedService } from '../../../services/shared/shared.service';
 import { VliegtuigenService } from '../../../services/apiservice/vliegtuigen.service';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
 import { ErrorMessage } from '../../../types/Utils';
+import { ErrorComponent } from '../../../shared/components/error/error.component';
 
 
 @Component({
     selector: 'app-vliegtuig-logboek',
     templateUrl: './vliegtuig-logboek.component.html',
     styleUrls: ['./vliegtuig-logboek.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, ModalComponent]
 })
 export class VliegtuigLogboekComponent implements OnInit {
     @ViewChild(ModalComponent) private popup: ModalComponent;

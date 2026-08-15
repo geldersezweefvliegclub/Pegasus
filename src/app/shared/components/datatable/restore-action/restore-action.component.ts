@@ -3,6 +3,7 @@ import { AgRendererComponent } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 import { faUndo } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 export interface RestoreButton {
     onRestoreClicked(id: number): void;
@@ -12,7 +13,7 @@ export interface RestoreButton {
     selector: 'app-restore-action',
     templateUrl: './restore-action.component.html',
     styleUrls: ['./restore-action.component.scss'],
-    standalone: false
+    imports: [FaIconComponent]
 })
 export class RestoreActionComponent implements AgRendererComponent {
   private params: ICellRendererParams & RestoreButton;

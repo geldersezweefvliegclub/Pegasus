@@ -8,26 +8,23 @@ import { RouterModule } from '@angular/router';
 import { HoofdschermComponent } from './hoofdscherm/hoofdscherm.component';
 
 @NgModule({
-  declarations: [
-    HoofdschermComponent,
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    FontAwesomeModule,
-    CodeInputModule,
-    SharedModule,
-
-    RouterModule.forChild([
-      {
-        path: '',
-        component: HoofdschermComponent
-      }
-    ])
-  ],
-  exports: [
-    HoofdschermComponent
-  ]
+    imports: [
+        CommonModule,
+        FormsModule,
+        FontAwesomeModule,
+        CodeInputModule,
+        SharedModule,
+        RouterModule.forChild([
+            {
+                path: '',
+                component: HoofdschermComponent
+            }
+        ]),
+        HoofdschermComponent
+    ],
+    exports: [
+        HoofdschermComponent
+    ]
 })
 
 export class HoofmenuModule { }

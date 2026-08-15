@@ -9,12 +9,13 @@ import {
 } from 'ag-grid-community';
 import { SharedService } from '../../../services/shared/shared.service';
 import { Subscription } from 'rxjs';
+import { AgGridAngular } from 'ag-grid-angular';
 
 @Component({
     selector: 'app-datatable',
     templateUrl: './datatable.component.html',
     styleUrls: ['./datatable.component.scss'],
-    standalone: false
+    imports: [AgGridAngular]
 })
 export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     @Input() columnDefs = [];

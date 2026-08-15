@@ -8,12 +8,18 @@ import { TypesService } from '../../../../services/apiservice/types.service';
 import { LedenService } from '../../../../services/apiservice/leden.service';
 import { PegasusConfigService } from '../../../../services/shared/pegasus-config.service';
 import { DienstenService } from '../../../../services/apiservice/diensten.service';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { FormsModule } from '@angular/forms';
+import { LidInvoerComponent } from '../start-editor/lid-invoer/lid-invoer.component';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { LoaderComponent } from '../../loader/loader.component';
 
 @Component({
     selector: 'app-dienst-editor',
     templateUrl: './dienst-editor.component.html',
     styleUrls: ['./dienst-editor.component.scss'],
-    standalone: false
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, LidInvoerComponent, IconButtonComponent, LoaderComponent]
 })
 export class DienstEditorComponent implements OnInit, OnDestroy {
     @ViewChild(ModalComponent) private popup: ModalComponent;

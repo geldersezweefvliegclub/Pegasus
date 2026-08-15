@@ -3,12 +3,14 @@ import { AgendaService } from '../../../services/apiservice/agenda';
 import { HeliosAgendaDataset } from '../../../types/Helios';
 import { DateTime } from 'luxon';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-agenda',
     templateUrl: './agenda.component.html',
     styleUrls: ['./agenda.component.scss'],
-    standalone: false
+    imports: [FaIconComponent, NgbPopover]
 })
 export class AgendaComponent implements OnInit {
 

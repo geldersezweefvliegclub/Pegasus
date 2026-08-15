@@ -4,6 +4,7 @@ import { AgRendererComponent } from 'ag-grid-angular';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { ICellRendererParams } from 'ag-grid-community';
 import { LoginService } from '../../../../services/apiservice/login.service';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 export interface buttonClicked {
     onTrackClicked(lidID: number, startID: number, naam: string, tekst: string): void;
@@ -13,7 +14,7 @@ export interface buttonClicked {
     selector: 'app-track-render',
     templateUrl: './track-render.component.html',
     styleUrls: ['./track-render.component.scss'],
-    standalone: false
+    imports: [FaIconComponent]
 })
 export class TrackRenderComponent implements AgRendererComponent {
     params: ICellRendererParams & buttonClicked;
