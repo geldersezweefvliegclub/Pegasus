@@ -37,8 +37,6 @@ import { StorageService } from '../../../services/storage/storage.service';
 import { FlarmData, FlarmInputService, FlarmStartData } from '../../../services/flarm-input.service';
 import { DatatableComponent } from '../../../shared/components/datatable/datatable.component';
 import { OpmerkingenRenderComponent } from '../opmerkingen-render/opmerkingen-render.component';
-import {isDecoratorDeclaration} from "@angular/compiler-cli/src/ngtsc/docs/src/decorator_extractor";
-import {TransactiesService} from "../../../services/apiservice/transacties.service";
 import {DdwvService} from "../../../services/apiservice/ddwv.service";
 
 type HeliosStartDatasetExtended = HeliosStartDataset & {
