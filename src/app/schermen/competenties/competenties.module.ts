@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { TreeviewModule } from 'ngx-treeview2';
+import { TreeModule } from '@ali-hm/angular-tree-component';
 
 @NgModule({
   declarations: [
@@ -22,9 +22,8 @@ import { TreeviewModule } from 'ngx-treeview2';
                 component: CompetentiesPageComponent
             }
         ]),
-        TreeviewModule,
+        TreeModule,
         FontAwesomeModule,
-        TreeviewModule,
     ]
 })
 export class CompetentiesModule { }

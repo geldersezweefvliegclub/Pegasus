@@ -5,15 +5,21 @@ import { Subscription } from 'rxjs';
 import { HeliosCompetentie, HeliosCompetentiesDataset, HeliosProgressieBoom, HeliosType } from '../../../types/Helios';
 import { SharedService } from '../../../services/shared/shared.service';
 import { CompetentieService } from '../../../services/apiservice/competentie.service';
-import { TreeviewConfig, TreeviewItem } from 'ngx-treeview2';
+import { ITreeOptions } from '@ali-hm/angular-tree-component';
 import { LoginService } from '../../../services/apiservice/login.service';
 import { TypesService } from '../../../services/apiservice/types.service';
 import {
   CompetentieEditorComponent,
 } from '../../../shared/components/editors/competentie-editor/competentie-editor.component';
 
-export class CompetentieTreeviewItem extends TreeviewItem {
+export interface CompetentieTreeviewItem {
+    nodeId: string;
+    text: string;
+    value: number | undefined;
+    expanded: boolean;
+    children?: CompetentieTreeviewItem[];
     leerfaseID: number | undefined;
+    blok: string | undefined;
     blokID: number | undefined;
     competentieID: number | undefined;
 }
@@ -35,19 +41,19 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
     private dbEventAbonnement: Subscription;        // Abonneer op aanpassingen in de database
     private competentiesAbonnement: Subscription;
     competenties: HeliosCompetentiesDataset[];
-    boom: CompetentieTreeviewItem[];
+    boom: CompetentieTreeviewItem[] = [];
 
     isLoading = false;
     isSuspended = false;
     private typesAbonnement: Subscription;
     leerfaseTypes: HeliosType[];
 
-    config = TreeviewConfig.create({
-        hasAllCheckBox: false,
-        hasFilter: false,
-        hasCollapseExpand: false,
-        decoupleChildFromParent: true,
-    });
+    treeOptions: ITreeOptions = {
+        idField: 'nodeId',
+        displayField: 'text',
+        childrenField: 'children',
+        isExpandedField: 'expanded',
+    };
 
     constructor(private readonly loginService: LoginService,
                 private readonly sharedService: SharedService,
@@ -105,25 +111,22 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
         if (boomTak.ONDERWERP)
             tekst += boomTak.ONDERWERP.toString()
 
-        const nieuwetak = new CompetentieTreeviewItem({
+        const nieuwetak: CompetentieTreeviewItem = {
+            nodeId: `competentie-${boomTak.COMPETENTIE_ID}`,
             text: (tekst).trim(),
             value: boomTak.COMPETENTIE_ID,
-            checked: false,
-            collapsed: false
-        });
-        nieuwetak.blokID = boomTak.BLOK_ID;
-        nieuwetak.leerfaseID = boomTak.LEERFASE_ID;
-        nieuwetak.competentieID = boomTak.COMPETENTIE_ID;
+            expanded: true,
+            leerfaseID: boomTak.LEERFASE_ID,
+            blok: boomTak.BLOK,
+            blokID: boomTak.BLOK_ID,
+            competentieID: boomTak.COMPETENTIE_ID,
+        };
 
         if (boomTak.children) {
             for (const item of boomTak.children) {
                 const extraTak: CompetentieTreeviewItem  = this.TreeView(item);   // recursion
 
-                if (!nieuwetak.children) {
-                    nieuwetak.children = [extraTak];  // creeer object en vullen
-                } else {
-                    nieuwetak.children.push(extraTak);  // voeg toe aan bestaand array
-                }
+                nieuwetak.children = [...(nieuwetak.children ?? []), extraTak];
             }
         }
         return nieuwetak;
@@ -131,38 +134,37 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
 
     // Het toevoegen van een competentie
     toevoegen(parent: CompetentieTreeviewItem) {
+        if (parent.value === undefined) {
+            return;
+        }
         this.boom.forEach((boomtak) => {
             this.nieuweBoomTak(boomtak, parent.value);
         })
     }
 
     // insert een nieuwe tak in de boom
-    nieuweBoomTak(boomTak: CompetentieTreeviewItem, parentID: number) {
+    nieuweBoomTak(boomTak: CompetentieTreeviewItem, parentID: number | undefined) {
         // toevoegen van de tak onder de parent
         if (boomTak.competentieID == parentID) {
-            const nieuwetak = new CompetentieTreeviewItem({
+            const nieuwetak: CompetentieTreeviewItem = {
+                nodeId: `nieuw-${parentID}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
                 text: "<< nieuwe competentie >>",
                 value: -1,
-                checked: false,
-                collapsed: false
-            });
-            nieuwetak.blokID = boomTak.competentieID;
-            nieuwetak.leerfaseID = boomTak.leerfaseID;
-            nieuwetak.competentieID = undefined;
+                expanded: true,
+                blok: boomTak.blok,
+                blokID: boomTak.competentieID,
+                leerfaseID: boomTak.leerfaseID,
+                competentieID: undefined,
+            };
 
-            if (boomTak.children) {                     // voeg item toe aan bestaande kinderder
-                boomTak.children.push(nieuwetak)
-            }
-            else {
-                boomTak.children = [nieuwetak]          // nieuwe kinderen
-            }
+            boomTak.children = [...(boomTak.children ?? []), nieuwetak];
             return
         }
 
         // We gaan dieper de boom in om te kijken of daar toegevoegd moet worden
         if (boomTak.children) {
             for (const item of boomTak.children) {
-                this.nieuweBoomTak(item as CompetentieTreeviewItem, parentID);
+                this.nieuweBoomTak(item, parentID);
             }
         }
     }
@@ -170,10 +172,11 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
     // open de editor in popup
     openEditor(item: CompetentieTreeviewItem) {
         if (!item.competentieID) {
-            const children = this.competenties.filter(c => c.BLOK_ID == item.blokID)
+            const children = this.competenties.filter(c => c.BLOK == item.blok)
 
             const c: HeliosCompetentie = {
                 BLOK_ID: item.blokID,
+                BLOK: item.blok,
                 LEERFASE_ID: item.leerfaseID,
                 VOLGORDE: children.length
             }
@@ -196,11 +199,10 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
         const competentie = this.competenties.find(c => c.ID == competentieID)
 
         if (competentie) {
-            const children: HeliosCompetentiesDataset[] = this.competenties.filter(c => c.BLOK_ID == competentie.BLOK_ID)
+            const children: HeliosCompetentiesDataset[] = this.competenties.filter(c => c.BLOK == competentie.BLOK)
 
             // hernummer de volgorde. Er mogen geen gaten aanwezig zijn
-            children.sort(function(a, b) {
-                return a.VOLGORDE! - b.VOLGORDE!});
+            children.sort((a, b) => a.VOLGORDE! - b.VOLGORDE!);
             for (let i=0 ; i < children.length ; i++) {
                 children[i].VOLGORDE = i+1;
             }
@@ -208,7 +210,7 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
 
             const idx = children.findIndex((c: HeliosCompetentiesDataset) => { return c.ID == competentieID })
 
-            if (idx < children.length) {     // bij einde is er niets meer te doen
+            if (idx < children.length - 1) {     // bij einde is er niets meer te doen
                 children[idx].VOLGORDE!++;
                 children[idx + 1].VOLGORDE!--;
 
@@ -226,7 +228,7 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
         const competentie = this.competenties.find(c => c.ID == competentieID)
 
         if (competentie) {
-            const children: HeliosCompetentiesDataset[] = this.competenties.filter(c => c.BLOK_ID == competentie.BLOK_ID)
+            const children: HeliosCompetentiesDataset[] = this.competenties.filter(c => c.BLOK == competentie.BLOK)
 
             // hernummer de volgorde. Er mogen geen gaten aanwezig zijn
             children.sort(function(a, b) {

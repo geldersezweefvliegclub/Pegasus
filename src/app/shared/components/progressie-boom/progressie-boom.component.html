@@ -1,52 +1,46 @@
 <app-error [error]="error"></app-error>
 <app-success [success]="success"></app-success>
 
-<ng-template #itemTemplate let-item="item" let-onCollapseExpand="onCollapseExpand"
-             let-onCheckedChange="onCheckedChange">
+<div class="mb-2">
+    <input type="text"
+           class="form-control form-control-sm"
+           placeholder="Filter competenties"
+           [ngModel]="filterText"
+           (ngModelChange)="onFilterChange($event)">
+</div>
+
+<tree-root #progressieTree
+           [nodes]="boom"
+           [options]="treeOptions"
+           [state]="treeState"
+           (stateChange)="onTreeStateChange($event)">
+    <ng-template #treeNodeTemplate let-node>
     <div class="form-inline row-item">
-        <i *ngIf="item.children" class="mr-1" (click)="onCollapseExpand()" aria-hidden="true"
-           [ngSwitch]="item.collapsed">
-            <svg *ngSwitchCase="true" width="0.8rem" height="0.8rem" viewBox="0 0 16 16" class="bi bi-caret-right-fill"
-                 fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path
-                        d="M12.14 8.753l-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
-            </svg>
-            <svg *ngSwitchCase="false" width="0.8rem" height="0.8rem" viewBox="0 0 16 16" class="bi bi-caret-down-fill"
-                 fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path
-                        d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-            </svg>
-        </i>
         <div class="form-check w-100">
-            <input type="checkbox" class="form-check-input" [ngModel]="item.IsBehaald > 0"  [ngClass]="{'unChecked': item.IsBehaald === 0, 'halfChecked': item.IsBehaald === 1, 'fullChecked': item.IsBehaald === 2 }"
-                   (ngModelChange)="onProgressieChange(item)"
-                   [disabled]="item.children || isDisabled" [indeterminate]="item.indeterminate"/>
-            <label class="form-check-label" (click)="onProgressieChange(item)">
-                {{item.text}}
+            <input type="checkbox" class="form-check-input" [ngModel]="node.data.IsBehaald > 0"  [ngClass]="{'unChecked': node.data.IsBehaald === 0, 'halfChecked': node.data.IsBehaald === 1, 'fullChecked': node.data.IsBehaald === 2 }"
+                   (ngModelChange)="onProgressieChange(node.data)"
+                   [disabled]="node.hasChildren || isDisabled" [indeterminate]="node.data.IsBehaald === 1"/>
+            <label class="form-check-label" (click)="onProgressieChange(node.data)">
+                {{node.data.text}}
             </label>
 
-            <label class="form-check-label ml-4 behaaldDetails" *ngIf="item.Behaald">
+            <label class="form-check-label ml-4 behaaldDetails" *ngIf="node.data.Behaald">
                 <div class="d-flex">
-                    Afgetekend door {{item.Instructeur}} op {{item.Behaald}}
+                    Afgetekend door {{node.data.Instructeur}} op {{node.data.Behaald}}
 
-                    <div *ngIf="item.GeldigTot">
-                        , geldig tot {{item.GeldigTot}}
+                    <div *ngIf="node.data.GeldigTot">
+                        , geldig tot {{node.data.GeldigTot}}
                     </div>
 
-                    <div *ngIf="item.Score" class="ms-2">
-                        <app-voortgang [status]="item.Score"></app-voortgang>
+                    <div *ngIf="node.data.Score" class="ms-2">
+                        <app-voortgang [status]="node.data.Score"></app-voortgang>
                     </div>
                 </div>
             </label>
         </div>
     </div>
-</ng-template>
-
-<ngx-treeview [config]="config"
-              [items]="boom"
-              [itemTemplate]="itemTemplate"
->
-</ngx-treeview>
+    </ng-template>
+</tree-root>
 
 
 <app-progressie-editor [competenties]="competenties" [vliegerID]="VliegerID" (aangepast)="ophalen()"></app-progressie-editor>

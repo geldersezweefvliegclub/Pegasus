@@ -12,6 +12,7 @@
   },
   "private": true,
   "dependencies": {
+    "@ali-hm/angular-tree-component": "^19.0.1",
     "@angular/animations": "^19.2.25",
     "@angular/cdk": "^19.2.19",
     "@angular/common": "^19.2.25",

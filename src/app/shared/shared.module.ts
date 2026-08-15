@@ -44,7 +44,7 @@ import {
     NgbTooltipModule,
 } from '@ng-bootstrap/ng-bootstrap';
 import { ProgressieBoomComponent } from './components/progressie-boom/progressie-boom.component';
-import { TreeviewModule } from 'ngx-treeview2';
+import { TreeModule } from '@ali-hm/angular-tree-component';
 import { PegasusCardComponent } from './components/pegasus-card/pegasus-card.component';
 import { LidEditorComponent } from './components/editors/lid-editor/lid-editor.component';
 import { ImageCropComponent } from './components/image-crop/image-crop.component';
@@ -117,8 +117,7 @@ import {FactuurUploadenComponent} from "./components/factuur-uploaden/uploaden.c
         NgbDatepickerModule,
         NgbPopoverModule,
         NgbProgressbarModule,
-        TreeviewModule,
-        TreeviewModule.forRoot(),
+        TreeModule,
         RouterModule,
         DragDropModule,
         NgbTooltipModule,
