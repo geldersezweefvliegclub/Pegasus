@@ -2,33 +2,41 @@
 
 <app-modal titel="Logboek {{ vliegtuig.REGISTRATIE}} {{vliegtuig.CALLSIGN}}">
     <div body>
-        <div class="spinnerOverlay" *ngIf="isLoading">
-            <div class="spinnerPosition">
-                <span><img src="../../../../assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Data wordt geladen .....</span>
-            </div>
-        </div>
-
-        <div *ngIf="!isLoading">
-            <div id="datacard" class="data">
-                <div *ngFor="let dag of data;let i = index">
-                    <div class="kaart">
-                        <table class="w-100">
-                            <tr>
-                                <td>
-                                    <b>{{dag.DATUM}}</b>
-                                </td>
-                                <td>vluchten:</td><td>{{dag.VLUCHTEN }}</td>
-                                <td>lierstarts:</td><td>{{dag.LIERSTARTS}}</td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>vliegtijd:</td><td>{{dag.VLIEGTIJD }}</td>
-                                <td>sleepstarts:</td><td>{{dag.SLEEPSTARTS}}</td>
-                            </tr>
-                        </table>
-                    </div>
+        @if (isLoading) {
+            <div class="spinnerOverlay">
+                <div class="spinnerPosition">
+                    <span><img src="../../../../assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Data wordt geladen .....</span>
                 </div>
             </div>
+        } @if (!isLoading) {
+        <div>
+            <div id="datacard" class="data">
+                @for (dag of data; track dag; let i = $index) {
+                    <div>
+                        <div class="kaart">
+                            <table class="w-100">
+                                <tr>
+                                    <td>
+                                        <b>{{ dag.DATUM }}</b>
+                                    </td>
+                                    <td>vluchten:</td>
+                                    <td>{{ dag.VLUCHTEN }}</td>
+                                    <td>lierstarts:</td>
+                                    <td>{{ dag.LIERSTARTS }}</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>vliegtijd:</td>
+                                    <td>{{ dag.VLIEGTIJD }}</td>
+                                    <td>sleepstarts:</td>
+                                    <td>{{ dag.SLEEPSTARTS }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
+    }
     </div>
 </app-modal>

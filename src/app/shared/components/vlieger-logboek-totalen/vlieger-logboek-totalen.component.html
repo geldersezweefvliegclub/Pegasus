@@ -1,56 +1,64 @@
 <app-error [error]="error"></app-error>
 <app-success [success]="success"></app-success>
 
-<div class="overflow-auto" *ngIf="data">
-    <div *ngIf="data.starts.length > 0">
+@if (data) {
+    <div class="overflow-auto">
+        @if (data.starts.length > 0) {
+            <div>
         <table class="vliegtuigenTabel">
             <tr class="headerRow">
                 <th></th>
                 <th>Starts</th>
                 <th class="kolom3">Vliegtijd</th>
             </tr>
-            <tr *ngFor="let v of data.vliegtuigen;">
-                <td class="kolom1">
-                    {{v.REG_CALL}}
-                </td>
-                <td class="kolom2">
-                    {{v.STARTS}}
-                </td>
-                <td class="kolom3">
-                    {{v.VLIEGTIJD}}
-                </td>
+            @for (v of data.vliegtuigen; track v) {
+                <tr>
+                    <td class="kolom1">
+                        {{ v.REG_CALL }}
+                    </td>
+                    <td class="kolom2">
+                        {{ v.STARTS }}
+                    </td>
+                    <td class="kolom3">
+                        {{ v.VLIEGTIJD }}
+                    </td>
             </tr>
+            }
             <tr class="jaar_totaal">
                 <td class="kolom1">
-                    Totaal {{datum.year}}
+                    Totaal {{ datum.year }}
                 </td>
                 <td class="kolom2">
-                    {{data.jaar.STARTS}}
+                    {{ data.jaar.STARTS }}
                 </td>
                 <td class="kolom3">
-                    {{data.jaar.VLIEGTIJD}}
+                    {{ data.jaar.VLIEGTIJD }}
                 </td>
             </tr>
         </table>
-    </div>
-
-    <p *ngIf="data.jaar.INSTRUCTIE_STARTS > 0"><b>Instructie</b>: {{data.jaar.INSTRUCTIE_STARTS}} starts en {{data.jaar.INSTRUCTIE_UREN}} uren</p>
-
-    <div *ngIf="data.starts.length > 0">
+            </div>
+        } @if (data.jaar.INSTRUCTIE_STARTS > 0) {
+        <p><b>Instructie</b>: {{ data.jaar.INSTRUCTIE_STARTS }} starts en {{ data.jaar.INSTRUCTIE_UREN }} uren</p>
+    } @if (data.starts.length > 0) {
+        <div>
         <p class="textStartMethode"><b>Start methode</b></p>
         <table class="startsTabel">
-            <tr *ngFor="let s of data.starts;">
-                <td class="kolom1">
-                    {{s.METHODE}}
-                </td>
-                <td class="kolom2">
-                    {{s.AANTAL}}
-                </td>
+            @for (s of data.starts; track s) {
+                <tr>
+                    <td class="kolom1">
+                        {{ s.METHODE }}
+                    </td>
+                    <td class="kolom2">
+                        {{ s.AANTAL }}
+                    </td>
             </tr>
+            }
         </table>
+        </div>
+    }
     </div>
-</div>
-
-<div class="spinnerOverlay" *ngIf="isLoading">
+} @if (isLoading) {
+    <div class="spinnerOverlay">
     <app-loader></app-loader>
-</div>
+    </div>
+}

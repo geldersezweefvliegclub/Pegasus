@@ -1,6 +1,8 @@
-<div *ngIf="!naarDashboard">{{naam}}</div>
-
-<div *ngIf="naarDashboard">
+@if (!naarDashboard) {
+    <div>{{ naam }}</div>
+} @if (naarDashboard) {
+    <div>
     <a aria-label="Naar dashboard" [routerLink]="['/dashboard']" [queryParams]="{lidID: lidID}">{{naam}}</a>
-</div>
+    </div>
+}
 

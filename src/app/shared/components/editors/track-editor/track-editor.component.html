@@ -3,39 +3,48 @@
 
 <app-modal [titel]="formTitel">
     <div body>
-        <app-lid-invoer id="LID" *ngIf="toonLidSelectie"
-                        placeholder="Selecteer lid"
-                        label="Lid"
-                        [LID_ID]="track.LID_ID"
-                        [disabled]="isVerwijderMode || isRestoreMode"
-                        excludeLidTypes="600,607,609,610,612,613,620,625"
-                        [required] = true
-                        [leden]="leden"
-                        (LidChanged)="lidGeselecteerd($event)"
-        ></app-lid-invoer>
+        @if (toonLidSelectie) {
+            <app-lid-invoer id="LID"
+                            placeholder="Selecteer lid"
+                            label="Lid"
+                            [LID_ID]="track.LID_ID"
+                            [disabled]="isVerwijderMode || isRestoreMode"
+                            excludeLidTypes="600,607,609,610,612,613,620,625"
+                            [required]=true
+                            [leden]="leden"
+                            (LidChanged)="lidGeselecteerd($event)"
+            ></app-lid-invoer>
+        }
 
         <fieldset [disabled]="isVerwijderMode || isRestoreMode || isLoading || isSaving">
             <div class="row">
                 <div class="col-12">
-                    <textarea [(ngModel)]="track.TEKST" name="TEKST"
-                              class="w-100 text-invoer form-control"
-                              rows=8></textarea>
+          <textarea [(ngModel)]="track.TEKST" name="TEKST"
+                    class="w-100 text-invoer form-control"
+                    rows=8></textarea>
                 </div>
             </div>
         </fieldset>
     </div>
     <div footer>
-        <app-icon-button *ngIf="!isLoading && !isSaving && track.ID !== undefined && !isRestoreMode && !isVerwijderMode" iconNaam="fas Edit" btnColor="btn-primary"
-                         [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
-        <app-icon-button *ngIf="!isLoading && !isSaving && track.ID === undefined && !isRestoreMode && !isVerwijderMode" iconNaam="fas Plus" btnColor="btn-primary"
-                         [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
-        <app-icon-button *ngIf="!isLoading && !isSaving && isVerwijderMode" iconNaam="fas TrashAlt" btnColor="btn-primary editorDeleteBtn"
+        @if (!isLoading && !isSaving && track.ID !== undefined && !isRestoreMode && !isVerwijderMode) {
+            <app-icon-button iconNaam="fas Edit" btnColor="btn-primary"
+                             [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()"
+                             (btnClicked)="uitvoeren()"></app-icon-button>
+        } @if (!isLoading && !isSaving && track.ID === undefined && !isRestoreMode && !isVerwijderMode) {
+        <app-icon-button iconNaam="fas Plus" btnColor="btn-primary"
+                         [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()"
+                         (btnClicked)="uitvoeren()"></app-icon-button>
+    } @if (!isLoading && !isSaving && isVerwijderMode) {
+        <app-icon-button iconNaam="fas TrashAlt" btnColor="btn-primary editorDeleteBtn"
                          [toonKlein]=false tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
-        <app-icon-button *ngIf="!isLoading && !isSaving && isRestoreMode" iconNaam="fas Undo" btnColor="btn-primary editorRestoreBtn"
+    } @if (!isLoading && !isSaving && isRestoreMode) {
+        <app-icon-button iconNaam="fas Undo" btnColor="btn-primary editorRestoreBtn"
                          [toonKlein]=false tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
-
-        <button class="btn btn-primary" *ngIf="isLoading || isSaving">
+    } @if (isLoading || isSaving) {
+        <button class="btn btn-primary">
             <span><app-loader></app-loader></span>
         </button>
+    }
     </div>
 </app-modal>

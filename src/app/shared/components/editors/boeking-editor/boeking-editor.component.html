@@ -77,12 +77,14 @@
         </form>
     </div>
     <div footer>
-        <app-icon-button *ngIf="!isSaving" iconNaam="fas Edit" btnColor="btn-primary" [toonKlein]=false
-                         [disabled]="opslaanDisabled()"
-                         tekst="Opslaan" (btnClicked)="aanmakenReserveringen()"></app-icon-button>
-
-        <button class="btn btn-primary" *ngIf="isSaving">
+        @if (!isSaving) {
+            <app-icon-button iconNaam="fas Edit" btnColor="btn-primary" [toonKlein]=false
+                             [disabled]="opslaanDisabled()"
+                             tekst="Opslaan" (btnClicked)="aanmakenReserveringen()"></app-icon-button>
+        } @if (isSaving) {
+        <button class="btn btn-primary">
             <span><app-loader></app-loader></span>
         </button>
+    }
     </div>
 </app-modal>

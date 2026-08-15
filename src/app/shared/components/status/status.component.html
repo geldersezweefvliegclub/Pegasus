@@ -4,51 +4,63 @@
 <table class="statusTabel">
     <tr class="headerRow">
         <th></th>
-        <th>{{checks.Jaren[0]}}</th>
-        <th>{{checks.Jaren[1]}}</th>
+        <th>{{ checks.Jaren[0] }}</th>
+        <th>{{ checks.Jaren[1] }}</th>
     </tr>
-    <tr *ngFor="let c of checks.Check;">
-        <td class="kolom1">
-            {{c.Omschrijving}}
-        </td>
-        <td class="kolom2">
-            <input type="checkbox" *ngIf="competenties && competentieBestaat(c.CompetentieID[0])"
-                   id="L{{c.CompetentieID[0]}}"
-                   class="form-check-inline"
-
-                   (change)="zetProgressie(c.CompetentieID[0])"
-                   [checked]="CheckGehaald(c.CompetentieID[0])"
-                   [disabled]="CheckDisabled(c.CompetentieID[0])">       <!-- als checked, dan disable. Verwijderen via progressie boom -->
+    @for (c of checks.Check; track c) {
+        <tr>
+            <td class="kolom1">
+                {{ c.Omschrijving }}
+            </td>
+            <td class="kolom2">
+                @if (competenties && competentieBestaat(c.CompetentieID[0])) {
+                    <input type="checkbox"
+                           id="L{{c.CompetentieID[0]}}"
+                           class="form-check-inline"
+                           (change)="zetProgressie(c.CompetentieID[0])"
+                           [checked]="CheckGehaald(c.CompetentieID[0])"
+                           [disabled]="CheckDisabled(c.CompetentieID[0])">
+                }       <!-- als checked, dan disable. Verwijderen via progressie boom -->
         </td>
         <td class="kolom3">
-            <input type="checkbox" *ngIf="competenties && competentieBestaat(c.CompetentieID[1])"
-                   id="O{{c.CompetentieID[1]}}"
-                   class="form-check-inline"
-                   (change)="zetProgressie(c.CompetentieID[1])"
-                   [checked]="CheckGehaald(c.CompetentieID[1])"
-                   [disabled]="CheckDisabled(c.CompetentieID[1])">       <!-- als checked, dan disable. Verwijderen via progressie boom -->
+            @if (competenties && competentieBestaat(c.CompetentieID[1])) {
+                <input type="checkbox"
+                       id="O{{c.CompetentieID[1]}}"
+                       class="form-check-inline"
+                       (change)="zetProgressie(c.CompetentieID[1])"
+                       [checked]="CheckGehaald(c.CompetentieID[1])"
+                       [disabled]="CheckDisabled(c.CompetentieID[1])">
+            }       <!-- als checked, dan disable. Verwijderen via progressie boom -->
         </td>
-    </tr>
+        </tr>
+    }
 </table>
 
 <table class="overigTabel">
-    <tr *ngFor="let o of overig;">
-        <td class="col1">
+    @for (o of overig; track o) {
+        <tr>
+            <td class="col1">
             {{o.Omschrijving}}
-        </td>
-        <td class="kolom2">
-            <input type="checkbox" *ngIf="competenties && competentieBestaat(o.CompetentieID)"
-                   id="{{o.CompetentieID}}"
-                   class="form-check-inline"
-                   (change)="zetProgressie(o.CompetentieID)"
-                   [checked]="CheckGehaald(o.CompetentieID)"
-                   [disabled]="CheckDisabled(o.CompetentieID)">          <!-- als checked, dan disable. Verwijderen via progressie boom -->
-        </td>
-    </tr>
+            </td>
+            <td class="kolom2">
+                @if (competenties && competentieBestaat(o.CompetentieID)) {
+                    <input type="checkbox"
+                           id="{{o.CompetentieID}}"
+                           class="form-check-inline"
+                           (change)="zetProgressie(o.CompetentieID)"
+                           [checked]="CheckGehaald(o.CompetentieID)"
+                           [disabled]="CheckDisabled(o.CompetentieID)">
+                }          <!-- als checked, dan disable. Verwijderen via progressie boom -->
+            </td>
+        </tr>
+    }
 </table>
 
-<div class="spinnerOverlay" *ngIf="isLoading">
-    <app-loader></app-loader>
-</div>
-
-<app-progressie-editor [competenties]="competenties" *ngIf="Vlieger" [vliegerID]="Vlieger.ID!" (aangepast)="ophalen()"></app-progressie-editor>
+@if (isLoading) {
+    <div class="spinnerOverlay">
+        <app-loader></app-loader>
+    </div>
+} @if (Vlieger) {
+    <app-progressie-editor [competenties]="competenties" [vliegerID]="Vlieger.ID!"
+                           (aangepast)="ophalen()"></app-progressie-editor>
+}

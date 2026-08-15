@@ -1,5 +1,18 @@
 <div class="telefoonBlok ">
-    <div class="telefoonRij" *ngIf="(telefoon)"><div class="TMN"><b>T:</b></div>{{telefoon}}</div>
-    <div class="telefoonRij" *ngIf="(mobiel)"><div class="TMN"><b>M:</b></div>{{mobiel}}</div>
-    <div class="telefoonRij" *ngIf="(noodnummer)"><div class="TMN"><b>N:</b></div>{{noodnummer}}</div>
+    @if ((telefoon)) {
+        <div class="telefoonRij">
+            <div class="TMN"><b>T:</b></div>
+            {{ telefoon }}
+        </div>
+    } @if ((mobiel)) {
+    <div class="telefoonRij">
+        <div class="TMN"><b>M:</b></div>
+        {{ mobiel }}
+    </div>
+} @if ((noodnummer)) {
+    <div class="telefoonRij">
+        <div class="TMN"><b>N:</b></div>
+        {{ noodnummer }}
+    </div>
+}
 </div>

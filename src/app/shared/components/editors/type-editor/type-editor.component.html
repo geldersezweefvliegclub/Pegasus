@@ -16,22 +16,25 @@
                            [(ngModel)]="type.EXT_REF">
                 </div>
             </div>
-            <div class="row mb-2" *ngIf="toonBedragEenheid">
-                <div class="col-8">
-                    <label for="EENHEDEN" class="form-label">Eenheden</label>
-                    <input type="number" name="EENHEDEN" class="form-control" id="EENHEDEN"
-                           [(ngModel)]="type.EENHEDEN" step="0.01">
+            @if (toonBedragEenheid) {
+                <div class="row mb-2">
+                    <div class="col-8">
+                        <label for="EENHEDEN" class="form-label">Eenheden</label>
+                        <input type="number" name="EENHEDEN" class="form-control" id="EENHEDEN"
+                               [(ngModel)]="type.EENHEDEN" step="0.01">
                 </div>
                 <div class="col-4">
                     <label for="BEDRAG" class="form-label">Bedrag</label>
                     <input type="number" name="BEDRAG" class="form-control" id="BEDRAG"
                            [(ngModel)]="type.BEDRAG" step="0.01">
                 </div>
-            </div>
+                </div>
+            }
             <div class="row">
                 <div class="col-12">
                     <label for="OMSCHRIJVING" class="form-label">Omschrijving</label>
-                    <input type="text" name="OMSCHRIJVING" class="form-control" id="OMSCHRIJVING"  [disabled]="type.READ_ONLY"
+                    <input type="text" name="OMSCHRIJVING" class="form-control" id="OMSCHRIJVING"
+                           [disabled]="type.READ_ONLY"
                            [(ngModel)]="type.OMSCHRIJVING">
                 </div>
             </div>
@@ -39,17 +42,24 @@
         </fieldset>
     </div>
     <div footer>
-        <app-icon-button *ngIf="!isLoading && !isSaving && type.ID !== undefined && !isRestoreMode && !isVerwijderMode" iconNaam="fas Edit" btnColor="btn-primary"
-                         [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
-        <app-icon-button *ngIf="!isLoading && !isSaving && type.ID === undefined && !isRestoreMode && !isVerwijderMode" iconNaam="fas Plus" btnColor="btn-primary"
-                         [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
-        <app-icon-button *ngIf="!isLoading && !isSaving && isVerwijderMode" iconNaam="fas TrashAlt" btnColor="btn-primary editorDeleteBtn"
+        @if (!isLoading && !isSaving && type.ID !== undefined && !isRestoreMode && !isVerwijderMode) {
+            <app-icon-button iconNaam="fas Edit" btnColor="btn-primary"
+                             [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()"
+                             (btnClicked)="uitvoeren()"></app-icon-button>
+        } @if (!isLoading && !isSaving && type.ID === undefined && !isRestoreMode && !isVerwijderMode) {
+        <app-icon-button iconNaam="fas Plus" btnColor="btn-primary"
+                         [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()"
+                         (btnClicked)="uitvoeren()"></app-icon-button>
+    } @if (!isLoading && !isSaving && isVerwijderMode) {
+        <app-icon-button iconNaam="fas TrashAlt" btnColor="btn-primary editorDeleteBtn"
                          [toonKlein]=false tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
-        <app-icon-button *ngIf="!isLoading && !isSaving && isRestoreMode" iconNaam="fas Undo" btnColor="btn-primary editorRestoreBtn"
+    } @if (!isLoading && !isSaving && isRestoreMode) {
+        <app-icon-button iconNaam="fas Undo" btnColor="btn-primary editorRestoreBtn"
                          [toonKlein]=false tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
-
-        <button class="btn btn-primary" *ngIf="isLoading || isSaving">
+    } @if (isLoading || isSaving) {
+        <button class="btn btn-primary">
             <span><app-loader></app-loader></span>
         </button>
+    }
     </div>
 </app-modal>

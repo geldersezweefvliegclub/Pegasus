@@ -7,11 +7,15 @@
             <div class="row">
                 <div class="col-12">
                     <label class="form-label" for="LEERFASE">Leerfase</label>
-                    <select class="form-select mb-2" [(ngModel)]="competentie.LEERFASE_ID" (change)="filterBovenliggend()" required
+                    <select class="form-select mb-2" [(ngModel)]="competentie.LEERFASE_ID"
+                            (change)="filterBovenliggend()" required
                             id="LEERFASE"
                             name="LEERFASE_ID">
-                        <option *ngFor="let top of topLevels"
-                                [value]="top.ID">{{top.OMSCHRIJVING}}</option>
+                        @for (top of topLevels; track top) {
+                            <option
+                                    [value]="top.ID">{{ top.OMSCHRIJVING }}
+                            </option>
+                        }
                     </select>
                 </div>
             </div>
@@ -69,26 +73,29 @@
         </fieldset>
     </div>
     <div footer>
-        <app-icon-button
-                *ngIf="!isLoading && !isSaving && competentie.ID !== undefined && !isRestoreMode && !isVerwijderMode"
-                iconNaam="fas Edit" btnColor="btn-primary"
-                [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()"
+        @if (!isLoading && !isSaving && competentie.ID !== undefined && !isRestoreMode && !isVerwijderMode) {
+            <app-icon-button
+                    iconNaam="fas Edit" btnColor="btn-primary"
+                    [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()"
                 (btnClicked)="uitvoeren()"></app-icon-button>
+        } @if (!isLoading && !isSaving && competentie.ID === undefined && !isRestoreMode && !isVerwijderMode) {
         <app-icon-button
-                *ngIf="!isLoading && !isSaving && competentie.ID === undefined && !isRestoreMode && !isVerwijderMode"
                 iconNaam="fas Plus" btnColor="btn-primary"
                 [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()"
                 (btnClicked)="uitvoeren()"></app-icon-button>
-        <app-icon-button *ngIf="!isLoading && !isSaving && isVerwijderMode" iconNaam="fas TrashAlt"
+    } @if (!isLoading && !isSaving && isVerwijderMode) {
+        <app-icon-button iconNaam="fas TrashAlt"
                          btnColor="btn-primary editorDeleteBtn"
                          [toonKlein]=false tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
-        <app-icon-button *ngIf="!isLoading && !isSaving && isRestoreMode" iconNaam="fas Undo"
+    } @if (!isLoading && !isSaving && isRestoreMode) {
+        <app-icon-button iconNaam="fas Undo"
                          btnColor="btn-primary editorRestoreBtn"
                          [toonKlein]=false tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
-
-        <button class="btn btn-primary" *ngIf="isLoading || isSaving">
+    } @if (isLoading || isSaving) {
+        <button class="btn btn-primary">
             <span><app-loader></app-loader></span>
         </button>
+    }
     </div>
 </app-modal>
 

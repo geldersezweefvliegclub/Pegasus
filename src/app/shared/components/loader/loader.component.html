@@ -1,1 +1,3 @@
-<span *ngIf="loader"><fa-icon [icon]="loader" animation="spin"></fa-icon></span>
+@if (loader) {
+    <span><fa-icon [icon]="loader" animation="spin"></fa-icon></span>
+}

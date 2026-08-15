@@ -1,12 +1,15 @@
-<div class="kaart" *ngIf="lid">
+@if (lid) {
+    <div class="kaart">
     <table>
         <tr>
             <td class="pe-1">
                 <div class="card-body">
                     <div id="avatar" class="d-flex">
-                        <div class="tegoed" data-toggle="tooltip" title="DDWV Saldo" *ngIf="toonTegoed">
-                            {{ lid.TEGOED }}
-                        </div>
+                        @if (toonTegoed) {
+                            <div class="tegoed" data-toggle="tooltip" title="DDWV Saldo">
+                                {{ lid.TEGOED }}
+                            </div>
+                        }
                         <div class="avatar">
                             <app-avatar [url]="lid.AVATAR"></app-avatar>
                         </div>
@@ -18,67 +21,86 @@
                     <!-- 1e rij -->
                     <div class="d-flex w-100 justify-content-between">
                         <div class="d-flex align-items-baseline">
-                            <div class="naam mb-1" *ngIf="!naarDashboard">{{ lid.NAAM }}</div>
-                            <div *ngIf="naarDashboard">
-                                <a aria-label="Naar dashboard" [routerLink]="['/dashboard']" [queryParams]="{lidID: lid.ID}">{{lid.NAAM}}</a>
+                            @if (!naarDashboard) {
+                                <div class="naam mb-1">{{ lid.NAAM }}</div>
+                            } @if (naarDashboard) {
+                            <div>
+                                <a aria-label="Naar dashboard" [routerLink]="['/dashboard']"
+                                   [queryParams]="{lidID: lid.ID}">{{ lid.NAAM }}</a>
                             </div>
-                            <div class="ms-1" *ngIf="(lid.EMAIL !== undefined) && (lid.EMAIL !== null)">
+                        } @if ((lid.EMAIL !== undefined) && (lid.EMAIL !== null)) {
+                            <div class="ms-1">
                                 <a aria-label="Verstuur email" title="verstuur email" href="mailto:{{lid.EMAIL}}"
                                    target="_blank">
                                     <fa-icon [icon]="faIcon" class="enveloppe"></fa-icon>
                                 </a>
                             </div>
+                        }
                         </div>
                         <div class="d-flex mt-2">
                             <div class="d-flex flex-row justify-content-end iconGroep ms-1">
                                 <div class="column">
-                                    <div *ngIf="!lid.CIMT" class="geenIcoontje">-</div>
-                                    <div *ngIf="lid.CIMT" class="icoontje" data-toggle="tooltip"
+                                    @if (!lid.CIMT) {
+                                        <div class="geenIcoontje">-</div>
+                                    } @if (lid.CIMT) {
+                                    <div class="icoontje" data-toggle="tooltip"
                                          title="Chef instructie">C
                                     </div>
+                                }
                                 </div>
-
                                 <div class="column">
-                                    <div *ngIf="!lid.INSTRUCTEUR" class="geenIcoontje">-</div>
-                                    <div *ngIf="lid.INSTRUCTEUR" class="icoontje" data-toggle="tooltip"
+                                    @if (!lid.INSTRUCTEUR) {
+                                        <div class="geenIcoontje">-</div>
+                                    } @if (lid.INSTRUCTEUR) {
+                                    <div class="icoontje" data-toggle="tooltip"
                                          title="instructeur">I
                                     </div>
+                                }
                                 </div>
-
                                 <div class="column">
-                                    <div *ngIf="!lid.LIERIST" class="geenIcoontje">-</div>
-                                    <div *ngIf="lid.LIERIST" class="icoontje" data-toggle="tooltip"
+                                    @if (!lid.LIERIST) {
+                                        <div class="geenIcoontje">-</div>
+                                    } @if (lid.LIERIST) {
+                                    <div class="icoontje" data-toggle="tooltip"
                                          title="Lierist">L
                                     </div>
+                                }
                                 </div>
-
                                 <div class="column">
-                                    <div *ngIf="!lid.STARTLEIDER" class="geenIcoontje">-</div>
-                                    <div *ngIf="lid.STARTLEIDER" class="icoontje" data-toggle="tooltip"
+                                    @if (!lid.STARTLEIDER) {
+                                        <div class="geenIcoontje">-</div>
+                                    } @if (lid.STARTLEIDER) {
+                                    <div class="icoontje" data-toggle="tooltip"
                                          title="Startleider">S
                                     </div>
+                                }
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <!-- 2e rij -->
                     <div class="d-flex w-100 adresRegel">
                         {{ lid.ADRES }} {{ lid.POSTCODE }} {{ lid.WOONPLAATS }}
                     </div>
-
                     <!-- 3e rij -->
                     <div class="d-flex w-100 justify-content-between">
-                        <div *ngIf="!lid.TELEFOON"></div>
-                        <div *ngIf="lid.TELEFOON"><b>T:</b><a aria-label="Bel telefoonnummer" href="tel:{{ lid.TELEFOON }}">{{ lid.TELEFOON }}</a></div>
-                        <div *ngIf="!lid.MOBIEL"></div>
-                        <div *ngIf="lid.MOBIEL"><b>M:</b><a aria-label="Bel mobiel nummer" href="tel:{{ lid.MOBIEL }}">{{ lid.MOBIEL }}</a></div>
+                        @if (!lid.TELEFOON) {
+                            <div></div>
+                        } @if (lid.TELEFOON) {
+                        <div><b>T:</b><a aria-label="Bel telefoonnummer"
+                                         href="tel:{{ lid.TELEFOON }}">{{ lid.TELEFOON }}</a></div>
+                    } @if (!lid.MOBIEL) {
+                        <div></div>
+                    } @if (lid.MOBIEL) {
+                        <div><b>M:</b><a aria-label="Bel mobiel nummer" href="tel:{{ lid.MOBIEL }}">{{ lid.MOBIEL }}</a>
+                        </div>
+                    }
                     </div>
                 </div>
             </td>
         </tr>
     </table>
-
-</div>
+    </div>
+}
 
 

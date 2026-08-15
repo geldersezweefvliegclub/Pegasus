@@ -38,14 +38,16 @@
                         </div>
                     </div>
 
-                    <div class="row" *ngIf="showSecret">
-                        <div class="col">
-                            <label for="cinput" class="form-label">Code</label>
-                            <code-input id="cinput" [codeLength]="6" (codeChanged)="onSecurityCodeChanged($event)">
-                            </code-input>
+                    @if (showSecret) {
+                        <div class="row">
+                            <div class="col">
+                                <label for="cinput" class="form-label">Code</label>
+                                <code-input id="cinput" [codeLength]="6" (codeChanged)="onSecurityCodeChanged($event)">
+                                </code-input>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row" *ngIf="privacyUrl">
+                    } @if (privacyUrl) {
+                    <div class="row">
                         <div class="col">
                             <input class="form-check-inline" type="checkbox" id="CLUBBLAD_POST"
                                    name="CLUBBLAD_POST"
@@ -55,20 +57,30 @@
                             </label>
                         </div>
                     </div>
+                }
                     <div class="row mt-4">
                         <div class="col d-flex"
                              [ngClass]="{'justify-content-end': !showSecret && !showLostPassword(), 'justify-content-between': showSecret || showLostPassword() }">
-                            <a *ngIf="showLostPassword()" class="lostPassword" (click)="recoverEmail()">Wachtwoord
-                                vergeten</a>
+                            @if (showLostPassword()) {
+                                <a class="lostPassword" (click)="recoverEmail()">Wachtwoord
+                                    vergeten</a>
+                            } @if (showSecret && !isLoading) {
                             <button class="btn btn-secondary mr-2" type="button" (click)="sendSMS()"
-                                    [disabled]="form.invalid" *ngIf="showSecret && !isLoading">
-                                <span *ngIf="!isLoading">SMS</span>
-                                <span *ngIf="isLoading"><app-loader></app-loader></span>
+                                    [disabled]="form.invalid">
+                                @if (!isLoading) {
+                                    <span>SMS</span>
+                                } @if (isLoading) {
+                                <span><app-loader></app-loader></span>
+                            }
                             </button>
+                        }
                             <button class="btn btn-primary" type="submit"
                                     [disabled]="form.invalid || (!privacyOk && privacyUrl)">
-                                <span *ngIf="!isLoading">Login</span>
-                                <span *ngIf="isLoading"><app-loader></app-loader></span>
+                                @if (!isLoading) {
+                                    <span>Login</span>
+                                } @if (isLoading) {
+                                <span><app-loader></app-loader></span>
+                            }
                             </button>
                         </div>
                     </div>

@@ -1,5 +1,6 @@
 <form #form='ngForm' (ngSubmit)="submit()">
-    <input name="FILE" class="form-control my-3" type="file" (change)="fileChangeEvent($event)" accept='image/png, image/jpeg'/>
+    <input name="FILE" class="form-control my-3" type="file" (change)="fileChangeEvent($event)"
+           accept='image/png, image/jpeg'/>
     <div>
         <image-cropper
                 [imageChangedEvent]="imageChangedEvent"
@@ -19,30 +20,33 @@
                 (loadImageFailed)="loadImageFailed()"
         ></image-cropper>
     </div>
-    <div class="d-flex justify-content-between" *ngIf="imageChangedEvent">
-        <div class="btn-group justify-content-center">
-            <button class="btn btn-primary" (click)="rotateLeft()" type="button">
-                <fa-icon [icon]="draaienIcon"></fa-icon>
-            </button>
-            <button class="btn btn-primary" (click)="rotateRight()" type="button">
-                <fa-icon [icon]="draaienIcon" flip="horizontal"></fa-icon>
-            </button>
-            <button class="btn btn-primary" (click)="zoomIn()" type="button">
-                <fa-icon [icon]="zoomInIcon"></fa-icon>
-            </button>
-            <button class="btn btn-primary" (click)="zoomOut()" type="button">
-                <fa-icon [icon]="zoomUitIcon"></fa-icon>
-            </button>
-            <button class="btn btn-primary" (click)="flipHorizontal()" type="button">
-                <i class="bi bi-symmetry-vertical"></i>
-            </button>
-            <button class="btn btn-primary" (click)="flipVertical()" type="button">
-                <i class="bi bi-symmetry-horizontal"></i>
-            </button>
-            <button class="btn btn-primary" (click)="resetImage()">
-                <fa-icon [icon]="resetIcon"></fa-icon>
-            </button>
-        </div>
-        <app-icon-button [disabled]='!croppedImage' class="ms-2" type="submit" iconNaam="fas Upload" tekst="Uploaden"></app-icon-button>
+    @if (imageChangedEvent) {
+        <div class="d-flex justify-content-between">
+            <div class="btn-group justify-content-center">
+                <button class="btn btn-primary" (click)="rotateLeft()" type="button">
+                    <fa-icon [icon]="draaienIcon"></fa-icon>
+                </button>
+                <button class="btn btn-primary" (click)="rotateRight()" type="button">
+                    <fa-icon [icon]="draaienIcon" flip="horizontal"></fa-icon>
+                </button>
+                <button class="btn btn-primary" (click)="zoomIn()" type="button">
+                    <fa-icon [icon]="zoomInIcon"></fa-icon>
+                </button>
+                <button class="btn btn-primary" (click)="zoomOut()" type="button">
+                    <fa-icon [icon]="zoomUitIcon"></fa-icon>
+                </button>
+                <button class="btn btn-primary" (click)="flipHorizontal()" type="button">
+                    <i class="bi bi-symmetry-vertical"></i>
+                </button>
+                <button class="btn btn-primary" (click)="flipVertical()" type="button">
+                    <i class="bi bi-symmetry-horizontal"></i>
+                </button>
+                <button class="btn btn-primary" (click)="resetImage()">
+                    <fa-icon [icon]="resetIcon"></fa-icon>
+                </button>
+            </div>
+            <app-icon-button [disabled]='!croppedImage' class="ms-2" type="submit" iconNaam="fas Upload"
+                             tekst="Uploaden"></app-icon-button>
     </div>
+    }
 </form>

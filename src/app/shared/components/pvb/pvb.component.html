@@ -7,33 +7,42 @@
         <th>Lokaal</th>
         <th>Overland</th>
     </tr>
-    <tr *ngFor="let p of PVBs; let i=index;">
-        <td class="kolom1">
-            {{p.Type}}
-        </td>
-        <td class="kolom2">
-            <input type="checkbox" *ngIf="competentieBestaat(p.Lokaal)"
-                   id="L{{p.Type}}"
-                   class="form-check-inline"
-                   (change)="zetProgressie(p.Lokaal)"
-                   [checked]="PVBgehaald(p.Lokaal)"
-                   [disabled]="CheckDisabled(p.Lokaal)">
-            <!-- als checked, dan disable. Verwijderen via progressie boom -->
-        </td>
-        <td class="kolom3">
-            <input type="checkbox" *ngIf="competentieBestaat(p.Overland)"
-                   id="O{{p.Type}}"
-                   class="form-check-inline"
-                   (change)="zetProgressie(p.Overland)"
-                   [checked]="PVBgehaald(p.Overland)"
-                   [disabled]="CheckDisabled(p.Overland)">
-            <!-- als checked, dan disable. Verwijderen via progressie boom -->
-        </td>
+    @for (p of PVBs; track p; let i = $index) {
+        <tr>
+            <td class="kolom1">
+                {{ p.Type }}
+            </td>
+            <td class="kolom2">
+                @if (competentieBestaat(p.Lokaal)) {
+                    <input type="checkbox"
+                           id="L{{p.Type}}"
+                           class="form-check-inline"
+                           (change)="zetProgressie(p.Lokaal)"
+                           [checked]="PVBgehaald(p.Lokaal)"
+                           [disabled]="CheckDisabled(p.Lokaal)">
+                }
+                <!-- als checked, dan disable. Verwijderen via progressie boom -->
+            </td>
+            <td class="kolom3">
+                @if (competentieBestaat(p.Overland)) {
+                    <input type="checkbox"
+                           id="O{{p.Type}}"
+                           class="form-check-inline"
+                           (change)="zetProgressie(p.Overland)"
+                           [checked]="PVBgehaald(p.Overland)"
+                           [disabled]="CheckDisabled(p.Overland)">
+                }
+                <!-- als checked, dan disable. Verwijderen via progressie boom -->
+            </td>
     </tr>
+    }
 </table>
 
-<div class="spinnerOverlay" *ngIf="isLoading">
+@if (isLoading) {
+    <div class="spinnerOverlay">
     <app-loader></app-loader>
-</div>
-
-<app-progressie-editor [competenties]="competenties" *ngIf="Vlieger" [vliegerID]="Vlieger.ID!" (aangepast)="ophalen()"></app-progressie-editor>
+    </div>
+} @if (Vlieger) {
+    <app-progressie-editor [competenties]="competenties" [vliegerID]="Vlieger.ID!"
+                           (aangepast)="ophalen()"></app-progressie-editor>
+}

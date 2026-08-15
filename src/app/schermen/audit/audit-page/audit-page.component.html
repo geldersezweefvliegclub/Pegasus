@@ -17,53 +17,59 @@
                         (rowSelected)="selectRow($event)"
                         class="h-100 mt-n8"></app-datatable>
             </div>
-            <div class="col-3 kolomRechts ml-2" *ngIf="data">
-                <div class="table-rechts">
-                    <table>
-                        <tr>
-                            <td colspan="2">
-                                <div class="header">Orgineel</div>
-                            </td>
-                        </tr>
-                        <tr *ngFor="let item of voor | keyvalue">
-                            <td>
-                                <div class="auditlineKey">{{item.key}}</div>
-                            </td>
-                            <td>
-                                <div class="auditline">{{item.value}}</div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="2">
-                                <div class="header">Data</div>
-                            </td>
-                        </tr>
-                        <tr *ngFor="let item of wijziging | keyvalue">
-                            <td>
-                                <div class="auditlineKey">{{item.key}}</div>
-                            </td>
-                            <td>
-                                <div class="auditline">{{item.value}}</div>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="2">
-                                <div class="header">Resultaat</div>
-                            </td>
-                        </tr>
-                        <tr *ngFor="let item of resultaat | keyvalue">
-                            <td>
-                                <div class="auditlineKey">{{item.key}}</div>
-                            </td>
-                            <td>
-                                <div class="auditline">{{item.value}}</div>
-                            </td>
-                        </tr>
-                    </table>
+            @if (data) {
+                <div class="col-3 kolomRechts ml-2">
+                    <div class="table-rechts">
+                        <table>
+                            <tr>
+                                <td colspan="2">
+                                    <div class="header">Orgineel</div>
+                                </td>
+                            </tr>
+                            @for (item of voor | keyvalue; track item) {
+                                <tr>
+                                    <td>
+                                        <div class="auditlineKey">{{ item.key }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="auditline">{{ item.value }}</div>
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <td colspan="2">
+                                    <div class="header">Data</div>
+                                </td>
+                            </tr>
+                            @for (item of wijziging | keyvalue; track item) {
+                                <tr>
+                                    <td>
+                                        <div class="auditlineKey">{{ item.key }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="auditline">{{ item.value }}</div>
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <td colspan="2">
+                                    <div class="header">Resultaat</div>
+                                </td>
+                            </tr>
+                            @for (item of resultaat | keyvalue; track item) {
+                                <tr>
+                                    <td>
+                                        <div class="auditlineKey">{{ item.key }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="auditline">{{ item.value }}</div>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
         <div class="row justify-content-start mt-2" id="toolbar">
             <div class="col-10">

@@ -2,52 +2,57 @@
 <app-success [success]="success"></app-success>
 
 <app-modal titel="Aanmelden lid">
-    <div body class="d-flex popupLargeWrapper" >
-        <div class="onTop" *ngIf="bezig">
-            <span><img src="assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Even geduld a.u.b. .....</span>
-        </div>
+    <div body class="d-flex popupLargeWrapper">
+        @if (bezig) {
+            <div class="onTop">
+                <span><img src="assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Even geduld a.u.b. .....</span>
+            </div>
+        }
 
         <div class="d-flex flex-column">
             <div class="d-flex flex-row overflow-hidden">
                 <div class="w-50 pe-2">
                     <h4>Leden</h4>
                     <div class="ledenlijst">
-                        <div class="card aanmeldkaart flex-row justify-content-between" *ngFor="let lid of filteredLeden">
-                            <div class="fw-bold">
-                                {{lid.NAAM}}
+                        @for (lid of filteredLeden; track lid) {
+                            <div class="card aanmeldkaart flex-row justify-content-between">
+                                <div class="fw-bold">
+                                    {{ lid.NAAM }}
+                                </div>
+                                <div class="d-flex flex-column justify-content-center p-0 me-2">
+                                    <app-icon-button iconNaam="fas ArrowRight"
+                                                     (btnClicked)="nieuwLidAanwezigEditor(lid)"
+                                                     [disabled]="bezig"></app-icon-button>
+                                </div>
                             </div>
-
-                            <div class="d-flex flex-column justify-content-center p-0 me-2">
-                                <app-icon-button iconNaam="fas ArrowRight" (btnClicked)="nieuwLidAanwezigEditor(lid)"
-                                                 [disabled]="bezig"></app-icon-button>
-                            </div>
-                        </div>
+                        }
                     </div>
                 </div>
                 <div class="w-50 ps-2 h-100">
                     <h4>Aanwezig</h4>
                     <div class="d-flex flex-row aanwezig">
                         <div class="aanweziglijst">
-                            <div class="card aanmeldkaart row flex-row" *ngFor="let aanwezig of filteredAanwezigLeden"
-                                 [ngClass]="{'highlight' : geselecteerdLid &&  aanwezig.ID === geselecteerdLid.ID}"
-                                 (click)="selecteerLid(aanwezig)">
-                                <div class="d-flex flex-row justify-content-between p-0">
-
-                                    <div class="d-flex flex-column justify-content-center p-0">
-                                    <app-icon-button iconNaam="fas ArrowLeft" class="mx-2" (btnClicked)="afmelden(aanwezig)"
-                                                     [disabled]="bezig"></app-icon-button>
-                                    </div>
-
-                                    <div class="flex-grow-1">
-                                        <div class="fw-bold">
-                                            {{aanwezig.NAAM}}
+                            @for (aanwezig of filteredAanwezigLeden; track aanwezig) {
+                                <div class="card aanmeldkaart row flex-row"
+                                     [ngClass]="{'highlight' : geselecteerdLid &&  aanwezig.ID === geselecteerdLid.ID}"
+                                     (click)="selecteerLid(aanwezig)">
+                                    <div class="d-flex flex-row justify-content-between p-0">
+                                        <div class="d-flex flex-column justify-content-center p-0">
+                                            <app-icon-button iconNaam="fas ArrowLeft" class="mx-2"
+                                                             (btnClicked)="afmelden(aanwezig)"
+                                                             [disabled]="bezig"></app-icon-button>
                                         </div>
-                                        <div class="smallFont">{{aanwezig.VLIEGTUIGTYPE_OMS}}</div>
-                                        <div class="smallFont">{{aanwezig.REG_CALL}}</div>
-                                        <div class="smallFont">{{aanwezig.OPMERKINGEN}}</div>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold">
+                                                {{ aanwezig.NAAM }}
+                                            </div>
+                                            <div class="smallFont">{{ aanwezig.VLIEGTUIGTYPE_OMS }}</div>
+                                            <div class="smallFont">{{ aanwezig.REG_CALL }}</div>
+                                            <div class="smallFont">{{ aanwezig.OPMERKINGEN }}</div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -70,8 +75,10 @@
         </div>
         <div class="col-4 d-flex flex-row justify-content-end">
             <div class="flex-row">
-                <app-icon-button class="me-3" iconNaam="fas ArrowUp" (btnClicked)="omhoog()" [disabled]="!geselecteerdLid"></app-icon-button>
-                <app-icon-button class="me-3" iconNaam="fas ArrowDown" (btnClicked)="omlaag()" [disabled]="!geselecteerdLid"></app-icon-button>
+                <app-icon-button class="me-3" iconNaam="fas ArrowUp" (btnClicked)="omhoog()"
+                                 [disabled]="!geselecteerdLid"></app-icon-button>
+                <app-icon-button class="me-3" iconNaam="fas ArrowDown" (btnClicked)="omlaag()"
+                                 [disabled]="!geselecteerdLid"></app-icon-button>
             </div>
         </div>
     </div>

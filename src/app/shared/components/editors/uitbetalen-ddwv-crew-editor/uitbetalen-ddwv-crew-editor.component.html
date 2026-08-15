@@ -2,20 +2,28 @@
 <app-success [success]="success"></app-success>
 
 <app-modal titel="Uitbetaling crew">
-    <div body *ngIf="diensten">
-        <table>
-            <tr *ngFor="let dienst of diensten;let i = index">
-                <td *ngIf="!dienst.UITBETAALD">
-                    <input type="checkbox" class="form-check-inline"
-                           [id]="'dienst_' + dienst.ID"
-                           [name]="'dienst_' + dienst.ID"
-                           (change)="selectieChanged($event, dienst.ID)">
+    @if (diensten) {
+        <div body>
+            <table>
+                @for (dienst of diensten; track dienst; let i = $index) {
+                    <tr>
+                        @if (!dienst.UITBETAALD) {
+                            <td>
+                                <input type="checkbox" class="form-check-inline"
+                                       [id]="'dienst_' + dienst.ID"
+                                       [name]="'dienst_' + dienst.ID"
+                                       (change)="selectieChanged($event, dienst.ID)">
                 </td>
-                <td *ngIf="!dienst.UITBETAALD">{{dienst.NAAM}}</td>
-                <td *ngIf="!dienst.UITBETAALD" class="ps-3">{{dienst.TYPE_DIENST}}</td>
+                        } @if (!dienst.UITBETAALD) {
+                        <td>{{ dienst.NAAM }}</td>
+                    } @if (!dienst.UITBETAALD) {
+                        <td class="ps-3">{{ dienst.TYPE_DIENST }}</td>
+                    }
             </tr>
+                }
         </table>
-    </div>
+        </div>
+    }
     <div footer>
         <app-icon-button iconNaam="fas EuroSign" btnColor="btn-primary" [toonKlein]=false
                          tekst="Uitbetalen" (btnClicked)="uitbetalen()"></app-icon-button>

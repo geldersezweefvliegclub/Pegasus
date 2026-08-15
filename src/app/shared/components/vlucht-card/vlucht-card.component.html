@@ -1,94 +1,139 @@
-<div class="kaart" (dblclick)="openStartEditor()" *ngIf="start">
+@if (start) {
+    <div class="kaart" (dblclick)="openStartEditor()">
     <div class="d-flex w-100">
         <div class="d-flex flex-column w-100">
             <!-- 1e rij -->
             <div class="d-flex w-100 justify-content-between">
-                <div class="me-1"><b>{{this.datumDM}}</b> {{start.REG_CALL}}</div>
+                <div class="me-1"><b>{{ this.datumDM }}</b> {{ start.REG_CALL }}</div>
                 <div class="d-flex">
-                    <div class="justify-content-end">{{start.VLIEGTUIGTYPE}}</div>
+                    <div class="justify-content-end">{{ start.VLIEGTUIGTYPE }}</div>
                     <div class="d-flex flex-row justify-content-end iconGroep ms-1">
                         <div class="column">
-                            <div *ngIf="!start.INSTRUCTIEVLUCHT" class="geenIcoontje">-</div>
-                            <div *ngIf="start.INSTRUCTIEVLUCHT" class="icoontje" data-toggle="tooltip"
+                            @if (!start.INSTRUCTIEVLUCHT) {
+                                <div class="geenIcoontje">-</div>
+                            } @if (start.INSTRUCTIEVLUCHT) {
+                            <div class="icoontje" data-toggle="tooltip"
                                  title="Instructie vlucht">I
                             </div>
+                        }
                         </div>
-
                         <div class="column">
-                            <div *ngIf="!start.CHECKSTART" class="geenIcoontje">-</div>
-                            <div *ngIf="start.CHECKSTART" class="icoontje" data-toggle="tooltip" title="Trainingsvlucht">T
+                            @if (!start.CHECKSTART) {
+                                <div class="geenIcoontje">-</div>
+                            } @if (start.CHECKSTART) {
+                            <div class="icoontje" data-toggle="tooltip" title="Trainingsvlucht">T
                             </div>
+                        }
                         </div>
                         <div class="column">
-                            <div *ngIf="!start.PAX" class="geenIcoontje">-</div>
-                            <div *ngIf="start.PAX" class="icoontje" data-toggle="tooltip" title="Passagiers">P</div>
+                            @if (!start.PAX) {
+                                <div class="geenIcoontje">-</div>
+                            } @if (start.PAX) {
+                            <div class="icoontje" data-toggle="tooltip" title="Passagiers">P</div>
+                        }
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
     <table class="w-100">
         <tr>
-            <td *ngIf="!naarDashboard(true)"><div class="d-flex">{{start.VLIEGERNAAM_LID}}<div *ngIf="start.VLIEGERNAAM">({{start.VLIEGERNAAM}})</div></div></td>
-            <td *ngIf="naarDashboard(true)"><a aria-label="Naar dashboard" [routerLink]="['/dashboard']"
-                                                           [queryParams]="{lidID: start.VLIEGER_ID}">{{start.VLIEGERNAAM_LID}}</a>
+            @if (!naarDashboard(true)) {
+                <td>
+                    <div class="d-flex">{{ start.VLIEGERNAAM_LID }}@if (start.VLIEGERNAAM) {
+                        <div>({{ start.VLIEGERNAAM }})</div>
+                    }</div>
+                </td>
+            } @if (naarDashboard(true)) {
+            <td><a aria-label="Naar dashboard" [routerLink]="['/dashboard']"
+                   [queryParams]="{lidID: start.VLIEGER_ID}">{{ start.VLIEGERNAAM_LID }}</a>
             </td>
-
-            <td class="tijd rechts" *ngIf="!this.inTijdspan || !start.STARTTIJD">{{start.STARTTIJD}}</td>
-            <td class="tijd rechts" *ngIf="this.inTijdspan && start.STARTTIJD"
-                (click)="startTijdClicked()">{{start.STARTTIJD}}</td>
-
-
-            <td class="rechts startMethode" *ngIf="start.STARTTIJD && start.LANDINGSTIJD"><div class="me-2">{{start.STARTMETHODE}}</div></td>
-            <td class="rechts laag" *ngIf="!start.STARTTIJD && !start.LANDINGSTIJD" rowspan="3">
+        } @if (!this.inTijdspan || !start.STARTTIJD) {
+            <td class="tijd rechts">{{ start.STARTTIJD }}</td>
+        } @if (this.inTijdspan && start.STARTTIJD) {
+            <td class="tijd rechts"
+                (click)="startTijdClicked()">{{ start.STARTTIJD }}
+            </td>
+        } @if (start.STARTTIJD && start.LANDINGSTIJD) {
+            <td class="rechts startMethode">
+                <div class="me-2">{{ start.STARTMETHODE }}</div>
+            </td>
+        } @if (!start.STARTTIJD && !start.LANDINGSTIJD) {
+            <td class="rechts laag" rowspan="3">
                 <app-icon-button class="toolbarBtn me-2" iconNaam="fas PlaneDeparture" (btnClicked)="startTijdClicked()"
                                  btnColor="startBtn"></app-icon-button>
             </td>
-            <td class="rechts laag" *ngIf="start.STARTTIJD && !start.LANDINGSTIJD" rowspan="3">
-                <app-icon-button class="toolbarBtn me-2" iconNaam="fas PlaneArrival" (btnClicked)="landingsTijdClicked()"
+        } @if (start.STARTTIJD && !start.LANDINGSTIJD) {
+            <td class="rechts laag" rowspan="3">
+                <app-icon-button class="toolbarBtn me-2" iconNaam="fas PlaneArrival"
+                                 (btnClicked)="landingsTijdClicked()"
                                  btnColor="landingsBtn"></app-icon-button>
             </td>
-            <td rowspan="2" class="iconEdit" *ngIf="inTijdspan"><fa-icon [icon]="iconEdit" class="mx-2" (click)="openStartEditor()"></fa-icon></td>
+        } @if (inTijdspan) {
+            <td rowspan="2" class="iconEdit">
+                <fa-icon [icon]="iconEdit" class="mx-2" (click)="openStartEditor()"></fa-icon>
+            </td>
+        }
         </tr>
         <tr>    <!-- inzittende -->
-            <td *ngIf="start.INSTRUCTIEVLUCHT && start.VLIEGER_ID && !start.INZITTENDE_ID"> <!-- instructie vlucht, maar geen instructeur -->
-                <div *ngIf="!start.DUUR" class="warning">
-                    <div class="fas fa-exclamation-triangle" data-toggle="tooltip"
-                         title="Vul de naam van de instructeur in"></div>
-                </div>
-                <div *ngIf="start.DUUR" class="urgent">
-                    <div class="fas fa-exclamation-triangle" data-toggle="tooltip"
-                         title="Vul de naam van de instructeur in"></div>
-                </div>
-            </td>
-
-            <td *ngIf="!start.INZITTENDE_ID"></td>
-            <td *ngIf="start.INZITTENDE_ID">
-                <div *ngIf="!naarDashboard(false)">
-                    <div class="d-flex">
-                        {{start.INZITTENDENAAM_LID}}
-                        <div *ngIf="start.PAX">{{start.INZITTENDENAAM}}</div>
-                        <div *ngIf="start.INZITTENDENAAM && !start.PAX">({{start.INZITTENDENAAM}})</div>
-                    </div>
-                </div>
-                <div *ngIf="naarDashboard(false)"><a aria-label="Naar dashboard" [routerLink]="['/dashboard']"
-                                                     [queryParams]="{lidID: start.INZITTENDE_ID}">{{start.INZITTENDENAAM_LID}}</a></div>
-            </td>
-
-            <td class="rechts" *ngIf="!this.inTijdspan || !start.LANDINGSTIJD">{{start.LANDINGSTIJD}}</td>
-            <td class="rechts" *ngIf="this.inTijdspan && start.LANDINGSTIJD"
-                (click)="landingsTijdClicked()">{{start.LANDINGSTIJD}}</td>
-
-            <td class="rechts" *ngIf="start.STARTTIJD && start.LANDINGSTIJD"><div class="me-2">{{start.DUUR}}</div></td>
+            @if (start.INSTRUCTIEVLUCHT && start.VLIEGER_ID && !start.INZITTENDE_ID) {
+                <td> <!-- instructie vlucht, maar geen instructeur -->
+                    @if (!start.DUUR) {
+                        <div class="warning">
+                            <div class="fas fa-exclamation-triangle" data-toggle="tooltip"
+                                 title="Vul de naam van de instructeur in"></div>
+                        </div>
+                    } @if (start.DUUR) {
+                        <div class="urgent">
+                            <div class="fas fa-exclamation-triangle" data-toggle="tooltip"
+                                 title="Vul de naam van de instructeur in"></div>
+                        </div>
+                    }
+                </td>
+            } @if (!start.INZITTENDE_ID) {
+                <td></td>
+            } @if (start.INZITTENDE_ID) {
+                <td>
+                    @if (!naarDashboard(false)) {
+                        <div>
+                            <div class="d-flex">
+                                {{ start.INZITTENDENAAM_LID }}
+                                @if (start.PAX) {
+                                    <div>{{ start.INZITTENDENAAM }}</div>
+                                } @if (start.INZITTENDENAAM && !start.PAX) {
+                                <div>({{ start.INZITTENDENAAM }})</div>
+                            }
+                            </div>
+                        </div>
+                    } @if (naarDashboard(false)) {
+                    <div><a aria-label="Naar dashboard" [routerLink]="['/dashboard']"
+                            [queryParams]="{lidID: start.INZITTENDE_ID}">{{ start.INZITTENDENAAM_LID }}</a></div>
+                }
+                </td>
+            } @if (!this.inTijdspan || !start.LANDINGSTIJD) {
+                <td class="rechts">{{ start.LANDINGSTIJD }}</td>
+            } @if (this.inTijdspan && start.LANDINGSTIJD) {
+                <td class="rechts"
+                    (click)="landingsTijdClicked()">{{ start.LANDINGSTIJD }}
+                </td>
+            } @if (start.STARTTIJD && start.LANDINGSTIJD) {
+                <td class="rechts">
+                    <div class="me-2">{{ start.DUUR }}</div>
+                </td>
+            }
         </tr>
-        <tr *ngIf="start.OPMERKINGEN">
-            <td colspan="4">{{start.OPMERKINGEN}}</td>
-        </tr>
+        @if (start.OPMERKINGEN) {
+            <tr>
+                <td colspan="4">{{ start.OPMERKINGEN }}</td>
+            </tr>
+        }
     </table>
 </div>
+}
 
 <app-tijd-invoer></app-tijd-invoer>
-<app-start-editor [VliegerID]="start.VLIEGER_ID" *ngIf="start"></app-start-editor>
+@if (start) {
+    <app-start-editor [VliegerID]="start.VLIEGER_ID"></app-start-editor>
+}
 <app-track-editor></app-track-editor>

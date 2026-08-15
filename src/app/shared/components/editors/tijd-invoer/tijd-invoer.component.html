@@ -3,38 +3,41 @@
 
 <app-modal [titel]="formTitel">
     <div body>
-            <fieldset>
-                <div class="row">
-                    <div class="col-9 col-md-6">
-                        <label for="tijdInvoer" class="form-label">{{label}}</label>
-                    </div>
-                    <div class="col-3 col-md-6">
-                        <div class="d-flex justify-content-end">
-                            <input id="tijdInvoer"
-                                   #tijdInvoerElement
-                                   type="search"
-                                   class="form-control"
-                                   [(ngModel)]="tijdIngevoerd"
-                                   [disabled]="isLoading || isSaving"
-                                   (ngModelChange)="veldInvoer($event)"
-                                   (keydown)="keyDown($event)"
-                            />
-                            <app-icon-button class="timeUpBtn" iconNaam="fas ArrowUp" (btnClicked)="timeDown()"
-                                             btnColor="btn-secondary"></app-icon-button>
+        <fieldset>
+            <div class="row">
+                <div class="col-9 col-md-6">
+                    <label for="tijdInvoer" class="form-label">{{ label }}</label>
+                </div>
+                <div class="col-3 col-md-6">
+                    <div class="d-flex justify-content-end">
+                        <input id="tijdInvoer"
+                               #tijdInvoerElement
+                               type="search"
+                               class="form-control"
+                               [(ngModel)]="tijdIngevoerd"
+                               [disabled]="isLoading || isSaving"
+                               (ngModelChange)="veldInvoer($event)"
+                               (keydown)="keyDown($event)"
+                        />
+                        <app-icon-button class="timeUpBtn" iconNaam="fas ArrowUp" (btnClicked)="timeDown()"
+                                         btnColor="btn-secondary"></app-icon-button>
 
-                            <app-icon-button class="timeResetBtn" iconNaam="fas ArrowDown" (btnClicked)="timeUp()"
-                                             btnColor="btn-secondary"></app-icon-button>
+                        <app-icon-button class="timeResetBtn" iconNaam="fas ArrowDown" (btnClicked)="timeUp()"
+                                         btnColor="btn-secondary"></app-icon-button>
 
-                        </div>
                     </div>
                 </div>
-            </fieldset>
+            </div>
+        </fieldset>
     </div>
     <div footer>
-        <app-icon-button *ngIf="!isLoading && !isSaving" iconNaam="fas Edit" btnColor="btn-primary" [disabled]="!tijdOK" [toonKlein]=false
-                         tekst="Opslaan" (btnClicked)="opslaan()"></app-icon-button>
-        <button class="btn btn-primary" *ngIf="isLoading || isSaving">
+        @if (!isLoading && !isSaving) {
+            <app-icon-button iconNaam="fas Edit" btnColor="btn-primary" [disabled]="!tijdOK" [toonKlein]=false
+                             tekst="Opslaan" (btnClicked)="opslaan()"></app-icon-button>
+        } @if (isLoading || isSaving) {
+        <button class="btn btn-primary">
             <span><app-loader></app-loader></span>
         </button>
+    }
     </div>
 </app-modal>

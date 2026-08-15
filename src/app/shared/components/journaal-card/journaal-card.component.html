@@ -1,18 +1,23 @@
-<div class="kaart"  *ngIf="melding">
+@if (melding) {
+    <div class="kaart">
     <div class="d-flex w-100">
         <b>
             <div class="d-flex w-100 justify-content-between">
-                <div class="me-1" *ngIf="melding.ROLLEND_ID !== null">{{ melding.ROLLEND }}: </div>
-                <div class="me-1" *ngIf="melding.VLIEGTUIG_ID !== null">{{ melding.REG_CALL }}: </div>
+                @if (melding.ROLLEND_ID !== null) {
+                    <div class="me-1">{{ melding.ROLLEND }}:</div>
+                } @if (melding.VLIEGTUIG_ID !== null) {
+                <div class="me-1">{{ melding.REG_CALL }}:</div>
+            }
                 {{ melding.TITEL }}
             </div>
         </b>
     </div>
-
     <div class="d-flex w-100">
         <div class="d-flex w-100 justify-content-between">
             <div class="baseStatus me-1" ngClass="Cat{{melding.CATEGORIE_ID}}"> {{ melding.CATEGORIE_CODE }}</div>
-            <div class="baseStatus ms-1" ngClass="Status{{melding.STATUS_ID}}" (click)=details(melding)> {{ melding.STATUS }}</div>
+            <div class="baseStatus ms-1" ngClass="Status{{melding.STATUS_ID}}"
+                 (click)=details(melding)> {{ melding.STATUS }}
+            </div>
         </div>
     </div>
     <div class="d-flex w-100">
@@ -30,12 +35,17 @@
         </table>
     </div>
     <div class="d-flex w-100">
-            <div class="mt-1 naamStyle" *ngIf="melding.TECHNICUS_ID">Technicus: {{ melding.TECHNICUS }}</div>
+        @if (melding.TECHNICUS_ID) {
+            <div class="mt-1 naamStyle">Technicus: {{ melding.TECHNICUS }}</div>
+        }
     </div>
     <div class="d-flex w-100">
-        <div class="mt-1 naamStyle"  *ngIf="melding.AFGETEKEND_ID">Afgetekend: {{ melding.AFGETEKEND }}</div>
+        @if (melding.AFGETEKEND_ID) {
+            <div class="mt-1 naamStyle">Afgetekend: {{ melding.AFGETEKEND }}</div>
+        }
     </div>
-</div>
+    </div>
+}
 
 
 <app-melding-editor></app-melding-editor>

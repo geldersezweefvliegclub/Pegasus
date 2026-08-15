@@ -1,7 +1,9 @@
-<button class="btn btn-noborder" (click)="logboekButtonClicked()" *ngIf="params.data.toonLogboek">
+@if (params.data.toonLogboek) {
+    <button class="btn btn-noborder" (click)="logboekButtonClicked()">
     <fa-icon [icon]="logboekIcon" class="logboekBtn"></fa-icon>
-</button>
-
-<button class="btn btn-noborder" (click)="journaalButtonClicked()" *ngIf="params.data.toonJournaal">
+    </button>
+} @if (params.data.toonJournaal) {
+    <button class="btn btn-noborder" (click)="journaalButtonClicked()">
     <fa-icon [icon]="journaalIcon" class="journaalBtn"></fa-icon>
-</button>
+    </button>
+}

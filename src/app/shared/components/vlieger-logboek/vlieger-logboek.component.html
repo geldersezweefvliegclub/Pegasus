@@ -1,7 +1,8 @@
 <app-error [error]="error"></app-error>
 <app-success [success]="success"></app-success>
 
-<div class="gridHoogte" *ngIf="!toonLogboekKlein">
+@if (!toonLogboekKlein) {
+    <div class="gridHoogte">
     <app-datatable
             [id]=id
             [rowData]="data"
@@ -13,14 +14,20 @@
             [pagination]="true"
             class="h-100">
     </app-datatable>
-</div>
-<div class="mobielHoogte" *ngIf="toonLogboekKlein">
-    <div *ngFor="let vlucht of data;let i = index">
-        <div *ngIf="i < MaxItems">
-            <app-vlucht-card [logboek]="vlucht"></app-vlucht-card>
-        </div>
     </div>
-</div>
+} @if (toonLogboekKlein) {
+    <div class="mobielHoogte">
+        @for (vlucht of data; track vlucht; let i = $index) {
+            <div>
+                @if (i < MaxItems) {
+                    <div>
+            <app-vlucht-card [logboek]="vlucht"></app-vlucht-card>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+}
 
 <app-tijd-invoer></app-tijd-invoer>
 <app-start-editor [VliegerID]="VliegerID"></app-start-editor>

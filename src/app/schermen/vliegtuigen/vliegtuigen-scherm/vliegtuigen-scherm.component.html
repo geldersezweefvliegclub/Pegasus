@@ -2,72 +2,88 @@
 <app-success [success]="success"></app-success>
 
 <app-pegasus-card titel="Vliegtuigen"
-               subtitel="Een overzicht van de vliegtuigen"
-               [icon]="iconCardIcon"
-               [exportEnabled]="this.magExporten"
-               (Exporting)="exportDataset()">
+                  subtitel="Een overzicht van de vliegtuigen"
+                  [icon]="iconCardIcon"
+                  [exportEnabled]="this.magExporten"
+                  (Exporting)="exportDataset()">
     <div class="box h-100">
-        <div id="data" class="data" *ngIf="!toonKlein">
-            <app-datatable
-                    id="vliegtuiggrid"
-                    [pagination]="false"
-                    [rowData]="data"
-                    [columnDefs]="columns"
-                    [loading]="isLoading"
-                    [rowClassRules]="rowClassRules"
-                    [frameworkComponents]="frameworkComponents"
-                    (rowDoubleClicked)="dbClickVliegtuig($event)"
-                    class="h-100 mt-n8"></app-datatable>
-        </div>
-        <div id="datacard" class="data" *ngIf="toonKlein">
-            <div *ngFor="let vliegtuig of data;let i = index">
-                <app-vliegtuig-card [vliegtuig]="vliegtuig"
-                                    (Logboek)="openVliegtuigLogboek($event)"
-                                    (Journaal)="openVliegtuigJournaal($event)"
-                                    (Editor)="OpenEditor($event)"
-                ></app-vliegtuig-card>
+        @if (!toonKlein) {
+            <div id="data" class="data">
+                <app-datatable
+                        id="vliegtuiggrid"
+                        [pagination]="false"
+                        [rowData]="data"
+                        [columnDefs]="columns"
+                        [loading]="isLoading"
+                        [rowClassRules]="rowClassRules"
+                        [frameworkComponents]="frameworkComponents"
+                        (rowDoubleClicked)="dbClickVliegtuig($event)"
+                        class="h-100 mt-n8"></app-datatable>
             </div>
+        } @if (toonKlein) {
+        <div id="datacard" class="data">
+            @for (vliegtuig of data; track vliegtuig; let i = $index) {
+                <div>
+                    <app-vliegtuig-card [vliegtuig]="vliegtuig"
+                                        (Logboek)="openVliegtuigLogboek($event)"
+                                        (Journaal)="openVliegtuigJournaal($event)"
+                                        (Editor)="OpenEditor($event)"
+                    ></app-vliegtuig-card>
+                </div>
+            }
         </div>
+    }
 
         <div class="row justify-content-start mt-2" id="toolbar">
-            <div class="col-4 col-xl-2" *ngIf="this.magToevoegen">
-                <app-icon-button class="toolbarBtn"
-                                 tekst="Toevoegen"
-                                 iconNaam="far PlusSquare" (btnClicked)="addVliegtuig()"
-                                 btnColor="btn-primary" *ngIf="!this.deleteMode"></app-icon-button>
-
-                <div *ngIf="this.deleteMode">
-                    <app-status-button
-                            class="toolbarBtn"
-                            tekst="Archief"
-                            [actief]="trashMode"
-                            (btnClicked)="trashModeJaNee($event)"
-                            iconNaam="fas Inbox">
-                    </app-status-button>
+            @if (this.magToevoegen) {
+                <div class="col-4 col-xl-2">
+                    @if (!this.deleteMode) {
+                        <app-icon-button class="toolbarBtn"
+                                         tekst="Toevoegen"
+                                         iconNaam="far PlusSquare" (btnClicked)="addVliegtuig()"
+                                         btnColor="btn-primary"></app-icon-button>
+                    } @if (this.deleteMode) {
+                    <div>
+                        <app-status-button
+                                class="toolbarBtn"
+                                tekst="Archief"
+                                [actief]="trashMode"
+                                (btnClicked)="trashModeJaNee($event)"
+                                iconNaam="fas Inbox">
+                        </app-status-button>
+                    </div>
+                }
                 </div>
-            </div>
+            }
             <div class="col-8 col-xl-10">
                 <div class="row justify-content-between" id="zoekbar">
                     <app-zoekbar class="col-12 col-md-8 flex-grow-1"
                                  [(zoekString)]="zoekString"
                                  (zoeken)="opvragen()"></app-zoekbar>
-                    <div class="col-4" *ngIf="this.magVerwijderen">
-                        <div class="d-flex justify-content-end">
-                            <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
-                                             btnColor="btn-secondary" *ngIf="this.magVerwijderen && !deleteMode"
-                                             (btnClicked)="deleteModeJaNee()"></app-icon-button>
-                            <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
-                                             btnColor="btn btn-outline-primary" *ngIf="deleteMode"
-                                             (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                    @if (this.magVerwijderen) {
+                        <div class="col-4">
+                            <div class="d-flex justify-content-end">
+                                @if (this.magVerwijderen && !deleteMode) {
+                                    <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
+                                                     btnColor="btn-secondary"
+                                                     (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                                } @if (deleteMode) {
+                                <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
+                                                 btnColor="btn btn-outline-primary"
+                                                 (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                            }
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
         </div>
     </div>
 
 
-    <app-vliegtuig-editor *ngIf="this.magToevoegen || this.magWijzigen || this.magVerwijderen"></app-vliegtuig-editor>
+    @if (this.magToevoegen || this.magWijzigen || this.magVerwijderen) {
+        <app-vliegtuig-editor></app-vliegtuig-editor>
+    }
     <app-popup-journaal></app-popup-journaal>
     <app-vliegtuig-logboek></app-vliegtuig-logboek>
 </app-pegasus-card>

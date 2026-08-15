@@ -4,15 +4,17 @@
 
 <app-modal titel="Transactie {{lidNaam}}">
     <div body>
-        <app-lid-invoer id="LID" *ngIf="toonLidSelectie"
-                        placeholder="Selecteer lid"
-                        label="Lid"
-                        [LID_ID]="transactie.LID_ID"
-                        excludeLidTypes="600,607,609,610,612,613,620"
-                        [required] = true
-                        [leden]="leden"
-                        (LidChanged)="lidGeselecteerd($event)"
-        ></app-lid-invoer>
+        @if (toonLidSelectie) {
+            <app-lid-invoer id="LID"
+                            placeholder="Selecteer lid"
+                            label="Lid"
+                            [LID_ID]="transactie.LID_ID"
+                            excludeLidTypes="600,607,609,610,612,613,620"
+                            [required]=true
+                            [leden]="leden"
+                            (LidChanged)="lidGeselecteerd($event)"
+            ></app-lid-invoer>
+        }
 
         <fieldset>
             <div class="row">
@@ -20,8 +22,11 @@
                     <label for="TYPE_ID" class="form-label">Type</label>
                     <select class="form-select" required name="TYPE_ID" id="TYPE_ID"
                             [(ngModel)]="transactie.TYPE_ID" (change)="typeAangepast()">
-                        <option *ngFor="let tType of transactieTypes"
-                                [value]="tType.ID">{{tType.OMSCHRIJVING}}</option>
+                        @for (tType of transactieTypes; track tType) {
+                            <option
+                                    [value]="tType.ID">{{ tType.OMSCHRIJVING }}
+                            </option>
+                        }
                     </select>
                 </div>
             </div>
@@ -59,7 +64,7 @@
                 <div class="col-12">
                     <label for="OMSCHRIJVING" class="form-label">Omschijving</label>
                     <input [(ngModel)]="transactie.OMSCHRIJVING" name="OMSCHRIJVING" id="OMSCHRIJVING"
-                              class="form-control w-100" required>
+                           class="form-control w-100" required>
                 </div>
             </div>
         </fieldset>

@@ -40,18 +40,23 @@
                             id="TYPE_ID"
                             name="TYPE_ID">
                         <option [ngValue]="-1">onbekend</option>
-                        <option *ngFor="let vliegtuigType of vliegtuigTypes"
-                                [ngValue]="vliegtuigType.ID">{{vliegtuigType.OMSCHRIJVING}}</option>
+                        @for (vliegtuigType of vliegtuigTypes; track vliegtuigType) {
+                            <option
+                                    [ngValue]="vliegtuigType.ID">{{ vliegtuigType.OMSCHRIJVING }}
+                            </option>
+                        }
                     </select>
                 </div>
-                <div class="col-12 col-md-3" *ngIf="vliegtuig.CLUBKIST">
+                @if (vliegtuig.CLUBKIST) {
+                    <div class="col-12 col-md-3">
                     <label for="VOLGORDE" class="form-label">Volgorde</label>
                     <input [required]="vliegtuig.CLUBKIST" name="zitplaatsen" type="number" class="form-control"
                            id="VOLGORDE"
                            [(ngModel)]="vliegtuig.VOLGORDE"
                            min="1" max="25"
                     >
-                </div>
+                    </div>
+                }
             </div>
             <div class="row my-2">
                 <div class="col-6 col-md-3">
@@ -85,29 +90,34 @@
                     </label>
                 </div>
             </div>
-            <div class="row my-3 align-items-end" *ngIf="vliegtuig.CLUBKIST">
-                <div class="col-6">
-                    <input name="INZETBAAR" type="checkbox" class="form-check-input" id="INZETBAAR"
-                           [(ngModel)]="vliegtuig.INZETBAAR">
-                    <label class="form-check-label ms-2" for="CLUBKIST">
-                        Inzetbaar
-                    </label>
+            @if (vliegtuig.CLUBKIST) {
+                <div class="row my-3 align-items-end">
+                    <div class="col-6">
+                        <input name="INZETBAAR" type="checkbox" class="form-check-input" id="INZETBAAR"
+                               [(ngModel)]="vliegtuig.INZETBAAR">
+                        <label class="form-check-label ms-2" for="CLUBKIST">
+                            Inzetbaar
+                        </label>
+                    </div>
+                    <div class="col-6">
+                        <input name="TRAINER" type="checkbox" class="form-check-input" id="TRAINER"
+                               [disabled]="vliegtuig.ZITPLAATSEN !== 2"
+                               [(ngModel)]="vliegtuig.TRAINER">
+                        <label for="TRAINER" class="form-check-label ms-2">DBO Trainer</label>
+                    </div>
                 </div>
-                <div class="col-6">
-                    <input name="TRAINER" type="checkbox" class="form-check-input" id="TRAINER"
-                           [disabled]="vliegtuig.ZITPLAATSEN !== 2"
-                           [(ngModel)]="vliegtuig.TRAINER">
-                    <label for="TRAINER" class="form-check-label ms-2">DBO Trainer</label>
-                </div>
-            </div>
-            <div class="row my-3 align-items-end" *ngIf="vliegtuig.CLUBKIST">
+            } @if (vliegtuig.CLUBKIST) {
+            <div class="row my-3 align-items-end">
                 <div class="col-12 col-md-6">
                     <label for="LOKAAL" class="form-label">Bevoegdheid lokaal</label>
                     <select class="form-select" [(ngModel)]="vliegtuig.BEVOEGDHEID_LOKAAL_ID"
                             name="BEVOEGDHEID_LOKAAL_ID" id="LOKAAL">
                         <option [ngValue]="-1">n.v.t.</option>
-                        <option *ngFor="let competentie of PVBs"
-                                [ngValue]="competentie.Lokaal">{{competentie.Type}}</option>
+                        @for (competentie of PVBs; track competentie) {
+                            <option
+                                    [ngValue]="competentie.Lokaal">{{ competentie.Type }}
+                            </option>
+                        }
                     </select>
                 </div>
                 <div class="col-12 col-md-6">
@@ -115,18 +125,23 @@
                     <select class="form-select" [(ngModel)]="vliegtuig.BEVOEGDHEID_OVERLAND_ID"
                             name="BEVOEGDHEID_OVERLAND_ID" id="OVERLAND">
                         <option [ngValue]="-1">n.v.t.</option>
-                        <option *ngFor="let competentie of PVBs"
-                                [ngValue]="competentie.Overland">{{competentie.Type}}</option>
+                        @for (competentie of PVBs; track competentie) {
+                            <option
+                                    [ngValue]="competentie.Overland">{{ competentie.Type }}
+                            </option>
+                        }
                     </select>
                 </div>
             </div>
-            <div class="row my-3 align-items-end" *ngIf="vliegtuig.CLUBKIST">
+        } @if (vliegtuig.CLUBKIST) {
+            <div class="row my-3 align-items-end">
                 <div class="col-12 col-md-12">
                     <label for="URL" class="form-label">URL naar handboek</label>
                     <input type="text" class="form-control" id="URL"
                            [(ngModel)]="vliegtuig.URL">
                 </div>
             </div>
+        }
             <div class="row my-3 align-items-end">
                 <div class="col-12 col-md-12">
                     <label for="OPMERKINGEN" class="form-label">Opmerkingen</label>
@@ -137,25 +152,28 @@
         </fieldset>
     </div>
     <div footer>
+        @if (!isLoading && !isSaving && vliegtuig.ID !== undefined && !isRestoreMode && !isVerwijderMode) {
+            <app-icon-button
+                    iconNaam="fas Edit" btnColor="btn-primary"
+                    [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()"
+                    (btnClicked)="uitvoeren()"></app-icon-button>
+        } @if (!isLoading && !isSaving && vliegtuig.ID === undefined && !isRestoreMode && !isVerwijderMode) {
         <app-icon-button
-                *ngIf="!isLoading && !isSaving && vliegtuig.ID !== undefined && !isRestoreMode && !isVerwijderMode"
-                iconNaam="fas Edit" btnColor="btn-primary"
-                [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()"
-                (btnClicked)="uitvoeren()"></app-icon-button>
-        <app-icon-button
-                *ngIf="!isLoading && !isSaving && vliegtuig.ID === undefined && !isRestoreMode && !isVerwijderMode"
                 iconNaam="fas Plus" btnColor="btn-primary"
                 [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled()"
                 (btnClicked)="uitvoeren()"></app-icon-button>
-        <app-icon-button *ngIf="!isLoading && !isSaving && isVerwijderMode" iconNaam="fas TrashAlt"
+    } @if (!isLoading && !isSaving && isVerwijderMode) {
+        <app-icon-button iconNaam="fas TrashAlt"
                          btnColor="btn-primary editorDeleteBtn"
                          [toonKlein]=false tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
-        <app-icon-button *ngIf="!isLoading && !isSaving && isRestoreMode" iconNaam="fas Undo"
+    } @if (!isLoading && !isSaving && isRestoreMode) {
+        <app-icon-button iconNaam="fas Undo"
                          btnColor="btn-primary editorRestoreBtn"
                          [toonKlein]=false tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
-
-        <button class="btn btn-primary" *ngIf="isLoading || isSaving">
+    } @if (isLoading || isSaving) {
+        <button class="btn btn-primary">
             <span><app-loader></app-loader></span>
         </button>
+    }
     </div>
 </app-modal>

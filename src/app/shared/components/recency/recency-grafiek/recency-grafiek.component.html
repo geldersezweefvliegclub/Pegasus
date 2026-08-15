@@ -1,17 +1,23 @@
 <app-modal popupClass="popupLarge" titel="Recency verloop {{naam}} over 24 maanden">
     <div body>
-        <div *ngIf="bezig">
-            <ngb-progressbar type="info" [value]="counter" showValue="true" max="36" [striped]="true"></ngb-progressbar>
-        </div>
-        <div class="barchart-wrapper popupLargeWrapper" *ngIf="!bezig">
+        @if (bezig) {
+            <div>
+                <ngb-progressbar type="info" [value]="counter" showValue="true" max="36"
+                                 [striped]="true"></ngb-progressbar>
+            </div>
+        } @if (!bezig) {
+        <div class="barchart-wrapper popupLargeWrapper">
             <div class="linechart-wrapper inlineGrafiek">
-                <canvas class="recencyGrafiek" baseChart *ngIf="waardes"
-                        style="width: inherit;height: 66vh;"
-                        [type]="'line'"
-                        [data]="lineChartData"
-                        [options]="lineChartOptions"ß>
-                </canvas>
+                @if (waardes) {
+                    <canvas class="recencyGrafiek" baseChart
+                            style="width: inherit;height: 66vh;"
+                            [type]="'line'"
+                            [data]="lineChartData"
+                            [options]="lineChartOptions" ß>
+                    </canvas>
+                }
             </div>
         </div>
+    }
     </div>
 </app-modal>

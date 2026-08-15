@@ -20,14 +20,19 @@
         </div>
         <div class="row justify-content-start mt-2" id="toolbar">
             <div class="col-3">
-                <div *ngIf="this.magToevoegen">
-                    <app-icon-button class="toolbarBtn"
-                                     tekst="Toevoegen"
-                                     iconNaam="far PlusSquare" (btnClicked)="addTransactie()"
-                                     btnColor="btn-primary"></app-icon-button>
-                    <app-icon-button class="toolbarBtn" tekst="Uploaden" iconNaam="fas BasketShopping" *ngIf="this.magUploaden"
-                                     btnColor="btn btn-outline-primary" (btnClicked)="uploadenFacturen()"></app-icon-button>
-                </div>
+                @if (this.magToevoegen) {
+                    <div>
+                        <app-icon-button class="toolbarBtn"
+                                         tekst="Toevoegen"
+                                         iconNaam="far PlusSquare" (btnClicked)="addTransactie()"
+                                         btnColor="btn-primary"></app-icon-button>
+                        @if (this.magUploaden) {
+                            <app-icon-button class="toolbarBtn" tekst="Uploaden" iconNaam="fas BasketShopping"
+                                             btnColor="btn btn-outline-primary"
+                                             (btnClicked)="uploadenFacturen()"></app-icon-button>
+                        }
+                    </div>
+                }
             </div>
             <div class="col-3">
                 <app-lid-invoer id="LID" class="w-100"
@@ -42,21 +47,26 @@
                                  btnColor="btn-primary"></app-icon-button>
             </div>
             <div class="col-5 d-flex justify-content-end align-items-center">
-                <div class="pe-4"  *ngIf="!deleteMode">
-                    <input class="form-check-inline" type="checkbox" id="toonAlles" name="startverbod"
-                           [ngModel]="toonAlles" (click)="switchToonAlles()">
-                    <label class="form-check-label" for="toonAlles">
-                        Toon alles
-                    </label>
-                </div>
+                @if (!deleteMode) {
+                    <div class="pe-4">
+                        <input class="form-check-inline" type="checkbox" id="toonAlles" name="startverbod"
+                               [ngModel]="toonAlles" (click)="switchToonAlles()">
+                        <label class="form-check-label" for="toonAlles">
+                            Toon alles
+                        </label>
+                    </div>
+                } @if (deleteMode) {
                 <app-icon-button class="toolbarBtn" tekst="Alles verwijderen" iconNaam="fas MinusCircle"
-                                 btnColor="btn" class="deleteAlles" *ngIf="deleteMode" (btnClicked)="deleteAlles()"></app-icon-button>
+                                 btnColor="btn" class="deleteAlles" (btnClicked)="deleteAlles()"></app-icon-button>
+            } @if (this.magVerwijderen && !deleteMode) {
                 <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
-                                 btnColor="btn-secondary" *ngIf="this.magVerwijderen && !deleteMode"
+                                 btnColor="btn-secondary"
                                  (btnClicked)="deleteModeJaNee()"></app-icon-button>
+            } @if (deleteMode) {
                 <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
-                                 btnColor="btn btn-outline-primary" *ngIf="deleteMode"
+                                 btnColor="btn btn-outline-primary"
                                  (btnClicked)="deleteModeJaNee()"></app-icon-button>
+            }
             </div>
         </div>
     </div>

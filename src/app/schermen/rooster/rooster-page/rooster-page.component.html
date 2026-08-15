@@ -6,61 +6,69 @@
     <div cdkDropListGroup class="h-100">
         <div class="box h-100">
             <div id="data">
-                <div class="dataContent w-100 h-100" *ngIf="roosterView === 'maand'">
-                    <app-rooster-maandview class="w-100 h-100"
-                            [zelfIndelen]="zelfIndelen"
-                            [magVerwijderen]="magVerwijderen"
-                            [lidInRoosterClass]="lidInRoosterClass"
-                            [tonen]="tonen"
-                            [leden]="filteredLeden"
-                            [rooster]="filteredRooster">
-                    </app-rooster-maandview>
-                </div>
-                <div class="dataContent w-100 h-100" *ngIf="roosterView === 'week'">
+                @if (roosterView === 'maand') {
+                    <div class="dataContent w-100 h-100">
+                        <app-rooster-maandview class="w-100 h-100"
+                                               [zelfIndelen]="zelfIndelen"
+                                               [magVerwijderen]="magVerwijderen"
+                                               [lidInRoosterClass]="lidInRoosterClass"
+                                               [tonen]="tonen"
+                                               [leden]="filteredLeden"
+                                               [rooster]="filteredRooster">
+                        </app-rooster-maandview>
+                    </div>
+                } @if (roosterView === 'week') {
+                <div class="dataContent w-100 h-100">
                     <app-rooster-weekview class="w-100 h-100"
-                            [zelfIndelen]="zelfIndelen"
-                            [magVerwijderen]="magVerwijderen"
-                            [lidInRoosterClass]="lidInRoosterClass"
-                            [tonen]="tonen"
-                            [datum]="datum"
-                            (nieuweDatum)="zetDatum($event)"
-                            [leden]="filteredLeden"
-                            [rooster]="filteredRooster">
+                                          [zelfIndelen]="zelfIndelen"
+                                          [magVerwijderen]="magVerwijderen"
+                                          [lidInRoosterClass]="lidInRoosterClass"
+                                          [tonen]="tonen"
+                                          [datum]="datum"
+                                          (nieuweDatum)="zetDatum($event)"
+                                          [leden]="filteredLeden"
+                                          [rooster]="filteredRooster">
                     </app-rooster-weekview>
                 </div>
-                <div class="dataContent w-100 h-100" *ngIf="roosterView === 'dag'">
+            } @if (roosterView === 'dag') {
+                <div class="dataContent w-100 h-100">
                     <app-rooster-dagview class="w-100 h-100"
-                            [zelfIndelen]="zelfIndelen"
-                            [magVerwijderen]="magVerwijderen"
-                            [lidInRoosterClass]="lidInRoosterClass"
-                            [tonen]="tonen"
-                            [datum]="datum"
-                            (nieuweDatum)="zetDatum($event)"
-                            [leden]="filteredLeden"
-                            [rooster]="filteredRooster">
+                                         [zelfIndelen]="zelfIndelen"
+                                         [magVerwijderen]="magVerwijderen"
+                                         [lidInRoosterClass]="lidInRoosterClass"
+                                         [tonen]="tonen"
+                                         [datum]="datum"
+                                         (nieuweDatum)="zetDatum($event)"
+                                         [leden]="filteredLeden"
+                                         [rooster]="filteredRooster">
                     </app-rooster-dagview>
                 </div>
+            }
             </div>
             <div class="row justify-content-start mt-2" id="toolbar">
                 <div class="d-flex row">
                     <div class="col-xl-4 col-sm-5">
-                        <app-icon-button *ngIf="magWijzigen"
-                                         class="toolbarBtn"
-                                         tekst="Filter"
-                                         iconNaam="fas Filter" (btnClicked)="filterPopup()"
-                                         btnColor="btn-primary"></app-icon-button>
-
-                        <app-icon-button *ngIf="!isDDWVer && roosterView !== 'dag'"
-                                         class="toolbarBtn"
-                                         [tekst]="ddwvActief ? 'Club / DDWV' : 'Club / Alles'"
-                                         iconNaam="fas CalendarWeek" (btnClicked)="ToggleWeekendDDWV()"
-                                         btnColor="btn-primary"></app-icon-button>
+                        @if (magWijzigen) {
+                            <app-icon-button
+                                    class="toolbarBtn"
+                                    tekst="Filter"
+                                    iconNaam="fas Filter" (btnClicked)="filterPopup()"
+                                    btnColor="btn-primary"></app-icon-button>
+                        } @if (!isDDWVer && roosterView !== 'dag') {
+                        <app-icon-button
+                                class="toolbarBtn"
+                                [tekst]="ddwvActief ? 'Club / DDWV' : 'Club / Alles'"
+                                iconNaam="fas CalendarWeek" (btnClicked)="ToggleWeekendDDWV()"
+                                btnColor="btn-primary"></app-icon-button>
+                    }
                     </div>
                     <div class="col-xl-8 col-sm-7">
-                        <app-zoekbar id="zoekbar" *ngIf="magWijzigen && roosterView === 'maand'"
-                                     [(zoekString)]="zoekString"
-                                     (zoeken)="applyLedenFilter()"
-                                     [toonRefresh]="false"></app-zoekbar>
+                        @if (magWijzigen && roosterView === 'maand') {
+                            <app-zoekbar id="zoekbar"
+                                         [(zoekString)]="zoekString"
+                                         (zoeken)="applyLedenFilter()"
+                                         [toonRefresh]="false"></app-zoekbar>
+                        }
                     </div>
                 </div>
             </div>
@@ -70,8 +78,10 @@
 </app-pegasus-card>
 
 
-<div class="spinnerOverlay" *ngIf="isLoading > 0">
+@if (isLoading > 0) {
+    <div class="spinnerOverlay">
     <div class="spinnerPosition">
         <span><img src="../../../../assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Data wordt geladen .....</span>
     </div>
-</div>
+    </div>
+}

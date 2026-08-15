@@ -1,6 +1,9 @@
-<div *ngIf="url === ''">
+@if (url === '') {
+    <div>
     {{txt}}
-</div>
-<div *ngIf="url !== ''">
-<a href="{{url}}" target="_blank" rel="noopener noreferrer">{{txt}} </a>
-</div>
+    </div>
+} @if (url !== '') {
+    <div>
+        <a href="{{url}}" target="_blank" rel="noopener noreferrer">{{ txt }} </a>
+    </div>
+}

@@ -13,12 +13,13 @@
 <app-modal [titel]="formTitel">
     <div body>
         <fieldset [disabled]="isVerwijderMode || isRestoreMode || isLoading || isSaving">
-            <div class="row mb-2" >
+            <div class="row mb-2">
                 <div class="col-12 col-md-5">
                     <label for="DATUM" class="form-label">Datum</label>
                     <div class="input-group">
                         <div class="input-group-append">
-                            <app-icon-button iconNaam="far Calendar" (btnClicked)="d.toggle()" [disabled]="!magDatumAanpassen"
+                            <app-icon-button iconNaam="far Calendar" (btnClicked)="d.toggle()"
+                                             [disabled]="!magDatumAanpassen"
                                              btnColor="btn-primary"></app-icon-button>
                         </div>
                         <input name="start" class="form-control dateInput" placeholder="dd-mm-yyyy" readonly
@@ -47,37 +48,42 @@
                 </div>
             </div>
 
-            <div class="row mt-2" *ngIf="start.VLIEGTUIG_ID && toonStartMethode && gekozenVliegtuig?.ZITPLAATSEN === 2">
-                <div class="col-6">
-                    <div class="d-flex flex-column">
-                        <div *ngIf="start.CHECKSTART !== true && start.INSTRUCTIEVLUCHT !== true && magPaxVliegen()"
-                             ngClass.lt-md="mb-2">
-                            <input name="PAX" type="checkbox" class="form-check-input" id="PAX"
-                                   [(ngModel)]="start.PAX">
-                            <label class="form-check-label ms-2" for="PAX">
-                                Passagiers start
-                            </label>
+            @if (start.VLIEGTUIG_ID && toonStartMethode && gekozenVliegtuig?.ZITPLAATSEN === 2) {
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <div class="d-flex flex-column">
+                            @if (start.CHECKSTART !== true && start.INSTRUCTIEVLUCHT !== true && magPaxVliegen()) {
+                                <div
+                                        ngClass.lt-md="mb-2">
+                                    <input name="PAX" type="checkbox" class="form-check-input" id="PAX"
+                                           [(ngModel)]="start.PAX">
+                                    <label class="form-check-label ms-2" for="PAX">
+                                        Passagiers start
+                                    </label>
+                                </div>
+                            } @if (start.PAX !== true && kanInstructieVluchtZijn()) {
+                            <div ngClass.lt-md="mb-2">
+                                <input name="PAX" type="checkbox" class="form-check-input" id="INSTRUCTIEVLUCHT"
+                                       [(ngModel)]="start.INSTRUCTIEVLUCHT">
+                                <label class="form-check-label ms-2" for="PAX">
+                                    Instructie start
+                                </label>
+                            </div>
+                        } @if (start.PAX !== true && start.INSTRUCTIEVLUCHT && magCheckZetten()) {
+                            <div
+                                    ngClass.lt-md="mb-2">
+                                <input name="CHECKSTART" type="checkbox" class="form-check-input" id="CHECKSTART"
+                                       [(ngModel)]="start.CHECKSTART">
+                                <label class="form-check-label ms-2" for="CHECKSTART">
+                                    Trainingsvlucht
+                                </label>
                         </div>
-                        <div *ngIf="start.PAX !== true && kanInstructieVluchtZijn()" ngClass.lt-md="mb-2">
-                            <input name="PAX" type="checkbox" class="form-check-input" id="INSTRUCTIEVLUCHT"
-                                   [(ngModel)]="start.INSTRUCTIEVLUCHT">
-                            <label class="form-check-label ms-2" for="PAX">
-                                Instructie start
-                            </label>
-                        </div>
-                        <div *ngIf="start.PAX !== true && start.INSTRUCTIEVLUCHT && magCheckZetten()"
-                             ngClass.lt-md="mb-2">
-                            <input name="CHECKSTART" type="checkbox" class="form-check-input" id="CHECKSTART"
-                                   [(ngModel)]="start.CHECKSTART">
-                            <label class="form-check-label ms-2" for="CHECKSTART">
-                                Trainingsvlucht
-                            </label>
-                        </div>
+                        }
+                    </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="row my-2" *ngIf="start.VLIEGTUIG_ID">
+            } @if (start.VLIEGTUIG_ID) {
+            <div class="row my-2">
                 <div class="col-10">
                     <div class="row">
                         <div class="col-12">
@@ -96,48 +102,58 @@
                                                 (LidChanged)="vliegerGeselecteerd($event)"
                                                 [uitleg]="start.PAX ? alleenPAX : undefined"
                                 ></app-lid-invoer>
-                                <div class="ms-2 d-flex align-items-end" *ngIf="toonTranactieKnop">
-                                    <app-icon-button id="ddwvPiloot" class="toolbarBtn" style="color: white" iconNaam="fas EuroSign"
-                                                     (btnClicked)="toonTransactieEditor(start.VLIEGER_ID)"
-                                                     btnColor="euroBtn"></app-icon-button>
+                                @if (toonTranactieKnop) {
+                                    <div class="ms-2 d-flex align-items-end">
+                                        <app-icon-button id="ddwvPiloot" class="toolbarBtn" style="color: white"
+                                                         iconNaam="fas EuroSign"
+                                                         (btnClicked)="toonTransactieEditor(start.VLIEGER_ID)"
+                                                         btnColor="euroBtn"></app-icon-button>
+                                    </div>
+                                }
+                            </div>
+                            @if (toonWaarschuwing && !start.INSTRUCTIEVLUCHT) {
+                                <div class="flex-row cssWarning">
+                                    <div class="fas fa-exclamation-triangle "></div>
+                                    Vlieger onbevoegd
                                 </div>
-                            </div>
-                            <div *ngIf="toonWaarschuwing && !start.INSTRUCTIEVLUCHT" class="flex-row cssWarning">
-                                <div class="fas fa-exclamation-triangle "></div>
-                                Vlieger onbevoegd
-                            </div>
-                            <div *ngIf="medicalWaarschuwing && !start.INSTRUCTIEVLUCHT" class="flex-row cssWarning">
+                            } @if (medicalWaarschuwing && !start.INSTRUCTIEVLUCHT) {
+                            <div class="flex-row cssWarning">
                                 <div class="fas fa-exclamation-triangle "></div>
                                 Controleer medical
                             </div>
-                            <div *ngIf="startVerbod" class="flex-row cssWarning">
+                        } @if (startVerbod) {
+                            <div class="flex-row cssWarning">
                                 <div class="fas fa-exclamation-triangle "></div>
                                 Vlieger heeft startverbod
                             </div>
+                        }
                         </div>
                     </div>
-
-                    <div class="namenInvullen" *ngIf="toonVliegerNaam">
+                    @if (toonVliegerNaam) {
+                        <div class="namenInvullen">
                         <label for="VLIEGER_NAAM" class="form-label">Naam van de vlieger</label>
                         <div class="d-flex flex-row">
+                            @if (!toonGastCombobox) {
                             <input required name="vliegernaam" type="text" class="form-control" id="VLIEGER_NAAM"
                                    [(ngModel)]="start.VLIEGERNAAM"
                                    placeholder="Vul de volledige naam in"
-                                   min="0" *ngIf="!toonGastCombobox">
-                            <app-gast-invoer *ngIf="toonGastCombobox" class="w-100"
+                                   min="0">
+                            } @if (toonGastCombobox) {
+                            <app-gast-invoer class="w-100"
                                              [DATUM]="startDatum"
                                              (gast)="start.VLIEGERNAAM = $event"
                                              (opmerking)="start.OPMERKINGEN = $event">
                             </app-gast-invoer>
+                        }
                             <button class="ms-1 btn btn-noborder gastBtn" (click)="toonGastenCombo()"
                                     [ngClass]="toonGastCombobox ? 'gastBtnAan': 'gastBtnUit'">
                                 <fa-icon [icon]="gastIcon" class="gastIcon"></fa-icon>
                             </button>
                         </div>
-                    </div>
-
+                        </div>
+                    } @if (gekozenVliegtuig?.ZITPLAATSEN === 2 && toonInzittendeNaam < 2 && !start.PAX) {
                     <div class="row my-2"
-                         *ngIf="gekozenVliegtuig?.ZITPLAATSEN === 2 && toonInzittendeNaam < 2 && !start.PAX">
+                    >
                         <div class="col-12">
                             <div class="d-flex">
                                 <app-lid-invoer id="INZITTENDE" class="w-100"
@@ -152,50 +168,63 @@
                                                 (LidChanged)="inzittendeGeselecteerd($event)"
                                                 [uitleg]="start.INSTRUCTIEVLUCHT ? alleenInstructeurs : undefined"
                                 ></app-lid-invoer>
-                                <div class="ms-2 d-flex align-items-end" *ngIf="toonTranactieKnop">
-                                    <app-icon-button id="ddwvInzittende" class="toolbarBtn" style="color: white" iconNaam="fas EuroSign"
-                                                     (btnClicked)="toonTransactieEditor(start.INZITTENDE_ID)"
-                                                     btnColor="euroBtn"></app-icon-button>
-                                </div>
+                                @if (toonTranactieKnop) {
+                                    <div class="ms-2 d-flex align-items-end">
+                                        <app-icon-button id="ddwvInzittende" class="toolbarBtn" style="color: white"
+                                                         iconNaam="fas EuroSign"
+                                                         (btnClicked)="toonTransactieEditor(start.INZITTENDE_ID)"
+                                                         btnColor="euroBtn"></app-icon-button>
+                                    </div>
+                                }
                             </div>
-                            <div *ngIf="toonWaarschuwing && start.INSTRUCTIEVLUCHT" class="flex-row cssWarning">
-                                <div class="fas fa-exclamation-triangle "></div>
-                                Vlieger onbevoegd
+                            @if (toonWaarschuwing && start.INSTRUCTIEVLUCHT) {
+                                <div class="flex-row cssWarning">
+                                    <div class="fas fa-exclamation-triangle "></div>
+                                    Vlieger onbevoegd
                             </div>
-                            <div *ngIf="medicalWaarschuwing && start.INSTRUCTIEVLUCHT" class="flex-row cssWarning">
+                            } @if (medicalWaarschuwing && start.INSTRUCTIEVLUCHT) {
+                            <div class="flex-row cssWarning">
                                 <div class="fas fa-exclamation-triangle "></div>
                                 Controleer medical
                             </div>
+                        }
                         </div>
                     </div>
-
-                    <div class="namenInvullen" *ngIf="start.PAX || toonInzittendeNaam > 0">
+                } @if (start.PAX || toonInzittendeNaam > 0) {
+                    <div class="namenInvullen">
                         <label for="INZITTENDE_NAAM" class="form-label">Naam van de inzittende</label>
                         <div class="d-flex flex-row">
+                            @if (!toonGastCombobox) {
                             <input name="inzittende" type="text" class="form-control" id="INZITTENDE_NAAM"
                                    [(ngModel)]="start.INZITTENDENAAM"
                                    placeholder="Vul de volledige naam in"
-                                   min="0" *ngIf="!toonGastCombobox">
-                            <app-gast-invoer *ngIf="toonGastCombobox" class="w-100"
+                                   min="0">
+                            } @if (toonGastCombobox) {
+                            <app-gast-invoer class="w-100"
                                              [DATUM]="startDatum"
                                              (gast)="start.INZITTENDENAAM = $event"
                                              (opmerking)="start.EXTERNAL_ID = $event">
                             </app-gast-invoer>
+                        }
                             <button class="ms-1 btn btn-noborder" (click)="toonGastenCombo()"
                                     [ngClass]="toonGastCombobox ? 'gastBtnAan': 'gastBtnUit'">
                                 <fa-icon [icon]="gastIcon" class="gastIcon"></fa-icon>
                             </button>
                         </div>
                     </div>
+                }
                 </div>
-                <div class="col-2 col-md-2 row align-items-center" *ngIf="magOmwisselen()">
-                    <app-icon-button id="switchVoorAchter" class="toolbarBtn display-1" iconNaam="fas ExchangeAlt"
-                                     (btnClicked)="omwisselen()"
-                                     btnColor="btn-secondary"></app-icon-button>
-                </div>
+                @if (magOmwisselen()) {
+                    <div class="col-2 col-md-2 row align-items-center">
+                        <app-icon-button id="switchVoorAchter" class="toolbarBtn display-1" iconNaam="fas ExchangeAlt"
+                                         (btnClicked)="omwisselen()"
+                                         btnColor="btn-secondary"></app-icon-button>
+                    </div>
+                }
             </div>
-            <div class="row secondaryFields pb-2" *ngIf="start.VLIEGTUIG_ID">
-                <div class="col-12 col-md-5" >
+        } @if (start.VLIEGTUIG_ID) {
+            <div class="row secondaryFields pb-2">
+                <div class="col-12 col-md-5">
                     <label for="VELD" class="form-label">Veld</label>
                     <ng-select id="VELD"
                                [disabled]="isVerwijderMode || isRestoreMode"
@@ -209,21 +238,24 @@
                                [(ngModel)]="start.VELD_ID">
                     </ng-select>
                 </div>
-                <div class="col-12 col-md-3" *ngIf="start.VLIEGTUIG_ID">
-                    <label for="BAAN" class="form-label">Strip</label>
-                    <ng-select id="BAAN"
-                               [disabled]="isVerwijderMode || isRestoreMode"
-                               [items]="baanTypes$ | async"
-                               placeholder="Strip"
-                               bindLabel="OMSCHRIJVING"
-                               bindValue="ID"
-                               closeOnSelect="true"
-                               openOnEnter="true"
-                               [(ngModel)]="start.BAAN_ID">
-                    </ng-select>
-                </div>
+                @if (start.VLIEGTUIG_ID) {
+                    <div class="col-12 col-md-3">
+                        <label for="BAAN" class="form-label">Strip</label>
+                        <ng-select id="BAAN"
+                                   [disabled]="isVerwijderMode || isRestoreMode"
+                                   [items]="baanTypes$ | async"
+                                   placeholder="Strip"
+                                   bindLabel="OMSCHRIJVING"
+                                   bindValue="ID"
+                                   closeOnSelect="true"
+                                   openOnEnter="true"
+                                   [(ngModel)]="start.BAAN_ID">
+                        </ng-select>
+                    </div>
+                }
                 <div class="col-4 flex-row align-self-end">
-                    <div class="col-12" *ngFor="let radiobutton of startMethodeTypesFiltered">
+                    @for (radiobutton of startMethodeTypesFiltered; track radiobutton) {
+                        <div class="col-12">
                         <label ngClass.lt-md="mb-2">
                             <div class="SMinvalid"></div>
                             <input type="radio" name="options"
@@ -231,11 +263,12 @@
                                    [checked]="start.STARTMETHODE_ID === radiobutton.ID">
                             <span class="ms-3" [ngClass]="StartMethodeIngevuld()">{{radiobutton.OMSCHRIJVING}}</span>
                         </label>
-                    </div>
+                        </div>
+                    }
                 </div>
             </div>
-
-            <div class="row secondaryFields pb-2" *ngIf="start.VLIEGTUIG_ID && start.STARTMETHODE_ID === 501">
+        } @if (start.VLIEGTUIG_ID && start.STARTMETHODE_ID === 501) {
+            <div class="row secondaryFields pb-2">
                 <div class="col-12 col-md-6">
                     <label for="SLEEPVLIEGTUIG" class="form-label">Sleepkist</label>
                     <app-vliegtuig-invoer id="SLEEPVLIEGTUIG"
@@ -256,9 +289,9 @@
                     >
                 </div>
             </div>
-
+        } @if ((!isVerwijderMode && start.VLIEGTUIG_ID) || (isVerwijderMode && start.EXTERNAL_ID)) {
             <div class="row my-2"
-                 *ngIf="(!isVerwijderMode && start.VLIEGTUIG_ID) || (isVerwijderMode && start.EXTERNAL_ID)">
+            >
                 <div class="opmerkingInvoer">
                     <label for="EXTERNAL_ID" class="form-label">Referentie</label>
                     <input name="inzittende" type="text" class="form-control w-50" id="EXTERNAL_ID"
@@ -267,9 +300,9 @@
                     >
                 </div>
             </div>
-
+        } @if ((!isVerwijderMode && start.VLIEGTUIG_ID) || (isVerwijderMode && start.OPMERKINGEN)) {
             <div class="row my-2"
-                 *ngIf="(!isVerwijderMode && start.VLIEGTUIG_ID) || (isVerwijderMode && start.OPMERKINGEN)">
+            >
                 <div class="opmerkingInvoer">
                     <label for="OPMERKINGEN" class="form-label">Opmerkingen</label>
                     <input name="inzittende" type="text" class="form-control" id="OPMERKINGEN"
@@ -278,26 +311,30 @@
                     >
                 </div>
             </div>
+        }
         </fieldset>
     </div>
     <div footer>
+        @if (!isLoading && !isSaving && start.ID !== undefined && !isRestoreMode && !isVerwijderMode) {
+            <app-icon-button
+                    iconNaam="fas Edit" btnColor="btn-primary" [toonKlein]=false
+                    tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
+        } @if (!isLoading && !isSaving && start.ID === undefined && !isRestoreMode && !isVerwijderMode) {
         <app-icon-button
-                *ngIf="!isLoading && !isSaving && start.ID !== undefined && !isRestoreMode && !isVerwijderMode"
-                iconNaam="fas Edit" btnColor="btn-primary" [toonKlein]=false
-                tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
-        <app-icon-button
-                *ngIf="!isLoading && !isSaving && start.ID === undefined && !isRestoreMode && !isVerwijderMode"
                 iconNaam="fas Plus" btnColor="btn-primary" [toonKlein]=false
                 tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
-        <app-icon-button *ngIf="!isLoading && !isSaving && isVerwijderMode" iconNaam="fas TrashAlt"
+    } @if (!isLoading && !isSaving && isVerwijderMode) {
+        <app-icon-button iconNaam="fas TrashAlt"
                          btnColor="btn-primary editorDeleteBtn" [toonKlein]=false
                          tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
-        <app-icon-button *ngIf="!isLoading && !isSaving && isRestoreMode" iconNaam="fas Undo"
+    } @if (!isLoading && !isSaving && isRestoreMode) {
+        <app-icon-button iconNaam="fas Undo"
                          btnColor="btn-primary editorRestoreBtn" [toonKlein]=false
                          tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
-
-        <button class="btn btn-primary" *ngIf="isLoading || isSaving">
+    } @if (isLoading || isSaving) {
+        <button class="btn btn-primary">
             <span><app-loader></app-loader></span>
         </button>
+    }
     </div>
 </app-modal>

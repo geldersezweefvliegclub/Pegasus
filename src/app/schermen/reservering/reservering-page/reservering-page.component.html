@@ -10,15 +10,19 @@
     <div class="h-100">
         <div class="box h-100">
             <div id="data" class="w-100">
-                <div class="dataContent w-100" *ngIf="reserveringView === 'maand'">
-                    <ng-template *ngTemplateOutlet="maand"></ng-template>
-                </div>
-                <div class="dataContent w-100" *ngIf="reserveringView === 'week'">
+                @if (reserveringView === 'maand') {
+                    <div class="dataContent w-100">
+                        <ng-template *ngTemplateOutlet="maand"></ng-template>
+                    </div>
+                } @if (reserveringView === 'week') {
+                <div class="dataContent w-100">
                     <ng-template *ngTemplateOutlet="week"></ng-template>
                 </div>
-                <div class="dataContent w-100" *ngIf="reserveringView === 'dag'">
+            } @if (reserveringView === 'dag') {
+                <div class="dataContent w-100">
                     <ng-template *ngTemplateOutlet="dag"></ng-template>
                 </div>
+            }
             </div>
             <div class="row justify-content-start mt-2" id="toolbar">
                 <div class="d-flex row">
@@ -29,21 +33,24 @@
                                 iconNaam="fas Filter" (btnClicked)="toonKistSelectie()"
                                 btnColor="btn-primary"></app-icon-button>
 
-                        <app-icon-button
-                                *ngIf="reserveringView !== 'dag'"
-                                class="toolbarBtn ps-2"
-                                tekst="Club / DDWV"
-                                iconNaam="fas CalendarWeek" (btnClicked)="ToggleWeekendDDWV()"
-                                btnColor="btn-primary"></app-icon-button>
+                        @if (reserveringView !== 'dag') {
+                            <app-icon-button
+                                    class="toolbarBtn ps-2"
+                                    tekst="Club / DDWV"
+                                    iconNaam="fas CalendarWeek" (btnClicked)="ToggleWeekendDDWV()"
+                                    btnColor="btn-primary"></app-icon-button>
+                        }
                     </div>
                     <div class="col-4">
-                        <div class="d-flex justify-content-end" *ngIf="magBoeken">
-                            <app-icon-button
-                                    class="toolbarBtn"
-                                    tekst="Boeking"
-                                    iconNaam="far PlusSquare" (btnClicked)="nieuweBoeking()"
-                                    btnColor="btn-primary"></app-icon-button>
-                        </div>
+                        @if (magBoeken) {
+                            <div class="d-flex justify-content-end">
+                                <app-icon-button
+                                        class="toolbarBtn"
+                                        tekst="Boeking"
+                                        iconNaam="far PlusSquare" (btnClicked)="nieuweBoeking()"
+                                        btnColor="btn-primary"></app-icon-button>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -72,55 +79,59 @@
             <thead>
             <th></th>
             <th></th>
-            <th *ngFor="let clubKist of clubVliegtuigenFiltered;let i = index">
-                {{clubKist.CALLSIGN}}
-            </th>
+            @for (clubKist of clubVliegtuigenFiltered; track clubKist; let i = $index) {
+                <th>
+                    {{ clubKist.CALLSIGN }}
+                </th>
+            }
             </thead>
             <tbody>
 
-            <tr *ngFor="let dagInRooster of filteredRooster;let r = index"
-                [ngClass]="isClubBedrijf(dagInRooster.DATUM) ? 'clubBedrijf' : ''">
-                <td class="WeekdagKolom" [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
-                    <div class="rotation-wrapper">
-                        <div class="dayOfTheWeek">
-                            {{DagVanDeWeek(dagInRooster.DATUM)}}
-                        </div>
-                    </div>
-                </td>
-
-                <td>
-                    <div class="d-flex dagInfo row m-0">
-                        <div class="p-0">
-                            <div class="text-nowrap fw-bold">
-                                {{dagInRooster.DATUM | date: 'dd-MM-yyyy'}}
-                            </div>
-                            <div>
-                                <input type="checkbox" class="form-check-inline" [id]="'DDWV' + r"
-                                       [name]="'DDWV' + r"
-                                       [(ngModel)]="dagInRooster.DDWV"
-                                       disabled>
-                                <label [for]="'DDWV' + r" class="form-check-label">DDWV</label>
-                            </div>
-                            <div class="text-nowrap">
-                                <input type="checkbox" class="form-check-inline"
-                                       [id]="'Clubbedrijf' + r"
-                                       [name]="'Clubbedrijf' + r"
-                                       [(ngModel)]="dagInRooster.CLUB_BEDRIJF"
-                                       disabled>
-                                <label [for]="'Clubbedrijf' + r"
-                                       class="labelClub form-check-label">Club
-                                    bedrijf</label>
+            @for (dagInRooster of filteredRooster; track dagInRooster; let r = $index) {
+                <tr
+                        [ngClass]="isClubBedrijf(dagInRooster.DATUM) ? 'clubBedrijf' : ''">
+                    <td class="WeekdagKolom" [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
+                        <div class="rotation-wrapper">
+                            <div class="dayOfTheWeek">
+                                {{ DagVanDeWeek(dagInRooster.DATUM) }}
                             </div>
                         </div>
-                    </div>
+                    </td>
+                    <td>
+                        <div class="d-flex dagInfo row m-0">
+                            <div class="p-0">
+                                <div class="text-nowrap fw-bold">
+                                    {{ dagInRooster.DATUM | date: 'dd-MM-yyyy' }}
+                                </div>
+                                <div>
+                                    <input type="checkbox" class="form-check-inline" [id]="'DDWV' + r"
+                                           [name]="'DDWV' + r"
+                                           [(ngModel)]="dagInRooster.DDWV"
+                                           disabled>
+                                    <label [for]="'DDWV' + r" class="form-check-label">DDWV</label>
+                                </div>
+                                <div class="text-nowrap">
+                                    <input type="checkbox" class="form-check-inline"
+                                           [id]="'Clubbedrijf' + r"
+                                           [name]="'Clubbedrijf' + r"
+                                           [(ngModel)]="dagInRooster.CLUB_BEDRIJF"
+                                           disabled>
+                                    <label [for]="'Clubbedrijf' + r"
+                                           class="labelClub form-check-label">Club
+                                        bedrijf</label>
+                                </div>
+                            </div>
+                        </div>
                 </td>
-                <td *ngFor="let clubKist of clubVliegtuigenFiltered;let i = index"
+                    @for (clubKist of clubVliegtuigenFiltered; track clubKist; let i = $index) {
+                        <td
                     [ngStyle]="{'width.%': 100/(clubVliegtuigenFiltered.length+2)}">
-
                     <ng-container [ngTemplateOutlet]="reservering"
                                   [ngTemplateOutletContext]="{dag:dagInRooster.DATUM,vliegtuigID:clubKist.ID}"></ng-container>
-                </td>
-            </tr>
+                        </td>
+                    }
+                </tr>
+            }
             </tbody>
         </table>
     </div>
@@ -130,17 +141,21 @@
     <div class="w-100">
         <div class="d-flex flex-row justify-content-between mb-2">
             <div>
-                <app-icon-button *ngIf="toonDatumKnoppen"
-                        class="toolbarBtn mx-2"
-                        iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum.plus({days: -7}))"
-                        btnColor="btn-secondary"></app-icon-button>
+                @if (toonDatumKnoppen) {
+                    <app-icon-button
+                            class="toolbarBtn mx-2"
+                            iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum.plus({days: -7}))"
+                            btnColor="btn-secondary"></app-icon-button>
+                }
             </div>
-            Reserveringen voor de week van {{maandag.day}}-{{maandag.month}}-{{maandag.year}}
+            Reserveringen voor de week van {{ maandag.day }}-{{ maandag.month }}-{{ maandag.year }}
             <div>
-                <app-icon-button *ngIf="toonDatumKnoppen"
-                        class="toolbarBtn mx-2"
-                        iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum.plus({days: 7}))"
-                        btnColor="btn-secondary"></app-icon-button>
+                @if (toonDatumKnoppen) {
+                    <app-icon-button
+                            class="toolbarBtn mx-2"
+                            iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum.plus({days: 7}))"
+                            btnColor="btn-secondary"></app-icon-button>
+                }
             </div>
         </div>
 
@@ -149,25 +164,33 @@
                 <thead>
                 <tr style="vertical-align: top;">
                     <td></td>
-                    <td *ngFor="let dagInRooster of filteredRooster;let r = index"
-                        [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
-                        {{DagVanDeWeek(dagInRooster.DATUM)}}
-
-                        <div *ngIf="dagInRooster.CLUB_BEDRIJF" class="me-2">Clubbedrijf</div>
-                        <div *ngIf="dagInRooster.DDWV">DDWV</div>
-                    </td>
+                    @for (dagInRooster of filteredRooster; track dagInRooster; let r = $index) {
+                        <td
+                                [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
+                            {{ DagVanDeWeek(dagInRooster.DATUM) }}
+                            @if (dagInRooster.CLUB_BEDRIJF) {
+                                <div class="me-2">Clubbedrijf</div>
+                            } @if (dagInRooster.DDWV) {
+                            <div>DDWV</div>
+                        }
+                        </td>
+                    }
                 </tr>
                 </thead>
                 <tbody>
 
-                <tr *ngFor="let clubKist of clubVliegtuigenFiltered;let i = index">
-                    <td>{{clubKist.CALLSIGN}}</td>
-                    <td *ngFor="let dagInRooster of filteredRooster;let r = index"
-                        [ngClass]="isClubBedrijf(dagInRooster.DATUM) ? 'clubBedrijf' : ''">
-                        <ng-container [ngTemplateOutlet]="reservering"
-                                      [ngTemplateOutletContext]="{dag:dagInRooster.DATUM,vliegtuigID:clubKist.ID}"></ng-container>
+                @for (clubKist of clubVliegtuigenFiltered; track clubKist; let i = $index) {
+                    <tr>
+                        <td>{{ clubKist.CALLSIGN }}</td>
+                        @for (dagInRooster of filteredRooster; track dagInRooster; let r = $index) {
+                            <td
+                                    [ngClass]="isClubBedrijf(dagInRooster.DATUM) ? 'clubBedrijf' : ''">
+                                <ng-container [ngTemplateOutlet]="reservering"
+                                              [ngTemplateOutletContext]="{dag:dagInRooster.DATUM,vliegtuigID:clubKist.ID}"></ng-container>
                     </td>
+                        }
                 </tr>
+                }
                 </tbody>
             </table>
         </div>
@@ -177,39 +200,44 @@
 <ng-template #dag>
     <div class="w-100 overflow-scroll">
         <div class="d-flex flex-row justify-content-between">
-            <div *ngIf="toonDatumKnoppen">
-                <app-icon-button
-                        class="toolbarBtn"
-                        iconNaam="fas AngleDoubleLeft" (btnClicked)="zetDatum(datum.plus({days: -7}))"
-                        btnColor="btn-secondary"></app-icon-button>
-                <app-icon-button
-                        class="toolbarBtn mx-2"
-                        iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum.plus({days: -1}))"
-                        btnColor="btn-secondary"></app-icon-button>
+            @if (toonDatumKnoppen) {
+                <div>
+                    <app-icon-button
+                            class="toolbarBtn"
+                            iconNaam="fas AngleDoubleLeft" (btnClicked)="zetDatum(datum.plus({days: -7}))"
+                            btnColor="btn-secondary"></app-icon-button>
+                    <app-icon-button
+                            class="toolbarBtn mx-2"
+                            iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum.plus({days: -1}))"
+                            btnColor="btn-secondary"></app-icon-button>
             </div>
-            {{DagVanDeWeek(datum.toISODate())}} <br>{{datum.day}}-{{datum.month}}-{{datum.year}}
-            <div *ngIf="toonDatumKnoppen">
-                <app-icon-button
-                        class="toolbarBtn mx-2"
-                        iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum.plus({days: 1}))"
-                        btnColor="btn-secondary"></app-icon-button>
-                <app-icon-button
-                        class="toolbarBtn"
-                        iconNaam="fas AngleDoubleRight" (btnClicked)="zetDatum(datum.plus({days: 7}))"
-                        btnColor="btn-secondary"></app-icon-button>
+            }
+            {{ DagVanDeWeek(datum.toISODate()) }} <br>{{ datum.day }}-{{ datum.month }}-{{ datum.year }}
+            @if (toonDatumKnoppen) {
+                <div>
+                    <app-icon-button
+                            class="toolbarBtn mx-2"
+                            iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum.plus({days: 1}))"
+                            btnColor="btn-secondary"></app-icon-button>
+                    <app-icon-button
+                            class="toolbarBtn"
+                            iconNaam="fas AngleDoubleRight" (btnClicked)="zetDatum(datum.plus({days: 7}))"
+                            btnColor="btn-secondary"></app-icon-button>
             </div>
+            }
         </div>
         <table>
-            <tr *ngFor="let clubKist of clubVliegtuigenFiltered;let i = index" class="w-100" style="height: 45px;">
-                <td class="me-2 mt-4">
-                    {{clubKist.CALLSIGN}}
-                </td>
-
-                <td class="w-100 pe-4">
-                    <ng-container [ngTemplateOutlet]="reservering"
-                                  [ngTemplateOutletContext]="{dag:datum.toISODate(),vliegtuigID:clubKist.ID}"></ng-container>
-                </td>
+            @for (clubKist of clubVliegtuigenFiltered; track clubKist; let i = $index) {
+                <tr class="w-100" style="height: 45px;">
+                    <td class="me-2 mt-4">
+                        {{ clubKist.CALLSIGN }}
+                    </td>
+                    <td class="w-100 pe-4">
+                        <ng-container [ngTemplateOutlet]="reservering"
+                                      [ngTemplateOutletContext]="{dag:datum.toISODate(),vliegtuigID:clubKist.ID}"></ng-container>
+                    </td>
             </tr>
+            }
         </table>
     </div>
 </ng-template>
@@ -220,20 +248,25 @@
         <div class="w-100">
             <div class="d-flex flex-row w-100">
                 <div [ngClass]="htmlClassReservering(dag, vliegtuigID)">
-                    {{ ToonNaam(dag, vliegtuigID)}}
+                    {{ ToonNaam(dag, vliegtuigID) }}
                 </div>
-                <div *ngIf="magReserveren(dag, vliegtuigID) && magNogReserveren"
-                     (click)="toekennenReservering(dag, vliegtuigID)">
-                    <ng-template *ngTemplateOutlet="assign"></ng-template>
-                </div>
-                <div *ngIf="magVerwijderen(dag, vliegtuigID)"
-                     (click)="verwijderReservering(dag, vliegtuigID)">
+                @if (magReserveren(dag, vliegtuigID) && magNogReserveren) {
+                    <div
+                            (click)="toekennenReservering(dag, vliegtuigID)">
+                        <ng-template *ngTemplateOutlet="assign"></ng-template>
+                    </div>
+                } @if (magVerwijderen(dag, vliegtuigID)) {
+                <div
+                        (click)="verwijderReservering(dag, vliegtuigID)">
                     <ng-template *ngTemplateOutlet="reset"></ng-template>
                 </div>
+            }
             </div>
-            <div *ngIf="ToonOpmerking(dag, vliegtuigID.ID)">
-                {{ ToonOpmerking(dag, vliegtuigID.ID)}}
+            @if (ToonOpmerking(dag, vliegtuigID.ID)) {
+                <div>
+                    {{ ToonOpmerking(dag, vliegtuigID.ID) }}
             </div>
+            }
         </div>
     </div>
 </ng-template>

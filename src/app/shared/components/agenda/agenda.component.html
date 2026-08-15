@@ -3,22 +3,26 @@
         <th style="width: 70px;">Datum</th>
         <th>Agenda</th>
     </tr>
-    <tr *ngFor="let a of agenda">
-        <ng-template #tipContent><span class="oms">{{a.OMSCHRIJVING}}</span></ng-template>
-
-        <td>{{datumDM(a.DATUM)}}</td>
-        <td>
-            <div class="d-flex flex-row">
-                <div *ngIf="a.TIJD">{{a.TIJD}}&nbsp;</div>
-                <div>{{a.KORT}}
-                    <fa-icon class="text-info ms-2 clickable"
-                             *ngIf="a.OMSCHRIJVING"
-                             [icon]="infoIcon"
-                             [ngbPopover]="tipContent"
-                             placement="top"></fa-icon>
+    @for (a of agenda; track a) {
+        <tr>
+            <ng-template #tipContent><span class="oms">{{ a.OMSCHRIJVING }}</span></ng-template>
+            <td>{{ datumDM(a.DATUM) }}</td>
+            <td>
+                <div class="d-flex flex-row">
+                    @if (a.TIJD) {
+                        <div>{{ a.TIJD }}&nbsp;</div>
+                    }
+                    <div>{{ a.KORT }}
+                        @if (a.OMSCHRIJVING) {
+                            <fa-icon class="text-info ms-2 clickable"
+                                     [icon]="infoIcon"
+                                     [ngbPopover]="tipContent"
+                                     placement="top"></fa-icon>
+                        }
+                    </div>
                 </div>
-            </div>
-        </td>
+            </td>
     </tr>
+    }
 </table>
 

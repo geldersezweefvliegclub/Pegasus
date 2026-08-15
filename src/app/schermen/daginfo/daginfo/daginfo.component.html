@@ -121,9 +121,9 @@
                                           subtitel="Wie zijn aanwezig en wie niet"
                                           [icon]="iconDiensten">
                             <div class="d-flex align-items-end h-100">
-                                <textarea [(ngModel)]="dagInfo.DIENSTEN" name="DIENSTEN"
-                                  class="w-100 h-100 text-invoer form-control"
-                                  rows=4></textarea>
+                    <textarea [(ngModel)]="dagInfo.DIENSTEN" name="DIENSTEN"
+                              class="w-100 h-100 text-invoer form-control"
+                              rows=4></textarea>
 
                                 <app-icon-button class="ms-2" iconNaam="fas PencilAlt" (btnClicked)="invullenDiensten()"
                                                  btnColor="btn-primary"></app-icon-button>
@@ -132,83 +132,100 @@
                     </div>
                 </div>
             </div>
-            <app-pegasus-card id="rapportenCard" *ngIf="toonDagRapport"
-                              class="kleineKaart"
-                              titel="Dagrapporten"
-                              subtitel="Samenvatting van de dag"
-                              [minimum]="true"
-                              [icon]="iconDiensten">
-
-                <table class="w-100">
-                    <tr *ngFor="let dr of dagRapporten" class="drRow" (dblclick)="openEditor(dr)">
-                        <td *ngIf="deleteMode && !trashMode">
-                            <button class="btn btn-noborder" (click)="openVerwijderPopup(dr)"
-                                    *ngIf="magDagRapportVerwijderen(dr)">
-                                <fa-icon [icon]="deleteIcon" class="deleteBtn"></fa-icon>
-                            </button>
-                        </td>
-                        <td *ngIf="deleteMode && trashMode">
-                            <button class="btn btn-noborder" (click)="openRestorePopup(dr)"
-                                    *ngIf="magDagRapportHerstellen(dr)">
-                                <fa-icon [icon]="restoreIcon" class="restoreBtn"></fa-icon>
-                            </button>
-                        </td>
-
-                        <td style="width: 100%;">
-                            <div class="rapportHeader">
-                                Op {{datumString(dr.LAATSTE_AANPASSING)}} om {{tijdString(dr.LAATSTE_AANPASSING)}}
-                                schreef {{dr.INGEVOERD}} dagrapport voor vliegveld {{dr.VELD_OMS}}
-                            </div>
-                            <div class="tekstbox">
-                                <div *ngIf="dr.VLIEGBEDRIJF && dr.VLIEGBEDRIJF.length > 0">
-                                    <h3>Vliegbedrijf</h3>
-                                    <p>{{dr.VLIEGBEDRIJF}}
-                                    </p>
-                                </div>
-                                <div *ngIf="dr.VERSLAG && dr.VERSLAG.length > 0">
-                                    <h3>Verslag</h3>
-                                    <p>{{dr.VERSLAG}}
-                                    </p>
-                                </div>
-                                <div *ngIf="dr.METEO && dr.METEO.length > 0">
-                                    <h3>Meteo</h3>
-                                    <p>{{dr.METEO}}
-                                    </p>
-                                </div>
-                                <div *ngIf="dr.VLIEGENDMATERIEEL && dr.VLIEGENDMATERIEEL.length > 0">
-                                    <h3>Vliegend materieel</h3>
-                                    <p>{{dr.VLIEGENDMATERIEEL}}
-                                    </p>
-                                </div>
-
-                                <div *ngIf="dr.ROLLENDMATERIEEL && dr.ROLLENDMATERIEEL.length > 0">
-                                    <h3>Rollend materieel</h3>
-                                    <p>{{dr.ROLLENDMATERIEEL}}
-                                    </p>
-                                </div>
-
-                                <div *ngIf="dr.INCIDENTEN && dr.INCIDENTEN.length > 0">
-                                    <h3>Incidenten</h3>
-                                    <p>{{dr.INCIDENTEN}}
-                                    </p>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
+            @if (toonDagRapport) {
+                <app-pegasus-card id="rapportenCard"
+                                  class="kleineKaart"
+                                  titel="Dagrapporten"
+                                  subtitel="Samenvatting van de dag"
+                                  [minimum]="true"
+                                  [icon]="iconDiensten">
+                    <table class="w-100">
+                        @for (dr of dagRapporten; track dr) {
+                            <tr class="drRow" (dblclick)="openEditor(dr)">
+                                @if (deleteMode && !trashMode) {
+                                    <td>
+                                        @if (magDagRapportVerwijderen(dr)) {
+                                            <button class="btn btn-noborder" (click)="openVerwijderPopup(dr)"
+                                            >
+                                                <fa-icon [icon]="deleteIcon" class="deleteBtn"></fa-icon>
+                                            </button>
+                                        }
+                                    </td>
+                                } @if (deleteMode && trashMode) {
+                                <td>
+                                    @if (magDagRapportHerstellen(dr)) {
+                                        <button class="btn btn-noborder" (click)="openRestorePopup(dr)"
+                                        >
+                                            <fa-icon [icon]="restoreIcon" class="restoreBtn"></fa-icon>
+                                        </button>
+                                    }
+                                </td>
+                            }
+                                <td style="width: 100%;">
+                                    <div class="rapportHeader">
+                                        Op {{ datumString(dr.LAATSTE_AANPASSING) }}
+                                        om {{ tijdString(dr.LAATSTE_AANPASSING) }}
+                                        schreef {{ dr.INGEVOERD }} dagrapport voor vliegveld {{ dr.VELD_OMS }}
+                                    </div>
+                                    <div class="tekstbox">
+                                        @if (dr.VLIEGBEDRIJF && dr.VLIEGBEDRIJF.length > 0) {
+                                            <div>
+                                                <h3>Vliegbedrijf</h3>
+                                                <p>{{ dr.VLIEGBEDRIJF }}
+                                                </p>
+                                            </div>
+                                        } @if (dr.VERSLAG && dr.VERSLAG.length > 0) {
+                                        <div>
+                                            <h3>Verslag</h3>
+                                            <p>{{ dr.VERSLAG }}
+                                            </p>
+                                        </div>
+                                    } @if (dr.METEO && dr.METEO.length > 0) {
+                                        <div>
+                                            <h3>Meteo</h3>
+                                            <p>{{ dr.METEO }}
+                                            </p>
+                                        </div>
+                                    } @if (dr.VLIEGENDMATERIEEL && dr.VLIEGENDMATERIEEL.length > 0) {
+                                        <div>
+                                            <h3>Vliegend materieel</h3>
+                                            <p>{{ dr.VLIEGENDMATERIEEL }}
+                                            </p>
+                                        </div>
+                                    } @if (dr.ROLLENDMATERIEEL && dr.ROLLENDMATERIEEL.length > 0) {
+                                        <div>
+                                            <h3>Rollend materieel</h3>
+                                            <p>{{ dr.ROLLENDMATERIEEL }}
+                                            </p>
+                                        </div>
+                                    } @if (dr.INCIDENTEN && dr.INCIDENTEN.length > 0) {
+                                        <div>
+                                            <h3>Incidenten</h3>
+                                            <p>{{ dr.INCIDENTEN }}
+                                            </p>
+                                        </div>
+                                    }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </table>
             </app-pegasus-card>
+            }
         </div>
         <div class="row" id="toolbar">
             <div class="col-12">
                 <div class="d-flex justify-content-between">
-                    <div *ngIf="!deleteMode && !datumInToekomst()">
-                        <app-icon-button [disabled]="opslaanDisabled()"
-                                         class="toolbarBtn"
-                                         tekst="Opslaan"
-                                         iconNaam="far PlusSquare" (btnClicked)="opslaanDagInfo()"
-                                         btnColor="btn-primary"></app-icon-button>
-                    </div>
-                    <div *ngIf="deleteMode">
+                    @if (!deleteMode && !datumInToekomst()) {
+                        <div>
+                            <app-icon-button [disabled]="opslaanDisabled()"
+                                             class="toolbarBtn"
+                                             tekst="Opslaan"
+                                             iconNaam="far PlusSquare" (btnClicked)="opslaanDagInfo()"
+                                             btnColor="btn-primary"></app-icon-button>
+                        </div>
+                    } @if (deleteMode) {
+                    <div>
                         <app-status-button
                                 class="toolbarBtn"
                                 tekst="Archief"
@@ -217,21 +234,27 @@
                                 iconNaam="fas Inbox">
                         </app-status-button>
                     </div>
+                }
                     <div class="d-flex">
-                        <app-icon-button class="toolbarBtn"
-                                         tekst="Dagrapport toevoegen"
-                                         iconNaam="far PlusSquare" (btnClicked)="addDagRapport()"
-                                         btnColor="btn-primary"
-                                         *ngIf="!deleteMode && toonDagRapport"></app-icon-button>
+                        @if (!deleteMode && toonDagRapport) {
+                            <app-icon-button class="toolbarBtn"
+                                             tekst="Dagrapport toevoegen"
+                                             iconNaam="far PlusSquare" (btnClicked)="addDagRapport()"
+                                             btnColor="btn-primary"
+                            ></app-icon-button>
+                        }
 
                         <div class="d-flex justify-content-end">
-                            <app-icon-button class="toolbarBtn" tekst="Dagrapport verwijderen" iconNaam="far TrashAlt"
-                                             btnColor="btn-secondary"
-                                             *ngIf="toonDagRapport && !deleteMode && dagRapporten && dagRapporten.length > 0"
-                                             (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                            @if (toonDagRapport && !deleteMode && dagRapporten && dagRapporten.length > 0) {
+                                <app-icon-button class="toolbarBtn" tekst="Dagrapport verwijderen"
+                                                 iconNaam="far TrashAlt"
+                                                 btnColor="btn-secondary"
+                                                 (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                            } @if (deleteMode) {
                             <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
-                                             btnColor="btn btn-outline-primary" *ngIf="deleteMode"
+                                             btnColor="btn btn-outline-primary"
                                              (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                        }
                         </div>
                     </div>
                 </div>

@@ -1,12 +1,16 @@
-<div *ngIf="!this.error">
-    <div *ngIf="!naarDashboard">{{grid_vliegernaam}}</div>
-
-    <div *ngIf="naarDashboard">
+@if (!this.error) {
+    <div>
+        @if (!naarDashboard) {
+            <div>{{ grid_vliegernaam }}</div>
+        } @if (naarDashboard) {
+        <div>
         <a aria-label="Naar dashboard" [routerLink]="['/dashboard']" [queryParams]="{lidID: lidID}">{{grid_vliegernaam}}</a>
+        </div>
+    }
     </div>
-</div>
-
-<div *ngIf="this.error" class="error">
+} @if (this.error) {
+    <div class="error">
     <div class="fas fa-exclamation-triangle" data-toggle="tooltip" title="Vul de naam van de vlieger in"></div>
-</div>
+    </div>
+}
 

@@ -26,31 +26,35 @@
                         </div>
                     </div>
                     <div [title]="node.displayField">
-                        <fa-icon [icon]="upIcon" class="upBtn me-2 clickable" (click)="omhoog(node.data);"
-                                 *ngIf="node.data.value >= 0 && node.data.blokID !== -1"></fa-icon>
+                        @if (node.data.value >= 0 && node.data.blokID !== -1) {
+                            <fa-icon [icon]="upIcon" class="upBtn me-2 clickable" (click)="omhoog(node.data);"
+                            ></fa-icon>
+                        } @if (node.data.value >= 0 && node.data.blokID !== -1) {
                         <fa-icon [icon]="downIcon" class="downBtn me-2 clickable" (click)="omlaag(node.data);"
-                                 *ngIf="node.data.value >= 0 && node.data.blokID !== -1"></fa-icon>
+                        ></fa-icon>
+                    } @if (node.data.value >= 0) {
                         <fa-icon [icon]="toevoegenIcon" class="addBtn me-2 clickable" (click)="toevoegen(node.data);"
-                                 *ngIf="node.data.value >= 0"></fa-icon>
+                        ></fa-icon>
+                    }
                     </div>
                 </div>
             </ng-template>
-           <!-- <ng-template #treeNodeTemplate let-node>
+            <!-- <ng-template #treeNodeTemplate let-node>
             Hello World!
-                <div class="form-inline row-item competentieRegel" (dblclick)="openEditor(node.data)">
-                <div class="form-check w-100">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <label class="form-check-label" [ngStyle]="node.data.value < 0 && {'color': 'red'}">
-                                {{node.data.text}}
-                            </label>
-                            <div class="badge bg-secondary ms-2" [innerHTML]="node.data.value" *ngIf="node.data.value >= 0"></div>
-                        </div>
+            <div class="form-inline row-item competentieRegel" (dblclick)="openEditor(node.data)">
+              <div class="form-check w-100">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <label class="form-check-label" [ngStyle]="node.data.value < 0 && {'color': 'red'}">
+                      {{node.data.text}}
+                    </label>
+                    <div class="badge bg-secondary ms-2" [innerHTML]="node.data.value" *ngIf="node.data.value >= 0"></div>
+                  </div>
 
-                    </div>
                 </div>
+              </div>
             </div>
-            </ng-template>-->
+          </ng-template>-->
         </tree-root>
     </div>
 </app-pegasus-card>

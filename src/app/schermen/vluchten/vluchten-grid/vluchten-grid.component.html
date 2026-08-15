@@ -7,31 +7,40 @@
                   [exportEnabled]="this.magExporteren"
                   (Exporting)="exporteerStartlijst()">
     <div class="box h-100">
-        <div id="data" class="d-flex data" *ngIf="!toonStartlijstKlein">
-            <div class="flex-row h-100 flex-grow-1">
-                <app-datatable
-                        id="startlijstgrid"
-                        [rowData]="filteredStarts"
-                        [columnDefs]="columns"
-                        [loading]="isLoading"
-                        [rowClassRules]="rowClassRules"
-                        [frameworkComponents]="frameworkComponents"
-                        (rowDoubleClicked)="openEditor($event)"
-                        class="h-100 mt-n8"></app-datatable>
-            </div>
-            <div class="flex-row h-100 flex-column flarm-container" *ngIf="isStarttoren">
-                <div class="slider">
-                    <fa-icon [icon]="iconExpandShrink" class="handle" [ngClass]="{'omdraaien': !toonFlarm}" (click)="toonFlarm = !toonFlarm"></fa-icon>
+        @if (!toonStartlijstKlein) {
+            <div id="data" class="d-flex data">
+                <div class="flex-row h-100 flex-grow-1">
+                    <app-datatable
+                            id="startlijstgrid"
+                            [rowData]="filteredStarts"
+                            [columnDefs]="columns"
+                            [loading]="isLoading"
+                            [rowClassRules]="rowClassRules"
+                            [frameworkComponents]="frameworkComponents"
+                            (rowDoubleClicked)="openEditor($event)"
+                            class="h-100 mt-n8"></app-datatable>
                 </div>
-                <app-flarm-lijst *ngIf="toonFlarm" [veldID]="vliegveld"></app-flarm-lijst>
+                @if (isStarttoren) {
+                    <div class="flex-row h-100 flex-column flarm-container">
+                        <div class="slider">
+                            <fa-icon [icon]="iconExpandShrink" class="handle" [ngClass]="{'omdraaien': !toonFlarm}"
+                                     (click)="toonFlarm = !toonFlarm"></fa-icon>
+                        </div>
+                        @if (toonFlarm) {
+                            <app-flarm-lijst [veldID]="vliegveld"></app-flarm-lijst>
+                        }
+                    </div>
+                }
             </div>
+        } @if (toonStartlijstKlein) {
+        <div id="datacard" class="data">
+            @for (vlucht of filteredStarts; track vlucht; let i = $index) {
+                <div>
+                    <app-vlucht-card [start]="vlucht"></app-vlucht-card>
+                </div>
+            }
         </div>
-
-        <div id="datacard" class="data" *ngIf="toonStartlijstKlein">
-            <div *ngFor="let vlucht of filteredStarts;let i = index">
-                <app-vlucht-card [start]="vlucht"></app-vlucht-card>
-            </div>
-        </div>
+    }
 
         <div class="row justify-content-start mt-2" id="toolbar">
             <div class="col-4 col-sm-3 col-xl-4">
@@ -44,19 +53,20 @@
                             iconNaam="fas Filter">
                     </app-status-button>
                     <div>
-                        <app-icon-button class="toolbarBtn"
-                                         tekst="Toevoegen"
-                                         iconNaam="far PlusSquare" (btnClicked)="addStart()"
-                                         btnColor="btn-primary"
-                                         *ngIf="!deleteMode && magToevoegen && inTijdspan"></app-icon-button>
-
+                        @if (!deleteMode && magToevoegen && inTijdspan) {
+                            <app-icon-button class="toolbarBtn"
+                                             tekst="Toevoegen"
+                                             iconNaam="far PlusSquare" (btnClicked)="addStart()"
+                                             btnColor="btn-primary"
+                            ></app-icon-button>
+                        } @if (!deleteMode && magFactureren) {
                         <app-icon-button class="toolbarBtn vluchten_transactie_button"
                                          tekst="Factureren"
                                          iconNaam="fas EuroSign" (btnClicked)="maakTransacties()"
                                          btnColor="btn-primary"
-                                         *ngIf="!deleteMode && magFactureren"></app-icon-button>
-
-                        <div *ngIf="this.deleteMode">
+                        ></app-icon-button>
+                    } @if (this.deleteMode) {
+                        <div>
                             <app-status-button
                                     class="toolbarBtn"
                                     tekst="Archief"
@@ -65,6 +75,7 @@
                                     iconNaam="fas Inbox">
                             </app-status-button>
                         </div>
+                    }
                     </div>
                 </div>
             </div>
@@ -75,35 +86,40 @@
                                  [(zoekString)]="zoekString"
                                  (zoeken)="opvragen()"
                                  [toonRefresh]="toonRefresh">
-                        <div class="ms-2 d-flex justify-content-begin align-items-end flex-wrap"
-                             *ngIf="toonVeldFilter">
-
-                            <label for="VELD" class="form-label me-2">Vliegveld:</label>
-                            <ng-select id="VELD" class="veldSelect"
-                                       [items]="veldTypes$ | async"
-                                       placeholder="Filter op vliegveld"
-                                       bindLabel="OMSCHRIJVING"
-                                       bindValue="ID"
-                                       closeOnSelect="true"
-                                       openOnEnter="true"
-                                       [searchable]="false"
-                                       (change)="filterStarts()"
-                                       [(ngModel)]="vliegveld">
-                            </ng-select>
-                        </div>
+                        @if (toonVeldFilter) {
+                            <div class="ms-2 d-flex justify-content-begin align-items-end flex-wrap"
+                            >
+                                <label for="VELD" class="form-label me-2">Vliegveld:</label>
+                                <ng-select id="VELD" class="veldSelect"
+                                           [items]="veldTypes$ | async"
+                                           placeholder="Filter op vliegveld"
+                                           bindLabel="OMSCHRIJVING"
+                                           bindValue="ID"
+                                           closeOnSelect="true"
+                                           openOnEnter="true"
+                                           [searchable]="false"
+                                           (change)="filterStarts()"
+                                           [(ngModel)]="vliegveld">
+                                </ng-select>
+                            </div>
+                        }
                     </app-zoekbar>
 
-                    <div class="col-4" *ngIf="!toonStartlijstKlein">
-                        <div class="d-flex justify-content-end">
-                            <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
-                                             btnColor="btn-secondary"
-                                             *ngIf="magVerwijderen && !deleteMode && inTijdspan"
-                                             (btnClicked)="deleteModeJaNee()"></app-icon-button>
-                            <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
-                                             btnColor="btn btn-outline-primary" *ngIf="deleteMode"
-                                             (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                    @if (!toonStartlijstKlein) {
+                        <div class="col-4">
+                            <div class="d-flex justify-content-end">
+                                @if (magVerwijderen && !deleteMode && inTijdspan) {
+                                    <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
+                                                     btnColor="btn-secondary"
+                                                     (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                                } @if (deleteMode) {
+                                <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
+                                                 btnColor="btn btn-outline-primary"
+                                                 (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                            }
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
         </div>
@@ -113,17 +129,21 @@
     <app-start-editor [VliegerID]="VliegerID" [VliegveldID]="vliegveld"></app-start-editor>
     <app-export-startlijst (exportDataset)="exportDataset($event)"></app-export-startlijst>
 
-    <div class="exportOverlay" *ngIf="isExporting">
-        <div class="exportPosition">
-            <span class="exportBorder"><fa-icon [icon]="downloadIcon" class="me-3 downloadIcon"></fa-icon> Data wordt geexporteerd .....</span>
-        </div>
+    @if (isExporting) {
+        <div class="exportOverlay">
+            <div class="exportPosition">
+                <span class="exportBorder"><fa-icon [icon]="downloadIcon" class="me-3 downloadIcon"></fa-icon> Data wordt geexporteerd .....</span>
+            </div>
     </div>
+    }
 </app-pegasus-card>
 
-<div *ngIf="transactiesBezig" class="maakTransacties">
+@if (transactiesBezig) {
+    <div class="maakTransacties">
     <div>
         <video autoplay loop>
             <source src="assets/videos/paper-stack-13599812-10967732.mp4" type="video/mp4">
         </video>
     </div>
-</div>
+    </div>
+}

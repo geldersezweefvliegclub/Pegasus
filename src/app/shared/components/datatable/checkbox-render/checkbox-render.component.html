@@ -1,2 +1,5 @@
-<fa-icon *ngIf="boolWaarde" [icon]="check" class="text-success"></fa-icon>
-<span *ngIf="!boolWaarde" class="text-center">-</span>
+@if (boolWaarde) {
+    <fa-icon [icon]="check" class="text-success"></fa-icon>
+} @if (!boolWaarde) {
+    <span class="text-center">-</span>
+}

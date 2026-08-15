@@ -6,80 +6,110 @@
         <div class="content">
             <div class="mb-2">
                 <div class="row mt-n8">
-                    <div class="col-12 col-sm-6 col-md-3" *ngFor="let docGroep of documentGroepen;let i=index;">
-                        <div class="card mb-2">
-                            <div class="d-flex w-100 groepHeader">
-                                <div class="docContent">
-                                    <fa-icon [icon]="toevoegenIcon" class="addBtn me-2 clickable" (click)="toevoegen(docGroep.ID);"
-                                         *ngIf="editMode"></fa-icon>
-                                    {{docGroep.OMSCHRIJVING}}
-                                </div>
-
-                            </div>
-
-                            <div class="d-flex flex-column">
-                                <div *ngFor="let doc of toonDocumenten(docGroep.ID); let d=index" >
-                                    <div (dblclick)="aanpassen(doc.ID)" class="d-flex justify-content-between w-100" [ngClass]="{'bovenlijn': doc.ONDERSTREEP && doc.BOVEN, 'onderlijn': doc.ONDERSTREEP && !doc.BOVEN }">
-                                        <button class="docContent btn btn-noborder" (click)="delete(doc.ID)" *ngIf="deleteMode && !trashMode">
-                                            <fa-icon [icon]="deleteIcon" class="deleteBtn"></fa-icon>
-                                        </button>
-
-                                        <button class="docContent btn btn-noborder" (click)="restore(doc.ID)"  *ngIf="trashMode">
-                                            <fa-icon [icon]="restoreIcon" class="restoreBtn"></fa-icon>
-                                        </button>
-
-                                        <div *ngIf="!doc.LEGE_REGEL && !editMode" class="w-100">
-                                            <div *ngIf="doc.URL" class="docContent linkButton" (click)="openUrl(doc.URL)">{{doc.TEKST}}</div>
-                                            <div *ngIf="!doc.URL" class="docContent paragraafHeader w-100">{{doc.TEKST}}</div>
-                                        </div>
-                                        <div *ngIf="editMode" class="docContent w-100" [ngClass]="{'paragraafHeader': !doc.URL && !doc.LEGE_REGEL}"> {{doc.TEKST}}</div>
-                                        <div *ngIf="doc.LEGE_REGEL">&nbsp;</div>
-
-                                        <div *ngIf="editMode" class="d-flex" [ngClass]="{'paragraafHeader': !doc.URL && !doc.LEGE_REGEL}">
-                                            <fa-icon [icon]="upIcon" class="upBtn me-2 clickable" (click)="omhoog(doc.ID);"
-                                                     *ngIf="toonOmhoogOmlaag(docGroep.ID)"></fa-icon>
-                                            <fa-icon [icon]="downIcon" class="downBtn me-2 clickable" (click)="omlaag(doc.ID);"
-                                                     *ngIf="toonOmhoogOmlaag(docGroep.ID)"></fa-icon>
-                                        </div>
+                    @for (docGroep of documentGroepen; track docGroep; let i = $index) {
+                        <div class="col-12 col-sm-6 col-md-3">
+                            <div class="card mb-2">
+                                <div class="d-flex w-100 groepHeader">
+                                    <div class="docContent">
+                                        @if (editMode) {
+                                            <fa-icon [icon]="toevoegenIcon" class="addBtn me-2 clickable"
+                                                     (click)="toevoegen(docGroep.ID);"
+                                            ></fa-icon>
+                                        }
+                                        {{ docGroep.OMSCHRIJVING }}
                                     </div>
                                 </div>
+                                <div class="d-flex flex-column">
+                                    @for (doc of toonDocumenten(docGroep.ID); track doc; let d = $index) {
+                                        <div>
+                                            <div (dblclick)="aanpassen(doc.ID)"
+                                                 class="d-flex justify-content-between w-100"
+                                                 [ngClass]="{'bovenlijn': doc.ONDERSTREEP && doc.BOVEN, 'onderlijn': doc.ONDERSTREEP && !doc.BOVEN }">
+                                                @if (deleteMode && !trashMode) {
+                                                    <button class="docContent btn btn-noborder"
+                                                            (click)="delete(doc.ID)">
+                                                        <fa-icon [icon]="deleteIcon" class="deleteBtn"></fa-icon>
+                                                    </button>
+                                                } @if (trashMode) {
+                                                <button class="docContent btn btn-noborder" (click)="restore(doc.ID)">
+                                                    <fa-icon [icon]="restoreIcon" class="restoreBtn"></fa-icon>
+                                                </button>
+                                            } @if (!doc.LEGE_REGEL && !editMode) {
+                                                <div class="w-100">
+                                                    @if (doc.URL) {
+                                                        <div class="docContent linkButton"
+                                                             (click)="openUrl(doc.URL)">{{ doc.TEKST }}
+                                                        </div>
+                                                    } @if (!doc.URL) {
+                                                    <div class="docContent paragraafHeader w-100">{{ doc.TEKST }}</div>
+                                                }
+                                                </div>
+                                            } @if (editMode) {
+                                                <div class="docContent w-100"
+                                                     [ngClass]="{'paragraafHeader': !doc.URL && !doc.LEGE_REGEL}"> {{ doc.TEKST }}
+                                                </div>
+                                            } @if (doc.LEGE_REGEL) {
+                                                <div>&nbsp;</div>
+                                            } @if (editMode) {
+                                                <div class="d-flex"
+                                                     [ngClass]="{'paragraafHeader': !doc.URL && !doc.LEGE_REGEL}">
+                                                    @if (toonOmhoogOmlaag(docGroep.ID)) {
+                                                        <fa-icon [icon]="upIcon" class="upBtn me-2 clickable"
+                                                                 (click)="omhoog(doc.ID);"
+                                                        ></fa-icon>
+                                                    } @if (toonOmhoogOmlaag(docGroep.ID)) {
+                                                    <fa-icon [icon]="downIcon" class="downBtn me-2 clickable"
+                                                             (click)="omlaag(doc.ID);"
+                                                    ></fa-icon>
+                                                }
+                                                </div>
+                                            }
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
 
                 </div>
             </div>
         </div>
-        <div class="row" id="toolbar" *ngIf="magAanpassen">
-            <div class="col-12">
-                <div class="d-flex justify-content-between">
-                    <div class="d-flex">
-                        <app-icon-button class="toolbarBtn"
-                                         tekst="Aanpassen"
-                                         [disabled]="deleteMode"
-                                         iconNaam="far Edit" (btnClicked)="editMode = !editMode"
-                                         btnColor="btn-primary"></app-icon-button>
-
-                        <div *ngIf="deleteMode">
-                            <app-status-button
-                                    class="toolbarBtn"
-                                    tekst="Archief"
-                                    [actief]="trashMode"
-                                    (btnClicked)="trashModeJaNee($event)"
-                                    iconNaam="fas Inbox">
-                            </app-status-button>
+        @if (magAanpassen) {
+            <div class="row" id="toolbar">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex">
+                            <app-icon-button class="toolbarBtn"
+                                             tekst="Aanpassen"
+                                             [disabled]="deleteMode"
+                                             iconNaam="far Edit" (btnClicked)="editMode = !editMode"
+                                             btnColor="btn-primary"></app-icon-button>
+                            @if (deleteMode) {
+                                <div>
+                                    <app-status-button
+                                            class="toolbarBtn"
+                                            tekst="Archief"
+                                            [actief]="trashMode"
+                                            (btnClicked)="trashModeJaNee($event)"
+                                            iconNaam="fas Inbox">
+                                    </app-status-button>
+                                </div>
+                            }
                         </div>
+                        @if (!deleteMode) {
+                            <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
+                                             btnColor="btn-secondary" [disabled]="editMode"
+                                             (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                        } @if (deleteMode) {
+                        <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
+                                         btnColor="btn btn-outline-primary"
+                                         (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                    }
                     </div>
-
-                    <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
-                                     btnColor="btn-secondary" *ngIf="!deleteMode" [disabled]="editMode"
-                                     (btnClicked)="deleteModeJaNee()"></app-icon-button>
-                    <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
-                                     btnColor="btn btn-outline-primary" *ngIf="deleteMode"
-                                     (btnClicked)="deleteModeJaNee()"></app-icon-button>
                 </div>
             </div>
-        </div>
+        }
     </div>
 </app-pegasus-card>
 

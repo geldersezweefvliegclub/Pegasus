@@ -2,42 +2,45 @@
 <app-success [success]="success"></app-success>
 
 <app-modal titel="Aanmelding gast">
-    <div body *ngIf="gast">
-        <fieldset>
-            <label for="VELD" class="form-label">Veld</label>
-            <ng-select id="VELD"
-                       [items]="veldenTypes$ | async"
-                       placeholder="Vliegveld"
-                       bindLabel="OMSCHRIJVING"
-                       bindValue="ID"
-                       closeOnSelect="true"
-                       openOnEnter="true"
-                       required
-                       [(ngModel)]="gast.VELD_ID">
-            </ng-select>
-
-            <div class="mt-2 col-8">
-                <label for="naam" class="form-label">Naam</label>
-                <input type="text" name="naam" class="form-control" id="naam"
-                       [(ngModel)]="gast.NAAM">
+    @if (gast) {
+        <div body>
+            <fieldset>
+                <label for="VELD" class="form-label">Veld</label>
+                <ng-select id="VELD"
+                           [items]="veldenTypes$ | async"
+                           placeholder="Vliegveld"
+                           bindLabel="OMSCHRIJVING"
+                           bindValue="ID"
+                           closeOnSelect="true"
+                           openOnEnter="true"
+                           required
+                           [(ngModel)]="gast.VELD_ID">
+                </ng-select>
+                <div class="mt-2 col-8">
+                    <label for="naam" class="form-label">Naam</label>
+                    <input type="text" name="naam" class="form-control" id="naam"
+                           [(ngModel)]="gast.NAAM">
+                </div>
+                <div class="col-12">
+                    <label for="opmerking" class="form-label">Opmerking</label>
+                    <input type="text" name="opmerking" class="form-control" id="opmerking"
+                           [(ngModel)]="gast.OPMERKINGEN">
             </div>
-
-            <div class="col-12">
-                <label for="opmerking" class="form-label">Opmerking</label>
-                <input type="text" name="opmerking" class="form-control" id="opmerking"
-                       [(ngModel)]="gast.OPMERKINGEN">
-            </div>
-        </fieldset>
-    </div>
+            </fieldset>
+        </div>
+    }
     <div footer>
-        <app-icon-button *ngIf="!isLoading && !isSaving" iconNaam="fas Edit" btnColor="btn-primary" [toonKlein]=false
-                         tekst="Opslaan" (btnClicked)="opslaan()"></app-icon-button>
-        <button class="btn btn-primary" *ngIf="isLoading || isSaving">
+        @if (!isLoading && !isSaving) {
+            <app-icon-button iconNaam="fas Edit" btnColor="btn-primary" [toonKlein]=false
+                             tekst="Opslaan" (btnClicked)="opslaan()"></app-icon-button>
+        } @if (isLoading || isSaving) {
+        <button class="btn btn-primary">
             <span><app-loader></app-loader></span>
         </button>
-
-        <app-icon-button *ngIf="!isLoading && !isSaving && this.gast && this.gast.ID" iconNaam="fas TrashAlt"
+    } @if (!isLoading && !isSaving && this.gast && this.gast.ID) {
+        <app-icon-button iconNaam="fas TrashAlt"
                          btnColor="btn-primary editorDeleteBtn" [toonKlein]=false class="ms-2"
                          tekst="Verwijderen" (btnClicked)="verwijderen()"></app-icon-button>
+    }
     </div>
 </app-modal>

@@ -5,74 +5,98 @@
         <div id="data">
             <select class="form-select" id="groep" name="groep" required
                     [ngModel]="toonGroep" (ngModelChange)="filterGroep($event)">
-                <option
-                        *ngFor="let groep of groepen"
-                        [value]="groep.ID">{{groep.OMSCHRIJVING}}</option>
+                @for (groep of groepen; track groep) {
+                    <option
+                            [value]="groep.ID">{{ groep.OMSCHRIJVING }}
+                    </option>
+                }
             </select>
 
             <ul class="list-group mt-4 typelijst">
-                <li *ngFor="let t of filteredTypes;let i = index" class="list-group-item" (dblclick)="openEditor(t)">
-                    <div class="d-flex justify-content-between">
-                        <div class="w-100 d-flex justify-content-between">
-                            <div class="d-flex">
-                                <fa-icon [icon]="restoreIcon" class="restoreBtn me-2" *ngIf="deleteMode && trashMode"
-                                         (click)="editor.openRestorePopup(t.ID);"></fa-icon>
-                                <fa-icon [icon]="deleteIcon" class="deleteBtn me-2"
-                                         *ngIf="deleteMode && !trashMode && !t.READ_ONLY"
-                                         (click)="editor.openVerwijderPopup(t.ID);"></fa-icon>
-                                <div *ngIf="deleteMode && !trashMode && t.READ_ONLY" style="width: 23px;"></div>
-                                {{t.OMSCHRIJVING}}
-                            </div>
-                            <div class="d-flex">
-                                <div class="ms-2 justify-content-end" >
-                                    {{t.EENHEDEN | number : '1.2-2'}}
+                @for (t of filteredTypes; track t; let i = $index) {
+                    <li class="list-group-item" (dblclick)="openEditor(t)">
+                        <div class="d-flex justify-content-between">
+                            <div class="w-100 d-flex justify-content-between">
+                                <div class="d-flex">
+                                    @if (deleteMode && trashMode) {
+                                        <fa-icon [icon]="restoreIcon" class="restoreBtn me-2"
+                                                 (click)="editor.openRestorePopup(t.ID);"></fa-icon>
+                                    } @if (deleteMode && !trashMode && !t.READ_ONLY) {
+                                    <fa-icon [icon]="deleteIcon" class="deleteBtn me-2"
+                                             (click)="editor.openVerwijderPopup(t.ID);"></fa-icon>
+                                } @if (deleteMode && !trashMode && t.READ_ONLY) {
+                                    <div style="width: 23px;"></div>
+                                }
+                                    {{ t.OMSCHRIJVING }}
                                 </div>
-                                <div  class="ms-3 d-flex justify-content-between" *ngIf="t.BEDRAG" style="min-width: 60px; max-width: 60px">
-                                    <div>&euro;</div>
-                                    <div>{{t.BEDRAG | number : '1.2-2'}}</div>
+                                <div class="d-flex">
+                                    <div class="ms-2 justify-content-end">
+                                        {{ t.EENHEDEN | number : '1.2-2' }}
+                                    </div>
+                                    @if (t.BEDRAG) {
+                                        <div class="ms-3 d-flex justify-content-between"
+                                             style="min-width: 60px; max-width: 60px">
+                                            <div>&euro;</div>
+                                            <div>{{ t.BEDRAG | number : '1.2-2' }}</div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
+                            @if (!deleteMode) {
+                                <div class="d-flex">
+                                    @if (i !== 0) {
+                                        <fa-icon class="upBtn mx-3" [icon]="upIcon"
+                                                 (click)="omhoog(t.ID)"></fa-icon>
+                                    } @if (i === 0) {
+                                    <div class="mx-3" style="min-width: 18px;max-width: 18px;"></div>
+                                } @if (i !== (filteredTypes.length - 1)) {
+                                    <fa-icon class="downBtn me-5" [icon]="downIcon"
+                                             (click)="omlaag(t.ID)"></fa-icon>
+                                } @if (i === (filteredTypes.length - 1)) {
+                                    <div style="width:66px;"></div>
+                                }
+                                </div>
+                            }
                         </div>
-                        <div class="d-flex" *ngIf="!deleteMode">
-                            <fa-icon class="upBtn mx-3" *ngIf="i !== 0" [icon]="upIcon"
-                                     (click)="omhoog(t.ID)"></fa-icon>
-                            <div class="mx-3" style="min-width: 18px;max-width: 18px;" *ngIf="i === 0"></div>
-
-                            <fa-icon class="downBtn me-5" *ngIf="i !== (filteredTypes.length-1)" [icon]="downIcon"
-                                     (click)="omlaag(t.ID)"></fa-icon>
-                            <div *ngIf="i === (filteredTypes.length-1)" style="width:66px;"></div>
-                        </div>
-                    </div>
-                </li>
+                    </li>
+                }
             </ul>
         </div>
         <div class="row justify-content-between mt-2" id="toolbar">
-            <div class="col-4 col-xl-2" *ngIf="this.magToevoegen">
-                <app-icon-button class="toolbarBtn"
-                                 tekst="Toevoegen"
-                                 iconNaam="far PlusSquare" (btnClicked)="addType()"
-                                 btnColor="btn-primary" *ngIf="!this.deleteMode"></app-icon-button>
-
-                <div *ngIf="this.deleteMode">
-                    <app-status-button
-                            class="toolbarBtn"
-                            tekst="Archief"
-                            [actief]="trashMode"
-                            (btnClicked)="trashModeJaNee($event)"
-                            iconNaam="fas Inbox">
-                    </app-status-button>
+            @if (this.magToevoegen) {
+                <div class="col-4 col-xl-2">
+                    @if (!this.deleteMode) {
+                        <app-icon-button class="toolbarBtn"
+                                         tekst="Toevoegen"
+                                         iconNaam="far PlusSquare" (btnClicked)="addType()"
+                                         btnColor="btn-primary"></app-icon-button>
+                    } @if (this.deleteMode) {
+                    <div>
+                        <app-status-button
+                                class="toolbarBtn"
+                                tekst="Archief"
+                                [actief]="trashMode"
+                                (btnClicked)="trashModeJaNee($event)"
+                                iconNaam="fas Inbox">
+                        </app-status-button>
+                    </div>
+                }
                 </div>
-            </div>
-            <div class="col-4" *ngIf="this.magVerwijderen">
+            } @if (this.magVerwijderen) {
+            <div class="col-4">
                 <div class="d-flex justify-content-end">
-                    <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
-                                     btnColor="btn-secondary" *ngIf="this.magVerwijderen && !deleteMode"
-                                     (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                    @if (this.magVerwijderen && !deleteMode) {
+                        <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
+                                         btnColor="btn-secondary"
+                                         (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                    } @if (deleteMode) {
                     <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
-                                     btnColor="btn btn-outline-primary" *ngIf="deleteMode"
+                                     btnColor="btn btn-outline-primary"
                                      (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                }
                 </div>
             </div>
+        }
         </div>
     </div>
 

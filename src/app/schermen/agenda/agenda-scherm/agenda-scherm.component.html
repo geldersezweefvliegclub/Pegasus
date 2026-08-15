@@ -20,13 +20,17 @@
         <div class="row" id="toolbar">
             <div class="col-12 d-flex justify-content-between mt-2">
                 <div>
-                    <div *ngIf="this.magToevoegen">
-                        <app-icon-button class="toolbarBtn"
-                                         tekst="Toevoegen"
-                                         iconNaam="far PlusSquare" (btnClicked)="addAgenda()"
-                                         btnColor="btn-primary" *ngIf="!this.deleteMode"></app-icon-button>
-                    </div>
-                    <div *ngIf="this.deleteMode">
+                    @if (this.magToevoegen) {
+                        <div>
+                            @if (!this.deleteMode) {
+                                <app-icon-button class="toolbarBtn"
+                                                 tekst="Toevoegen"
+                                                 iconNaam="far PlusSquare" (btnClicked)="addAgenda()"
+                                                 btnColor="btn-primary"></app-icon-button>
+                            }
+                        </div>
+                    } @if (this.deleteMode) {
+                    <div>
                         <app-status-button
                                 class="toolbarBtn"
                                 tekst="Archief"
@@ -35,17 +39,23 @@
                                 iconNaam="fas Inbox">
                         </app-status-button>
                     </div>
+                }
                 </div>
 
                 <div>
-                    <div class="d-flex justify-content-end" *ngIf="this.magVerwijderen">
-                        <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
-                                         btnColor="btn-secondary" *ngIf="this.magVerwijderen && !deleteMode"
-                                         (btnClicked)="deleteModeJaNee()"></app-icon-button>
-                        <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
-                                         btnColor="btn btn-outline-primary" *ngIf="deleteMode"
-                                         (btnClicked)="deleteModeJaNee()"></app-icon-button>
-                    </div>
+                    @if (this.magVerwijderen) {
+                        <div class="d-flex justify-content-end">
+                            @if (this.magVerwijderen && !deleteMode) {
+                                <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
+                                                 btnColor="btn-secondary"
+                                                 (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                            } @if (deleteMode) {
+                            <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
+                                             btnColor="btn btn-outline-primary"
+                                             (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                        }
+                        </div>
+                    }
                 </div>
             </div>
         </div>

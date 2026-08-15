@@ -48,8 +48,11 @@
                             [disabled]="isVerwijderMode || isRestoreMode || !superGebruiker()"
                             id="STATUS_ID"
                             name="STATUS_ID">
-                        <option *ngFor="let s of status"
-                                [value]="s.ID">{{s.OMSCHRIJVING}}</option>
+                        @for (s of status; track s) {
+                            <option
+                                    [value]="s.ID">{{ s.OMSCHRIJVING }}
+                            </option>
+                        }
                     </select>
                 </div>
             </div>
@@ -58,8 +61,8 @@
                 <div class="col-12">
                     <label for="OMSCHRIJVING" class="form-label">Gedetailleerde omschrijving</label>
                     <textarea name="Titel" type="text" class="w-100 text-invoer form-control" id="OMSCHRIJVING" required
-                           [(ngModel)]="melding.OMSCHRIJVING"
-                           min="0" rows=2></textarea>
+                              [(ngModel)]="melding.OMSCHRIJVING"
+                              min="0" rows=2></textarea>
                 </div>
             </div>
 
@@ -69,8 +72,11 @@
                     <select class="form-select" required [(ngModel)]="melding.CATEGORIE_ID"
                             id="CATEGORIE_ID"
                             name="CATEGORIE_ID">
-                        <option *ngFor="let c of categorie"
-                                [value]="c.ID">{{c.CODE}}: {{c.OMSCHRIJVING}}</option>
+                        @for (c of categorie; track c) {
+                            <option
+                                    [value]="c.ID">{{ c.CODE }}: {{ c.OMSCHRIJVING }}
+                            </option>
+                        }
                     </select>
                 </div>
             </div>
@@ -111,25 +117,30 @@
         </fieldset>
     </div>
     <div footer>
+        @if (!isLoading && !isSaving && melding.ID !== undefined && !isRestoreMode && !isVerwijderMode) {
         <app-icon-button
-                *ngIf="!isLoading && !isSaving && melding.ID !== undefined && !isRestoreMode && !isVerwijderMode"
                 iconNaam="fas Edit" btnColor="btn-primary"
-                [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled() || melding.TITEL === undefined || melding.OMSCHRIJVING === undefined"
+                [toonKlein]=false tekst="Opslaan"
+                [disabled]="opslaanDisabled() || melding.TITEL === undefined || melding.OMSCHRIJVING === undefined"
                 (btnClicked)="uitvoeren()"></app-icon-button>
+        } @if (!isLoading && !isSaving && melding.ID === undefined && !isRestoreMode && !isVerwijderMode) {
         <app-icon-button
-                *ngIf="!isLoading && !isSaving && melding.ID === undefined && !isRestoreMode && !isVerwijderMode"
                 iconNaam="fas Plus" btnColor="btn-primary"
-                [toonKlein]=false tekst="Opslaan" [disabled]="opslaanDisabled() || melding.TITEL === undefined || melding.OMSCHRIJVING === undefined"
+                [toonKlein]=false tekst="Opslaan"
+                [disabled]="opslaanDisabled() || melding.TITEL === undefined || melding.OMSCHRIJVING === undefined"
                 (btnClicked)="uitvoeren()"></app-icon-button>
-        <app-icon-button *ngIf="!isLoading && !isSaving && isVerwijderMode" iconNaam="fas TrashAlt"
+    } @if (!isLoading && !isSaving && isVerwijderMode) {
+        <app-icon-button iconNaam="fas TrashAlt"
                          btnColor="btn-primary editorDeleteBtn"
                          [toonKlein]=false tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
-        <app-icon-button *ngIf="!isLoading && !isSaving && isRestoreMode" iconNaam="fas Undo"
+    } @if (!isLoading && !isSaving && isRestoreMode) {
+        <app-icon-button iconNaam="fas Undo"
                          btnColor="btn-primary editorRestoreBtn"
                          [toonKlein]=false tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
-
-        <button class="btn btn-primary" *ngIf="isLoading || isSaving">
+    } @if (isLoading || isSaving) {
+        <button class="btn btn-primary">
             <span><app-loader></app-loader></span>
         </button>
+    }
     </div>
 </app-modal>

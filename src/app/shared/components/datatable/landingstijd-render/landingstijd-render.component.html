@@ -1,7 +1,12 @@
-<div *ngIf="params.data.inTijdspan">
-    <div *ngIf="this.landingsTijd" class="landingstijd" (click)="tijdClicked()">{{landingsTijd}}</div>
-
-    <app-icon-button class="toolbarBtn" iconNaam="fas PlaneArrival" (btnClicked)="tijdClicked()" *ngIf="this.toonButton"
-                     btnColor="landingsBtn"></app-icon-button>
-</div>
-<div *ngIf="!params.data.inTijdspan">{{landingsTijd}}</div>
+@if (params.data.inTijdspan) {
+    <div>
+        @if (this.landingsTijd) {
+            <div class="landingstijd" (click)="tijdClicked()">{{ landingsTijd }}</div>
+        } @if (this.toonButton) {
+        <app-icon-button class="toolbarBtn" iconNaam="fas PlaneArrival" (btnClicked)="tijdClicked()"
+                         btnColor="landingsBtn"></app-icon-button>
+    }
+    </div>
+} @if (!params.data.inTijdspan) {
+    <div>{{ landingsTijd }}</div>
+}

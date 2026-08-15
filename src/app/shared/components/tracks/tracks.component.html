@@ -6,98 +6,124 @@
         <div class="box h-100">
             <div id="data" style="height: 1px">
                 <table class="w-100">
-                    <tr *ngFor="let trk of data" class="trkRow" (click)="trackSelected(trk)"
-                        (dblclick)="openEditor(trk)">
-                        <td *ngIf="deleteMode && !trashMode">
-                            <button class="btn btn-noborder" (click)="openVerwijderPopup(trk)"
-                                    *ngIf="magTrackVerwijderen(trk)">
-                                <fa-icon [icon]="deleteIcon" class="deleteBtn"></fa-icon>
-                            </button>
-                        </td>
-                        <td *ngIf="deleteMode && trashMode">
-                            <button class="btn btn-noborder" (click)="openRestorePopup(trk)"
-                                    *ngIf="magTrackHerstellen(trk)">
-                                <fa-icon [icon]="restoreIcon" class="restoreBtn"></fa-icon>
-                            </button>
-                        </td>
-                        <td *ngIf="toonLid && lidColumn()" class="naamCell">
-                            <div class="d-flex">
-                                <app-avatar [url]="trk.lid.AVATAR" *ngIf="trk.lid"></app-avatar>
-                                <div class="naam text-nowrap"><a aria-label="Naar dashboard"
-                                                                 [routerLink]="['/dashboard']"
-                                                                 [queryParams]='{lidID: trk.LID_ID}'>{{trk.LID_NAAM}}</a>
+                    @for (trk of data; track trk) {
+                        <tr class="trkRow" (click)="trackSelected(trk)"
+                            (dblclick)="openEditor(trk)">
+                            @if (deleteMode && !trashMode) {
+                                <td>
+                                    @if (magTrackVerwijderen(trk)) {
+                                        <button class="btn btn-noborder" (click)="openVerwijderPopup(trk)"
+                                        >
+                                            <fa-icon [icon]="deleteIcon" class="deleteBtn"></fa-icon>
+                                        </button>
+                                    }
+                                </td>
+                            } @if (deleteMode && trashMode) {
+                            <td>
+                                @if (magTrackHerstellen(trk)) {
+                                    <button class="btn btn-noborder" (click)="openRestorePopup(trk)"
+                                    >
+                                        <fa-icon [icon]="restoreIcon" class="restoreBtn"></fa-icon>
+                                    </button>
+                                }
+                            </td>
+                        } @if (toonLid && lidColumn()) {
+                            <td class="naamCell">
+                                <div class="d-flex">
+                                    @if (trk.lid) {
+                                        <app-avatar [url]="trk.lid.AVATAR"></app-avatar>
+                                    }
+                                    <div class="naam text-nowrap"><a aria-label="Naar dashboard"
+                                                                     [routerLink]="['/dashboard']"
+                                                                     [queryParams]='{lidID: trk.LID_ID}'>{{ trk.LID_NAAM }}</a>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td style="width: 100%;">
-                            <div class="d-flex" *ngIf="!lidColumn()">
-                                <app-avatar [url]="trk.lid.AVATAR" *ngIf="trk.lid"></app-avatar>
-                                <div class="naam text-nowrap"><a aria-label="Naar dashboard"
-                                                                 [routerLink]="['/dashboard']"
-                                                                 [queryParams]='{lidID: trk.LID_ID}'>{{trk.LID_NAAM}}</a>
+                            </td>
+                        }
+                            <td style="width: 100%;">
+                                @if (!lidColumn()) {
+                                    <div class="d-flex">
+                                        @if (trk.lid) {
+                                            <app-avatar [url]="trk.lid.AVATAR"></app-avatar>
+                                        }
+                                        <div class="naam text-nowrap"><a aria-label="Naar dashboard"
+                                                                         [routerLink]="['/dashboard']"
+                                                                         [queryParams]='{lidID: trk.LID_ID}'>{{ trk.LID_NAAM }}</a>
+                                        </div>
+                                    </div>
+                                }
+                                <div class="trackHeader">
+                                    Op {{ datumString(trk.INGEVOERD) }} om {{ tijdString(trk.INGEVOERD) }}
+                                    schreef {{ trk.INSTRUCTEUR_NAAM }}
                                 </div>
-                            </div>
-                            <div class="trackHeader">
-                                Op {{datumString(trk.INGEVOERD)}} om {{tijdString(trk.INGEVOERD)}}
-                                schreef {{trk.INSTRUCTEUR_NAAM}}
-                            </div>
-
-                            <div class="tekstbox">
-                                {{trk.TEKST}}
-                            </div>
-                        </td>
-                        <td class="replyColumn" *ngIf="!deleteMode">
-                            <app-icon-button iconNaam="fas Reply" class="tracksReplyIcon" (btnClicked)="replyTrackEditor(trk)"></app-icon-button>
-                        </td>
-                    </tr>
+                                <div class="tekstbox">
+                                    {{ trk.TEKST }}
+                                </div>
+                            </td>
+                            @if (!deleteMode) {
+                                <td class="replyColumn">
+                                    <app-icon-button iconNaam="fas Reply" class="tracksReplyIcon"
+                                                     (btnClicked)="replyTrackEditor(trk)"></app-icon-button>
+                                </td>
+                            }
+                        </tr>
+                    }
                 </table>
             </div>
             <div id="toolbar">
                 <div class="row">
-                    <div class="col-3" *ngIf="this.magToevoegen">
-                        <div class="d-flex justify-content-start">
-                            <app-icon-button class="toolbarBtn"
-                                             tekst="Toevoegen"
-                                             iconNaam="far PlusSquare" (btnClicked)="openTrackEditor()"
-                                             btnColor="btn-primary" *ngIf="!this.deleteMode"></app-icon-button>
+                    @if (this.magToevoegen) {
+                        <div class="col-3">
+                            <div class="d-flex justify-content-start">
+                                @if (!this.deleteMode) {
+                                    <app-icon-button class="toolbarBtn"
+                                                     tekst="Toevoegen"
+                                                     iconNaam="far PlusSquare" (btnClicked)="openTrackEditor()"
+                                                     btnColor="btn-primary"></app-icon-button>
+                                }
+                            </div>
+                            @if (this.deleteMode) {
+                                <div class="ms-2">
+                                    <app-status-button
+                                            class="toolbarBtn"
+                                            tekst="Archief"
+                                            [actief]="trashMode"
+                                            (btnClicked)="trashModeJaNee($event)"
+                                            iconNaam="fas Inbox">
+                                    </app-status-button>
+                                </div>
+                            }
                         </div>
-
-                        <div *ngIf="this.deleteMode" class="ms-2">
-                            <app-status-button
-                                    class="toolbarBtn"
-                                    tekst="Archief"
-                                    [actief]="trashMode"
-                                    (btnClicked)="trashModeJaNee($event)"
-                                    iconNaam="fas Inbox">
-                            </app-status-button>
-                        </div>
-                    </div>
+                    }
                     <div class="col-9">
                         <div class="row justify-content-between" id="zoekbar">
                             <div class="col-8">
                                 <!-- todo misschien iets voor de toekomst
                                 <div class="d-flex justify-content-begin align-items-end text-nowrap">
-                                    <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>
-                                    <input id="zoekInput"
-                                           type="search"
-                                           class="form-control"
-                                           [(ngModel)]="zoekString"
-                                           name="zoekString"
-                                           (keyup)="opvragen()"
-                                           (search)="opvragen()"
+                                  <label id="zoekLabel" for="zoekInput" class="form-label">Zoeken : </label>
+                                  <input id="zoekInput"
+                                    type="search"
+                                    class="form-control"
+                                    [(ngModel)]="zoekString"
+                                    name="zoekString"
+                                    (keyup)="opvragen()"
+                                    (search)="opvragen()"
                                     >
                                     <app-icon-button class="toolbarBtn" iconNaam="fas Redo" (btnClicked)="opvragen()"
-                                                     btnColor="btn-primary"></app-icon-button>
-                                </div> -->
+                                    btnColor="btn-primary"></app-icon-button>
+                                  </div> -->
                             </div>
                             <div class="col-4">
                                 <div class="d-flex justify-content-end">
-                                    <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
-                                                     btnColor="btn-secondary" *ngIf="this.magVerwijderen && !deleteMode"
-                                                     (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                                    @if (this.magVerwijderen && !deleteMode) {
+                                        <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
+                                                         btnColor="btn-secondary"
+                                                         (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                                    } @if (deleteMode) {
                                     <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
-                                                     btnColor="btn btn-outline-primary" *ngIf="deleteMode"
+                                                     btnColor="btn btn-outline-primary"
                                                      (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                                }
                                 </div>
                             </div>
                         </div>
@@ -107,58 +133,65 @@
         </div>
     </div>
 
-    <div class="col-3 kolomRechts d-none d-xxl-block" *ngIf="toonLid">
-        <div *ngIf="geselecteerdLid">
-            <h4>{{geselecteerdLid.NAAM}}</h4>
-            <div class="container">
-                <app-pegasus-card id="statusCard"
-                                  class="kleineKaart"
-                                  titel="Status"
-                                  subtitel="Vliegstatus"
-                                  minimum="true"
-                                  [icon]="iconStatus">
-                    <app-status [Vlieger]="geselecteerdLid"></app-status>
-                </app-pegasus-card>
-            </div>
-            <div class="container">
-                <app-pegasus-card id="pvbCard"
-                                  class="kleineKaart"
-                                  titel="PVB"
-                                  subtitel="Proef van bekwaamheid"
-                                  minimum="true"
-                                  [icon]="iconPVB">
-                    <app-pvb [VliegerID]="geselecteerdLid.ID"></app-pvb>
-                </app-pegasus-card>
-            </div>
-            <div class="container">
-                <app-pegasus-card id="recencyCard"
-                                  class="kleineKaart"
-                                  titel="Recency"
-                                  subtitel="Trainingsbarometer"
-                                  minimum="true"
-                                  [icon]="iconRecency">
-                    <app-recency [Vlieger]="geselecteerdLid" [naam]="geselecteerdLid.NAAM"></app-recency>
-                </app-pegasus-card>
-            </div>
-            <div class="container">
-                <app-pegasus-card id="logboekCardSummary"
-                                  class="kleineKaart"
-                                  titel="Totalen {{datum.year}}"
-                                  subtitel="Per vliegtuig"
-                                  minimum="true"
-                                  [icon]="iconPlane">
-                    <app-vlieger-logboek-totalen
-                            [VliegerID]="geselecteerdLid.ID"></app-vlieger-logboek-totalen>
-                </app-pegasus-card>
-            </div>
+    @if (toonLid) {
+        <div class="col-3 kolomRechts d-none d-xxl-block">
+            @if (geselecteerdLid) {
+                <div>
+                    <h4>{{ geselecteerdLid.NAAM }}</h4>
+                    <div class="container">
+                        <app-pegasus-card id="statusCard"
+                                          class="kleineKaart"
+                                          titel="Status"
+                                          subtitel="Vliegstatus"
+                                          minimum="true"
+                                          [icon]="iconStatus">
+                            <app-status [Vlieger]="geselecteerdLid"></app-status>
+                        </app-pegasus-card>
+                    </div>
+                    <div class="container">
+                        <app-pegasus-card id="pvbCard"
+                                          class="kleineKaart"
+                                          titel="PVB"
+                                          subtitel="Proef van bekwaamheid"
+                                          minimum="true"
+                                          [icon]="iconPVB">
+                            <app-pvb [VliegerID]="geselecteerdLid.ID"></app-pvb>
+                        </app-pegasus-card>
+                    </div>
+                    <div class="container">
+                        <app-pegasus-card id="recencyCard"
+                                          class="kleineKaart"
+                                          titel="Recency"
+                                          subtitel="Trainingsbarometer"
+                                          minimum="true"
+                                          [icon]="iconRecency">
+                            <app-recency [Vlieger]="geselecteerdLid" [naam]="geselecteerdLid.NAAM"></app-recency>
+                        </app-pegasus-card>
+                    </div>
+                    <div class="container">
+                        <app-pegasus-card id="logboekCardSummary"
+                                          class="kleineKaart"
+                                          titel="Totalen {{datum.year}}"
+                                          subtitel="Per vliegtuig"
+                                          minimum="true"
+                                          [icon]="iconPlane">
+                            <app-vlieger-logboek-totalen
+                                    [VliegerID]="geselecteerdLid.ID"></app-vlieger-logboek-totalen>
+                        </app-pegasus-card>
+                    </div>
+                </div>
+            }
         </div>
-    </div>
+    }
 </div>
 
-<div class="spinnerOverlay" *ngIf="isLoading">
+@if (isLoading) {
+    <div class="spinnerOverlay">
     <div class="spinnerPosition">
-        <span><img src="assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Data wordt geladen .....</span>
+        <span><img src="assets/img/zandloper.gif" alt="zandloper, even wachten"
+                   width=100px> Data wordt geladen .....</span>
     </div>
-</div>
-
-<app-track-editor *ngIf="this.magToevoegen || this.magWijzigen || this.magVerwijderen"></app-track-editor>
+    </div>
+} @if (this.magToevoegen || this.magWijzigen || this.magVerwijderen) {
+    <app-track-editor></app-track-editor>
+}

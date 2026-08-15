@@ -5,21 +5,23 @@
     <div body class="ms-3 me-3">
         <form>
             <div class="row my-2">
-                <div style="padding-left: 0 !important;"><b>{{competentieString}}</b></div>
+                <div style="padding-left: 0 !important;"><b>{{ competentieString }}</b></div>
             </div>
-            <div class="row my-2" *ngIf="competentie && competentie.GELDIGHEID">
-                <ngb-datepicker
-                    #d
-                    name="datumIngave"
-                    class="navCalendar w-100"
-                    outsideDays="hidden"
-                    [minDate]="kalenderEersteDatum"
-                    [maxDate]="kalenderLaatsteDatum"
-                    [(ngModel)]="geldigTot"
-                    (dateSelect)="datumAanpassen($event)">
-                </ngb-datepicker>
-            </div>
-            <div class="row my-2" *ngIf="competentie && competentie.SCORE">>
+            @if (competentie && competentie.GELDIGHEID) {
+                <div class="row my-2">
+                    <ngb-datepicker
+                        #d
+                        name="datumIngave"
+                        class="navCalendar w-100"
+                        outsideDays="hidden"
+                        [minDate]="kalenderEersteDatum"
+                        [maxDate]="kalenderLaatsteDatum"
+                        [(ngModel)]="geldigTot"
+                        (dateSelect)="datumAanpassen($event)">
+                    </ngb-datepicker>
+                </div>
+            } @if (competentie && competentie.SCORE) {
+            <div class="row my-2">>
                 <label for="lidmaatschap" class="form-label">Voortgang</label>
                 <select class="form-select" id="lidmaatschap" name="lidmaatschap" required
                         [(ngModel)]="progressie.SCORE">
@@ -30,8 +32,8 @@
                     <option [ngValue]=5>Volledig bekwaam</option>
                 </select>
                 <app-voortgang class="mt-2" [status]="progressie.SCORE"></app-voortgang>
-
             </div>
+        }
             <div class="row my-2">
                 <label for="OPMERKINGEN" class="form-label">Opmerkingen</label>
                 <input name="inzittende" type="text" class="form-control" id="OPMERKINGEN"
@@ -44,16 +46,22 @@
     </div>
     <div footer class="w-100">
         <div class="w-100 d-flex justify-content-between">
-            <div *ngIf="isLoading || isSaving || isLoading || !isVerwijderMode"></div>
-            <app-icon-button *ngIf="!isLoading && !isSaving && !isLoading && isVerwijderMode" iconNaam="fas TrashAlt"
+            @if (isLoading || isSaving || isLoading || !isVerwijderMode) {
+                <div></div>
+            } @if (!isLoading && !isSaving && !isLoading && isVerwijderMode) {
+            <app-icon-button iconNaam="fas TrashAlt"
                              btnColor="btn-primary editorDeleteBtn"
                              [toonKlein]=false tekst="Verwijderen" (btnClicked)="Verwijderen()"></app-icon-button>
-            <app-icon-button *ngIf="!isSaving && !isLoading" iconNaam="fas Edit"
+        } @if (!isSaving && !isLoading) {
+            <app-icon-button iconNaam="fas Edit"
                              btnColor="btn-primary" [toonKlein]=false
                              tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
+        }
         </div>
-        <button class="btn btn-primary" *ngIf="isSaving || isLoading ">
-            <span><app-loader></app-loader></span>
+        @if (isSaving || isLoading) {
+            <button class="btn btn-primary">
+                <span><app-loader></app-loader></span>
         </button>
+        }
     </div>
 </app-modal>

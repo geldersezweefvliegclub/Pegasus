@@ -1,94 +1,110 @@
 <app-modal [titel]="formTitel">
     <div body>
-        <div *ngIf="samenvatting">
-            <h4>Aanmeldingen</h4>
-            <table class="w-100">
-                <tr class="headerRow">
-                    <td class="cel" ngClass.gt-sm="w-25">Totaal</td>
-                    <td class="cel" ngClass.gt-sm="w-25">Brevethouders</td>
-                    <td class="cel" ngClass.gt-sm="w-25">Solisten</td>
-                    <td class="cel" ngClass.gt-sm="w-25">DBO'ers</td>
-                </tr>
-                <tr>
-                    <td class="cel"><b>{{samenvatting.aanmeldingen}}</b></td>
-                    <td class="cel"><b>{{samenvatting.brevethouders}}</b></td>
-                    <td class="cel"><b>{{samenvatting.solisten}}</b></td>
-                    <td class="cel"><b>{{samenvatting.dbo}}</b></td>
-                </tr>
-            </table>
-            <table class="w-100">
-                <tr class="headerRow">
-                    <td class="cel">Instructeurs</td>
-                    <td class="cel">Lieristen</td>
-                    <td class="cel">Startleiders</td>
-                </tr>
-                <tr>
-                    <td class="cel"><b>{{samenvatting.instructeurs}}</b></td>
-                    <td class="cel"><b>{{samenvatting.lieristen}}</b></td>
-                    <td class="cel"><b>{{samenvatting.startleiders}}</b></td>
-                </tr>
-            </table>
-
-            <h4>Diensten</h4>
-            <table class="w-100">
-                <tr class="headerRow">
-                    <td class="cel" ngClass.gt-sm="w-20" *ngIf="rooster.CLUB_BEDRIJF">DDI</td>
-                    <td class="cel" ngClass.gt-sm="w-20" *ngIf="rooster.CLUB_BEDRIJF">Instructeur</td>
-                    <td class="cel" ngClass.gt-sm="w-20">Startleider</td>
-                    <td class="cel" ngClass.gt-sm="w-20">Lierist</td>
-                    <td class="cel" ngClass.gt-sm="w-20">Sleepvlieger</td>
-                </tr>
-                <tr>
-                    <td class="cel dienst" *ngIf="rooster.CLUB_BEDRIJF">{{ochtendDDI}}</td>
-                    <td class="cel dienst" *ngIf="rooster.CLUB_BEDRIJF">{{ochtendInstructeur}}</td>
-                    <td class="cel dienst">{{ochtendStartleider}}</td>
-                    <td class="cel dienst">{{ochtendLierist}}</td>
-                    <td class="cel dienst">{{ochtendSleper}}</td>
-                </tr>
-                <tr *ngIf="rooster.CLUB_BEDRIJF">
-                    <td class="cel dienst">{{middagDDI}}</td>
-                    <td class="cel dienst">{{middagInstructeur}}</td>
-                    <td class="cel dienst">{{middagStartleider}}</td>
-                    <td class="cel dienst">{{middagLierist}}</td>
-                    <td class="cel dienst">{{middagSleper}}</td>
-                </tr>
-            </table>
-            <hr>
-            <div class="d-flex">
-                <div>
-                    <h4>Vliegtuig types</h4>
-                    <table>
-                        <tr *ngFor="let type of samenvatting.types">
-                            <td class="vtype">
-                                {{type.type}}
-                            </td>
-                            <td>
-                                <b>{{type.aantal}}</b>
-                            </td>
+        @if (samenvatting) {
+            <div>
+                <h4>Aanmeldingen</h4>
+                <table class="w-100">
+                    <tr class="headerRow">
+                        <td class="cel" ngClass.gt-sm="w-25">Totaal</td>
+                        <td class="cel" ngClass.gt-sm="w-25">Brevethouders</td>
+                        <td class="cel" ngClass.gt-sm="w-25">Solisten</td>
+                        <td class="cel" ngClass.gt-sm="w-25">DBO'ers</td>
+                    </tr>
+                    <tr>
+                        <td class="cel"><b>{{ samenvatting.aanmeldingen }}</b></td>
+                        <td class="cel"><b>{{ samenvatting.brevethouders }}</b></td>
+                        <td class="cel"><b>{{ samenvatting.solisten }}</b></td>
+                        <td class="cel"><b>{{ samenvatting.dbo }}</b></td>
+                    </tr>
+                </table>
+                <table class="w-100">
+                    <tr class="headerRow">
+                        <td class="cel">Instructeurs</td>
+                        <td class="cel">Lieristen</td>
+                        <td class="cel">Startleiders</td>
+                    </tr>
+                    <tr>
+                        <td class="cel"><b>{{ samenvatting.instructeurs }}</b></td>
+                        <td class="cel"><b>{{ samenvatting.lieristen }}</b></td>
+                        <td class="cel"><b>{{ samenvatting.startleiders }}</b></td>
+                    </tr>
+                </table>
+                <h4>Diensten</h4>
+                <table class="w-100">
+                    <tr class="headerRow">
+                        @if (rooster.CLUB_BEDRIJF) {
+                            <td class="cel" ngClass.gt-sm="w-20">DDI</td>
+                        } @if (rooster.CLUB_BEDRIJF) {
+                        <td class="cel" ngClass.gt-sm="w-20">Instructeur</td>
+                    }
+                        <td class="cel" ngClass.gt-sm="w-20">Startleider</td>
+                        <td class="cel" ngClass.gt-sm="w-20">Lierist</td>
+                        <td class="cel" ngClass.gt-sm="w-20">Sleepvlieger</td>
+                    </tr>
+                    <tr>
+                        @if (rooster.CLUB_BEDRIJF) {
+                            <td class="cel dienst">{{ ochtendDDI }}</td>
+                        } @if (rooster.CLUB_BEDRIJF) {
+                        <td class="cel dienst">{{ ochtendInstructeur }}</td>
+                    }
+                        <td class="cel dienst">{{ ochtendStartleider }}</td>
+                        <td class="cel dienst">{{ ochtendLierist }}</td>
+                        <td class="cel dienst">{{ ochtendSleper }}</td>
+                    </tr>
+                    @if (rooster.CLUB_BEDRIJF) {
+                        <tr>
+                            <td class="cel dienst">{{ middagDDI }}</td>
+                            <td class="cel dienst">{{ middagInstructeur }}</td>
+                            <td class="cel dienst">{{ middagStartleider }}</td>
+                            <td class="cel dienst">{{ middagLierist }}</td>
+                            <td class="cel dienst">{{ middagSleper }}</td>
                         </tr>
-                    </table>
-                </div>
-
-                <div class="ms-4"  *ngIf="samenvatting.overland.length > 0"><h4>Overland aanvragen</h4>
-                    <table>
-                        <tr *ngFor="let ovl of samenvatting.overland">
-                            <td>
-                                {{ovl.reg_call}}
-                            </td>
-                            <td>
-                                {{ovl.naam}}
-                            </td>
-                        </tr>
-                    </table>
+                    }
+                </table>
+                <hr>
+                <div class="d-flex">
+                    <div>
+                        <h4>Vliegtuig types</h4>
+                        <table>
+                            @for (type of samenvatting.types; track type) {
+                                <tr>
+                                    <td class="vtype">
+                                        {{ type.type }}
+                                    </td>
+                                    <td>
+                                        <b>{{ type.aantal }}</b>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                    @if (samenvatting.overland.length > 0) {
+                        <div class="ms-4"><h4>Overland aanvragen</h4>
+                            <table>
+                                @for (ovl of samenvatting.overland; track ovl) {
+                                    <tr>
+                                        <td>
+                                            {{ ovl.reg_call }}
+                                        </td>
+                                        <td>
+                                            {{ ovl.naam }}
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    }
                 </div>
             </div>
-        </div>
+        }
     </div>
     <div footer>
-        <app-icon-button class="toolbarBtn" *ngIf="toonBulkEmail"
-                         tekst="Email aanmeldingen"
-                         btnColor="btn-primary"
-                         iconNaam="fas MailBulk"
-                         (btnClicked)="sendBulkEmail()"></app-icon-button>
+        @if (toonBulkEmail) {
+            <app-icon-button class="toolbarBtn"
+                             tekst="Email aanmeldingen"
+                             btnColor="btn-primary"
+                             iconNaam="fas MailBulk"
+                             (btnClicked)="sendBulkEmail()"></app-icon-button>
+        }
     </div>
 </app-modal>

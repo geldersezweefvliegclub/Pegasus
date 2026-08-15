@@ -11,81 +11,96 @@
 </ng-template>
 
 <nav class="h-100">
-    <ng-container *ngIf="!hoofdscherm" [ngTemplateOutlet]="menuInside"></ng-container>
-    <ng-container class="d-flex h-100" *ngIf="hoofdscherm" [ngTemplateOutlet]="menuScherm"></ng-container>
+    @if (!hoofdscherm) {
+        <ng-container [ngTemplateOutlet]="menuInside"></ng-container>
+    } @if (hoofdscherm) {
+    <ng-container class="d-flex h-100" [ngTemplateOutlet]="menuScherm"></ng-container>
+}
 </nav>
 
 <ng-template #menuScherm>
     <div class="h-100 row">
-        <div class="row" *ngIf="!showBeheer">
-            <div class="p-0 col-12 col-sm-6 col-md-3" *ngFor="let route of activeRoutes() ;let i=index;">
-                <a class="menuButton menuItemScherm"
-                        routerLinkActive="active"
-                        [routerLink]="'/' + route.path"
-                >
-                    <div class="text-nowrap">
-                        <fa-icon [icon]="route.icon" class="me-3"></fa-icon>
-                        {{ route.text }}
-                        <div class="badge bg-danger ms-2" *ngIf="route.batch" [innerHTML]="route.batch"></div>
+        @if (!showBeheer) {
+            <div class="row">
+                @for (route of activeRoutes(); track route; let i = $index) {
+                    <div class="p-0 col-12 col-sm-6 col-md-3">
+                        <a class="menuButton menuItemScherm"
+                           routerLinkActive="active"
+                           [routerLink]="'/' + route.path"
+                        >
+                            <div class="text-nowrap">
+                                <fa-icon [icon]="route.icon" class="me-3"></fa-icon>
+                                {{ route.text }}
+                                @if (route.batch) {
+                                    <div class="badge bg-danger ms-2" [innerHTML]="route.batch"></div>
+                                }
+                            </div>
+                        </a>
                     </div>
-                </a>
-            </div>
-
-            <div class="p-0 col-12 col-sm-6 col-md-3" *ngFor="let menuItem of urlMenuItems ;let i=index;">
-                <a class="menuButton menuItemScherm" style="{{ menuItem.css }}" href="{{ menuItem.Url }}" target="_blank">
-                    <div class="text-nowrap">
-                        <fa-icon [icon]="toonIcon(menuItem.Icon)" class="me-3"></fa-icon>
-                           {{ menuItem.Titel }}
-                    </div>
-                </a>
-            </div>
-
-            <div class="p-0 col-12 col-sm-6 col-md-3">
-                <a class="menuButton menuItemScherm" (click)="Uitloggen()">
-                    <fa-icon [icon]="logUitIcon" class="me-3"></fa-icon>
-                    Uitloggen
-                </a>
-            </div>
-        </div>
-
-        <div class="flex-grow-1"></div>
-        <div class="-d-flex row align-content-end" *ngIf="!this.loginService.userInfo?.Userinfo.isStarttoren">
-
-
-            <div class="p-0 col-12 col-sm-6 col-md-3">
-                <a class="menuButton menuItemScherm" (click)="showBeheer = !showBeheer">
-                    <fa-icon [icon]="beheerIcon" class="me-3"></fa-icon>
-                    Beheer
-                </a>
-            </div>
-
-            <div *ngIf="showBeheer">
-                <div class="p-0 col-12 col-sm-6 col-md-3" *ngFor="let route of activeBeheerRoutes() ;let i=index;">
-                    <a
-                            class="menuButton menuItemScherm"
-                            routerLinkActive="active"
-                            [routerLink]="'/' + route.path"
-                    >
+                } @for (menuItem of urlMenuItems; track menuItem; let i = $index) {
+                <div class="p-0 col-12 col-sm-6 col-md-3">
+                    <a class="menuButton menuItemScherm" style="{{ menuItem.css }}" href="{{ menuItem.Url }}"
+                       target="_blank">
                         <div class="text-nowrap">
-                            <fa-icon [icon]="route.icon" class="me-3"></fa-icon>
-                            {{ route.text }}
+                            <fa-icon [icon]="toonIcon(menuItem.Icon)" class="me-3"></fa-icon>
+                            {{ menuItem.Titel }}
                         </div>
                     </a>
                 </div>
+            }
+                <div class="p-0 col-12 col-sm-6 col-md-3">
+                    <a class="menuButton menuItemScherm" (click)="Uitloggen()">
+                        <fa-icon [icon]="logUitIcon" class="me-3"></fa-icon>
+                        Uitloggen
+                    </a>
+                </div>
             </div>
+        }
 
-            <div class="p-0" *ngIf="!showBeheer">
-                <div *ngIf="kleineDatum()" class="d-flex">
-                    <div class="datumVeld">{{ datumDMY }}</div>
-                    <app-icon-button iconNaam="far Calendar" (btnClicked)="popupKalender.openPopup()"
-                                     btnColor="btn-primary"></app-icon-button>
+        <div class="flex-grow-1"></div>
+        @if (!this.loginService.userInfo?.Userinfo.isStarttoren) {
+            <div class="-d-flex row align-content-end">
+                <div class="p-0 col-12 col-sm-6 col-md-3">
+                    <a class="menuButton menuItemScherm" (click)="showBeheer = !showBeheer">
+                        <fa-icon [icon]="beheerIcon" class="me-3"></fa-icon>
+                        Beheer
+                    </a>
                 </div>
-                <div class="w-100 overflow-auto" style="max-width: 280px;" *ngIf="!kleineDatum() && !showBeheer">
-                    <app-vliegdag-selectie
-                    ></app-vliegdag-selectie>
+                @if (showBeheer) {
+                    <div>
+                        @for (route of activeBeheerRoutes(); track route; let i = $index) {
+                            <div class="p-0 col-12 col-sm-6 col-md-3">
+                                <a
+                                        class="menuButton menuItemScherm"
+                                        routerLinkActive="active"
+                                        [routerLink]="'/' + route.path"
+                                >
+                                    <div class="text-nowrap">
+                                        <fa-icon [icon]="route.icon" class="me-3"></fa-icon>
+                                        {{ route.text }}
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                } @if (!showBeheer) {
+                <div class="p-0">
+                    @if (kleineDatum()) {
+                        <div class="d-flex">
+                            <div class="datumVeld">{{ datumDMY }}</div>
+                            <app-icon-button iconNaam="far Calendar" (btnClicked)="popupKalender.openPopup()"
+                                             btnColor="btn-primary"></app-icon-button>
+                        </div>
+                    } @if (!kleineDatum() && !showBeheer) {
+                    <div class="w-100 overflow-auto" style="max-width: 280px;">
+                        <app-vliegdag-selectie
+                        ></app-vliegdag-selectie>
+                    </div>
+                }
                 </div>
+            }
             </div>
-        </div>
+        }
     </div>
 </ng-template>
 
@@ -95,31 +110,33 @@
              [ngClass]="{'linker-menu-smal': kleineDatum()}">
 
             <div class="list-group list-group-flush p-3">
-                <div class="logoContainer" *ngIf="toonLogo()">
-                    <img src="/assets/img/logo.png" class="logo" alt="logo">
-                </div>
-                <ng-template ngFor let-route [ngForOf]="activeRoutes()">
-                    <a
-                            class="list-group-item list-group-item-action waves-effect py-2"
-                            routerLinkActive="active"
-                            [routerLink]="route.path"
-                    >
-                        <div class="text-nowrap">
-                            <fa-icon [icon]="route.icon" class="me-3"></fa-icon>
-                            {{ route.text }}
-                            <div class="badge bg-danger ms-2" *ngIf="route.batch" [innerHTML]="route.batch"></div>
-                        </div>
-                    </a>
-                </ng-template>
-
-                <ng-template ngFor let-menuItem [ngForOf]="urlMenuItems">
-                    <a class="list-group-item list-group-item-action waves-effect py-2" style="{{ menuItem.css }}" href="{{ menuItem.Url }}" target="_blank">
-                        <div class="text-nowrap">
-                            <fa-icon [icon]="toonIcon(menuItem.Icon)" class="me-3"></fa-icon>
-                            {{ menuItem.Titel }}
-                        </div>
-                    </a>
-                </ng-template>
+                @if (toonLogo()) {
+                    <div class="logoContainer">
+                        <img src="/assets/img/logo.png" class="logo" alt="logo">
+                    </div>
+                } @for (route of activeRoutes(); track route) {
+                <a
+                        class="list-group-item list-group-item-action waves-effect py-2"
+                        routerLinkActive="active"
+                        [routerLink]="route.path"
+                >
+                    <div class="text-nowrap">
+                        <fa-icon [icon]="route.icon" class="me-3"></fa-icon>
+                        {{ route.text }}
+                        @if (route.batch) {
+                            <div class="badge bg-danger ms-2" [innerHTML]="route.batch"></div>
+                        }
+                    </div>
+                </a>
+            } @for (menuItem of urlMenuItems; track menuItem) {
+                <a class="list-group-item list-group-item-action waves-effect py-2" style="{{ menuItem.css }}"
+                   href="{{ menuItem.Url }}" target="_blank">
+                    <div class="text-nowrap">
+                        <fa-icon [icon]="toonIcon(menuItem.Icon)" class="me-3"></fa-icon>
+                        {{ menuItem.Titel }}
+                    </div>
+                </a>
+            }
 
                 <a class="list-group-item list-group-item-action waves-effect"
                    (click)="Uitloggen()">
@@ -129,40 +146,45 @@
             </div>
 
             <!-- onderste sectie -->
-            <div class="list-group list-group-flush p-3" *ngIf="!this.loginService.userInfo?.Userinfo.isStarttoren">
-                <!-- Beheer -->
-                <a class="list-group-item list-group-item-action waves-effect beheer" *ngIf="!beheerExcluded"
-                   (click)="showBeheer = !showBeheer">
-                    <fa-icon [icon]="beheerIcon" class="me-3"></fa-icon>
-                    Beheer
-                    <div *ngIf="showBeheer">
-                        <ng-template ngFor let-route [ngForOf]="activeBeheerRoutes()">
-                            <a
-                                    class="list-group-item list-subgroup-item list-group-item-action waves-effect py-2"
-                                    routerLinkActive="active"
-                                    [routerLink]="route.path"
-                            >
-                                <div class="text-nowrap">
-                                    <fa-icon [icon]="route.icon" class="ms-3 me-3"></fa-icon>
-                                    {{ route.text }}
+            @if (!this.loginService.userInfo?.Userinfo.isStarttoren) {
+                <div class="list-group list-group-flush p-3">
+                    <!-- Beheer -->
+                    @if (!beheerExcluded) {
+                        <a class="list-group-item list-group-item-action waves-effect beheer"
+                           (click)="showBeheer = !showBeheer">
+                            <fa-icon [icon]="beheerIcon" class="me-3"></fa-icon>
+                            Beheer
+                            @if (showBeheer) {
+                                <div>
+                                    @for (route of activeBeheerRoutes(); track route) {
+                                        <a
+                                                class="list-group-item list-subgroup-item list-group-item-action waves-effect py-2"
+                                                routerLinkActive="active"
+                                                [routerLink]="route.path"
+                                        >
+                                            <div class="text-nowrap">
+                                                <fa-icon [icon]="route.icon" class="ms-3 me-3"></fa-icon>
+                                                {{ route.text }}
+                                            </div>
+                                        </a>
+                                    }
                                 </div>
-                            </a>
-                        </ng-template>
+                            }
+                        </a>
+                    }
+                    <div class="w-100 overflow-auto" [ngClass]="{'verbergDatum': kleineDatum() || showBeheer}">
+                        <app-vliegdag-selectie
+                        ></app-vliegdag-selectie>
                     </div>
-                </a>
-
-                <div class="w-100 overflow-auto"  [ngClass]="{'verbergDatum': kleineDatum() || showBeheer}">
-
-                    <app-vliegdag-selectie
-                    ></app-vliegdag-selectie>
+                    @if (kleineDatum()) {
+                        <div class="list-group-item d-flex">
+                            <div class="datumVeld">{{ datumDMY }}</div>
+                            <app-icon-button iconNaam="far Calendar" (btnClicked)="popupKalender.openPopup()"
+                                             btnColor="btn-primary"></app-icon-button>
+                        </div>
+                    }
                 </div>
-
-                <div *ngIf="kleineDatum()" class="list-group-item d-flex">
-                    <div class="datumVeld">{{ datumDMY }}</div>
-                    <app-icon-button iconNaam="far Calendar" (btnClicked)="popupKalender.openPopup()"
-                                     btnColor="btn-primary"></app-icon-button>
-                </div>
-            </div>
+            }
         </div>
     </div>
 </ng-template>

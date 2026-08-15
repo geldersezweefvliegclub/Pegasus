@@ -5,125 +5,150 @@
                   subtitel="Een verzameling van nuttige info"
                   [icon]="iconCardIcon">
 
-    <div header class="DDWVtegoed d-flex flex-column" (click)="toonTransacties()" *ngIf="saldoTonen && lidData">
-        <div style="font-size: x-small">
-            Tegoed
-        </div>
-        <div class="d-flex align-items-end justify-content-end">
-            {{lidData.TEGOED}}&nbsp;
-            <div style="font-size: x-small;  margin-bottom: 2px;">
-                strippen
+    @if (saldoTonen && lidData) {
+        <div header class="DDWVtegoed d-flex flex-column" (click)="toonTransacties()">
+            <div style="font-size: x-small">
+                Tegoed
             </div>
-        </div>
+            <div class="d-flex align-items-end justify-content-end">
+                {{ lidData.TEGOED }}&nbsp;
+                <div style="font-size: x-small;  margin-bottom: 2px;">
+                    strippen
+                </div>
+            </div>
     </div>
+    }
 
     <div class="box">
         <div class="bg-tertiary rounded text-white " ngClass.gt-sm="px-5">
             <table class="w-100">
                 <tr>
                     <td class="w-100">
-                        <h2 class="ms-2 mb-0" *ngIf="lidData">{{lidData.NAAM}}</h2>
+                        @if (lidData) {
+                            <h2 class="ms-2 mb-0">{{ lidData.NAAM }}</h2>
+                        }
                     </td>
                     <td [rowSpan]="2">
-                        <app-avatar class="me-2" [url]="lidData.AVATAR" [naam]="lidData.NAAM"
-                                    *ngIf="lidData"></app-avatar>
+                        @if (lidData) {
+                            <app-avatar class="me-2" [url]="lidData.AVATAR" [naam]="lidData.NAAM"
+                            ></app-avatar>
+                        }
                     </td>
                 </tr>
                 <tr>
                     <table class="w-100">
                         <tr>
                             <td class="w-100">
-                                <p class="mb-0 ms-2" *ngIf="lidData">{{getLidType()}}</p>
+                                @if (lidData) {
+                                    <p class="mb-0 ms-2">{{ getLidType() }}</p>
+                                }
                             </td>
                             <td>
-                                <div *ngIf="statusTypes && lidData">
-                                    <select class="form-select" id="STATUS" name="STATUS" *ngIf="statusWijzigbaar()"
-                                            [(ngModel)]="lidData.STATUSTYPE_ID"
-                                            (change)="wijzigVliegStatus()">
-                                        <option value="undefined">n.v.t.</option>
-                                        <option *ngFor="let type of statusTypes"
-                                                [value]="type.ID">{{type.OMSCHRIJVING}}</option>
-                                    </select>
-                                </div>
-                                <div *ngIf="!statusWijzigbaar()">
+                                @if (statusTypes && lidData) {
+                                    <div>
+                                        @if (statusWijzigbaar()) {
+                                            <select class="form-select" id="STATUS" name="STATUS"
+                                                    [(ngModel)]="lidData.STATUSTYPE_ID"
+                                                    (change)="wijzigVliegStatus()">
+                                                <option value="undefined">n.v.t.</option>
+                                                @for (type of statusTypes; track type) {
+                                                    <option
+                                                            [value]="type.ID">{{ type.OMSCHRIJVING }}
+                                                    </option>
+                                                }
+                                            </select>
+                                        }
+                                    </div>
+                                } @if (!statusWijzigbaar()) {
+                                <div>
                                     <p>Vliegstatus<br>
-                                        <b>{{getStatusType()}}</b></p>
+                                        <b>{{ getStatusType() }}</b></p>
                                 </div>
+                            }
                             </td>
                         </tr>
                     </table>
                 </tr>
             </table>
         </div>
-        <div class="row mt-4" *ngIf="!alleenLogboekTonen()">
-            <div class="col-12 col-sm-6 col-xl-3 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
-                <app-pegasus-card id="statusCard"
-                                  class="kleineKaart"
-                                  titel="Status"
-                                  subtitel="Vliegstatus"
-                                  [icon]="iconStatus">
-                    <app-status [Vlieger]="lidData" *ngIf="lidData"></app-status>
-                </app-pegasus-card>
-            </div>
-            <div class="col-12 col-sm-6 col-xl-3 mt-4 mt-sm-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
-                <app-pegasus-card id="pvbCard"
-                                  class="kleineKaart"
-                                  titel="PVB"
-                                  subtitel="Proef van bekwaamheid"
-                                  [icon]="iconPVB">
-                    <app-pvb [Vlieger]="lidData" *ngIf="lidData"></app-pvb>
-                </app-pegasus-card>
-            </div>
-
-            <div class="col-12 col-sm-6 col-xl-3 mt-4 mt-xl-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
-                <app-pegasus-card id="recencyCard"
-                                  class="kleineKaart"
-                                  titel="Recency"
-                                  subtitel="Trainingsbarometer"
-                                  [icon]="iconRecency">
-                    <app-recency [Vlieger]="lidData" [naam]="lidData.NAAM" *ngIf="lidData"></app-recency>
-                </app-pegasus-card>
-            </div>
-
-            <div class="col-12 col-sm-6 col-xl-3 mt-4 mt-xl-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
-                <!-- carousel met diensten / verjaardagen -->
-
-                <ngb-carousel [showNavigationIndicators]="true" [pauseOnHover]="true" [interval]="10000" class="carousel-dva h-100 overflow-x-clip">
-                    <ng-template ngbSlide>
-                        <app-pegasus-card id="dientenCard"
-                                          class="kleineKaart"
-                                          titel="Diensten"
-                                          subtitel="Ingeroosterde diensten"
-                                          [icon]="iconRooster">
-                            <div class="expand">
-                                <a aria-label="Toon diensten groter" class="clickable" (click)="toonDienstenGroot()">
-                                    <fa-icon [icon]="iconExpand"></fa-icon>
-                                </a>
-                            </div>
-                            <app-diensten [Vlieger]="lidData" *ngIf="lidData"></app-diensten>
-                        </app-pegasus-card>
-                    </ng-template>
-                    <ng-template ngbSlide class="h-100">
-                        <app-pegasus-card id="verjaardagenCard"
-                                          class="kleineKaart"
-                                          titel="Verjaardagen"
-                                          subtitel="Komende jarigen"
-                                          [icon]="iconRooster">
-                            <app-verjaardagen></app-verjaardagen>
-                        </app-pegasus-card>
-                    </ng-template>
-                    <ng-template ngbSlide class="h-100">
-                        <app-pegasus-card id="agendaCard"
-                                          class="kleineKaart"
-                                          titel="Agenda"
-                                          subtitel="Komende evenementen"
-                                          [icon]="iconRooster">
-                            <app-agenda></app-agenda>
-                        </app-pegasus-card>
-                    </ng-template>
-                </ngb-carousel>
-            </div>
+        @if (!alleenLogboekTonen()) {
+            <div class="row mt-4">
+                <div class="col-12 col-sm-6 col-xl-3 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
+                    <app-pegasus-card id="statusCard"
+                                      class="kleineKaart"
+                                      titel="Status"
+                                      subtitel="Vliegstatus"
+                                      [icon]="iconStatus">
+                        @if (lidData) {
+                            <app-status [Vlieger]="lidData"></app-status>
+                        }
+                    </app-pegasus-card>
+                </div>
+                <div class="col-12 col-sm-6 col-xl-3 mt-4 mt-sm-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
+                    <app-pegasus-card id="pvbCard"
+                                      class="kleineKaart"
+                                      titel="PVB"
+                                      subtitel="Proef van bekwaamheid"
+                                      [icon]="iconPVB">
+                        @if (lidData) {
+                            <app-pvb [Vlieger]="lidData"></app-pvb>
+                        }
+                    </app-pegasus-card>
+                </div>
+                <div class="col-12 col-sm-6 col-xl-3 mt-4 mt-xl-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
+                    <app-pegasus-card id="recencyCard"
+                                      class="kleineKaart"
+                                      titel="Recency"
+                                      subtitel="Trainingsbarometer"
+                                      [icon]="iconRecency">
+                        @if (lidData) {
+                            <app-recency [Vlieger]="lidData" [naam]="lidData.NAAM"></app-recency>
+                        }
+                    </app-pegasus-card>
+                </div>
+                <div class="col-12 col-sm-6 col-xl-3 mt-4 mt-xl-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
+                    <!-- carousel met diensten / verjaardagen -->
+                    <ngb-carousel [showNavigationIndicators]="true" [pauseOnHover]="true" [interval]="10000"
+                                  class="carousel-dva h-100 overflow-x-clip">
+                        <ng-template ngbSlide>
+                            <app-pegasus-card id="dientenCard"
+                                              class="kleineKaart"
+                                              titel="Diensten"
+                                              subtitel="Ingeroosterde diensten"
+                                              [icon]="iconRooster">
+                                <div class="expand">
+                                    <a aria-label="Toon diensten groter" class="clickable"
+                                       (click)="toonDienstenGroot()">
+                                        <fa-icon [icon]="iconExpand"></fa-icon>
+                                    </a>
+                                </div>
+                                @if (lidData) {
+                                    <app-diensten [Vlieger]="lidData"></app-diensten>
+                                }
+                            </app-pegasus-card>
+                        </ng-template>
+                        <ng-template ngbSlide class="h-100">
+                            <app-pegasus-card id="verjaardagenCard"
+                                              class="kleineKaart"
+                                              titel="Verjaardagen"
+                                              subtitel="Komende jarigen"
+                                              [icon]="iconRooster">
+                                <app-verjaardagen></app-verjaardagen>
+                            </app-pegasus-card>
+                        </ng-template>
+                        <ng-template ngbSlide class="h-100">
+                            <app-pegasus-card id="agendaCard"
+                                              class="kleineKaart"
+                                              titel="Agenda"
+                                              subtitel="Komende evenementen"
+                                              [icon]="iconRooster">
+                                <app-agenda></app-agenda>
+                            </app-pegasus-card>
+                        </ng-template>
+                    </ngb-carousel>
+                </div>
         </div>
+        }
 
         <!-- logboek -->
         <div class="row mt-4 datatable-hoogte">
@@ -138,11 +163,13 @@
                             <fa-icon [icon]="iconExpand"></fa-icon>
                         </a>
                     </div>
-                    <app-vlieger-logboek *ngIf="lidData"
-                                         MaxItems=5
-                                         id="vliegerlogboekgrid"
-                                         [VliegerID]="lidData.ID">
-                    </app-vlieger-logboek>
+                    @if (lidData) {
+                        <app-vlieger-logboek
+                                MaxItems=5
+                                id="vliegerlogboekgrid"
+                                [VliegerID]="lidData.ID">
+                        </app-vlieger-logboek>
+                    }
                 </app-pegasus-card>
             </div>
             <div class="col-12 col-lg-4 col-xl-3 mt-4 mt-lg-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
@@ -151,34 +178,41 @@
                                   titel="Totalen {{datum.year}}"
                                   subtitel="Per vliegtuig"
                                   [icon]="iconPlane">
-                    <app-vlieger-logboek-totalen *ngIf="lidData"
-                                                 [VliegerID]="lidData.ID"></app-vlieger-logboek-totalen>
+                    @if (lidData) {
+                        <app-vlieger-logboek-totalen
+                                [VliegerID]="lidData.ID"></app-vlieger-logboek-totalen>
+                    }
                 </app-pegasus-card>
             </div>
         </div>
 
         <!-- progressie -->
-        <div class="row mt-4 progressie-hoogte" *ngIf="!alleenLogboekTonen()">
-            <div class="col-12 col-lg-8 col-xl-9 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
-                <app-pegasus-card id="progressieCard"
-                                  class="kleineKaart"
-                                  titel="Progressiekaart"
-                                  subtitel="Behaalde competenties"
-                                  exportEnabled="true"
-                                  (Exporting)="exportProgressieKaart()"
-                                  [icon]="iconProgressie">
-                    <app-progressie-boom
-                            [VliegerID]="lidData.ID" *ngIf="lidData">
-                    </app-progressie-boom>
-                </app-pegasus-card>
-            </div>
-            <div class="col-12 col-lg-4 col-xl-3 mt-4 mt-lg-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
-                <app-leden-documenten [LidID]="lidData.ID" *ngIf="lidData">
-                </app-leden-documenten>
-            </div>
+        @if (!alleenLogboekTonen()) {
+            <div class="row mt-4 progressie-hoogte">
+                <div class="col-12 col-lg-8 col-xl-9 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
+                    <app-pegasus-card id="progressieCard"
+                                      class="kleineKaart"
+                                      titel="Progressiekaart"
+                                      subtitel="Behaalde competenties"
+                                      exportEnabled="true"
+                                      (Exporting)="exportProgressieKaart()"
+                                      [icon]="iconProgressie">
+                        @if (lidData) {
+                            <app-progressie-boom
+                                    [VliegerID]="lidData.ID">
+                            </app-progressie-boom>
+                        }
+                    </app-pegasus-card>
+                </div>
+                <div class="col-12 col-lg-4 col-xl-3 mt-4 mt-lg-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
+                    @if (lidData) {
+                        <app-leden-documenten [LidID]="lidData.ID">
+                        </app-leden-documenten>
+                    }
+                </div>
         </div>
-
-        <div class="row mt-4 tracks-hoogte flex-grow" *ngIf="toonTracks">
+        } @if (toonTracks) {
+        <div class="row mt-4 tracks-hoogte flex-grow">
             <div class="col-12 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
                 <app-pegasus-card id="tracksCard"
                                   class="kleineKaart"
@@ -188,16 +222,20 @@
                                   exportImg="/assets/img/word-logo.png"
                                   (Exporting)="exportTracks(lidData.ID)"
                                   [icon]="iconTracks">
-                    <app-tracks [VliegerID]="lidData.ID" [VliegerNaam]="lidData.NAAM" *ngIf="lidData"></app-tracks>
+                    @if (lidData) {
+                        <app-tracks [VliegerID]="lidData.ID" [VliegerNaam]="lidData.NAAM"></app-tracks>
+                    }
                 </app-pegasus-card>
             </div>
         </div>
+    }
     </div>
 </app-pegasus-card>
 
 
-<app-modal #logboekPopup popupClass="popupLarge" titel="Logboek van {{lidData.NAAM}}" *ngIf="lidData">
-    <div body>
+@if (lidData) {
+    <app-modal #logboekPopup popupClass="popupLarge" titel="Logboek van {{lidData.NAAM}}">
+        <div body>
         <div class="popupLargeWrapper">
             <div class="excel">
                 <img class="logo" src="/assets/img/excel-logo.png" alt="excel logo" (click)="this.exportLogboek()"/>
@@ -211,29 +249,38 @@
                         [deleteMode]="verwijderMode"></app-vlieger-logboek>
             </div>
         </div>
-    </div>
-    <div footer>
+        </div>
+        <div footer>
         <div class="toolbar logboekToolbar">
             <app-icon-button class="toolbarBtn"
                              tekst="Toevoegen"
                              iconNaam="far PlusSquare" (btnClicked)="addStart()"
                              btnColor="btn-primary"></app-icon-button>
+            @if (magVerwijderen) {
             <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
-                             btnColor="btn-secondary" *ngIf="magVerwijderen"
+                             btnColor="btn-secondary"
                              (btnClicked)="verwijderMode = !verwijderMode"></app-icon-button>
+            }
         </div>
-    </div>
-</app-modal>
+        </div>
+    </app-modal>
+}
 
 <!-- toevoegen van een start vanuit groot logboek -->
-<app-start-editor [VliegerID]="lidData.ID" *ngIf="lidData"></app-start-editor>
+@if (lidData) {
+    <app-start-editor [VliegerID]="lidData.ID"></app-start-editor>
+}
 <app-transacties (TransactieGedaan)="opvragenLid()"></app-transacties>
 
 
-<app-modal #dienstenPopup titel="Diensten van {{lidData.NAAM}}" *ngIf="lidData">
-    <div body>
+@if (lidData) {
+    <app-modal #dienstenPopup titel="Diensten van {{lidData.NAAM}}">
+        <div body>
         <div>
-            <app-diensten [Vlieger]="lidData" UitgebreideWeergave="true" *ngIf="lidData"></app-diensten>
+            @if (lidData) {
+                <app-diensten [Vlieger]="lidData" UitgebreideWeergave="true"></app-diensten>
+            }
         </div>
-    </div>
-</app-modal>
+        </div>
+    </app-modal>
+}

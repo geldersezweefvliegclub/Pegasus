@@ -7,27 +7,35 @@
                     <label for="BESTELLING" class="form-label">Bedrag</label>
                     <select class="form-select" [(ngModel)]="bestelling"
                             name="BESTELLING" id="BESTELLING">
-                        <option value="-1" >Maak keuze</option>
-                        <option *ngFor="let bi of bestelInfo"
-                                [value]="bi.ID">{{bi.OMSCHRIJVING}}</option>
+                        <option value="-1">Maak keuze</option>
+                        @for (bi of bestelInfo; track bi) {
+                            <option
+                                    [value]="bi.ID">{{ bi.OMSCHRIJVING }}
+                            </option>
+                        }
                     </select>
 
                     <label for="BANK" class="form-label">Bank</label>
                     <select class="form-select" [(ngModel)]="bank"
                             name="BANK" id="BANK">
-                        <option value="-1" >Maak keuze</option>
-                        <option *ngFor="let bank of banken;let r = index"
-                                [value]=r>{{bank.NAAM}}</option>
+                        <option value="-1">Maak keuze</option>
+                        @for (bank of banken; track bank; let r = $index) {
+                            <option
+                                    [value]=r>{{ bank.NAAM }}
+                            </option>
+                        }
                     </select>
                 </div>
             </div>
         </fieldset>
 
         <p class="pt-3">
-            <b>Noot 1:</b> Voor een succesvolle bestelling is het noodzakelijk dat u het hele iDEAL proces doorloopt en uiteindelijk naar deze website terugkeert.
+            <b>Noot 1:</b> Voor een succesvolle bestelling is het noodzakelijk dat u het hele iDEAL proces doorloopt en
+            uiteindelijk naar deze website terugkeert.
         </p>
         <p>
-            <b>Noot 2:</b> Voor iDEAL maken wij gebruik van een tussenpersoon. "Gelderse Zweefvliegclub via Stichting Mollie Payments" zal u vermeld zien op uw bank afschrift met rekeningnummer NL51 DEUT 0265 2624 61
+            <b>Noot 2:</b> Voor iDEAL maken wij gebruik van een tussenpersoon. "Gelderse Zweefvliegclub via Stichting
+            Mollie Payments" zal u vermeld zien op uw bank afschrift met rekeningnummer NL51 DEUT 0265 2624 61
         </p>
     </div>
 

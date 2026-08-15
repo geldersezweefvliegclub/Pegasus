@@ -6,30 +6,36 @@
                   [exportEnabled]="this.magExporteren"
                   (Exporting)="exportDataset()">
     <div class="box h-100">
-        <div id="data" class="data" *ngIf="!toonKlein">
-            <app-datatable
-                    id="ledengrid"
-                    rowHeight=70
-                    [pagination]="toonBladwijzer"
-                    [sizeToFit]="true"
-                    [rowData]="leden"
-                    [columnDefs]="columns"
-                    [loading]="isLoading"
-                    [rowClassRules]="rowClassRules"
-                    [frameworkComponents]="frameworkComponents"
-                    (rowDoubleClicked)="bewerkLid($event)"
-                    class="h-100 mt-n8"></app-datatable>
-        </div>
-        <div id="datacard" class="data" *ngIf="toonKlein">
-            <div *ngIf="isLoading" class="w-100 h-100">
-                <div class="spinnerPosition">
-                    <span><img src="assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Data wordt geladen .....</span>
-                </div>
+        @if (!toonKlein) {
+            <div id="data" class="data">
+                <app-datatable
+                        id="ledengrid"
+                        rowHeight=70
+                        [pagination]="toonBladwijzer"
+                        [sizeToFit]="true"
+                        [rowData]="leden"
+                        [columnDefs]="columns"
+                        [loading]="isLoading"
+                        [rowClassRules]="rowClassRules"
+                        [frameworkComponents]="frameworkComponents"
+                        (rowDoubleClicked)="bewerkLid($event)"
+                        class="h-100 mt-n8"></app-datatable>
             </div>
-            <div *ngFor="let lid of leden;let i = index">
+        } @if (toonKlein) {
+        <div id="datacard" class="data">
+            @if (isLoading) {
+                <div class="w-100 h-100">
+                    <div class="spinnerPosition">
+                        <span><img src="assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Data wordt geladen .....</span>
+                    </div>
+                </div>
+            } @for (lid of leden; track lid; let i = $index) {
+            <div>
                 <app-leden-card [lid]="lid"></app-leden-card>
             </div>
+        }
         </div>
+    }
         <div class="row justify-content-start mt-2" id="toolbar">
             <div class="col-4">
                 <div class="d-flex">
@@ -38,22 +44,26 @@
                                      iconNaam="fas Filter" (btnClicked)="filterPopup()"
                                      btnColor="btn-primary"></app-icon-button>
 
-                    <div *ngIf="this.magToevoegen">
-                        <app-icon-button class="toolbarBtn"
-                                         tekst="Toevoegen"
-                                         iconNaam="far PlusSquare" (btnClicked)="addLid()"
-                                         btnColor="btn-primary" *ngIf="!this.deleteMode"></app-icon-button>
-
-                        <div *ngIf="this.deleteMode">
-                            <app-status-button
-                                    class="toolbarBtn"
-                                    tekst="Archief"
-                                    [actief]="trashMode"
-                                    (btnClicked)="trashModeJaNee($event)"
-                                    iconNaam="fas Inbox">
-                            </app-status-button>
+                    @if (this.magToevoegen) {
+                        <div>
+                            @if (!this.deleteMode) {
+                                <app-icon-button class="toolbarBtn"
+                                                 tekst="Toevoegen"
+                                                 iconNaam="far PlusSquare" (btnClicked)="addLid()"
+                                                 btnColor="btn-primary"></app-icon-button>
+                            } @if (this.deleteMode) {
+                            <div>
+                                <app-status-button
+                                        class="toolbarBtn"
+                                        tekst="Archief"
+                                        [actief]="trashMode"
+                                        (btnClicked)="trashModeJaNee($event)"
+                                        iconNaam="fas Inbox">
+                                </app-status-button>
+                            </div>
+                        }
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
             <div class="col-8">
@@ -61,20 +71,26 @@
                     <app-zoekbar class="col-12 col-md-8 flex-grow-1"
                                  [(zoekString)]="zoekString"
                                  (zoeken)="opvragen()">
-                        <app-icon-button class="toolbarBtn" iconNaam="fas MailBulk" (btnClicked)="bulkEmail()"
-                                         *ngIf="toonBulkEmail"
-                                         btnColor="btn-secondary"></app-icon-button>
+                        @if (toonBulkEmail) {
+                            <app-icon-button class="toolbarBtn" iconNaam="fas MailBulk" (btnClicked)="bulkEmail()"
+                                             btnColor="btn-secondary"></app-icon-button>
+                        }
                     </app-zoekbar>
-                    <div class="col-4" *ngIf="this.magVerwijderen">
-                        <div class="d-flex justify-content-end">
-                            <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
-                                             btnColor="btn-secondary" *ngIf="this.magVerwijderen && !deleteMode"
-                                             (btnClicked)="deleteModeJaNee()"></app-icon-button>
-                            <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
-                                             btnColor="btn btn-outline-primary" *ngIf="deleteMode"
-                                             (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                    @if (this.magVerwijderen) {
+                        <div class="col-4">
+                            <div class="d-flex justify-content-end">
+                                @if (this.magVerwijderen && !deleteMode) {
+                                    <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
+                                                     btnColor="btn-secondary"
+                                                     (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                                } @if (deleteMode) {
+                                <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
+                                                 btnColor="btn btn-outline-primary"
+                                                 (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                            }
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
         </div>

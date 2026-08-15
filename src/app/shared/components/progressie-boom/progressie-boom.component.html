@@ -15,32 +15,37 @@
            [state]="treeState"
            (stateChange)="onTreeStateChange($event)">
     <ng-template #treeNodeTemplate let-node>
-    <div class="form-inline row-item">
+        <div class="form-inline row-item">
         <div class="form-check w-100">
-            <input type="checkbox" class="form-check-input" [ngModel]="node.data.IsBehaald > 0"  [ngClass]="{'unChecked': node.data.IsBehaald === 0, 'halfChecked': node.data.IsBehaald === 1, 'fullChecked': node.data.IsBehaald === 2 }"
+            <input type="checkbox" class="form-check-input" [ngModel]="node.data.IsBehaald > 0"
+                   [ngClass]="{'unChecked': node.data.IsBehaald === 0, 'halfChecked': node.data.IsBehaald === 1, 'fullChecked': node.data.IsBehaald === 2 }"
                    (ngModelChange)="onProgressieChange(node.data)"
                    [disabled]="node.hasChildren || isDisabled" [indeterminate]="node.data.IsBehaald === 1"/>
             <label class="form-check-label" (click)="onProgressieChange(node.data)">
-                {{node.data.text}}
+                {{ node.data.text }}
             </label>
 
-            <label class="form-check-label ml-4 behaaldDetails" *ngIf="node.data.Behaald">
-                <div class="d-flex">
-                    Afgetekend door {{node.data.Instructeur}} op {{node.data.Behaald}}
-
-                    <div *ngIf="node.data.GeldigTot">
-                        , geldig tot {{node.data.GeldigTot}}
+            @if (node.data.Behaald) {
+                <label class="form-check-label ml-4 behaaldDetails">
+                    <div class="d-flex">
+                        Afgetekend door {{ node.data.Instructeur }} op {{ node.data.Behaald }}
+                        @if (node.data.GeldigTot) {
+                            <div>
+                                , geldig tot {{ node.data.GeldigTot }}
+                            </div>
+                        } @if (node.data.Score) {
+                        <div class="ms-2">
+                            <app-voortgang [status]="node.data.Score"></app-voortgang>
+                        </div>
+                    }
                     </div>
-
-                    <div *ngIf="node.data.Score" class="ms-2">
-                        <app-voortgang [status]="node.data.Score"></app-voortgang>
-                    </div>
-                </div>
             </label>
+            }
         </div>
-    </div>
+        </div>
     </ng-template>
 </tree-root>
 
 
-<app-progressie-editor [competenties]="competenties" [vliegerID]="VliegerID" (aangepast)="ophalen()"></app-progressie-editor>
+<app-progressie-editor [competenties]="competenties" [vliegerID]="VliegerID"
+                       (aangepast)="ophalen()"></app-progressie-editor>

@@ -1,6 +1,7 @@
 <app-uitbetalen-ddwv-crew-editor></app-uitbetalen-ddwv-crew-editor>
 
-<div class="dataContent" *ngIf="leden && rooster">
+@if (leden && rooster) {
+    <div class="dataContent">
     <div class="d-flex justify-content-between mb-2">
         <div>
             <app-icon-button
@@ -8,7 +9,7 @@
                     iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum.plus({days: -7}))"
                     btnColor="btn-secondary"></app-icon-button>
         </div>
-        Rooster voor de week van {{maandag.day}}-{{maandag.month}}-{{maandag.year}}
+        Rooster voor de week van {{ maandag.day }}-{{ maandag.month }}-{{ maandag.year }}
         <div>
             <app-icon-button
                     class="toolbarBtn mx-2"
@@ -16,39 +17,40 @@
                     btnColor="btn-secondary"></app-icon-button>
         </div>
     </div>
-
     <div class="roosterTabel">
         <table class="table" style="width: calc(100% - 15px);">
             <thead>
             <tr style="vertical-align: top;">
                 <td></td>
-                <td *ngFor="let dagInRooster of rooster;let r = index" class="dagInRooster" [style]="KolomBreedte()"
-                    [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
-                    <div>
-                        {{DagVanDeWeek(dagInRooster.DATUM)}}
+                @for (dagInRooster of rooster; track dagInRooster; let r = $index) {
+                    <td class="dagInRooster" [style]="KolomBreedte()"
+                        [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
                         <div>
-                            {{dagInRooster.DATUM | slice:8:10 }}-{{dagInRooster.DATUM | slice:5:7 }}
+                            {{ DagVanDeWeek(dagInRooster.DATUM) }}
+                            <div>
+                                {{ dagInRooster.DATUM | slice:8:10 }}-{{ dagInRooster.DATUM | slice:5:7 }}
+                            </div>
                         </div>
+                        @if (ddwvActief) {
+                            <div>
+                                <input type="checkbox" class="form-check-inline" [id]="'DDWV' + i"
+                                       [name]="'DDWV' + i"
+                                       [(ngModel)]="dagInRooster.DDWV"
+                                       (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
+                                       [disabled]="!magWijzigen && !isCIMT && !isBeheerderDDWV">
+                                <label [for]="'DDWV' + i" class="form-check-label">DDWV</label>
                     </div>
-
-                    <div *ngIf="ddwvActief">
-                        <input type="checkbox" class="form-check-inline" [id]="'DDWV' + i"
-                               [name]="'DDWV' + i"
-                               [(ngModel)]="dagInRooster.DDWV"
-                               (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
-                               [disabled]="!magWijzigen && !isCIMT && !isBeheerderDDWV">
-                        <label [for]="'DDWV' + i" class="form-check-label">DDWV</label>
-                    </div>
-                    <div class="text-nowrap">
-                        <input type="checkbox" class="form-check-inline"
-                               [id]="'Clubbedrijf' + i"
-                               [name]="'Clubbedrijf' + i"
-                               [(ngModel)]="dagInRooster.CLUB_BEDRIJF"
-                               (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
-                               [disabled]="!magWijzigen && !isCIMT && !isBeheerderDDWV">
-                        <label [for]="'Clubbedrijf' + i"
-                               class="labelClub form-check-label">Club
-                            bedrijf</label>
+                        }
+                        <div class="text-nowrap">
+                            <input type="checkbox" class="form-check-inline"
+                                   [id]="'Clubbedrijf' + i"
+                                   [name]="'Clubbedrijf' + i"
+                                   [(ngModel)]="dagInRooster.CLUB_BEDRIJF"
+                                   (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
+                                   [disabled]="!magWijzigen && !isCIMT && !isBeheerderDDWV">
+                            <label [for]="'Clubbedrijf' + i"
+                                   class="labelClub form-check-label">Club
+                                bedrijf</label>
                     </div>
                     <div class="text-nowrap">
                         <input type="checkbox" class="form-check-inline"
@@ -60,167 +62,229 @@
                         <label [for]="'Clubbedrijf' + i"
                                class="labelClub form-check-label">Winterwerk</label>
                     </div>
-                </td>
+                    </td>
+                }
             </tr>
             <tr>
                 <td></td>
-                <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
-                    <textarea
-                            [id]="'OPMERKINGEN' + i"
-                            [name]="'OPMERKINGEN' + i"
-                            [(ngModel)]="dagInRooster.OPMERKINGEN"
-                            (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
-                            [disabled]="!magWijzigen && !isCIMT && !isBeheerderDDWV"
-                            class="w-100 text-invoer form-control opmerkingen"
-                            [rows]="2" style="resize: none"></textarea>
-                </td>
+                @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                    <td class="dagInRooster" [style]="KolomBreedte()">
+                      <textarea
+                              [id]="'OPMERKINGEN' + i"
+                              [name]="'OPMERKINGEN' + i"
+                              [(ngModel)]="dagInRooster.OPMERKINGEN"
+                              (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
+                              [disabled]="!magWijzigen && !isCIMT && !isBeheerderDDWV"
+                              class="w-100 text-invoer form-control opmerkingen"
+                              [rows]="2" style="resize: none"></textarea>
+                    </td>
+                }
             </tr>
             </thead>
             <tbody>
-
-            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_DDI_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_DDI_TYPE_ID]) && tonen.Instructeurs && tonen.toonClubDDWV !==2">
-                <td class="dienstType">DDI</td>
-                <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
-                    <div *ngIf="dagInRooster.CLUB_BEDRIJF">
-                        <ng-container [ngTemplateOutlet]="roosterDienst"
-                                      [ngTemplateOutletContext]="{dag:dagInRooster, typeDienst: [ configService.OCHTEND_DDI_TYPE_ID, configService.MIDDAG_DDI_TYPE_ID]}"></ng-container>
-                    </div>
-                </td>
-            </tr>
-
-            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_INSTRUCTEUR_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) && tonen.Instructeurs && tonen.toonClubDDWV !==2">
-                <td class="dienstType">Instructeur</td>
-                <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
-                    <div *ngIf="dagInRooster.CLUB_BEDRIJF">
-                        <ng-container [ngTemplateOutlet]="roosterDienst"
-                                      [ngTemplateOutletContext]="{dag:dagInRooster, typeDienst: [ configService.OCHTEND_INSTRUCTEUR_TYPE_ID, configService.MIDDAG_INSTRUCTEUR_TYPE_ID]}"></ng-container>
-                    </div>
-                </td>
-            </tr>
-
-            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_STARTLEIDER_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_STARTLEIDER_TYPE_ID]) && (tonen.Startleiders || tonen.DDWV)">
-                <td class="dienstType">Startleider</td>
-                <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
-                    <div *ngIf="dagInRooster.CLUB_BEDRIJF">
-                        <ng-container [ngTemplateOutlet]="roosterDienst"
-                                      [ngTemplateOutletContext]="{dag:dagInRooster, typeDienst: [ configService.OCHTEND_STARTLEIDER_TYPE_ID, configService.MIDDAG_STARTLEIDER_TYPE_ID]}"></ng-container>
-                    </div>
-                    <div *ngIf="dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF">
-                        <ng-container [ngTemplateOutlet]="roosterDienst"
-                                      [ngTemplateOutletContext]="{dag:dagInRooster, typeDienst: [ configService.OCHTEND_STARTLEIDER_TYPE_ID]}"></ng-container>
-                    </div>
-                </td>
-            </tr>
-
-            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID] || tonen.toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]) && tonen.Startleiders && tonen.toonClubDDWV !==2">
-                <td class="dienstType">Startleider 2</td>
-                <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
-                    <div *ngIf="dagInRooster.CLUB_BEDRIJF">
-                        <ng-container [ngTemplateOutlet]="roosterDienst"
-                                      [ngTemplateOutletContext]="{dag:dagInRooster, typeDienst: [ configService.OCHTEND_STARTLEIDER_IO_TYPE_ID, configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]}"></ng-container>
-                    </div>
-                </td>
-            </tr>
-
-            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_LIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_LIERIST_TYPE_ID]) && (tonen.Lieristen || tonen.DDWV)">
-                <td class="dienstType">Lierist</td>
-                <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
-                    <div *ngIf="dagInRooster.CLUB_BEDRIJF">
-                        <ng-container [ngTemplateOutlet]="roosterDienst"
-                                      [ngTemplateOutletContext]="{dag:dagInRooster, typeDienst: [ configService.OCHTEND_LIERIST_TYPE_ID, configService.MIDDAG_LIERIST_TYPE_ID]}"></ng-container>
-                    </div>
-                    <div *ngIf="dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF">
-                        <ng-container [ngTemplateOutlet]="roosterDienst"
-                                      [ngTemplateOutletContext]="{dag:dagInRooster, typeDienst: [ configService.OCHTEND_LIERIST_TYPE_ID]}"></ng-container>
-                    </div>
-                </td>
-            </tr>
-
-            <tr *ngIf="(tonen.toonDienst[configService.OCHTEND_HULPLIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_HULPLIERIST_TYPE_ID]) && tonen.LIO && tonen.toonClubDDWV !==2">
-                <td class="dienstType">Hulplierist</td>
-                <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
-                    <div *ngIf="dagInRooster.CLUB_BEDRIJF">
-                        <ng-container [ngTemplateOutlet]="roosterDienst"
-                                      [ngTemplateOutletContext]="{dag:dagInRooster, typeDienst: [ configService.OCHTEND_HULPLIERIST_TYPE_ID, configService.MIDDAG_HULPLIERIST_TYPE_ID]}"></ng-container>
-                    </div>
-                </td>
-            </tr>
-
-            <tr *ngIf="(tonen.toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID] || tonen.toonDienst[configService.GASTEN_VLIEGER2_TYPE_ID]) && tonen.GastenVliegers && tonen.toonClubDDWV !==2">
-                <td class="dienstType">Gasten vlieger</td>
-                <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
-                    <div *ngIf="dagInRooster.CLUB_BEDRIJF">
-                        <ng-container [ngTemplateOutlet]="roosterDienst"
-                                      [ngTemplateOutletContext]="{dag:dagInRooster, typeDienst: [ configService.GASTEN_VLIEGER1_TYPE_ID, configService.GASTEN_VLIEGER2_TYPE_ID]}"></ng-container>
-                    </div>
-                </td>
-            </tr>
-
-            <tr *ngIf="tonen.toonDienst[configService.SLEEPVLIEGER_TYPE_ID] && tonen.Sleepvliegers">
-                <td class="dienstType">Sleepvlieger</td>
-                <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
-                    <div *ngIf="dagInRooster.DDWV || dagInRooster.CLUB_BEDRIJF">
-                        <ng-container [ngTemplateOutlet]="roosterDienst"
-                                      [ngTemplateOutletContext]="{dag:dagInRooster, typeDienst: [ configService.SLEEPVLIEGER_TYPE_ID]}"></ng-container>
-                    </div>
-                </td>
-            </tr>
-
-            <tr *ngIf="tonen.toonClubDDWV ===2">
-                <td class="dienstType">Slepen</td>
-                <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
-                    <div class="d-flex flex-row" *ngIf="dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF">
-                        <input type="range" class="form-range" min="1" max="25"
-                               [(ngModel)]="dagInRooster.MIN_SLEEPSTART" (change)="opslaanRooster(dagInRooster.DATUM)"
-                               [disabled]="!magWijzigen">
-                        <div class="ms-2 me-1">{{dagInRooster.MIN_SLEEPSTART}}</div>
-                    </div>
-                </td>
-            </tr>
-            <tr *ngIf="tonen.toonClubDDWV ===2">
-                <td class="dienstType">Lieren</td>
-                <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
-                    <div class="d-flex flex-row" *ngIf="dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF">
-                        <input type="range" class="form-range" min="1" max="25" [(ngModel)]="dagInRooster.MIN_LIERSTART"
-                               (change)="opslaanRooster(dagInRooster.DATUM)" [disabled]="!magWijzigen">
-                        <div class="ms-2 me-1">{{dagInRooster.MIN_LIERSTART}}</div>
-                    </div>
-                </td>
-            </tr>
-            <tr *ngIf="tonen.toonClubDDWV ===2">
-                <td></td>
-                <td *ngFor="let dagInRooster of rooster;let i = index" class="dagInRooster" [style]="KolomBreedte()">
-                    <div *ngIf="!datumInToekomst(dagInRooster.DATUM) && dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF && (isBeheerderDDWV || isBeheerder)" class="w-100">
-                        <app-icon-button class="toolbarBtn"
-                                         tekst="Uitbetalen"
-                                         iconNaam="fas EuroSign" (btnClicked)="uitbetalen.openPopup(dagInRooster)"
-                                         btnColor="btn-secondary"></app-icon-button>
-                    </div>
-                </td>
-            </tr>
+            @if ((tonen.toonDienst[configService.OCHTEND_DDI_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_DDI_TYPE_ID]) && tonen.Instructeurs && tonen.toonClubDDWV !== 2) {
+                <tr>
+                    <td class="dienstType">DDI</td>
+                    @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                        <td class="dagInRooster" [style]="KolomBreedte()">
+                            @if (dagInRooster.CLUB_BEDRIJF) {
+                                <div>
+                                    <ng-container [ngTemplateOutlet]="roosterDienst"
+                                                  [ngTemplateOutletContext]="{dag:dagInRooster, typeDienst: [ configService.OCHTEND_DDI_TYPE_ID, configService.MIDDAG_DDI_TYPE_ID]}"></ng-container>
+                                </div>
+                            }
+                        </td>
+                    }
+                </tr>
+            } @if ((tonen.toonDienst[configService.OCHTEND_INSTRUCTEUR_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) && tonen.Instructeurs && tonen.toonClubDDWV !== 2) {
+                <tr>
+                    <td class="dienstType">Instructeur</td>
+                    @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                        <td class="dagInRooster" [style]="KolomBreedte()">
+                            @if (dagInRooster.CLUB_BEDRIJF) {
+                                <div>
+                                    <ng-container [ngTemplateOutlet]="roosterDienst"
+                                                  [ngTemplateOutletContext]="{dag:dagInRooster, typeDienst: [ configService.OCHTEND_INSTRUCTEUR_TYPE_ID, configService.MIDDAG_INSTRUCTEUR_TYPE_ID]}"></ng-container>
+                                </div>
+                            }
+                        </td>
+                    }
+                </tr>
+            } @if ((tonen.toonDienst[configService.OCHTEND_STARTLEIDER_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_STARTLEIDER_TYPE_ID]) && (tonen.Startleiders || tonen.DDWV)) {
+                <tr>
+                    <td class="dienstType">Startleider</td>
+                    @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                        <td class="dagInRooster" [style]="KolomBreedte()">
+                            @if (dagInRooster.CLUB_BEDRIJF) {
+                                <div>
+                                    <ng-container [ngTemplateOutlet]="roosterDienst"
+                                                  [ngTemplateOutletContext]="{dag:dagInRooster, typeDienst: [ configService.OCHTEND_STARTLEIDER_TYPE_ID, configService.MIDDAG_STARTLEIDER_TYPE_ID]}"></ng-container>
+                                </div>
+                            } @if (dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF) {
+                            <div>
+                                <ng-container [ngTemplateOutlet]="roosterDienst"
+                                              [ngTemplateOutletContext]="{dag:dagInRooster, typeDienst: [ configService.OCHTEND_STARTLEIDER_TYPE_ID]}"></ng-container>
+                            </div>
+                        }
+                        </td>
+                    }
+                </tr>
+            } @if ((tonen.toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID] || tonen.toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]) && tonen.Startleiders && tonen.toonClubDDWV !== 2) {
+                <tr>
+                    <td class="dienstType">Startleider 2</td>
+                    @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                        <td class="dagInRooster" [style]="KolomBreedte()">
+                            @if (dagInRooster.CLUB_BEDRIJF) {
+                                <div>
+                                    <ng-container [ngTemplateOutlet]="roosterDienst"
+                                                  [ngTemplateOutletContext]="{dag:dagInRooster, typeDienst: [ configService.OCHTEND_STARTLEIDER_IO_TYPE_ID, configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]}"></ng-container>
+                                </div>
+                            }
+                        </td>
+                    }
+                </tr>
+            } @if ((tonen.toonDienst[configService.OCHTEND_LIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_LIERIST_TYPE_ID]) && (tonen.Lieristen || tonen.DDWV)) {
+                <tr>
+                    <td class="dienstType">Lierist</td>
+                    @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                        <td class="dagInRooster" [style]="KolomBreedte()">
+                            @if (dagInRooster.CLUB_BEDRIJF) {
+                                <div>
+                                    <ng-container [ngTemplateOutlet]="roosterDienst"
+                                                  [ngTemplateOutletContext]="{dag:dagInRooster, typeDienst: [ configService.OCHTEND_LIERIST_TYPE_ID, configService.MIDDAG_LIERIST_TYPE_ID]}"></ng-container>
+                                </div>
+                            } @if (dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF) {
+                            <div>
+                                <ng-container [ngTemplateOutlet]="roosterDienst"
+                                              [ngTemplateOutletContext]="{dag:dagInRooster, typeDienst: [ configService.OCHTEND_LIERIST_TYPE_ID]}"></ng-container>
+                            </div>
+                        }
+                        </td>
+                    }
+                </tr>
+            } @if ((tonen.toonDienst[configService.OCHTEND_HULPLIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_HULPLIERIST_TYPE_ID]) && tonen.LIO && tonen.toonClubDDWV !== 2) {
+                <tr>
+                    <td class="dienstType">Hulplierist</td>
+                    @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                        <td class="dagInRooster" [style]="KolomBreedte()">
+                            @if (dagInRooster.CLUB_BEDRIJF) {
+                                <div>
+                                    <ng-container [ngTemplateOutlet]="roosterDienst"
+                                                  [ngTemplateOutletContext]="{dag:dagInRooster, typeDienst: [ configService.OCHTEND_HULPLIERIST_TYPE_ID, configService.MIDDAG_HULPLIERIST_TYPE_ID]}"></ng-container>
+                                </div>
+                            }
+                        </td>
+                    }
+                </tr>
+            } @if ((tonen.toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID] || tonen.toonDienst[configService.GASTEN_VLIEGER2_TYPE_ID]) && tonen.GastenVliegers && tonen.toonClubDDWV !== 2) {
+                <tr>
+                    <td class="dienstType">Gasten vlieger</td>
+                    @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                        <td class="dagInRooster" [style]="KolomBreedte()">
+                            @if (dagInRooster.CLUB_BEDRIJF) {
+                                <div>
+                                    <ng-container [ngTemplateOutlet]="roosterDienst"
+                                                  [ngTemplateOutletContext]="{dag:dagInRooster, typeDienst: [ configService.GASTEN_VLIEGER1_TYPE_ID, configService.GASTEN_VLIEGER2_TYPE_ID]}"></ng-container>
+                                </div>
+                            }
+                        </td>
+                    }
+                </tr>
+            } @if (tonen.toonDienst[configService.SLEEPVLIEGER_TYPE_ID] && tonen.Sleepvliegers) {
+                <tr>
+                    <td class="dienstType">Sleepvlieger</td>
+                    @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                        <td class="dagInRooster" [style]="KolomBreedte()">
+                            @if (dagInRooster.DDWV || dagInRooster.CLUB_BEDRIJF) {
+                                <div>
+                                    <ng-container [ngTemplateOutlet]="roosterDienst"
+                                                  [ngTemplateOutletContext]="{dag:dagInRooster, typeDienst: [ configService.SLEEPVLIEGER_TYPE_ID]}"></ng-container>
+                                </div>
+                            }
+                        </td>
+                    }
+                </tr>
+            } @if (tonen.toonClubDDWV === 2) {
+                <tr>
+                    <td class="dienstType">Slepen</td>
+                    @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                        <td class="dagInRooster" [style]="KolomBreedte()">
+                            @if (dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF) {
+                                <div class="d-flex flex-row">
+                                    <input type="range" class="form-range" min="1" max="25"
+                                           [(ngModel)]="dagInRooster.MIN_SLEEPSTART"
+                                           (change)="opslaanRooster(dagInRooster.DATUM)"
+                                           [disabled]="!magWijzigen">
+                                    <div class="ms-2 me-1">{{ dagInRooster.MIN_SLEEPSTART }}</div>
+                                </div>
+                            }
+                        </td>
+                    }
+                </tr>
+            } @if (tonen.toonClubDDWV === 2) {
+                <tr>
+                    <td class="dienstType">Lieren</td>
+                    @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                        <td class="dagInRooster" [style]="KolomBreedte()">
+                            @if (dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF) {
+                                <div class="d-flex flex-row">
+                                    <input type="range" class="form-range" min="1" max="25"
+                                           [(ngModel)]="dagInRooster.MIN_LIERSTART"
+                                           (change)="opslaanRooster(dagInRooster.DATUM)" [disabled]="!magWijzigen">
+                                    <div class="ms-2 me-1">{{ dagInRooster.MIN_LIERSTART }}</div>
+                                </div>
+                            }
+                        </td>
+                    }
+                </tr>
+            } @if (tonen.toonClubDDWV === 2) {
+                <tr>
+                    <td></td>
+                    @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                        <td class="dagInRooster" [style]="KolomBreedte()">
+                            @if (!datumInToekomst(dagInRooster.DATUM) && dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF && (isBeheerderDDWV || isBeheerder)) {
+                                <div class="w-100">
+                                    <app-icon-button class="toolbarBtn"
+                                                     tekst="Uitbetalen"
+                                                     iconNaam="fas EuroSign"
+                                                     (btnClicked)="uitbetalen.openPopup(dagInRooster)"
+                                                     btnColor="btn-secondary"></app-icon-button>
+                                </div>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
             </tbody>
         </table>
     </div>
-</div>
+    </div>
+}
 
 <ng-template #roosterDienst let-dag="dag" let-typeDienst="typeDienst">
-    <div class="d-flex" *ngFor="let dt of typeDienst">
-        <div class="d-flex w-100" *ngIf="tonen.toonDienst[dt]">
-            <div class="naam" (click)="openPopup(dag, dt)"
-                 [ngClass]="lidInRoosterDagClass(dag.Diensten[dt], dag)">
-                {{ (dag.Diensten[dt]) ? dag.Diensten[dt].NAAM : "" }}
-            </div>
-
-            <div *ngIf="zelfIndelen(dt, dag.DATUM) && !dag.Diensten[dt]"
-                 (click)="toekennenDienst(dag, dt)">
-                <ng-template *ngTemplateOutlet="assign"></ng-template>
-            </div>
-            <div *ngIf="magVerwijderen(dag.Diensten[dt])"
-                 (click)="verwijderDienst(dag, dt)">
-                <ng-template *ngTemplateOutlet="reset"></ng-template>
-            </div>
+    @for (dt of typeDienst; track dt) {
+        <div class="d-flex">
+            @if (tonen.toonDienst[dt]) {
+                <div class="d-flex w-100">
+                    <div class="naam" (click)="openPopup(dag, dt)"
+                         [ngClass]="lidInRoosterDagClass(dag.Diensten[dt], dag)">
+                        {{ (dag.Diensten[dt]) ? dag.Diensten[dt].NAAM : "" }}
+                    </div>
+                    @if (zelfIndelen(dt, dag.DATUM) && !dag.Diensten[dt]) {
+                        <div
+                                (click)="toekennenDienst(dag, dt)">
+                            <ng-template *ngTemplateOutlet="assign"></ng-template>
+                        </div>
+                    } @if (magVerwijderen(dag.Diensten[dt])) {
+                    <div
+                            (click)="verwijderDienst(dag, dt)">
+                        <ng-template *ngTemplateOutlet="reset"></ng-template>
+                    </div>
+                }
+                </div>
+            }
         </div>
-    </div>
+    }
 </ng-template>
 
 <ng-template #reset>

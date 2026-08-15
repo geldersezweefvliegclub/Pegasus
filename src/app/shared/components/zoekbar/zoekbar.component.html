@@ -10,8 +10,9 @@
            (keyup)="zoeken.emit()"
            (search)="zoeken.emit()"
     >
-    <app-icon-button class="toolbarBtn d-none d-md-block" iconNaam="fas Redo" (btnClicked)="zoeken.emit()"
-                     *ngIf="toonRefresh"
-                     btnColor="btn-primary"></app-icon-button>
+    @if (toonRefresh) {
+        <app-icon-button class="toolbarBtn d-none d-md-block" iconNaam="fas Redo" (btnClicked)="zoeken.emit()"
+                         btnColor="btn-primary"></app-icon-button>
+    }
     <ng-content></ng-content>
 </div>

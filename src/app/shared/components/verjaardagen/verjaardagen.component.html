@@ -3,8 +3,10 @@
         <th style="width: 70px;">Datum</th>
         <th>Naam</th>
     </tr>
-    <tr *ngFor="let verjaardag of verjaardagen">
-        <td>{{verjaardag.DAG}}-{{verjaardag.MAAND}}</td>
-        <td>{{verjaardag.NAAM}}</td>
+    @for (verjaardag of verjaardagen; track verjaardag) {
+        <tr>
+            <td>{{ verjaardag.DAG }}-{{ verjaardag.MAAND }}</td>
+            <td>{{ verjaardag.NAAM }}</td>
     </tr>
+    }
 </table>
