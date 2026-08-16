@@ -263,8 +263,6 @@ export class InstructieGrafiekComponent implements OnInit {
                 uren.push(0);
             }
         }
-        this.bezig = false;                         // klaar met ophalen
-
         this.uren = uren;
         this.starts = starts;
 
@@ -296,5 +294,6 @@ export class InstructieGrafiekComponent implements OnInit {
             data: this.uren,
         }
         this.lineChartData = [startsReeks, urenReeks];
+        this.bezig = false;                         // klaar met ophalen
     }
 }

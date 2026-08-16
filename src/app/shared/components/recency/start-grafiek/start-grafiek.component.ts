@@ -224,8 +224,6 @@ export class StartGrafiekComponent implements OnInit {
                 tmgstarts.push(0);
             }
         }
-        this.bezig = false;                         // klaar met ophalen
-
         this.lierstarts = lierstarts;
         this.sleepstarts = sleepstarts;
         this.zelfstarts = zelfstarts;
@@ -295,5 +293,6 @@ export class StartGrafiekComponent implements OnInit {
         if (Math.max.apply(null, this.tmgstarts) > 0) {
             this.startsLineChartData.push(tmgReeks)
         }
+        this.bezig = false;                         // klaar met ophalen
     }
 }

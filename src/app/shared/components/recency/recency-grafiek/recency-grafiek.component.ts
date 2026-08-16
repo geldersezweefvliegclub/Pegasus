@@ -266,15 +266,20 @@ export class RecencyGrafiekComponent implements OnInit {
                 waardes.push(0);
             }
         }
-        this.bezig = false;                         // klaar met ophalen
         if (this.GroeneBalk.type === "box") {       // aanpassen groene schaal
             this.GroeneBalk.yMax = Math.ceil(maxWaarde / 10) * 10;    // afronden naar boven in tientallen 70 - 80 - 90
         }
 
-        //  this.waardes = waardes;
-        //this.lineChartLabels = lineChartLabels;
-
-        this.lineChartData.datasets[0].data = waardes;
-        this.lineChartData.labels = lineChartLabels;
+        this.lineChartData = {
+            ...this.lineChartData,
+            datasets: [
+                {
+                    ...this.lineChartData.datasets[0],
+                    data: waardes,
+                }
+            ],
+            labels: lineChartLabels,
+        };
+        this.bezig = false;                         // klaar met ophalen
     }
 }
