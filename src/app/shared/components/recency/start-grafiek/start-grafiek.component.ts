@@ -10,14 +10,13 @@ import { ChartDataset, ChartOptions } from 'chart.js';
 import { ModalComponent } from '../../modal/modal.component';
 import { NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
 import { BaseChartDirective } from 'ng2-charts';
-import {JsonPipe} from "@angular/common";
 
 
 @Component({
     selector: 'app-start-grafiek',
     templateUrl: './start-grafiek.component.html',
     styleUrls: ['./start-grafiek.component.scss'],
-    imports: [ModalComponent, NgbProgressbar, BaseChartDirective, JsonPipe]
+    imports: [ModalComponent, NgbProgressbar, BaseChartDirective]
 })
 
 export class StartGrafiekComponent implements OnInit {
@@ -217,8 +216,7 @@ export class StartGrafiekComponent implements OnInit {
                 zelfstarts.push(recency.ZELFSTARTS as number);
                 tmgstarts.push(recency.TMGSTARTS as number);
 
-            } catch (e) {
-                console.error("Catching here!", e);
+            } catch (_) {
                 lierstarts.push(0);
                 sleepstarts.push(0);
                 zelfstarts.push(0);
@@ -295,6 +293,5 @@ export class StartGrafiekComponent implements OnInit {
             this.startsLineChartData.push(tmgReeks)
         }
         this.bezig = false;                         // klaar met ophalen
-        this.popup.reflow();
     }
 }
