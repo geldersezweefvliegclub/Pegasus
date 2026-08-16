@@ -21,21 +21,29 @@ EASA minimum is 15 starts en 5 uur per 24 maanden
     </div>
     <div *ngIf="!toonEASA">
         <a aria-label="Recency in laatste 24 maanden" (click)="openRecencyPopup()" class="recencyGrafiek">
-            <div class="d-flex flex-column  groen" *ngIf="recency.STATUS_BAROMETER === 'groen'">
-                <p class="niveau">Groene zone</p>
-                <p class="currency">{{recency.STARTS_BAROMETER}} starts en {{recency.UREN_BAROMETER}} uur</p>
-                <p class="nivTekst">Recente vliegervaring is op orde</p>
-            </div>
-            <div class="d-flex flex-column  geel" *ngIf="recency.STATUS_BAROMETER === 'geel'">
-                <p class="niveau">Gele zone</p>
-                <p class="currency">{{recency.STARTS_BAROMETER}} starts en {{recency.UREN_BAROMETER}} uur</p>
-                <p class="nivTekst">Meer oefening kan geen kwaad</p>
-            </div>
-            <div class="d-flex flex-column rood" *ngIf="recency.STATUS_BAROMETER === 'rood'">
-                <p class="niveau">Rode zone</p>
-                <p class="currency">{{recency.STARTS_BAROMETER}} starts en {{recency.UREN_BAROMETER}} uur</p>
-                <p class="nivTekst">Onvoldoende recente ervaring</p>
-            </div>
+            @switch (recency.STATUS_BAROMETER) {
+                @case ('groen') {
+                    <div class="d-flex flex-column  groen">
+                        <p class="niveau">Groene zone</p>
+                        <p class="currency">{{recency.STARTS_BAROMETER}} starts en {{recency.UREN_BAROMETER}} uur</p>
+                        <p class="nivTekst">Recente vliegervaring is op orde</p>
+                    </div>
+                }
+                @case ('geel') {
+                    <div class="d-flex flex-column  geel">
+                        <p class="niveau">Gele zone</p>
+                        <p class="currency">{{recency.STARTS_BAROMETER}} starts en {{recency.UREN_BAROMETER}} uur</p>
+                        <p class="nivTekst">Meer oefening kan geen kwaad</p>
+                    </div>
+                }
+                @case ('rood') {
+                    <div class="d-flex flex-column rood">
+                        <p class="niveau">Rode zone</p>
+                        <p class="currency">{{recency.STARTS_BAROMETER}} starts en {{recency.UREN_BAROMETER}} uur</p>
+                        <p class="nivTekst">Onvoldoende recente ervaring</p>
+                    </div>
+                }
+            }
         </a>
         <div>
             <p class="titel">Laatste 3 maanden</p>
@@ -156,11 +164,12 @@ EASA minimum is 15 starts en 5 uur per 24 maanden
     </div>
 </div>
 
-<div class="spinnerOverlay" *ngIf="isLoading">
-    <app-loader></app-loader>
-</div>
+@if (isLoading) {
+    <div class="spinnerOverlay">
+        <app-loader></app-loader>
+    </div>
+}
 
-<app-recency-grafiek [VliegerID]="Vlieger.ID!" [naam]=""></app-recency-grafiek>
-<app-instructie-grafiek [VliegerID]="Vlieger.ID!" [naam]=""></app-instructie-grafiek>
-<app-start-grafiek [VliegerID]="Vlieger.ID!" [naam]=""></app-start-grafiek>
-
+<app-recency-grafiek [VliegerID]="Vlieger.ID!"></app-recency-grafiek>
+<app-instructie-grafiek [VliegerID]="Vlieger.ID!"></app-instructie-grafiek>
+<app-start-grafiek [VliegerID]="Vlieger.ID!"></app-start-grafiek>
