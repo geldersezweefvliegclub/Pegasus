@@ -2,7 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
-import AnnotationPlugin, { AnnotationOptions } from 'chartjs-plugin-annotation';
+import { AnnotationOptions } from 'chartjs-plugin-annotation';
 import { ChartDataset, ChartOptions } from 'chart.js';
 import { StartlijstService } from '../../../../services/apiservice/startlijst.service';
 import { SharedService } from '../../../../services/shared/shared.service';
@@ -143,7 +143,6 @@ export class InstructieGrafiekComponent implements OnInit {
     lineChartLabels: string[] = []
     lineChartLegend = true;
 
-    lineChartPlugins = [AnnotationPlugin];
     lineChartData: ChartDataset[] = [];
 
     constructor(private readonly startlijstService: StartlijstService,

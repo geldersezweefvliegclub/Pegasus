@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 import { SharedService } from '../../../../services/shared/shared.service';
 import { StartlijstService } from '../../../../services/apiservice/startlijst.service';
 
-import AnnotationPlugin, { AnnotationOptions } from 'chartjs-plugin-annotation';
+import { AnnotationOptions } from 'chartjs-plugin-annotation';
 import { ChartDataset, ChartOptions } from 'chart.js';
 
 import { ModalComponent } from '../../modal/modal.component';
@@ -57,7 +57,6 @@ export class StartGrafiekComponent implements OnInit {
             borderWidth: 1,
         }
 
-    lineChartPlugins = [AnnotationPlugin];
     startsLineChartLabels: string[] = []
     startsLineChartData: ChartDataset[] = [];
     startsLineChartOptions: ChartOptions = {

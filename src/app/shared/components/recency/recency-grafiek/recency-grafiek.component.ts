@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 import { SharedService } from '../../../../services/shared/shared.service';
 import { StartlijstService } from '../../../../services/apiservice/startlijst.service';
 
-import AnnotationPlugin, { AnnotationOptions } from 'chartjs-plugin-annotation';
+import { AnnotationOptions } from 'chartjs-plugin-annotation';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 
 import { ModalComponent } from '../../modal/modal.component';
@@ -150,7 +150,6 @@ export class RecencyGrafiekComponent implements OnInit {
         }
     }
 
-    lineChartPlugins = [AnnotationPlugin];
     lineChartData: ChartConfiguration['data'] = {
         datasets: [
             {
