@@ -109,7 +109,7 @@
         <div class="linker-menu d-flex flex-column justify-content-between min-vh-100'"
              [ngClass]="{'linker-menu-smal': kleineDatum()}">
 
-            <div class="list-group list-group-flush p-3">
+            <div class="list-group list-group-flush p-2">
                 @if (toonLogo()) {
                     <div class="logoContainer">
                         <img src="/assets/img/logo.png" class="logo" alt="logo">
@@ -150,12 +150,14 @@
                 <div class="list-group list-group-flush p-3">
                     <!-- Beheer -->
                     @if (!beheerExcluded) {
-                        <a class="list-group-item list-group-item-action waves-effect beheer"
-                           (click)="showBeheer = !showBeheer">
-                            <fa-icon [icon]="beheerIcon" class="me-3"></fa-icon>
-                            Beheer
+                        <div class="beheer-menu">
+                            <a class="list-group-item list-group-item-action waves-effect beheer"
+                               (click)="showBeheer = !showBeheer">
+                                <fa-icon [icon]="beheerIcon" class="me-3"></fa-icon>
+                                Beheer
+                            </a>
                             @if (showBeheer) {
-                                <div>
+                                <div class="beheer-submenu">
                                     @for (route of activeBeheerRoutes(); track route) {
                                         <a
                                                 class="list-group-item list-subgroup-item list-group-item-action waves-effect py-2"
@@ -170,7 +172,7 @@
                                     }
                                 </div>
                             }
-                        </a>
+                        </div>
                     }
                     <div class="w-100 overflow-auto" [ngClass]="{'verbergDatum': kleineDatum() || showBeheer}">
                         <app-vliegdag-selectie

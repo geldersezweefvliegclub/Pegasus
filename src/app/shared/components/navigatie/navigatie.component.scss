@@ -8,6 +8,11 @@
 .linker-menu {
   background-color: #f1f1f1;
   width: 270px;
+  height: 100dvh;
+  max-height: 100dvh;
+  min-height: 0 !important;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .linker-menu-smal {
@@ -15,13 +20,13 @@
 }
 
 .logoContainer {
-  max-height: 200px;
+  max-height: 7em;
   display: flex;
   justify-content: center;
+  margin-bottom:3px;
+  border-bottom: #dfdfdf solid 1px;
 }
 .logo {
-  padding: 5px 5px 20px 5px;
-  border-bottom: #dfdfdf solid 1px;
   max-width:100%;
   max-height:100%;
 }
@@ -41,6 +46,11 @@
 .beheer {
   padding-right: 0.3rem;
 }
+
+.beheer-menu {
+  flex: 0 0 auto;
+}
+
 .list-subgroup-item {
   padding-left: 0 !important;
   border: none !important;
