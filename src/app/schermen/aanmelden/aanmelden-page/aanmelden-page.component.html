@@ -3,17 +3,19 @@
                   subtitel="Aanmelden voor de vliegdag"
                   [icon]="aanmeldenIcon">
     <div class="h-100">
-        <div class="DDWVtegoed d-flex flex-column" (click)="toonTransacties()" *ngIf="saldoTonen && lid">
-            <div style="font-size: x-small">
-                Tegoed
-            </div>
-            <div class="d-flex align-items-end justify-content-end">
-                {{lid.TEGOED}}&nbsp;
-                <div style="font-size: x-small;  margin-bottom: 2px;">
-                    strippen
+        @if (saldoTonen && lid) {
+            <div class="DDWVtegoed d-flex flex-column" (click)="toonTransacties()">
+                <div style="font-size: x-small">
+                    Tegoed
+                </div>
+                <div class="d-flex align-items-end justify-content-end">
+                    {{lid.TEGOED}}&nbsp;
+                    <div style="font-size: x-small;  margin-bottom: 2px;">
+                        strippen
+                    </div>
                 </div>
             </div>
-        </div>
+        }
         <div class="ms-2 d-flex justify-content-begin align-items-end text-nowrap" [ngClass]="{'veldTop':aanmeldenView === 'week', 'mb-1' : aanmeldenView === 'dag'}">
             <label for="VELD" class="form-label me-2">Vliegveld:</label>
             <ng-select id="VELD" style="width: 160px;"
@@ -59,9 +61,7 @@
 
     <div footer class="row mt-2 justify-content-end">
         <div class="col-12 d-flex justify-content-end">
-            <app-icon-button type="submit" iconNaam="fas PersonWalkingArrowRight" tekst="Bevestigen"
-                             (click)="afmelden()">
-            </app-icon-button>
+            <app-icon-button type="submit" iconNaam="fas PersonWalkingArrowRight" tekst="Bevestigen" (click)="afmelden()"></app-icon-button>
         </div>
     </div>
 </app-modal>
@@ -71,19 +71,21 @@
 <ng-template #week>
     <div class="dataContent" *ngIf="rooster">
         <div class="d-flex justify-content-between mb-2">
-            <div *ngIf="toonDatumKnoppen">
-                <app-icon-button
-                        class="toolbarBtn mx-2"
-                        iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum.plus({days: -7}))"
-                        btnColor="btn-secondary"></app-icon-button>
-            </div>
-            Aanmeldingen voor de week van {{maandag.day}}-{{maandag.month}}-{{maandag.year}}
-            <div *ngIf="toonDatumKnoppen">
-                <app-icon-button
-                        class="toolbarBtn mx-2"
-                        iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum.plus({days: 7}))"
-                        btnColor="btn-secondary"></app-icon-button>
-            </div>
+            @if (toonDatumKnoppen) {
+                <div>
+                    <app-icon-button
+                            class="toolbarBtn mx-2"
+                            iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum.plus({days: -7}))"
+                            btnColor="btn-secondary"></app-icon-button>
+                </div>
+                Aanmeldingen voor de week van {{maandag.day}}-{{maandag.month}}-{{maandag.year}}
+                <div>
+                    <app-icon-button
+                            class="toolbarBtn mx-2"
+                            iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum.plus({days: 7}))"
+                            btnColor="btn-secondary"></app-icon-button>
+                </div>
+            }
         </div>
 
         <div class="roosterTabel volSchermWeekView">
@@ -227,164 +229,169 @@
 
 <!-- template voor dag view -->
 <ng-template #dag>
-    <div class="dataContent" *ngIf="rooster">
-        <div class="d-flex flex-row justify-content-between dagHeader ps-1 pe-1" >
-            <div class="d-flex align-items-center">
-                <app-icon-button *ngIf="toonDatumKnoppen"
-                        class="toolbarBtn"
-                        iconNaam="fas AngleDoubleLeft" (btnClicked)="zetDatum(datum.plus({days: -7}))"
-                        btnColor="btn-secondary"></app-icon-button>
-                <app-icon-button *ngIf="toonDatumKnoppen"
-                        class="toolbarBtn mx-2"
-                        iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum.plus({days: -1}))"
-                        btnColor="btn-secondary"></app-icon-button>
+    @if (rooster){
+        <div class="dataContent">
+            <div class="d-flex flex-row justify-content-between dagHeader ps-1 pe-1" >
+                <div class="d-flex align-items-center">
+                    <app-icon-button *ngIf="toonDatumKnoppen"
+                            class="toolbarBtn"
+                            iconNaam="fas AngleDoubleLeft" (btnClicked)="zetDatum(datum.plus({days: -7}))"
+                            btnColor="btn-secondary"></app-icon-button>
+                    <app-icon-button *ngIf="toonDatumKnoppen"
+                            class="toolbarBtn mx-2"
+                            iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum.plus({days: -1}))"
+                            btnColor="btn-secondary"></app-icon-button>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    {{DagVanDeWeek(datum.toISODate())}} <br>{{datum.day}}-{{datum.month}}-{{datum.year}}
+                </div>
+
+
+                <div class="d-flex align-items-center">
+                    <app-icon-button *ngIf="toonDatumKnoppen"
+                            class="toolbarBtn"
+                            iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum.plus({days: 1}))"
+                            btnColor="btn-secondary"></app-icon-button>
+                    <app-icon-button *ngIf="toonDatumKnoppen"
+                            class="toolbarBtn ms-2"
+                            iconNaam="fas AngleDoubleRight" (btnClicked)="zetDatum(datum.plus({days: 7}))"
+                            btnColor="btn-secondary"></app-icon-button>
+                </div>
             </div>
 
-            <div class="d-flex justify-content-between">
-                {{DagVanDeWeek(datum.toISODate())}} <br>{{datum.day}}-{{datum.month}}-{{datum.year}}
+            <!--
+            <div class="dagInRooster d-flex w-100 justify-content-end" *ngIf="rooster.length > 0 && rooster[0].EENHEDEN > 0">
+                <div class="strip stripDagview">
+                    <img src="assets/img/strip.png" class="stripImg"/>
+                    <div class="stripTxt">{{rooster[0].EENHEDEN}}</div>
+                </div>
             </div>
+            -->
 
+            <div class="roosterTabel volSchermDagView">
+                <table class="table" style="width: calc(100% - 15px);">
+                    <thead>
+                    <tr style="vertical-align: top;">
+                        <td>
+                            <div class="d-flex flex-row justify-content-center w-100">
+                                <div *ngIf="rooster[0].CLUB_BEDRIJF" class="me-2">Clubbedrijf</div>
+                                <div *ngIf="rooster[0].CLUB_BEDRIJF && rooster[0].DDWV" class="me-2">&</div>
+                                <div *ngIf="rooster[0].DDWV && ddwvActief ">DDWV</div>
+                                <div *ngIf="rooster[0].WINTER_WERK ">Winterwerk</div>
+                                <div *ngIf="(!rooster[0].DDWV || !ddwvActief) && !rooster[0].CLUB_BEDRIJF && !rooster[0].WINTER_WERK">Geen activiteiten</div>
 
-            <div class="d-flex align-items-center">
-                <app-icon-button *ngIf="toonDatumKnoppen"
-                        class="toolbarBtn"
-                        iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum.plus({days: 1}))"
-                        btnColor="btn-secondary"></app-icon-button>
-                <app-icon-button *ngIf="toonDatumKnoppen"
-                        class="toolbarBtn ms-2"
-                        iconNaam="fas AngleDoubleRight" (btnClicked)="zetDatum(datum.plus({days: 7}))"
-                        btnColor="btn-secondary"></app-icon-button>
-            </div>
-        </div>
-
-        <!--
-        <div class="dagInRooster d-flex w-100 justify-content-end" *ngIf="rooster.length > 0 && rooster[0].EENHEDEN > 0">
-            <div class="strip stripDagview">
-                <img src="assets/img/strip.png" class="stripImg"/>
-                <div class="stripTxt">{{rooster[0].EENHEDEN}}</div>
-            </div>
-        </div>
-        -->
-
-        <div class="roosterTabel volSchermDagView">
-            <table class="table" style="width: calc(100% - 15px);">
-                <thead>
-                <tr style="vertical-align: top;">
-                    <td>
-                        <div class="d-flex flex-row justify-content-center w-100">
-                            <div *ngIf="rooster[0].CLUB_BEDRIJF" class="me-2">Clubbedrijf</div>
-                            <div *ngIf="rooster[0].CLUB_BEDRIJF && rooster[0].DDWV" class="me-2">&</div>
-                            <div *ngIf="rooster[0].DDWV && ddwvActief ">DDWV</div>
-                            <div *ngIf="rooster[0].WINTER_WERK ">Winterwerk</div>
-                            <div *ngIf="(!rooster[0].DDWV || !ddwvActief) && !rooster[0].CLUB_BEDRIJF && !rooster[0].WINTER_WERK">Geen activiteiten</div>
-
-                            <fa-icon class="infoIcon clickable" [icon]="infoIcon" placement="right" (click)="samenvatting(rooster[0])" *ngIf="!isDDWVer && (rooster[0].DDWV && ddwvActief) || rooster[0].CLUB_BEDRIJF"></fa-icon>
-                        </div>
-
-                    </td>
-                </tr>
-                <tr *ngIf="ddwvActief && magTonen(rooster[0].DATUM) && rooster[0].DDWV && !rooster[0].CLUB_BEDRIJF">
-                    <td>
-                        <div  [ngClass]="TypeBedrijfClass(rooster[0].DATUM, rooster[0])" >
-                            {{TypeBedrijf(rooster[0].DATUM, rooster[0])}}
-                        </div>
-                    </td>
-                </tr>
-                <tr *ngIf="magTonen(rooster[0].DATUM)">
-                    <td class="dagInRooster">
-                        <div class="w-100">
-                            <textarea disabled class="w-100">{{rooster[0].OPMERKINGEN}}</textarea>
-                        </div>
-                    </td>
-                </tr>
-                <tr *ngIf="magTonen(rooster[0].DATUM) && !verleden(rooster[0].DATUM) && (rooster[0].DDWV || rooster[0].CLUB_BEDRIJF || rooster[0].WINTER_WERK)">
-                    <td>
-                        <div class="dagInRooster">
-                            <app-icon-button *ngIf="magAanmelden(rooster[0].DATUM)"
-                                             class="toolbarBtn"
-                                             tekst="Aanmelden"
-                                             iconNaam="fas StreetView"
-                                             (btnClicked)="aanmeldenLidScherm(rooster[0].DATUM)"
-                                             btnColor="btn-primary"
-                                             [toonKlein]="false"></app-icon-button>
-                            <app-icon-button *ngIf="isAangemeld(rooster[0].DATUM)"
-                                             class="toolbarBtn"
-                                             tekst="Afmelden"
-                                             iconNaam="fas PersonWalkingArrowRight"
-                                             (btnClicked)="afmeldenPopup(rooster[0].DATUM)"
-                                             btnColor="btn-secondary"
-                                             [toonKlein]="false"></app-icon-button>
-                        </div>
-                    </td>
-                </tr>
-                <tr *ngIf="magTonen(rooster[0].DATUM)">
-                    <td class="aanwezigenLijst" *ngIf="rooster[0] as dagInRooster">
-                        <table>
-                            <tr *ngFor="let lid of aanwezigen(dagInRooster.DATUM)">
-                                <td (dblclick)="openLidAanwezigEditor(lid)" >
-                                    <div class="nowrap">
-                                        <div class="me-1 starts" *ngIf="(isBeheerder || (isBeheerderDDWV && dagInRooster.DDWV)) && DateDiff(dagInRooster.DATUM) < 0">{{lid.STARTS}}</div>
-                                        <div class="barometer" [ngClass]="kleurBarometer(lid)" *ngIf="toonBarometer(lid) && DateDiff(dagInRooster.DATUM) >= 0 && !dagInRooster.WINTER_WERK"></div>
-                                        <div [ngClass]="{'vertrokken': lid.VERTREK && (isBeheerder || (isBeheerderDDWV && dagInRooster.DDWV))}">
-                                            <div *ngIf="lid.VERWIJDERD" class="verwijderd" >{{lid.NAAM}}</div>
-                                            <div *ngIf="!lid.VERWIJDERD && !naarDashboard(lid)">{{lid.NAAM}}</div>
-                                            <div *ngIf="!lid.VERWIJDERD &&  naarDashboard(lid)">
-                                                <a aria-label="Naar dashboard" [routerLink]="['/dashboard']" [queryParams]="{lidID: lid.LID_ID}">{{lid.NAAM}}</a>
-                                            </div>
-                                        </div>
-                                        <div *ngIf="staf(dagInRooster.DATUM) && lid.STATUSTYPE_ID && DateDiff(dagInRooster.DATUM) >= 0 && !dagInRooster.WINTER_WERK" class="icoontje"
-                                             style="white-space: pre;">{{lid.STATUS}}
-                                        </div>
-                                        <div class="fas fa-exclamation-triangle niet-betaald ms-1" data-toggle="tooltip" title="DDWV nog niet betaald"
-                                             *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && (isBeheerder || isBeheerderDDWV) && !lid.ZELFSTART_ABONNEMENT && !lid.TRANSACTIE_ID && dagInRooster.DDWV && (lid.LIDTYPE_ID === 625 || !dagInRooster.CLUB_BEDRIJF) && !dagInRooster.WINTER_WERK ">
-                                        </div>
-                                        <div *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && lid.ZELFSTART_ABONNEMENT && (isBeheerder || isBeheerderDDWV) && !dagInRooster.WINTER_WERK ">&nbsp;ZSA</div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-
-                    </td>
-                </tr>
-                <tr *ngIf="!isDDWVer && magTonen(rooster[0].DATUM) && (rooster[0].DDWV || rooster[0].CLUB_BEDRIJF)">
-                    <td colspan="8" class="gastenHeader">
-                        <div class="d-flex justify-content-between"><b>Gasten</b>
-                            <fa-icon [icon]="iconDown" (click)="toonGastenWelNiet()" *ngIf="!toonGasten"></fa-icon>
-                            <fa-icon [icon]="iconUp" (click)="toonGastenWelNiet()" *ngIf="toonGasten"></fa-icon>
-                        </div>
-                    </td>
-                </tr>
-                <!-- sectie met gasten lijst -->
-                <tr *ngIf="toonGasten && !isDDWVer && (rooster[0].DDWV || rooster[0].CLUB_BEDRIJF)" class="gastenHeader">
-                    <td>
-                        <div *ngIf="!verleden(rooster[0].DATUM)" class="dagInRooster">
-                            <div class="d-flex">
-                                <app-icon-button
-                                        class="ps-1 toolbarBtn"
-                                        tekst="Aanmelden"
-                                        iconNaam="fas UserPlus" (btnClicked)="aanmeldenGastScherm(rooster[0].DATUM)"
-                                        btnColor="btn-primary"
-                                        [toonKlein]="false"></app-icon-button>
+                                <fa-icon class="infoIcon clickable" [icon]="infoIcon" placement="right" (click)="samenvatting(rooster[0])" *ngIf="!isDDWVer && (rooster[0].DDWV && ddwvActief) || rooster[0].CLUB_BEDRIJF"></fa-icon>
                             </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr *ngIf="(rooster[0].DDWV || rooster[0].CLUB_BEDRIJF) && toonGasten && !isDDWVer &&
-                            magTonen(rooster[0].DATUM)"class="gastenHeader">
-                    <td class="aanwezigenLijst">
-                        <table>
-                            <tr *ngFor="let gast of gastenAanwezig(rooster[0].DATUM)">
-                                <td (dblclick)="openGastAanwezigEditor(gast)">
-                                    {{gast.NAAM}}
+
+                        </td>
+                    </tr>
+                    <tr *ngIf="ddwvActief && magTonen(rooster[0].DATUM) && rooster[0].DDWV && !rooster[0].CLUB_BEDRIJF">
+                        <td>
+                            <div  [ngClass]="TypeBedrijfClass(rooster[0].DATUM, rooster[0])" >
+                                {{TypeBedrijf(rooster[0].DATUM, rooster[0])}}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr *ngIf="magTonen(rooster[0].DATUM)">
+                        <td class="dagInRooster">
+                            <div class="w-100">
+                                <textarea disabled class="w-100">{{rooster[0].OPMERKINGEN}}</textarea>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr *ngIf="magTonen(rooster[0].DATUM) && !verleden(rooster[0].DATUM) && (rooster[0].DDWV || rooster[0].CLUB_BEDRIJF || rooster[0].WINTER_WERK)">
+                        <td>
+                            <div class="dagInRooster">
+                                <app-icon-button *ngIf="magAanmelden(rooster[0].DATUM)"
+                                                 class="toolbarBtn"
+                                                 tekst="Aanmelden"
+                                                 iconNaam="fas StreetView"
+                                                 (btnClicked)="aanmeldenLidScherm(rooster[0].DATUM)"
+                                                 btnColor="btn-primary"
+                                                 [toonKlein]="false"></app-icon-button>
+                                <app-icon-button *ngIf="isAangemeld(rooster[0].DATUM)"
+                                                 class="toolbarBtn"
+                                                 tekst="Afmelden"
+                                                 iconNaam="fas PersonWalkingArrowRight"
+                                                 (btnClicked)="afmeldenPopup(rooster[0].DATUM)"
+                                                 btnColor="btn-secondary"
+                                                 [toonKlein]="false"></app-icon-button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr *ngIf="magTonen(rooster[0].DATUM)">
+                        <td class="aanwezigenLijst" *ngIf="rooster[0] as dagInRooster">
+                            <table>
+                                <tr *ngFor="let lid of aanwezigen(dagInRooster.DATUM)">
+                                    <td (dblclick)="openLidAanwezigEditor(lid)" >
+                                        <div class="nowrap">
+                                            <div class="me-1 starts" *ngIf="(isBeheerder || (isBeheerderDDWV && dagInRooster.DDWV)) && DateDiff(dagInRooster.DATUM) < 0">{{lid.STARTS}}</div>
+                                            <div class="barometer" [ngClass]="kleurBarometer(lid)" *ngIf="toonBarometer(lid) && DateDiff(dagInRooster.DATUM) >= 0 && !dagInRooster.WINTER_WERK"></div>
+                                            <div [ngClass]="{'vertrokken': lid.VERTREK && (isBeheerder || (isBeheerderDDWV && dagInRooster.DDWV))}">
+                                                <div *ngIf="lid.VERWIJDERD" class="verwijderd" >{{lid.NAAM}}</div>
+                                                <div *ngIf="!lid.VERWIJDERD && !naarDashboard(lid)">{{lid.NAAM}}</div>
+                                                <div *ngIf="!lid.VERWIJDERD &&  naarDashboard(lid)">
+                                                    <a aria-label="Naar dashboard" [routerLink]="['/dashboard']" [queryParams]="{lidID: lid.LID_ID}">{{lid.NAAM}}</a>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="staf(dagInRooster.DATUM) && lid.STATUSTYPE_ID && DateDiff(dagInRooster.DATUM) >= 0 && !dagInRooster.WINTER_WERK" class="icoontje"
+                                                 style="white-space: pre;">{{lid.STATUS}}
+                                            </div>
+                                            <div class="fas fa-exclamation-triangle niet-betaald ms-1" data-toggle="tooltip" title="DDWV nog niet betaald"
+                                                 *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && (isBeheerder || isBeheerderDDWV) && !lid.ZELFSTART_ABONNEMENT && !lid.TRANSACTIE_ID && dagInRooster.DDWV && (lid.LIDTYPE_ID === 625 || !dagInRooster.CLUB_BEDRIJF) && !dagInRooster.WINTER_WERK ">
+                                            </div>
+                                            <div *ngIf="DateDiff(dagInRooster.DATUM) <= 0 && lid.ZELFSTART_ABONNEMENT && (isBeheerder || isBeheerderDDWV) && !dagInRooster.WINTER_WERK ">&nbsp;ZSA</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+                    <tr *ngIf="!isDDWVer && magTonen(rooster[0].DATUM) && (rooster[0].DDWV || rooster[0].CLUB_BEDRIJF)">
+                        <td colspan="8" class="gastenHeader">
+                            <div class="d-flex justify-content-between"><b>Gasten</b>
+                                <fa-icon [icon]="iconDown" (click)="toonGastenWelNiet()" *ngIf="!toonGasten"></fa-icon>
+                                <fa-icon [icon]="iconUp" (click)="toonGastenWelNiet()" *ngIf="toonGasten"></fa-icon>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- sectie met gasten lijst -->
+                    <tr *ngIf="toonGasten && !isDDWVer && (rooster[0].DDWV || rooster[0].CLUB_BEDRIJF)" class="gastenHeader">
+                        <td>
+                            <div *ngIf="!verleden(rooster[0].DATUM)" class="dagInRooster">
+                                <div class="d-flex">
+                                    <app-icon-button
+                                            class="ps-1 toolbarBtn"
+                                            tekst="Aanmelden"
+                                            iconNaam="fas UserPlus" (btnClicked)="aanmeldenGastScherm(rooster[0].DATUM)"
+                                            btnColor="btn-primary"
+                                            [toonKlein]="false"></app-icon-button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                        @if ((rooster[0].DDWV || rooster[0].CLUB_BEDRIJF) && toonGasten && !isDDWVer && magTonen(rooster[0].DATUM)) {
+                            <tr class="gastenHeader">
+                                <td class="aanwezigenLijst">
+                                    <table>
+                                        @for (gast of gastenAanwezig(rooster[0].DATUM); track gast.ID){
+                                            <tr>
+                                                <td (dblclick)="openGastAanwezigEditor(gast)">
+                                                    {{gast.NAAM}}
+                                                </td>
+                                            </tr>
+                                        }
+                                    </table>
                                 </td>
                             </tr>
-                        </table>
-                    </td>
-                </tr>
-                </thead>
-            </table>
+                        }
+                    </thead>
+                </table>
+            </div>
         </div>
-    </div>
+    }
 </ng-template>
 
 <app-lid-aanwezig-editor (opgeslagen)="opvragen()"></app-lid-aanwezig-editor>
