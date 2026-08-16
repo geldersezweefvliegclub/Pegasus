@@ -40,6 +40,7 @@ export class RecencyGrafiekComponent implements OnInit {
             yMin: 0,
             yMax: 10,
             backgroundColor: 'rgba(220,53,69,0.75)',
+            label: {display: false, content: null},
         };
 
     // De gele zone tekenen in de grafiek
@@ -50,6 +51,7 @@ export class RecencyGrafiekComponent implements OnInit {
             yMin: 10,
             yMax: 20,
             backgroundColor: 'rgba(255,193,7,0.75)',
+            label: {display: false, content: null},
         }
 
     // De groene zone tekenen in de grafiek
@@ -61,6 +63,7 @@ export class RecencyGrafiekComponent implements OnInit {
             yMax: 30,
 
             backgroundColor: 'rgba(40,167,69,0.75)',
+            label: {display: false, content: null},
         }
 
     // Teken een verticale lijn op de 1e jaargrens zodat je de jaren goed kunt onderscheiden
@@ -71,6 +74,7 @@ export class RecencyGrafiekComponent implements OnInit {
             value: '',                       // wordt later gezet
             borderColor: '#bfbebe',
             borderWidth: 1,
+            label: {display: false, content: null},
         }
 
     // Teken een sverticale lijn op de 2e jaargrens zodat je de jaren goed kunt onderscheiden
@@ -81,6 +85,7 @@ export class RecencyGrafiekComponent implements OnInit {
             value: '',                      // wordt later gezet
             borderColor: '#bfbebe',
             borderWidth: 1,
+            label: {display: false, content: null},
         }
 
     // alle opties voor het tekenen van de lijn

@@ -37,6 +37,7 @@ export class InstructieGrafiekComponent implements OnInit {
             value: '',                       // wordt later gezet
             borderColor: '#9b9b9b',
             borderWidth: 1,
+            label: {display: false, content: null},
         }
 
     // Teken een verticale lijn op de 2e jaargrens zodat je de jaren goed kunt onderscheiden
@@ -47,6 +48,7 @@ export class InstructieGrafiekComponent implements OnInit {
             value: '',                      // wordt later gezet
             borderColor: '#9b9b9b',
             borderWidth: 1,
+            label: {display: false, content: null},
         }
 
     // Teken een verticale lijn op de 3e jaargrens zodat je de jaren goed kunt onderscheiden
@@ -57,6 +59,7 @@ export class InstructieGrafiekComponent implements OnInit {
             value: '',                      // wordt later gezet
             borderColor: '#9b9b9b',
             borderWidth: 1,
+            label: {display: false, content: null},
         }
 
     MinimaleEisUren: AnnotationOptions =
@@ -66,7 +69,8 @@ export class InstructieGrafiekComponent implements OnInit {
             value: 30,
             borderColor: '#2f4a7f',
             borderWidth: 2,
-            borderDash: [10,5]
+            borderDash: [10,5],
+            label: {display: false, content: null},
         }
 
     MinimaleEisStarts: AnnotationOptions =
@@ -76,7 +80,8 @@ export class InstructieGrafiekComponent implements OnInit {
             value: 60,
             borderColor: '#d6b052',
             borderWidth: 2,
-            borderDash: [10,5]
+            borderDash: [10,5],
+            label: {display: false, content: null},
         }
 
     // alle opties voor het tekenen van de lijn
