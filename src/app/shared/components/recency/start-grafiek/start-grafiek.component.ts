@@ -45,7 +45,6 @@ export class StartGrafiekComponent implements OnInit {
             value: '',                       // wordt later gezet
             borderColor: '#bfbebe',
             borderWidth: 1,
-            label: {display: false, content: null},
         }
 
     // Teken een sverticale lijn op de 2e jaargrens zodat je de jaren goed kunt onderscheiden
@@ -56,7 +55,6 @@ export class StartGrafiekComponent implements OnInit {
             value: '',                      // wordt later gezet
             borderColor: '#bfbebe',
             borderWidth: 1,
-            label: {display: false, content: null},
         }
 
     lineChartPlugins = [AnnotationPlugin];
