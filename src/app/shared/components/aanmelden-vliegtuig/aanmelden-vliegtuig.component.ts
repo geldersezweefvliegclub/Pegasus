@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { HeliosAanwezigVliegtuigenDataset, HeliosVliegtuigenDataset } from '../../../types/Helios';
 import { ModalComponent } from '../modal/modal.component';
 import { Subscription } from 'rxjs';
@@ -21,6 +21,11 @@ import { FormsModule } from '@angular/forms';
     imports: [ErrorComponent, SuccessComponent, ModalComponent, IconButtonComponent, FormsModule]
 })
 export class AanmeldenVliegtuigComponent implements OnInit, OnDestroy {
+    private readonly sharedService = inject(SharedService);
+    private readonly daginfoService = inject(DaginfoService);
+    private readonly vliegtuigenService = inject(VliegtuigenService);
+    private readonly aanwezigVliegtuigenService = inject(AanwezigVliegtuigService);
+
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @Input() vliegveld: number | undefined;
 
@@ -41,12 +46,6 @@ export class AanmeldenVliegtuigComponent implements OnInit, OnDestroy {
     zoekString: string;
     bezig = false;
     bezigTimer: number;
-
-    constructor(private readonly sharedService: SharedService,
-                private readonly daginfoService: DaginfoService,
-                private readonly vliegtuigenService: VliegtuigenService,
-                private readonly aanwezigVliegtuigenService: AanwezigVliegtuigService) {
-    }
 
     ngOnInit(): void {
         this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {

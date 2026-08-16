@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { SharedService } from '../../services/shared/shared.service';
 import { slideInOutLeftAnimation } from '../../utils/animations';
@@ -14,10 +14,11 @@ import { filter } from 'rxjs/operators';
     ]
 })
 export class FooterComponent {
+    private readonly router = inject(Router);
+    private readonly sharedService = inject(SharedService);
     toonMenu = false;
 
-    constructor(private readonly router: Router,
-                private readonly sharedService: SharedService) {
+    constructor() {
         this.router.events
             .pipe(filter(event => event instanceof NavigationEnd))
             .subscribe(() => this.toonMenu = false);

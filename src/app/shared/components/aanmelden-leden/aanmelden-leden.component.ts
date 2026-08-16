@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
@@ -29,6 +29,13 @@ import { FormsModule } from '@angular/forms';
 })
 
 export class AanmeldenLedenComponent implements OnInit, OnDestroy {
+    private readonly ledenService = inject(LedenService);
+    private readonly typesService = inject(TypesService);
+    private readonly sharedService = inject(SharedService);
+    private readonly daginfoService = inject(DaginfoService);
+    private readonly vliegtuigenService = inject(VliegtuigenService);
+    private readonly aanwezigLedenService = inject(AanwezigLedenService);
+
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @ViewChild(LidAanwezigEditorComponent) aanmeldEditor: LidAanwezigEditorComponent;
 
@@ -56,14 +63,6 @@ export class AanmeldenLedenComponent implements OnInit, OnDestroy {
     bezigTimer: number;
 
     geselecteerdLid: HeliosAanwezigLedenDataset | undefined;
-
-    constructor(private readonly ledenService: LedenService,
-                private readonly typesService: TypesService,
-                private readonly sharedService: SharedService,
-                private readonly daginfoService: DaginfoService,
-                private readonly vliegtuigenService: VliegtuigenService,
-                private readonly aanwezigLedenService: AanwezigLedenService) {
-    }
 
     ngOnInit(): void {
         this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
