@@ -4,9 +4,8 @@ import { DateTime } from 'luxon';
 import { SharedService } from '../../../../services/shared/shared.service';
 import { StartlijstService } from '../../../../services/apiservice/startlijst.service';
 
-import * as pluginAnnotations from 'chartjs-plugin-annotation';
 import AnnotationPlugin, { AnnotationOptions } from 'chartjs-plugin-annotation';
-import { Chart, ChartConfiguration, ChartOptions } from 'chart.js';
+import { ChartConfiguration, ChartOptions } from 'chart.js';
 
 import { ModalComponent } from '../../modal/modal.component';
 import { NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
@@ -37,9 +36,7 @@ export class RecencyGrafiekComponent implements OnInit {
     RodeBalk: AnnotationOptions =
         {
             type: 'box',
-            yScaleID: 'y-axis-0',
-            xMin: 0,
-            xMax: 100,
+            yScaleID: 'y',
             yMin: 0,
             yMax: 10,
             backgroundColor: 'rgba(220,53,69,0.75)',
@@ -49,9 +46,7 @@ export class RecencyGrafiekComponent implements OnInit {
     GeleBalk: AnnotationOptions =
         {
             type: 'box',
-            yScaleID: 'y-axis-0',
-            xMin: 0,
-            xMax: 100,
+            yScaleID: 'y',
             yMin: 10,
             yMax: 20,
             backgroundColor: 'rgba(255,193,7,0.75)',
@@ -61,9 +56,7 @@ export class RecencyGrafiekComponent implements OnInit {
     GroeneBalk: AnnotationOptions =
         {
             type: 'box',
-            yScaleID: 'y-axis-0',
-            xMin: 0,
-            xMax: 100,
+            yScaleID: 'y',
             yMin: 20,
             yMax: 30,
 
@@ -74,7 +67,7 @@ export class RecencyGrafiekComponent implements OnInit {
     JaarGrens1: AnnotationOptions =
         {
             type: 'line',
-            scaleID: 'x-axis-0',
+            scaleID: 'x',
             value: '',                       // wordt later gezet
             borderColor: '#bfbebe',
             borderWidth: 1,
@@ -84,7 +77,7 @@ export class RecencyGrafiekComponent implements OnInit {
     JaarGrens2: AnnotationOptions =
         {
             type: 'line',
-            scaleID: 'x-axis-0',
+            scaleID: 'x',
             value: '',                      // wordt later gezet
             borderColor: '#bfbebe',
             borderWidth: 1,
@@ -119,7 +112,7 @@ export class RecencyGrafiekComponent implements OnInit {
                     },
                 }
             },
-            'y-axis-0': {
+            'y': {
                 beginAtZero: true,
                 border: {
                     dash: [6, 4],
@@ -146,18 +139,18 @@ export class RecencyGrafiekComponent implements OnInit {
                 common: {
                     drawTime: "beforeDatasetsDraw"
                 }, */
-                annotations: [
-                    this.RodeBalk,
-                    this.GeleBalk,
-                    this.GroeneBalk,
-                    this.JaarGrens1,
-                    this.JaarGrens2
-                ]
+                annotations: {
+                    rodeBalk: this.RodeBalk,
+                    geleBalk: this.GeleBalk,
+                    groeneBalk: this.GroeneBalk,
+                    jaarGrens1: this.JaarGrens1,
+                    jaarGrens2: this.JaarGrens2,
+                }
             }
         }
     }
 
-    lineChartPlugins = [pluginAnnotations];
+    lineChartPlugins = [AnnotationPlugin];
     lineChartData: ChartConfiguration['data'] = {
         datasets: [
             {
@@ -174,9 +167,7 @@ export class RecencyGrafiekComponent implements OnInit {
     }
 
     constructor(private readonly startlijstService: StartlijstService,
-                private readonly sharedService: SharedService) {
-        Chart.register(AnnotationPlugin);
-    }
+                private readonly sharedService: SharedService) {}
 
     ngOnInit(): void {
         // de datum zoals die in de kalender gekozen is
@@ -195,10 +186,12 @@ export class RecencyGrafiekComponent implements OnInit {
         this.opvragen();
 
         // zet de jaargrenzen
-        this.JaarGrens1.xMin = 'Jan ' + (this.datum.year - 1).toString()
-        this.JaarGrens1.xMax = this.JaarGrens1.xMin
-        this.JaarGrens2.xMin = 'Jan ' + this.datum.year.toString()
-        this.JaarGrens2.xMax = this.JaarGrens2.xMin
+        if (this.JaarGrens1.type === "line") {
+            this.JaarGrens1.value = 'Jan ' + (this.datum.year - 1).toString()
+        }
+        if (this.JaarGrens2.type === "line") {
+            this.JaarGrens2.value = 'Jan ' + this.datum.year.toString()
+        }
 
         this.popup.open();
     }

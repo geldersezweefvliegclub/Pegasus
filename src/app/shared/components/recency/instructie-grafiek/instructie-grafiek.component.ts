@@ -2,8 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
-import * as pluginAnnotations from 'chartjs-plugin-annotation';
-import { AnnotationOptions } from 'chartjs-plugin-annotation';
+import AnnotationPlugin, { AnnotationOptions } from 'chartjs-plugin-annotation';
 import { ChartDataset, ChartOptions } from 'chart.js';
 import { StartlijstService } from '../../../../services/apiservice/startlijst.service';
 import { SharedService } from '../../../../services/shared/shared.service';
@@ -34,7 +33,7 @@ export class InstructieGrafiekComponent implements OnInit {
     JaarGrens1: AnnotationOptions =
         {
             type: 'line',
-            scaleID: 'x-axis-0',
+            scaleID: 'x',
             value: '',                       // wordt later gezet
             borderColor: '#9b9b9b',
             borderWidth: 1,
@@ -44,7 +43,7 @@ export class InstructieGrafiekComponent implements OnInit {
     JaarGrens2: AnnotationOptions =
         {
             type: 'line',
-            scaleID: 'x-axis-0',
+            scaleID: 'x',
             value: '',                      // wordt later gezet
             borderColor: '#9b9b9b',
             borderWidth: 1,
@@ -54,7 +53,7 @@ export class InstructieGrafiekComponent implements OnInit {
     JaarGrens3: AnnotationOptions =
         {
             type: 'line',
-            scaleID: 'x-axis-0',
+            scaleID: 'x',
             value: '',                      // wordt later gezet
             borderColor: '#9b9b9b',
             borderWidth: 1,
@@ -63,8 +62,8 @@ export class InstructieGrafiekComponent implements OnInit {
     MinimaleEisUren: AnnotationOptions =
         {
             type: 'line',
-            scaleID: 'y-axis-0',
-            value: '30',
+            scaleID: 'y',
+            value: 30,
             borderColor: '#2f4a7f',
             borderWidth: 2,
             borderDash: [10,5]
@@ -73,8 +72,8 @@ export class InstructieGrafiekComponent implements OnInit {
     MinimaleEisStarts: AnnotationOptions =
         {
             type: 'line',
-            scaleID: 'y-axis-0',
-            value: '60',
+            scaleID: 'y',
+            value: 60,
             borderColor: '#d6b052',
             borderWidth: 2,
             borderDash: [10,5]
@@ -109,7 +108,7 @@ export class InstructieGrafiekComponent implements OnInit {
                     }
                 }
             },
-            "y-axis-0": {
+            "y": {
                 border: {
                     dash: [6, 4]
                 },
@@ -130,13 +129,13 @@ export class InstructieGrafiekComponent implements OnInit {
         },
         plugins: {
             annotation: {
-                annotations: [
-                    this.MinimaleEisStarts,
-                    this.MinimaleEisUren,
-                    this.JaarGrens1,
-                    this.JaarGrens2,
-                    this.JaarGrens3,
-                ]
+                annotations: {
+                    minimaleEisStarts: this.MinimaleEisStarts,
+                    minimaleEisUren: this.MinimaleEisUren,
+                    jaarGrens1: this.JaarGrens1,
+                    jaarGrens2: this.JaarGrens2,
+                    jaarGrens3: this.JaarGrens3,
+                }
             }
         }
     }
@@ -144,7 +143,7 @@ export class InstructieGrafiekComponent implements OnInit {
     lineChartLabels: string[] = []
     lineChartLegend = true;
 
-    lineChartPlugins = [pluginAnnotations];
+    lineChartPlugins = [AnnotationPlugin];
     lineChartData: ChartDataset[] = [];
 
     constructor(private readonly startlijstService: StartlijstService,
@@ -168,18 +167,15 @@ export class InstructieGrafiekComponent implements OnInit {
 
         // zet de jaargrenzen
         if (this.JaarGrens1.type === "line") {
-            this.JaarGrens1.xMin = 'Jan ' + (this.datum.year-2).toString()
-            this.JaarGrens1.xMax = 'Jan ' + (this.datum.year-2).toString()
+            this.JaarGrens1.value = 'Jan ' + (this.datum.year-2).toString()
         }
 
         if (this.JaarGrens2.type === "line") {
-            this.JaarGrens2.xMin = 'Jan ' + (this.datum.year-1).toString()
-            this.JaarGrens2.xMax = 'Jan ' + (this.datum.year-1).toString()
+            this.JaarGrens2.value = 'Jan ' + (this.datum.year-1).toString()
         }
 
         if (this.JaarGrens3.type === "line") {
-            this.JaarGrens3.xMin = 'Jan ' + this.datum.year.toString()
-            this.JaarGrens3.xMax = 'Jan ' + this.datum.year.toString()
+            this.JaarGrens3.value = 'Jan ' + this.datum.year.toString()
         }
         this.popup.open();
     }

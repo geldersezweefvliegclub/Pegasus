@@ -4,9 +4,8 @@ import { DateTime } from 'luxon';
 import { SharedService } from '../../../../services/shared/shared.service';
 import { StartlijstService } from '../../../../services/apiservice/startlijst.service';
 
-import * as pluginAnnotations from 'chartjs-plugin-annotation';
 import AnnotationPlugin, { AnnotationOptions } from 'chartjs-plugin-annotation';
-import { Chart, ChartDataset, ChartOptions } from 'chart.js';
+import { ChartDataset, ChartOptions } from 'chart.js';
 
 import { ModalComponent } from '../../modal/modal.component';
 import { NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
@@ -42,7 +41,7 @@ export class StartGrafiekComponent implements OnInit {
     JaarGrens1: AnnotationOptions =
         {
             type: 'line',
-            scaleID: 'x-axis-0',
+            scaleID: 'x',
             value: '',                       // wordt later gezet
             borderColor: '#bfbebe',
             borderWidth: 1,
@@ -52,13 +51,13 @@ export class StartGrafiekComponent implements OnInit {
     JaarGrens2: AnnotationOptions =
         {
             type: 'line',
-            scaleID: 'x-axis-0',
+            scaleID: 'x',
             value: '',                      // wordt later gezet
             borderColor: '#bfbebe',
             borderWidth: 1,
         }
 
-    lineChartPlugins = [pluginAnnotations];
+    lineChartPlugins = [AnnotationPlugin];
     startsLineChartLabels: string[] = []
     startsLineChartData: ChartDataset[] = [];
     startsLineChartOptions: ChartOptions = {
@@ -89,7 +88,7 @@ export class StartGrafiekComponent implements OnInit {
                     }
                 }
             },
-            "y-axis-0": {
+            "y": {
                 border: {
                     dash: [6, 4],
                 },
@@ -111,18 +110,16 @@ export class StartGrafiekComponent implements OnInit {
         plugins: {
             legend: {display: true},
             annotation: {
-                annotations: [
-                    this.JaarGrens1,
-                    this.JaarGrens2
-                ]
+                annotations: {
+                    jaarGrens1: this.JaarGrens1,
+                    jaarGrens2: this.JaarGrens2,
+                }
             }
         }
     }
 
     constructor(private readonly startlijstService: StartlijstService,
-                private readonly sharedService: SharedService) {
-        Chart.register(AnnotationPlugin);
-    }
+                private readonly sharedService: SharedService) {}
 
     ngOnInit(): void {
         // de datum zoals die in de kalender gekozen is
@@ -141,10 +138,12 @@ export class StartGrafiekComponent implements OnInit {
         this.opvragen();
 
         // zet de jaargrenzen
-        this.JaarGrens1.xMin = 'Jan ' + (this.datum.year - 1).toString()
-        this.JaarGrens1.xMax = this.JaarGrens1.xMin
-        this.JaarGrens2.xMin = 'Jan ' + this.datum.year.toString()
-        this.JaarGrens2.xMax = this.JaarGrens2.xMin
+        if (this.JaarGrens1.type === "line") {
+            this.JaarGrens1.value = 'Jan ' + (this.datum.year - 1).toString()
+        }
+        if (this.JaarGrens2.type === "line") {
+            this.JaarGrens2.value = 'Jan ' + this.datum.year.toString()
+        }
 
         this.popup.open();
     }
