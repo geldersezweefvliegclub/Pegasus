@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { LedenService } from '../../../services/apiservice/leden.service';
 import { HeliosLedenDataset } from '../../../types/Helios';
 
@@ -8,8 +8,8 @@ import { HeliosLedenDataset } from '../../../types/Helios';
     styleUrls: ['./verjaardagen.component.scss']
 })
 export class VerjaardagenComponent implements OnInit {
+  private readonly ledenService = inject(LedenService);
 
-  constructor(private readonly ledenService: LedenService) { }
 
   verjaardagen: HeliosLedenDataset[] = [];
 

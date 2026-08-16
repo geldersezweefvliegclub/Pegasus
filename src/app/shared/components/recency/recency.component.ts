@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { StartlijstService } from '../../../services/apiservice/startlijst.service';
 import { HeliosBehaaldeProgressieDataset, HeliosLid, HeliosRecency } from '../../../types/Helios';
 import { RecencyGrafiekComponent } from './recency-grafiek/recency-grafiek.component';
@@ -39,6 +39,9 @@ interface brevetEASA {
 })
 
 export class RecencyComponent implements OnInit, OnChanges {
+    private readonly startlijstService = inject(StartlijstService);
+    private readonly progressieService = inject(ProgressieService);
+
     @Input() Vlieger: HeliosLid;
     @Input() naam: string;
 
@@ -68,10 +71,6 @@ export class RecencyComponent implements OnInit, OnChanges {
         tmgstarts: -1,
         pax: -1
     };
-
-    constructor(private readonly startlijstService: StartlijstService,
-                private readonly progressieService: ProgressieService) {
-    }
 
     ngOnInit(): void {
         this.ophalen();

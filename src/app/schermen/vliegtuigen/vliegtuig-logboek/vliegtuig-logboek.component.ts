@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { HeliosVliegtuig, HeliosVliegtuigLogboekDataset } from '../../../types/Helios';
 import { StartlijstService } from '../../../services/apiservice/startlijst.service';
 import { Subscription } from 'rxjs';
@@ -17,6 +17,10 @@ import { ErrorComponent } from '../../../shared/components/error/error.component
     imports: [ErrorComponent, ModalComponent]
 })
 export class VliegtuigLogboekComponent implements OnInit {
+    private readonly startlijstService = inject(StartlijstService);
+    private readonly vliegtuigenService = inject(VliegtuigenService);
+    private readonly sharedService = inject(SharedService);
+
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
     data: HeliosVliegtuigLogboekDataset[] = [];
@@ -27,11 +31,6 @@ export class VliegtuigLogboekComponent implements OnInit {
     private datumAbonnement: Subscription; // volg de keuze van de kalender
     datum: DateTime = DateTime.now();      // de gekozen dag
     error: ErrorMessage | undefined;
-
-    constructor(private readonly startlijstService: StartlijstService,
-                private readonly vliegtuigenService: VliegtuigenService,
-                private readonly sharedService: SharedService) {
-    }
 
     ngOnInit(): void {
 

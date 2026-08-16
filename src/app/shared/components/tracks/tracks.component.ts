@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { HeliosLedenDataset, HeliosTrack, HeliosTracksDataset } from '../../../types/Helios';
 import { TracksService } from '../../../services/apiservice/tracks.service';
 import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
@@ -43,6 +43,11 @@ export interface TracksLedenDataset extends HeliosTracksDataset {
     imports: [ErrorComponent, SuccessComponent, FaIconComponent, AvatarComponent, RouterLink, IconButtonComponent, StatusButtonComponent, PegasusCardComponent, StatusComponent, PvbComponent, RecencyComponent, VliegerLogboekTotalenComponent, TrackEditorComponent]
 })
 export class TracksComponent implements OnInit, OnDestroy, OnChanges {
+    private readonly trackService = inject(TracksService);
+    private readonly ledenService = inject(LedenService);
+    private readonly loginService = inject(LoginService);
+    private readonly sharedService = inject(SharedService);
+
     @Input() VliegerID: number;
     @Input() VliegerNaam: string;
     @Input() toonLid = false;
@@ -80,12 +85,6 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
     magWijzigen = false;
 
     geselecteerdLid: HeliosLedenDataset;
-
-    constructor(private readonly trackService: TracksService,
-                private readonly ledenService: LedenService,
-                private readonly loginService: LoginService,
-                private readonly sharedService: SharedService) {
-    }
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo?.Userinfo;

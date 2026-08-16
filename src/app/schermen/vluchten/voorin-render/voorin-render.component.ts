@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ICellRendererParams } from 'ag-grid-community';
 import { AgRendererComponent } from 'ag-grid-angular';
 import { LoginService } from '../../../services/apiservice/login.service';
@@ -12,13 +12,13 @@ import { RouterLink } from '@angular/router';
     imports: [RouterLink]
 })
 export class VoorinRenderComponent implements AgRendererComponent {
+    private readonly loginService = inject(LoginService);
+
     lidID: string;
     grid_vliegernaam: string;
     naarDashboard = false;
 
-    error = false;          // er is gestart, maar PIC is onbekend
-
-    constructor(private readonly loginService: LoginService) { }
+    error = false;
 
     // Als de vlieger geen clublid is, dan is de naam handmatig ingevoerd
     agInit(params: ICellRendererParams): void {

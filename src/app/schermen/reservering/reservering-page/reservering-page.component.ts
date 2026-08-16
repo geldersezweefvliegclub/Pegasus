@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { DatePipe, NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -60,6 +60,16 @@ export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
     ]
 })
 export class ReserveringPageComponent implements OnInit, OnDestroy {
+    private readonly loginService = inject(LoginService);
+    private readonly ledenService = inject(LedenService);
+    private readonly vliegtuigenService = inject(VliegtuigenService);
+    private readonly reserveringenService = inject(ReserveringService);
+    private readonly progressieService = inject(ProgressieService);
+    private readonly roosterService = inject(RoosterService);
+    private readonly dagInfoService = inject(DaginfoService);
+    private readonly storageService = inject(StorageService);
+    private readonly sharedService = inject(SharedService);
+
     @ViewChild(KistSelectieComponent) kistSelector: KistSelectieComponent;
     @ViewChild(BoekingEditorComponent) boeking: BoekingEditorComponent;
     @ViewChild(StartEditorComponent) startEditor: StartEditorComponent;
@@ -99,17 +109,6 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
-
-    constructor(private readonly loginService: LoginService,
-                private readonly ledenService: LedenService,
-                private readonly vliegtuigenService: VliegtuigenService,
-                private readonly reserveringenService: ReserveringService,
-                private readonly progressieService: ProgressieService,
-                private readonly roosterService: RoosterService,
-                private readonly dagInfoService: DaginfoService,
-                private readonly storageService: StorageService,
-                private readonly sharedService: SharedService) {
-    }
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo?.Userinfo;

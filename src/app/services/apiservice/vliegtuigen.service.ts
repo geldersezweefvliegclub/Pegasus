@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { APIService } from './api.service';
 
 import { HeliosVliegtuig, HeliosVliegtuigen, HeliosVliegtuigenDataset } from '../../types/Helios';
@@ -13,6 +13,11 @@ import { CustomJsonSerializer } from '../../utils/Utils';
     providedIn: 'root'
 })
 export class VliegtuigenService {
+    private readonly apiService = inject(APIService);
+    private readonly loginService = inject(LoginService);
+    private readonly sharedService = inject(SharedService);
+    private readonly storageService = inject(StorageService);
+
     private vliegtuigenCache: HeliosVliegtuigen = {dataset: []};     // return waarde van API call
 
     private overslaan = false;
@@ -22,10 +27,9 @@ export class VliegtuigenService {
     private dbEventAbonnement: Subscription;
     public readonly vliegtuigenChange = this.vliegtuigenStore.asObservable();      // nieuwe vliegtuigen beschikbaar
 
-    constructor(private readonly apiService: APIService,
-                private readonly loginService: LoginService,
-                private readonly sharedService: SharedService,
-                private readonly storageService: StorageService) {
+    constructor() {
+        const loginService = this.loginService;
+
 
         // We hebben misschien eerder de vliegtuigen opgehaald. Die gebruiken we totdat de API starts heeft opgehaald
         if (this.storageService.ophalen('vliegtuigen') != null) {

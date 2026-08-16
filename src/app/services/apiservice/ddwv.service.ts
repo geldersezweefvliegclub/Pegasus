@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { APIService } from './api.service';
 import { HeliosConfigDDWV } from '../../types/Helios';
 import { StorageService } from '../storage/storage.service';
@@ -9,11 +9,13 @@ import { KeyValueArray } from '../../types/Utils';
     providedIn: 'root'
 })
 export class DdwvService {
+    private readonly apiService = inject(APIService);
+    private readonly storageService = inject(StorageService);
+
 
     private configDDWV: HeliosConfigDDWV;
 
-    constructor(private readonly apiService: APIService,
-                private readonly storageService: StorageService) {
+    constructor() {
         // We hebben misschien eerder de lidTypes opgehaald. Die gebruiken we totdat de API starts heeft opgehaald
         if (this.storageService.ophalen('configDDWV') != null) {
             this.configDDWV = this.storageService.ophalen('configDDWV') as HeliosConfigDDWV;

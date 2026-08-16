@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, inject } from '@angular/core';
 import {
     ColDef,
     GridApi,
@@ -18,6 +18,8 @@ import { AgGridAngular } from 'ag-grid-angular';
     imports: [AgGridAngular]
 })
 export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
+    private readonly sharedService = inject(SharedService);
+
     @Input() columnDefs = [];
     @Input() rowData = [];
     @Input() frameworkComponents = {};
@@ -61,7 +63,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     noRowsTemplate;
     loadingTemplate;
 
-    constructor(private readonly sharedService: SharedService) {
+    constructor() {
         this.loadingTemplate = '<span><img src="assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Data wordt geladen .....</span>';
         this.noRowsTemplate = '<span>Geen informatie beschikbaar</span>';
     }

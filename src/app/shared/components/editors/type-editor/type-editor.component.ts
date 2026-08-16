@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, inject } from '@angular/core';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosType } from '../../../../types/Helios';
@@ -16,6 +16,8 @@ import { LoaderComponent } from '../../loader/loader.component';
     imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, IconButtonComponent, LoaderComponent]
 })
 export class TypeEditorComponent  {
+    private readonly typesService = inject(TypesService);
+
     @Input() toonBedragEenheid = false;
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
@@ -30,9 +32,6 @@ export class TypeEditorComponent  {
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
-
-    constructor(private readonly typesService: TypesService) {
-    }
 
     // Open invoer popup voor de track. Als track ingevuld is, wijzigen we bestaande track
     openPopup(type: HeliosType) {

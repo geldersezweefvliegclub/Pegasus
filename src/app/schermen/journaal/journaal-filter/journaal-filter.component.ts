@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
 import { Subscription } from 'rxjs';
 import { HeliosType, HeliosVliegtuigenDataset } from '../../../types/Helios';
@@ -17,6 +17,9 @@ import { IconButtonComponent } from '../../../shared/components/icon-button/icon
     imports: [ModalComponent, FormsModule, NgSelectComponent, NgOptionComponent, IconButtonComponent]
 })
 export class JournaalFilterComponent implements OnInit, OnDestroy {
+    private readonly typesService = inject(TypesService);
+    private readonly vliegtuigenService = inject(VliegtuigenService);
+
     @Input() activeFilter: journaalFilter;
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @Output() aangepast: EventEmitter<void> = new EventEmitter<void>();
@@ -29,10 +32,6 @@ export class JournaalFilterComponent implements OnInit, OnDestroy {
 
     private vliegtuigenAbonnement: Subscription;
     clubVliegtuigen: HeliosVliegtuigenDataset[] = [];
-
-    constructor(private readonly typesService: TypesService,
-                private readonly vliegtuigenService: VliegtuigenService) {
-    }
 
     ngOnInit(): void {
         // abonneer op wijziging van transactie types

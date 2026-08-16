@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateFRParserFormatter } from '../../../shared/ngb-date-fr-parser-formatter';
 import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
@@ -16,6 +16,10 @@ import { LidEditorComponent } from '../../../shared/components/editors/lid-edito
     imports: [LidEditorComponent]
 })
 export class ProfielPageComponent {
+    private readonly loginService = inject(LoginService);
+    private readonly storageService = inject(StorageService);
+    private readonly activatedRoute = inject(ActivatedRoute);
+
     lidID: number;
     isVerwijderMode = false;
     isRestoreMode = false;
@@ -23,9 +27,7 @@ export class ProfielPageComponent {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
-    constructor(private readonly loginService: LoginService,
-                private readonly storageService: StorageService,
-                private readonly activatedRoute: ActivatedRoute) {
+    constructor() {
 
         // Als lidID is meegegeven in URL, moeten we de lidData ophalen
         this.activatedRoute.queryParams.subscribe(params => {

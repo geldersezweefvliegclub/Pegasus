@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
 import { SharedService } from '../../../../services/shared/shared.service';
@@ -20,6 +20,9 @@ import { BaseChartDirective } from 'ng2-charts';
 })
 
 export class RecencyGrafiekComponent implements OnInit {
+    private readonly startlijstService = inject(StartlijstService);
+    private readonly sharedService = inject(SharedService);
+
     @Input() VliegerID: number;
     @Input() naam: string;
 
@@ -164,9 +167,6 @@ export class RecencyGrafiekComponent implements OnInit {
         ],
         labels: []                                              // wordt later gevuld
     }
-
-    constructor(private readonly startlijstService: StartlijstService,
-                private readonly sharedService: SharedService) {}
 
     ngOnInit(): void {
         // de datum zoals die in de kalender gekozen is

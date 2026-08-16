@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { DienstenService } from '../../../services/apiservice/diensten.service';
 import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
@@ -16,6 +16,10 @@ import { LoaderComponent } from '../loader/loader.component';
     imports: [LoaderComponent, DagRoosterComponent]
 })
 export class DienstenComponent implements OnInit, OnChanges {
+    private readonly dienstenService = inject(DienstenService);
+    private readonly loginService = inject(LoginService);
+    private readonly sharedService = inject(SharedService);
+
     @Input() Vlieger: HeliosLid;
     @Input() UitgebreideWeergave = false;
 
@@ -30,11 +34,6 @@ export class DienstenComponent implements OnInit, OnChanges {
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
-
-    constructor(private readonly dienstenService: DienstenService,
-                private readonly loginService: LoginService,
-                private readonly sharedService: SharedService) {
-    }
 
     ngOnInit(): void {
         // de datum zoals die in de kalender gekozen is

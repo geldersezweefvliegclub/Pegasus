@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { APIService } from './api.service';
 import { HeliosReservering, HeliosReserveringen, HeliosReserveringenDataset } from '../../types/Helios';
 import { KeyValueArray } from '../../types/Utils';
@@ -9,12 +9,11 @@ import { LoginService } from './login.service';
     providedIn: 'root'
 })
 export class ReserveringService {
+    private readonly apiService = inject(APIService);
+    private readonly loginService = inject(LoginService);
 
-    private reserveringenCache: HeliosReserveringen = { dataset: []};                      // return waarde van API call
 
-    constructor(private readonly apiService: APIService,
-                private readonly loginService: LoginService) {
-    }
+    private reserveringenCache: HeliosReserveringen = { dataset: []};
 
     async getReserveringen(startDatum: DateTime, eindDatum: DateTime, maxRecords?: number): Promise<HeliosReserveringenDataset[]> {
         const getParams: KeyValueArray = {};

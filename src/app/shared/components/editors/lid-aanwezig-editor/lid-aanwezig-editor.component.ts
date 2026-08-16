@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { HeliosAanwezigLedenDataset, HeliosType, HeliosVliegtuigenDataset } from '../../../../types/Helios';
@@ -28,6 +28,12 @@ type HeliosTypeExtended = HeliosType & {
     imports: [ErrorComponent, SuccessComponent, ModalComponent, NgSelectComponent, FormsModule, VliegtuigInvoerComponent, IconButtonComponent, LoaderComponent, AsyncPipe]
 })
 export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
+    private readonly aanwezigLedenService = inject(AanwezigLedenService);
+    private readonly vliegtuigenService = inject(VliegtuigenService);
+    private readonly storageService = inject(StorageService);
+    private readonly loginService = inject(LoginService);
+    private readonly typesService = inject(TypesService);
+
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @Output() opgeslagen: EventEmitter<number> = new EventEmitter<number>();
 
@@ -49,13 +55,6 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
     private vliegtuigenAbonnement: Subscription;
     vliegtuigen: HeliosVliegtuigenDataset[] = [];
     vliegtuigenFiltered: HeliosVliegtuigenDataset[] = [];
-
-    constructor(private readonly aanwezigLedenService: AanwezigLedenService,
-                private readonly vliegtuigenService: VliegtuigenService,
-                private readonly storageService: StorageService,
-                private readonly loginService: LoginService,
-                private readonly typesService: TypesService) {
-    }
 
     ngOnInit(): void {
         // abonneer op wijziging van vliegtuigen

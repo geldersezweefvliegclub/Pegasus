@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import {
   HeliosLedenDatasetExtended,
   HeliosRoosterDagExtended,
@@ -45,6 +45,14 @@ import { AvatarComponent } from '../../../shared/components/avatar/avatar.compon
     imports: [JaarTotalenComponent, UitbetalenDdwvCrewEditorComponent, NgClass, FormsModule, CdkDropList, CdkDrag, NgTemplateOutlet, IconButtonComponent, FaIconComponent, CdkDragPreview, CdkDragPlaceholder, AvatarComponent, DecimalPipe, DatePipe]
 })
 export class RoosterMaandviewComponent implements OnInit, OnDestroy {
+    private readonly ddwvService = inject(DdwvService);
+    private readonly loginService = inject(LoginService);
+    private readonly typesService = inject(TypesService);
+    protected readonly sharedService = inject(SharedService);
+    private readonly roosterService = inject(RoosterService);
+    private readonly dienstenService = inject(DienstenService);
+    readonly configService = inject(PegasusConfigService);
+
     @Input() rooster: HeliosRoosterDagExtended[];
     @Input() leden:HeliosLedenDatasetExtended[];
     @Input() tonen: WeergaveData;
@@ -73,16 +81,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
     ddwvActief = true;
     dragDisabled = true;
 
-    opslaanTimer: number;                           // kleine vertraging om starts opslaan te beperken
-
-    constructor(private readonly ddwvService: DdwvService,
-                private readonly loginService: LoginService,
-                private readonly typesService: TypesService,
-                protected readonly sharedService: SharedService,
-                private readonly roosterService: RoosterService,
-                private readonly dienstenService: DienstenService,
-                readonly configService: PegasusConfigService) {
-    }
+    opslaanTimer: number;
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo;

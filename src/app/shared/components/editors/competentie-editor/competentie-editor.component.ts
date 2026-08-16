@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosCompetentie, HeliosCompetentiesDataset, HeliosType } from '../../../../types/Helios';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
@@ -25,6 +25,9 @@ export interface CompetentieLijst {
     imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, NgSelectComponent, IconButtonComponent, LoaderComponent, AsyncPipe]
 })
 export class CompetentieEditorComponent implements OnInit, OnDestroy {
+    private readonly typesService = inject(TypesService);
+    private readonly competentieService = inject(CompetentieService);
+
     @ViewChild(ModalComponent) private popup: ModalComponent;
     formTitel: string;
 
@@ -43,10 +46,6 @@ export class CompetentieEditorComponent implements OnInit, OnDestroy {
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
-
-    constructor(private readonly typesService: TypesService,
-                private readonly competentieService: CompetentieService) {
-    }
 
     ngOnInit() {
         // abonneer op wijziging van top level competenties

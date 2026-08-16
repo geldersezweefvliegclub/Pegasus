@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faCaretSquareDown, faCaretSquareUp, faGraduationCap, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
@@ -34,6 +34,11 @@ export interface CompetentieTreeviewItem {
     imports: [CompetentieEditorComponent, PegasusCardComponent, TreeComponent, TreeNodeExpanderComponent, TreeDragDirective, TreeDropDirective, TreeNodeContent, FaIconComponent, NgStyle]
 })
 export class CompetentiesPageComponent implements OnInit, OnDestroy {
+    private readonly loginService = inject(LoginService);
+    private readonly sharedService = inject(SharedService);
+    private readonly typesService = inject(TypesService);
+    private readonly competentieService = inject(CompetentieService);
+
     @ViewChild(CompetentieEditorComponent) editor: CompetentieEditorComponent;
 
     iconCardIcon: IconDefinition = faGraduationCap;
@@ -57,12 +62,6 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
         childrenField: 'children',
         isExpandedField: 'expanded',
     };
-
-    constructor(private readonly loginService: LoginService,
-                private readonly sharedService: SharedService,
-                private readonly typesService: TypesService,
-                private readonly competentieService: CompetentieService) {
-    }
 
     ngOnInit(): void {
         // abonneer op wijziging van vliegtuigTypes

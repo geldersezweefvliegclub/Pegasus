@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
 import {
     HeliosVliegtuigenDatasetExtended,
 } from '../../../../schermen/reservering/reservering-page/reservering-page.component';
@@ -28,6 +28,9 @@ import { LoaderComponent } from '../../loader/loader.component';
     imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, LidInvoerComponent, VliegtuigInvoerComponent, NgbInputDatepicker, IconButtonComponent, NgClass, LoaderComponent]
 })
 export class BoekingEditorComponent implements OnInit, OnDestroy {
+    private readonly ledenService = inject(LedenService);
+    private readonly reserveringenService = inject(ReserveringService);
+
     @Input() clubVliegtuigen: HeliosVliegtuigenDatasetExtended[];
     @Output() boekingToegevoegd: EventEmitter<void> = new EventEmitter<void>();
 
@@ -46,10 +49,6 @@ export class BoekingEditorComponent implements OnInit, OnDestroy {
     opmerkingen: string;
     eersteDag: NgbDate | null;
     laatsteDag: NgbDate | null;
-
-    constructor(private readonly ledenService: LedenService,
-                private readonly reserveringenService: ReserveringService) {
-    }
 
     ngOnInit(): void {
         // abonneer op wijziging van leden

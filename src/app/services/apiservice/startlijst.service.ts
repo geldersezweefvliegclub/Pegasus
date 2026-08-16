@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { APIService } from './api.service';
 
 import {
@@ -26,6 +26,10 @@ type parameters = Record<string, string>;
     providedIn: 'root'
 })
 export class StartlijstService {
+    private readonly apiService = inject(APIService);
+    private readonly loginService = inject(LoginService);
+    private readonly storageService = inject(StorageService);
+
     private startsCache: HeliosStarts = { dataset: []};                      // return waarde van API call
     private vliegdagenCache: HeliosVliegdagen = { dataset: []};              // return waarde van API call
     private logboekCache: HeliosLogboek = { dataset: []};                    // return waarde van API call logboek vlieger
@@ -33,11 +37,6 @@ export class StartlijstService {
 
     private logboekTotalen: HeliosLogboekTotalen | null = null;         // totalen logboek voor vlieger
     private vliegtuigLogboekTotalen: HeliosVliegtuigLogboekTotalen;
-
-    constructor(private readonly apiService: APIService,
-                private readonly loginService: LoginService,
-                private readonly storageService: StorageService) {
-    }
 
     async getVliegdagen(startDatum: DateTime, eindDatum: DateTime): Promise<[]> {
         const getParams: parameters = {};

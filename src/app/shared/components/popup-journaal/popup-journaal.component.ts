@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { journaalFilter, JournaalService } from '../../../services/apiservice/journaal.service';
 import { HeliosJournaalDataset } from '../../../types/Helios';
@@ -14,6 +14,9 @@ import { JournaalCardComponent } from '../journaal-card/journaal-card.component'
     imports: [ModalComponent, JournaalCardComponent]
 })
 export class PopupJournaalComponent implements OnInit, OnDestroy {
+  private readonly sharedService = inject(SharedService);
+  private readonly journaalService = inject(JournaalService);
+
   @ViewChild(ModalComponent) private popup: ModalComponent;
 
   data:HeliosJournaalDataset[] = [];
@@ -23,10 +26,6 @@ export class PopupJournaalComponent implements OnInit, OnDestroy {
   private vliegtuigID:  number;
   datum: DateTime = DateTime.now();           // de gekozen dag
   isLoading = false;
-
-  constructor(private readonly sharedService: SharedService,
-              private readonly journaalService: JournaalService) {
-  }
 
   ngOnInit(): void {
     // Op safari hebben we een korte vertraging nodig op te zorgen dat initialisatie gedaan is

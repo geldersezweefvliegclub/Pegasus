@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavigationEnd, Router } from '@angular/router';
 import { LoginService } from '../../services/apiservice/login.service';
@@ -20,6 +20,13 @@ import { Subscription } from 'rxjs';
 })
 
 export class AppComponent implements OnDestroy{
+    readonly router = inject(Router);
+    private readonly updates = inject(SwUpdate);
+    private readonly calendar = inject(NgbCalendar);
+    readonly loginService = inject(LoginService);
+    private readonly sharedService = inject(SharedService);
+    private readonly storageService = inject(StorageService);
+
     @ViewChild(PopupKalenderComponent) popupKalender: PopupKalenderComponent;
 
     private maandAbonnement: Subscription;          // volg de keuze van de kalender
@@ -35,14 +42,10 @@ export class AppComponent implements OnDestroy{
     updateAvailable = false;
     private keepAliveTimer: number;
 
-    constructor(readonly router: Router,
-                private readonly updates: SwUpdate,
-                private readonly calendar: NgbCalendar,
-                public readonly loginService: LoginService,
-                private readonly sharedService: SharedService,
-                private readonly storageService: StorageService,
+    constructor() {
+        const router = this.router;
+        const loginService = this.loginService;
 
-                ) {
 
         // Service worker update, but only in production. During development, the service worker is disabled which results in an error.
         // Enabling the service worker would result in a lot of caching, which is not desired during development because it would be hard to test changes.

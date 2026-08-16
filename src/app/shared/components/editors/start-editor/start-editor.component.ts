@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
 import {
     HeliosAanwezigLedenDataset,
     HeliosBehaaldeProgressieDataset,
@@ -52,6 +52,21 @@ import { LoaderComponent } from '../../loader/loader.component';
 })
 
 export class StartEditorComponent implements OnInit {
+    private readonly typesService = inject(TypesService);
+    private readonly ledenService = inject(LedenService);
+    private readonly loginService = inject(LoginService);
+    private readonly sharedService = inject(SharedService);
+    private readonly daginfoService = inject(DaginfoService);
+    private readonly roosterService = inject(RoosterService);
+    private readonly storageService = inject(StorageService);
+    private readonly dienstenService = inject(DienstenService);
+    private readonly configService = inject(PegasusConfigService);
+    private readonly startlijstService = inject(StartlijstService);
+    private readonly progressieService = inject(ProgressieService);
+    private readonly vliegtuigenService = inject(VliegtuigenService);
+    private readonly aanwezigLedenService = inject(AanwezigLedenService);
+    private readonly aanwezigVliegtuigenService = inject(AanwezigVliegtuigService);
+
     @Input() VliegerID: number;                     // wordt gezet bij aanroep vanuit logboek
     @Input() VliegveldID: number | undefined;       // wordt gezet als we van start / vluchten een start aanmaken
     @ViewChild(ModalComponent) private popup: ModalComponent;
@@ -116,23 +131,6 @@ export class StartEditorComponent implements OnInit {
     startDatum: DateTime;
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
-
-    constructor(
-        private readonly typesService: TypesService,
-        private readonly ledenService: LedenService,
-        private readonly loginService: LoginService,
-        private readonly sharedService: SharedService,
-        private readonly daginfoService: DaginfoService,
-        private readonly roosterService: RoosterService,
-        private readonly storageService: StorageService,
-        private readonly dienstenService: DienstenService,
-        private readonly configService: PegasusConfigService,
-        private readonly startlijstService: StartlijstService,
-        private readonly progressieService: ProgressieService,
-        private readonly vliegtuigenService: VliegtuigenService,
-        private readonly aanwezigLedenService: AanwezigLedenService,
-        private readonly aanwezigVliegtuigenService: AanwezigVliegtuigService) {
-    }
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo?.Userinfo;

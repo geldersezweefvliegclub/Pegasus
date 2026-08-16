@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { APIService } from './api.service';
 import { LoginService } from './login.service';
 import {
@@ -16,12 +16,10 @@ import {CustomJsonSerializer} from "../../utils/Utils";
     providedIn: 'root'
 })
 export class TransactiesService {
-    private transactiesCache: HeliosTransacties = { dataset: []};      // return waarde van API call
+    private readonly apiService = inject(APIService);
+    private readonly loginService = inject(LoginService);
 
-
-    constructor(private readonly apiService: APIService,
-                private readonly loginService: LoginService) {
-    }
+    private transactiesCache: HeliosTransacties = { dataset: []};
 
     async getTransacties(lidID?: number, startDatum?: DateTime, eindDatum?: DateTime, vliegdag?: DateTime, max?: number): Promise<HeliosTransactiesDataset[]> {
         const getParams: KeyValueArray = {};

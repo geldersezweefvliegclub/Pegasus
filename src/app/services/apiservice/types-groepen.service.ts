@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HeliosTypesGroep, HeliosTypesGroepen } from '../../types/Helios';
 import { BehaviorSubject } from 'rxjs';
 import { APIService } from './api.service';
@@ -11,14 +11,16 @@ import { KeyValueArray } from '../../types/Utils';
 })
 
 export class TypesGroepenService {
+    private readonly apiService = inject(APIService);
+    private readonly loginService = inject(LoginService);
+    private readonly storageService = inject(StorageService);
+
     private typesGroepenCache: HeliosTypesGroepen = {dataset: []};        // return waarde van API call
 
     private typesGroepenStore = new BehaviorSubject(this.typesGroepenCache.dataset);
     public readonly typesGroepenChange = this.typesGroepenStore.asObservable();      // nieuwe aanwezigheid beschikbaar
 
-    constructor(private readonly apiService: APIService,
-                private readonly loginService: LoginService,
-                private readonly storageService: StorageService) {
+    constructor() {
 
         // We hebben misschien eerder de lidTypes opgehaald. Die gebruiken we totdat de API starts heeft opgehaald
         if (this.storageService.ophalen('types') != null) {

@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Injectable, inject } from '@angular/core';
 import { APIService } from './api.service';
 
 import { HeliosUserinfo } from '../../types/Helios';
@@ -24,6 +24,11 @@ type LoginResponse = BearerToken | HeliosJsLoginResponse;
 })
 
 export class LoginService  {
+    private readonly apiService = inject(APIService);
+    private readonly ddwwService = inject(DdwvService);
+    private readonly sharedService = inject(SharedService);
+    private readonly storageService = inject(StorageService);
+
     userInfo: HeliosUserinfo | null = null;
     private userInfoStore = new BehaviorSubject(this.userInfo);
     public readonly userInfoChange = this.userInfoStore.asObservable();      // nieuwe userInfo beschikbaar
@@ -32,10 +37,7 @@ export class LoginService  {
 
     private dbEventAbonnement: Subscription;
 
-    constructor(private readonly apiService: APIService,
-                private readonly ddwwService: DdwvService,
-                private readonly sharedService: SharedService,
-                private readonly storageService: StorageService) {
+    constructor() {
 
         // als we ons profiel aanpassen, dan moeten we userinfo ook aanpassen
         this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {

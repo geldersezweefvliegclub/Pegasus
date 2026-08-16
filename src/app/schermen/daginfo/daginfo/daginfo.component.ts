@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 
 import { LoginService } from '../../../services/apiservice/login.service';
 import { DaginfoService } from '../../../services/apiservice/daginfo.service';
@@ -41,6 +41,15 @@ import { AsyncPipe } from '@angular/common';
     imports: [DagRapportEditorComponent, DagRoosterComponent, ErrorComponent, IconButtonComponent, NgSelectComponent, FormsModule, FaIconComponent, AsyncPipe, PegasusCardComponent, StatusButtonComponent, SuccessComponent]
 })
 export class DaginfoComponent implements OnInit, OnDestroy{
+    private readonly loginService = inject(LoginService);
+    private readonly typesService = inject(TypesService);
+    private readonly sharedService = inject(SharedService);
+    private readonly daginfoService = inject(DaginfoService);
+    private readonly storageService = inject(StorageService);
+    private readonly roosterService = inject(RoosterService);
+    private readonly dienstenService = inject(DienstenService);
+    private readonly dagRapportenService = inject(DagRapportenService);
+
     @ViewChild(DagRoosterComponent) dienstenWizard: DagRoosterComponent;
     @ViewChild(DagRapportEditorComponent) editor: DagRapportEditorComponent;
 
@@ -76,17 +85,7 @@ export class DaginfoComponent implements OnInit, OnDestroy{
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
-    veld_id: number| undefined;     // Default waarde voor dagrapport
-
-    constructor(private readonly loginService: LoginService,
-                private readonly typesService: TypesService,
-                private readonly sharedService: SharedService,
-                private readonly daginfoService: DaginfoService,
-                private readonly storageService: StorageService,
-                private readonly roosterService: RoosterService,
-                private readonly dienstenService: DienstenService,
-                private readonly dagRapportenService: DagRapportenService) {
-    }
+    veld_id: number| undefined;
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo?.Userinfo;

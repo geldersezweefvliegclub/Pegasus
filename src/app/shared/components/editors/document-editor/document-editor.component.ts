@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild, inject } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosDocument } from '../../../../types/Helios';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
@@ -16,6 +16,8 @@ import { LoaderComponent } from '../../loader/loader.component';
     imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, IconButtonComponent, LoaderComponent]
 })
 export class DocumentEditorComponent {
+    private readonly documentenService = inject(DocumentenService);
+
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @Output() refresh: EventEmitter<void> = new EventEmitter<void>();
     formTitel: string;
@@ -33,9 +35,6 @@ export class DocumentEditorComponent {
     isUrl = false;
 
     document: HeliosDocument;
-
-    constructor(private readonly documentenService: DocumentenService) {
-    }
 
     // open popup, maar haal eerst de start op. De eerder ingevoerde tijd wordt als default waarde gebruikt
     // indien niet eerder ingvuld, dan de huidige tijd. Buiten de daglicht periode is het veld leeg

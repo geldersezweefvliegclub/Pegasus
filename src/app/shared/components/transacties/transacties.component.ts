@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { TransactiesService } from '../../../services/apiservice/transacties.service';
 import { HeliosTransactiesDataset } from '../../../types/Helios';
@@ -18,6 +18,10 @@ import { IconButtonComponent } from '../icon-button/icon-button.component';
     imports: [ModalComponent, NgTemplateOutlet, IconButtonComponent, NgClass, TransactieEditorComponent, IdealBestellenComponent, DecimalPipe]
 })
 export class TransactiesComponent implements OnInit, OnDestroy {
+    private readonly sharedService = inject(SharedService);
+    private readonly loginService = inject(LoginService);
+    private readonly transactiesService = inject(TransactiesService);
+
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @ViewChild(TransactieEditorComponent) private editor: TransactieEditorComponent;
     @ViewChild(IdealBestellenComponent) private bestellen: IdealBestellenComponent;
@@ -36,11 +40,6 @@ export class TransactiesComponent implements OnInit, OnDestroy {
     transacties: HeliosTransactiesDataset[];
     transactiesView = "grid";
     expandedView = false;
-
-    constructor(private readonly sharedService: SharedService,
-                private readonly loginService: LoginService,
-                private readonly transactiesService: TransactiesService) {
-    }
 
     ngOnInit(): void {
         this.onWindowResize();          // bepaal wat we moeten tonen dag/week/maand

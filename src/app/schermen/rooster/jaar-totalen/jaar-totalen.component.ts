@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
 import { DateTime } from 'luxon';
 import { ColDef } from 'ag-grid-community';
 import { Subscription } from 'rxjs';
@@ -39,6 +39,9 @@ interface JaarTotaal {
     imports: [ModalComponent, DatatableComponent]
 })
 export class JaarTotalenComponent implements OnInit {
+    private readonly dienstenService = inject(DienstenService);
+    private readonly sharedService = inject(SharedService);
+
     @Input() leden: HeliosLedenDataset[];
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
@@ -84,10 +87,6 @@ export class JaarTotalenComponent implements OnInit {
     frameworkComponents = {
         nummerRender: OnderdrukNulComponent,
     };
-
-    constructor(private readonly dienstenService: DienstenService,
-                private readonly sharedService: SharedService) {
-    }
 
     ngOnInit(): void {
         // de datum zoals die in de kalender gekozen is

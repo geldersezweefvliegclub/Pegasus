@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { NgbCalendar, NgbDate, NgbDatepickerNavigateEvent, NgbDateStruct, NgbDatepicker, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { DateTime } from 'luxon';
 import { LoginService } from '../../../services/apiservice/login.service';
@@ -22,6 +22,13 @@ import { NgClass } from '@angular/common';
     imports: [NgbDatepicker, FormsModule, NgbTooltip, NgClass]
 })
 export class VliegdagSelectieComponent implements OnInit, OnDestroy {
+    readonly loginService = inject(LoginService);
+    private readonly calendar = inject(NgbCalendar);
+    private readonly sharedService = inject(SharedService);
+    private readonly dienstenService = inject(DienstenService);
+    private readonly startlijstService = inject(StartlijstService);
+    private readonly dagRapportenService = inject(DagRapportenService);
+
     private dbEventAbonnement: Subscription;
     private dagInfoAbonnement: Subscription;
     private dienstenAbonnement: Subscription;
@@ -37,17 +44,7 @@ export class VliegdagSelectieComponent implements OnInit, OnDestroy {
 
     vliegdagen = "";        // vliegdagen van deze maand in json formaat
     diensten = "";          // daginfos van deze maand in json formaat
-    daginfo = "";           // daginfos van deze maand in json formaat
-
-    constructor(readonly loginService: LoginService,
-                private readonly calendar: NgbCalendar,
-                private readonly sharedService: SharedService,
-                private readonly dienstenService: DienstenService,
-                private readonly startlijstService: StartlijstService,
-                private readonly dagRapportenService: DagRapportenService,)
-    {
-
-    }
+    daginfo = "";
 
     ngOnInit() {
         const ui = this.loginService.userInfo?.Userinfo;

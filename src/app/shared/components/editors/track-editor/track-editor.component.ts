@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { HeliosLedenDataset, HeliosTrack } from '../../../../types/Helios';
 import { ModalComponent } from '../../modal/modal.component';
 import { TracksService } from '../../../../services/apiservice/tracks.service';
@@ -21,6 +21,10 @@ import { LoaderComponent } from '../../loader/loader.component';
     imports: [ErrorComponent, SuccessComponent, ModalComponent, LidInvoerComponent, FormsModule, IconButtonComponent, LoaderComponent]
 })
 export class TrackEditorComponent implements OnInit{
+    private readonly trackService = inject(TracksService);
+    private readonly ledenService = inject(LedenService);
+    private readonly loginService = inject(LoginService);
+
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
     private ledenAbonnement: Subscription;
@@ -37,12 +41,6 @@ export class TrackEditorComponent implements OnInit{
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
-
-
-    constructor(private readonly trackService: TracksService,
-                private readonly ledenService: LedenService,
-                private readonly loginService: LoginService) {
-    }
 
     ngOnInit() {
         // abonneer op wijziging van leden

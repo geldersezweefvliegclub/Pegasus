@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HeliosFacturen, HeliosFacturenDataset, HeliosFactuur } from '../../types/Helios';
 import { APIService } from './api.service';
 import { KeyValueArray } from '../../types/Utils';
@@ -9,11 +9,10 @@ import {DateTime} from "luxon";
   providedIn: 'root'
 })
 export class FacturenService {
-  private facturenCache: HeliosFacturen = {dataset: []};      // return waarde van API call
-  private teDoenCache: HeliosFacturen = {dataset: []};        // return waarde van API call
+  private readonly apiService = inject(APIService);
 
-  constructor(private readonly apiService: APIService) {
-  }
+  private facturenCache: HeliosFacturen = {dataset: []};      // return waarde van API call
+  private teDoenCache: HeliosFacturen = {dataset: []};
 
   async getFacturen(Jaar: number, zoekString?: string): Promise<HeliosFacturenDataset[]> {
     const getParams: KeyValueArray = {};

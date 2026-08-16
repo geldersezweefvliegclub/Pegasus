@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { VliegtuigenService } from '../../../services/apiservice/vliegtuigen.service';
 
 import { faPlane, faRecycle } from '@fortawesome/free-solid-svg-icons';
@@ -51,6 +51,12 @@ export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
     imports: [ErrorComponent, SuccessComponent, PegasusCardComponent, DatatableComponent, VliegtuigCardComponent, IconButtonComponent, StatusButtonComponent, ZoekbarComponent, VliegtuigEditorComponent, PopupJournaalComponent, VliegtuigLogboekComponent]
 })
 export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
+    private readonly vliegtuigenService = inject(VliegtuigenService);
+    private readonly startlijstService = inject(StartlijstService);
+    private readonly loginService = inject(LoginService);
+    private readonly router = inject(Router);
+    private readonly sharedService = inject(SharedService);
+
     @ViewChild(VliegtuigEditorComponent) editor: VliegtuigEditorComponent;
     @ViewChild(PopupJournaalComponent) journaal: PopupJournaalComponent;
     @ViewChild(VliegtuigLogboekComponent) vliegtuigLogboek: VliegtuigLogboekComponent;
@@ -161,11 +167,7 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
     private dbEventAbonnement: Subscription;        // Abonneer op aanpassingen in de database
     private resizeSubscription: Subscription;       // Abonneer op aanpassing van window grootte (of draaien mobiel)
 
-    constructor(private readonly vliegtuigenService: VliegtuigenService,
-                private readonly startlijstService: StartlijstService,
-                private readonly loginService: LoginService,
-                private readonly router: Router,
-                private readonly sharedService: SharedService) {
+    constructor() {
 
         // Als vliegtuig is aangepast, moeten we grid opnieuw laden
         this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {

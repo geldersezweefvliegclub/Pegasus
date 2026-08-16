@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AgRendererComponent } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 import { LoginService } from '../../../services/apiservice/login.service';
@@ -14,15 +14,14 @@ import { NgClass } from '@angular/common';
 })
 
 export class AchterinRenderComponent implements AgRendererComponent {
+    private readonly loginService = inject(LoginService);
+
     grid_inzittendenaam: string;
     lidID: string;
     naarDashboard = false;
 
     warning = false;        // nog niet gestart, instructeur is onbekend
-    error = false;          // er is gestart, maar instructeur is onbekend
-
-    constructor(private readonly loginService: LoginService) {
-    }
+    error = false;
 
     // Als de inzittende geen clublid is, dan is de naam handmatig ingevoerd
     agInit(params: ICellRendererParams): void {

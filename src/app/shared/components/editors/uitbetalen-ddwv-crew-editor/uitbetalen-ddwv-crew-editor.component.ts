@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild, inject } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { ErrorMessage, KeyValueArray, SuccessMessage } from '../../../../types/Utils';
 import { HeliosDienstenDataset } from '../../../../types/Helios';
@@ -16,6 +16,8 @@ import { IconButtonComponent } from '../../icon-button/icon-button.component';
     imports: [ErrorComponent, SuccessComponent, ModalComponent, IconButtonComponent]
 })
 export class UitbetalenDdwvCrewEditorComponent  {
+    private readonly ddwvService = inject(DdwvService);
+
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @Output() refresh: EventEmitter<void> = new EventEmitter<void>();
 
@@ -28,9 +30,6 @@ export class UitbetalenDdwvCrewEditorComponent  {
     datum: string;
     diensten: HeliosDienstenDataset[];
     uitbetalenCrew: KeyValueArray = {};
-
-    constructor(private readonly ddwvService: DdwvService) {
-    }
 
     // open popup, maar haal eerst de start op. De eerder ingevoerde tijd wordt als default waarde gebruikt
     // indien niet eerder ingvuld, dan de huidige tijd. Buiten de daglicht periode is het veld leeg

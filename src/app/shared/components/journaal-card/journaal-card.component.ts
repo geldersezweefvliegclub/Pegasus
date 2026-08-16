@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
 import { HeliosJournaalDataset } from '../../../types/Helios';
 import { SharedService } from '../../../services/shared/shared.service';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
@@ -13,13 +13,13 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
     imports: [NgClass, FaIconComponent, JournaalEditorComponent]
 })
 export class JournaalCardComponent implements OnInit {
+    private readonly sharedService = inject(SharedService);
+
     @Input() melding: HeliosJournaalDataset;
     @ViewChild(JournaalEditorComponent) editor: JournaalEditorComponent;
 
     protected readonly iconEdit = faPenToSquare;
     datumDM: string
-    constructor(private readonly sharedService: SharedService) {
-    }
 
     ngOnInit(): void {
         this.datumDM = this.sharedService.datumDM(this.melding.DATUM!)    // jaar hoeft niet getoond te worden

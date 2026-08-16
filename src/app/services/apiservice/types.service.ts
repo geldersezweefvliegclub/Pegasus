@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { APIService } from './api.service';
 import { HeliosType, HeliosTypes } from '../../types/Helios';
 import { StorageService } from '../storage/storage.service';
@@ -10,6 +10,10 @@ import { LoginService } from './login.service';
     providedIn: 'root'
 })
 export class TypesService {
+    private readonly apiService = inject(APIService);
+    private readonly loginService = inject(LoginService);
+    private readonly storageService = inject(StorageService);
+
     private typesCache: HeliosTypes = { dataset: []};        // return waarde van API call
     private cvTypesCache: HeliosTypes = { dataset: []};      // clubvliegtuigen type
     private fallbackTimer: number;                           // Timer om te zorgen dat starts geladen echt is
@@ -17,9 +21,9 @@ export class TypesService {
     private typesStore = new BehaviorSubject(this.typesCache.dataset);
     public readonly typesChange = this.typesStore.asObservable();      // nieuwe aanwezigheid beschikbaar
 
-    constructor(private readonly apiService: APIService,
-                private readonly loginService: LoginService,
-                private readonly storageService: StorageService) {
+    constructor() {
+        const loginService = this.loginService;
+
 
         // We hebben misschien eerder de lidTypes opgehaald. Die gebruiken we totdat de API starts heeft opgehaald
         if (this.storageService.ophalen('types') != null) {

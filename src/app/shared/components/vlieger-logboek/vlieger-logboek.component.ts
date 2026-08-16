@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { ColDef, RowClassParams } from 'ag-grid-community';
 import { HeliosLogboekDataset, HeliosTrack } from '../../../types/Helios';
 import { DateTime, Interval } from 'luxon';
@@ -39,6 +39,12 @@ type HeliosLogboekDatasetExtended = HeliosLogboekDataset & {
 })
 
 export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
+    private readonly startlijstService = inject(StartlijstService);
+    private readonly trackService = inject(TracksService);
+    private readonly configService = inject(PegasusConfigService);
+    private readonly sharedService = inject(SharedService);
+    private readonly loginService = inject(LoginService);
+
     @Input() id: string;
     @Input() VliegerID: number;
     @Input() deleteMode: boolean;
@@ -154,13 +160,6 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
         landingsTijdRender: LandingstijdRenderComponent,
         deleteAction: DeleteActionComponent,
     };
-
-    constructor(private readonly startlijstService: StartlijstService,
-                private readonly trackService: TracksService,
-                private readonly configService: PegasusConfigService,
-                private readonly sharedService: SharedService,
-                private readonly loginService: LoginService) {
-    }
 
     ngOnInit(): void {
         // Op safari hebben we een korte vertraging nodig op te zorgen dat initialisatie gedaan is

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ErrorMessage, HeliosActie, KeyValueArray } from '../../types/Utils';
 import { SharedService } from '../shared/shared.service';
 import { PegasusConfigService } from '../shared/pegasus-config.service';
@@ -7,11 +7,15 @@ import { PegasusConfigService } from '../shared/pegasus-config.service';
     providedIn: 'root'
 })
 export class APIService {
+    private readonly sharedService = inject(SharedService);
+    private readonly configService = inject(PegasusConfigService);
+
     private readonly URL:string = 'http://localhost:4200/api/'
     private BearerToken: string | null = null;
 
-    constructor(private readonly sharedService: SharedService,
-                private readonly configService: PegasusConfigService) {
+    constructor() {
+        const configService = this.configService;
+
 
         const url = configService.getURL();
         if (url) this.URL = url;

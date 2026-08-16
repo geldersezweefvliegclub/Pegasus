@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, inject } from '@angular/core';
 import { ModalComponent } from '../../../modal/modal.component';
 import { Observable, of, Subscription } from 'rxjs';
 import { HeliosType } from '../../../../../types/Helios';
@@ -16,6 +16,8 @@ import { AsyncPipe } from '@angular/common';
     imports: [ModalComponent, NgSelectComponent, FormsModule, IconButtonComponent, AsyncPipe]
 })
 export class ComposeBedrijfComponent {
+    private readonly typesService = inject(TypesService);
+
     @Input() datum: DateTime;
 
     @Output() opslaan: EventEmitter<string> = new EventEmitter<string>();
@@ -34,7 +36,7 @@ export class ComposeBedrijfComponent {
     linkerhandCircuit: boolean;
     rechterhandCircuit: boolean;
 
-    constructor(private readonly typesService: TypesService) {
+    constructor() {
 
         // abonneer op wijziging van lidTypes
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {

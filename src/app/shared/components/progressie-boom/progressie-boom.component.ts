@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { ITreeOptions, ITreeState, TreeComponent } from '@ali-hm/angular-tree-component';
 import { ProgressieService } from '../../../services/apiservice/progressie.service';
 import { HeliosCompetentiesDataset, HeliosProgressieBoom, HeliosType } from '../../../types/Helios';
@@ -37,6 +37,12 @@ export interface ProgressieTreeviewItem {
 })
 
 export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
+    private readonly loginService = inject(LoginService);
+    private readonly typesService = inject(TypesService);
+    private readonly sharedService = inject(SharedService);
+    private readonly competentieService = inject(CompetentieService);
+    private readonly progressieService = inject(ProgressieService);
+
     @Input() VliegerID: number;
     @ViewChild(ProgressieEditorComponent) private editor: ProgressieEditorComponent;
     @ViewChild('progressieTree') private progressieTree?: TreeComponent;
@@ -65,13 +71,6 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
     verwijderCompetentie: ProgressieTreeviewItem;
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
-
-    constructor(private readonly loginService: LoginService,
-                private readonly typesService: TypesService,
-                private readonly sharedService: SharedService,
-                private readonly competentieService: CompetentieService,
-                private readonly progressieService: ProgressieService) {
-    }
 
     ngOnInit(): void {
         // abonneer op wijziging van types

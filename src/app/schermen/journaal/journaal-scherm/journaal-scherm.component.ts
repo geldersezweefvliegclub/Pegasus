@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 
 import { faBug } from '@fortawesome/free-solid-svg-icons';
 import { ColDef, RowDoubleClickedEvent } from 'ag-grid-community';
@@ -42,6 +42,11 @@ import { PopupJournaalComponent } from '../../../shared/components/popup-journaa
 })
 
 export class JournaalSchermComponent implements OnInit, OnDestroy {
+    private readonly loginService = inject(LoginService);
+    private readonly sharedService = inject(SharedService);
+    private readonly activatedRoute = inject(ActivatedRoute);
+    private readonly meldingenService = inject(JournaalService);
+
     @ViewChild(JournaalFilterComponent) private filter: JournaalFilterComponent;
     @ViewChild(JournaalEditorComponent) editor: JournaalEditorComponent;
 
@@ -137,14 +142,7 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
-    private resizeSubscription: Subscription;       // Abonneer op aanpassing van window grootte (of draaien mobiel)
-
-    constructor(private readonly loginService: LoginService,
-                private readonly sharedService: SharedService,
-                private readonly activatedRoute: ActivatedRoute,
-                private readonly meldingenService: JournaalService) {
-
-    }
+    private resizeSubscription: Subscription;
 
     ngOnInit(): void {
         this.activeFilter = {

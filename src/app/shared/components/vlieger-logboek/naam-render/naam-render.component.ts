@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AgRendererComponent } from 'ag-grid-angular';
 import { LoginService } from '../../../../services/apiservice/login.service';
 import { ICellRendererParams } from 'ag-grid-community';
@@ -11,12 +11,11 @@ import { RouterLink } from '@angular/router';
     imports: [RouterLink]
 })
 export class NaamRenderComponent implements AgRendererComponent {
+    private readonly loginService = inject(LoginService);
+
     naam: string;
     lidID: string;
     naarDashboard = false;
-
-    constructor(private readonly loginService: LoginService) {
-    }
 
     agInit(params: ICellRendererParams): void {
         this.naam = params.value;

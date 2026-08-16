@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
 import {
   faCaretSquareDown,
   faCaretSquareUp,
@@ -26,6 +26,9 @@ import { StatusButtonComponent } from '../../../../shared/components/status-butt
     imports: [DocumentEditorComponent, IconButtonComponent, PegasusCardComponent, StatusButtonComponent, FaIconComponent, NgClass]
 })
 export class LedenDocumentenComponent implements OnInit {
+    private readonly typesService = inject(TypesService);
+    private readonly documentenService = inject(DocumentenService);
+
     @Input() LidID: number;
     @ViewChild(DocumentEditorComponent) editor: DocumentEditorComponent;
 
@@ -40,11 +43,7 @@ export class LedenDocumentenComponent implements OnInit {
 
     editMode = false;          // zitten we in edit mode om documenten te kunnen aanpassen
     deleteMode = false;        // zitten we in delete mode om documenten te kunnen verwijderen
-    trashMode = false;         // zitten in restore mode om documenten te kunnen terughalen
-
-    constructor(private readonly typesService: TypesService,
-                private readonly documentenService: DocumentenService) {
-    }
+    trashMode = false;
 
     ngOnInit(): void {
         this.opvragen();

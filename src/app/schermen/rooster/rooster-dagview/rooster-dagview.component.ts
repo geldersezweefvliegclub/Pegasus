@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { DagVanDeWeek } from '../../../utils/Utils';
 
 import {
@@ -33,6 +33,13 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
     imports: [UitbetalenDdwvCrewEditorComponent, IconButtonComponent, FormsModule, NgTemplateOutlet, NgClass, FaIconComponent, DienstEditorComponent]
 })
 export class RoosterDagviewComponent implements OnInit, OnDestroy {
+    private readonly ddwvService = inject(DdwvService);
+    private readonly loginService = inject(LoginService);
+    private readonly typesService = inject(TypesService);
+    private readonly roosterService = inject(RoosterService);
+    private readonly dienstenService = inject(DienstenService);
+    readonly configService = inject(PegasusConfigService);
+
     @Input() rooster: HeliosRoosterDagExtended[];
     @Input() leden: HeliosLedenDatasetExtended[];
     @Input() datum: DateTime;
@@ -58,15 +65,7 @@ export class RoosterDagviewComponent implements OnInit, OnDestroy {
     isCIMT: boolean;
     dblKlik = false;
 
-    opslaanTimer: number;                       // kleine vertraging om starts opslaan te beperken
-
-    constructor(private readonly ddwvService: DdwvService,
-                private readonly loginService: LoginService,
-                private readonly typesService: TypesService,
-                private readonly roosterService: RoosterService,
-                private readonly dienstenService: DienstenService,
-                readonly configService: PegasusConfigService) {
-    }
+    opslaanTimer: number;
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo;

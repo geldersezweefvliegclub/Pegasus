@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosAgendaActiviteit, HeliosAgendaDataset, HeliosJournaal } from '../../../../types/Helios';
 import { AgendaService } from '../../../../services/apiservice/agenda';
@@ -21,6 +21,9 @@ import { LoaderComponent } from '../../loader/loader.component';
     imports: [ErrorComponent, SuccessComponent, ModalComponent, NgbInputDatepicker, FormsModule, IconButtonComponent, NgClass, NgxMaterialTimepickerModule, LoaderComponent]
 })
 export class AgendaEditorComponent  {
+  private readonly agendaService = inject(AgendaService);
+  private readonly loginService = inject(LoginService);
+
   @ViewChild(ModalComponent) private popup: ModalComponent;
 
   isLoading = false;
@@ -37,9 +40,6 @@ export class AgendaEditorComponent  {
 
   eersteDag: DateTime | undefined;
   laatsteDag: DateTime | undefined;
-
-  constructor(private readonly agendaService: AgendaService,
-              private readonly loginService: LoginService) { }
 
   openPopup(activiteit: HeliosAgendaDataset | null) {
     if (activiteit) {

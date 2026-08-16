@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
 import { nummerSort } from '../../../utils/Utils';
@@ -38,6 +38,11 @@ import { FormsModule } from '@angular/forms';
     imports: [ErrorComponent, PegasusCardComponent, DatatableComponent, IconButtonComponent, LidInvoerComponent, FormsModule, TransactieEditorComponent, FactuurUploadenComponent]
 })
 export class TransactiesGridComponent implements OnInit, OnDestroy {
+    private readonly loginService = inject(LoginService);
+    private readonly ledenService = inject(LedenService);
+    private readonly sharedService = inject(SharedService);
+    private readonly transactiesService = inject(TransactiesService);
+
     @ViewChild(TransactieEditorComponent) private editor: TransactieEditorComponent;
     @ViewChild(FactuurUploadenComponent) private uploaden: FactuurUploadenComponent;
 
@@ -175,12 +180,6 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
     lidID: number | undefined;
 
     timerID: number;
-
-    constructor(private readonly loginService: LoginService,
-                private readonly ledenService: LedenService,
-                private readonly sharedService: SharedService,
-                private readonly transactiesService: TransactiesService) {
-    }
 
     ngOnInit(): void {
         setTimeout(() => {

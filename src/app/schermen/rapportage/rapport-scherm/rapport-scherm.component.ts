@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -12,14 +12,13 @@ import { IconButtonComponent } from '../../../shared/components/icon-button/icon
     imports: [IconButtonComponent]
 })
 export class RapportSchermComponent implements OnInit {
+    private readonly sanitizer = inject(DomSanitizer);
+    private readonly activatedRoute = inject(ActivatedRoute);
+    private readonly configService = inject(PegasusConfigService);
+
     rapporten: Rapport[] = [];
 
     url: SafeResourceUrl | undefined;
-
-    constructor(private readonly sanitizer: DomSanitizer,
-                private readonly activatedRoute: ActivatedRoute,
-                private readonly configService: PegasusConfigService) {
-    }
 
     ngOnInit(): void {
         this.rapporten = this.configService.getRapporten();

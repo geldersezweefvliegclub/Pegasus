@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import {
     faCaretSquareDown,
@@ -27,6 +27,10 @@ import { DecimalPipe } from '@angular/common';
     imports: [PegasusCardComponent, FormsModule, FaIconComponent, IconButtonComponent, StatusButtonComponent, TypeEditorComponent, DecimalPipe]
 })
 export class TypesPageComponent implements OnInit, OnDestroy {
+    private readonly typesService = inject(TypesService);
+    private readonly sharedService = inject(SharedService);
+    private readonly typesGroepenService = inject(TypesGroepenService);
+
     @ViewChild(TypeEditorComponent) editor: TypeEditorComponent;
     iconCardIcon: IconDefinition = faKeyboard;
     deleteIcon:IconDefinition = faMinusCircle;
@@ -45,12 +49,7 @@ export class TypesPageComponent implements OnInit, OnDestroy {
     magToevoegen = true;
     magVerwijderen = true;
     deleteMode = false;        // zitten we in delete mode om types te kunnen verwijderen
-    trashMode = false;         // zitten in restore mode om types te kunnen terughalen
-
-    constructor(private readonly typesService: TypesService,
-                private readonly sharedService: SharedService,
-                private readonly typesGroepenService: TypesGroepenService) {
-    }
+    trashMode = false;
 
     ngOnInit(): void {
         this.typesGroepenService.getTypesGroepen().then((dataset) => {

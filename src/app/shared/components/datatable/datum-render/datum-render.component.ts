@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AgRendererComponent } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 import { SharedService } from '../../../../services/shared/shared.service';
@@ -9,10 +9,9 @@ import { SharedService } from '../../../../services/shared/shared.service';
     styleUrls: ['./datum-render.component.scss']
 })
 export class DatumRenderComponent implements AgRendererComponent {
-    public datum: string;
+    private readonly sharedService = inject(SharedService);
 
-    constructor(private readonly sharedService: SharedService) {
-    }
+    public datum: string;
 
     agInit(params: ICellRendererParams): void {
 

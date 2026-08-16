@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { HeliosJournaal, HeliosLedenDataset, HeliosType, HeliosVliegtuigenDataset } from '../../../../types/Helios';
 import { TypesService } from '../../../../services/apiservice/types.service';
 import { Observable, of, Subscription } from 'rxjs';
@@ -23,6 +23,12 @@ import { LoaderComponent } from '../../loader/loader.component';
     imports: [ErrorComponent, SuccessComponent, ModalComponent, NgSelectComponent, NgClass, FormsModule, IconButtonComponent, LoaderComponent, AsyncPipe]
 })
 export class JournaalEditorComponent implements OnInit, OnDestroy {
+    private readonly typesService = inject(TypesService);
+    private readonly ledenService = inject(LedenService);
+    private readonly loginService = inject(LoginService);
+    private readonly journaalService = inject(JournaalService);
+    private readonly vliegtuigenService = inject(VliegtuigenService);
+
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
     private vliegtuigenAbonnement: Subscription;
@@ -49,13 +55,6 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
     error: ErrorMessage | undefined;
 
     melding: HeliosJournaal = {}
-
-    constructor(private readonly typesService: TypesService,
-                private readonly ledenService: LedenService,
-                private readonly loginService: LoginService,
-                private readonly journaalService: JournaalService,
-                private readonly vliegtuigenService: VliegtuigenService) {
-    }
 
     ngOnInit(): void {
         // abonneer op wijziging van rollend materieel

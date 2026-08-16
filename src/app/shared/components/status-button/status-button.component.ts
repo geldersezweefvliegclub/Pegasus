@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
 import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
 import { far, IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { fas } from '@fortawesome/free-solid-svg-icons';
@@ -13,6 +13,8 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
     imports: [NgClass, FaIconComponent]
 })
 export class StatusButtonComponent implements OnInit, OnDestroy {
+    private readonly sharedService = inject(SharedService);
+
     @Input() tekst = '';
     @Input() disabled = false;
     @Input() toonKlein = true;
@@ -24,9 +26,7 @@ export class StatusButtonComponent implements OnInit, OnDestroy {
     faIcon: IconDefinition;
     toonTekst = true;
 
-    private resizeSubscription: Subscription;           // Abonneer op aanpassing van window grootte (of draaien mobiel)
-    constructor(private readonly sharedService: SharedService) {
-    }
+    private resizeSubscription: Subscription;
 
     ngOnInit(): void {
         if (this.iconNaam) {

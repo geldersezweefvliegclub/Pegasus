@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { HeliosAgendaDataset } from '../../../types/Helios';
 import { AgendaService } from '../../../services/apiservice/agenda';
 import { Subscription } from 'rxjs';
@@ -26,6 +26,10 @@ import { SuccessComponent } from '../../../shared/components/success/success.com
     imports: [AgendaEditorComponent, DatatableComponent, ErrorComponent, IconButtonComponent, PegasusCardComponent, StatusButtonComponent, SuccessComponent]
 })
 export class AgendaSchermComponent implements OnInit, OnDestroy {
+  private readonly loginService = inject(LoginService);
+  private readonly sharedService = inject(SharedService);
+  private readonly agendaService = inject(AgendaService);
+
   @ViewChild(AgendaEditorComponent) editor:AgendaEditorComponent;
 
   data:HeliosAgendaDataset[] = [];
@@ -93,10 +97,6 @@ export class AgendaSchermComponent implements OnInit, OnDestroy {
   };
 
   iconCardIcon: IconDefinition = faCalendar
-
-  constructor(private readonly loginService: LoginService,
-              private readonly sharedService: SharedService,
-              private readonly agendaService: AgendaService) { }
 
   ngOnInit(): void {
     console.log("AgendaSchermComponent.ngOnInit");

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { FacturenService } from '../../../services/apiservice/facturen.service';
 import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
@@ -16,6 +16,9 @@ import { IconButtonComponent } from '../icon-button/icon-button.component';
     imports: [ErrorComponent, ModalComponent, NgbProgressbar, IconButtonComponent]
 })
 export class FactuurUploadenComponent implements OnInit {
+  private readonly facturenService = inject(FacturenService);
+  private readonly transactiesService = inject(TransactiesService);
+
   @ViewChild(ModalComponent) private popup: ModalComponent;
 
   isBezig: boolean;
@@ -28,9 +31,6 @@ export class FactuurUploadenComponent implements OnInit {
 
   success: SuccessMessage | undefined;
   error: ErrorMessage | undefined;
-
-  constructor(private readonly facturenService: FacturenService,
-              private readonly transactiesService: TransactiesService) { }
 
   ngOnInit(): void {
     this.isBezig = false;

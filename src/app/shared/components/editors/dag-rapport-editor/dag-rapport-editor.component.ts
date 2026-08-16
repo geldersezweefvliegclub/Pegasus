@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
@@ -29,6 +29,10 @@ import { AsyncPipe } from '@angular/common';
     imports: [ErrorComponent, SuccessComponent, ModalComponent, NgSelectComponent, FormsModule, PegasusCardComponent, IconButtonComponent, LoaderComponent, ComposeMeteoComponent, ComposeBedrijfComponent, AsyncPipe]
 })
 export class DagRapportEditorComponent implements OnInit, OnDestroy {
+    private readonly typesService = inject(TypesService);
+    private readonly sharedService = inject(SharedService);
+    private readonly dagRapportenService = inject(DagRapportenService);
+
     @Input() veld_id: number | undefined;
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @ViewChild(ComposeMeteoComponent) private meteoWizard: ComposeMeteoComponent;
@@ -59,11 +63,6 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
     isRestoreMode = false;
 
     formTitel = "";
-
-    constructor(private readonly typesService: TypesService,
-                private readonly sharedService: SharedService,
-                private readonly dagRapportenService: DagRapportenService) {
-    }
 
     ngOnInit(): void {
         // abonneer op wijziging van lidTypes

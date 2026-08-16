@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { DateTime } from 'luxon';
 import { APIService } from './api.service';
 import { KeyValueArray } from '../../types/Utils';
@@ -13,6 +13,10 @@ import { debounceTime } from 'rxjs/operators';
     providedIn: 'root'
 })
 export class RoosterService {
+    private readonly apiService = inject(APIService);
+    private readonly loginService = inject(LoginService);
+    private readonly sharedService = inject(SharedService);
+
     private roosterCache: HeliosRooster = {dataset: []};    // return waarde van API call
     private datumAbonnement: Subscription;                  // volg de keuze van de kalender
     private datum: DateTime = DateTime.now();               // de gekozen dag
@@ -20,9 +24,9 @@ export class RoosterService {
     private roosterStore = new BehaviorSubject(this.roosterCache.dataset);
     public readonly roosterChange = this.roosterStore.asObservable();      // nieuw rooster beschikbaar
 
-    constructor(private readonly apiService: APIService,
-                private readonly loginService: LoginService,
-                private readonly sharedService: SharedService) {
+    constructor() {
+        const loginService = this.loginService;
+
 
         // de datum zoals die in de kalender gekozen is
         this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(datum => {

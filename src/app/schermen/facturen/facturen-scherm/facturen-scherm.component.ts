@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { HeliosFacturenDataset } from '../../../types/Helios';
 import { Subscription } from 'rxjs';
 import { ColDef, RowClassParams } from 'ag-grid-community';
@@ -30,6 +30,10 @@ import { ZoekbarComponent } from '../../../shared/components/zoekbar/zoekbar.com
     imports: [DatatableComponent, ErrorComponent, FactuurUploadenComponent, IconButtonComponent, PegasusCardComponent, SuccessComponent, ZoekbarComponent]
 })
 export class FacturenSchermComponent implements OnInit, OnDestroy {
+  private readonly loginService = inject(LoginService);
+  private readonly sharedService = inject(SharedService);
+  private readonly facturenService = inject(FacturenService);
+
   @ViewChild(DatatableComponent) grid: DatatableComponent;
   @ViewChild(FactuurUploadenComponent) private uploaden: FactuurUploadenComponent;
 
@@ -116,12 +120,6 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
 
   success: SuccessMessage | undefined;
   error: ErrorMessage | undefined;
-
-  constructor(private readonly loginService: LoginService,
-              private readonly sharedService: SharedService,
-              private readonly facturenService: FacturenService) {
-
-  }
 
   ngOnInit(): void {
     // Op safari hebben we een korte vertraging nodig op te zorgen dat initialisatie gedaan is

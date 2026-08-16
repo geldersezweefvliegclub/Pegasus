@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
 import { HeliosLogboekTotalen } from '../../../types/Helios';
@@ -16,6 +16,9 @@ import { LoaderComponent } from '../loader/loader.component';
     imports: [ErrorComponent, SuccessComponent, LoaderComponent]
 })
 export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDestroy {
+    private readonly startlijstService = inject(StartlijstService);
+    private readonly sharedService = inject(SharedService);
+
     @Input() VliegerID: number;
 
     private dbEventAbonnement: Subscription;
@@ -27,10 +30,6 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDest
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
-
-    constructor(private readonly startlijstService: StartlijstService,
-                private readonly sharedService: SharedService) {
-    }
 
     ngOnInit(): void {
         setTimeout(() => {

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { PegasusConfigService } from './shared/pegasus-config.service';
 import { io, Socket } from 'socket.io-client';
 import { BehaviorSubject } from 'rxjs';
@@ -31,6 +31,9 @@ export interface FlarmStartData {
   providedIn: 'root'
 })
 export class FlarmInputService  {
+  private readonly loginService = inject(LoginService);
+  private readonly configService = inject(PegasusConfigService);
+
   private socket: Socket;
   public flarmCache: FlarmData[] = [];
   private flarmStore = new BehaviorSubject(this.flarmCache);
@@ -38,8 +41,7 @@ export class FlarmInputService  {
   private startStore = new BehaviorSubject({START_ID: -1} as FlarmStartData);
   public readonly startUpdate = this.startStore.asObservable();
 
-  constructor(private readonly loginService: LoginService,
-              private readonly configService: PegasusConfigService)
+  constructor()
   {
     const ui = this.loginService.userInfo?.Userinfo;
     if (!ui?.isStarttoren) {

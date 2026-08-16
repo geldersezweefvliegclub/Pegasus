@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
 import { HeliosLogboekDataset, HeliosStartDataset } from '../../../types/Helios';
 import { LoginService } from '../../../services/apiservice/login.service';
 import { TijdInvoerComponent } from '../editors/tijd-invoer/tijd-invoer.component';
@@ -21,6 +21,10 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
     imports: [RouterLink, IconButtonComponent, FaIconComponent, TijdInvoerComponent, StartEditorComponent, TrackEditorComponent]
 })
 export class VluchtCardComponent implements OnInit {
+    private readonly configService = inject(PegasusConfigService);
+    private readonly loginService = inject(LoginService);
+    private readonly sharedService = inject(SharedService);
+
     @Input() logboek: HeliosLogboekDataset;
     @Input() start: HeliosStartDataset;
 
@@ -32,11 +36,6 @@ export class VluchtCardComponent implements OnInit {
 
     inTijdspan = false;
     datumDM: string;
-
-    constructor(private readonly configService: PegasusConfigService,
-                private readonly loginService: LoginService,
-                private readonly sharedService: SharedService) {
-    }
 
     ngOnInit(): void {
         if (!this.start) {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { HeliosVliegtuigenDataset } from '../../../types/Helios';
 import { faBug, faFileAlt, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { SharedService } from '../../../services/shared/shared.service';
@@ -14,15 +14,14 @@ import { VliegtuigEditorComponent } from '../../../shared/components/editors/vli
     imports: [NgClass, FaIconComponent, VliegtuigEditorComponent]
 })
 export class VliegtuigCardComponent  {
+  private readonly sharedService = inject(SharedService);
+
   @Input() vliegtuig: HeliosVliegtuigenDatasetExtended;
   @Output() Journaal: EventEmitter<number> = new EventEmitter<number>();
   @Output() Logboek: EventEmitter<number> = new EventEmitter<number>();
   @Output() Editor: EventEmitter<HeliosVliegtuigenDatasetExtended> = new EventEmitter<HeliosVliegtuigenDatasetExtended>();
 
   protected readonly iconEdit = faPenToSquare;
-
-  constructor(private readonly sharedService: SharedService) {
-  }
 
   editorButtonClicked() {
     this.Editor.emit(this.vliegtuig as HeliosVliegtuigenDataset);

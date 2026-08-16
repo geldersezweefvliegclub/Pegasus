@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { DateTime } from 'luxon';
 import { KeyValueArray } from '../../types/Utils';
 import { APIService } from './api.service';
@@ -17,6 +17,10 @@ import { LoginService } from './login.service';
     providedIn: 'root'
 })
 export class AanwezigVliegtuigService {
+    private readonly apiService = inject(APIService);
+    private readonly loginService = inject(LoginService);
+    private readonly sharedService = inject(SharedService);
+
     private aanwezigCache: HeliosAanwezigVliegtuigen = { dataset: []};   // return waarde van API call
     private aanwezigDagCache: HeliosVliegtuigenDataset[] = [];       // vliegtuigen aanwezig op de geselecteerde dag
 
@@ -28,10 +32,7 @@ export class AanwezigVliegtuigService {
     private aanwezigStore = new BehaviorSubject(this.aanwezigCache.dataset);
     public readonly aanwezigChange = this.aanwezigStore.asObservable();      // nieuwe aanwezigheid beschikbaar
 
-    constructor(private readonly apiService: APIService,
-                private readonly loginService: LoginService,
-                private readonly sharedService: SharedService) {
-
+    constructor() {
         // de datum zoals die in de kalender gekozen is
         this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
             this.datum = DateTime.fromObject({
@@ -70,7 +71,7 @@ export class AanwezigVliegtuigService {
         });
 
         // nadat we ingelogd zijn kunnen we de aanwezige vliegtuigen ophalen
-        loginService.inloggenSucces.subscribe(() => {
+        this.loginService.inloggenSucces.subscribe(() => {
             this.updateAanwezigCache();
         });
     }

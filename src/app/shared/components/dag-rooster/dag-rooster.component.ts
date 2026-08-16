@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, inject } from '@angular/core';
 import { DienstenService } from '../../../services/apiservice/diensten.service';
 import { RoosterService } from '../../../services/apiservice/rooster.service';
 import { HeliosDienst, HeliosDienstenDataset, HeliosRoosterDataset } from '../../../types/Helios';
@@ -15,6 +15,9 @@ import { IconButtonComponent } from '../icon-button/icon-button.component';
     imports: [ModalComponent, FormsModule, IconButtonComponent]
 })
 export class DagRoosterComponent {
+    private readonly roosterService = inject(RoosterService);
+    private readonly dienstenService = inject(DienstenService);
+
     @Output() opslaan: EventEmitter<string> = new EventEmitter<string>();
 
     @Input() Datum: DateTime;
@@ -23,10 +26,6 @@ export class DagRoosterComponent {
 
     rooster: HeliosRoosterDataset;
     diensten: HeliosDienstenDataset[];
-
-    constructor(private readonly roosterService: RoosterService,
-                private readonly dienstenService: DienstenService) {
-    }
 
     // Open leden-filter dialoog met de leden-filter opties
     openPopup() {

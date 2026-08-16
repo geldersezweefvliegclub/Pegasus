@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   HeliosCompetentie,
   HeliosCompetenties,
@@ -17,6 +17,10 @@ import { CustomJsonSerializer } from '../../utils/Utils';
     providedIn: 'root'
 })
 export class CompetentieService {
+    private readonly apiService = inject(APIService);
+    private readonly loginService = inject(LoginService);
+    private readonly storageService = inject(StorageService);
+
     private competentiesCache: HeliosCompetenties = {dataset: []};  // return waarde van API call
     private fallbackTimer: number;                           // Timer om te zorgen dat starts geladen echt is
 
@@ -25,9 +29,9 @@ export class CompetentieService {
 
     private boom: HeliosProgressieBoom[] = [];
 
-    constructor(private readonly apiService: APIService,
-                private readonly loginService: LoginService,
-                private readonly storageService: StorageService) {
+    constructor() {
+        const loginService = this.loginService;
+
 
         // We hebben misschien eerder de comptenties opgehaald. Die gebruiken we totdat de API starts heeft opgehaald
         if (this.storageService.ophalen('competenties') != null) {

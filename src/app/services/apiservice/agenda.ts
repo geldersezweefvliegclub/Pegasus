@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { DateTime } from 'luxon';
 import { APIService } from './api.service';
 import { KeyValueArray } from '../../types/Utils';
@@ -11,12 +11,12 @@ import { LoginService } from './login.service';
     providedIn: 'root'
 })
 export class AgendaService {
-    private agendaCache: HeliosAgenda = {dataset: []};    // return waarde van API call
-    private datumAbonnement: Subscription;                  // volg de keuze van de kalender
+    private readonly apiService = inject(APIService);
+    private readonly loginService = inject(LoginService);
+    private readonly sharedService = inject(SharedService);
 
-    constructor(private readonly apiService: APIService,
-                private readonly loginService: LoginService,
-                private readonly sharedService: SharedService) {}
+    private agendaCache: HeliosAgenda = {dataset: []};    // return waarde van API call
+    private datumAbonnement: Subscription;
 
     async getAgenda(startDatum: DateTime, eindDatum: DateTime, max?: number, verwijderd = false): Promise<HeliosAgendaDataset[]> {
         const getParams: KeyValueArray = {};

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { LedenService } from '../../../services/apiservice/leden.service';
 import {
   HeliosDienstenDataset,
@@ -62,6 +62,15 @@ export interface WeergaveData {
     imports: [PegasusCardComponent, CdkDropListGroup, RoosterMaandviewComponent, RoosterWeekviewComponent, RoosterDagviewComponent, IconButtonComponent, ZoekbarComponent, LedenFilterComponent]
 })
 export class RoosterPageComponent implements OnInit, OnDestroy {
+    private readonly ddwvService = inject(DdwvService);
+    private readonly loginService = inject(LoginService);
+    private readonly ledenService = inject(LedenService);
+    private readonly typesService = inject(TypesService);
+    private readonly sharedService = inject(SharedService);
+    private readonly configService = inject(PegasusConfigService);
+    private readonly roosterService = inject(RoosterService);
+    private readonly dienstenService = inject(DienstenService);
+
     @ViewChild(LedenFilterComponent) ledenFilter: LedenFilterComponent;
 
     readonly roosterIcon: IconDefinition = faCalendarDay;
@@ -113,16 +122,6 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
 
     isLoading = 0;
     zoekString: string;
-
-    constructor(private readonly ddwvService: DdwvService,
-                private readonly loginService: LoginService,
-                private readonly ledenService: LedenService,
-                private readonly typesService: TypesService,
-                private readonly sharedService: SharedService,
-                private readonly configService: PegasusConfigService,
-                private readonly roosterService: RoosterService,
-                private readonly dienstenService: DienstenService) {
-    }
 
     ngOnInit(): void {
         this.onWindowResize();          // bepaal wat we moeten tonen dag/week/maand

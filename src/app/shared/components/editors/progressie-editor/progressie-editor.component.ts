@@ -1,14 +1,4 @@
-import {
-    Component,
-    EventEmitter,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Output,
-    SimpleChanges,
-    ViewChild,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import {
     HeliosBehaaldeProgressieDataset,
@@ -38,6 +28,11 @@ import { LoaderComponent } from '../../loader/loader.component';
     imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, NgbDatepicker, VoortgangComponent, IconButtonComponent, LoaderComponent]
 })
 export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
+    private readonly loginService = inject(LoginService);
+    private readonly ledenService = inject(LedenService);
+    private readonly typesService = inject(TypesService);
+    private readonly progressieService = inject(ProgressieService);
+
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @Input() competenties: HeliosCompetentiesDataset[];
     @Input() vliegerID: number;
@@ -64,12 +59,6 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
     topLevels: HeliosType[];
 
     geldigTot: DateTime | undefined;
-
-    constructor(private readonly loginService: LoginService,
-                private readonly ledenService: LedenService,
-                private readonly typesService: TypesService,
-                private readonly progressieService: ProgressieService) {
-    }
 
     ngOnInit() {
         // abonneer op wijziging van top level competenties

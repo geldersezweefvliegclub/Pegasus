@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, inject } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { SharedService } from '../../../services/shared/shared.service';
 import { LoginService } from '../../../services/apiservice/login.service';
@@ -13,6 +13,9 @@ import { FormsModule } from '@angular/forms';
 })
 
 export class LedenFilterComponent {
+    private readonly loginService = inject(LoginService);
+    readonly sharedService = inject(SharedService);
+
     @Input() LedenDDWV = true;
     @Output() filterChanged: EventEmitter<void> = new EventEmitter<void>();
 
@@ -20,9 +23,6 @@ export class LedenFilterComponent {
 
     isBeheerder: boolean;
     isDDWVer: boolean;
-
-    constructor(private readonly loginService: LoginService, readonly sharedService: SharedService) {
-    }
 
     // Open leden-filter dialoog met de leden-filter opties
     openPopup() {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { AgendaService } from '../../../services/apiservice/agenda';
 import { HeliosAgendaDataset } from '../../../types/Helios';
 import { DateTime } from 'luxon';
@@ -13,10 +13,10 @@ import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
     imports: [FaIconComponent, NgbPopover]
 })
 export class AgendaComponent implements OnInit {
+  private readonly agendaService = inject(AgendaService);
+
 
   agenda: HeliosAgendaDataset[] = [];
-
-  constructor(private readonly agendaService: AgendaService) { }
 
   ngOnInit(): void {
     const Vanaf = DateTime.now();

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faChevronDown, faChevronUp, faInfoCircle, faStreetView } from '@fortawesome/free-solid-svg-icons';
 import { Observable, of, Subscription } from 'rxjs';
@@ -67,6 +67,20 @@ export type HeliosAanwezigLedenDatasetExtended = HeliosAanwezigLedenDataset & {
     imports: [ErrorComponent, GastEditorComponent, IconButtonComponent, LidAanwezigEditorComponent, ModalComponent, NgIf, NgClass, NgSelectComponent, FormsModule, NgTemplateOutlet, PegasusCardComponent, SamenvattingComponent, NgFor, FaIconComponent, RouterLink, AsyncPipe, TransactiesComponent]
 })
 export class AanmeldenPageComponent implements OnInit, OnDestroy {
+    private readonly ddwvService = inject(DdwvService);
+    private readonly typesService = inject(TypesService);
+    private readonly loginService = inject(LoginService);
+    private readonly ledenService = inject(LedenService);
+    private readonly sharedService = inject(SharedService);
+    private readonly gastenService = inject(GastenService);
+    private readonly roosterService = inject(RoosterService);
+    private readonly storageService = inject(StorageService);
+    private readonly daginfoService = inject(DaginfoService);
+    private readonly dienstenService = inject(DienstenService);
+    private readonly configService = inject(PegasusConfigService);
+    private readonly progressieService = inject(ProgressieService);
+    private readonly aanwezigLedenService = inject(AanwezigLedenService);
+
     @ViewChild(ModalComponent) private bevestigAfmeldenPopup: ModalComponent;
     @ViewChild(LidAanwezigEditorComponent) aanmeldEditor: LidAanwezigEditorComponent;
     @ViewChild(GastEditorComponent) gastEditor: GastEditorComponent;
@@ -124,21 +138,6 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
 
     // Expose de functie DagVanDeWeek naar de .html file, want die kan daar niet direct bij.
     protected readonly DagVanDeWeek = DagVanDeWeek;
-
-    constructor(private readonly ddwvService: DdwvService,
-                private readonly typesService: TypesService,
-                private readonly loginService: LoginService,
-                private readonly ledenService: LedenService,
-                private readonly sharedService: SharedService,
-                private readonly gastenService: GastenService,
-                private readonly roosterService: RoosterService,
-                private readonly storageService: StorageService,
-                private readonly daginfoService: DaginfoService,
-                private readonly dienstenService: DienstenService,
-                private readonly configService: PegasusConfigService,
-                private readonly progressieService: ProgressieService,
-                private readonly aanwezigLedenService: AanwezigLedenService) {
-    }
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo?.Userinfo;

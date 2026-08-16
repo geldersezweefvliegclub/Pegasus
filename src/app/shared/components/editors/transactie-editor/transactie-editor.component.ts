@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { TransactiesService } from '../../../../services/apiservice/transacties.service';
@@ -23,6 +23,10 @@ import { IconButtonComponent } from '../../icon-button/icon-button.component';
     imports: [ErrorComponent, SuccessComponent, ModalComponent, LidInvoerComponent, FormsModule, NgbInputDatepicker, IconButtonComponent]
 })
 export class TransactieEditorComponent implements OnInit {
+    private readonly ledenService = inject(LedenService);
+    private readonly typesService = inject(TypesService);
+    private readonly transactiesService = inject(TransactiesService);
+
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
     @Input() toonLidSelectie = true;
@@ -42,11 +46,6 @@ export class TransactieEditorComponent implements OnInit {
     error: ErrorMessage | undefined;
 
     vliegdag: DateTime | undefined;
-
-    constructor(private readonly ledenService: LedenService,
-                private readonly typesService: TypesService,
-                private readonly transactiesService: TransactiesService) {
-    }
 
     ngOnInit(): void {
         // abonneer op wijziging van leden

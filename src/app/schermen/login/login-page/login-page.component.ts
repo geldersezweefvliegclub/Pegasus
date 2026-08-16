@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { LoginService } from '../../../services/apiservice/login.service';
 import { ErrorMessage } from '../../../types/Utils';
 import { Router } from '@angular/router';
@@ -23,6 +23,12 @@ import { LoaderComponent } from '../../../shared/components/loader/loader.compon
 })
 
 export class LoginPageComponent implements OnInit {
+    private readonly loginService = inject(LoginService);
+    private readonly ledenService = inject(LedenService);
+    private readonly configService = inject(PegasusConfigService);
+    private readonly storageService = inject(StorageService);
+    private readonly router = inject(Router);
+
     @ViewChild(CodeInputComponent) private codeInput: CodeInputComponent;
 
     oogIcon: IconDefinition = faEye;
@@ -61,13 +67,6 @@ export class LoginPageComponent implements OnInit {
         "/assets/img/20201025.jpg"
     ];
     toonFoto: string = this.urlFoto();
-
-    constructor(private readonly loginService: LoginService,
-                private readonly ledenService: LedenService,
-                private readonly configService: PegasusConfigService,
-                private readonly storageService: StorageService,
-                private readonly router: Router) {
-    }
 
     ngOnInit() {
         setInterval(() => {

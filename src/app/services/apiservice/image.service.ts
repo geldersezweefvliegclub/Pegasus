@@ -1,13 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { APIService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ImageService {
+  private readonly apiService = inject(APIService);
 
-  constructor(private readonly apiService: APIService) {
-  }
 
   /**
    * Upload een avatar van een lid

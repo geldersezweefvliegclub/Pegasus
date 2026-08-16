@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { FlarmData, FlarmInputService } from '../../../services/flarm-input.service';
 import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
@@ -16,6 +16,9 @@ interface FlarmDataExt extends FlarmData {
     imports: [NgClass, StartDetailsComponent]
 })
 export class FlarmLijstComponent implements OnInit, OnDestroy, OnChanges {
+  private readonly flarmService = inject(FlarmInputService);
+  private readonly startService = inject(StartlijstService);
+
   @Input() veldID: number | undefined
   @ViewChild(StartDetailsComponent) startDetails: StartDetailsComponent;
 
@@ -28,9 +31,6 @@ export class FlarmLijstComponent implements OnInit, OnDestroy, OnChanges {
   landing: FlarmDataExt[] = [];
 
   private classTimer: number;
-
-  constructor(private readonly flarmService: FlarmInputService,
-              private readonly startService: StartlijstService) { }
 
   ngOnInit(): void {
     this.classTimer = window.setInterval(() => {

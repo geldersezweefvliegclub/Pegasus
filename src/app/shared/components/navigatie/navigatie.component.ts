@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { beheerRoutes, CustomRoute, routes } from '../../../routing.module';
 
 import { Router, RouterLinkActive, RouterLink } from '@angular/router';
@@ -31,6 +31,14 @@ import { VliegdagSelectieComponent } from '../vliegdag-selectie/vliegdag-selecti
 })
 
 export class NavigatieComponent implements OnInit, OnDestroy {
+    readonly loginService = inject(LoginService);
+    private readonly router = inject(Router);
+    private readonly calendar = inject(NgbCalendar);
+    private readonly daginfoService = inject(DaginfoService);
+    private readonly vliegtuigenService = inject(VliegtuigenService);
+    private readonly sharedService = inject(SharedService);
+    private readonly configService = inject(PegasusConfigService);
+
     @Input() hoofdscherm = false;
     @ViewChild(PopupKalenderComponent) popupKalender: PopupKalenderComponent;
 
@@ -53,16 +61,7 @@ export class NavigatieComponent implements OnInit, OnDestroy {
     private dagInfoAbonnement: Subscription;
     private vliegtuigenAbonnement: Subscription;
     private userInfoAbonnement: Subscription;
-    private resizeSubscription: Subscription;       // Abonneer op aanpassing van window grootte (of draaien mobiel)
-
-    constructor(readonly loginService: LoginService,
-                private readonly router: Router,
-                private readonly calendar: NgbCalendar,
-                private readonly daginfoService: DaginfoService,
-                private readonly vliegtuigenService: VliegtuigenService,
-                private readonly sharedService: SharedService,
-                private readonly configService: PegasusConfigService) {
-    }
+    private resizeSubscription: Subscription;
 
     ngOnInit() {
         this.toonMenuItems();

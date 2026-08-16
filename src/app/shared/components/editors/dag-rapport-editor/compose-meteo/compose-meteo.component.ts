@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild, inject } from '@angular/core';
 import { Observable, of, Subscription } from 'rxjs';
 import { TypesService } from '../../../../../services/apiservice/types.service';
 import { HeliosType } from '../../../../../types/Helios';
@@ -15,6 +15,8 @@ import { AsyncPipe } from '@angular/common';
     imports: [ModalComponent, NgSelectComponent, FormsModule, IconButtonComponent, AsyncPipe]
 })
 export class ComposeMeteoComponent {
+    private readonly typesService = inject(TypesService);
+
     @Output() opslaan: EventEmitter<string> = new EventEmitter<string>();
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
@@ -37,7 +39,7 @@ export class ComposeMeteoComponent {
     gemiddeldStijgen: string;
     zicht: string;
 
-    constructor(private readonly typesService: TypesService) {
+    constructor() {
         // abonneer op wijziging van competenties
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
             this.windRichtingTypes$ = of(dataset!.filter((t: HeliosType) => {

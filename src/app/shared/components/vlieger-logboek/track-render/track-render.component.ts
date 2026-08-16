@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
 import { AgRendererComponent } from 'ag-grid-angular';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
@@ -17,14 +17,13 @@ export interface buttonClicked {
     imports: [FaIconComponent]
 })
 export class TrackRenderComponent implements AgRendererComponent {
+    private readonly loginService = inject(LoginService);
+
     params: ICellRendererParams & buttonClicked;
     trackIcon: IconDefinition = faAddressCard;
 
     LID_ID: number;
     NAAM: string;
-
-    constructor(private readonly loginService: LoginService) {
-    }
 
     agInit(params: ICellRendererParams & buttonClicked): void {
         this.params = params;

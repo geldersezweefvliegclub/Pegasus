@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Airport, Check, Dienst, IPegasusConfig, MenuItem, Overig, PVB, Rapport } from '../../types/IPegasusConfig';
 
@@ -6,6 +6,8 @@ import { Airport, Check, Dienst, IPegasusConfig, MenuItem, Overig, PVB, Rapport 
     providedIn: 'root'
 })
 export class PegasusConfigService {
+    private http = inject(HttpClient);
+
     private configURL = './assets/pegasus.config.json';
     private pegasusConfig: IPegasusConfig;
 
@@ -24,10 +26,6 @@ export class PegasusConfigService {
     public readonly SLEEPVLIEGER_TYPE_ID: number = 1810;
     public readonly GASTEN_VLIEGER1_TYPE_ID: number = 1813;
     public readonly GASTEN_VLIEGER2_TYPE_ID: number = 1814;
-
-
-    constructor(private http: HttpClient) {
-    }
 
     public load() {
         return new Promise<IPegasusConfig>((resolve, reject) => {

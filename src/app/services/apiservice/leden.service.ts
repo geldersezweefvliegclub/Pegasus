@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { APIService } from './api.service';
 
 import { HeliosLeden, HeliosLedenDataset, HeliosLid } from '../../types/Helios';
@@ -12,6 +12,10 @@ import { CustomJsonSerializer } from '../../utils/Utils';
     providedIn: 'root'
 })
 export class LedenService {
+    private readonly apiService = inject(APIService);
+    private readonly loginService = inject(LoginService);
+    private readonly sharedService = inject(SharedService);
+
     private ledenCache: HeliosLeden  = { dataset: []};       // return waarde van API call
 
     private overslaan = false;
@@ -21,9 +25,9 @@ export class LedenService {
     private dbEventAbonnement: Subscription;
     public readonly ledenChange = this.ledenStore.asObservable();      // nieuwe leden beschikbaar
 
-    constructor(private readonly apiService: APIService,
-                private readonly loginService: LoginService,
-                private readonly sharedService: SharedService) {
+    constructor() {
+        const loginService = this.loginService;
+
 
         // nadat we ingelogd zijn kunnen we de vliegtuigen ophalen
         loginService.inloggenSucces.subscribe(() => {

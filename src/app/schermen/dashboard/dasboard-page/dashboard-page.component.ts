@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import {
   faAddressCard,
@@ -72,6 +72,18 @@ import { VliegerLogboekTotalenComponent } from '../../../shared/components/vlieg
     imports: [AgendaComponent, AvatarComponent, DienstenComponent, ErrorComponent, FormsModule, IconButtonComponent, LedenDocumentenComponent, ModalComponent, NgbCarousel, NgbSlide, FaIconComponent, PegasusCardComponent, ProgressieBoomComponent, PvbComponent, RecencyComponent, StartEditorComponent, StatusComponent, SuccessComponent, TracksComponent, TransactiesComponent, VerjaardagenComponent, VliegerLogboekComponent, VliegerLogboekTotalenComponent]
 })
 export class DashboardPageComponent implements OnInit, OnDestroy {
+    private readonly ddwvService = inject(DdwvService);
+    private readonly ledenService = inject(LedenService);
+    private readonly loginService = inject(LoginService);
+    private readonly typesService = inject(TypesService);
+    private readonly trackService = inject(TracksService);
+    private readonly sharedService = inject(SharedService);
+    private readonly configService = inject(PegasusConfigService);
+    private readonly startlijstService = inject(StartlijstService);
+    private readonly progressieService = inject(ProgressieService);
+    private readonly router = inject(Router);
+    private activatedRoute = inject(ActivatedRoute);
+
     readonly iconCardIcon: IconDefinition = faChartPie;
     readonly iconProgressie: IconDefinition = faChartLine;
     readonly iconLogboek: IconDefinition = faClipboardList;
@@ -105,20 +117,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
     verwijderMode = false;
     magVerwijderen = false;
-
-
-    constructor(private readonly ddwvService: DdwvService,
-                private readonly ledenService: LedenService,
-                private readonly loginService: LoginService,
-                private readonly typesService: TypesService,
-                private readonly trackService: TracksService,
-                private readonly sharedService: SharedService,
-                private readonly configService: PegasusConfigService,
-                private readonly startlijstService: StartlijstService,
-                private readonly progressieService: ProgressieService,
-                private readonly router: Router,
-                private activatedRoute: ActivatedRoute) {
-    }
 
     ngOnInit(): void {
         // de datum zoals die in de kalender gekozen is

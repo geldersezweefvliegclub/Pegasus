@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { APIService } from './api.service';
 import { DateTime } from 'luxon';
 import { KeyValueArray } from '../../types/Utils';
@@ -14,6 +14,12 @@ import { CustomJsonSerializer } from '../../utils/Utils';
     providedIn: 'root'
 })
 export class DaginfoService {
+    private readonly apiService = inject(APIService);
+    private readonly loginService = inject(LoginService);
+    private readonly sharedService = inject(SharedService);
+    private readonly storageService = inject(StorageService);
+    private readonly roosterService = inject(RoosterService);
+
     private dagInfoTotaalCache: HeliosDagInfoDagen = { dataset: []}; // return waarde van API call
     private dagenCache: HeliosDagInfoDagen = { dataset: []};         // return waarde van API call
 
@@ -24,11 +30,7 @@ export class DaginfoService {
     private dagInfoStore = new BehaviorSubject(this.dagInfo);
     public readonly dagInfoChange = this.dagInfoStore.asObservable();      // nieuwe dagInfo beschikbaar
 
-    constructor(private readonly apiService: APIService,
-                private readonly loginService: LoginService,
-                private readonly sharedService: SharedService,
-                private readonly storageService: StorageService,
-                private readonly roosterService: RoosterService) {
+    constructor() {
 
         // de datum zoals die in de kalender gekozen is
         this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {

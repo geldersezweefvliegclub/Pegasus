@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosRoosterDagExtended } from '../../../../schermen/rooster/rooster-page/rooster-page.component';
@@ -22,6 +22,11 @@ import { LoaderComponent } from '../../loader/loader.component';
     imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, LidInvoerComponent, IconButtonComponent, LoaderComponent]
 })
 export class DienstEditorComponent implements OnInit, OnDestroy {
+    private readonly typesService = inject(TypesService);
+    private readonly ledenService = inject(LedenService);
+    private readonly dienstenService = inject(DienstenService);
+    private readonly configService = inject(PegasusConfigService);
+
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
     success: SuccessMessage | undefined;
@@ -41,12 +46,6 @@ export class DienstEditorComponent implements OnInit, OnDestroy {
     lidID: number | undefined;
     dienstBeschrijving: string;
     isSaving: boolean;
-
-    constructor(private readonly typesService: TypesService,
-                private readonly ledenService: LedenService,
-                private readonly dienstenService: DienstenService,
-                private readonly configService: PegasusConfigService) {
-    }
 
     ngOnInit(): void {
         // abonneer op wijziging van leden

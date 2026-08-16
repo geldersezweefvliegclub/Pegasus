@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, inject } from '@angular/core';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
 import { HeliosAanwezigSamenvatting, HeliosDienstenDataset, HeliosRoosterDataset } from '../../../types/Helios';
 import { DateTime } from 'luxon';
@@ -15,6 +15,11 @@ import { IconButtonComponent } from '../../../shared/components/icon-button/icon
     imports: [ModalComponent, IconButtonComponent]
 })
 export class SamenvattingComponent {
+    private readonly sharedService = inject(SharedService);
+    private readonly loginService = inject(LoginService);
+    private readonly configService = inject(PegasusConfigService);
+    private readonly aanwezigLedenService = inject(AanwezigLedenService);
+
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @Input() diensten: HeliosDienstenDataset[];
     @Output() bulkEmail: EventEmitter<string> = new EventEmitter<string>();
@@ -35,12 +40,6 @@ export class SamenvattingComponent {
     middagStartleider = "";
     middagLierist = "";
     middagSleper = "";
-
-    constructor(private readonly sharedService: SharedService,
-                private readonly loginService: LoginService,
-                private readonly configService: PegasusConfigService,
-                private readonly aanwezigLedenService: AanwezigLedenService) {
-    }
 
     openPopup(rooster: HeliosRoosterDataset) {
         const ui = this.loginService.userInfo;

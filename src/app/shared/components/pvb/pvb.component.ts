@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
 import { ProgressieService } from '../../../services/apiservice/progressie.service';
 import { HeliosBehaaldeProgressieDataset, HeliosCompetentiesDataset, HeliosLid } from '../../../types/Helios';
@@ -20,6 +20,12 @@ import { LoaderComponent } from '../loader/loader.component';
     imports: [ErrorComponent, SuccessComponent, LoaderComponent, ProgressieEditorComponent]
 })
 export class PvbComponent implements OnInit, OnChanges, OnDestroy {
+    private readonly loginService = inject(LoginService);
+    private readonly configService = inject(PegasusConfigService);
+    private readonly sharedService = inject(SharedService);
+    private readonly competentieService = inject(CompetentieService);
+    private readonly progressieService = inject(ProgressieService);
+
     @Input() Vlieger: HeliosLid;
     @ViewChild(ProgressieEditorComponent) private editor: ProgressieEditorComponent;
 
@@ -33,12 +39,6 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
-
-    constructor(private readonly loginService: LoginService,
-                private readonly configService: PegasusConfigService,
-                private readonly sharedService: SharedService,
-                private readonly competentieService: CompetentieService,
-                private readonly progressieService: ProgressieService) { }
 
     ngOnInit(): void {
         // Als in de progressie tabel is aangepast, moet we onze dataset ook aanpassen

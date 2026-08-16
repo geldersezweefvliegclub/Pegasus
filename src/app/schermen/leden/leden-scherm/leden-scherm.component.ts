@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { faUsers } from '@fortawesome/free-solid-svg-icons';
 import { HeliosLedenDataset } from '../../../types/Helios';
 import { ColDef, RowClassParams, RowDoubleClickedEvent } from 'ag-grid-community';
@@ -42,6 +42,12 @@ import { ZoekbarComponent } from '../../../shared/components/zoekbar/zoekbar.com
     imports: [ErrorComponent, PegasusCardComponent, DatatableComponent, LedenCardComponent, IconButtonComponent, StatusButtonComponent, ZoekbarComponent, LedenFilterComponent, TrackEditorComponent]
 })
 export class LedenSchermComponent implements OnInit, OnDestroy {
+    private readonly ledenService = inject(LedenService);
+    private readonly loginService = inject(LoginService);
+    private readonly trackService = inject(TracksService);
+    private readonly sharedService = inject(SharedService);
+    private readonly router = inject(Router);
+
     @ViewChild(LedenFilterComponent) ledenFilter: LedenFilterComponent;
     @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
     @ViewChild(DatatableComponent) grid: DatatableComponent;
@@ -199,14 +205,6 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
     magExporteren = false;
     toonBulkEmail = false;
     toonBladwijzer = false;
-
-    constructor(private readonly ledenService: LedenService,
-                private readonly loginService: LoginService,
-                private readonly trackService: TracksService,
-                private readonly sharedService: SharedService,
-                private readonly router: Router
-    ) {
-    }
 
     ngOnInit(): void {
         // plaats de juiste kolommen in het grid

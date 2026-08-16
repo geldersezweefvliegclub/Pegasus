@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { APIService } from './api.service';
 import { HeliosJournaal, HeliosJournaalDataset, HeliosJournaals } from '../../types/Helios';
 import { KeyValueArray } from '../../types/Utils';
@@ -18,10 +18,9 @@ export interface journaalFilter {
     providedIn: 'root'
 })
 export class JournaalService {
-    private meldingenCache: HeliosJournaals = {dataset: []};      // return waarde van API call
+    private readonly apiService = inject(APIService);
 
-    constructor(private readonly apiService: APIService) {
-    }
+    private meldingenCache: HeliosJournaals = {dataset: []};
 
     async getJournaals(filter: journaalFilter, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, verwijderd = false): Promise<HeliosJournaalDataset[]> {
         const getParams: KeyValueArray = {};

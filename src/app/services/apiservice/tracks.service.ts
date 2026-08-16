@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { APIService } from './api.service';
 import { HeliosTrack, HeliosTracks, HeliosTracksDataset } from '../../types/Helios';
 import { KeyValueArray } from '../../types/Utils';
@@ -8,10 +8,10 @@ import { LoginService } from './login.service';
     providedIn: 'root'
 })
 export class TracksService {
-    private tracksCache: HeliosTracks = {dataset: []};      // return waarde van API call
+    private readonly apiService = inject(APIService);
+    private readonly loginService = inject(LoginService);
 
-    constructor(private readonly apiService: APIService,
-                private readonly loginService: LoginService) {}
+    private tracksCache: HeliosTracks = {dataset: []};
 
     async getTracks(verwijderd = false, lidID?: number, max?: number): Promise<HeliosTracksDataset[]> {
 

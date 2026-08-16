@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { APIService } from './api.service';
 import {
   HeliosDagInfosDataset,
@@ -15,12 +15,11 @@ import { DateTime } from 'luxon';
     providedIn: 'root'
 })
 export class DagRapportenService {
-    private rapportenCache: HeliosDagRapporten = {dataset: []};      // return waarde van API call
-    private dagenCache: HeliosDagRapporten = { dataset: []};         // return waarde van API call
+    private readonly apiService = inject(APIService);
+    private readonly loginService = inject(LoginService);
 
-    constructor(private readonly apiService: APIService,
-                private readonly loginService: LoginService) {
-    }
+    private rapportenCache: HeliosDagRapporten = {dataset: []};      // return waarde van API call
+    private dagenCache: HeliosDagRapporten = { dataset: []};
 
     async getDagRapporten(verwijderd = false, datum: string, max?: number): Promise<HeliosDagRapportenDataset[]> {
         // Alleen als we onderstaande rollen niet hebben, gaan we ook niets ophalen. DDWV crew/beheerder heeft niet altijd

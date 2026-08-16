@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ColDef, RowSelectedEvent } from 'ag-grid-community';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { HeliosAuditDataset } from '../../../types/Helios';
@@ -23,6 +23,8 @@ import { ZoekbarComponent } from '../../../shared/components/zoekbar/zoekbar.com
 })
 
 export class AuditPageComponent implements OnInit {
+    private readonly auditService = inject(AuditService);
+
     readonly iconCardIcon: IconDefinition = faWaveSquare;
 
     data: HeliosAuditDataset[] = [];
@@ -47,8 +49,6 @@ export class AuditPageComponent implements OnInit {
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
-
-    constructor(private readonly auditService: AuditService) { }
 
     ngOnInit(): void {
         this.opvragen();

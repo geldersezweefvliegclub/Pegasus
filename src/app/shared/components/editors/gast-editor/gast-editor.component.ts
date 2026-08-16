@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosGast, HeliosType } from '../../../../types/Helios';
@@ -20,6 +20,9 @@ import { AsyncPipe } from '@angular/common';
     imports: [ErrorComponent, SuccessComponent, ModalComponent, NgSelectComponent, FormsModule, IconButtonComponent, LoaderComponent, AsyncPipe]
 })
 export class GastEditorComponent implements OnInit, OnDestroy {
+    private readonly gastenService = inject(GastenService);
+    private readonly typesService = inject(TypesService);
+
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @Output() refresh: EventEmitter<void> = new EventEmitter<void>();
 
@@ -32,11 +35,7 @@ export class GastEditorComponent implements OnInit, OnDestroy {
     gast: HeliosGast;
 
     private typesAbonnement: Subscription;
-    veldenTypes$: Observable<HeliosType[]>;         // vliegveld types
-
-    constructor(private readonly gastenService: GastenService,
-                private readonly typesService: TypesService) {
-    }
+    veldenTypes$: Observable<HeliosType[]>;
 
     ngOnInit(): void {
         // abonneer op wijziging van types

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { TransactiesService } from '../../../services/apiservice/transacties.service';
 import { HeliosTransactiesBanken, HeliosType } from '../../../types/Helios';
 import { ModalComponent } from '../modal/modal.component';
@@ -17,6 +17,10 @@ import { IconButtonComponent } from '../icon-button/icon-button.component';
     imports: [ErrorComponent, ModalComponent, FormsModule, IconButtonComponent]
 })
 export class IdealBestellenComponent implements OnInit{
+    private readonly ddwvService = inject(DdwvService);
+    private readonly typesService = inject(TypesService);
+    private readonly transactieService = inject(TransactiesService);
+
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
     private typesAbonnement: Subscription;
@@ -29,11 +33,6 @@ export class IdealBestellenComponent implements OnInit{
     lidID: number;
     bestelling = -1;
     bank = -1;
-
-    constructor(private readonly ddwvService: DdwvService,
-                private readonly typesService: TypesService,
-                private readonly transactieService: TransactiesService) {
-    }
 
     ngOnInit() {
         // abonneer op bestel info uit types

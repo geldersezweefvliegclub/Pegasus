@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, ViewChild, inject } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosStart, HeliosStartDataset } from '../../../../types/Helios';
 import { StartlijstService } from '../../../../services/apiservice/startlijst.service';
@@ -31,6 +31,9 @@ enum TypeTijdInvoer {
 })
 
 export class TijdInvoerComponent {
+    private readonly startlijstService = inject(StartlijstService);
+    private readonly configService = inject(PegasusConfigService);
+
     @Output() OpslaanStarttijd: EventEmitter<HeliosStart> = new EventEmitter<HeliosStart>();
     @Output() OpslaanLandingstijd: EventEmitter<HeliosStart> = new EventEmitter<HeliosStart>();
 
@@ -52,9 +55,9 @@ export class TijdInvoerComponent {
 
     Invoer: TypeTijdInvoer = TypeTijdInvoer.Starttijd;
 
-    constructor(private readonly startlijstService: StartlijstService,
-                private readonly configService: PegasusConfigService,
-                config: NgbTypeaheadConfig) {
+    constructor() {
+        const config = inject(NgbTypeaheadConfig);
+
         config.showHint = true;
     }
 

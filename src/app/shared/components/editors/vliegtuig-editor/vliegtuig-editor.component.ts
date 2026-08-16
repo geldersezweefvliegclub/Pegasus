@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosType, HeliosVliegtuig, HeliosVliegtuigenDataset } from '../../../../types/Helios';
 import { VliegtuigenService } from '../../../../services/apiservice/vliegtuigen.service';
@@ -23,6 +23,12 @@ import { LoaderComponent } from '../../loader/loader.component';
     imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, RegistratieDirective, IconButtonComponent, LoaderComponent]
 })
 export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
+    private readonly vliegtuigenService = inject(VliegtuigenService);
+    private readonly competentiesService = inject(CompetentieService);
+    private readonly configService = inject(PegasusConfigService);
+    private readonly loginService = inject(LoginService);
+    private readonly typesService = inject(TypesService);
+
     @Output() add: EventEmitter<HeliosVliegtuig> = new EventEmitter<HeliosVliegtuig>();
     @Output() update: EventEmitter<HeliosVliegtuig> = new EventEmitter<HeliosVliegtuig>();
     @Output() delete: EventEmitter<HeliosVliegtuig> = new EventEmitter<HeliosVliegtuig>();
@@ -67,15 +73,7 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
-    PVBs: PVB[];        // proef van bekwaamheid met kruisjeslijst (lokaal / overland)
-
-    constructor(
-        private readonly vliegtuigenService: VliegtuigenService,
-        private readonly competentiesService: CompetentieService,
-        private readonly configService: PegasusConfigService,
-        private readonly loginService: LoginService,
-        private readonly typesService: TypesService
-    ) {}
+    PVBs: PVB[];
 
     ngOnInit(): void {
         // abonneer op wijziging van vliegtuigTypes

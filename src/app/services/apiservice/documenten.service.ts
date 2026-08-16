@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { APIService } from './api.service';
 import { HeliosDocument, HeliosDocumenten, HeliosDocumentenDataset } from '../../types/Helios';
 import { KeyValueArray } from '../../types/Utils';
@@ -9,11 +9,13 @@ import { LoginService } from './login.service';
     providedIn: 'root'
 })
 export class DocumentenService {
+    private readonly apiService = inject(APIService);
+    private readonly loginService = inject(LoginService);
+    private readonly storageService = inject(StorageService);
+
     private documentenCache: HeliosDocumenten = {dataset: []};      // return waarde van API call
 
-    constructor(private readonly apiService: APIService,
-                private readonly loginService: LoginService,
-                private readonly storageService: StorageService) {
+    constructor() {
 
         // We hebben misschien eerder de documenten opgehaald. Die laden we alvast
         if (this.storageService.ophalen('documenten') != null) {

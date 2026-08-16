@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { APIService } from './api.service';
 import { StorageService } from '../storage/storage.service';
 import {
@@ -17,15 +17,14 @@ import { LoginService } from './login.service';
     providedIn: 'root'
 })
 export class ProgressieService {
+    private readonly apiService = inject(APIService);
+    private readonly loginService = inject(LoginService);
+    private readonly storageService = inject(StorageService);
+
     private progressieCache: HeliosBehaaldeProgressie = { dataset: []};  // return waarde van API call
     private kaartCache:HeliosProgressieKaart = { dataset: []};           // return waarde van API call
 
     private boom: HeliosProgressieBoom[] = [];
-
-    constructor(private readonly apiService: APIService,
-                private readonly loginService: LoginService,
-                private readonly storageService: StorageService) {
-    }
 
     async getProgressiesLid(lidID:number, comptentiesIDs?: string): Promise<HeliosBehaaldeProgressieDataset[]> {
         // kunnen alleen data ophalen als we ingelogd zijn

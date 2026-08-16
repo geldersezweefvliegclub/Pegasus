@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { Subscription } from 'rxjs';
 import { SharedService } from '../../../services/shared/shared.service';
@@ -11,11 +11,11 @@ import { VliegdagSelectieComponent } from '../vliegdag-selectie/vliegdag-selecti
     imports: [ModalComponent, VliegdagSelectieComponent]
 })
 export class PopupKalenderComponent implements OnInit, OnDestroy {
+  private readonly sharedService = inject(SharedService);
+
   @ViewChild(ModalComponent) private popup: ModalComponent;
 
-  private datumAbonnement: Subscription;          // volg de keuze van de kalender
-
-  constructor(private readonly sharedService: SharedService) { }
+  private datumAbonnement: Subscription;
 
   ngOnInit() : void {
     this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(() => {

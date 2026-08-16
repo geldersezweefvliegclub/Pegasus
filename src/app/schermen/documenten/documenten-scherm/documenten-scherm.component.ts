@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { faFile, IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { HeliosDocument, HeliosDocumentenDataset, HeliosType } from '../../../types/Helios';
 import { Subscription } from 'rxjs';
@@ -26,6 +26,10 @@ import { StatusButtonComponent } from '../../../shared/components/status-button/
     imports: [DocumentEditorComponent, IconButtonComponent, PegasusCardComponent, StatusButtonComponent, FaIconComponent, NgClass]
 })
 export class DocumentenSchermComponent implements OnInit, OnDestroy {
+    private readonly typesService = inject(TypesService);
+    private readonly loginService = inject(LoginService);
+    private readonly documentenService = inject(DocumentenService);
+
     @ViewChild(DocumentEditorComponent) editor: DocumentEditorComponent;
 
     iconCardIcon: IconDefinition = faFile;
@@ -43,12 +47,7 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
     deleteMode = false;        // zitten we in delete mode om documenten te kunnen verwijderen
     trashMode = false;         // zitten in restore mode om documenten te kunnen terughalen
 
-    magAanpassen = false;      // mag de gebruiker documenten aanpassen
-
-    constructor(private readonly typesService: TypesService,
-                private readonly loginService: LoginService,
-                private readonly documentenService: DocumentenService) {
-    }
+    magAanpassen = false;
 
     ngOnInit(): void {
         // abonneer op wijziging van documenten

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { StartlijstService } from '../../../services/apiservice/startlijst.service';
 import {
   CheckboxRenderComponent,
@@ -63,6 +63,17 @@ type HeliosStartDatasetExtended = HeliosStartDataset & {
     imports: [AsyncPipe, DatatableComponent, ErrorComponent, ExportStartlijstComponent, FaIconComponent, FlarmLijstComponent, FormsModule, IconButtonComponent, NgClass, NgSelectComponent, PegasusCardComponent, StartEditorComponent, StatusButtonComponent, SuccessComponent, TijdInvoerComponent, VluchtCardComponent, ZoekbarComponent]
 })
 export class VluchtenGridComponent implements OnInit, OnDestroy {
+    private readonly startlijstService = inject(StartlijstService);
+    private readonly ddwvService = inject(DdwvService);
+    private readonly loginService = inject(LoginService);
+    private readonly typesService = inject(TypesService);
+    private readonly roosterService = inject(RoosterService);
+    private readonly storageService = inject(StorageService);
+    private readonly dienstenService = inject(DienstenService);
+    private readonly configService = inject(PegasusConfigService);
+    private readonly flarmService = inject(FlarmInputService);
+    private readonly sharedService = inject(SharedService);
+
     @ViewChild(StartEditorComponent) editor: StartEditorComponent;
     @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
     @ViewChild(ExportStartlijstComponent) exportStartlijstKeuze: ExportStartlijstComponent;
@@ -229,18 +240,6 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     error: ErrorMessage | undefined;
 
     VliegerID: number | undefined = undefined;
-
-    constructor(private readonly startlijstService: StartlijstService,
-                private readonly ddwvService: DdwvService,
-                private readonly loginService: LoginService,
-                private readonly typesService: TypesService,
-                private readonly roosterService: RoosterService,
-                private readonly storageService: StorageService,
-                private readonly dienstenService: DienstenService,
-                private readonly configService: PegasusConfigService,
-                private readonly flarmService: FlarmInputService,
-                private readonly sharedService: SharedService) {
-    }
 
     ngOnInit(): void {
         // plaats de juiste kolommen in het grid

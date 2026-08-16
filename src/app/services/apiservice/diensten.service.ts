@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   HeliosDienst,
   HeliosDiensten,
@@ -20,6 +20,10 @@ import { LoginService } from './login.service';
 })
 
 export class DienstenService {
+    private readonly apiService = inject(APIService);
+    private readonly loginService = inject(LoginService);
+    private readonly sharedService = inject(SharedService);
+
     private dienstenCache: HeliosDiensten = { dataset: []};     // return waarde van API call
     private totalenCache: HeliosDienstenTotaal[] = [];          // return waarde van API call
 
@@ -29,9 +33,9 @@ export class DienstenService {
     private dienstenStore = new BehaviorSubject(this.dienstenCache.dataset);
     public readonly dienstenChange = this.dienstenStore.asObservable();      // nieuw rooster beschikbaar
 
-    constructor(private readonly apiService: APIService,
-                private readonly loginService: LoginService,
-                private readonly sharedService: SharedService) {
+    constructor() {
+        const loginService = this.loginService;
+
 
         // de datum zoals die in de kalender gekozen is
         this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(datum => {

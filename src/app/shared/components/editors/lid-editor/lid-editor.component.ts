@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { NgbDate, NgbDateParserFormatter, NgbInputDatepicker, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { DateTime } from 'luxon';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
@@ -39,6 +39,17 @@ import { LoaderComponent } from '../../loader/loader.component';
     imports: [ErrorComponent, SuccessComponent, FormsModule, PegasusCardComponent, ImageCropComponent, WachtwoordMatchValidatorDirective, TelefoonValidatorDirective, NgbInputDatepicker, IconButtonComponent, NgClass, FaIconComponent, NgbPopover, WachtwoordSterkteValidatorDirective, LidInvoerComponent, LoaderComponent, TransactiesComponent]
 })
 export class LidEditorComponent implements OnInit, OnDestroy {
+    private readonly router = inject(Router);
+    private readonly ddwvService = inject(DdwvService);
+    private readonly typesService = inject(TypesService);
+    private readonly ledenService = inject(LedenService);
+    private readonly loginService = inject(LoginService);
+    private readonly imageService = inject(ImageService);
+    private readonly sharedService = inject(SharedService);
+    private readonly storageService = inject(StorageService);
+    private readonly configService = inject(PegasusConfigService);
+    private readonly changeDetector = inject(ChangeDetectorRef);
+
     @Input() lidID: number;
     @Input() isVerwijderMode = false;
     @Input() isRestoreMode = false;
@@ -81,19 +92,6 @@ export class LidEditorComponent implements OnInit, OnDestroy {
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
-
-    constructor(
-        private readonly router: Router,
-        private readonly ddwvService: DdwvService,
-        private readonly typesService: TypesService,
-        private readonly ledenService: LedenService,
-        private readonly loginService: LoginService,
-        private readonly imageService: ImageService,
-        private readonly sharedService: SharedService,
-        private readonly storageService: StorageService,
-        private readonly configService: PegasusConfigService,
-        private readonly changeDetector: ChangeDetectorRef) {
-    }
 
     ngOnInit(): void {
         this.onWindowResize();
