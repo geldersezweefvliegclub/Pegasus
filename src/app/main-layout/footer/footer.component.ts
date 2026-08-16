@@ -1,17 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { SharedService } from '../../services/shared/shared.service';
-import { slideInOutLeftAnimation } from '../../utils/animations';
 import { filter } from 'rxjs/operators';
 
 
 @Component({
     selector: 'app-footer',
     templateUrl: './footer.component.html',
-    styleUrls: ['./footer.component.scss'],
-    animations: [
-        slideInOutLeftAnimation
-    ]
+    styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent {
     private readonly router = inject(Router);

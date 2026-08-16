@@ -1,6 +1,5 @@
 import {enableProdMode, importProvidersFrom, inject, provideAppInitializer, provideZoneChangeDetection} from '@angular/core';
 import {bootstrapApplication} from '@angular/platform-browser';
-import {provideAnimations} from '@angular/platform-browser/animations';
 import {provideHttpClient} from '@angular/common/http';
 import {provideRouter} from '@angular/router';
 import {provideServiceWorker} from '@angular/service-worker';
@@ -53,7 +52,6 @@ ModuleRegistry.registerModules([
 bootstrapApplication(AppComponent, {
   providers: [
     provideZoneChangeDetection(),
-    provideAnimations(),
     provideHttpClient(),
     provideRouter(routes),
     importProvidersFrom(NgbModule),

@@ -36,7 +36,6 @@
                             "src/styles.scss"
                         ],
                         "scripts": [
-                            "node_modules/chart.js/dist/chart.cjs"
                         ],
                         "serviceWorker": "ngsw-config.json",
                         "browser": "src/main.ts"

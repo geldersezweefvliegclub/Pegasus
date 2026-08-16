@@ -13,7 +13,6 @@
   "private": true,
   "dependencies": {
     "@ali-hm/angular-tree-component": "^21.0.4",
-    "@angular/animations": "^21.2.20",
     "@angular/cdk": "^21.2.14",
     "@angular/common": "^21.2.20",
     "@angular/compiler": "^21.2.20",
