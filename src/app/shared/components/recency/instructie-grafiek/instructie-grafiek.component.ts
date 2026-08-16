@@ -1,13 +1,13 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { ModalComponent } from '../../modal/modal.component';
-import { Subscription } from 'rxjs';
-import { DateTime } from 'luxon';
-import { AnnotationOptions } from 'chartjs-plugin-annotation';
-import { ChartDataset, ChartOptions } from 'chart.js';
-import { StartlijstService } from '../../../../services/apiservice/startlijst.service';
-import { SharedService } from '../../../../services/shared/shared.service';
-import { NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
-import { BaseChartDirective } from 'ng2-charts';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {ModalComponent} from '../../modal/modal.component';
+import {Subscription} from 'rxjs';
+import {DateTime} from 'luxon';
+import {AnnotationOptions} from 'chartjs-plugin-annotation';
+import {ChartDataset, ChartOptions} from 'chart.js';
+import {StartlijstService} from '../../../../services/apiservice/startlijst.service';
+import {SharedService} from '../../../../services/shared/shared.service';
+import {NgbProgressbar} from '@ng-bootstrap/ng-bootstrap';
+import {BaseChartDirective} from 'ng2-charts';
 
 @Component({
     selector: 'app-instructie-grafiek',
@@ -257,7 +257,8 @@ export class InstructieGrafiekComponent implements OnInit {
                 if (hours+1 > maxWaarde) {
                     maxWaarde = hours+1;
                 }
-            } catch (_) {
+            } catch (e) {
+                console.error("Catching here!", e);
                 starts.push(0);
                 uren.push(0);
             }
@@ -294,5 +295,6 @@ export class InstructieGrafiekComponent implements OnInit {
         }
         this.lineChartData = [startsReeks, urenReeks];
         this.bezig = false;                         // klaar met ophalen
+        this.popup.reflow();
     }
 }

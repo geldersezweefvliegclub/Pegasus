@@ -280,5 +280,6 @@ export class RecencyGrafiekComponent implements OnInit {
             labels: lineChartLabels,
         };
         this.bezig = false;                         // klaar met ophalen
+        this.popup.reflow();
     }
 }

@@ -41,4 +41,8 @@ export class ModalComponent {
             this.modalRef.close();
         }
     }
+
+    reflow() {
+        setTimeout(() => window.dispatchEvent(new Event('resize')));
+    }
 }
