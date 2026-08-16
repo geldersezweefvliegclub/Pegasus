@@ -20,14 +20,7 @@ import {
   faUsers,
   faWaveSquare,
 } from '@fortawesome/free-solid-svg-icons';
-import { AuditPageComponent } from './schermen/audit/audit-page/audit-page.component';
-import { TypesPageComponent } from './schermen/types/types-page/types-page.component';
-import { CompetentiesPageComponent } from './schermen/competenties/competenties-page/competenties-page.component';
 import { faAvianex } from '@fortawesome/free-brands-svg-icons';
-import { RapportSchermComponent } from './schermen/rapportage/rapport-scherm/rapport-scherm.component';
-import { TransactiesGridComponent } from './schermen/transacties/transacties-grid/transacties-grid.component';
-import { FacturenSchermComponent } from './schermen/facturen/facturen-scherm/facturen-scherm.component';
-import { AgendaSchermComponent } from './schermen/agenda/agenda-scherm/agenda-scherm.component';
 
 export interface CustomRoute extends Route {
     excluded: boolean;
@@ -47,98 +40,98 @@ export const routes: CustomRoute[] = [
     },
     {
         path: 'login',
-        loadChildren: () => import('./schermen/login/login.module').then(m => m.LoginModule),
+        loadComponent: () => import('./schermen/login/login-page/login-page.component').then(m => m.LoginPageComponent),
         excluded: true,
         icon: faKey,
         text: 'Login'
     },
     {
         path: 'hoofdscherm',
-        loadChildren: () => import('./schermen/hoofmenu/hoofmenu.module').then(m => m.HoofmenuModule),
+        loadComponent: () => import('./schermen/hoofmenu/hoofdscherm/hoofdscherm.component').then(m => m.HoofdschermComponent),
         excluded: true,
         icon: faKey,
         text: 'Hoofdscherm'
     },
     {
         path: 'dashboard',
-        loadChildren: () => import('./schermen/dashboard/dashboard.module').then(m => m.DashboardModule),
+        loadComponent: () => import('./schermen/dashboard/dasboard-page/dashboard-page.component').then(m => m.DashboardPageComponent),
         excluded: false,
         icon: faChartPie,
         text: 'Dashboard'
     },
     {
         path: 'aanmelden',
-        loadChildren: () => import('./schermen/aanmelden/aanmelden.module').then(m => m.AanmeldenModule),
+        loadComponent: () => import('./schermen/aanmelden/aanmelden-page/aanmelden-page.component').then(m => m.AanmeldenPageComponent),
         excluded: false,
         icon: faStreetView,
         text: 'Aanmelden'
     },
     {
         path: 'vluchten',
-        loadChildren: () => import('./schermen/vluchten/vluchten.module').then(m => m.VluchtenModule),
+        loadComponent: () => import('./schermen/vluchten/vluchten-grid/vluchten-grid.component').then(m => m.VluchtenGridComponent),
         excluded: false,
         icon: faPlaneDeparture,
         text: 'Vluchten'
     },
     {
         path: 'daginfo',
-        loadChildren: () => import('./schermen/daginfo/daginfo.module').then(m => m.DaginfoModule),
+        loadComponent: () => import('./schermen/daginfo/daginfo/daginfo.component').then(m => m.DaginfoComponent),
         excluded: false,
         icon: faCalendarAlt,
         text: 'Dag info'
     },
     {
         path: 'tracks',
-        loadChildren: () => import('./schermen/tracks/tracks.module').then(m => m.TracksModule),
+        loadComponent: () => import('./schermen/tracks/tracks-grid/tracks-grid.component').then(m => m.TracksGridComponent),
         excluded: false,
         icon: faAddressCard,
         text: 'Tracks'
     },
     {
         path: 'reserveringen',
-        loadChildren: () => import('./schermen/reservering/reservering.module').then(m => m.ReserveringModule),
+        loadComponent: () => import('./schermen/reservering/reservering-page/reservering-page.component').then(m => m.ReserveringPageComponent),
         excluded: false,
         icon: faAvianex,
         text: 'Kist reserveren'
     },
     {
         path: 'leden',
-        loadChildren: () => import('./schermen/leden/leden.module').then(m => m.LedenModule),
+        loadComponent: () => import('./schermen/leden/leden-scherm/leden-scherm.component').then(m => m.LedenSchermComponent),
         excluded: false,
         icon: faUsers,
         text: 'Ledenlijst'
     },
     {
         path: 'vliegtuigen',
-        loadChildren: () => import('./schermen/vliegtuigen/vliegtuigen.module').then(m => m.VliegtuigenModule),
+        loadComponent: () => import('./schermen/vliegtuigen/vliegtuigen-scherm/vliegtuigen-scherm.component').then(m => m.VliegtuigenSchermComponent),
         excluded: false,
         icon: faPlane,
         text: 'Vliegtuigen'
     },
     {
         path: 'profiel',
-        loadChildren: () => import('./schermen/profiel/profiel.module').then(m => m.ProfielModule),
+        loadComponent: () => import('./schermen/profiel/profiel/profiel-page.component').then(m => m.ProfielPageComponent),
         excluded: false,
         icon: faUser,
         text: 'Profiel'
     },
     {
         path: 'rooster',
-        loadChildren: () => import('./schermen/rooster/rooster.module').then(m => m.RoosterModule),
+        loadComponent: () => import('./schermen/rooster/rooster-page/rooster-page.component').then(m => m.RoosterPageComponent),
         excluded: false,
         icon: faCalendarDay,
         text: 'Rooster'
     },
     {
         path: 'documenten',
-        loadChildren: () => import('./schermen/documenten/documenten.module').then(m => m.DocumentenModule),
+        loadComponent: () => import('./schermen/documenten/documenten-scherm/documenten-scherm.component').then(m => m.DocumentenSchermComponent),
         excluded: false,
         icon: faFile,
         text: 'Documenten'
     },
     {
         path: 'journaal',
-        loadChildren: () => import('./schermen/journaal/journaal.module').then(m => m.JournaalModule),
+        loadComponent: () => import('./schermen/journaal/journaal-scherm/journaal-scherm.component').then(m => m.JournaalSchermComponent),
         excluded: false,
         icon: faBug,
         text: 'Journaal'
@@ -146,7 +139,7 @@ export const routes: CustomRoute[] = [
 
     {
         path: 'audit',
-        loadChildren: () => import('./schermen/audit/audit.module').then(m => m.AuditModule),
+        loadComponent: () => import('./schermen/audit/audit-page/audit-page.component').then(m => m.AuditPageComponent),
         excluded: true,
         icon: faWaveSquare,
         text: 'Audit'
@@ -154,7 +147,7 @@ export const routes: CustomRoute[] = [
 
     {
         path: 'agenda',
-        loadChildren: () => import('./schermen/agenda/agenda.module').then(m => m.AgendaModule),
+        loadComponent: () => import('./schermen/agenda/agenda-scherm/agenda-scherm.component').then(m => m.AgendaSchermComponent),
         excluded: true,
         icon: faCalendar,
         text: 'Agenda'
@@ -162,7 +155,7 @@ export const routes: CustomRoute[] = [
 
     {
         path: 'types',
-        loadChildren: () => import('./schermen/types/types.module').then(m => m.TypesModule),
+        loadComponent: () => import('./schermen/types/types-page/types-page.component').then(m => m.TypesPageComponent),
         excluded: true,
         icon: faKeyboard,
         text: 'Types'
@@ -170,7 +163,7 @@ export const routes: CustomRoute[] = [
 
     {
         path: 'competenties',
-        loadChildren: () => import('./schermen/competenties/competenties.module').then(m => m.CompetentiesModule),
+        loadComponent: () => import('./schermen/competenties/competenties-page/competenties-page.component').then(m => m.CompetentiesPageComponent),
         excluded: true,
         icon: faGraduationCap,
         text: 'Competenties'
@@ -178,7 +171,7 @@ export const routes: CustomRoute[] = [
 
     {
         path: 'rapportage',
-        loadChildren: () => import('./schermen/rapportage/rapportage.module').then(m => m.RapportageModule),
+        loadComponent: () => import('./schermen/rapportage/rapport-scherm/rapport-scherm.component').then(m => m.RapportSchermComponent),
         excluded: true,
         icon: faFilm,
         text: 'Rapportage'
@@ -186,7 +179,7 @@ export const routes: CustomRoute[] = [
 
     {
         path: 'facturen',
-        loadChildren: () => import('./schermen/facturen/facturen.module').then(m => m.FacturenModule),
+        loadComponent: () => import('./schermen/facturen/facturen-scherm/facturen-scherm.component').then(m => m.FacturenSchermComponent),
         excluded: true,
         icon: faLayerGroup,
         text: 'Facturen'
@@ -194,7 +187,7 @@ export const routes: CustomRoute[] = [
 
     {
         path: 'transacties',
-        loadChildren: () => import('./schermen/transacties/transacties.module').then(m => m.TransactiesModule),
+        loadComponent: () => import('./schermen/transacties/transacties-grid/transacties-grid.component').then(m => m.TransactiesGridComponent),
         excluded: true,
         icon: faEuroSign,
         text: 'Transacties'
@@ -202,7 +195,7 @@ export const routes: CustomRoute[] = [
 
     {
         path: '**',
-        loadChildren: () => import('./schermen/not-found/not-found.module').then(m => m.NotFoundModule),
+        loadComponent: () => import('./schermen/not-found/not-found/not-found.component').then(m => m.NotFoundComponent),
         excluded: true,
         icon: faUser,
         text: 'EXCLUDED'
@@ -210,11 +203,11 @@ export const routes: CustomRoute[] = [
 ];
 
 export const beheerRoutes: CustomRoute[] = [
-    {path: 'agenda', component: AgendaSchermComponent, excluded: false, icon: faCalendar, text: 'Agenda'},
-    {path: 'audit', component: AuditPageComponent, excluded: false, icon: faWaveSquare, text: 'Audit'},
-    {path: 'competenties', component: CompetentiesPageComponent, excluded: false, icon: faGraduationCap, text: 'Competenties'},
-    {path: 'types', component: TypesPageComponent, excluded: false, icon: faKeyboard, text: 'Types'},
-    {path: 'transacties', component: TransactiesGridComponent, excluded: false, icon: faEuroSign, text: 'Transacties'},
-    {path: 'rapportage', component: RapportSchermComponent, excluded: false, icon: faFilm, text: 'Rapportage'},
-    {path: 'facturen', component: FacturenSchermComponent, excluded: false, icon: faLayerGroup, text: 'Facturen'},
+    {path: 'agenda', loadComponent: () => import('./schermen/agenda/agenda-scherm/agenda-scherm.component').then(m => m.AgendaSchermComponent), excluded: false, icon: faCalendar, text: 'Agenda'},
+    {path: 'audit', loadComponent: () => import('./schermen/audit/audit-page/audit-page.component').then(m => m.AuditPageComponent), excluded: false, icon: faWaveSquare, text: 'Audit'},
+    {path: 'competenties', loadComponent: () => import('./schermen/competenties/competenties-page/competenties-page.component').then(m => m.CompetentiesPageComponent), excluded: false, icon: faGraduationCap, text: 'Competenties'},
+    {path: 'types', loadComponent: () => import('./schermen/types/types-page/types-page.component').then(m => m.TypesPageComponent), excluded: false, icon: faKeyboard, text: 'Types'},
+    {path: 'transacties', loadComponent: () => import('./schermen/transacties/transacties-grid/transacties-grid.component').then(m => m.TransactiesGridComponent), excluded: false, icon: faEuroSign, text: 'Transacties'},
+    {path: 'rapportage', loadComponent: () => import('./schermen/rapportage/rapport-scherm/rapport-scherm.component').then(m => m.RapportSchermComponent), excluded: false, icon: faFilm, text: 'Rapportage'},
+    {path: 'facturen', loadComponent: () => import('./schermen/facturen/facturen-scherm/facturen-scherm.component').then(m => m.FacturenSchermComponent), excluded: false, icon: faLayerGroup, text: 'Facturen'},
 ];

@@ -24,7 +24,11 @@ import { DagRapportenService } from '../../../services/apiservice/dag-rapporten.
 import {
     DagRapportEditorComponent,
 } from '../../../shared/components/editors/dag-rapport-editor/dag-rapport-editor.component';
-import { SharedModule } from '../../../shared/shared.module';
+import { ErrorComponent } from '../../../shared/components/error/error.component';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
+import { PegasusCardComponent } from '../../../shared/components/pegasus-card/pegasus-card.component';
+import { StatusButtonComponent } from '../../../shared/components/status-button/status-button.component';
+import { SuccessComponent } from '../../../shared/components/success/success.component';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -34,7 +38,7 @@ import { AsyncPipe } from '@angular/common';
     selector: 'app-daginfo',
     templateUrl: './daginfo.component.html',
     styleUrls: ['./daginfo.component.scss'],
-    imports: [SharedModule, NgSelectComponent, FormsModule, FaIconComponent, AsyncPipe]
+    imports: [DagRapportEditorComponent, DagRoosterComponent, ErrorComponent, IconButtonComponent, NgSelectComponent, FormsModule, FaIconComponent, AsyncPipe, PegasusCardComponent, StatusButtonComponent, SuccessComponent]
 })
 export class DaginfoComponent implements OnInit, OnDestroy{
     @ViewChild(DagRoosterComponent) dienstenWizard: DagRoosterComponent;

@@ -12,13 +12,18 @@ import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { AgendaEditorComponent } from '../../../shared/components/editors/agenda-editor/agenda-editor.component';
 import { DatumRenderComponent } from '../../../shared/components/datatable/datum-render/datum-render.component';
-import { SharedModule } from '../../../shared/shared.module';
+import { DatatableComponent } from '../../../shared/components/datatable/datatable.component';
+import { ErrorComponent } from '../../../shared/components/error/error.component';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
+import { PegasusCardComponent } from '../../../shared/components/pegasus-card/pegasus-card.component';
+import { StatusButtonComponent } from '../../../shared/components/status-button/status-button.component';
+import { SuccessComponent } from '../../../shared/components/success/success.component';
 
 @Component({
     selector: 'app-agenda-scherm',
     templateUrl: './agenda-scherm.component.html',
     styleUrls: ['./agenda-scherm.component.scss'],
-    imports: [SharedModule]
+    imports: [AgendaEditorComponent, DatatableComponent, ErrorComponent, IconButtonComponent, PegasusCardComponent, StatusButtonComponent, SuccessComponent]
 })
 export class AgendaSchermComponent implements OnInit, OnDestroy {
   @ViewChild(AgendaEditorComponent) editor:AgendaEditorComponent;

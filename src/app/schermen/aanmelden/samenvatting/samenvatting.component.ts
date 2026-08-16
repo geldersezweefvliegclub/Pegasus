@@ -6,13 +6,13 @@ import { AanwezigLedenService } from '../../../services/apiservice/aanwezig-lede
 import { SharedService } from '../../../services/shared/shared.service';
 import { LoginService } from '../../../services/apiservice/login.service';
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
-import { SharedModule } from '../../../shared/shared.module';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
 
 @Component({
     selector: 'app-samenvatting',
     templateUrl: './samenvatting.component.html',
     styleUrls: ['./samenvatting.component.scss'],
-    imports: [SharedModule]
+    imports: [ModalComponent, IconButtonComponent]
 })
 export class SamenvattingComponent {
     @ViewChild(ModalComponent) private popup: ModalComponent;

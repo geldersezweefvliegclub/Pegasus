@@ -45,17 +45,31 @@ import { saveAs } from 'file-saver';
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
 import { TransactiesComponent } from '../../../shared/components/transacties/transacties.component';
 import { DdwvService } from '../../../services/apiservice/ddwv.service';
-import { SharedModule } from '../../../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { NgbCarousel, NgbSlide } from '@ng-bootstrap/ng-bootstrap/carousel';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { LedenDocumentenComponent } from './leden-documenten/leden-documenten.component';
+import { AgendaComponent } from '../../../shared/components/agenda/agenda.component';
+import { AvatarComponent } from '../../../shared/components/avatar/avatar.component';
+import { DienstenComponent } from '../../../shared/components/diensten/diensten.component';
+import { ErrorComponent } from '../../../shared/components/error/error.component';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
+import { PegasusCardComponent } from '../../../shared/components/pegasus-card/pegasus-card.component';
+import { ProgressieBoomComponent } from '../../../shared/components/progressie-boom/progressie-boom.component';
+import { PvbComponent } from '../../../shared/components/pvb/pvb.component';
+import { RecencyComponent } from '../../../shared/components/recency/recency.component';
+import { StatusComponent } from '../../../shared/components/status/status.component';
+import { SuccessComponent } from '../../../shared/components/success/success.component';
+import { TracksComponent } from '../../../shared/components/tracks/tracks.component';
+import { VerjaardagenComponent } from '../../../shared/components/verjaardagen/verjaardagen.component';
+import { VliegerLogboekComponent } from '../../../shared/components/vlieger-logboek/vlieger-logboek.component';
+import { VliegerLogboekTotalenComponent } from '../../../shared/components/vlieger-logboek-totalen/vlieger-logboek-totalen.component';
 
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard-page.component.html',
     styleUrls: ['./dashboard-page.component.scss'],
-    imports: [SharedModule, FormsModule, NgbCarousel, NgbSlide, FaIconComponent, LedenDocumentenComponent]
+    imports: [AgendaComponent, AvatarComponent, DienstenComponent, ErrorComponent, FormsModule, IconButtonComponent, LedenDocumentenComponent, ModalComponent, NgbCarousel, NgbSlide, FaIconComponent, PegasusCardComponent, ProgressieBoomComponent, PvbComponent, RecencyComponent, StartEditorComponent, StatusComponent, SuccessComponent, TracksComponent, TransactiesComponent, VerjaardagenComponent, VliegerLogboekComponent, VliegerLogboekTotalenComponent]
 })
 export class DashboardPageComponent implements OnInit, OnDestroy {
     readonly iconCardIcon: IconDefinition = faChartPie;

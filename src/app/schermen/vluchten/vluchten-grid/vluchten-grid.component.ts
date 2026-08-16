@@ -38,12 +38,18 @@ import { FlarmData, FlarmInputService, FlarmStartData } from '../../../services/
 import { DatatableComponent } from '../../../shared/components/datatable/datatable.component';
 import { OpmerkingenRenderComponent } from '../opmerkingen-render/opmerkingen-render.component';
 import {DdwvService} from "../../../services/apiservice/ddwv.service";
-import { SharedModule } from '../../../shared/shared.module';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { NgClass, AsyncPipe } from '@angular/common';
 import { FlarmLijstComponent } from '../flarm-lijst/flarm-lijst.component';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
+import { ErrorComponent } from '../../../shared/components/error/error.component';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
+import { PegasusCardComponent } from '../../../shared/components/pegasus-card/pegasus-card.component';
+import { StatusButtonComponent } from '../../../shared/components/status-button/status-button.component';
+import { SuccessComponent } from '../../../shared/components/success/success.component';
+import { VluchtCardComponent } from '../../../shared/components/vlucht-card/vlucht-card.component';
+import { ZoekbarComponent } from '../../../shared/components/zoekbar/zoekbar.component';
 
 type HeliosStartDatasetExtended = HeliosStartDataset & {
     inTijdspan?: boolean
@@ -54,7 +60,7 @@ type HeliosStartDatasetExtended = HeliosStartDataset & {
     selector: 'app-startlijst-grid',
     templateUrl: './vluchten-grid.component.html',
     styleUrls: ['./vluchten-grid.component.scss'],
-    imports: [SharedModule, FaIconComponent, NgClass, FlarmLijstComponent, NgSelectComponent, FormsModule, ExportStartlijstComponent, AsyncPipe]
+    imports: [AsyncPipe, DatatableComponent, ErrorComponent, ExportStartlijstComponent, FaIconComponent, FlarmLijstComponent, FormsModule, IconButtonComponent, NgClass, NgSelectComponent, PegasusCardComponent, StartEditorComponent, StatusButtonComponent, SuccessComponent, TijdInvoerComponent, VluchtCardComponent, ZoekbarComponent]
 })
 export class VluchtenGridComponent implements OnInit, OnDestroy {
     @ViewChild(StartEditorComponent) editor: StartEditorComponent;

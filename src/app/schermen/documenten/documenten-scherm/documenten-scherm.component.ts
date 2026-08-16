@@ -13,15 +13,17 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { DocumentEditorComponent } from '../../../shared/components/editors/document-editor/document-editor.component';
 import { LoginService } from '../../../services/apiservice/login.service';
-import { SharedModule } from '../../../shared/shared.module';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { NgClass } from '@angular/common';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
+import { PegasusCardComponent } from '../../../shared/components/pegasus-card/pegasus-card.component';
+import { StatusButtonComponent } from '../../../shared/components/status-button/status-button.component';
 
 @Component({
     selector: 'app-documenten-scherm',
     templateUrl: './documenten-scherm.component.html',
     styleUrls: ['./documenten-scherm.component.scss'],
-    imports: [SharedModule, FaIconComponent, NgClass]
+    imports: [DocumentEditorComponent, IconButtonComponent, PegasusCardComponent, StatusButtonComponent, FaIconComponent, NgClass]
 })
 export class DocumentenSchermComponent implements OnInit, OnDestroy {
     @ViewChild(DocumentEditorComponent) editor: DocumentEditorComponent;

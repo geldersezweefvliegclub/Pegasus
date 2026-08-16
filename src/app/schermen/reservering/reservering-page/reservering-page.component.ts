@@ -30,7 +30,10 @@ import { StartEditorComponent } from '../../../shared/components/editors/start-e
 import { DaginfoService } from '../../../services/apiservice/daginfo.service';
 import * as xlsx from 'xlsx';
 import { ProgressieService } from '../../../services/apiservice/progressie.service';
-import { SharedModule } from '../../../shared/shared.module';
+import { ErrorComponent } from '../../../shared/components/error/error.component';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
+import { PegasusCardComponent } from '../../../shared/components/pegasus-card/pegasus-card.component';
+import { SuccessComponent } from '../../../shared/components/success/success.component';
 
 export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
     Tonen?: boolean;
@@ -41,7 +44,10 @@ export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
     templateUrl: './reservering-page.component.html',
     styleUrls: ['./reservering-page.component.scss'],
     imports: [
-        SharedModule,
+        ErrorComponent,
+        IconButtonComponent,
+        PegasusCardComponent,
+        SuccessComponent,
         KistSelectieComponent,
         BoekingEditorComponent,
         StartEditorComponent,

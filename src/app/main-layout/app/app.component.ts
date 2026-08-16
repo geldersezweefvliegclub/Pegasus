@@ -7,7 +7,8 @@ import { debounceTime } from 'rxjs/operators';
 import { SharedService } from '../../services/shared/shared.service';
 import { StorageService } from '../../services/storage/storage.service';
 import { PopupKalenderComponent } from '../../shared/components/popup-kalender/popup-kalender.component';
-import { SharedModule } from '../../shared/shared.module';
+import { NavigatieComponent } from '../../shared/components/navigatie/navigatie.component';
+import { IconButtonComponent } from '../../shared/components/icon-button/icon-button.component';
 import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 
@@ -15,7 +16,7 @@ import { Subscription } from 'rxjs';
     selector: 'app-root',
     templateUrl: 'app.component.html',
     styleUrls: ['app.component.scss'],
-    imports: [SharedModule, RouterOutlet]
+    imports: [NavigatieComponent, IconButtonComponent, PopupKalenderComponent, RouterOutlet]
 })
 
 export class AppComponent implements OnDestroy{

@@ -5,6 +5,7 @@ import {provideHttpClient} from '@angular/common/http';
 import {provideRouter} from '@angular/router';
 import {provideServiceWorker} from '@angular/service-worker';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {provideCharts, withDefaultRegisterables} from 'ng2-charts';
 import {AppComponent} from './app/main-layout/app/app.component';
 import {PegasusConfigService} from './app/services/shared/pegasus-config.service';
 import {routes} from './app/routing.module';
@@ -55,6 +56,7 @@ bootstrapApplication(AppComponent, {
     provideHttpClient(),
     provideRouter(routes),
     importProvidersFrom(NgbModule),
+    provideCharts(withDefaultRegisterables()),
     provideServiceWorker('ngsw-worker.js', {
       enabled: environment.production,
       registrationStrategy: 'registerImmediately'

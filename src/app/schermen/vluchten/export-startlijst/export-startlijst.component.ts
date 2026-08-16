@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
-import { SharedModule } from '../../../shared/shared.module';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
 
 @Component({
     selector: 'app-export-startlijst',
     templateUrl: './export-startlijst.component.html',
     styleUrls: ['./export-startlijst.component.scss'],
-    imports: [SharedModule]
+    imports: [ModalComponent, IconButtonComponent]
 })
 export class ExportStartlijstComponent {
     @ViewChild(ModalComponent) private popup: ModalComponent;

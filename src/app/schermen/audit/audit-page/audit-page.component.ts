@@ -7,15 +7,19 @@ import * as xlsx from 'xlsx';
 import { nummerSort } from '../../../utils/Utils';
 import { AuditService } from '../../../services/apiservice/audit.service';
 import { faWaveSquare } from '@fortawesome/free-solid-svg-icons';
-import { SharedModule } from '../../../shared/shared.module';
 import { KeyValuePipe } from '@angular/common';
+import { DatatableComponent } from '../../../shared/components/datatable/datatable.component';
+import { ErrorComponent } from '../../../shared/components/error/error.component';
+import { PegasusCardComponent } from '../../../shared/components/pegasus-card/pegasus-card.component';
+import { SuccessComponent } from '../../../shared/components/success/success.component';
+import { ZoekbarComponent } from '../../../shared/components/zoekbar/zoekbar.component';
 
 
 @Component({
     selector: 'app-audit-page',
     templateUrl: './audit-page.component.html',
     styleUrls: ['./audit-page.component.scss'],
-    imports: [SharedModule, KeyValuePipe]
+    imports: [DatatableComponent, ErrorComponent, KeyValuePipe, PegasusCardComponent, SuccessComponent, ZoekbarComponent]
 })
 
 export class AuditPageComponent implements OnInit {

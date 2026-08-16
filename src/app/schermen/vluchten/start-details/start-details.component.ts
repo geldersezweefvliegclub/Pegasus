@@ -4,13 +4,12 @@ import { HeliosStartDataset } from '../../../types/Helios';
 import { FlarmData } from '../../../services/flarm-input.service';
 import { StartlijstService } from '../../../services/apiservice/startlijst.service';
 import { DateTime } from 'luxon';
-import { SharedModule } from '../../../shared/shared.module';
 
 @Component({
     selector: 'app-start-details',
     templateUrl: './start-details.component.html',
     styleUrls: ['./start-details.component.scss'],
-    imports: [SharedModule]
+    imports: [ModalComponent]
 })
 export class StartDetailsComponent  {
   @ViewChild(ModalComponent) private popup: ModalComponent;
