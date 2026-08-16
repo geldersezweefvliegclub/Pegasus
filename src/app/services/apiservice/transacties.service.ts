@@ -2,7 +2,6 @@ import { Injectable, inject } from '@angular/core';
 import { APIService } from './api.service';
 import { LoginService } from './login.service';
 import {
-    HeliosLid, HeliosStart,
     HeliosTransactie,
     HeliosTransacties,
     HeliosTransactiesBanken,

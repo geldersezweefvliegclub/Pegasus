@@ -321,8 +321,6 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
 
     kolomDefinitie()
     {
-        const ui = this.loginService.userInfo?.Userinfo;
-
         if (!this.deleteMode)
         {
             this.columns = this.dataColumns;

@@ -71,7 +71,7 @@ export class GastEditorComponent implements OnInit, OnDestroy {
     }
 
     verwijderen() {
-        this.gastenService.deleteGast(this.gast!.ID!).then((a) => {
+        this.gastenService.deleteGast(this.gast!.ID!).then(() => {
             this.success = {titel: "Aanmelden gast", beschrijving: "Aanmelding is verwijderd"}
             this.refresh.emit();
 
