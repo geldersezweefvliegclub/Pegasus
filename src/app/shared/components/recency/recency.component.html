@@ -14,12 +14,20 @@ EASA minimum is 15 starts en 5 uur per 24 maanden
     EASA minimum is 2 trainingsvluchten per 24 maanden
 </ng-template>
 
-<div *ngIf="recency">
-    <div *ngIf="Vlieger && Vlieger.STATUSTYPE_ID === 1903">
-        <p *ngIf="!toonEASA" class="easa" (click)="toonEASA = !toonEASA" [ngClass]="{'geenGeldigBrevet': geenGeldigBrevet() }">EASA</p>
-        <p *ngIf="toonEASA" class="easa" (click)="toonEASA = !toonEASA">Barometer</p>
+@if (recency) {
+<div>
+    @if (Vlieger && Vlieger.STATUSTYPE_ID === 1903) {
+    <div>
+        @if (!toonEASA) {
+        <p class="easa" (click)="toonEASA = !toonEASA" [ngClass]="{'geenGeldigBrevet': geenGeldigBrevet() }">EASA</p>
+        }
+        @if (toonEASA) {
+        <p class="easa" (click)="toonEASA = !toonEASA">Barometer</p>
+        }
     </div>
-    <div *ngIf="!toonEASA">
+    }
+    @if (!toonEASA) {
+    <div>
         <a aria-label="Recency in laatste 24 maanden" (click)="openRecencyPopup()" class="recencyGrafiek">
             @switch (recency.STATUS_BAROMETER) {
                 @case ('groen') {
@@ -57,13 +65,17 @@ EASA minimum is 15 starts en 5 uur per 24 maanden
             <p class="titel">Vorig jaar</p>
             <p class="beschrijving">{{recency.STARTS_VORIG_JAAR}} starts en {{recency.UREN_VORIG_JAAR}} uur</p>
         </div>
-        <div *ngIf="recency.STARTS_INSTRUCTIE >= 0" (click)="openInstructiePopup()" class="recencyGrafiek">
+        @if (recency.STARTS_INSTRUCTIE >= 0) {
+        <div (click)="openInstructiePopup()" class="recencyGrafiek">
             <p class="titel">Instructie laatste 3 jaar</p>
             <p class="beschrijving">{{recency.STARTS_INSTRUCTIE}} starts en {{recency.UREN_INSTRUCTIE}} uur</p>
         </div>
+        }
     </div>
+    }
 
-    <div *ngIf="toonEASA">
+    @if (toonEASA) {
+    <div>
         <div>
             <p class="titelOpenPopup" (click)="openStartPopup()">Laatste 24 maanden</p>
 
@@ -76,8 +88,12 @@ EASA minimum is 15 starts en 5 uur per 24 maanden
                         </p>
                     </td>
                     <td>
-                        <fa-icon *ngIf="brevet.aantal" class="checkIcon" [icon]="checkIcon"></fa-icon>
-                        <fa-icon *ngIf="!brevet.aantal"class="declineIcon" [icon]="declineIcon"></fa-icon>
+                        @if (brevet.aantal) {
+                        <fa-icon class="checkIcon" [icon]="checkIcon"></fa-icon>
+                        }
+                        @if (!brevet.aantal) {
+                        <fa-icon class="declineIcon" [icon]="declineIcon"></fa-icon>
+                        }
                     </td>
                 </tr>
 
@@ -94,39 +110,62 @@ EASA minimum is 15 starts en 5 uur per 24 maanden
                         <li class="beschrijving">{{recency.LIERSTARTS}} lierstarts</li>
                     </td>
                     <td>
-                        <fa-icon *ngIf="brevet.lierstarts === 1" class="checkIcon" [icon]="checkIcon"></fa-icon>
-                        <fa-icon *ngIf="brevet.lierstarts === 0" class="declineIcon" [icon]="declineIcon"></fa-icon>
+                        @if (brevet.lierstarts === 1) {
+                        <fa-icon class="checkIcon" [icon]="checkIcon"></fa-icon>
+                        }
+                        @if (brevet.lierstarts === 0) {
+                        <fa-icon class="declineIcon" [icon]="declineIcon"></fa-icon>
+                        }
                     </td>
                 </tr>
-                <tr *ngIf="brevet.sleepstart !== -1">
+                @if (brevet.sleepstart !== -1) {
+                <tr>
                     <td class="w-100">
                         <li class="beschrijving">{{recency.SLEEPSTARTS}} sleepstarts</li>
                     </td>
                     <td>
-                        <fa-icon *ngIf="brevet.sleepstart === 1" class="checkIcon" [icon]="checkIcon"></fa-icon>
-                        <fa-icon *ngIf="brevet.sleepstart === 0" class="declineIcon" [icon]="declineIcon"></fa-icon>
+                        @if (brevet.sleepstart === 1) {
+                        <fa-icon class="checkIcon" [icon]="checkIcon"></fa-icon>
+                        }
+                        @if (brevet.sleepstart === 0) {
+                        <fa-icon class="declineIcon" [icon]="declineIcon"></fa-icon>
+                        }
                     </td>
                 </tr>
-                <tr *ngIf="brevet.zelfstarts !== -1">
+                }
+                @if (brevet.zelfstarts !== -1) {
+                <tr>
                     <td class="w-100">
                         <li class="beschrijving">{{recency.ZELFSTARTS}} zelfstarts</li>
                     </td>
                     <td>
-                        <fa-icon *ngIf="brevet.zelfstarts === 1" class="checkIcon" [icon]="checkIcon"></fa-icon>
-                        <fa-icon *ngIf="brevet.zelfstarts === 0" class="declineIcon" [icon]="declineIcon"></fa-icon>
+                        @if (brevet.zelfstarts === 1) {
+                        <fa-icon class="checkIcon" [icon]="checkIcon"></fa-icon>
+                        }
+                        @if (brevet.zelfstarts === 0) {
+                        <fa-icon class="declineIcon" [icon]="declineIcon"></fa-icon>
+                        }
                     </td>
                 </tr>
-                <tr *ngIf="brevet.tmgstarts > 0">
+                }
+                @if (brevet.tmgstarts > 0) {
+                <tr>
                     <td class="w-100">
                         <li class="beschrijving">{{recency.TMGSTARTS}} TMG starts</li>
                     </td>
                     <td>
-                        <fa-icon *ngIf="brevet.tmgstarts === 1" class="checkIcon" [icon]="checkIcon"></fa-icon>
-                        <fa-icon *ngIf="brevet.tmgstarts === 0" class="declineIcon" [icon]="declineIcon"></fa-icon>
+                        @if (brevet.tmgstarts === 1) {
+                        <fa-icon class="checkIcon" [icon]="checkIcon"></fa-icon>
+                        }
+                        @if (brevet.tmgstarts === 0) {
+                        <fa-icon class="declineIcon" [icon]="declineIcon"></fa-icon>
+                        }
                     </td>
                 </tr>
+                }
 
-                <tr *ngIf="brevet.pax !== -1">
+                @if (brevet.pax !== -1) {
+                <tr>
                     <td class="w-100">
                         <div class="beschrijving">Passagiers vliegen
                             <fa-icon [icon]="infoIcon" [ngbPopover]="paxPopover" placement="right"
@@ -134,17 +173,26 @@ EASA minimum is 15 starts en 5 uur per 24 maanden
                         </div>
                     </td>
                     <td>
-                        <fa-icon *ngIf="brevet.pax === 1"  class="checkIcon" [icon]="checkIcon"></fa-icon>
-                        <fa-icon *ngIf="brevet.pax === 0" class="declineIcon" [icon]="declineIcon"></fa-icon>
+                        @if (brevet.pax === 1) {
+                        <fa-icon class="checkIcon" [icon]="checkIcon"></fa-icon>
+                        }
+                        @if (brevet.pax === 0) {
+                        <fa-icon class="declineIcon" [icon]="declineIcon"></fa-icon>
+                        }
                     </td>
                 </tr>
+                }
                 <tr>
                     <td class="w-100">
                         <div class="beschrijving">Medical</div>
                     </td>
                     <td>
-                        <fa-icon *ngIf="brevet.medical"  class="checkIcon" [icon]="checkIcon"></fa-icon>
-                        <fa-icon *ngIf="!brevet.medical" class="declineIcon" [icon]="declineIcon"></fa-icon>
+                        @if (brevet.medical) {
+                        <fa-icon class="checkIcon" [icon]="checkIcon"></fa-icon>
+                        }
+                        @if (!brevet.medical) {
+                        <fa-icon class="declineIcon" [icon]="declineIcon"></fa-icon>
+                        }
                     </td>
                 </tr>
                 <tr>
@@ -155,14 +203,20 @@ EASA minimum is 15 starts en 5 uur per 24 maanden
                         </div>
                     </td>
                     <td>
-                        <fa-icon *ngIf="recency.CHECKS.length >= 2"  class="checkIcon" [icon]="checkIcon"></fa-icon>
-                        <fa-icon *ngIf="recency.CHECKS.length < 2" class="declineIcon" [icon]="declineIcon"></fa-icon>
+                        @if (recency.CHECKS.length >= 2) {
+                        <fa-icon class="checkIcon" [icon]="checkIcon"></fa-icon>
+                        }
+                        @if (recency.CHECKS.length < 2) {
+                        <fa-icon class="declineIcon" [icon]="declineIcon"></fa-icon>
+                        }
                     </td>
                 </tr>
             </table>
         </div>
     </div>
+    }
 </div>
+}
 
 @if (isLoading) {
     <div class="spinnerOverlay">

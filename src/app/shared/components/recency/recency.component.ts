@@ -11,7 +11,7 @@ import { DateTime } from 'luxon';
 import { StartGrafiekComponent } from './start-grafiek/start-grafiek.component';
 import { ErrorComponent } from '../error/error.component';
 import { SuccessComponent } from '../success/success.component';
-import { NgIf, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { LoaderComponent } from '../loader/loader.component';
@@ -35,7 +35,7 @@ interface brevetEASA {
     selector: 'app-recency',
     templateUrl: './recency.component.html',
     styleUrls: ['./recency.component.scss'],
-    imports: [ErrorComponent, SuccessComponent, NgIf, NgClass, FaIconComponent, NgbPopover, LoaderComponent, RecencyGrafiekComponent, InstructieGrafiekComponent, StartGrafiekComponent]
+    imports: [ErrorComponent, SuccessComponent, NgClass, FaIconComponent, NgbPopover, LoaderComponent, RecencyGrafiekComponent, InstructieGrafiekComponent, StartGrafiekComponent]
 })
 
 export class RecencyComponent implements OnInit, OnChanges {

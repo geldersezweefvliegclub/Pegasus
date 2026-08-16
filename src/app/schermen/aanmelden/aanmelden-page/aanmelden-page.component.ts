@@ -36,7 +36,7 @@ import { DaginfoService } from '../../../services/apiservice/daginfo.service';
 import {ErrorMessage, KeyValueArray} from '../../../types/Utils';
 import { SamenvattingComponent } from '../samenvatting/samenvatting.component';
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
-import { NgIf, NgClass, NgTemplateOutlet, NgFor, AsyncPipe } from '@angular/common';
+import { NgClass, NgTemplateOutlet, AsyncPipe } from '@angular/common';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -64,7 +64,7 @@ export type HeliosAanwezigLedenDatasetExtended = HeliosAanwezigLedenDataset & {
     selector: 'app-aanmelden-page',
     templateUrl: './aanmelden-page.component.html',
     styleUrls: ['./aanmelden-page.component.scss'],
-    imports: [ErrorComponent, GastEditorComponent, IconButtonComponent, LidAanwezigEditorComponent, ModalComponent, NgIf, NgClass, NgSelectComponent, FormsModule, NgTemplateOutlet, PegasusCardComponent, SamenvattingComponent, NgFor, FaIconComponent, RouterLink, AsyncPipe, TransactiesComponent]
+    imports: [ErrorComponent, GastEditorComponent, IconButtonComponent, LidAanwezigEditorComponent, ModalComponent, NgClass, NgSelectComponent, FormsModule, NgTemplateOutlet, PegasusCardComponent, SamenvattingComponent, FaIconComponent, RouterLink, AsyncPipe, TransactiesComponent]
 })
 export class AanmeldenPageComponent implements OnInit, OnDestroy {
     private readonly ddwvService = inject(DdwvService);
