@@ -29,6 +29,10 @@ export class ModalComponent {
             windowClass: this.popupClass,
         });
 
+        this.modalRef.shown.subscribe(() => {
+            window.dispatchEvent(new Event('resize'));
+        });
+
         this.modalRef.result.then()
     }
 
