@@ -1,10 +1,16 @@
+@use "sass:map";
+
 @use "@fortawesome/fontawesome-free/scss/fontawesome";
 @use "@fortawesome/fontawesome-free/scss/solid";
 @use "@fortawesome/fontawesome-free/scss/regular";
 @use "@fortawesome/fontawesome-free/scss/brands";
+@use "variables";
+@use "bootstrap/scss/bootstrap" with (
+  $primary: map.get(variables.$theme-colors, "primary"),
+  $theme-colors: variables.$theme-colors
+);
+@use "variables" as *;
 
-@import "variables";
-@import "bootstrap/scss/bootstrap";
 @import "animate.css/animate.css";
 @import "ag-grid-community/styles/ag-grid.css";
 @import "ag-grid-community/styles/ag-theme-material.css";

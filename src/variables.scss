@@ -1,5 +1,7 @@
+@use "sass:map";
+
 @function getColor($key) {
-  @return map-get($theme-colors, $key);
+  @return map.get($theme-colors, $key);
 }
 
 $theme-colors: (

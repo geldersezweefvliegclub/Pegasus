@@ -1,4 +1,4 @@
-@import "../../../../variables";
+@use "../../../../variables" as *;
 
 .kaart {
   margin: 4px 0 4px 0;
@@ -80,4 +80,3 @@
   z-index: 2;
   position: absolute;
 }
-
