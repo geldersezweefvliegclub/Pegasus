@@ -1,7 +1,8 @@
 @if (error) {
     <div
             id="errorOverlay"
-            [ngClass]="showError === true ? 'show' : ''"
+            #errorOverlay
+            [ngClass]="showError ? 'show' : ''"
             class="alert alert-dismissable alert-danger"
             role="alert">
     <div class="fw-bold">Foutmelding!</div>

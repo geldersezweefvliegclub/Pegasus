@@ -82,7 +82,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     private readonly startlijstService = inject(StartlijstService);
     private readonly progressieService = inject(ProgressieService);
     private readonly router = inject(Router);
-    private activatedRoute = inject(ActivatedRoute);
+    private readonly activatedRoute = inject(ActivatedRoute);
 
     readonly iconCardIcon: IconDefinition = faChartPie;
     readonly iconProgressie: IconDefinition = faChartLine;
@@ -110,10 +110,10 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
-    @ViewChild('logboekPopup') private popupLogboek: ModalComponent;
-    @ViewChild('dienstenPopup') private popupDiensten: ModalComponent;
+    @ViewChild('logboekPopup') private readonly popupLogboek: ModalComponent;
+    @ViewChild('dienstenPopup') private readonly popupDiensten: ModalComponent;
     @ViewChild(TransactiesComponent) transactieScherm: TransactiesComponent;
-    @ViewChild(StartEditorComponent) private startEditor: StartEditorComponent;
+    @ViewChild(StartEditorComponent) private readonly startEditor: StartEditorComponent;
 
     verwijderMode = false;
     magVerwijderen = false;

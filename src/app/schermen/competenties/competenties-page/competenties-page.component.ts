@@ -6,7 +6,6 @@ import { HeliosCompetentie, HeliosCompetentiesDataset, HeliosProgressieBoom, Hel
 import { SharedService } from '../../../services/shared/shared.service';
 import { CompetentieService } from '../../../services/apiservice/competentie.service';
 import { ITreeOptions, TreeComponent, TreeNodeExpanderComponent, TreeDragDirective, TreeDropDirective, TreeNodeContent } from '@ali-hm/angular-tree-component';
-import { LoginService } from '../../../services/apiservice/login.service';
 import { TypesService } from '../../../services/apiservice/types.service';
 import {
   CompetentieEditorComponent,
@@ -34,7 +33,6 @@ export interface CompetentieTreeviewItem {
     imports: [CompetentieEditorComponent, PegasusCardComponent, TreeComponent, TreeNodeExpanderComponent, TreeDragDirective, TreeDropDirective, TreeNodeContent, FaIconComponent, NgStyle]
 })
 export class CompetentiesPageComponent implements OnInit, OnDestroy {
-    private readonly loginService = inject(LoginService);
     private readonly sharedService = inject(SharedService);
     private readonly typesService = inject(TypesService);
     private readonly competentieService = inject(CompetentieService);

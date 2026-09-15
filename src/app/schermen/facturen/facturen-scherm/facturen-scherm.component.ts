@@ -35,7 +35,7 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
   private readonly facturenService = inject(FacturenService);
 
   @ViewChild(DatatableComponent) grid: DatatableComponent;
-  @ViewChild(FactuurUploadenComponent) private uploaden: FactuurUploadenComponent;
+  @ViewChild(FactuurUploadenComponent) private readonly uploaden: FactuurUploadenComponent;
 
   data:HeliosFacturenDataset[] = [];
   facturenData:HeliosFacturenDataset[] = [];

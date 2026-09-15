@@ -1,17 +1,10 @@
-import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
+import { faMinusCircle, faPlusCircle, faUndo, } from '@fortawesome/free-solid-svg-icons';
 import {
-  faCaretSquareDown,
-  faCaretSquareUp,
-  faMinusCircle,
-  faPlusCircle,
-  faUndo,
-} from '@fortawesome/free-solid-svg-icons';
-import {
-  DocumentEditorComponent,
+    DocumentEditorComponent,
 } from '../../../../shared/components/editors/document-editor/document-editor.component';
 import { faFile, IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { HeliosDocument, HeliosDocumentenDataset } from '../../../../types/Helios';
-import { TypesService } from '../../../../services/apiservice/types.service';
 import { DocumentenService } from '../../../../services/apiservice/documenten.service';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { NgClass } from '@angular/common';
@@ -26,7 +19,6 @@ import { StatusButtonComponent } from '../../../../shared/components/status-butt
     imports: [DocumentEditorComponent, IconButtonComponent, PegasusCardComponent, StatusButtonComponent, FaIconComponent, NgClass]
 })
 export class LedenDocumentenComponent implements OnInit {
-    private readonly typesService = inject(TypesService);
     private readonly documentenService = inject(DocumentenService);
 
     @Input() LidID: number;
@@ -36,8 +28,6 @@ export class LedenDocumentenComponent implements OnInit {
     toevoegenIcon: IconDefinition = faPlusCircle;
     deleteIcon: IconDefinition = faMinusCircle;
     restoreIcon: IconDefinition = faUndo;
-    upIcon: IconDefinition = faCaretSquareUp;
-    downIcon: IconDefinition = faCaretSquareDown;
 
     documenten: HeliosDocumentenDataset[];
 

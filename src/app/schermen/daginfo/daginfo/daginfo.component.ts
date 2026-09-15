@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { LoginService } from '../../../services/apiservice/login.service';
 import { DaginfoService } from '../../../services/apiservice/daginfo.service';
@@ -15,8 +15,7 @@ import {
 } from '../../../types/Helios';
 import { TypesService } from '../../../services/apiservice/types.service';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
-import { faFileImport, faInfo, faMinusCircle, faPlane, faUndo, faUsers } from '@fortawesome/free-solid-svg-icons';
-import { StorageService } from '../../../services/storage/storage.service';
+import { faInfo, faMinusCircle, faPlane, faUndo, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { DagRoosterComponent } from '../../../shared/components/dag-rooster/dag-rooster.component';
 import { RoosterService } from '../../../services/apiservice/rooster.service';
 import { DienstenService } from '../../../services/apiservice/diensten.service';
@@ -45,7 +44,6 @@ export class DaginfoComponent implements OnInit, OnDestroy{
     private readonly typesService = inject(TypesService);
     private readonly sharedService = inject(SharedService);
     private readonly daginfoService = inject(DaginfoService);
-    private readonly storageService = inject(StorageService);
     private readonly roosterService = inject(RoosterService);
     private readonly dienstenService = inject(DienstenService);
     private readonly dagRapportenService = inject(DagRapportenService);
@@ -56,7 +54,6 @@ export class DaginfoComponent implements OnInit, OnDestroy{
     iconCardIcon: IconDefinition = faInfo;
     iconVliegveld: IconDefinition = faPlane;
     iconDiensten: IconDefinition = faUsers;
-    iconDefault: IconDefinition = faFileImport;
     deleteIcon: IconDefinition = faMinusCircle;
     restoreIcon: IconDefinition = faUndo;
 
