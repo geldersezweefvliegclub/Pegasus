@@ -76,11 +76,11 @@ export class LoginService  {
             const login: LoginResponse = await response.json();
             const bearerToken = this.getAccessToken(login);
 
-            this.storageService.opslaan("bearer", bearerToken);
+            this.storageService.opslaan("bearer", bearerToken, null, "session");
             this.apiService.setBearerToken(bearerToken);
 
             await this.getUserInfo();
-            this.ddwwService.loadConfigDDWV();
+            await this.ddwwService.loadConfigDDWV();
             this.successEmit();
 
             return this.userInfo!.LidData!.ID;

@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { ErrorMessage, HeliosActie, KeyValueArray } from '../../types/Utils';
 import { SharedService } from '../shared/shared.service';
 import { PegasusConfigService } from '../shared/pegasus-config.service';
+import { StorageService } from "../storage/storage.service";
 
 @Injectable({
     providedIn: 'root'
@@ -9,6 +10,7 @@ import { PegasusConfigService } from '../shared/pegasus-config.service';
 export class APIService {
     private readonly sharedService = inject(SharedService);
     private readonly configService = inject(PegasusConfigService);
+    private readonly storageService = inject(StorageService);
 
     private readonly URL:string = 'http://localhost:4200/api/'
     private BearerToken: string | null = null;
@@ -18,12 +20,20 @@ export class APIService {
 
 
         const url = configService.getURL();
-        if (url) this.URL = url;
+        if (url) {
+            this.URL = url;
+        };
+
+        this.setBearerToken(this.storageService.ophalen<string>("bearer", "session"))
     }
 
-    // opslaan van de token die we met inloggen hebben vekregen
-    async setBearerToken(token?: string) {
-        this.BearerToken = (token) ? token : null;
+    // opslaan van de token die we met inloggen hebben verkregen
+    setBearerToken(token?: string | null) {
+        if (!token) {
+            return;
+        }
+
+        this.BearerToken = token;
     }
 
     async get(url: string, params?: KeyValueArray, headers?: Headers): Promise<Response> {
