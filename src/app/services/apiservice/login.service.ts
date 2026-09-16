@@ -30,12 +30,12 @@ export class LoginService  {
     private readonly storageService = inject(StorageService);
 
     userInfo: HeliosUserinfo | null = null;
-    private userInfoStore = new BehaviorSubject(this.userInfo);
+    private readonly userInfoStore = new BehaviorSubject(this.userInfo);
     public readonly userInfoChange = this.userInfoStore.asObservable();      // nieuwe userInfo beschikbaar
 
     inloggenSucces: EventEmitter<void> = new EventEmitter<void>();
 
-    private dbEventAbonnement: Subscription;
+    private readonly dbEventAbonnement: Subscription;
 
     constructor() {
 
