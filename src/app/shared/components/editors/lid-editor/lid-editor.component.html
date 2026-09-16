@@ -22,7 +22,7 @@
         <div class="col-12 col-xl-7 col-xxl-8">
             <app-pegasus-card [titel]="titel" [subtitel]="subtitel" class="h-100" [img]="avatar">
                 <div avatar>
-                    @if (!this.isVerwijderMode && !this.isRestoreMode) {
+                    @if (!this.isVerwijderMode() && !this.isRestoreMode()) {
                         <app-image-crop (opslaan)="uploadFoto($event)" (cropped)="setAvatar($event)"
                         ></app-image-crop>
                     }
@@ -48,7 +48,7 @@
                         Avatar ontbreekt
                     </div>
                 }
-                <fieldset [disabled]="isVerwijderMode || isRestoreMode || isDisabled('BASIS')">
+                <fieldset [disabled]="isVerwijderMode() || isRestoreMode() || isDisabled('BASIS')">
                     <div #persoonGroup="ngModelGroup" ngModelGroup="persoonGroup" appWachtwoordMatchValidator>
                         <div class="row">
                             <div class="col-12 col-md-5 ">
@@ -614,21 +614,21 @@
     </div>
         <div class="row mt-2 justify-content-end">
             <div class="col-3 d-flex justify-content-end">
-                @if (!isLoading && !isSaving && lid.ID !== undefined && !isRestoreMode && !isVerwijderMode) {
+                @if (!isLoading && !isSaving && lid.ID !== undefined && !isRestoreMode() && !isVerwijderMode()) {
                     <app-icon-button
                             [disabled]="informatieGroup.invalid || persoonGroup.invalid"
                             iconNaam="fas Edit" btnColor="btn-primary" [toonKlein]=false
                             tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
-                } @if (!isLoading && !isSaving && lid.ID === undefined && !isRestoreMode && !isVerwijderMode) {
+                } @if (!isLoading && !isSaving && lid.ID === undefined && !isRestoreMode() && !isVerwijderMode()) {
                 <app-icon-button
                         [disabled]="informatieGroup.invalid || persoonGroup.invalid"
                         iconNaam="fas Plus" btnColor="btn-primary" [toonKlein]=false
                         tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
-            } @if (!isLoading && !isSaving && isVerwijderMode) {
+            } @if (!isLoading && !isSaving && isVerwijderMode()) {
                 <app-icon-button iconNaam="fas TrashAlt"
                                  btnColor="btn-primary editorDeleteBtn" [toonKlein]=false
                                  tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
-            } @if (!isLoading && !isSaving && isRestoreMode) {
+            } @if (!isLoading && !isSaving && isRestoreMode()) {
                 <app-icon-button iconNaam="fas Undo"
                                  btnColor="btn-primary editorRestoreBtn" [toonKlein]=false
                                  tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>

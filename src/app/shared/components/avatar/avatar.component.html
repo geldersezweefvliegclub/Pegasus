@@ -1,6 +1,6 @@
-<img defaultImage="/assets/img/avatar.png" alt="Avatar klein" [lazyLoad]="url" [class]="vorm" class="clickable" (click)="showPopup()" />
+<img defaultImage="/assets/img/avatar.png" alt="Avatar klein" [lazyLoad]="url" [class]="vorm()" class="clickable" (click)="showPopup()" />
 
-<app-modal [titel]="naam">
+<app-modal [titel]="naam()">
     <div body>
         @if (url && ref.children.length === 0) {
             <img class="volBeeld" alt="Avatar groot" [src]="url">

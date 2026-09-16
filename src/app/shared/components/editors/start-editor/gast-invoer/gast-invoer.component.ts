@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, inject } from '@angular/core';
+import { Component, EventEmitter, OnChanges, OnInit, Output, SimpleChanges, inject, input } from '@angular/core';
 import { GastenService } from '../../../../../services/apiservice/gasten.service';
 import { DateTime } from 'luxon';
 import { HeliosGastenDataset } from '../../../../../types/Helios';
@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 export class GastInvoerComponent implements OnInit, OnChanges {
     private readonly gastenService = inject(GastenService);
 
-    @Input() DATUM: DateTime;
+    readonly DATUM = input.required<DateTime>();
     @Output() gast:EventEmitter<string> = new EventEmitter<string>();
     @Output() opmerking:EventEmitter<string> = new EventEmitter<string>();
 
@@ -30,7 +30,7 @@ export class GastInvoerComponent implements OnInit, OnChanges {
     }
 
     private opvragen() {
-        this.gastenService.getGasten(false, this.DATUM, this.DATUM).then((gasten) => {
+        this.gastenService.getGasten(false, this.DATUM(), this.DATUM()).then((gasten) => {
             this.gasten = gasten;
         });
     }

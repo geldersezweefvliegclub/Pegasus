@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, input } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
 import { HeliosVliegtuigenDataset } from '../../../../../types/Helios';
 import { NgSelectComponent } from '@ng-select/ng-select';
@@ -14,10 +14,10 @@ import { AsyncPipe } from '@angular/common';
 export class VliegtuigInvoerComponent implements OnInit, OnChanges {
     @Input() vliegtuigen: HeliosVliegtuigenDataset[] = [];
     @Input() aanwezig: HeliosVliegtuigenDataset[] = [];
-    @Input() label = "";
-    @Input() disabled = false;
-    @Input() Sleep = false;
-    @Input() verplicht = true;
+    readonly label = input("");
+    readonly disabled = input(false);
+    readonly Sleep = input(false);
+    readonly verplicht = input(true);
     @Input() VLIEGTUIG_ID: number | undefined;
 
     @Output() VliegtuigChanged: EventEmitter<number> = new EventEmitter<number>();
@@ -25,7 +25,7 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
 
     @ViewChild(NgSelectComponent) ngSelect: NgSelectComponent;
 
-    vliegtuigInput$ = new Subject<string | null>();
+    vliegtuigInput$ = new Subject<string>();
     vliegtuigenSelectie$: Observable<HeliosVliegtuigenDataset[]>;
 
     inzetbaar = true;
@@ -77,7 +77,7 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
 
 
         // Indien we sleepkist moeten invoeren, halen we de andere kisten weg uit het array
-        if (this.Sleep) {
+        if (this.Sleep()) {
             this.aanwezig = this.aanwezig.filter((vliegtuig: HeliosVliegtuigenDataset) => {
                 return (vliegtuig.SLEEPKIST == true);
             });

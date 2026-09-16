@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, input } from '@angular/core';
 import { DateTime } from 'luxon';
 import { ColDef } from 'ag-grid-community';
 import { Subscription } from 'rxjs';
@@ -42,7 +42,7 @@ export class JaarTotalenComponent implements OnInit {
     private readonly dienstenService = inject(DienstenService);
     private readonly sharedService = inject(SharedService);
 
-    @Input() leden: HeliosLedenDataset[];
+    readonly leden = input<HeliosLedenDataset[]>([]);
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
     jaarTotalen: JaarTotaal[];
@@ -112,7 +112,7 @@ export class JaarTotalenComponent implements OnInit {
         const totals: JaarTotaal[] = [];
 
         // alle leden met lege starts toevoegen aan het grid
-        this.leden.forEach(lid => {
+        this.leden().forEach(lid => {
             totals.push({
                 ID: lid.ID as number,
                 NAAM: lid.NAAM as string,

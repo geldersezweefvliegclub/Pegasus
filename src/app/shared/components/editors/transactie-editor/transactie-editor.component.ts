@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild, inject, input } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { TransactiesService } from '../../../../services/apiservice/transacties.service';
@@ -29,7 +29,7 @@ export class TransactieEditorComponent implements OnInit {
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
-    @Input() toonLidSelectie = true;
+    readonly toonLidSelectie = input(true);
     @Output() TransactieGedaan: EventEmitter<void> = new EventEmitter<void>();
 
     private ledenAbonnement: Subscription;
@@ -80,7 +80,7 @@ export class TransactieEditorComponent implements OnInit {
                 this.transactie.VLIEGDAG = this.vliegdag.toISODate() ?? undefined;
             }
 
-            if (this.toonLidSelectie)
+            if (this.toonLidSelectie())
             {
                 this.lidNaam = ""
             }

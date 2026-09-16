@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject, input } from '@angular/core';
 import { ITreeOptions, ITreeState, TreeComponent } from '@ali-hm/angular-tree-component';
 import { ProgressieService } from '../../../services/apiservice/progressie.service';
 import { HeliosCompetentiesDataset, HeliosProgressieBoom, HeliosType } from '../../../types/Helios';
@@ -43,7 +43,7 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
     private readonly competentieService = inject(CompetentieService);
     private readonly progressieService = inject(ProgressieService);
 
-    @Input() VliegerID: number;
+    readonly VliegerID = input.required<number>();
     @ViewChild(ProgressieEditorComponent) private editor: ProgressieEditorComponent;
     @ViewChild('progressieTree') private progressieTree?: TreeComponent;
 
@@ -111,10 +111,10 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
 
     ophalen(): void {
         const ui = this.loginService.userInfo?.Userinfo;
-        this.isDisabled = !(ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) || (this.VliegerID == this.loginService.userInfo?.LidData?.ID);
+        this.isDisabled = !(ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) || (this.VliegerID() == this.loginService.userInfo?.LidData?.ID);
         this.treeState = this.progressieTree?.treeModel.getState() ?? this.treeState;
 
-        this.progressieService.getBoom(this.VliegerID).then((b) => {
+        this.progressieService.getBoom(this.VliegerID()).then((b) => {
             const tree: ProgressieTreeviewItem[] = [];
             for (let i = 0; i < b.length; i++) {
                 const tak = this.TreeView(b[i], `root-${i}`);

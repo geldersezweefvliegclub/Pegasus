@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, inject } from '@angular/core';
+import { Component, EventEmitter, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, inject, input } from '@angular/core';
 import {
     ColDef,
     GridApi,
@@ -20,18 +20,18 @@ import { AgGridAngular } from 'ag-grid-angular';
 export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     private readonly sharedService = inject(SharedService);
 
-    @Input() columnDefs = [];
-    @Input() rowData = [];
-    @Input() frameworkComponents = {};
-    @Input() id: string;
-    @Input() loading = false;
-    @Input() sizeToFit = true;
-    @Input() autoSizeColumns = false;
-    @Input() autoHeight = false;
-    @Input() rowHeight = 40;
-    @Input() multipleSelection = false;
-    @Input() pagination = true;
-    @Input() rowClassRules = null;
+    readonly columnDefs = input([]);
+    readonly rowData = input([]);
+    readonly frameworkComponents = input({});
+    readonly id = input.required<string>();
+    readonly loading = input(false);
+    readonly sizeToFit = input(true);
+    readonly autoSizeColumns = input(false);
+    readonly autoHeight = input(false);
+    readonly rowHeight = input(40);
+    readonly multipleSelection = input(false);
+    readonly pagination = input(true);
+    readonly rowClassRules = input(null);
     @Output() rowDoubleClicked: EventEmitter<RowDoubleClickedEvent> = new EventEmitter<RowDoubleClickedEvent>();
     @Output() rowSelected: EventEmitter<RowSelectedEvent> = new EventEmitter<RowSelectedEvent>();
 
@@ -53,7 +53,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
 
     defaultColDef: ColDef = {
         editable: false,              // Gaan niet editen in grid
-        autoHeight: this.autoHeight,
+        autoHeight: this.autoHeight(),
         filter: 'agTextColumnFilter', // use 'text' leden-filter by default
     };
     private api: GridApi | undefined;
@@ -69,17 +69,20 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnInit() {
-        this.defaultColDef.autoHeight = this.autoHeight;
-        this.options.pagination = this.pagination;
+        this.defaultColDef.autoHeight = this.autoHeight();
+        this.options.pagination = this.pagination();
 
-        if (this.multipleSelection)
+        if (this.multipleSelection())
         {
             this.options.rowSelection = 'multiple'
             this.options.rowMultiSelectWithClick = true;
+            // TODO test if this works to fix deprecation notice above.
+            // this.options.rowSelection = {mode: 'multiRow', enableSelectionWithoutKeys: true}
         }
 
-        if (this.rowClassRules) {
-            this.options.rowClassRules = this.rowClassRules;
+        const rowClassRules = this.rowClassRules();
+        if (rowClassRules) {
+            this.options.rowClassRules = rowClassRules;
         }
 
         // Roep onWindowResize aan zodra we het event ontvangen hebben
@@ -101,9 +104,9 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        this.options.pagination = this.pagination;
+        this.options.pagination = this.pagination();
 
-        if (this.multipleSelection) {
+        if (this.multipleSelection()) {
             this.options.rowSelection = 'multiple'
             this.options.rowMultiSelectWithClick = true;
         }
@@ -112,8 +115,8 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         if (this.api) {
-            this.api.setGridOption("columnDefs", this.columnDefs);
-            this.api.setGridOption("rowData", this.rowData);
+            this.api.setGridOption("columnDefs", this.columnDefs());
+            this.api.setGridOption("rowData", this.rowData());
 
             if (Object.prototype.hasOwnProperty.call(changes, "loading")) {
                 this.api.setGridOption("loading", changes["loading"].currentValue);
@@ -121,7 +124,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         }
         else
         {
-            console.log("no api", this.id)
+            console.log("no api", this.id())
         }
     }
 
@@ -131,10 +134,10 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     gridReady(ready: GridReadyEvent) {
-        console.log(this.id, "grid ready")
+        console.log(this.id(), "grid ready")
         this.api = ready.api;
 
-        this.api!.setGridOption("columnDefs", this.columnDefs);
+        this.api!.setGridOption("columnDefs", this.columnDefs());
         this.api!.sizeColumnsToFit()
 
         this.columnStateTimer = window.setInterval(() => {
@@ -144,10 +147,10 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
 
     sizeColumnsToFit() {
         if (this.api) {
-            if (this.sizeToFit) {
+            if (this.sizeToFit()) {
                 this.api.sizeColumnsToFit();
             }
-            if (this.autoSizeColumns) {
+            if (this.autoSizeColumns()) {
                 this.api.autoSizeAllColumns(false);
             }
         }

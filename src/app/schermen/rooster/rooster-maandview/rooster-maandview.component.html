@@ -112,7 +112,7 @@
                                 >
                                     <div
                                             class="drop-container"
-                                            [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID])"
+                                            [ngClass]="lidInRoosterClass()(dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID])"
                                             cdkDropList
                                             [id]="dagInRooster.DATUM + ',' + configService.OCHTEND_DDI_TYPE_ID"
                                             (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.OCHTEND_DDI_TYPE_ID);"
@@ -122,12 +122,12 @@
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID].NAAM : "" }}
                                         </div>
                                     </div>
-                                    @if (zelfIndelen(configService.OCHTEND_DDI_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID]) {
+                                    @if (zelfIndelen()(configService.OCHTEND_DDI_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID]) {
                                         <div
                                                 (click)="toekennenDienst(dagInRooster, configService.OCHTEND_DDI_TYPE_ID, mijnID, mijnNaam)">
                                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                                         </div>
-                                    } @if (magVerwijderen(dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID])) {
+                                    } @if (magVerwijderen()(dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID])) {
                                     <div
                                             (click)="verwijderDienst(dagInRooster, configService.OCHTEND_DDI_TYPE_ID)">
                                         <ng-template *ngTemplateOutlet="reset"></ng-template>
@@ -139,7 +139,7 @@
                             >
                                 <div
                                         class="drop-container"
-                                        [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID])"
+                                        [ngClass]="lidInRoosterClass()(dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID])"
                                         cdkDropList
                                         [id]="dagInRooster.DATUM + ',' + configService.MIDDAG_DDI_TYPE_ID"
                                         (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.MIDDAG_DDI_TYPE_ID);"
@@ -149,12 +149,12 @@
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID].NAAM : "" }}
                                     </div>
                                 </div>
-                                @if (zelfIndelen(configService.MIDDAG_DDI_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID]) {
+                                @if (zelfIndelen()(configService.MIDDAG_DDI_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.MIDDAG_DDI_TYPE_ID, mijnID, mijnNaam)">
                                         <ng-template *ngTemplateOutlet="assign"></ng-template>
                                     </div>
-                                } @if (magVerwijderen(dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID])) {
+                                } @if (magVerwijderen()(dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID])) {
                                 <div
                                         (click)="verwijderDienst(dagInRooster, configService.MIDDAG_DDI_TYPE_ID)">
                                     <ng-template *ngTemplateOutlet="reset"></ng-template>
@@ -171,7 +171,7 @@
                             >
                                 <div
                                         class="drop-container"
-                                        [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID])"
+                                        [ngClass]="lidInRoosterClass()(dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID])"
                                         cdkDropList
                                         [id]="dagInRooster.DATUM + ',' + configService.OCHTEND_INSTRUCTEUR_TYPE_ID"
                                         (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.OCHTEND_INSTRUCTEUR_TYPE_ID);"
@@ -181,12 +181,12 @@
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID].NAAM : "" }}
                                     </div>
                                 </div>
-                                @if (zelfIndelen(configService.OCHTEND_INSTRUCTEUR_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID]) {
+                                @if (zelfIndelen()(configService.OCHTEND_INSTRUCTEUR_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.OCHTEND_INSTRUCTEUR_TYPE_ID, mijnID, mijnNaam)">
                                         <ng-template *ngTemplateOutlet="assign"></ng-template>
                                     </div>
-                                } @if (magVerwijderen(dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID])) {
+                                } @if (magVerwijderen()(dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID])) {
                                 <div
                                         (click)="verwijderDienst(dagInRooster, configService.OCHTEND_INSTRUCTEUR_TYPE_ID)">
                                     <ng-template *ngTemplateOutlet="reset"></ng-template>
@@ -198,7 +198,7 @@
                         >
                             <div
                                     class="drop-container"
-                                    [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID])"
+                                    [ngClass]="lidInRoosterClass()(dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID])"
                                     cdkDropList
                                     [id]="dagInRooster.DATUM + ',' + configService.MIDDAG_INSTRUCTEUR_TYPE_ID"
                                     (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.MIDDAG_INSTRUCTEUR_TYPE_ID);"
@@ -208,12 +208,12 @@
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID].NAAM : "" }}
                                 </div>
                             </div>
-                            @if (zelfIndelen(configService.MIDDAG_INSTRUCTEUR_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) {
+                            @if (zelfIndelen()(configService.MIDDAG_INSTRUCTEUR_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) {
                                 <div
                                         (click)="toekennenDienst(dagInRooster, configService.MIDDAG_INSTRUCTEUR_TYPE_ID, mijnID, mijnNaam)">
                                     <ng-template *ngTemplateOutlet="assign"></ng-template>
                                 </div>
-                            } @if (magVerwijderen(dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID])) {
+                            } @if (magVerwijderen()(dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID])) {
                             <div
                                     (click)="verwijderDienst(dagInRooster, configService.MIDDAG_INSTRUCTEUR_TYPE_ID)">
                                 <ng-template *ngTemplateOutlet="reset"></ng-template>
@@ -229,7 +229,7 @@
                             <div class="d-flex">
                                 <div
                                         class="drop-container"
-                                        [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID])"
+                                        [ngClass]="lidInRoosterClass()(dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID])"
                                         cdkDropList
                                         [id]="dagInRooster.DATUM + ',' + configService.OCHTEND_STARTLEIDER_TYPE_ID"
                                         (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.OCHTEND_STARTLEIDER_TYPE_ID);"
@@ -239,12 +239,12 @@
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID].NAAM : "" }}
                                     </div>
                                 </div>
-                                @if (((zelfIndelen(configService.OCHTEND_STARTLEIDER_TYPE_ID, dagInRooster.DATUM)) || (isDDWVCrew && dagInRooster.DDWV && sharedService.datumInToekomst(dagInRooster.DATUM))) && !dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID]) {
+                                @if (((zelfIndelen()(configService.OCHTEND_STARTLEIDER_TYPE_ID, dagInRooster.DATUM)) || (isDDWVCrew && dagInRooster.DDWV && sharedService.datumInToekomst(dagInRooster.DATUM))) && !dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.OCHTEND_STARTLEIDER_TYPE_ID, mijnID, mijnNaam)">
                                         <ng-template *ngTemplateOutlet="assign"></ng-template>
                                     </div>
-                                } @if (magVerwijderen(dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID])) {
+                                } @if (magVerwijderen()(dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID])) {
                                 <div
                                         (click)="verwijderDienst(dagInRooster, configService.OCHTEND_STARTLEIDER_TYPE_ID)">
                                     <ng-template *ngTemplateOutlet="reset"></ng-template>
@@ -256,7 +256,7 @@
                         >
                             <div
                                     class="drop-container"
-                                    [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID])"
+                                    [ngClass]="lidInRoosterClass()(dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID])"
                                     cdkDropList
                                     [id]="dagInRooster.DATUM + ',' + configService.MIDDAG_STARTLEIDER_TYPE_ID"
                                     (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.MIDDAG_STARTLEIDER_TYPE_ID);"
@@ -266,12 +266,12 @@
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID].NAAM : "" }}
                                 </div>
                             </div>
-                            @if (zelfIndelen(configService.MIDDAG_STARTLEIDER_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID]) {
+                            @if (zelfIndelen()(configService.MIDDAG_STARTLEIDER_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID]) {
                                 <div
                                         (click)="toekennenDienst(dagInRooster, configService.MIDDAG_STARTLEIDER_TYPE_ID, mijnID, mijnNaam)">
                                     <ng-template *ngTemplateOutlet="assign"></ng-template>
                                 </div>
-                            } @if (magVerwijderen(dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID])) {
+                            } @if (magVerwijderen()(dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID])) {
                             <div
                                     (click)="verwijderDienst(dagInRooster, configService.MIDDAG_STARTLEIDER_TYPE_ID)">
                                 <ng-template *ngTemplateOutlet="reset"></ng-template>
@@ -288,7 +288,7 @@
                             >
                                 <div
                                         class="drop-container"
-                                        [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID])"
+                                        [ngClass]="lidInRoosterClass()(dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID])"
                                         cdkDropList
                                         [id]="dagInRooster.DATUM + ',' + configService.OCHTEND_STARTLEIDER_IO_TYPE_ID"
                                         (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.OCHTEND_STARTLEIDER_IO_TYPE_ID);"
@@ -298,12 +298,12 @@
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID].NAAM : "" }}
                                     </div>
                                 </div>
-                                @if ((zelfIndelen(configService.OCHTEND_STARTLEIDER_IO_TYPE_ID, dagInRooster.DATUM)) && !dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]) {
+                                @if ((zelfIndelen()(configService.OCHTEND_STARTLEIDER_IO_TYPE_ID, dagInRooster.DATUM)) && !dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.OCHTEND_STARTLEIDER_IO_TYPE_ID, mijnID, mijnNaam)">
                                         <ng-template *ngTemplateOutlet="assign"></ng-template>
                                     </div>
-                                } @if (magVerwijderen(dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID])) {
+                                } @if (magVerwijderen()(dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID])) {
                                 <div
                                         (click)="verwijderDienst(dagInRooster, configService.OCHTEND_STARTLEIDER_IO_TYPE_ID)">
                                     <ng-template *ngTemplateOutlet="reset"></ng-template>
@@ -315,7 +315,7 @@
                         >
                             <div
                                     class="drop-container"
-                                    [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID])"
+                                    [ngClass]="lidInRoosterClass()(dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID])"
                                     cdkDropList
                                     [id]="dagInRooster.DATUM + ',' + configService.MIDDAG_STARTLEIDER_IO_TYPE_ID"
                                     (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.MIDDAG_STARTLEIDER_IO_TYPE_ID);"
@@ -325,12 +325,12 @@
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID].NAAM : "" }}
                                 </div>
                             </div>
-                            @if (zelfIndelen(configService.MIDDAG_STARTLEIDER_IO_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID]) {
+                            @if (zelfIndelen()(configService.MIDDAG_STARTLEIDER_IO_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID]) {
                                 <div
                                         (click)="toekennenDienst(dagInRooster, configService.MIDDAG_STARTLEIDER_IO_TYPE_ID, mijnID, mijnNaam)">
                                     <ng-template *ngTemplateOutlet="assign"></ng-template>
                                 </div>
-                            } @if (magVerwijderen(dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID])) {
+                            } @if (magVerwijderen()(dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID])) {
                             <div
                                     (click)="verwijderDienst(dagInRooster, configService.MIDDAG_STARTLEIDER_IO_TYPE_ID)">
                                 <ng-template *ngTemplateOutlet="reset"></ng-template>
@@ -346,7 +346,7 @@
                             <div class="d-flex">
                                 <div
                                         class="drop-container"
-                                        [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID])"
+                                        [ngClass]="lidInRoosterClass()(dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID])"
                                         cdkDropList
                                         [id]="dagInRooster.DATUM + ',' + configService.OCHTEND_LIERIST_TYPE_ID"
                                         (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.OCHTEND_LIERIST_TYPE_ID);"
@@ -356,12 +356,12 @@
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID].NAAM : "" }}
                                     </div>
                                 </div>
-                                @if (((zelfIndelen(configService.OCHTEND_LIERIST_TYPE_ID, dagInRooster.DATUM)) || (isDDWVCrew && dagInRooster.DDWV && sharedService.datumInToekomst(dagInRooster.DATUM))) && !dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID]) {
+                                @if (((zelfIndelen()(configService.OCHTEND_LIERIST_TYPE_ID, dagInRooster.DATUM)) || (isDDWVCrew && dagInRooster.DDWV && sharedService.datumInToekomst(dagInRooster.DATUM))) && !dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.OCHTEND_LIERIST_TYPE_ID, mijnID, mijnNaam)">
                                         <ng-template *ngTemplateOutlet="assign"></ng-template>
                                     </div>
-                                } @if (magVerwijderen(dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID])) {
+                                } @if (magVerwijderen()(dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID])) {
                                 <div
                                         (click)="verwijderDienst(dagInRooster, configService.OCHTEND_LIERIST_TYPE_ID)">
                                     <ng-template *ngTemplateOutlet="reset"></ng-template>
@@ -373,7 +373,7 @@
                         >
                             <div
                                     class="drop-container"
-                                    [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID])"
+                                    [ngClass]="lidInRoosterClass()(dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID])"
                                     cdkDropList
                                     [id]="dagInRooster.DATUM + ',' + configService.MIDDAG_LIERIST_TYPE_ID"
                                     (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.MIDDAG_LIERIST_TYPE_ID);"
@@ -383,12 +383,12 @@
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID].NAAM : "" }}
                                 </div>
                             </div>
-                            @if (zelfIndelen(configService.MIDDAG_LIERIST_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID]) {
+                            @if (zelfIndelen()(configService.MIDDAG_LIERIST_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID]) {
                                 <div
                                         (click)="toekennenDienst(dagInRooster, configService.MIDDAG_LIERIST_TYPE_ID, mijnID, mijnNaam)">
                                     <ng-template *ngTemplateOutlet="assign"></ng-template>
                                 </div>
-                            } @if (magVerwijderen(dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID])) {
+                            } @if (magVerwijderen()(dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID])) {
                             <div
                                     (click)="verwijderDienst(dagInRooster, configService.MIDDAG_LIERIST_TYPE_ID)">
                                 <ng-template *ngTemplateOutlet="reset"></ng-template>
@@ -405,7 +405,7 @@
                             >
                                 <div
                                         class="drop-container"
-                                        [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID])"
+                                        [ngClass]="lidInRoosterClass()(dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID])"
                                         cdkDropList
                                         [id]="dagInRooster.DATUM + ',' + configService.OCHTEND_HULPLIERIST_TYPE_ID"
                                         (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.OCHTEND_HULPLIERIST_TYPE_ID);"
@@ -415,12 +415,12 @@
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID].NAAM : "" }}
                                     </div>
                                 </div>
-                                @if (zelfIndelen(configService.OCHTEND_HULPLIERIST_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID]) {
+                                @if (zelfIndelen()(configService.OCHTEND_HULPLIERIST_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.OCHTEND_HULPLIERIST_TYPE_ID, mijnID, mijnNaam)">
                                         <ng-template *ngTemplateOutlet="assign"></ng-template>
                                     </div>
-                                } @if (magVerwijderen(dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID])) {
+                                } @if (magVerwijderen()(dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID])) {
                                 <div
                                         (click)="verwijderDienst(dagInRooster, configService.OCHTEND_HULPLIERIST_TYPE_ID)">
                                     <ng-template *ngTemplateOutlet="reset"></ng-template>
@@ -432,7 +432,7 @@
                         >
                             <div
                                     class="drop-container"
-                                    [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID])"
+                                    [ngClass]="lidInRoosterClass()(dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID])"
                                     cdkDropList
                                     [id]="dagInRooster.DATUM + ',' + configService.MIDDAG_HULPLIERIST_TYPE_ID"
                                     (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.MIDDAG_HULPLIERIST_TYPE_ID);"
@@ -442,12 +442,12 @@
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID].NAAM : "" }}
                                 </div>
                             </div>
-                            @if (zelfIndelen(configService.MIDDAG_HULPLIERIST_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID]) {
+                            @if (zelfIndelen()(configService.MIDDAG_HULPLIERIST_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID]) {
                                 <div
                                         (click)="toekennenDienst(dagInRooster, configService.MIDDAG_HULPLIERIST_TYPE_ID, mijnID, mijnNaam)">
                                     <ng-template *ngTemplateOutlet="assign"></ng-template>
                                 </div>
-                            } @if (magVerwijderen(dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID])) {
+                            } @if (magVerwijderen()(dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID])) {
                             <div
                                     (click)="verwijderDienst(dagInRooster, configService.MIDDAG_HULPLIERIST_TYPE_ID)">
                                 <ng-template *ngTemplateOutlet="reset"></ng-template>
@@ -464,7 +464,7 @@
                             >
                                 <div
                                         class="drop-container"
-                                        [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID])"
+                                        [ngClass]="lidInRoosterClass()(dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID])"
                                         cdkDropList
                                         [id]="dagInRooster.DATUM + ',' + configService.GASTEN_VLIEGER1_TYPE_ID"
                                         (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.GASTEN_VLIEGER1_TYPE_ID);"
@@ -474,12 +474,12 @@
                                 {{ (dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID]) ? dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID].NAAM : "" }}
                                     </div>
                                 </div>
-                                @if (zelfIndelen(configService.GASTEN_VLIEGER1_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID]) {
+                                @if (zelfIndelen()(configService.GASTEN_VLIEGER1_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.GASTEN_VLIEGER1_TYPE_ID, mijnID, mijnNaam)">
                                         <ng-template *ngTemplateOutlet="assign"></ng-template>
                                     </div>
-                                } @if (magVerwijderen(dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID])) {
+                                } @if (magVerwijderen()(dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID])) {
                                 <div
                                         (click)="verwijderDienst(dagInRooster, configService.GASTEN_VLIEGER1_TYPE_ID)">
                                     <ng-template *ngTemplateOutlet="reset"></ng-template>
@@ -491,7 +491,7 @@
                         >
                             <div
                                     class="drop-container"
-                                    [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID])"
+                                    [ngClass]="lidInRoosterClass()(dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID])"
                                     cdkDropList
                                     [id]="dagInRooster.DATUM + ',' + configService.GASTEN_VLIEGER2_TYPE_ID"
                                     (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.GASTEN_VLIEGER2_TYPE_ID);"
@@ -501,12 +501,12 @@
                                 {{ (dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID]) ? dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID].NAAM : "" }}
                                 </div>
                             </div>
-                            @if (zelfIndelen(configService.GASTEN_VLIEGER2_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID]) {
+                            @if (zelfIndelen()(configService.GASTEN_VLIEGER2_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID]) {
                                 <div
                                         (click)="toekennenDienst(dagInRooster, configService.GASTEN_VLIEGER2_TYPE_ID, mijnID, mijnNaam)">
                                     <ng-template *ngTemplateOutlet="assign"></ng-template>
                                 </div>
-                            } @if (magVerwijderen(dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID])) {
+                            } @if (magVerwijderen()(dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID])) {
                             <div
                                     (click)="verwijderDienst(dagInRooster, configService.GASTEN_VLIEGER2_TYPE_ID)">
                                 <ng-template *ngTemplateOutlet="reset"></ng-template>
@@ -521,7 +521,7 @@
                             <div class="d-flex">
                                 <div
                                         class="drop-container"
-                                        [ngClass]="lidInRoosterClass(dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID])"
+                                        [ngClass]="lidInRoosterClass()(dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID])"
                                         cdkDropList
                                         [id]="dagInRooster.DATUM + ',' + configService.SLEEPVLIEGER_TYPE_ID"
                                         (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.SLEEPVLIEGER_TYPE_ID);"
@@ -531,12 +531,12 @@
                                 {{ (dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID]) ? dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID].NAAM : "" }}
                                     </div>
                                 </div>
-                                @if (zelfIndelen(configService.SLEEPVLIEGER_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID]) {
+                                @if (zelfIndelen()(configService.SLEEPVLIEGER_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.SLEEPVLIEGER_TYPE_ID, mijnID, mijnNaam)">
                                         <ng-template *ngTemplateOutlet="assign"></ng-template>
                                     </div>
-                                } @if (magVerwijderen(dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID])) {
+                                } @if (magVerwijderen()(dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID])) {
                                 <div
                                         (click)="verwijderDienst(dagInRooster, configService.SLEEPVLIEGER_TYPE_ID)">
                                     <ng-template *ngTemplateOutlet="reset"></ng-template>

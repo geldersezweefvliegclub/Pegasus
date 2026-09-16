@@ -1,15 +1,15 @@
 
-<label for="VLIEGTUIG-INVOER" class="form-label">{{label}}</label>
+<label for="VLIEGTUIG-INVOER" class="form-label">{{label()}}</label>
 <ng-select id="VLIEGTUIG-INVOER"
            [items]="vliegtuigenSelectie$ | async"
-           [disabled]="disabled"
+           [disabled]="disabled()"
            placeholder="Selecteer vliegtuig"
            bindLabel="REG_CALL"
            bindValue="ID"
            closeOnSelect="true"
            openOnEnter="true"
            name="VliegtuigID"
-           [required]="verplicht"
+           [required]="verplicht()"
            (ngModelChange)="inputChange($event)"
            [typeahead]="vliegtuigInput$"
            [(ngModel)]="VLIEGTUIG_ID">

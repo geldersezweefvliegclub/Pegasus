@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild, inject } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild, inject, input } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { SharedService } from '../../../services/shared/shared.service';
 import { LoginService } from '../../../services/apiservice/login.service';
@@ -16,7 +16,7 @@ export class LedenFilterComponent {
     private readonly loginService = inject(LoginService);
     readonly sharedService = inject(SharedService);
 
-    @Input() LedenDDWV = true;
+    readonly LedenDDWV = input(true);
     @Output() filterChanged: EventEmitter<void> = new EventEmitter<void>();
 
     @ViewChild(ModalComponent) private popup: ModalComponent;

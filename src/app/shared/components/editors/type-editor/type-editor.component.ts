@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, inject } from '@angular/core';
+import { Component, ViewChild, inject, input } from '@angular/core';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosType } from '../../../../types/Helios';
@@ -18,7 +18,7 @@ import { LoaderComponent } from '../../loader/loader.component';
 export class TypeEditorComponent  {
     private readonly typesService = inject(TypesService);
 
-    @Input() toonBedragEenheid = false;
+    readonly toonBedragEenheid = input(false);
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
     formTitel: string;

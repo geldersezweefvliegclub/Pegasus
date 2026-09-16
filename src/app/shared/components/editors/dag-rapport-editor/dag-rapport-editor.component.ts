@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, inject, input } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
@@ -33,7 +33,7 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
     private readonly sharedService = inject(SharedService);
     private readonly dagRapportenService = inject(DagRapportenService);
 
-    @Input() veld_id: number | undefined;
+    readonly veld_id = input<number>();
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @ViewChild(ComposeMeteoComponent) private meteoWizard: ComposeMeteoComponent;
     @ViewChild(ComposeBedrijfComponent) private bedrijfWizard: ComposeBedrijfComponent;
@@ -109,7 +109,7 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
         else {
             this.dagRapport = {
                 DATUM: this.datum.toISODate() as string,
-                VELD_ID: this.veld_id
+                VELD_ID: this.veld_id()
             }
             this.formTitel = "Nieuw dag rapport voor " + this.sharedService.datumDMJ(this.datum.toISODate() as string)
         }

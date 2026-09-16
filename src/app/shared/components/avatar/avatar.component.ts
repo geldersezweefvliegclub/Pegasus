@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, input } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 
@@ -9,9 +9,9 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
     imports: [LazyLoadImageModule, ModalComponent]
 })
 export class AvatarComponent {
-  @Input() naam = '';
+  readonly naam = input.required();
   @Input() url = '';
-  @Input() vorm: 'cirkel' | 'vierkant' = 'cirkel';
+  readonly vorm = input<'cirkel' | 'vierkant'>('cirkel');
   @ViewChild(ModalComponent) private popup: ModalComponent;
 
 

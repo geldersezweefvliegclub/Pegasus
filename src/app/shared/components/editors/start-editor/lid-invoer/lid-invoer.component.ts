@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, input } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
 import { HeliosAanwezigLedenDataset, HeliosLedenDataset, HeliosVliegtuigenDataset } from '../../../../../types/Helios';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
@@ -16,19 +16,19 @@ import { FormsModule } from '@angular/forms';
     imports: [NgClass, FaIconComponent, NgbPopover, NgSelectComponent, FormsModule, AsyncPipe]
 })
 export class LidInvoerComponent implements OnInit, OnChanges {
-    @Input() leden: HeliosLedenDataset[] = [];
-    @Input() aanwezig: HeliosAanwezigLedenDataset[] = [];
-    @Input() placeholder = "";
+    readonly leden = input<HeliosLedenDataset[]>([]);
+    readonly aanwezig = input<HeliosAanwezigLedenDataset[]>([]);
+    readonly placeholder = input("");
     @Input() label = "";
     @Input() uitleg: string;
-    @Input() disabled = false;
-    @Input() required = false;
-    @Input() veldID: number | undefined;
-    @Input() excludeLidTypes = ""
-    @Input() alleenPaxVliegers = false;
-    @Input() alleenInstructeurs = false;
+    readonly disabled = input(false);
+    readonly required = input(false);
+    readonly veldID = input<number>();
+    readonly excludeLidTypes = input("");
+    readonly alleenPaxVliegers = input(false);
+    readonly alleenInstructeurs = input(false);
     @Input() LID_ID: number | undefined;
-    @Input() vliegtuig: HeliosVliegtuigenDataset | undefined = undefined
+    readonly vliegtuig = input<HeliosVliegtuigenDataset>();
 
     @Output() LidChanged: EventEmitter<number> = new EventEmitter<number>();
     EventEmitterDelay: number;
@@ -78,17 +78,19 @@ export class LidInvoerComponent implements OnInit, OnChanges {
     ngOnChanges(_: SimpleChanges) {
         // leden komen in ander formaat, dus even goed zetten
         this.ledenFiltered = [];
-        if (this.leden) {
-            this.leden.forEach(item => {
-                if (this.excludeLidTypes) {
-                    if (this.excludeLidTypes.includes(item.LIDTYPE_ID!.toString())) {
+        const leden = this.leden();
+        if (leden) {
+            leden.forEach(item => {
+                const excludeLidTypes = this.excludeLidTypes();
+                if (excludeLidTypes) {
+                    if (excludeLidTypes.includes(item.LIDTYPE_ID!.toString())) {
                         return;    // we moeten dit lid niet opnemen omdat lidtype niet voldoet
                     }
                 }
-                if ((this.alleenPaxVliegers) && (item.PAX !== true)) {
+                if ((this.alleenPaxVliegers()) && (item.PAX !== true)) {
                     return;    // We zoeken alleen leden die PAX mogenvliegen
                 }
-                if ((this.alleenInstructeurs) && (item.INSTRUCTEUR !== true)) {
+                if ((this.alleenInstructeurs()) && (item.INSTRUCTEUR !== true)) {
                     return;    // We zoeken alleen leden die instructeur zijn
                 }
                 this.ledenFiltered.push(
@@ -102,20 +104,22 @@ export class LidInvoerComponent implements OnInit, OnChanges {
             });
         }
 
-        this.aanwezigFiltered = this.aanwezig.filter((lid: HeliosAanwezigLedenDataset) => {
-            if (!lid.INSTRUCTEUR && this.alleenInstructeurs) return false;
+        this.aanwezigFiltered = this.aanwezig().filter((lid: HeliosAanwezigLedenDataset) => {
+            if (!lid.INSTRUCTEUR && this.alleenInstructeurs()) return false;
             if (lid.LID_ID == this.LID_ID) return true;  // reeds invoerde lid moet ook in de lijst
 
             // We laten alleen vlieger zien die zich voor dit veld hebben aangemeld. Handig voor kampen als er
             // op twee velden gevlogen wordt.
-            if (this.veldID) {
-                if ((lid.VELD_ID != this.veldID) && (lid.VELD_ID != undefined)) {
+            const veldID = this.veldID();
+            if (veldID) {
+                if ((lid.VELD_ID != veldID) && (lid.VELD_ID != undefined)) {
                     return false;       // niet op dit vliegveld, dus niet in de default lijst
                 }
             }
 
-            if (this.excludeLidTypes) {
-                return (!this.excludeLidTypes.includes(lid.LIDTYPE_ID!.toString()))
+            const excludeLidTypes = this.excludeLidTypes();
+            if (excludeLidTypes) {
+                return (!excludeLidTypes.includes(lid.LIDTYPE_ID!.toString()))
             }
             return true;
         });
@@ -131,10 +135,11 @@ export class LidInvoerComponent implements OnInit, OnChanges {
         const defaultLijst = this.aanwezigFiltered.filter((lid: HeliosAanwezigLedenDataset) => {
             if (lid.LID_ID == this.LID_ID) return true;     // reeds invoerde lid moet ook in de lijst
 
-            if ((this.vliegtuig?.TYPE_ID) && (lid.VOORKEUR_VLIEGTUIG_TYPE) &&
-                (lid.VOORKEUR_VLIEGTUIG_TYPE.includes(this.vliegtuig.TYPE_ID.toString())))
+            const vliegtuig = this.vliegtuig();
+            if ((vliegtuig?.TYPE_ID) && (lid.VOORKEUR_VLIEGTUIG_TYPE) &&
+                (lid.VOORKEUR_VLIEGTUIG_TYPE.includes(vliegtuig.TYPE_ID.toString())))
                 return true;
-            return (lid.OVERLAND_VLIEGTUIG_ID == this.vliegtuig?.ID)
+            return (lid.OVERLAND_VLIEGTUIG_ID == vliegtuig?.ID)
         });
 
         const inDefault = defaultLijst.findIndex(lid => lid.LID_ID == this.LID_ID) >= 0;                // bevat defaultLijst de vlieger, boolean true/false
@@ -149,7 +154,7 @@ export class LidInvoerComponent implements OnInit, OnChanges {
             this.ledenSelectie$ = of(this.ledenFiltered);     // complete ledenlijst
         } else if (defaultLijst.length > 0) {
             this.ledenSelectie$ = of(defaultLijst);           // leden die graag op dit vliegtuig vliegen
-        } else if (this.aanwezig.length > 0) {
+        } else if (this.aanwezig().length > 0) {
             this.ledenSelectie$ = of(this.aanwezigFiltered);  // alle aanwezig leden
         } else {
             this.ledenSelectie$ = of(this.ledenFiltered);     // complete ledenlijst

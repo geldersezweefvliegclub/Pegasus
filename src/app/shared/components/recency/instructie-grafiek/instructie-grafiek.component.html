@@ -1,8 +1,8 @@
-<app-modal popupClass="popupLarge" titel="Instructie bevoegdheid {{naam}} over 36 maanden">
+<app-modal popupClass="popupLarge" titel="Instructie bevoegdheid {{naam()}} over 36 maanden">
     <div body>
         @if (bezig) {
             <div>
-                <ngb-progressbar type="info" [value]="counter" showValue="true" max="36"
+                <ngb-progressbar type="info" [value]="counter" [showValue]="true" [max]="36"
                                  [striped]="true"></ngb-progressbar>
             </div>
         } @if (!bezig) {

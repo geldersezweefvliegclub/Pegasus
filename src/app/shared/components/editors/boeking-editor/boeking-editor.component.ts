@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, inject, input } from '@angular/core';
 import {
     HeliosVliegtuigenDatasetExtended,
 } from '../../../../schermen/reservering/reservering-page/reservering-page.component';
@@ -31,7 +31,7 @@ export class BoekingEditorComponent implements OnInit, OnDestroy {
     private readonly ledenService = inject(LedenService);
     private readonly reserveringenService = inject(ReserveringService);
 
-    @Input() clubVliegtuigen: HeliosVliegtuigenDatasetExtended[];
+    readonly clubVliegtuigen = input<HeliosVliegtuigenDatasetExtended[]>([]);
     @Output() boekingToegevoegd: EventEmitter<void> = new EventEmitter<void>();
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
@@ -104,7 +104,7 @@ export class BoekingEditorComponent implements OnInit, OnDestroy {
             const eindDatum: DateTime = DateTime.fromObject({day: this.laatsteDag.day, month: this.laatsteDag.month, year: this.laatsteDag.year});
 
             const dataset = await this.reserveringenService.getReserveringen(beginDatum, eindDatum);    // opvragen reserveringen in deze periode
-            const kist = this.clubVliegtuigen.find(v => v.ID == this.vliegtuigID)
+            const kist = this.clubVliegtuigen().find(v => v.ID == this.vliegtuigID)
 
             //controle of kist al gereseveerd is in deze periode
             for (const item of dataset) {

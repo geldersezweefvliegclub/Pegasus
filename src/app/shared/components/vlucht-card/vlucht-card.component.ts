@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, inject, input } from '@angular/core';
 import { HeliosLogboekDataset, HeliosStartDataset } from '../../../types/Helios';
 import { LoginService } from '../../../services/apiservice/login.service';
 import { TijdInvoerComponent } from '../editors/tijd-invoer/tijd-invoer.component';
@@ -25,7 +25,7 @@ export class VluchtCardComponent implements OnInit {
     private readonly loginService = inject(LoginService);
     private readonly sharedService = inject(SharedService);
 
-    @Input() logboek: HeliosLogboekDataset;
+    readonly logboek = input<HeliosLogboekDataset>();
     @Input() start: HeliosStartDataset;
 
     @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
@@ -39,14 +39,19 @@ export class VluchtCardComponent implements OnInit {
 
     ngOnInit(): void {
         if (!this.start) {
-            this.start = JSON.parse(JSON.stringify(this.logboek));    // alles harmoniseren naar start object
+            const logboek = this.logboek();
+            if (!logboek) {
+                throw new Error('VluchtCardComponent requires either start or logboek input');
+            }
+
+            this.start = JSON.parse(JSON.stringify(logboek));    // alles harmoniseren naar start object
 
             // mismatch start & logboek oplossen, in logboek zijn VLIEGERNAAM en INZITTENDENAAM altijd ingevuld
             // bij een start zijn de namen VLIEGERNAAM_LID en INZITTENDENAAM_LID
             // VLIEGERNAAM en INZITTENDENAAM  worden gebruikt voor handmatig naam invoer
-            this.start.VLIEGERNAAM_LID = this.logboek.VLIEGERNAAM;
+            this.start.VLIEGERNAAM_LID = logboek.VLIEGERNAAM;
             this.start.VLIEGERNAAM = undefined;
-            this.start.INZITTENDENAAM_LID = this.logboek.INZITTENDENAAM;
+            this.start.INZITTENDENAAM_LID = logboek.INZITTENDENAAM;
             this.start.INZITTENDENAAM = undefined
         }
 

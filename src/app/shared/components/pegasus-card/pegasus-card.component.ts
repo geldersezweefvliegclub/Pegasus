@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, input } from '@angular/core';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { NgClass } from '@angular/common';
@@ -12,13 +12,13 @@ import { AvatarComponent } from '../avatar/avatar.component';
     imports: [NgClass, FaIconComponent, AvatarComponent]
 })
 export class PegasusCardComponent implements OnInit{
-    @Input() icon: IconDefinition = faQuestionCircle
-    @Input() minimum = false;
+    readonly icon = input<IconDefinition>(faQuestionCircle);
+    readonly minimum = input(false);
     @Input() img: string
-    @Input() titel: string;
-    @Input() subtitel: string;
-    @Input() exportEnabled = true;
-    @Input() exportImg = "/assets/img/excel-logo.png";
+    readonly titel = input.required();
+    readonly subtitel = input.required();
+    readonly exportEnabled = input(true);
+    readonly exportImg = input("/assets/img/excel-logo.png");
     @Output() Exporting: EventEmitter<void> = new EventEmitter<void>();
 
     hasExportListener: boolean;
@@ -32,6 +32,6 @@ export class PegasusCardComponent implements OnInit{
     }
 
     hoogte() {
-        return (this.minimum) ? "" : "h-100";
+        return (this.minimum()) ? "" : "h-100";
     }
 }

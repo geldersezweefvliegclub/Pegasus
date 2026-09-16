@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { NgClass } from '@angular/common';
 
 @Component({
@@ -8,5 +8,5 @@ import { NgClass } from '@angular/common';
     imports: [NgClass]
 })
 export class VoortgangComponent {
-  @Input() status: number;
+  readonly status = input.required<number>();
 }

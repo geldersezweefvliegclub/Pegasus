@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
 import { SharedService } from '../../../../services/shared/shared.service';
@@ -23,8 +23,8 @@ export class RecencyGrafiekComponent implements OnInit {
     private readonly startlijstService = inject(StartlijstService);
     private readonly sharedService = inject(SharedService);
 
-    @Input() VliegerID: number;
-    @Input() naam: string;
+    readonly VliegerID = input.required<number>();
+    readonly naam = input<string>();
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
@@ -254,7 +254,7 @@ export class RecencyGrafiekComponent implements OnInit {
             lineChartLabels.push(maand);
 
             try {
-                const recency = await this.startlijstService.getRecency(this.VliegerID, d);
+                const recency = await this.startlijstService.getRecency(this.VliegerID(), d);
                 waardes.push(recency.WAARDE as number);
 
                 // de maximale waarde die de grafiek heeft

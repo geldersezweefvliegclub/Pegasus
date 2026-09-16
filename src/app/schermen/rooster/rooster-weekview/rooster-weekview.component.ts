@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, inject, input } from '@angular/core';
 import { DagVanDeWeek } from '../../../utils/Utils';
 
 import {
@@ -41,12 +41,12 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
     readonly configService = inject(PegasusConfigService);
 
     @Input() rooster: HeliosRoosterDagExtended[];
-    @Input() leden: HeliosLedenDatasetExtended[];
-    @Input() datum: DateTime;
-    @Input() tonen: WeergaveData;
-    @Input() zelfIndelen: (dienstType: number, datum: string) => boolean;
-    @Input() magVerwijderen: (dienstData: HeliosDienstenDataset) => boolean;
-    @Input() lidInRoosterClass: (dienst: HeliosDienstenDataset) => string;
+    readonly leden = input.required<HeliosLedenDatasetExtended[]>();
+    readonly datum = input.required<DateTime>();
+    readonly tonen = input.required<WeergaveData>();
+    readonly zelfIndelen = input.required<(dienstType: number, datum: string) => boolean>();
+    readonly magVerwijderen = input.required<(dienstData: HeliosDienstenDataset) => boolean>();
+    readonly lidInRoosterClass = input.required<(dienst: HeliosDienstenDataset) => string>();
     @Output() nieuweDatum: EventEmitter<DateTime> = new EventEmitter<DateTime>();
 
     @ViewChild(DienstEditorComponent) dienstEditor: DienstEditorComponent;
@@ -91,7 +91,7 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
 
     ngOnChanges(changes: SimpleChanges) {
         if (Object.prototype.hasOwnProperty.call(changes, "datum")) {
-            this.maandag = this.datum.startOf('week');     // de eerste dag van de gekozen week
+            this.maandag = this.datum().startOf('week');     // de eerste dag van de gekozen week
         }
     }
 
@@ -180,7 +180,7 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
     }
 
     lidInRoosterDagClass(dienst: HeliosDienstenDataset, dag: HeliosRoosterDag) {
-        return (dag.CLUB_BEDRIJF || dag.DDWV) ? this.lidInRoosterClass(dienst) : "blanco";
+        return (dag.CLUB_BEDRIJF || dag.DDWV) ? this.lidInRoosterClass()(dienst) : "blanco";
     }
 
     // Hebben we een datum in de toekomst, vandaag is geen toekomst

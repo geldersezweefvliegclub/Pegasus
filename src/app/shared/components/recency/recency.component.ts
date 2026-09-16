@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild, inject } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, ViewChild, inject, input } from '@angular/core';
 import { StartlijstService } from '../../../services/apiservice/startlijst.service';
 import { HeliosBehaaldeProgressieDataset, HeliosLid, HeliosRecency } from '../../../types/Helios';
 import { RecencyGrafiekComponent } from './recency-grafiek/recency-grafiek.component';
@@ -42,8 +42,8 @@ export class RecencyComponent implements OnInit, OnChanges {
     private readonly startlijstService = inject(StartlijstService);
     private readonly progressieService = inject(ProgressieService);
 
-    @Input() Vlieger: HeliosLid;
-    @Input() naam: string;
+    readonly Vlieger = input.required<HeliosLid>();
+    readonly naam = input.required();
 
     @ViewChild(RecencyGrafiekComponent) private grafiekRecency: RecencyGrafiekComponent;
     @ViewChild(InstructieGrafiekComponent) private grafiekInstructie: InstructieGrafiekComponent;
@@ -79,7 +79,8 @@ export class RecencyComponent implements OnInit, OnChanges {
     ophalen(): void {
         this.isLoading = true;
 
-        if (this.Vlieger.STATUSTYPE_ID !== 1903) {
+        const Vlieger = this.Vlieger();
+        if (Vlieger.STATUSTYPE_ID !== 1903) {
             this.toonEASA = false;
         }
 
@@ -89,7 +90,7 @@ export class RecencyComponent implements OnInit, OnChanges {
         // 273 = Slepen
         // 274 = Zelfstart
 
-        this.progressieService.getProgressiesLid(this.Vlieger.ID!, "271,272,273,274").then((p: HeliosBehaaldeProgressieDataset[]) => {
+        this.progressieService.getProgressiesLid(Vlieger.ID!, "271,272,273,274").then((p: HeliosBehaaldeProgressieDataset[]) => {
             this.aantekeningen = p;
 
             this.brevet.lierstarts = -1;
@@ -98,7 +99,7 @@ export class RecencyComponent implements OnInit, OnChanges {
             this.brevet.tmgstarts = -1;
             this.brevet.medical = false;
 
-            this.startlijstService.getRecency(this.Vlieger.ID!).then((r) => {
+            this.startlijstService.getRecency(this.Vlieger().ID!).then((r) => {
                 this.isLoading = false;
                 this.recency = r
 
@@ -131,9 +132,10 @@ export class RecencyComponent implements OnInit, OnChanges {
 
                 this.brevet.aantal = ((r.STARTS_24_MND! >= 15) && (parseInt(r.UREN_24_MND!.split(":")[0]) > 5));
 
-                if (this.Vlieger.MEDICAL) {
+                const VliegerValue = this.Vlieger();
+                if (VliegerValue.MEDICAL) {
                     const nu: DateTime = DateTime.now();
-                    const d: DateTime = DateTime.fromSQL(this.Vlieger.MEDICAL);
+                    const d: DateTime = DateTime.fromSQL(VliegerValue.MEDICAL);
 
                     this.brevet.medical = (d > nu); // datum is in het toekomst
                 } else {
@@ -197,4 +199,3 @@ export class RecencyComponent implements OnInit, OnChanges {
         }
     }
 }
-

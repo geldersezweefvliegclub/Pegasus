@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, inject, input } from '@angular/core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far, IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { FlipProp, SizeProp } from '@fortawesome/fontawesome-svg-core';
@@ -16,15 +16,15 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 export class IconButtonComponent implements OnInit, OnDestroy {
     private readonly sharedService = inject(SharedService);
 
-    @Input() tekst = '';
-    @Input() iconNaam: string;
-    @Input() btnColor = 'btn-secondary';
-    @Input() disabled = false;
-    @Input() toonKlein = true;
-    @Input() flip: FlipProp;
-    @Input() size: SizeProp;
-    @Input() stopPropagation = false;
-    @Input() type: 'button' | 'submit' = 'button';
+    readonly tekst = input('');
+    readonly iconNaam = input.required<string>();
+    readonly btnColor = input('btn-secondary');
+    readonly disabled = input(false);
+    readonly toonKlein = input(true);
+    readonly flip = input<FlipProp>();
+    readonly size = input<SizeProp>();
+    readonly stopPropagation = input(false);
+    readonly type = input<'button' | 'submit'>('button');
     @Output() btnClicked: EventEmitter<void> = new EventEmitter<void>();
 
     faIcon: IconDefinition;
@@ -33,8 +33,9 @@ export class IconButtonComponent implements OnInit, OnDestroy {
     private resizeSubscription: Subscription;
 
     ngOnInit(): void {
-        if (this.iconNaam) {
-            const parts: string[] = this.iconNaam.split(' ');
+        const iconNaam = this.iconNaam();
+        if (iconNaam) {
+            const parts: string[] = iconNaam.split(' ');
 
             if (parts.length != 2) {
                 console.error('iconNaam moet 2 parameters hebben');
@@ -76,7 +77,7 @@ export class IconButtonComponent implements OnInit, OnDestroy {
 
     // Voor de actie uit die gekoppeld is aan deze knop
     buttonClicked($event: Event) {
-        if (this.stopPropagation) {
+        if (this.stopPropagation()) {
             $event.stopPropagation();           // zorg dat onderliggende element geen click event krijgen
         }
         this.btnClicked.emit();

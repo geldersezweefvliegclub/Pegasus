@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject, input } from '@angular/core';
 import { DagVanDeWeek } from '../../../utils/Utils';
 
 import {
@@ -41,12 +41,12 @@ export class RoosterDagviewComponent implements OnInit, OnDestroy {
     readonly configService = inject(PegasusConfigService);
 
     @Input() rooster: HeliosRoosterDagExtended[];
-    @Input() leden: HeliosLedenDatasetExtended[];
-    @Input() datum: DateTime;
+    readonly leden = input.required<HeliosLedenDatasetExtended[]>();
     @Input() tonen: WeergaveData;
-    @Input() zelfIndelen: (dienstType: number, datum: string) => boolean;
-    @Input() magVerwijderen: (dienstData: HeliosDienstenDataset) => boolean;
-    @Input() lidInRoosterClass: (dienst: HeliosDienstenDataset) => string;
+    readonly datum = input.required<DateTime>();
+    readonly zelfIndelen = input.required<(dienstType: number, datum: string) => boolean>();
+    readonly magVerwijderen = input.required<(dienstData: HeliosDienstenDataset) => boolean>();
+    readonly lidInRoosterClass = input.required<(dienst: HeliosDienstenDataset) => string>();
     @Output() nieuweDatum: EventEmitter<DateTime> = new EventEmitter<DateTime>();
 
     @ViewChild(DienstEditorComponent) dienstEditor: DienstEditorComponent;
@@ -169,7 +169,7 @@ export class RoosterDagviewComponent implements OnInit, OnDestroy {
     }
 
     lidInRoosterDagClass(dienst: HeliosDienstenDataset, dag: HeliosRoosterDag) {
-        return (dag.CLUB_BEDRIJF || dag.DDWV) ? this.lidInRoosterClass(dienst) : "blanco";
+        return (dag.CLUB_BEDRIJF || dag.DDWV) ? this.lidInRoosterClass()(dienst) : "blanco";
     }
 
     // Hebben we een datum in de toekomst, vandaag is geen toekomst

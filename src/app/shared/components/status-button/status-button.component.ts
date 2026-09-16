@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject, input } from '@angular/core';
 import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
 import { far, IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { fas } from '@fortawesome/free-solid-svg-icons';
@@ -15,11 +15,11 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 export class StatusButtonComponent implements OnInit, OnDestroy {
     private readonly sharedService = inject(SharedService);
 
-    @Input() tekst = '';
-    @Input() disabled = false;
-    @Input() toonKlein = true;
+    readonly tekst = input('');
+    readonly disabled = input(false);
+    readonly toonKlein = input(true);
     @Input() actief = false;
-    @Input() iconNaam: string;
+    readonly iconNaam = input<string>();
 
     @Output() btnClicked: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -29,8 +29,9 @@ export class StatusButtonComponent implements OnInit, OnDestroy {
     private resizeSubscription: Subscription;
 
     ngOnInit(): void {
-        if (this.iconNaam) {
-            const parts: string[] = this.iconNaam.split(' ');
+        const iconNaam = this.iconNaam();
+        if (iconNaam) {
+            const parts: string[] = iconNaam.split(' ');
 
             if (parts.length != 2) {
                 console.error('iconNaam moet 2 parameters hebben');

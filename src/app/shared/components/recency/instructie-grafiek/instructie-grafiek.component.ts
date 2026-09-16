@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, input } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
@@ -19,8 +19,8 @@ export class InstructieGrafiekComponent implements OnInit {
     private readonly startlijstService = inject(StartlijstService);
     private readonly sharedService = inject(SharedService);
 
-    @Input() VliegerID: number;
-    @Input() naam: string;
+    readonly VliegerID = input.required<number>();
+    readonly naam = input<string>();
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
@@ -239,7 +239,7 @@ export class InstructieGrafiekComponent implements OnInit {
             lineChartLabels.push(maand);
 
             try {
-                const recency = await this.startlijstService.getRecency(this.VliegerID, d);
+                const recency = await this.startlijstService.getRecency(this.VliegerID(), d);
                 starts.push(recency.STARTS_INSTRUCTIE as number);
 
                 const vliegtijdParts = recency.UREN_INSTRUCTIE?.split(':');

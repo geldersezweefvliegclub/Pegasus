@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgbDate, NgbDateParserFormatter, NgbInputDatepicker, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { DateTime } from 'luxon';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
@@ -11,7 +11,6 @@ import { NgbDateFRParserFormatter } from '../../../ngb-date-fr-parser-formatter'
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { ImageService } from '../../../../services/apiservice/image.service';
 import { Router } from '@angular/router';
-import { StorageService } from '../../../../services/storage/storage.service';
 import { Subscription } from 'rxjs';
 import { SchermGrootte, SharedService } from '../../../../services/shared/shared.service';
 import { TransactiesComponent } from '../../transacties/transacties.component';
@@ -46,13 +45,12 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     private readonly loginService = inject(LoginService);
     private readonly imageService = inject(ImageService);
     private readonly sharedService = inject(SharedService);
-    private readonly storageService = inject(StorageService);
     private readonly configService = inject(PegasusConfigService);
     private readonly changeDetector = inject(ChangeDetectorRef);
 
-    @Input() lidID: number;
-    @Input() isVerwijderMode = false;
-    @Input() isRestoreMode = false;
+    readonly lidID = input.required<number>();
+    readonly isVerwijderMode = input(false);
+    readonly isRestoreMode = input(false);
 
     @ViewChild(TransactiesComponent) transactieScherm: TransactiesComponent;
 
@@ -70,7 +68,6 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     oogIcon: IconDefinition = faEye;
     readonly informatieIcon: IconDefinition = faInfo;
     readonly infoIcon: IconDefinition = faInfoCircle;
-    readonly persoonIcon: IconDefinition = faUser;
 
     controleWachtwoord = '';
     wachtwoord = '';
@@ -127,6 +124,8 @@ export class LidEditorComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         if (this.resizeSubscription) this.resizeSubscription.unsubscribe();
+        this.ledenAbonnement.unsubscribe();
+        this.typesAbonnement.unsubscribe();
     }
 
     onWindowResize() {
@@ -138,19 +137,19 @@ export class LidEditorComponent implements OnInit, OnDestroy {
         this.saldoTonen = false;
 
         // als lidID > 0, dan wijzigen we een bestaand lid profiel
-        if (this.lidID >= 0) {
+        if (this.lidID() >= 0) {
             this.isLoading = true;
 
-            if (this.isRestoreMode) {
+            if (this.isRestoreMode()) {
                 this.titel = 'Lid herstellen';
                 this.subtitel = 'Een oud lid is weer terug, maak de verwijdering ongedaan';
-            } else if (this.isVerwijderMode) {
+            } else if (this.isVerwijderMode()) {
                 this.titel = 'Lid verwijderen';
                 this.subtitel = 'Geen lid meer dan markeren als verwijderd';
             }
 
             try {
-                this.ledenService.getLid(this.lidID).then((lid: HeliosLid) => {
+                this.ledenService.getLid(this.lidID()).then((lid: HeliosLid) => {
                     this.lid = lid;
 
                     // gebruik twee locale variable voor datum ingave
@@ -221,9 +220,9 @@ export class LidEditorComponent implements OnInit, OnDestroy {
         }
 
         // nu opslaan van de starts
-        if (this.isRestoreMode) {
+        if (this.isRestoreMode()) {
             this.restore()
-        } else if (this.isVerwijderMode) {
+        } else if (this.isVerwijderMode()) {
             this.delete()
         } else if (this.lid.ID != undefined && this.lid.ID >= 0) {
             this.updateLid()
@@ -235,7 +234,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     // markeer lid als verwijderd
     delete(): void {
         this.isSaving = true;
-        this.ledenService.deleteLid(this.lidID).then(() => {
+        this.ledenService.deleteLid(this.lidID()).then(() => {
             this.isSaving = false;
             this.error = undefined;
             this.success = {titel: "Profiel", beschrijving: this.lid.NAAM + " is verwijderd"}
@@ -272,7 +271,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
             this.error = undefined;
 
             const ui = this.loginService.userInfo?.LidData
-            if (this.lidID == ui!.ID) {
+            if (this.lidID() == ui!.ID) {
                 this.success = {titel: "Profiel", beschrijving: "Uw profiel is aangepast"}
             } else {
                 this.success = {titel: "Profiel", beschrijving: "Profiel " + l.NAAM + " is aangepast"}
@@ -332,7 +331,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     uploadFoto(image: string) {
         this.setAvatar(image);
         try {
-            this.imageService.uploadFoto(this.lidID, image).then(() => {
+            this.imageService.uploadFoto(this.lidID(), image).then(() => {
                 this.success = {titel: "upload avatar", beschrijving: "Foto is succesvol opgeslagen"};
             });
         } catch (e) {
@@ -355,7 +354,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     isDisabled(veld: string) {
         const ui = this.loginService.userInfo?.Userinfo;
 
-        if (this.isRestoreMode || this.isVerwijderMode) {
+        if (this.isRestoreMode() || this.isVerwijderMode()) {
             return true;
         }
 
@@ -492,7 +491,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
 
     // Ben ik mijn eigen profiel aan het aanpassen?
     ikBenHetZelf(): boolean {
-        return this.loginService.userInfo?.LidData?.ID == this.lidID
+        return this.loginService.userInfo?.LidData?.ID == this.lidID()
     }
 
     // Als veld disabled is, dan extra class toevoegen voor label
@@ -505,7 +504,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
 
     // Toon de QR code voor Google Authenticator
     toonSecret() {
-        if (this.isRestoreMode || this.isVerwijderMode) {
+        if (this.isRestoreMode() || this.isVerwijderMode()) {
             return false;
         }
 

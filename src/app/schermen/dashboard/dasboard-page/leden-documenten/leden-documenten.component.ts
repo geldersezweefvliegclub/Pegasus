@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild, input } from '@angular/core';
 import { faMinusCircle, faPlusCircle, faUndo, } from '@fortawesome/free-solid-svg-icons';
 import {
     DocumentEditorComponent,
@@ -21,7 +21,7 @@ import { StatusButtonComponent } from '../../../../shared/components/status-butt
 export class LedenDocumentenComponent implements OnInit {
     private readonly documentenService = inject(DocumentenService);
 
-    @Input() LidID: number;
+    readonly LidID = input.required<number>();
     @ViewChild(DocumentEditorComponent) editor: DocumentEditorComponent;
 
     iconCardIcon: IconDefinition = faFile;
@@ -41,7 +41,7 @@ export class LedenDocumentenComponent implements OnInit {
 
     // ophalen document van de server
     opvragen() {
-        this.documentenService.getDocumenten(this.trashMode, this.LidID).then((docs) => this.documenten = docs);
+        this.documentenService.getDocumenten(this.trashMode, this.LidID()).then((docs) => this.documenten = docs);
     }
 
 
@@ -86,7 +86,7 @@ export class LedenDocumentenComponent implements OnInit {
 
     toevoegen() {
         const doc: HeliosDocument = {
-            LID_ID: this.LidID,
+            LID_ID: this.LidID(),
             GROEP_ID: 22                      // Speciaal type
         }
 
@@ -97,4 +97,3 @@ export class LedenDocumentenComponent implements OnInit {
         window.open(url);
     }
 }
-

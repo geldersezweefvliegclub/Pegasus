@@ -1,19 +1,19 @@
 <app-uitbetalen-ddwv-crew-editor></app-uitbetalen-ddwv-crew-editor>
 
-@if (leden && rooster) {
+@if (leden() && rooster) {
     <div class="dataContent">
     <div class="d-flex justify-content-between mb-2">
         <div>
             <app-icon-button
                     class="toolbarBtn mx-2"
-                    iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum.plus({days: -7}))"
+                    iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum().plus({days: -7}))"
                     btnColor="btn-secondary"></app-icon-button>
         </div>
         Rooster voor de week van {{ maandag.day }}-{{ maandag.month }}-{{ maandag.year }}
         <div>
             <app-icon-button
                     class="toolbarBtn mx-2"
-                    iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum.plus({days: 7}))"
+                    iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum().plus({days: 7}))"
                     btnColor="btn-secondary"></app-icon-button>
         </div>
     </div>
@@ -82,7 +82,7 @@
             </tr>
             </thead>
             <tbody>
-            @if ((tonen.toonDienst[configService.OCHTEND_DDI_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_DDI_TYPE_ID]) && tonen.Instructeurs && tonen.toonClubDDWV !== 2) {
+            @if ((tonen().toonDienst[configService.OCHTEND_DDI_TYPE_ID] || tonen().toonDienst[configService.MIDDAG_DDI_TYPE_ID]) && tonen().Instructeurs && tonen().toonClubDDWV !== 2) {
                 <tr>
                     <td class="dienstType">DDI</td>
                     @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
@@ -96,7 +96,7 @@
                         </td>
                     }
                 </tr>
-            } @if ((tonen.toonDienst[configService.OCHTEND_INSTRUCTEUR_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) && tonen.Instructeurs && tonen.toonClubDDWV !== 2) {
+            } @if ((tonen().toonDienst[configService.OCHTEND_INSTRUCTEUR_TYPE_ID] || tonen().toonDienst[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) && tonen().Instructeurs && tonen().toonClubDDWV !== 2) {
                 <tr>
                     <td class="dienstType">Instructeur</td>
                     @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
@@ -110,7 +110,7 @@
                         </td>
                     }
                 </tr>
-            } @if ((tonen.toonDienst[configService.OCHTEND_STARTLEIDER_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_STARTLEIDER_TYPE_ID]) && (tonen.Startleiders || tonen.DDWV)) {
+            } @if ((tonen().toonDienst[configService.OCHTEND_STARTLEIDER_TYPE_ID] || tonen().toonDienst[configService.MIDDAG_STARTLEIDER_TYPE_ID]) && (tonen().Startleiders || tonen().DDWV)) {
                 <tr>
                     <td class="dienstType">Startleider</td>
                     @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
@@ -129,7 +129,7 @@
                         </td>
                     }
                 </tr>
-            } @if ((tonen.toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID] || tonen.toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]) && tonen.Startleiders && tonen.toonClubDDWV !== 2) {
+            } @if ((tonen().toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID] || tonen().toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]) && tonen().Startleiders && tonen().toonClubDDWV !== 2) {
                 <tr>
                     <td class="dienstType">Startleider 2</td>
                     @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
@@ -143,7 +143,7 @@
                         </td>
                     }
                 </tr>
-            } @if ((tonen.toonDienst[configService.OCHTEND_LIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_LIERIST_TYPE_ID]) && (tonen.Lieristen || tonen.DDWV)) {
+            } @if ((tonen().toonDienst[configService.OCHTEND_LIERIST_TYPE_ID] || tonen().toonDienst[configService.MIDDAG_LIERIST_TYPE_ID]) && (tonen().Lieristen || tonen().DDWV)) {
                 <tr>
                     <td class="dienstType">Lierist</td>
                     @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
@@ -162,7 +162,7 @@
                         </td>
                     }
                 </tr>
-            } @if ((tonen.toonDienst[configService.OCHTEND_HULPLIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_HULPLIERIST_TYPE_ID]) && tonen.LIO && tonen.toonClubDDWV !== 2) {
+            } @if ((tonen().toonDienst[configService.OCHTEND_HULPLIERIST_TYPE_ID] || tonen().toonDienst[configService.MIDDAG_HULPLIERIST_TYPE_ID]) && tonen().LIO && tonen().toonClubDDWV !== 2) {
                 <tr>
                     <td class="dienstType">Hulplierist</td>
                     @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
@@ -176,7 +176,7 @@
                         </td>
                     }
                 </tr>
-            } @if ((tonen.toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID] || tonen.toonDienst[configService.GASTEN_VLIEGER2_TYPE_ID]) && tonen.GastenVliegers && tonen.toonClubDDWV !== 2) {
+            } @if ((tonen().toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID] || tonen().toonDienst[configService.GASTEN_VLIEGER2_TYPE_ID]) && tonen().GastenVliegers && tonen().toonClubDDWV !== 2) {
                 <tr>
                     <td class="dienstType">Gasten vlieger</td>
                     @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
@@ -190,7 +190,7 @@
                         </td>
                     }
                 </tr>
-            } @if (tonen.toonDienst[configService.SLEEPVLIEGER_TYPE_ID] && tonen.Sleepvliegers) {
+            } @if (tonen().toonDienst[configService.SLEEPVLIEGER_TYPE_ID] && tonen().Sleepvliegers) {
                 <tr>
                     <td class="dienstType">Sleepvlieger</td>
                     @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
@@ -204,7 +204,7 @@
                         </td>
                     }
                 </tr>
-            } @if (tonen.toonClubDDWV === 2) {
+            } @if (tonen().toonClubDDWV === 2) {
                 <tr>
                     <td class="dienstType">Slepen</td>
                     @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
@@ -221,7 +221,7 @@
                         </td>
                     }
                 </tr>
-            } @if (tonen.toonClubDDWV === 2) {
+            } @if (tonen().toonClubDDWV === 2) {
                 <tr>
                     <td class="dienstType">Lieren</td>
                     @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
@@ -237,7 +237,7 @@
                         </td>
                     }
                 </tr>
-            } @if (tonen.toonClubDDWV === 2) {
+            } @if (tonen().toonClubDDWV === 2) {
                 <tr>
                     <td></td>
                     @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
@@ -264,18 +264,18 @@
 <ng-template #roosterDienst let-dag="dag" let-typeDienst="typeDienst">
     @for (dt of typeDienst; track dt) {
         <div class="d-flex">
-            @if (tonen.toonDienst[dt]) {
+            @if (tonen().toonDienst[dt]) {
                 <div class="d-flex w-100">
                     <div class="naam" (click)="openPopup(dag, dt)"
                          [ngClass]="lidInRoosterDagClass(dag.Diensten[dt], dag)">
                         {{ (dag.Diensten[dt]) ? dag.Diensten[dt].NAAM : "" }}
                     </div>
-                    @if (zelfIndelen(dt, dag.DATUM) && !dag.Diensten[dt]) {
+                    @if (zelfIndelen()(dt, dag.DATUM) && !dag.Diensten[dt]) {
                         <div
                                 (click)="toekennenDienst(dag, dt)">
                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                         </div>
-                    } @if (magVerwijderen(dag.Diensten[dt])) {
+                    } @if (magVerwijderen()(dag.Diensten[dt])) {
                     <div
                             (click)="verwijderDienst(dag, dt)">
                         <ng-template *ngTemplateOutlet="reset"></ng-template>

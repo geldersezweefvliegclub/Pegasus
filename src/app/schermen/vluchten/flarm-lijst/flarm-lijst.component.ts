@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject, input } from '@angular/core';
 import { FlarmData, FlarmInputService } from '../../../services/flarm-input.service';
 import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
@@ -19,7 +19,7 @@ export class FlarmLijstComponent implements OnInit, OnDestroy, OnChanges {
   private readonly flarmService = inject(FlarmInputService);
   private readonly startService = inject(StartlijstService);
 
-  @Input() veldID: number | undefined
+  readonly veldID = input<number>();
   @ViewChild(StartDetailsComponent) startDetails: StartDetailsComponent;
 
   private flarmAbonnement: Subscription;
@@ -81,10 +81,22 @@ export class FlarmLijstComponent implements OnInit, OnDestroy, OnChanges {
       item.landingstijd = item.landingstijd ? item.landingstijd : "--:--";
     }
 
-    this.grond = this.flarmData.filter((flarm) => flarm.status === 'On_Ground' && (this.veldID === null || flarm.VELD_ID === this.veldID));
-    this.takeoff = this.flarmData.filter((flarm) => flarm.status === 'TakeOff' && (this.veldID === null || flarm.VELD_ID === this.veldID));
-    this.flying = this.flarmData.filter((flarm) => flarm.status === 'Flying' && (this.veldID === null || flarm.VELD_ID === this.veldID));
-    this.landing = this.flarmData.filter((flarm) => (flarm.status === 'Landing' || flarm.status === 'Circuit') && (this.veldID === null || flarm.VELD_ID === this.veldID));
+    this.grond = this.flarmData.filter((flarm) => {
+      const veldID = this.veldID();
+      return flarm.status === 'On_Ground' && (veldID === null || flarm.VELD_ID === veldID);
+    });
+    this.takeoff = this.flarmData.filter((flarm) => {
+      const veldID = this.veldID();
+      return flarm.status === 'TakeOff' && (veldID === null || flarm.VELD_ID === veldID);
+    });
+    this.flying = this.flarmData.filter((flarm) => {
+      const veldID = this.veldID();
+      return flarm.status === 'Flying' && (veldID === null || flarm.VELD_ID === veldID);
+    });
+    this.landing = this.flarmData.filter((flarm) => {
+      const veldID = this.veldID();
+      return (flarm.status === 'Landing' || flarm.status === 'Circuit') && (veldID === null || flarm.VELD_ID === veldID);
+    });
 
     if ((this.grond.length % 2 === 1) && (this.grond.length > 1))
     {

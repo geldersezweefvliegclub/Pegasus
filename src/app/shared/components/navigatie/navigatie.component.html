@@ -11,9 +11,9 @@
 </ng-template>
 
 <nav class="h-100">
-    @if (!hoofdscherm) {
+    @if (!hoofdscherm()) {
         <ng-container [ngTemplateOutlet]="menuInside"></ng-container>
-    } @if (hoofdscherm) {
+    } @if (hoofdscherm()) {
     <ng-container class="d-flex h-100" [ngTemplateOutlet]="menuScherm"></ng-container>
 }
 </nav>

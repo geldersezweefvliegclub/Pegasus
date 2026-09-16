@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject, input } from '@angular/core';
 import { beheerRoutes, CustomRoute, routes } from '../../../routing.module';
 
 import { Router, RouterLinkActive, RouterLink } from '@angular/router';
@@ -39,7 +39,7 @@ export class NavigatieComponent implements OnInit, OnDestroy {
     private readonly sharedService = inject(SharedService);
     private readonly configService = inject(PegasusConfigService);
 
-    @Input() hoofdscherm = false;
+    readonly hoofdscherm = input(false);
     @ViewChild(PopupKalenderComponent) popupKalender: PopupKalenderComponent;
 
     readonly routes = routes;
@@ -316,7 +316,7 @@ export class NavigatieComponent implements OnInit, OnDestroy {
     }
 
     kleineDatum() {
-        if (this.hoofdscherm)
+        if (this.hoofdscherm())
             return (window.innerHeight < 670)
 
         return (window.innerHeight < 850 || this.sharedService.getSchermSize() < SchermGrootte.xxl)

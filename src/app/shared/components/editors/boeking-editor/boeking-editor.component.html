@@ -20,7 +20,7 @@
                 <div class="col-12 col-md-6">
                     <app-vliegtuig-invoer id="VLIEGTUIG"
                                           [VLIEGTUIG_ID]="vliegtuigID"
-                                          [vliegtuigen]="clubVliegtuigen"
+                                          [vliegtuigen]="clubVliegtuigen()"
                                           (VliegtuigChanged)="vliegtuigGeselecteerd($event)"
                                           label="Vliegtuig"
                     ></app-vliegtuig-invoer>

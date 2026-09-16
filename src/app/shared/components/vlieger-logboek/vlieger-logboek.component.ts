@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject, input } from '@angular/core';
 import { ColDef, RowClassParams } from 'ag-grid-community';
 import { HeliosLogboekDataset, HeliosTrack } from '../../../types/Helios';
 import { DateTime, Interval } from 'luxon';
@@ -45,11 +45,11 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
     private readonly sharedService = inject(SharedService);
     private readonly loginService = inject(LoginService);
 
-    @Input() id: string;
-    @Input() VliegerID: number;
-    @Input() deleteMode: boolean;
-    @Input() Kolommen = "";
-    @Input() MaxItems = 1000;
+    readonly id = input.required<string>();
+    readonly VliegerID = input.required<number>();
+    readonly deleteMode = input(false);
+    readonly Kolommen = input("");
+    readonly MaxItems = input(1000);
 
     @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
     @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
@@ -238,7 +238,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
             const eindDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 12, day: 31});
 
             this.isLoading = true;
-            this.startlijstService.getLogboek(this.VliegerID, startDatum, eindDatum).then((dataset) => {
+            this.startlijstService.getLogboek(this.VliegerID(), startDatum, eindDatum).then((dataset) => {
                 this.isLoading = false;
                 const data:HeliosLogboekDatasetExtended[] = (dataset) ? dataset : [];
 
@@ -292,7 +292,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
             kolom.hide = true;
         }
         else {
-            kolom.hide = !this.Kolommen.includes("STARTMETHODE");
+            kolom.hide = !this.Kolommen().includes("STARTMETHODE");
         }
 
         kolom = this.columns.find(c => c.field == "VELD") as ColDef;
@@ -300,7 +300,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
             kolom.hide = true;
         }
         else {
-            kolom.hide = !this.Kolommen.includes("VELD");
+            kolom.hide = !this.Kolommen().includes("VELD");
         }
 
         kolom = this.columns.find(c => c.field == "OPMERKINGEN") as ColDef;
@@ -308,7 +308,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
             kolom.hide = true;
         }
         else {
-            kolom.hide = !this.Kolommen.includes("OPMERKINGEN");
+            kolom.hide = !this.Kolommen().includes("OPMERKINGEN");
         }
 
         kolom = this.columns.find(c => c.field == "VLIEGERNAAM") as ColDef;
@@ -319,7 +319,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
 
 
         this.columns = this.dataColumns;
-        if (!this.deleteMode) {
+        if (!this.deleteMode()) {
             const ui = this.loginService.userInfo?.Userinfo
             if ((ui!.isBeheerder || ui!.isCIMT || ui!.isInstructeur) && (this.sharedService.getSchermSize() >= SchermGrootte.md)) {
                 this.columns = this.aanmakenTrackColumn.concat(this.dataColumns);

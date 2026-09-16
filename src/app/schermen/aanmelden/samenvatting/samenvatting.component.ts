@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild, inject } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild, inject, input } from '@angular/core';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
 import { HeliosAanwezigSamenvatting, HeliosDienstenDataset, HeliosRoosterDataset } from '../../../types/Helios';
 import { DateTime } from 'luxon';
@@ -21,7 +21,7 @@ export class SamenvattingComponent {
     private readonly aanwezigLedenService = inject(AanwezigLedenService);
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
-    @Input() diensten: HeliosDienstenDataset[];
+    readonly diensten = input.required<HeliosDienstenDataset[]>();
     @Output() bulkEmail: EventEmitter<string> = new EventEmitter<string>();
 
     samenvatting: HeliosAanwezigSamenvatting | undefined;
@@ -46,11 +46,12 @@ export class SamenvattingComponent {
         if (ui!.Userinfo!.isBeheerder || ui?.Userinfo!.isCIMT)
             this.toonBulkEmail = true;
         else {
-            if (!this.diensten) {
+            const diensten = this.diensten();
+            if (!diensten) {
                 this.toonBulkEmail = false;
             }
             // als de ingelode gebruiker dienst heeft, dan toegang tot bulk email
-            const idx = this.diensten.findIndex((d) => {
+            const idx = diensten.findIndex((d) => {
                 return (d.DATUM == rooster.DATUM && d.LID_ID == ui!.LidData!.ID)
             });
             this.toonBulkEmail = (idx >= 0);
@@ -85,9 +86,9 @@ export class SamenvattingComponent {
         this.middagLierist = "";
         this.middagSleper = "";
 
-        const dagDiensten = this.diensten.filter((dienst) => dienst.DATUM == this.rooster.DATUM)
+        const dagDiensten = this.diensten().filter((dienst) => dienst.DATUM == this.rooster.DATUM)
 
-        console.log(this.diensten)
+        console.log(this.diensten())
         dagDiensten.forEach((dienst) => {
             switch (dienst.TYPE_DIENST_ID) {
                 case this.configService.OCHTEND_DDI_TYPE_ID:

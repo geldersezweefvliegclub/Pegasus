@@ -2,7 +2,7 @@
 <app-success [success]="success"></app-success>
 
 <div class="d-flex h-100">
-    <div [class]="toonLid ? 'col-sm-12 col-xxl-9' : 'col-12'">
+    <div [class]="toonLid() ? 'col-sm-12 col-xxl-9' : 'col-12'">
         <div class="box h-100">
             <div id="data" style="height: 1px">
                 <table class="w-100">
@@ -27,7 +27,7 @@
                                     </button>
                                 }
                             </td>
-                        } @if (toonLid && lidColumn()) {
+                        } @if (toonLid() && lidColumn()) {
                             <td class="naamCell">
                                 <div class="d-flex">
                                     @if (trk.lid) {
@@ -133,7 +133,7 @@
         </div>
     </div>
 
-    @if (toonLid) {
+    @if (toonLid()) {
         <div class="col-3 kolomRechts d-none d-xxl-block">
             @if (geselecteerdLid) {
                 <div>

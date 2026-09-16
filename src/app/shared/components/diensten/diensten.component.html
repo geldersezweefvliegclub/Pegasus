@@ -3,9 +3,9 @@
     <tr class="headerRow">
         <th scope="col" class="datum">Datum</th>
         <th scope="col">Dienst</th>
-        @if (UitgebreideWeergave) {
+        @if (UitgebreideWeergave()) {
             <th scope="col">Afwezig</th>
-        } @if (UitgebreideWeergave) {
+        } @if (UitgebreideWeergave()) {
         <th scope="col">Aanwezig</th>
     }
     </tr>
@@ -13,14 +13,14 @@
             <tr>
         <td class="datum clickable"><a aria-label="Toon diensten van de dag" (click)="toonDagRooster(dienst.DATUM)" class="clickable">{{toonDatum(dienst.DATUM)}}</a></td>
         <td>{{dienst.TYPE_DIENST}}</td>
-                @if (UitgebreideWeergave) {
+                @if (UitgebreideWeergave()) {
                     <td class="midden">
             <input type="checkbox"
                    class="form-check-inline"
                    [checked]="dienst.AFWEZIG"
                    disabled>
                     </td>
-                } @if (UitgebreideWeergave) {
+                } @if (UitgebreideWeergave()) {
                 <td class="midden">
                     <input type="checkbox"
                            class="form-check-inline"

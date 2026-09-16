@@ -1,7 +1,7 @@
 <app-modal titel="Keuze van kisten">
     <div body>
         <table class="">
-            @for (kist of clubVliegtuigen; track kist; let i = $index) {
+            @for (kist of clubVliegtuigen(); track kist.ID; let i = $index) {
                 <tr>
                     <td>
                         <input type="checkbox"

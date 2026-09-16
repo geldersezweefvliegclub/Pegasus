@@ -4,7 +4,7 @@
 
 <app-modal titel="Transactie {{lidNaam}}">
     <div body>
-        @if (toonLidSelectie) {
+        @if (toonLidSelectie()) {
             <app-lid-invoer id="LID"
                             placeholder="Selecteer lid"
                             label="Lid"

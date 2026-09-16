@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, inject } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, inject, input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
 import { HeliosLogboekTotalen } from '../../../types/Helios';
@@ -19,7 +19,7 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDest
     private readonly startlijstService = inject(StartlijstService);
     private readonly sharedService = inject(SharedService);
 
-    @Input() VliegerID: number;
+    readonly VliegerID = input.required<number>();
 
     private dbEventAbonnement: Subscription;
     private maandAbonnement: Subscription;          // volg de keuze van de kalender
@@ -122,7 +122,7 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDest
             }
 
             this.isLoading = true;
-            this.startlijstService.getLogboekTotalen(this.VliegerID, this.datum.year).then((dataset) => {
+            this.startlijstService.getLogboekTotalen(this.VliegerID(), this.datum.year).then((dataset) => {
                 this.isLoading = false;
                 this.data = dataset;
             }).catch(e => {

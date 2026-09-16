@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, inject } from '@angular/core';
+import { Component, EventEmitter, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, inject, input } from '@angular/core';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import {
     HeliosBehaaldeProgressieDataset,
@@ -34,8 +34,8 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
     private readonly progressieService = inject(ProgressieService);
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
-    @Input() competenties: HeliosCompetentiesDataset[];
-    @Input() vliegerID: number;
+    readonly competenties = input.required<HeliosCompetentiesDataset[]>();
+    readonly vliegerID = input.required<number>();
 
     @Output() aangepast: EventEmitter<number> = new EventEmitter<number>();
 
@@ -80,7 +80,7 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
         if (Object.prototype.hasOwnProperty.call(changes, "vliegerID")) {
             const ui = this.loginService.userInfo?.Userinfo;
             if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) {
-                this.ledenService.getLid(this.vliegerID).then((l) => this.lid = l)
+                this.ledenService.getLid(this.vliegerID()).then((l) => this.lid = l)
             }
         }
     }
@@ -103,11 +103,11 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
         this.isVerwijderMode = false;
         this.isLoading = false;
         this.isSaving = false;
-        this.competentie = this.competenties.find((c) => c.ID == competentieID)
+        this.competentie = this.competenties().find((c) => c.ID == competentieID)
 
         if (!this.competentie)
         {
-            console.error(this.competenties);
+            console.error(this.competenties());
             const errorString = "Competentie met ID " + competentieID + " niet gevonden";
             this.error = {
                 beschrijving: errorString
@@ -118,7 +118,7 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
 
             const ui = this.loginService.userInfo?.LidData;
             this.progressie = {
-                LID_ID: this.vliegerID,
+                LID_ID: this.vliegerID(),
                 INSTRUCTEUR_ID: ui?.ID,
                 COMPETENTIE_ID: competentieID
             }
@@ -138,10 +138,10 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
         this.isSaving = false;
 
         this.ophalen(progressieID).then ((p: HeliosBehaaldeProgressieDataset) => {
-            this.competentie = this.competenties.find((c) => c.ID == p.COMPETENTIE_ID);
+            this.competentie = this.competenties().find((c) => c.ID == p.COMPETENTIE_ID);
 
             if (!this.competentie) {
-                console.error(this.competenties);
+                console.error(this.competenties());
                 this.competentieString = "<< onbekend >>";
                 const errorString = "Competentie met ID " + p.COMPETENTIE_ID + " niet gevonden";
                 this.error = {
@@ -163,7 +163,7 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
         if (init) {
             this.competentieString = "";
         }
-        const competentie = this.competenties.find((c) => c.ID == id)
+        const competentie = this.competenties().find((c) => c.ID == id)
 
         if (!competentie) {
             return "";

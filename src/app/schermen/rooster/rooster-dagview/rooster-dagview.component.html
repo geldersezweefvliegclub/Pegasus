@@ -5,22 +5,22 @@
         <div>
             <app-icon-button
                     class="toolbarBtn"
-                    iconNaam="fas AngleDoubleLeft" (btnClicked)="zetDatum(datum.plus({days: -7}))"
+                    iconNaam="fas AngleDoubleLeft" (btnClicked)="zetDatum(datum().plus({days: -7}))"
                     btnColor="btn-secondary"></app-icon-button>
             <app-icon-button
                     class="toolbarBtn mx-2"
-                    iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum.plus({days: -1}))"
+                    iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum().plus({days: -1}))"
                     btnColor="btn-secondary"></app-icon-button>
         </div>
-        {{ DagVanDeWeek(datum.toISODate()) }} <br>{{ datum.day }}-{{ datum.month }}-{{ datum.year }}
+        {{ DagVanDeWeek(datum().toISODate()) }} <br>{{ datum().day }}-{{ datum().month }}-{{ datum().year }}
         <div>
             <app-icon-button
                     class="toolbarBtn mx-2"
-                    iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum.plus({days: 1}))"
+                    iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum().plus({days: 1}))"
                     btnColor="btn-secondary"></app-icon-button>
             <app-icon-button
                     class="toolbarBtn"
-                    iconNaam="fas AngleDoubleRight" (btnClicked)="zetDatum(datum.plus({days: 7}))"
+                    iconNaam="fas AngleDoubleRight" (btnClicked)="zetDatum(datum().plus({days: 7}))"
                     btnColor="btn-secondary"></app-icon-button>
         </div>
     </div>
@@ -212,12 +212,12 @@
                          [ngClass]="lidInRoosterDagClass(dag.Diensten[dt], dag)">
                         {{ (dag.Diensten[dt]) ? dag.Diensten[dt].NAAM : "" }}
                     </div>
-                    @if (zelfIndelen(dt, dag.DATUM) && !dag.Diensten[dt]) {
+                    @if (zelfIndelen()(dt, dag.DATUM) && !dag.Diensten[dt]) {
                         <div
                                 (click)="toekennenDienst(dag, dt)">
                             <ng-template *ngTemplateOutlet="assign"></ng-template>
                         </div>
-                    } @if (magVerwijderen(dag.Diensten[dt])) {
+                    } @if (magVerwijderen()(dag.Diensten[dt])) {
                     <div
                             (click)="verwijderDienst(dag, dt)">
                         <ng-template *ngTemplateOutlet="reset"></ng-template>

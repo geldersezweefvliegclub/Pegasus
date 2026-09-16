@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject, input } from '@angular/core';
 import { HeliosLedenDataset, HeliosTrack, HeliosTracksDataset } from '../../../types/Helios';
 import { TracksService } from '../../../services/apiservice/tracks.service';
 import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
@@ -48,9 +48,9 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
     private readonly loginService = inject(LoginService);
     private readonly sharedService = inject(SharedService);
 
-    @Input() VliegerID: number;
-    @Input() VliegerNaam: string;
-    @Input() toonLid = false;
+    readonly VliegerID = input<number>();
+    readonly VliegerNaam = input('');
+    readonly toonLid = input(false);
 
     @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
 
@@ -114,9 +114,10 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
             // Als in de tracks tabel is aangepast, moet we onze dataset ook aanpassen
             this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
                 if (ev.tabel == "Tracks") {
-                    if (!this.VliegerID) {
+                    const VliegerID = this.VliegerID();
+                    if (!VliegerID) {
                         this.opvragen();
-                    } else if (ev.data.LID_ID == this.VliegerID) {
+                    } else if (ev.data.LID_ID == VliegerID) {
                         this.opvragen();
                     }
                 }
@@ -134,7 +135,7 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
 
     // open de track editor om nieuwe track toe te voegen. Editor opent als popup
     openTrackEditor() {
-        this.trackEditor.openPopup(null, this.VliegerID, undefined, this.VliegerNaam);
+        this.trackEditor.openPopup(null, this.VliegerID(), undefined, this.VliegerNaam());
     }
 
     // open de track editor om nieuwe track toe te voegen. Editor opent als popup
@@ -191,11 +192,11 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
     opvragen(): void {
         clearTimeout(this.zoekTimer);
 
-        const maxTrackItems = (this.VliegerID) ? -1 : 100; // alle tracks voor een vlieger, anders 100 items
+        const maxTrackItems = (this.VliegerID()) ? -1 : 100; // alle tracks voor een vlieger, anders 100 items
 
         this.zoekTimer = window.setTimeout(() => {
             this.isLoading = true;
-            this.trackService.getTracks(this.trashMode, this.VliegerID, maxTrackItems).then((dataset) => {
+            this.trackService.getTracks(this.trashMode, this.VliegerID(), maxTrackItems).then((dataset) => {
                 this.isLoading = false;
                 this.data = dataset as TracksLedenDataset[];
                 this.lidToevoegenAanTrack();

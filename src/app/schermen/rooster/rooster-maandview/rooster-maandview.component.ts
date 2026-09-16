@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild, inject, input } from '@angular/core';
 import {
   HeliosLedenDatasetExtended,
   HeliosRoosterDagExtended,
@@ -56,9 +56,9 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
     @Input() rooster: HeliosRoosterDagExtended[];
     @Input() leden:HeliosLedenDatasetExtended[];
     @Input() tonen: WeergaveData;
-    @Input() zelfIndelen: (dienstType: number, datum: string) => boolean;
-    @Input() magVerwijderen: (dienstData: HeliosDienstenDataset) => boolean;
-    @Input() lidInRoosterClass: (dienst: HeliosDienstenDataset) => string;
+    readonly zelfIndelen = input.required<(dienstType: number, datum: string) => boolean>();
+    readonly magVerwijderen = input.required<(dienstData: HeliosDienstenDataset) => boolean>();
+    readonly lidInRoosterClass = input.required<(dienst: HeliosDienstenDataset) => string>();
 
     @ViewChild(JaarTotalenComponent) private jaarTotalen: JaarTotalenComponent;
     @ViewChild(UitbetalenDdwvCrewEditorComponent) protected uitbetalen: UitbetalenDdwvCrewEditorComponent;

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, input } from '@angular/core';
 import {
     HeliosAanwezigLedenDataset,
     HeliosBehaaldeProgressieDataset,
@@ -67,8 +67,8 @@ export class StartEditorComponent implements OnInit {
     private readonly aanwezigLedenService = inject(AanwezigLedenService);
     private readonly aanwezigVliegtuigenService = inject(AanwezigVliegtuigService);
 
-    @Input() VliegerID: number;                     // wordt gezet bij aanroep vanuit logboek
-    @Input() VliegveldID: number | undefined;       // wordt gezet als we van start / vluchten een start aanmaken
+    readonly VliegerID = input<number>();                     // wordt gezet bij aanroep vanuit logboek
+    readonly VliegveldID = input<number>();       // wordt gezet als we van start / vluchten een start aanmaken
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @ViewChild(VliegtuigInvoerComponent) vliegtuigInvoerComponent: VliegtuigInvoerComponent;
     @ViewChild(TransactieEditorComponent) transactieEditor: TransactieEditorComponent;
@@ -241,28 +241,30 @@ export class StartEditorComponent implements OnInit {
             this.formTitel = `Start aanmaken`;
             this.toonGastCombobox = this.storageService.ophalen("toonGastenCombo") ? this.storageService.ophalen("toonGastenCombo") as boolean : false;
 
-            let veld_id = this.VliegveldID;
+            let veld_id = this.VliegveldID();
             let baan_id = undefined;
             let startmethode_id = undefined;
 
-            if (!this.VliegveldID) {
+            const VliegveldID = this.VliegveldID();
+            if (!VliegveldID) {
                 veld_id = this.daginfoService.dagInfo.VELD_ID;
                 baan_id = this.daginfoService.dagInfo.BAAN_ID;
                 startmethode_id = this.daginfoService.dagInfo.STARTMETHODE_ID;
             }
-            else if ((this.VliegveldID == this.daginfoService.dagInfo.VELD_ID) ||
-                (this.VliegveldID == this.daginfoService.dagInfo.VELD_ID2)) {
-                veld_id = (this.VliegveldID == this.daginfoService.dagInfo.VELD_ID2) ? this.daginfoService.dagInfo.VELD_ID2 : this.daginfoService.dagInfo.VELD_ID;
-                baan_id = (this.VliegveldID == this.daginfoService.dagInfo.VELD_ID2) ? this.daginfoService.dagInfo.BAAN_ID2 : this.daginfoService.dagInfo.BAAN_ID;
-                startmethode_id = (this.VliegveldID == this.daginfoService.dagInfo.VELD_ID2) ? this.daginfoService.dagInfo.STARTMETHODE_ID2 : this.daginfoService.dagInfo.STARTMETHODE_ID;
+            else if ((VliegveldID == this.daginfoService.dagInfo.VELD_ID) ||
+                (VliegveldID == this.daginfoService.dagInfo.VELD_ID2)) {
+                veld_id = (VliegveldID == this.daginfoService.dagInfo.VELD_ID2) ? this.daginfoService.dagInfo.VELD_ID2 : this.daginfoService.dagInfo.VELD_ID;
+                baan_id = (VliegveldID == this.daginfoService.dagInfo.VELD_ID2) ? this.daginfoService.dagInfo.BAAN_ID2 : this.daginfoService.dagInfo.BAAN_ID;
+                startmethode_id = (VliegveldID == this.daginfoService.dagInfo.VELD_ID2) ? this.daginfoService.dagInfo.STARTMETHODE_ID2 : this.daginfoService.dagInfo.STARTMETHODE_ID;
             }
 
+            const VliegerID = this.VliegerID();
             this.start = {
                 ID: undefined,
                 DATUM: this.datum.toISODate() as string,
                 DAGNUMMER: undefined,
                 VLIEGTUIG_ID: undefined,
-                VLIEGER_ID: (this.VliegerID && !this.magAltijdWijzigen) ? this.VliegerID : undefined,      // Vlieger ID is bekend als we vanuit logboek start toevoegen
+                VLIEGER_ID: (VliegerID && !this.magAltijdWijzigen) ? VliegerID : undefined,      // Vlieger ID is bekend als we vanuit logboek start toevoegen
                 INZITTENDE_ID: undefined,
                 VLIEGERNAAM: undefined,
                 INZITTENDENAAM: undefined,

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild, inject } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild, inject, input } from '@angular/core';
 import { ModalComponent } from '../../../modal/modal.component';
 import { Observable, of, Subscription } from 'rxjs';
 import { HeliosType } from '../../../../../types/Helios';
@@ -18,7 +18,7 @@ import { AsyncPipe } from '@angular/common';
 export class ComposeBedrijfComponent {
     private readonly typesService = inject(TypesService);
 
-    @Input() datum: DateTime;
+    readonly datum = input.required<DateTime>();
 
     @Output() opslaan: EventEmitter<string> = new EventEmitter<string>();
     @ViewChild(ModalComponent) private popup: ModalComponent;
@@ -69,7 +69,8 @@ export class ComposeBedrijfComponent {
     Compose() {
         // dag van de week in een string stoppen
         let dagVDweek = "";
-        switch (this.datum.weekday) {
+        const datum = this.datum();
+        switch (datum.weekday) {
             case 1:
                 dagVDweek = "maandag";
                 break;
@@ -95,42 +96,42 @@ export class ComposeBedrijfComponent {
 
         // string met datum in het nederlands
         let dmj = ""
-        switch (this.datum.month) {
+        switch (datum.month) {
             case 1:
-                dmj = this.datum.day + " januari " + this.datum.year;
+                dmj = datum.day + " januari " + datum.year;
                 break;
             case 2:
-                dmj = this.datum.day + " februari " + this.datum.year;
+                dmj = datum.day + " februari " + datum.year;
                 break;
             case 3:
-                dmj = this.datum.day + " maart " + this.datum.year;
+                dmj = datum.day + " maart " + datum.year;
                 break;
             case 4:
-                dmj = this.datum.day + " april " + this.datum.year;
+                dmj = datum.day + " april " + datum.year;
                 break;
             case 5:
-                dmj = this.datum.day + " mei " + this.datum.year;
+                dmj = datum.day + " mei " + datum.year;
                 break;
             case 6:
-                dmj = this.datum.day + " juni " + this.datum.year;
+                dmj = datum.day + " juni " + datum.year;
                 break;
             case 7:
-                dmj = this.datum.day + " juli " + this.datum.year;
+                dmj = datum.day + " juli " + datum.year;
                 break;
             case 8:
-                dmj = this.datum.day + " augustus " + this.datum.year;
+                dmj = datum.day + " augustus " + datum.year;
                 break;
             case 9:
-                dmj = this.datum.day + " september " + this.datum.year;
+                dmj = datum.day + " september " + datum.year;
                 break;
             case 10:
-                dmj = this.datum.day + " oktober " + this.datum.year;
+                dmj = datum.day + " oktober " + datum.year;
                 break;
             case 11:
-                dmj = this.datum.day + " november " + this.datum.year;
+                dmj = datum.day + " november " + datum.year;
                 break;
             case 12:
-                dmj = this.datum.day + " december " + this.datum.year;
+                dmj = datum.day + " december " + datum.year;
                 break;
         }
 

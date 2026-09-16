@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild, inject, input } from '@angular/core';
 import { DienstenService } from '../../../services/apiservice/diensten.service';
 import { RoosterService } from '../../../services/apiservice/rooster.service';
 import { HeliosDienst, HeliosDienstenDataset, HeliosRoosterDataset } from '../../../types/Helios';
@@ -20,7 +20,7 @@ export class DagRoosterComponent {
 
     @Output() opslaan: EventEmitter<string> = new EventEmitter<string>();
 
-    @Input() Datum: DateTime;
+    readonly Datum = input.required<DateTime>();
     @Input() magWijzigen = false;
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
@@ -34,12 +34,13 @@ export class DagRoosterComponent {
     }
 
     ophalen(): void {
-        if (this.Datum) {
-            this.roosterService.getRooster(this.Datum, this.Datum).then(r => {
+        const Datum = this.Datum();
+        if (Datum) {
+            this.roosterService.getRooster(Datum, Datum).then(r => {
                 this.rooster = r[0]
             })
 
-            this.dienstenService.getDiensten(this.Datum, this.Datum).then(d => {
+            this.dienstenService.getDiensten(Datum, Datum).then(d => {
                 this.diensten = d;
             })
         }
@@ -47,7 +48,7 @@ export class DagRoosterComponent {
 
     // Datum in de titel in het juiste formaat
     toonDatum() {
-        return (this.Datum) ? this.Datum.day + "-" + this.Datum.month + "-" + this.Datum.year : "";
+        return (this.Datum()) ? this.Datum().day + "-" + this.Datum().month + "-" + this.Datum().year : "";
     }
 
     afwezig(i: number) {

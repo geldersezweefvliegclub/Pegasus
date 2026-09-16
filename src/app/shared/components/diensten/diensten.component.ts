@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild, inject } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, ViewChild, inject, input } from '@angular/core';
 import { DienstenService } from '../../../services/apiservice/diensten.service';
 import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
@@ -20,8 +20,8 @@ export class DienstenComponent implements OnInit, OnChanges {
     private readonly loginService = inject(LoginService);
     private readonly sharedService = inject(SharedService);
 
-    @Input() Vlieger: HeliosLid;
-    @Input() UitgebreideWeergave = false;
+    readonly Vlieger = input.required<HeliosLid>();
+    readonly UitgebreideWeergave = input(false);
 
     @ViewChild(DagRoosterComponent) popup: DagRoosterComponent;
 
@@ -59,7 +59,8 @@ export class DienstenComponent implements OnInit, OnChanges {
         }
 
         // Als vlieger niet bekend is, kunnen we niets ophalen
-        if (!this.Vlieger) {
+        const Vlieger = this.Vlieger();
+        if (!Vlieger) {
             return;
         }
 
@@ -67,7 +68,7 @@ export class DienstenComponent implements OnInit, OnChanges {
             let startMaand: number = this.datum.month; // laat alles vanaf gekozen maand zien
             let startDag: number = this.datum.day; // laat alles vanaf gekozen maand zien
 
-            if ((this.UitgebreideWeergave) || (DateTime.now().year != this.datum.year)) {   // maar niet altijd
+            if ((this.UitgebreideWeergave()) || (DateTime.now().year != this.datum.year)) {   // maar niet altijd
                 startMaand = 1;
                 startDag = 1;
             }
@@ -85,9 +86,9 @@ export class DienstenComponent implements OnInit, OnChanges {
             })
 
             this.isLoading = true;
-            this.dienstenService.getDiensten(startDatum, eindDatum, undefined, this.Vlieger.ID!).then((d) => {
+            this.dienstenService.getDiensten(startDatum, eindDatum, undefined, Vlieger.ID!).then((d) => {
                 this.isLoading = false;
-                if ((this.UitgebreideWeergave) || d.length < 5) {
+                if ((this.UitgebreideWeergave()) || d.length < 5) {
                     this.diensten = d;
                 } else {
                     this.diensten = d.slice(0, 7);
