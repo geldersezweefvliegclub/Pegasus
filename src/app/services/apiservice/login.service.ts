@@ -145,13 +145,13 @@ export class LoginService  {
         const response: Response = await this.apiService.get('Login/GetUserInfo' + urlParams);
         if (response.ok) {
             this.userInfo = await response.json();
-            this.storageService.opslaan("userInfo", this.userInfo);
+            this.storageService.opslaan("userInfo", this.userInfo, null, "session");
         }
     }
 
     uitloggen(): void {
         this.userInfo = null;
-        this.storageService.verwijder("userInfo");
-        this.storageService.verwijder("bearer");
+        this.storageService.verwijder("userInfo", "session");
+        this.storageService.verwijder("bearer", "session");
     }
 }
