@@ -61,7 +61,7 @@ export const routes: CustomRoute[] = [
     },
     {
         path: 'aanmelden',
-        loadComponent: () => import('./schermen/aanmelden/aanmelden-page/aanmelden-page.component').then(m => m.AanmeldenPageComponent),
+        loadComponent: () => import('./schermen/aanmelden/aanmelden-page/aanmelden-page.component').then(m => m.default),
         excluded: false,
         icon: faStreetView,
         text: 'Aanmelden'

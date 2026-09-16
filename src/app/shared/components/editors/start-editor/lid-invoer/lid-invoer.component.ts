@@ -136,9 +136,9 @@ export class LidInvoerComponent implements OnInit, OnChanges {
             if (lid.LID_ID == this.LID_ID) return true;     // reeds invoerde lid moet ook in de lijst
 
             const vliegtuig = this.vliegtuig();
-            if ((vliegtuig?.TYPE_ID) && (lid.VOORKEUR_VLIEGTUIG_TYPE) &&
-                (lid.VOORKEUR_VLIEGTUIG_TYPE.includes(vliegtuig.TYPE_ID.toString())))
+            if ((vliegtuig?.TYPE_ID) && lid.VOORKEUR_VLIEGTUIG_TYPE?.includes(vliegtuig.TYPE_ID.toString())) {
                 return true;
+            }
             return (lid.OVERLAND_VLIEGTUIG_ID == vliegtuig?.ID)
         });
 

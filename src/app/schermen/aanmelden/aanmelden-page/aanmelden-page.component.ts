@@ -66,7 +66,7 @@ export type HeliosAanwezigLedenDatasetExtended = HeliosAanwezigLedenDataset & {
     styleUrls: ['./aanmelden-page.component.scss'],
     imports: [ErrorComponent, GastEditorComponent, IconButtonComponent, LidAanwezigEditorComponent, ModalComponent, NgSelectComponent, FormsModule, NgTemplateOutlet, PegasusCardComponent, SamenvattingComponent, FaIconComponent, RouterLink, AsyncPipe, TransactiesComponent]
 })
-export class AanmeldenPageComponent implements OnInit, OnDestroy {
+class AanmeldenPageComponent implements OnInit, OnDestroy {
     private readonly ddwvService = inject(DdwvService);
     private readonly typesService = inject(TypesService);
     private readonly loginService = inject(LoginService);
@@ -196,8 +196,8 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
 
         const competentieIDs = (this.configService.DDWVtoestemmingID() !== undefined) ? this.configService.DDWVtoestemmingID().toString() + "," + this.configService.DDWVvragenlijstID().toString() :this.configService.DDWVvragenlijstID().toString();
         this.progressieService.getProgressiesLid(this.loginService.userInfo!.LidData?.ID!, competentieIDs).then((progressie:  HeliosBehaaldeProgressieDataset[]) => {
-            const toestemming = progressie.findIndex(p => p.COMPETENTIE_ID == this.configService.DDWVtoestemmingID()) >= 0 ? true : false;
-            const vragenlijst = progressie.findIndex(p => p.COMPETENTIE_ID == this.configService.DDWVvragenlijstID()) >= 0 ? true : false;
+            const toestemming = progressie.some(p => p.COMPETENTIE_ID == this.configService.DDWVtoestemmingID()) ? true : false;
+            const vragenlijst = progressie.some(p => p.COMPETENTIE_ID == this.configService.DDWVvragenlijstID()) ? true : false;
 
             if (ui?.isClubVlieger)
             {
@@ -220,14 +220,12 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
 
     onWindowResize() {
         // als je geen datum mag aanpassen, zie alleen vandaag
-        if (this.toonDatumKnoppen == false) {
+        if (!this.toonDatumKnoppen) {
             this.aanmeldenView = "dag"
+        } else if (this.sharedService.getSchermSize() <= SchermGrootte.sm) {
+            this.aanmeldenView = "dag";
         } else {
-            if (this.sharedService.getSchermSize() <= SchermGrootte.sm) {
-                this.aanmeldenView = "dag"
-            } else {
-                this.aanmeldenView = "week"
-            }
+            this.aanmeldenView = "week";
         }
     }
 
@@ -446,7 +444,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
             VOORAANMELDING: true
         }
 
-        if (rooster && rooster.WINTER_WERK) {
+        if (rooster?.WINTER_WERK) {
             this.aanwezigLedenService.aanmelden(aanmelding).then(() => this.opvragen(true))
         }
         else {
@@ -811,3 +809,5 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         return "lierBedrijf";
     }
 }
+
+export default AanmeldenPageComponent;

@@ -115,12 +115,6 @@
                                                          (click)='samenvatting(dagInRooster)'/>
                                             }
                                         </div>
-                                        <!--
-                                        <div *ngIf="dagInRooster.EENHEDEN > 0" class="strip d-flex justify-content-end w-100">
-                                          <img src="assets/img/strip.png" class="stripImg"/>
-                                          <div class="stripTxt">{{dagInRooster.EENHEDEN}}</div>
-                                        </div>
-                                        -->
                                     </div>
                                 }
                                 @if (magTonen(dagInRooster.DATUM)) {
@@ -347,15 +341,6 @@
                     }
                 </div>
             </div>
-
-            <!--
-            <div class="dagInRooster d-flex w-100 justify-content-end" *ngIf="rooster.length > 0 && rooster[0].EENHEDEN > 0">
-              <div class="strip stripDagview">
-                <img src="assets/img/strip.png" class="stripImg"/>
-                <div class="stripTxt">{{rooster[0].EENHEDEN}}</div>
-              </div>
-            </div>
-            -->
 
             <div class="roosterTabel volSchermDagView">
                 <table class="table" style="width: calc(100% - 15px);">

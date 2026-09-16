@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, output, output as output_1, viewChild } from '@angular/core';
+import { Component, ElementRef, inject, output, viewChild } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosStart, HeliosStartDataset } from '../../../../types/Helios';
 import { StartlijstService } from '../../../../services/apiservice/startlijst.service';
