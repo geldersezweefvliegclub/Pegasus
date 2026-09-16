@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject, output } from '@angular/core';
+import { Component, inject, output, viewChild } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosDocument } from '../../../../types/Helios';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
@@ -18,7 +18,7 @@ import { LoaderComponent } from '../../loader/loader.component';
 export class DocumentEditorComponent {
     private readonly documentenService = inject(DocumentenService);
 
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
     readonly refresh = output<void>();
     formTitel: string;
 
@@ -55,11 +55,11 @@ export class DocumentEditorComponent {
             this.docUrl("doc");
             this.formTitel = 'Toevoegen';
         }
-        this.popup.open();
+        this.popup().open();
     }
 
     closePopup() {
-        this.popup.close();
+        this.popup().close();
     }
 
     // Toon popup om type te verwijderen
@@ -71,7 +71,7 @@ export class DocumentEditorComponent {
         this.isSaving = false;
         this.isVerwijderMode = true;
         this.isRestoreMode = false;
-        this.popup.open();
+        this.popup().open();
     }
 
     // Toon popup om type uit de archief te halen
@@ -83,7 +83,7 @@ export class DocumentEditorComponent {
         this.isSaving = false;
         this.isRestoreMode = true;
         this.isVerwijderMode = false;
-        this.popup.open();
+        this.popup().open();
     }
 
     // uitvoeren van de actie waar we mee bezig zijn
@@ -122,7 +122,7 @@ export class DocumentEditorComponent {
             this.refresh.emit();
 
             this.isSaving = false;
-            this.popup.close();
+            this.popup().close();
         }).catch(e => {
             this.error = e;
             this.isSaving = false;
@@ -152,7 +152,7 @@ export class DocumentEditorComponent {
 
             this.document = doc;
             this.isSaving = false;
-            this.popup.close();
+            this.popup().close();
         }).catch(e => {
             this.error = e;
             this.isSaving = false;
@@ -167,7 +167,7 @@ export class DocumentEditorComponent {
             this.refresh.emit();
 
             this.isSaving = false;
-            this.popup.close();
+            this.popup().close();
         }).catch(e => {
             this.error = e;
             this.isSaving = false;

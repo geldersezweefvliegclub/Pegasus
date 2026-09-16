@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject, input, output } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, input, output, viewChild } from '@angular/core';
 import {
     HeliosVliegtuigenDatasetExtended,
 } from '../../../../schermen/reservering/reservering-page/reservering-page.component';
@@ -34,7 +34,7 @@ export class BoekingEditorComponent implements OnInit, OnDestroy {
     readonly clubVliegtuigen = input<HeliosVliegtuigenDatasetExtended[]>([]);
     readonly boekingToegevoegd = output<void>();
 
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
 
     private ledenAbonnement: Subscription;
     leden: HeliosLedenDataset[] = [];
@@ -63,7 +63,7 @@ export class BoekingEditorComponent implements OnInit, OnDestroy {
 
     // Openen van popup scherm
     openPopup() {
-        this.popup.open();
+        this.popup().open();
     }
 
     // Aan wie wordt het vliegtuig toegekend
@@ -145,7 +145,7 @@ export class BoekingEditorComponent implements OnInit, OnDestroy {
 
             this.boekingToegevoegd.emit();
             this.isSaving = false;
-            this.popup.close();
+            this.popup().close();
         }
     }
 }

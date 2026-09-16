@@ -88,7 +88,7 @@
                     @if (kleineDatum()) {
                         <div class="d-flex">
                             <div class="datumVeld">{{ datumDMY }}</div>
-                            <app-icon-button iconNaam="far Calendar" (btnClicked)="popupKalender.openPopup()"
+                            <app-icon-button iconNaam="far Calendar" (btnClicked)="popupKalender().openPopup()"
                                              btnColor="btn-primary"></app-icon-button>
                         </div>
                     } @if (!kleineDatum() && !showBeheer) {
@@ -181,7 +181,7 @@
                     @if (kleineDatum()) {
                         <div class="list-group-item d-flex">
                             <div class="datumVeld">{{ datumDMY }}</div>
-                            <app-icon-button iconNaam="far Calendar" (btnClicked)="popupKalender.openPopup()"
+                            <app-icon-button iconNaam="far Calendar" (btnClicked)="popupKalender().openPopup()"
                                              btnColor="btn-primary"></app-icon-button>
                         </div>
                     }

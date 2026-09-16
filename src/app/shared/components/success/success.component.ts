@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, SimpleChanges, viewChild } from '@angular/core';
 import { SuccessMessage } from '../../../types/Utils';
 import { NgClass } from '@angular/common';
 
@@ -10,7 +10,7 @@ import { NgClass } from '@angular/common';
 })
 export class SuccessComponent implements OnChanges {
     @Input() success: SuccessMessage | undefined = undefined;
-    @ViewChild('successOverlay') errorOverlay: ElementRef;
+    readonly errorOverlay = viewChild.required<ElementRef>('successOverlay');
 
     showSuccess = false;
 

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject, output } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, output, viewChild } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { TransactiesService } from '../../../services/apiservice/transacties.service';
 import { HeliosTransactiesDataset } from '../../../types/Helios';
@@ -22,9 +22,9 @@ export class TransactiesComponent implements OnInit, OnDestroy {
     private readonly loginService = inject(LoginService);
     private readonly transactiesService = inject(TransactiesService);
 
-    @ViewChild(ModalComponent) private popup: ModalComponent;
-    @ViewChild(TransactieEditorComponent) private editor: TransactieEditorComponent;
-    @ViewChild(IdealBestellenComponent) private bestellen: IdealBestellenComponent;
+    private readonly popup = viewChild.required(ModalComponent);
+    private readonly editor = viewChild.required(TransactieEditorComponent);
+    private readonly bestellen = viewChild.required(IdealBestellenComponent);
 
     readonly TransactieGedaan = output<void>();
 
@@ -92,15 +92,15 @@ export class TransactiesComponent implements OnInit, OnDestroy {
         this.lidID = lidID;
         this.magBestellen = magBestellen;
         this.opvragen(lidID);
-        this.popup.open();
+        this.popup().open();
     }
 
     nieuweBetaling() {
-        this.bestellen.openPopup(this.lidID)
+        this.bestellen().openPopup(this.lidID)
     }
 
     toonEditor() {
-        this.editor.openPopup(this.lidID)
+        this.editor().openPopup(this.lidID)
     }
 
     // Dit is al geimplementeerd in util.ts

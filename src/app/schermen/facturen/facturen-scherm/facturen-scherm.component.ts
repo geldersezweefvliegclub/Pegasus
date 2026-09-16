@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { HeliosFacturenDataset } from '../../../types/Helios';
 import { Subscription } from 'rxjs';
 import { ColDef, RowClassParams } from 'ag-grid-community';
@@ -34,8 +34,8 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
   private readonly sharedService = inject(SharedService);
   private readonly facturenService = inject(FacturenService);
 
-  @ViewChild(DatatableComponent) grid: DatatableComponent;
-  @ViewChild(FactuurUploadenComponent) private readonly uploaden: FactuurUploadenComponent;
+  readonly grid = viewChild.required(DatatableComponent);
+  private readonly uploaden = viewChild.required(FactuurUploadenComponent);
 
   data:HeliosFacturenDataset[] = [];
   facturenData:HeliosFacturenDataset[] = [];
@@ -252,7 +252,7 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
   maakFacturen() {
     const IDs: number[] = [];
 
-    this.grid.selectedRecords().forEach(row => {
+    this.grid().selectedRecords().forEach(row => {
         if ((row.LIDNR) && (row.GEFACTUREERD == null || row.GEFACTUREERD == undefined)) {
           IDs.push(row.LID_ID);
         }
@@ -270,14 +270,14 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
   uploadenFacturen() {
     const IDs: number[] = [];
 
-    this.grid.selectedRecords().forEach(row => {
+    this.grid().selectedRecords().forEach(row => {
       if (row.ID && !row.FACTUUR_NUMMER) {
         IDs.push(row.ID);
       }
     })
 
     if (IDs.length > 0) {
-      this.uploaden.showPopupAndUploadFacturen(IDs);
+      this.uploaden().showPopupAndUploadFacturen(IDs);
     }
   }
 }

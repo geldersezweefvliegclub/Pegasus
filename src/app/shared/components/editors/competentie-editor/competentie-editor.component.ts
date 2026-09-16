@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosCompetentie, HeliosCompetentiesDataset, HeliosType } from '../../../../types/Helios';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
@@ -28,7 +28,7 @@ export class CompetentieEditorComponent implements OnInit, OnDestroy {
     private readonly typesService = inject(TypesService);
     private readonly competentieService = inject(CompetentieService);
 
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
     formTitel: string;
 
     private typesAbonnement: Subscription;
@@ -78,11 +78,11 @@ export class CompetentieEditorComponent implements OnInit, OnDestroy {
         this.isVerwijderMode = false;
         this.isRestoreMode = false;
         this.filterBovenliggend()
-        this.popup.open();
+        this.popup().open();
     }
 
     closePopup() {
-        this.popup.close();
+        this.popup().close();
     }
 
     // ophalen van type uit de database (via API)
@@ -107,7 +107,7 @@ export class CompetentieEditorComponent implements OnInit, OnDestroy {
         this.isSaving = false;
         this.isVerwijderMode = true;
         this.isRestoreMode = false;
-        this.popup.open();
+        this.popup().open();
     }
 
     // Toon popup om type uit de archief te halen
@@ -118,7 +118,7 @@ export class CompetentieEditorComponent implements OnInit, OnDestroy {
         this.isSaving = false;
         this.isRestoreMode = true;
         this.isVerwijderMode = false;
-        this.popup.open();
+        this.popup().open();
     }
 
     // uitvoeren van de actie waar we mee bezig zijn

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, input, OnDestroy, OnInit, viewChild } from '@angular/core';
 import { NgbDate, NgbDateParserFormatter, NgbInputDatepicker, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { DateTime } from 'luxon';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
@@ -52,7 +52,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     readonly isVerwijderMode = input(false);
     readonly isRestoreMode = input(false);
 
-    @ViewChild(TransactiesComponent) transactieScherm: TransactiesComponent;
+    readonly transactieScherm = viewChild.required(TransactiesComponent);
 
     private resizeSubscription: Subscription;       // Abonneer op aanpassing van window grootte (of draaien mobiel)
     private ledenAbonnement: Subscription;
@@ -529,6 +529,6 @@ export class LidEditorComponent implements OnInit, OnDestroy {
 
     // openen van windows voor het tonen van de transacties
     toonTransacties() {
-        this.transactieScherm.openPopup(this.lid!.ID!, this.ddwvService.magBestellen(this.lid.TEGOED));
+        this.transactieScherm().openPopup(this.lid!.ID!, this.ddwvService.magBestellen(this.lid.TEGOED));
     }
 }

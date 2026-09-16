@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject, input, output } from '@angular/core';
+import { Component, OnInit, inject, input, output, viewChild } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { TransactiesService } from '../../../../services/apiservice/transacties.service';
@@ -27,7 +27,7 @@ export class TransactieEditorComponent implements OnInit {
     private readonly typesService = inject(TypesService);
     private readonly transactiesService = inject(TransactiesService);
 
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
 
     readonly toonLidSelectie = input(true);
     readonly TransactieGedaan = output<void>();
@@ -90,7 +90,7 @@ export class TransactieEditorComponent implements OnInit {
                 this.lidNaam = (Lid) ? Lid.NAAM! : "";
             }
         }
-        this.popup.open();
+        this.popup().open();
     }
 
     // opslaan van de transactie
@@ -144,7 +144,7 @@ export class TransactieEditorComponent implements OnInit {
                this.error = e;
            })
         }
-        this.popup.close();
+        this.popup().close();
     }
 
     // Over welke vlieger gaat deze track

@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, inject, input } from '@angular/core';
+import { Component, ElementRef, inject, input, viewChild } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
@@ -16,13 +16,13 @@ export class ModalComponent {
 
     readonly titel = input('Editor');
     readonly popupClass = input<string>();
-    @ViewChild('content') content: ElementRef;
+    readonly content = viewChild.required<ElementRef>('content');
 
     cross: IconDefinition = faTimes;
     private modalRef: NgbModalRef;
 
     open() {
-        this.modalRef = this.modalService.open(this.content, {
+        this.modalRef = this.modalService.open(this.content(), {
             ariaLabelledBy: 'modal-basic-title',
             backdrop: "static",
             windowClass: this.popupClass(),

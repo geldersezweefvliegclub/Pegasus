@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, inject, viewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavigationEnd, Router } from '@angular/router';
 import { LoginService } from '../../services/apiservice/login.service';
@@ -27,7 +27,7 @@ export class AppComponent implements OnDestroy{
     private readonly sharedService = inject(SharedService);
     private readonly storageService = inject(StorageService);
 
-    @ViewChild(PopupKalenderComponent) popupKalender: PopupKalenderComponent;
+    readonly popupKalender = viewChild.required(PopupKalenderComponent);
 
     private maandAbonnement: Subscription;          // volg de keuze van de kalender
     private datumAbonnement: Subscription;          // volg de keuze van de kalender

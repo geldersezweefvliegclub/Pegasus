@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, inject, viewChild } from '@angular/core';
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
 import { ProgressieService } from '../../../services/apiservice/progressie.service';
 import { HeliosBehaaldeProgressieDataset, HeliosCompetentiesDataset, HeliosLid } from '../../../types/Helios';
@@ -28,7 +28,7 @@ export class StatusComponent implements OnInit, OnChanges, OnDestroy {
     private readonly progressieService = inject(ProgressieService);
 
     @Input() Vlieger: HeliosLid;
-    @ViewChild(ProgressieEditorComponent) private editor: ProgressieEditorComponent;
+    private readonly editor = viewChild.required(ProgressieEditorComponent);
 
     checks: { Jaren: number[], Check: Check[] };
     overig: Overig[];
@@ -134,7 +134,7 @@ export class StatusComponent implements OnInit, OnChanges, OnDestroy {
 
     // Progressie kan gezet worden via snelkeuze in deze component, lange weg kan via progressie boom
     zetProgressie(id:number) {
-        this.editor.openNieuwPopup(id);
+        this.editor().openNieuwPopup(id);
     }
 
     competentieBestaat(id: number) {

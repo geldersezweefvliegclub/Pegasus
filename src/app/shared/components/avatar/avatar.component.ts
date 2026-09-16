@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, input } from '@angular/core';
+import { Component, Input, input, viewChild } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 
@@ -12,15 +12,15 @@ export class AvatarComponent {
   readonly naam = input.required();
   @Input() url = '';
   readonly vorm = input<'cirkel' | 'vierkant'>('cirkel');
-  @ViewChild(ModalComponent) private popup: ModalComponent;
+  private readonly popup = viewChild.required(ModalComponent);
 
 
   // Toon grote avatar in popup window
   showPopup() {
-    this.popup.open();
+    this.popup().open();
   }
 
   closePopup() {
-    this.popup.close();
+    this.popup().close();
   }
 }

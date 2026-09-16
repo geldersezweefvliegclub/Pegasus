@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import {
   faAddressCard,
@@ -110,10 +110,10 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
-    @ViewChild('logboekPopup') private readonly popupLogboek: ModalComponent;
-    @ViewChild('dienstenPopup') private readonly popupDiensten: ModalComponent;
-    @ViewChild(TransactiesComponent) transactieScherm: TransactiesComponent;
-    @ViewChild(StartEditorComponent) private readonly startEditor: StartEditorComponent;
+    private readonly popupLogboek = viewChild.required<ModalComponent>('logboekPopup');
+    private readonly popupDiensten = viewChild.required<ModalComponent>('dienstenPopup');
+    readonly transactieScherm = viewChild.required(TransactiesComponent);
+    private readonly startEditor = viewChild.required(StartEditorComponent);
 
     verwijderMode = false;
     magVerwijderen = false;
@@ -191,11 +191,11 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
     // laat meer vluchten zien van logboek in een popupLogboek window
     toonLogboekGroot(): void {
-        this.popupLogboek.open();
+        this.popupLogboek().open();
     }
 
     toonDienstenGroot() {
-        this.popupDiensten.open();
+        this.popupDiensten().open();
     }
 
     // mogen we vlieger status aanpassen
@@ -206,7 +206,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
     // Toevoegen van een start
     addStart() {
-        this.startEditor.openPopup(null);
+        this.startEditor().openPopup(null);
     }
 
     // export het vlieger logboek naar excel
@@ -429,7 +429,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
     // openen van windows voor het tonen van de transacties
     toonTransacties() {
-        this.transactieScherm.openPopup(this.lidData!.ID!, this.ddwvService.magBestellen(this.lidData.TEGOED));
+        this.transactieScherm().openPopup(this.lidData!.ID!, this.ddwvService.magBestellen(this.lidData.TEGOED));
     }
 
     magSaldoTonen() {

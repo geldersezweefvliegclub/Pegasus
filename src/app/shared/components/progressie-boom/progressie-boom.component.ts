@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject, input } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, inject, input, viewChild } from '@angular/core';
 import { ITreeOptions, ITreeState, TreeComponent } from '@ali-hm/angular-tree-component';
 import { ProgressieService } from '../../../services/apiservice/progressie.service';
 import { HeliosCompetentiesDataset, HeliosProgressieBoom, HeliosType } from '../../../types/Helios';
@@ -44,8 +44,8 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
     private readonly progressieService = inject(ProgressieService);
 
     readonly VliegerID = input.required<number>();
-    @ViewChild(ProgressieEditorComponent) private editor: ProgressieEditorComponent;
-    @ViewChild('progressieTree') private progressieTree?: TreeComponent;
+    private readonly editor = viewChild.required(ProgressieEditorComponent);
+    private readonly progressieTree = viewChild<TreeComponent>('progressieTree');
 
     private dbEventAbonnement: Subscription;
     private competentiesAbonnement: Subscription;
@@ -112,7 +112,7 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
     ophalen(): void {
         const ui = this.loginService.userInfo?.Userinfo;
         this.isDisabled = !(ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) || (this.VliegerID() == this.loginService.userInfo?.LidData?.ID);
-        this.treeState = this.progressieTree?.treeModel.getState() ?? this.treeState;
+        this.treeState = this.progressieTree()?.treeModel.getState() ?? this.treeState;
 
         this.progressieService.getBoom(this.VliegerID()).then((b) => {
             const tree: ProgressieTreeviewItem[] = [];
@@ -188,9 +188,9 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
         if (item.ProgresssieID) {
             this.verwijderCompetentie = item
 
-            this.editor.openVerwijderWijzigPopup(item.ProgresssieID);
+            this.editor().openVerwijderWijzigPopup(item.ProgresssieID);
         } else if (item.value !== undefined) {
-            this.editor.openNieuwPopup(item.value);
+            this.editor().openNieuwPopup(item.value);
         }
     }
 
@@ -210,16 +210,17 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     private applyFilter(): void {
-        if (!this.progressieTree?.treeModel) {
+        const progressieTree = this.progressieTree();
+        if (!progressieTree?.treeModel) {
             return;
         }
 
         const filter = this.filterText.trim();
         if (filter.length > 0) {
-            this.progressieTree.treeModel.filterNodes(filter, true);
+            progressieTree.treeModel.filterNodes(filter, true);
             return;
         }
 
-        this.progressieTree.treeModel.clearFilter();
+        progressieTree.treeModel.clearFilter();
     }
 }

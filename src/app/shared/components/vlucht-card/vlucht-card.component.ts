@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, inject, input } from '@angular/core';
+import { Component, Input, OnInit, inject, input, viewChild } from '@angular/core';
 import { HeliosLogboekDataset, HeliosStartDataset } from '../../../types/Helios';
 import { LoginService } from '../../../services/apiservice/login.service';
 import { TijdInvoerComponent } from '../editors/tijd-invoer/tijd-invoer.component';
@@ -28,9 +28,9 @@ export class VluchtCardComponent implements OnInit {
     readonly logboek = input<HeliosLogboekDataset>();
     @Input() start: HeliosStartDataset;
 
-    @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
-    @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
-    @ViewChild(StartEditorComponent) startEditor: StartEditorComponent;
+    readonly tijdInvoerEditor = viewChild.required(TijdInvoerComponent);
+    readonly trackEditor = viewChild.required(TrackEditorComponent);
+    readonly startEditor = viewChild.required(StartEditorComponent);
 
     readonly iconEdit: IconDefinition = faPenToSquare;
 
@@ -93,17 +93,17 @@ export class VluchtCardComponent implements OnInit {
     // openen van popup om bestaande start te kunnen aanpassen
     openStartEditor() {
         if (this.inTijdspan) {
-            this.startEditor.openPopup(this.start);
+            this.startEditor().openPopup(this.start);
         }
     }
 
     // bestaande starttijd wijzigen door openen van starttijd popup
     startTijdClicked() {
-        this.tijdInvoerEditor.openStarttijdPopup(this.start);
+        this.tijdInvoerEditor().openStarttijdPopup(this.start);
     }
 
     // bestaande landingstijd wijzigen door openen van de landingstijd popup
     landingsTijdClicked() {
-        this.tijdInvoerEditor.openLandingsTijdPopup(this.start);
+        this.tijdInvoerEditor().openLandingsTijdPopup(this.start);
     }
 }

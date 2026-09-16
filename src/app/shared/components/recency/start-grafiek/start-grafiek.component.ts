@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject, input } from '@angular/core';
+import { Component, OnInit, inject, input, viewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
 import { SharedService } from '../../../../services/shared/shared.service';
@@ -26,7 +26,7 @@ export class StartGrafiekComponent implements OnInit {
     readonly VliegerID = input.required<number>();
     readonly naam = input<string>();
 
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
 
     private datumAbonnement: Subscription;  // volg de keuze van de kalender
     datum: DateTime = DateTime.now();       // de gekozen dag
@@ -144,7 +144,7 @@ export class StartGrafiekComponent implements OnInit {
             this.JaarGrens2.value = 'Jan ' + this.datum.year.toString()
         }
 
-        this.popup.open();
+        this.popup().open();
     }
 
     async opvragen(): Promise<void> {

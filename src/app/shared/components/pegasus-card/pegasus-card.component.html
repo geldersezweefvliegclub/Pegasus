@@ -18,7 +18,7 @@
         <div class="data">
             <ng-content select="[header]"></ng-content>
         </div>
-        @if (hasExportListener && exportEnabled()) {
+        @if (exportEnabled()) {
             <div id="nnDsKv" class="excel">
                 <img class="logo" src="{{exportImg()}}" alt="excel logo" (click)="this.export()"/>
             </div>

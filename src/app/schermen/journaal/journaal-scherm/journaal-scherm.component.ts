@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 
 import { faBug } from '@fortawesome/free-solid-svg-icons';
 import { ColDef, RowDoubleClickedEvent } from 'ag-grid-community';
@@ -47,8 +47,8 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
     private readonly activatedRoute = inject(ActivatedRoute);
     private readonly meldingenService = inject(JournaalService);
 
-    @ViewChild(JournaalFilterComponent) private filter: JournaalFilterComponent;
-    @ViewChild(JournaalEditorComponent) editor: JournaalEditorComponent;
+    private readonly filter = viewChild.required(JournaalFilterComponent);
+    readonly editor = viewChild.required(JournaalEditorComponent);
 
     data:HeliosJournaalDataset[] = [];
     isLoading = false;
@@ -92,7 +92,7 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
         cellRenderer: 'deleteAction', headerName: '', sortable: false,
         cellRendererParams: {
             onDeleteClicked: (ID: number) => {
-                this.editor.openVerwijderPopup(ID);
+                this.editor().openVerwijderPopup(ID);
             }
         },
     }];
@@ -108,7 +108,7 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
         cellRenderer: 'restoreAction', headerName: '', sortable: false,
         cellRendererParams: {
             onRestoreClicked: (ID: number) => {
-                this.editor.openRestorePopup(ID);
+                this.editor().openRestorePopup(ID);
             }
         },
     }];
@@ -238,14 +238,14 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
     // openen van popup om nieuwe melding te kunnen invoeren
     addMelding(): void {
         if (this.magToevoegen) {
-            this.editor.openPopup(null);
+            this.editor().openPopup(null);
         }
     }
 
     // openen van popup om gegevens van een bestaand vliegtuig aan te passen
     openEditor(event?: RowDoubleClickedEvent) {
         if (this.magWijzigen) {
-            this.editor.openPopup(event?.data as HeliosJournaalDataset);
+            this.editor().openPopup(event?.data as HeliosJournaalDataset);
         }
     }
 
@@ -332,7 +332,7 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
 
     // Open van het filter dialoog
     filterPopup() {
-        this.filter.openPopup();
+        this.filter().openPopup();
     }
 }
 

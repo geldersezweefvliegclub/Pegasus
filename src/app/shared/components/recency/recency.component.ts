@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges, ViewChild, inject, input } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, inject, input, viewChild } from '@angular/core';
 import { StartlijstService } from '../../../services/apiservice/startlijst.service';
 import { HeliosBehaaldeProgressieDataset, HeliosLid, HeliosRecency } from '../../../types/Helios';
 import { RecencyGrafiekComponent } from './recency-grafiek/recency-grafiek.component';
@@ -45,9 +45,9 @@ export class RecencyComponent implements OnInit, OnChanges {
     readonly Vlieger = input.required<HeliosLid>();
     readonly naam = input.required();
 
-    @ViewChild(RecencyGrafiekComponent) private grafiekRecency: RecencyGrafiekComponent;
-    @ViewChild(InstructieGrafiekComponent) private grafiekInstructie: InstructieGrafiekComponent;
-    @ViewChild(StartGrafiekComponent) private grafiekStarts: StartGrafiekComponent;
+    private readonly grafiekRecency = viewChild.required(RecencyGrafiekComponent);
+    private readonly grafiekInstructie = viewChild.required(InstructieGrafiekComponent);
+    private readonly grafiekStarts = viewChild.required(StartGrafiekComponent);
 
     readonly checkIcon: IconDefinition = faCircleCheck;
     readonly declineIcon: IconDefinition = faCircleXmark;
@@ -158,15 +158,15 @@ export class RecencyComponent implements OnInit, OnChanges {
     }
 
     openRecencyPopup(): void {
-        this.grafiekRecency.openPopup();
+        this.grafiekRecency().openPopup();
     }
 
     openInstructiePopup(): void {
-        this.grafiekInstructie.openPopup();
+        this.grafiekInstructie().openPopup();
     }
 
     openStartPopup() {
-        this.grafiekStarts.openPopup();
+        this.grafiekStarts().openPopup();
     }
 
     geenGeldigBrevet() {

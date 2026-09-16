@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild, input } from '@angular/core';
+import { Component, inject, OnInit, input, viewChild } from '@angular/core';
 import { faMinusCircle, faPlusCircle, faUndo, } from '@fortawesome/free-solid-svg-icons';
 import {
     DocumentEditorComponent,
@@ -22,7 +22,7 @@ export class LedenDocumentenComponent implements OnInit {
     private readonly documentenService = inject(DocumentenService);
 
     readonly LidID = input.required<number>();
-    @ViewChild(DocumentEditorComponent) editor: DocumentEditorComponent;
+    readonly editor = viewChild.required(DocumentEditorComponent);
 
     iconCardIcon: IconDefinition = faFile;
     toevoegenIcon: IconDefinition = faPlusCircle;
@@ -64,7 +64,7 @@ export class LedenDocumentenComponent implements OnInit {
         const doc = this.documenten.find(d => d.ID == id);
 
         if (doc) {
-            this.editor.openVerwijderPopup(doc);
+            this.editor().openVerwijderPopup(doc);
         }
     }
 
@@ -72,7 +72,7 @@ export class LedenDocumentenComponent implements OnInit {
         const doc = this.documenten.find(d => d.ID == id);
 
         if (doc) {
-            this.editor.openRestorePopup(doc);
+            this.editor().openRestorePopup(doc);
         }
     }
 
@@ -80,7 +80,7 @@ export class LedenDocumentenComponent implements OnInit {
         const doc = this.documenten.find(d => d.ID == id);
 
         if (doc) {
-            this.editor.openPopup(doc);
+            this.editor().openPopup(doc);
         }
     }
 
@@ -90,7 +90,7 @@ export class LedenDocumentenComponent implements OnInit {
             GROEP_ID: 22                      // Speciaal type
         }
 
-        this.editor.openPopup(doc);
+        this.editor().openPopup(doc);
     }
 
     openUrl(url: string | URL) {

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, inject, viewChild } from '@angular/core';
 import { HeliosVliegtuig, HeliosVliegtuigLogboekDataset } from '../../../types/Helios';
 import { StartlijstService } from '../../../services/apiservice/startlijst.service';
 import { Subscription } from 'rxjs';
@@ -21,7 +21,7 @@ export class VliegtuigLogboekComponent implements OnInit {
     private readonly vliegtuigenService = inject(VliegtuigenService);
     private readonly sharedService = inject(SharedService);
 
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
 
     data: HeliosVliegtuigLogboekDataset[] = [];
     vliegtuig: HeliosVliegtuig = {};
@@ -47,11 +47,11 @@ export class VliegtuigLogboekComponent implements OnInit {
     showPopup(ID: number) {
         this.vliegtuigID = ID;
         this.opvragen();
-        this.popup.open();
+        this.popup().open();
     }
 
     closePopup() {
-        this.popup.close();
+        this.popup().close();
     }
 
 

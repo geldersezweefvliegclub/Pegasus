@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { journaalFilter, JournaalService } from '../../../services/apiservice/journaal.service';
 import { HeliosJournaalDataset } from '../../../types/Helios';
@@ -17,7 +17,7 @@ export class PopupJournaalComponent implements OnInit, OnDestroy {
   private readonly sharedService = inject(SharedService);
   private readonly journaalService = inject(JournaalService);
 
-  @ViewChild(ModalComponent) private popup: ModalComponent;
+  private readonly popup = viewChild.required(ModalComponent);
 
   data:HeliosJournaalDataset[] = [];
 
@@ -61,11 +61,11 @@ export class PopupJournaalComponent implements OnInit, OnDestroy {
   showPopup(ID: number) {
     this.vliegtuigID = ID;
     this.opvragen();
-    this.popup.open();
+    this.popup().open();
   }
 
   closePopup() {
-    this.popup.close();
+    this.popup().close();
   }
 
   opvragen() : void {

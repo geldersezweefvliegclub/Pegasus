@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject, input } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, input, viewChild } from '@angular/core';
 import { beheerRoutes, CustomRoute, routes } from '../../../routing.module';
 
 import { Router, RouterLinkActive, RouterLink } from '@angular/router';
@@ -40,7 +40,7 @@ export class NavigatieComponent implements OnInit, OnDestroy {
     private readonly configService = inject(PegasusConfigService);
 
     readonly hoofdscherm = input(false);
-    @ViewChild(PopupKalenderComponent) popupKalender: PopupKalenderComponent;
+    readonly popupKalender = viewChild.required(PopupKalenderComponent);
 
     readonly routes = routes;
     readonly beheerRoutes = beheerRoutes;

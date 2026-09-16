@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject } from '@angular/core';
+import { Component, inject, viewChild } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosAgendaActiviteit, HeliosAgendaDataset, HeliosJournaal } from '../../../../types/Helios';
 import { AgendaService } from '../../../../services/apiservice/agenda';
@@ -24,7 +24,7 @@ export class AgendaEditorComponent  {
   private readonly agendaService = inject(AgendaService);
   private readonly loginService = inject(LoginService);
 
-  @ViewChild(ModalComponent) private popup: ModalComponent;
+  private readonly popup = viewChild.required(ModalComponent);
 
   isLoading = false;
   isSaving = false;
@@ -69,11 +69,11 @@ export class AgendaEditorComponent  {
     this.isSaving = false;
     this.isVerwijderMode = false;
     this.isRestoreMode = false;
-    this.popup.open();
+    this.popup().open();
   }
 
   closePopup() {
-    this.popup.close();
+    this.popup().close();
   }
 
   haalAktiviteitOp(id: number): void {
@@ -98,7 +98,7 @@ export class AgendaEditorComponent  {
     this.isSaving = false;
     this.isVerwijderMode = true;
     this.isRestoreMode = false;
-    this.popup.open();
+    this.popup().open();
   }
 
   openRestorePopup(id: number) {
@@ -108,7 +108,7 @@ export class AgendaEditorComponent  {
     this.isSaving = false;
     this.isRestoreMode = true;
     this.isVerwijderMode = false;
-    this.popup.open();
+    this.popup().open();
   }
 
   uitvoeren() {

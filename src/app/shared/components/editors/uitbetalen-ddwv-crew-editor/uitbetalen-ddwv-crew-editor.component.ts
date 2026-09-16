@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject, output } from '@angular/core';
+import { Component, inject, output, viewChild } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { ErrorMessage, KeyValueArray, SuccessMessage } from '../../../../types/Utils';
 import { HeliosDienstenDataset } from '../../../../types/Helios';
@@ -18,7 +18,7 @@ import { IconButtonComponent } from '../../icon-button/icon-button.component';
 export class UitbetalenDdwvCrewEditorComponent  {
     private readonly ddwvService = inject(DdwvService);
 
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
     readonly refresh = output<void>();
 
     success: SuccessMessage | undefined;
@@ -37,7 +37,7 @@ export class UitbetalenDdwvCrewEditorComponent  {
         this.datum = rooster.DATUM!;
         this.diensten = rooster.Diensten.filter((d) => d != null);
 
-        this.popup.open();
+        this.popup().open();
     }
 
     uitbetalen() {
@@ -53,7 +53,7 @@ export class UitbetalenDdwvCrewEditorComponent  {
         })
         this.ddwvService.betaalCrew(this.datum, IDs).then(() => {
             this.success = { titel: "Uitbetaling", beschrijving: "Transactie(s) opgeslagen"};
-            this.popup.close();
+            this.popup().close();
         }).catch((e) => this.error = e)
     }
 

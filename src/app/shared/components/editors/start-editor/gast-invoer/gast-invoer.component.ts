@@ -14,8 +14,8 @@ export class GastInvoerComponent implements OnInit, OnChanges {
     private readonly gastenService = inject(GastenService);
 
     readonly DATUM = input.required<DateTime>();
-    readonly gast = output<string>();
-    readonly opmerking = output<string>();
+    readonly gast = output<string | undefined>();
+    readonly opmerking = output<string | undefined>();
 
     gasten: HeliosGastenDataset[] = [];
 
@@ -39,8 +39,12 @@ export class GastInvoerComponent implements OnInit, OnChanges {
         const idx = this.gasten.findIndex(g => g.ID == id);
 
         if (idx != -1) {
-            this.gast.emit(this.gasten[idx].NAAM);
-            this.opmerking.emit(this.gasten[idx].OPMERKINGEN);
+            const gast = this.gasten[idx];
+            if (gast === undefined) {
+                return;
+            }
+            this.gast.emit(gast.NAAM);
+            this.opmerking.emit(gast.OPMERKINGEN);
         }
     }
 }

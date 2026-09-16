@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject, output } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, output, viewChild } from '@angular/core';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosGast, HeliosType } from '../../../../types/Helios';
@@ -23,7 +23,7 @@ export class GastEditorComponent implements OnInit, OnDestroy {
     private readonly gastenService = inject(GastenService);
     private readonly typesService = inject(TypesService);
 
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
     readonly refresh = output<void>();
 
     success: SuccessMessage | undefined;
@@ -67,7 +67,7 @@ export class GastEditorComponent implements OnInit, OnDestroy {
             });
         }
 
-        this.popup.open();
+        this.popup().open();
     }
 
     verwijderen() {
@@ -76,7 +76,7 @@ export class GastEditorComponent implements OnInit, OnDestroy {
             this.refresh.emit();
 
             this.isSaving = false;
-            this.popup.close();
+            this.popup().close();
         }).catch(e => {
             this.error = e;
             this.isSaving = false;
@@ -94,7 +94,7 @@ export class GastEditorComponent implements OnInit, OnDestroy {
 
                 this.gast = a;
                 this.isSaving = false;
-                this.popup.close();
+                this.popup().close();
             }).catch(e => {
                 this.error = e;
                 this.isSaving = false;
@@ -105,7 +105,7 @@ export class GastEditorComponent implements OnInit, OnDestroy {
                 this.refresh.emit();
 
                 this.isSaving = false;
-                this.popup.close();
+                this.popup().close();
             }).catch(e => {
                 this.error = e;
                 this.isSaving = false;

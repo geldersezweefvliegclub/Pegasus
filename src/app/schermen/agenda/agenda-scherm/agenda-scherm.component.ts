@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { HeliosAgendaDataset } from '../../../types/Helios';
 import { AgendaService } from '../../../services/apiservice/agenda';
 import { Subscription } from 'rxjs';
@@ -30,7 +30,7 @@ export class AgendaSchermComponent implements OnInit, OnDestroy {
   private readonly sharedService = inject(SharedService);
   private readonly agendaService = inject(AgendaService);
 
-  @ViewChild(AgendaEditorComponent) editor:AgendaEditorComponent;
+  readonly editor = viewChild.required(AgendaEditorComponent);
 
   data:HeliosAgendaDataset[] = [];
   isLoading = false;
@@ -69,7 +69,7 @@ export class AgendaSchermComponent implements OnInit, OnDestroy {
     cellRenderer: 'deleteAction', headerName: '', sortable: false,
     cellRendererParams: {
       onDeleteClicked: (ID: number) => {
-        this.editor.openVerwijderPopup(ID);
+        this.editor().openVerwijderPopup(ID);
       }
     },
   }];
@@ -85,7 +85,7 @@ export class AgendaSchermComponent implements OnInit, OnDestroy {
     cellRenderer: 'restoreAction', headerName: '', sortable: false,
     cellRendererParams: {
       onRestoreClicked: (ID: number) => {
-        this.editor.openRestorePopup(ID);
+        this.editor().openRestorePopup(ID);
       }
     },
   }];
@@ -190,13 +190,13 @@ export class AgendaSchermComponent implements OnInit, OnDestroy {
 
   addAgenda() {
     if (this.magToevoegen) {
-      this.editor.openPopup(null);
+      this.editor().openPopup(null);
     }
   }
 
   openEditor(event?: RowDoubleClickedEvent) {
     if (this.magWijzigen) {
-      this.editor.openPopup(event?.data as HeliosAgendaDataset);
+      this.editor().openPopup(event?.data as HeliosAgendaDataset);
     }
   }
 

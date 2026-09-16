@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { HeliosJournaal, HeliosLedenDataset, HeliosType, HeliosVliegtuigenDataset } from '../../../../types/Helios';
 import { TypesService } from '../../../../services/apiservice/types.service';
 import { Observable, of, Subscription } from 'rxjs';
@@ -29,7 +29,7 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
     private readonly journaalService = inject(JournaalService);
     private readonly vliegtuigenService = inject(VliegtuigenService);
 
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
 
     private vliegtuigenAbonnement: Subscription;
     clubVliegtuigen$: Observable<HeliosVliegtuigenDataset[]>;
@@ -122,11 +122,11 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
         this.isSaving = false;
         this.isVerwijderMode = false;
         this.isRestoreMode = false;
-        this.popup.open();
+        this.popup().open();
     }
 
     closePopup() {
-        this.popup.close();
+        this.popup().close();
     }
 
     haalMeldingOp(id: number): void {
@@ -149,7 +149,7 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
         this.isSaving = false;
         this.isVerwijderMode = true;
         this.isRestoreMode = false;
-        this.popup.open();
+        this.popup().open();
     }
 
     openRestorePopup(id: number) {
@@ -159,7 +159,7 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
         this.isSaving = false;
         this.isRestoreMode = true;
         this.isVerwijderMode = false;
-        this.popup.open();
+        this.popup().open();
     }
 
     uitvoeren() {

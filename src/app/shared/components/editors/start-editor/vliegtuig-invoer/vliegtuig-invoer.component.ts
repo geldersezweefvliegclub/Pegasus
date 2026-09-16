@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild, input, output } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, input, output, viewChild } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
 import { HeliosVliegtuigenDataset } from '../../../../../types/Helios';
 import { NgSelectComponent } from '@ng-select/ng-select';
@@ -23,7 +23,7 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
     readonly VliegtuigChanged = output<number>();
     EventEmitterDelay: number;
 
-    @ViewChild(NgSelectComponent) ngSelect: NgSelectComponent;
+    readonly ngSelect = viewChild.required(NgSelectComponent);
 
     vliegtuigInput$ = new Subject<string>();
     vliegtuigenSelectie$: Observable<HeliosVliegtuigenDataset[]>;
@@ -96,7 +96,9 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
     }
 
     inputChange(id: number | undefined) {
-
+        if (!id) {
+            return;
+        }
         const vliegtuig = this.vliegtuigen.find(v => v.ID == id);
         this.inzetbaar = (vliegtuig) ? vliegtuig.INZETBAAR! : true;
 

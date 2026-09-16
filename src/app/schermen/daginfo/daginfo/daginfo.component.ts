@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, viewChild } from '@angular/core';
 
 import { LoginService } from '../../../services/apiservice/login.service';
 import { DaginfoService } from '../../../services/apiservice/daginfo.service';
@@ -48,8 +48,8 @@ export class DaginfoComponent implements OnInit, OnDestroy{
     private readonly dienstenService = inject(DienstenService);
     private readonly dagRapportenService = inject(DagRapportenService);
 
-    @ViewChild(DagRoosterComponent) dienstenWizard: DagRoosterComponent;
-    @ViewChild(DagRapportEditorComponent) editor: DagRapportEditorComponent;
+    readonly dienstenWizard = viewChild.required(DagRoosterComponent);
+    readonly editor = viewChild.required(DagRapportEditorComponent);
 
     iconCardIcon: IconDefinition = faInfo;
     iconVliegveld: IconDefinition = faPlane;
@@ -239,7 +239,7 @@ export class DaginfoComponent implements OnInit, OnDestroy{
 
     // Wizard om tekst te genereren voor aanwezige leden. Tekst kan daarna aangepast worden
     invullenDiensten() {
-        this.dienstenWizard.openPopup();
+        this.dienstenWizard().openPopup();
     }
 
     tijdString(dt: string): string {
@@ -263,18 +263,18 @@ export class DaginfoComponent implements OnInit, OnDestroy{
     }
 
     addDagRapport() {
-        this.editor.openPopup()
+        this.editor().openPopup()
     }
 
     openEditor(dagRapport: HeliosDagRapportenDataset) {
-        this.editor.openPopup(dagRapport)
+        this.editor().openPopup(dagRapport)
     }
 
     openVerwijderPopup(dagRapport: HeliosDagRapportenDataset) {
-        this.editor.openVerwijderPopup(dagRapport)
+        this.editor().openVerwijderPopup(dagRapport)
     }
 
     openRestorePopup(dagRapport: HeliosDagRapportenDataset) {
-        this.editor.openRestorePopup(dagRapport)
+        this.editor().openRestorePopup(dagRapport)
     }
 }

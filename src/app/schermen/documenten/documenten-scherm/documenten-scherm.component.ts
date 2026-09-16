@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { faFile, IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { HeliosDocument, HeliosDocumentenDataset, HeliosType } from '../../../types/Helios';
 import { Subscription } from 'rxjs';
@@ -30,7 +30,7 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
     private readonly loginService = inject(LoginService);
     private readonly documentenService = inject(DocumentenService);
 
-    @ViewChild(DocumentEditorComponent) editor: DocumentEditorComponent;
+    readonly editor = viewChild.required(DocumentEditorComponent);
 
     iconCardIcon: IconDefinition = faFile;
     toevoegenIcon: IconDefinition = faPlusCircle;
@@ -110,7 +110,7 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
         const doc = this.documenten.find(d => d.ID == id);
 
         if (doc) {
-            this.editor.openVerwijderPopup(doc);
+            this.editor().openVerwijderPopup(doc);
         }
     }
 
@@ -118,7 +118,7 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
         const doc = this.documenten.find(d => d.ID == id);
 
         if (doc) {
-            this.editor.openRestorePopup(doc);
+            this.editor().openRestorePopup(doc);
         }
     }
 
@@ -126,7 +126,7 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
         const doc = this.documenten.find(d => d.ID == id);
 
         if (doc) {
-            this.editor.openPopup(doc);
+            this.editor().openPopup(doc);
         }
     }
 
@@ -135,7 +135,7 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
             GROEP_ID: id
         }
 
-        this.editor.openPopup(doc);
+        this.editor().openPopup(doc);
     }
 
 

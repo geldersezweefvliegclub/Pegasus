@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { StartlijstService } from '../../../services/apiservice/startlijst.service';
 import {
   CheckboxRenderComponent,
@@ -74,10 +74,10 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     private readonly flarmService = inject(FlarmInputService);
     private readonly sharedService = inject(SharedService);
 
-    @ViewChild(StartEditorComponent) editor: StartEditorComponent;
-    @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
-    @ViewChild(ExportStartlijstComponent) exportStartlijstKeuze: ExportStartlijstComponent;
-    @ViewChild(DatatableComponent) grid: DatatableComponent;
+    readonly editor = viewChild.required(StartEditorComponent);
+    readonly tijdInvoerEditor = viewChild.required(TijdInvoerComponent);
+    readonly exportStartlijstKeuze = viewChild.required(ExportStartlijstComponent);
+    readonly grid = viewChild.required(DatatableComponent);
 
     iconExpandShrink: IconDefinition = faChevronRight;
 
@@ -120,7 +120,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
             cellRendererParams: {
                 tijdClicked: (record: HeliosStartDataset) => {
                     if (!this.deleteMode && this.inTijdspan)
-                        this.tijdInvoerEditor.openStarttijdPopup(record);
+                        this.tijdInvoerEditor().openStarttijdPopup(record);
                 }
             },
         },
@@ -133,7 +133,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
             cellRendererParams: {
                 tijdClicked: (record: HeliosStartDataset) => {
                     if (!this.deleteMode && this.inTijdspan)
-                        this.tijdInvoerEditor.openLandingsTijdPopup(record);
+                        this.tijdInvoerEditor().openLandingsTijdPopup(record);
                 }
             },
         },
@@ -165,7 +165,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         cellRenderer: 'deleteAction', headerName: '', sortable: false,
         cellRendererParams: {
             onDeleteClicked: (ID: number) => {
-                this.editor.openVerwijderPopup(ID);
+                this.editor().openVerwijderPopup(ID);
             }
         },
     }];
@@ -181,7 +181,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         cellRenderer: 'restoreAction', headerName: '', sortable: false,
         cellRendererParams: {
             onRestoreClicked: (ID: number) => {
-                this.editor.openRestorePopup(ID);
+                this.editor().openRestorePopup(ID);
             }
         },
     }];
@@ -378,14 +378,14 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     // openen van popup om nieuwe start te kunnen invoeren
     addStart(): void {
         if (this.magToevoegen) {
-            this.editor.openPopup(null);
+            this.editor().openPopup(null);
         }
     }
 
     // openen van popup om bestaande start te kunnen aanpassen
     openEditor(event?: RowDoubleClickedEvent) {
         if (this.magWijzigen && !this.deleteMode && this.inTijdspan) {
-            this.editor.openPopup(event?.data);
+            this.editor().openPopup(event?.data);
         }
     }
 
@@ -481,7 +481,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
                 this.starts[idx].OPMERKINGEN = start.OPMERKINGEN;
                 this.filterStarts();
-                if (!this.toonStartlijstKlein) { this.grid.refreshGrid() }
+                if (!this.toonStartlijstKlein) { this.grid().refreshGrid() }
             }
         }
     }
@@ -518,11 +518,11 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
             }
         }
         this.filterStarts();
-        if (!this.toonStartlijstKlein) { this.grid.refreshGrid(); }
+        if (!this.toonStartlijstKlein) { this.grid().refreshGrid(); }
     }
     // keuze voor startlijst export
     exporteerStartlijst() {
-        this.exportStartlijstKeuze.openPopup();
+        this.exportStartlijstKeuze().openPopup();
     }
 
     // Export naar excel

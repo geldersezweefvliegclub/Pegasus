@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject, output } from '@angular/core';
+import { Component, inject, output, viewChild } from '@angular/core';
 import { Observable, of, Subscription } from 'rxjs';
 import { TypesService } from '../../../../../services/apiservice/types.service';
 import { HeliosType } from '../../../../../types/Helios';
@@ -18,7 +18,7 @@ export class ComposeMeteoComponent {
     private readonly typesService = inject(TypesService);
 
     readonly opslaan = output<string>();
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
 
     private typesAbonnement: Subscription;
 
@@ -83,11 +83,11 @@ export class ComposeMeteoComponent {
         tekst = tekst.replace(/#STIJGEN#/, (!this.gemiddeldStijgen) ? "@@" : this.gemiddeldStijgen);
 
         this.opslaan.emit(tekst);
-        this.popup.close();
+        this.popup().close();
     }
 
     // Tonen van het popup window met de wizard velden
     openPopup() {
-        this.popup.open();
+        this.popup().open();
     }
 }

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import {ColDef, RowDoubleClickedEvent} from 'ag-grid-community';
 import { nummerSort } from '../../../utils/Utils';
@@ -43,8 +43,8 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
     private readonly sharedService = inject(SharedService);
     private readonly transactiesService = inject(TransactiesService);
 
-    @ViewChild(TransactieEditorComponent) private editor: TransactieEditorComponent;
-    @ViewChild(FactuurUploadenComponent) private uploaden: FactuurUploadenComponent;
+    private readonly editor = viewChild.required(TransactieEditorComponent);
+    private readonly uploaden = viewChild.required(FactuurUploadenComponent);
 
     private ledenAbonnement: Subscription;
     leden: HeliosLedenDataset[] = [];
@@ -334,7 +334,7 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
 
     // Openen van editor
     addTransactie() {
-        this.editor.openPopup(this.lidID)
+        this.editor().openPopup(this.lidID)
     }
 
     // export de huidige dataset naar excel
@@ -357,7 +357,7 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
     bewerkTransactie($event: RowDoubleClickedEvent) {
         const ui = this.loginService.userInfo?.Userinfo;
         if (ui?.isBeheerder || ui?.isBeheerderDDWV) {
-            this.editor.openPopup(undefined, undefined, $event.data.ID);
+            this.editor().openPopup(undefined, undefined, $event.data.ID);
         }
     }
 
@@ -380,6 +380,6 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
     uploadenFacturen()
     {
         const transacties = this.transacties.filter(t => t.VLIEGDAG == this.datum.toISODate() && t.BEDRAG != undefined && t.EXT_REF === null);
-        this.uploaden.showPopupAndUploadTransacties(transacties, this.datum);
+        this.uploaden().showPopupAndUploadTransacties(transacties, this.datum);
     }
 }

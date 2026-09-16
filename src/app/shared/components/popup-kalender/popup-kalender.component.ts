@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { Subscription } from 'rxjs';
 import { SharedService } from '../../../services/shared/shared.service';
@@ -13,14 +13,15 @@ import { VliegdagSelectieComponent } from '../vliegdag-selectie/vliegdag-selecti
 export class PopupKalenderComponent implements OnInit, OnDestroy {
   private readonly sharedService = inject(SharedService);
 
-  @ViewChild(ModalComponent) private popup: ModalComponent;
+  private readonly popup = viewChild.required(ModalComponent);
 
   private datumAbonnement: Subscription;
 
   ngOnInit() : void {
     this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(() => {
-      if (this.popup !== undefined) {
-        this.popup.close();
+      const popup = this.popup();
+      if (popup !== undefined) {
+        popup.close();
       }
     });
   }
@@ -31,7 +32,7 @@ export class PopupKalenderComponent implements OnInit, OnDestroy {
 
   // Open dialoog met de kalender
   openPopup() {
-    this.popup.open();
+    this.popup().open();
   }
 
 

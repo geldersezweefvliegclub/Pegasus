@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosRoosterDagExtended } from '../../../../schermen/rooster/rooster-page/rooster-page.component';
@@ -27,7 +27,7 @@ export class DienstEditorComponent implements OnInit, OnDestroy {
     private readonly dienstenService = inject(DienstenService);
     private readonly configService = inject(PegasusConfigService);
 
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -123,7 +123,7 @@ export class DienstEditorComponent implements OnInit, OnDestroy {
             }
             return false;
         });
-        this.popup.open();
+        this.popup().open();
     }
 
     lidGeselecteerd(id: number | undefined) {
@@ -141,7 +141,7 @@ export class DienstEditorComponent implements OnInit, OnDestroy {
                     beschrijving: "Dienst verwijderd"
                 }
                 this.isSaving = false;
-                this.popup.close();
+                this.popup().close();
             });
         } else {
             if (id >= 0) {
@@ -159,7 +159,7 @@ export class DienstEditorComponent implements OnInit, OnDestroy {
                         beschrijving: "Dienst aangepast"
                     }
                     this.isSaving = false;
-                    this.popup.close();
+                    this.popup().close();
                 }).catch(e => {
                     this.isSaving = false;
                     this.error = e;
@@ -178,7 +178,7 @@ export class DienstEditorComponent implements OnInit, OnDestroy {
                         beschrijving: "Dienst toegevoegd"
                     }
                     this.isSaving = false;
-                    this.popup.close();
+                    this.popup().close();
                 }).catch(e => {
                     this.isSaving = false;
                     this.error = e;

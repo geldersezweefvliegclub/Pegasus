@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faChevronDown, faChevronUp, faInfoCircle, faStreetView } from '@fortawesome/free-solid-svg-icons';
 import { Observable, of, Subscription } from 'rxjs';
@@ -81,12 +81,12 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
     private readonly progressieService = inject(ProgressieService);
     private readonly aanwezigLedenService = inject(AanwezigLedenService);
 
-    @ViewChild(ModalComponent) private bevestigAfmeldenPopup: ModalComponent;
-    @ViewChild(LidAanwezigEditorComponent) aanmeldEditor: LidAanwezigEditorComponent;
-    @ViewChild(GastEditorComponent) gastEditor: GastEditorComponent;
-    @ViewChild(SamenvattingComponent) samenvattingPopup: SamenvattingComponent;
+    private readonly bevestigAfmeldenPopup = viewChild.required(ModalComponent);
+    readonly aanmeldEditor = viewChild.required(LidAanwezigEditorComponent);
+    readonly gastEditor = viewChild.required(GastEditorComponent);
+    readonly samenvattingPopup = viewChild.required(SamenvattingComponent);
 
-    @ViewChild(TransactiesComponent) transactieScherm: TransactiesComponent;
+    readonly transactieScherm = viewChild.required(TransactiesComponent);
 
     readonly aanmeldenIcon: IconDefinition = faStreetView;
     readonly infoIcon: IconDefinition = faInfoCircle;
@@ -403,7 +403,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         this.afmeldDatumDMY = d[2] + '-' + d[1] + '-' + d[0];
         this.afmeldDatum = DateTime.fromSQL(datum);
 
-        this.bevestigAfmeldenPopup.open();
+        this.bevestigAfmeldenPopup().open();
     }
 
     // afmelding doorvoeren bij Helios
@@ -425,7 +425,7 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
                 }
             }
             this.isLoadingAanwezig = false;
-            this.bevestigAfmeldenPopup.close();
+            this.bevestigAfmeldenPopup().close();
         }).catch((e) => {
             this.error = e;
             console.error (e);
@@ -450,14 +450,14 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
             this.aanwezigLedenService.aanmelden(aanmelding).then(() => this.opvragen(true))
         }
         else {
-            this.aanmeldEditor.openPopup(aanmelding, strippen);
+            this.aanmeldEditor().openPopup(aanmelding, strippen);
         }
 
     }
 
     // open van editor voor aanmelden
     openLidAanwezigEditor(lidAanwezig: HeliosAanwezigLedenDataset) {
-        this.aanmeldEditor.openPopup(lidAanwezig);
+        this.aanmeldEditor().openPopup(lidAanwezig);
     }
 
     // openen van windows voor aanmelden gast
@@ -465,12 +465,12 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
         const aanmelding: HeliosGast = {
             DATUM: datum
         }
-        this.gastEditor.openPopup(aanmelding);
+        this.gastEditor().openPopup(aanmelding);
     }
 
     // open van editor voor aanmelden van een gast
     openGastAanwezigEditor(gast: HeliosGastenDataset) {
-        this.gastEditor.openPopup(gast);
+        this.gastEditor().openPopup(gast);
     }
 
     // hoe breed moeten de kolommen zijn in week view
@@ -727,12 +727,12 @@ export class AanmeldenPageComponent implements OnInit, OnDestroy {
 
     // openen van windows voor het tonen van de transacties
     toonTransacties() {
-        this.transactieScherm.openPopup(this.lid!.ID!, this.ddwvService.magBestellen(this.lid.TEGOED));
+        this.transactieScherm().openPopup(this.lid!.ID!, this.ddwvService.magBestellen(this.lid.TEGOED));
     }
 
     // toon de samenvatting van de dag
     samenvatting(rooster: HeliosRoosterDataset) {
-        this.samenvattingPopup.openPopup(rooster)
+        this.samenvattingPopup().openPopup(rooster)
     }
 
     // als we daginfo hebben, hoeven we niet meer te berekenen welke startmethode we gebruiken

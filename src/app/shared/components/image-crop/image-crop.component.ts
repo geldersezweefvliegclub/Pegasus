@@ -104,6 +104,9 @@ export class ImageCropComponent {
 
   // laat parent weten dat we kunnen opslaan
   submit() {
-    this.opslaan.emit(this.croppedImage);
+    const croppedImage = this.croppedImage;
+    if (croppedImage != null) {
+      this.opslaan.emit(croppedImage);
+    }
   }
 }

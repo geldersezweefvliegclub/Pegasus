@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject, input, output } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, inject, input, output, viewChild } from '@angular/core';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import {
     HeliosBehaaldeProgressieDataset,
@@ -33,7 +33,7 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
     private readonly typesService = inject(TypesService);
     private readonly progressieService = inject(ProgressieService);
 
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
     readonly competenties = input.required<HeliosCompetentiesDataset[]>();
     readonly vliegerID = input.required<number>();
 
@@ -127,7 +127,7 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
                 this.progressie.SCORE = 1;
             }
             this.formTitel = "Nieuwe progressie voor " + this.lid.NAAM
-            this.popup.open();
+            this.popup().open();
         }
     }
 
@@ -154,7 +154,7 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
         })
 
         this.formTitel = "Aanpassen/verwijderen progressie voor " + this.lid.NAAM
-        this.popup.open();
+        this.popup().open();
     }
 
 
@@ -247,8 +247,13 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
 
     // sluiten van window en inform parent dat data aangepast is.
     closePopup() {
-        this.aangepast.emit(this.progressie.ID)
-        this.popup.close();
+        const id = this.progressie.ID;
+        if (id === undefined) {
+            console.error("Kan progressie niet sluiten zonder progressie-ID.");
+            return;
+        }
+        this.aangepast.emit(id)
+        this.popup().close();
     }
 
     // Datum van de start aanpassen

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild, inject, output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject, output, viewChild } from '@angular/core';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
 import { Subscription } from 'rxjs';
 import { HeliosType, HeliosVliegtuigenDataset } from '../../../types/Helios';
@@ -21,7 +21,7 @@ export class JournaalFilterComponent implements OnInit, OnDestroy {
     private readonly vliegtuigenService = inject(VliegtuigenService);
 
     @Input() activeFilter: journaalFilter;
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
     readonly aangepast = output<void>();
 
     private typesAbonnement: Subscription;
@@ -60,7 +60,7 @@ export class JournaalFilterComponent implements OnInit, OnDestroy {
     }
 
     openPopup() {
-        this.popup.open();
+        this.popup().open();
     }
 
     filter(): void {

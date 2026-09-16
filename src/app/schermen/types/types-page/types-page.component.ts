@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import {
     faCaretSquareDown,
@@ -31,7 +31,7 @@ export class TypesPageComponent implements OnInit, OnDestroy {
     private readonly sharedService = inject(SharedService);
     private readonly typesGroepenService = inject(TypesGroepenService);
 
-    @ViewChild(TypeEditorComponent) editor: TypeEditorComponent;
+    readonly editor = viewChild.required(TypeEditorComponent);
     iconCardIcon: IconDefinition = faKeyboard;
     deleteIcon:IconDefinition = faMinusCircle;
     restoreIcon: IconDefinition = faUndo;
@@ -108,7 +108,7 @@ export class TypesPageComponent implements OnInit, OnDestroy {
     // openen van popup om nieuwe start te kunnen invoeren
     addType(): void {
         if (this.magToevoegen) {
-            this.editor.openPopup({
+            this.editor().openPopup({
                 GROEP: this.toonGroep
             });
         }
@@ -117,7 +117,7 @@ export class TypesPageComponent implements OnInit, OnDestroy {
     // openen van popup om bestaande start te kunnen aanpassen
     openEditor(t: HeliosType) {
         if (!this.deleteMode) {
-            this.editor.openPopup(t);
+            this.editor().openPopup(t);
         }
     }
 

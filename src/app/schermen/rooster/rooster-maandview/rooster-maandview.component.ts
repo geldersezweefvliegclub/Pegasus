@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild, inject, input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject, input, viewChild } from '@angular/core';
 import {
   HeliosLedenDatasetExtended,
   HeliosRoosterDagExtended,
@@ -60,8 +60,8 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
     readonly magVerwijderen = input.required<(dienstData: HeliosDienstenDataset) => boolean>();
     readonly lidInRoosterClass = input.required<(dienst: HeliosDienstenDataset) => string>();
 
-    @ViewChild(JaarTotalenComponent) private jaarTotalen: JaarTotalenComponent;
-    @ViewChild(UitbetalenDdwvCrewEditorComponent) protected uitbetalen: UitbetalenDdwvCrewEditorComponent;
+    private readonly jaarTotalen = viewChild.required(JaarTotalenComponent);
+    protected readonly uitbetalen = viewChild.required(UitbetalenDdwvCrewEditorComponent);
 
     readonly resetIcon: IconDefinition = faTimesCircle;
     readonly assignIcon: IconDefinition = faCalendarCheck;
@@ -467,7 +467,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
 
     // laat zien hoe vaak een lid is ingedeeld voor het gekozen jaar
     toonJaarRooster(): void {
-        this.jaarTotalen.openPopup();
+        this.jaarTotalen().openPopup();
     }
 
     // sorteer zodanig dat lid met minste diensten bovenaan staat

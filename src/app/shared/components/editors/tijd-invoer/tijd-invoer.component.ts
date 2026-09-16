@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, inject, output as output_1 } from '@angular/core';
+import { Component, ElementRef, inject, output, output as output_1, viewChild } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosStart, HeliosStartDataset } from '../../../../types/Helios';
 import { StartlijstService } from '../../../../services/apiservice/startlijst.service';
@@ -37,8 +37,8 @@ export class TijdInvoerComponent {
     readonly OpslaanStarttijd = output<HeliosStart>();
     readonly OpslaanLandingstijd = output<HeliosStart>();
 
-    @ViewChild(ModalComponent) private popup: ModalComponent;
-    @ViewChild('tijdInvoerElement') tijdInvoerElement: ElementRef;
+    private readonly popup = viewChild.required(ModalComponent);
+    readonly tijdInvoerElement = viewChild.required<ElementRef>('tijdInvoerElement');
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
@@ -103,10 +103,10 @@ export class TijdInvoerComponent {
             this.tijdIngevoerd = (DateTime.now().toISOTime() as string).substring(0, 5);
             this.tijdOK = true;
         }
-        this.popup.open();
+        this.popup().open();
 
         // geef tijd invoer de focus, moeten wachten tot alles op het scherm staat
-        setTimeout(()=> this.tijdInvoerElement.nativeElement.focus(), 200);
+        setTimeout(()=> this.tijdInvoerElement().nativeElement.focus(), 200);
     }
 
     // open popup, maar haal eerst de start op. De eerder ingevoerde tijd wordt als default waarde gebruikt
@@ -141,13 +141,13 @@ export class TijdInvoerComponent {
             this.tijdIngevoerd = (DateTime.now().toISOTime() as string).substring(0, 5);
             this.tijdOK = true;
         }
-        this.popup.open();
+        this.popup().open();
         // geef tijd invoer de focus, moeten wachten tot alles op het scherm staat
-        setTimeout(()=> this.tijdInvoerElement.nativeElement.focus(), 200);
+        setTimeout(()=> this.tijdInvoerElement().nativeElement.focus(), 200);
     }
 
     closePopup() {
-        this.popup.close();
+        this.popup().close();
     }
 
     // ophalen van de start, zodat we altijd met de laatste starts werken
@@ -291,14 +291,14 @@ export class TijdInvoerComponent {
             }
         }
 
-        this.tijdInvoerElement.nativeElement.value = output.substring(0, 5);
+        this.tijdInvoerElement().nativeElement.value = output.substring(0, 5);
         const result = this.overdag.findIndex((t) =>
                     {
-                        return t.startsWith(this.tijdInvoerElement.nativeElement.value);
-                    }, this.tijdInvoerElement.nativeElement.value);
+                        return t.startsWith(this.tijdInvoerElement().nativeElement.value);
+                    }, this.tijdInvoerElement().nativeElement.value);
 
         // tijd moet overdag zijn en volledig zijn. als tijdOK = true, dan kan je pas opslaan
-        this.tijdOK = !!((result && (inputParts.length > 1)) || this.tijdIngevoerd == "");
+        this.tijdOK = ((result && (inputParts.length > 1)) || this.tijdIngevoerd == "");
     }
 
     // Welke invoer staan we toe, alleen cijfers en control toetsen
@@ -332,7 +332,7 @@ export class TijdInvoerComponent {
 
     // Ingevoerde tijd wordt een minuutje later
     timeUp() {
-        const TijdParts = this.tijdInvoerElement.nativeElement.value.split(':');
+        const TijdParts = this.tijdInvoerElement().nativeElement.value.split(':');
 
         // conversie hh:mm naar minuten
         let minuten = +TijdParts[0] * 60;
@@ -352,7 +352,7 @@ export class TijdInvoerComponent {
 
     // Ingevoerde tijd wordt een minuutje eerder
     timeDown() {
-        const TijdParts = this.tijdInvoerElement.nativeElement.value.split(':');
+        const TijdParts = this.tijdInvoerElement().nativeElement.value.split(':');
 
         // conversie hh:mm naar minuten
         let minuten = +TijdParts[0] * 60;

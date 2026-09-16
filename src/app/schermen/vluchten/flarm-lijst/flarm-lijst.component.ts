@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject, input } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, inject, input, viewChild } from '@angular/core';
 import { FlarmData, FlarmInputService } from '../../../services/flarm-input.service';
 import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
@@ -20,7 +20,7 @@ export class FlarmLijstComponent implements OnInit, OnDestroy, OnChanges {
   private readonly startService = inject(StartlijstService);
 
   readonly veldID = input<number>();
-  @ViewChild(StartDetailsComponent) startDetails: StartDetailsComponent;
+  readonly startDetails = viewChild.required(StartDetailsComponent);
 
   private flarmAbonnement: Subscription;
 
@@ -120,6 +120,6 @@ export class FlarmLijstComponent implements OnInit, OnDestroy, OnChanges {
 
   toonStartdetails(flarm: FlarmData) {
     if (flarm.START_ID === undefined) return;
-    this.startDetails.openPopup(flarm);
+    this.startDetails().openPopup(flarm);
   }
 }

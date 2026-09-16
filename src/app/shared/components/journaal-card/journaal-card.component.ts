@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, Input, OnInit, inject, viewChild } from '@angular/core';
 import { HeliosJournaalDataset } from '../../../types/Helios';
 import { SharedService } from '../../../services/shared/shared.service';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
@@ -16,7 +16,7 @@ export class JournaalCardComponent implements OnInit {
     private readonly sharedService = inject(SharedService);
 
     @Input() melding: HeliosJournaalDataset;
-    @ViewChild(JournaalEditorComponent) editor: JournaalEditorComponent;
+    readonly editor = viewChild.required(JournaalEditorComponent);
 
     protected readonly iconEdit = faPenToSquare;
     datumDM: string
@@ -26,7 +26,7 @@ export class JournaalCardComponent implements OnInit {
     }
 
     openEditor() {
-        this.editor.openPopup(this.melding as HeliosJournaalDataset);
+        this.editor().openPopup(this.melding as HeliosJournaalDataset);
     }
 
     details(melding: HeliosJournaalDataset) {

@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject, input } from '@angular/core';
+import { Component, inject, input, viewChild } from '@angular/core';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosType } from '../../../../types/Helios';
@@ -20,7 +20,7 @@ export class TypeEditorComponent  {
 
     readonly toonBedragEenheid = input(false);
 
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
     formTitel: string;
 
     type: HeliosType = {};
@@ -45,11 +45,11 @@ export class TypeEditorComponent  {
         this.isSaving = false;
         this.isVerwijderMode = false;
         this.isRestoreMode = false;
-        this.popup.open();
+        this.popup().open();
     }
 
     closePopup() {
-        this.popup.close();
+        this.popup().close();
     }
 
     // ophalen van type uit de database (via API)
@@ -74,7 +74,7 @@ export class TypeEditorComponent  {
         this.isSaving = false;
         this.isVerwijderMode = true;
         this.isRestoreMode = false;
-        this.popup.open();
+        this.popup().open();
     }
 
     // Toon popup om type uit de prullenbak te halen
@@ -85,7 +85,7 @@ export class TypeEditorComponent  {
         this.isSaving = false;
         this.isRestoreMode = true;
         this.isVerwijderMode = false;
-        this.popup.open();
+        this.popup().open();
     }
 
     // uitvoeren van de actie waar we mee bezig zijn

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, inject, viewChild } from '@angular/core';
 import { HeliosLedenDataset, HeliosTrack } from '../../../../types/Helios';
 import { ModalComponent } from '../../modal/modal.component';
 import { TracksService } from '../../../../services/apiservice/tracks.service';
@@ -25,7 +25,7 @@ export class TrackEditorComponent implements OnInit{
     private readonly ledenService = inject(LedenService);
     private readonly loginService = inject(LoginService);
 
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
 
     private ledenAbonnement: Subscription;
     leden: HeliosLedenDataset[] = [];
@@ -78,11 +78,11 @@ export class TrackEditorComponent implements OnInit{
         this.isSaving = false;
         this.isVerwijderMode = false;
         this.isRestoreMode = false;
-        this.popup.open();
+        this.popup().open();
     }
 
     closePopup() {
-        this.popup.close();
+        this.popup().close();
     }
 
     // ophalen van track uit de database (via API)
@@ -108,7 +108,7 @@ export class TrackEditorComponent implements OnInit{
         this.isSaving = false;
         this.isVerwijderMode = true;
         this.isRestoreMode = false;
-        this.popup.open();
+        this.popup().open();
     }
 
     // Toon popup om track uit de prullenbak te halen
@@ -120,7 +120,7 @@ export class TrackEditorComponent implements OnInit{
         this.isSaving = false;
         this.isRestoreMode = true;
         this.isVerwijderMode = false;
-        this.popup.open();
+        this.popup().open();
     }
 
     // uitvoeren van de actie waar we mee bezig zijn

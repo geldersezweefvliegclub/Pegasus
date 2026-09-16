@@ -30,7 +30,7 @@ export class LidInvoerComponent implements OnInit, OnChanges {
     @Input() LID_ID: number | undefined;
     readonly vliegtuig = input<HeliosVliegtuigenDataset>();
 
-    readonly LidChanged = output<number>();
+    readonly LidChanged = output<number | undefined>();
     EventEmitterDelay: number;
 
     readonly infoIcon: IconDefinition = faInfoCircle;

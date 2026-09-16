@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, inject, viewChild } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { FacturenService } from '../../../services/apiservice/facturen.service';
 import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
@@ -19,7 +19,7 @@ export class FactuurUploadenComponent implements OnInit {
   private readonly facturenService = inject(FacturenService);
   private readonly transactiesService = inject(TransactiesService);
 
-  @ViewChild(ModalComponent) private popup: ModalComponent;
+  private readonly popup = viewChild.required(ModalComponent);
 
   isBezig: boolean;
   isKlaar: boolean;
@@ -39,7 +39,7 @@ export class FactuurUploadenComponent implements OnInit {
 
   // Contributie en facturen factuur-uploaden
   showPopupAndUploadFacturen(IDs: number[]) {
-    this.popup.open();
+    this.popup().open();
     this.IDs = IDs;
     this.counter = 0;
     this.max = IDs.length;
@@ -56,7 +56,7 @@ export class FactuurUploadenComponent implements OnInit {
     {
       this.transacties = transacties;
 
-      this.popup.open();
+      this.popup().open();
       this.counter = 0;
       this.isBezig = true;
       this.isKlaar = false;
@@ -114,6 +114,6 @@ export class FactuurUploadenComponent implements OnInit {
   }
 
   closePopup() {
-    this.popup.close();
+    this.popup().close();
   }
 }

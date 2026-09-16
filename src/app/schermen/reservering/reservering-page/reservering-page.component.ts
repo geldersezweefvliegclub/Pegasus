@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { DatePipe, NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -70,9 +70,9 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     private readonly storageService = inject(StorageService);
     private readonly sharedService = inject(SharedService);
 
-    @ViewChild(KistSelectieComponent) kistSelector: KistSelectieComponent;
-    @ViewChild(BoekingEditorComponent) boeking: BoekingEditorComponent;
-    @ViewChild(StartEditorComponent) startEditor: StartEditorComponent;
+    readonly kistSelector = viewChild.required(KistSelectieComponent);
+    readonly boeking = viewChild.required(BoekingEditorComponent);
+    readonly startEditor = viewChild.required(StartEditorComponent);
 
     readonly resetIcon: IconDefinition = faTimesCircle;
     readonly assignIcon: IconDefinition = faCalendarCheck;
@@ -338,12 +338,12 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
 
     // openen van popup om nieuwe start te kunnen invoeren
     toonKistSelectie(): void {
-        this.kistSelector.openPopup();
+        this.kistSelector().openPopup();
     }
 
     // openen van popup om nieuwe start te kunnen invoeren
     nieuweBoeking(): void {
-        this.boeking.openPopup();
+        this.boeking().openPopup();
     }
 
     ToggleWeekendDDWV() {

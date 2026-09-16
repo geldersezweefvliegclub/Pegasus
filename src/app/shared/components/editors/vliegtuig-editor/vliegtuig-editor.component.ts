@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject, output } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, output, viewChild } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosType, HeliosVliegtuig, HeliosVliegtuigenDataset } from '../../../../types/Helios';
 import { VliegtuigenService } from '../../../../services/apiservice/vliegtuigen.service';
@@ -34,7 +34,7 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
     readonly delete = output<HeliosVliegtuig>();
     readonly restore = output<HeliosVliegtuig>();
 
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
 
     vliegtuig: HeliosVliegtuig = {
         ID: undefined,
@@ -128,11 +128,11 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
         this.isSaving = false;
         this.isVerwijderMode = false;
         this.isRestoreMode = false;
-        this.popup.open();
+        this.popup().open();
     }
 
     closePopup() {
-        this.popup.close();
+        this.popup().close();
     }
 
     haalVliegtuigOp(id: number): void {
@@ -155,7 +155,7 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
         this.isSaving = false;
         this.isVerwijderMode = true;
         this.isRestoreMode = false;
-        this.popup.open();
+        this.popup().open();
     }
 
     openRestorePopup(id: number) {
@@ -165,7 +165,7 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
         this.isSaving = false;
         this.isRestoreMode = true;
         this.isVerwijderMode = false;
-        this.popup.open();
+        this.popup().open();
     }
 
     uitvoeren() {

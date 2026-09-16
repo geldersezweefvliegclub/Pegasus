@@ -28,14 +28,23 @@ export class VliegtuigCardComponent  {
   }
 
   logboekButtonClicked() {
-    this.Logboek.emit(this.vliegtuig.ID);
+    const id = this.vliegtuig.ID;
+    if (id === undefined) {
+      console.error("Kan logboek niet openen zonder vliegtuig-ID.");
+      return;
+    }
+    this.Logboek.emit(id);
   }
 
   journaalButtonClicked() {
-    this.Journaal.emit(this.vliegtuig.ID);
+    const id = this.vliegtuig.ID;
+    if (id === undefined) {
+      console.error("Kan journaal niet openen zonder vliegtuig-ID.");
+      return;
+    }
+    this.Journaal.emit(id);
   }
 
   protected readonly journaalIcon = faBug;
   protected readonly logboekIcon = faFileAlt;
 }
-

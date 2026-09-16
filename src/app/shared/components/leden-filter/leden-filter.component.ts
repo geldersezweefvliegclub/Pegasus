@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject, input, output } from '@angular/core';
+import { Component, inject, input, output, viewChild } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { SharedService } from '../../../services/shared/shared.service';
 import { LoginService } from '../../../services/apiservice/login.service';
@@ -19,7 +19,7 @@ export class LedenFilterComponent {
     readonly LedenDDWV = input(true);
     readonly filterChanged = output<void>();
 
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
 
     isBeheerder: boolean;
     isDDWVer: boolean;
@@ -30,7 +30,7 @@ export class LedenFilterComponent {
         this.isBeheerder = ui!.Userinfo?.isBeheerder ?? false;
         this.isDDWVer = ui!.Userinfo?.isDDWV ?? false;
 
-        this.popup.open();
+        this.popup().open();
     }
 
     // Er is een leden-filter gewijzigd, meteen aan parent melden zodat starts opgehaald kan worden

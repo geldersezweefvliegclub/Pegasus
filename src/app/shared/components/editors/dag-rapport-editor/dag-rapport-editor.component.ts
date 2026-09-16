@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject, input, output } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, input, output, viewChild } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
@@ -34,9 +34,9 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
     private readonly dagRapportenService = inject(DagRapportenService);
 
     readonly veld_id = input<number>();
-    @ViewChild(ModalComponent) private popup: ModalComponent;
-    @ViewChild(ComposeMeteoComponent) private meteoWizard: ComposeMeteoComponent;
-    @ViewChild(ComposeBedrijfComponent) private bedrijfWizard: ComposeBedrijfComponent;
+    private readonly popup = viewChild.required(ModalComponent);
+    private readonly meteoWizard = viewChild.required(ComposeMeteoComponent);
+    private readonly bedrijfWizard = viewChild.required(ComposeBedrijfComponent);
 
     readonly aangepast = output<number>();
 
@@ -113,7 +113,7 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
             }
             this.formTitel = "Nieuw dag rapport voor " + this.sharedService.datumDMJ(this.datum.toISODate() as string)
         }
-        this.popup.open();
+        this.popup().open();
     }
 
     // Toon popup om dagrapport te verwijderen
@@ -124,7 +124,7 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
         this.isSaving = false;
         this.isVerwijderMode = true;
         this.isRestoreMode = false;
-        this.popup.open();
+        this.popup().open();
     }
 
     // Toon popup om dagrapport uit de prullenbak te halen
@@ -135,7 +135,7 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
         this.isSaving = false;
         this.isRestoreMode = true;
         this.isVerwijderMode = false;
-        this.popup.open();
+        this.popup().open();
     }
 
     // uitvoeren van de actie waar we mee bezig zijn
@@ -220,8 +220,13 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
 
     // sluiten van window en inform parent dat data aangepast is.
     closePopup() {
-        this.aangepast.emit(this.dagRapport.ID)
-        this.popup.close();
+        const id = this.dagRapport.ID;
+        if (id === undefined) {
+            console.error("Kan dagrapport niet sluiten zonder rapport-ID.");
+            return;
+        }
+        this.aangepast.emit(id)
+        this.popup().close();
     }
 
     // Hoe groot moet de popup worden

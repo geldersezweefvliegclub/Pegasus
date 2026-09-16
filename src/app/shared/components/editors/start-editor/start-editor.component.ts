@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject, input } from '@angular/core';
+import { Component, OnInit, inject, input, viewChild } from '@angular/core';
 import {
     HeliosAanwezigLedenDataset,
     HeliosBehaaldeProgressieDataset,
@@ -69,9 +69,9 @@ export class StartEditorComponent implements OnInit {
 
     readonly VliegerID = input<number>();                     // wordt gezet bij aanroep vanuit logboek
     readonly VliegveldID = input<number>();       // wordt gezet als we van start / vluchten een start aanmaken
-    @ViewChild(ModalComponent) private popup: ModalComponent;
-    @ViewChild(VliegtuigInvoerComponent) vliegtuigInvoerComponent: VliegtuigInvoerComponent;
-    @ViewChild(TransactieEditorComponent) transactieEditor: TransactieEditorComponent;
+    private readonly popup = viewChild.required(ModalComponent);
+    readonly vliegtuigInvoerComponent = viewChild.required(VliegtuigInvoerComponent);
+    readonly transactieEditor = viewChild.required(TransactieEditorComponent);
 
     gastIcon: IconDefinition = faStreetView;
 
@@ -298,16 +298,16 @@ export class StartEditorComponent implements OnInit {
         const diff = Interval.fromDateTimes(this.startDatum, nu);
         this.magDatumAanpassen = ((Math.floor(diff.length("days")) <= this.configService.maxZelfEditDagen()) && (!ui?.isStarttoren) || ui!.isBeheerder! || ui!.isBeheerderDDWV!);
 
-        this.popup.open();
+        this.popup().open();
 
         // open de lijst met vliegtuigen, bij aan,maken nieuwe start
         if (!start) {
-            this.vliegtuigInvoerComponent.ngSelect.open();
+            this.vliegtuigInvoerComponent().ngSelect().open();
         }
     }
 
     closePopup() {
-        this.popup.close();
+        this.popup().close();
     }
 
     // Ophalen van de start uit de database (via API)
@@ -468,7 +468,7 @@ export class StartEditorComponent implements OnInit {
         this.isSaving = false;
         this.isVerwijderMode = true;
         this.isRestoreMode = false;
-        this.popup.open();
+        this.popup().open();
     }
 
     // toon popup om eerder verwijderde vlucht weer terug ui de prullenbak te halen
@@ -479,7 +479,7 @@ export class StartEditorComponent implements OnInit {
         this.isSaving = false;
         this.isRestoreMode = true;
         this.isVerwijderMode = false;
-        this.popup.open();
+        this.popup().open();
     }
 
     // Opslaan van de informatie
@@ -883,6 +883,6 @@ export class StartEditorComponent implements OnInit {
 
     // open de transactie om sleep of 3e lierstart strippen te afschrijven
     toonTransactieEditor(VLIEGER_ID: number) {
-       this.transactieEditor.openPopup(VLIEGER_ID, this.start.DATUM)
+       this.transactieEditor().openPopup(VLIEGER_ID, this.start.DATUM)
     }
 }

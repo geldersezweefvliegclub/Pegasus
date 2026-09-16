@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, SimpleChanges, viewChild } from '@angular/core';
 import { ErrorMessage } from '../../../types/Utils';
 import { NgClass } from '@angular/common';
 
@@ -10,7 +10,7 @@ import { NgClass } from '@angular/common';
 })
 export class ErrorComponent implements OnChanges{
   @Input() error: ErrorMessage | undefined = undefined;
-  @ViewChild('errorOverlay') errorOverlay: ElementRef;
+  readonly errorOverlay = viewChild.required<ElementRef>('errorOverlay');
 
   showError = false;
 

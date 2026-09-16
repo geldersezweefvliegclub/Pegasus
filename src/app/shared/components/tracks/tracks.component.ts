@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject, input } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, inject, input, viewChild } from '@angular/core';
 import { HeliosLedenDataset, HeliosTrack, HeliosTracksDataset } from '../../../types/Helios';
 import { TracksService } from '../../../services/apiservice/tracks.service';
 import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
@@ -52,7 +52,7 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
     readonly VliegerNaam = input('');
     readonly toonLid = input(false);
 
-    @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
+    readonly trackEditor = viewChild.required(TrackEditorComponent);
 
     iconCardIcon: IconDefinition = faAddressCard;
     prullenbakIcon: IconDefinition = faRecycle;
@@ -135,19 +135,19 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
 
     // open de track editor om nieuwe track toe te voegen. Editor opent als popup
     openTrackEditor() {
-        this.trackEditor.openPopup(null, this.VliegerID(), undefined, this.VliegerNaam());
+        this.trackEditor().openPopup(null, this.VliegerID(), undefined, this.VliegerNaam());
     }
 
     // open de track editor om nieuwe track toe te voegen. Editor opent als popup
     replyTrackEditor(trk: TracksLedenDataset) {
         const tekst = "In reactie op: \n----------------\n" + trk.TEKST + "\n----------------\n";
-        this.trackEditor.openPopup(null, trk.LID_ID, undefined, trk.LID_NAAM, tekst);
+        this.trackEditor().openPopup(null, trk.LID_ID, undefined, trk.LID_NAAM, tekst);
     }
 
     // Toevoegen van een vlieger track aan de database
     ToevoegenTrack(track: HeliosTrack): void {
         this.trackService.addTrack(track);
-        this.trackEditor.closePopup();
+        this.trackEditor().closePopup();
     }
 
     // openen van popup om gegevens van een bestaande track aan te passen
@@ -156,7 +156,7 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
 
         // Je mag alleen tracks van jezelf wijzigen
         if ((trk.INSTRUCTEUR_ID == ui!.ID) || (this.magWijzigen)) {
-            this.trackEditor.openPopup(trk, trk.LID_ID, undefined, trk.LID_NAAM as string);
+            this.trackEditor().openPopup(trk, trk.LID_ID, undefined, trk.LID_NAAM as string);
         }
         else {
             window.alert("U bent niet gemachtigd om deze track aan te passen");
@@ -165,12 +165,12 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
 
     // openen van popup om track te verwijderen
     openVerwijderPopup(trk: TracksLedenDataset) {
-        this.trackEditor.openVerwijderPopup(trk.ID as number, trk.LID_NAAM as string);
+        this.trackEditor().openVerwijderPopup(trk.ID as number, trk.LID_NAAM as string);
     }
 
     // openen van popup om track te hestellen
     openRestorePopup(trk: TracksLedenDataset) {
-        this.trackEditor.openRestorePopup(trk.ID as number, trk.LID_NAAM as string);
+        this.trackEditor().openRestorePopup(trk.ID as number, trk.LID_NAAM as string);
     }
 
     // schakelen tussen deleteMode JA/NEE. In deleteMode kun je vliegtuigen verwijderen

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { VliegtuigenService } from '../../../services/apiservice/vliegtuigen.service';
 
 import { faPlane, faRecycle } from '@fortawesome/free-solid-svg-icons';
@@ -57,9 +57,9 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
     private readonly router = inject(Router);
     private readonly sharedService = inject(SharedService);
 
-    @ViewChild(VliegtuigEditorComponent) editor: VliegtuigEditorComponent;
-    @ViewChild(PopupJournaalComponent) journaal: PopupJournaalComponent;
-    @ViewChild(VliegtuigLogboekComponent) vliegtuigLogboek: VliegtuigLogboekComponent;
+    readonly editor = viewChild.required(VliegtuigEditorComponent);
+    readonly journaal = viewChild.required(PopupJournaalComponent);
+    readonly vliegtuigLogboek = viewChild.required(VliegtuigLogboekComponent);
 
     data:HeliosVliegtuigenDatasetExtended[] = [];
     logboek: HeliosLogboekDataset[] = [];
@@ -92,7 +92,7 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
         cellRenderer: 'deleteAction', headerName: '', sortable: false,
         cellRendererParams: {
             onDeleteClicked: (ID: number) => {
-                this.editor.openVerwijderPopup(ID);
+                this.editor().openVerwijderPopup(ID);
             }
         },
     }];
@@ -108,7 +108,7 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
         cellRenderer: 'restoreAction', headerName: '', sortable: false,
         cellRendererParams: {
             onRestoreClicked: (ID: number) => {
-                this.editor.openRestorePopup(ID);
+                this.editor().openRestorePopup(ID);
             }
         },
     }];
@@ -218,7 +218,7 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
     // openen van popup om de starts van een nieuw vliegtuig te kunnen invoeren
     addVliegtuig(): void {
         if (this.magToevoegen) {
-            this.editor.openPopup(null);
+            this.editor().openPopup(null);
         }
     }
 
@@ -233,10 +233,10 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
         if (this.magWijzigen) {
             // clubkisten mag niet iedereen aanpassen
             if (!vliegtuig.CLUBKIST) {
-                this.editor.openPopup(vliegtuig);
+                this.editor().openPopup(vliegtuig);
             }
             else if (this.magClubkistWijzigen) {
-                this.editor.openPopup(vliegtuig);
+                this.editor().openPopup(vliegtuig);
             }
         }
     }
@@ -384,11 +384,11 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
 
     // wijzig de route naar vliegtuig logboek. Vliegtuig logboek is te groot voor popup
     public openVliegtuigLogboek(ID: number) {
-        this.vliegtuigLogboek.showPopup(ID);
+        this.vliegtuigLogboek().showPopup(ID);
     }
 
     public openVliegtuigJournaal(ID: number) {
-        this.journaal.showPopup(ID);
+        this.journaal().showPopup(ID);
     }
 }
 

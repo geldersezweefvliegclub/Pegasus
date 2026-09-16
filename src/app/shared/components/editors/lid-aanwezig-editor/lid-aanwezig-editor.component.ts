@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject, output } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, output, viewChild } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { HeliosAanwezigLedenDataset, HeliosType, HeliosVliegtuigenDataset } from '../../../../types/Helios';
@@ -34,7 +34,7 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
     private readonly loginService = inject(LoginService);
     private readonly typesService = inject(TypesService);
 
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
     readonly opgeslagen = output<number>();
 
     success: SuccessMessage | undefined;
@@ -132,7 +132,7 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
         }
 
         this.formTitel = 'Aanmelding: ' + record.NAAM
-        this.popup.open();
+        this.popup().open();
     }
 
     // zet vinkje geselecteerd in de vliegtuig types. Wordt later gebruikt om toe te voegen bij aanmelden
@@ -194,7 +194,7 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
 
                 this.aanwezig = a;
                 this.isSaving = false;
-                this.popup.close();
+                this.popup().close();
             }).catch(e => {
                 this.error = e;
                 this.isSaving = false;
@@ -206,7 +206,7 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
                 this.opgeslagen.emit(a.ID);
 
                 this.isSaving = false;
-                this.popup.close();
+                this.popup().close();
             }).catch(e => {
                 this.error = e;
                 this.isSaving = false;

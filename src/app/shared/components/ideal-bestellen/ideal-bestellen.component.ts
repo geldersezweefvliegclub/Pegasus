@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, inject, viewChild } from '@angular/core';
 import { TransactiesService } from '../../../services/apiservice/transacties.service';
 import { HeliosTransactiesBanken, HeliosType } from '../../../types/Helios';
 import { ModalComponent } from '../modal/modal.component';
@@ -21,7 +21,7 @@ export class IdealBestellenComponent implements OnInit{
     private readonly typesService = inject(TypesService);
     private readonly transactieService = inject(TransactiesService);
 
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
 
     private typesAbonnement: Subscription;
     bestelInfo: HeliosType[];
@@ -45,7 +45,7 @@ export class IdealBestellenComponent implements OnInit{
         this.transactieService.getBanken().then((b) => this.banken = b);
 
         this.lidID = lidID;
-        this.popup.open();
+        this.popup().open();
     }
 
     bestellen() {

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faCaretSquareDown, faCaretSquareUp, faGraduationCap, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
@@ -37,7 +37,7 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
     private readonly typesService = inject(TypesService);
     private readonly competentieService = inject(CompetentieService);
 
-    @ViewChild(CompetentieEditorComponent) editor: CompetentieEditorComponent;
+    readonly editor = viewChild.required(CompetentieEditorComponent);
 
     iconCardIcon: IconDefinition = faGraduationCap;
     toevoegenIcon: IconDefinition = faPlusCircle;
@@ -180,11 +180,11 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
                 LEERFASE_ID: item.leerfaseID,
                 VOLGORDE: children.length
             }
-            this.editor.openPopup(c);
+            this.editor().openPopup(c);
         }
         else {
             const competentie = this.competenties.find(c => c.ID == item.competentieID)
-            this.editor.openPopup(competentie!);
+            this.editor().openPopup(competentie!);
         }
     }
 

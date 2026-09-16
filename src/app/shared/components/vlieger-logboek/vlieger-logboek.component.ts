@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject, input } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, inject, input, viewChild } from '@angular/core';
 import { ColDef, RowClassParams } from 'ag-grid-community';
 import { HeliosLogboekDataset, HeliosTrack } from '../../../types/Helios';
 import { DateTime, Interval } from 'luxon';
@@ -51,9 +51,9 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
     readonly Kolommen = input("");
     readonly MaxItems = input(1000);
 
-    @ViewChild(TijdInvoerComponent) tijdInvoerEditor: TijdInvoerComponent;
-    @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
-    @ViewChild(StartEditorComponent) startEditor: StartEditorComponent;
+    readonly tijdInvoerEditor = viewChild.required(TijdInvoerComponent);
+    readonly trackEditor = viewChild.required(TrackEditorComponent);
+    readonly startEditor = viewChild.required(StartEditorComponent);
 
     toonLogboekKlein = false;     // Klein formaat van het vliegerlogboek
 
@@ -87,7 +87,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
             cellRendererParams: {
                 tijdClicked: (record: HeliosLogboekDatasetExtended) => {
                     if (record.inTijdspan) {
-                        this.tijdInvoerEditor.openStarttijdPopup(record);
+                        this.tijdInvoerEditor().openStarttijdPopup(record);
                     }
                 }
             },
@@ -101,7 +101,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
             cellRendererParams: {
                 tijdClicked: (record: HeliosLogboekDatasetExtended) => {
                     if (record.inTijdspan) {
-                        this.tijdInvoerEditor.openLandingsTijdPopup(record);
+                        this.tijdInvoerEditor().openLandingsTijdPopup(record);
                     }
                 }
             },
@@ -140,7 +140,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
         cellRenderer: 'deleteAction', headerName: '', sortable: false,
         cellRendererParams: {
             onDeleteClicked: (ID: number) => {
-                this.startEditor.openVerwijderPopup(ID);
+                this.startEditor().openVerwijderPopup(ID);
             }
         },
     }];
@@ -267,19 +267,19 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
     // openen van popup om bestaande start te kunnen aanpassen
     openStartEditor(vlucht: HeliosLogboekDatasetExtended) {
         if (vlucht.inTijdspan) {
-            this.startEditor.openPopup(vlucht);
+            this.startEditor().openPopup(vlucht);
         }
     }
 
     // open de track editor om nieuwe track toe te voegen. Edit opent als popup
     private openTrackEditor(LID_ID: number, START_ID: number, NAAM: string, TEKST: string) {
-        this.trackEditor.openPopup(null, LID_ID, START_ID, NAAM, TEKST);
+        this.trackEditor().openPopup(null, LID_ID, START_ID, NAAM, TEKST);
     }
 
     // Toevoegen van een vlieger track aan de database
     ToevoegenTrack(track: HeliosTrack): void {
         this.trackService.addTrack(track);
-        this.trackEditor.closePopup();
+        this.trackEditor().closePopup();
     }
 
     // Welke kolommen moet worden getoond in het grid

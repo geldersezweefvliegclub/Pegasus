@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, inject, input, output } from '@angular/core';
+import { Component, Input, inject, input, output, viewChild } from '@angular/core';
 import { DienstenService } from '../../../services/apiservice/diensten.service';
 import { RoosterService } from '../../../services/apiservice/rooster.service';
 import { HeliosDienst, HeliosDienstenDataset, HeliosRoosterDataset } from '../../../types/Helios';
@@ -22,7 +22,7 @@ export class DagRoosterComponent {
 
     readonly Datum = input.required<DateTime>();
     @Input() magWijzigen = false;
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
 
     rooster: HeliosRoosterDataset;
     diensten: HeliosDienstenDataset[];
@@ -30,7 +30,7 @@ export class DagRoosterComponent {
     // Open leden-filter dialoog met de leden-filter opties
     openPopup() {
         this.ophalen();
-        this.popup.open();
+        this.popup().open();
     }
 
     ophalen(): void {
@@ -107,6 +107,6 @@ export class DagRoosterComponent {
         }
 
         this.opslaan.emit(tekst);
-        this.popup.close();
+        this.popup().close();
     }
 }

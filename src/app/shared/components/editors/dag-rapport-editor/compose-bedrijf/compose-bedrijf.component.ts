@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject, input, output } from '@angular/core';
+import { Component, inject, input, output, viewChild } from '@angular/core';
 import { ModalComponent } from '../../../modal/modal.component';
 import { Observable, of, Subscription } from 'rxjs';
 import { HeliosType } from '../../../../../types/Helios';
@@ -21,7 +21,7 @@ export class ComposeBedrijfComponent {
     readonly datum = input.required<DateTime>();
 
     readonly opslaan = output<string>();
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
 
     private typesAbonnement: Subscription;
     startMethodeTypes$: Observable<HeliosType[]>;
@@ -49,7 +49,7 @@ export class ComposeBedrijfComponent {
 
     // open het popup scherm voor de wizard
     openPopup() {
-        this.popup.open();
+        this.popup().open();
     }
 
     // linkerhand circuit, dus niet rechtsom. Of LH = true of RH = true, beide false mag wel
@@ -191,6 +191,6 @@ export class ComposeBedrijfComponent {
         tekst += luchtuim;
 
         this.opslaan.emit(tekst);
-        this.popup.close();
+        this.popup().close();
     }
 }

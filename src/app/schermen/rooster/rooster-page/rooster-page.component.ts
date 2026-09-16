@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { LedenService } from '../../../services/apiservice/leden.service';
 import {
   HeliosDienstenDataset,
@@ -71,7 +71,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
     private readonly roosterService = inject(RoosterService);
     private readonly dienstenService = inject(DienstenService);
 
-    @ViewChild(LedenFilterComponent) ledenFilter: LedenFilterComponent;
+    readonly ledenFilter = viewChild.required(LedenFilterComponent);
 
     readonly roosterIcon: IconDefinition = faCalendarDay;
 
@@ -315,7 +315,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
 
     // Open van het leden-filter dialoog
     filterPopup() {
-        this.ledenFilter.openPopup();
+        this.ledenFilter().openPopup();
     }
 
     // moeten we de dienst tonen, niet iedere club heeft dezelfde diensten

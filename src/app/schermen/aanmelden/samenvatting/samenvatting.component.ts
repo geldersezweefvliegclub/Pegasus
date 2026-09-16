@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject, input, output } from '@angular/core';
+import { Component, inject, input, output, viewChild } from '@angular/core';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
 import { HeliosAanwezigSamenvatting, HeliosDienstenDataset, HeliosRoosterDataset } from '../../../types/Helios';
 import { DateTime } from 'luxon';
@@ -20,7 +20,7 @@ export class SamenvattingComponent {
     private readonly configService = inject(PegasusConfigService);
     private readonly aanwezigLedenService = inject(AanwezigLedenService);
 
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
     readonly diensten = input.required<HeliosDienstenDataset[]>();
     readonly bulkEmail = output<string>();
 
@@ -64,12 +64,17 @@ export class SamenvattingComponent {
 
         this.aanwezigLedenService.getSamenvatting(DateTime.fromSQL(rooster.DATUM!)).then((s) => this.samenvatting = s);
         this.dienstNamen();
-        this.popup.open();
+        this.popup().open();
     }
 
     // stuur alle aangemelde leden een email. Die hebben we alleen niet hier, maar 1 niveau hoger in aanmeld pagina
     sendBulkEmail() {
-       this.bulkEmail.emit(this.rooster.DATUM);
+       const datum = this.rooster.DATUM;
+       if (datum === undefined) {
+           console.error("Kan bulk email niet versturen zonder roosterdatum.");
+           return;
+       }
+       this.bulkEmail.emit(datum);
     }
 
     // zet de namen van de diensten

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject, input, output } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, inject, input, output, viewChild } from '@angular/core';
 import { DagVanDeWeek } from '../../../utils/Utils';
 
 import {
@@ -49,8 +49,8 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
     readonly lidInRoosterClass = input.required<(dienst: HeliosDienstenDataset) => string>();
     readonly nieuweDatum = output<DateTime>();
 
-    @ViewChild(DienstEditorComponent) dienstEditor: DienstEditorComponent;
-    @ViewChild(UitbetalenDdwvCrewEditorComponent) protected uitbetalen: UitbetalenDdwvCrewEditorComponent;
+    readonly dienstEditor = viewChild.required(DienstEditorComponent);
+    protected readonly uitbetalen = viewChild.required(UitbetalenDdwvCrewEditorComponent);
 
     readonly resetIcon: IconDefinition = faTimesCircle;
     readonly assignIcon: IconDefinition = faCalendarCheck;
@@ -118,7 +118,7 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
         }
 
         if (this.dblKlik) { // er was al een keer geklikt
-            this.dienstEditor.openPopup(dag, typeDienstID)
+            this.dienstEditor().openPopup(dag, typeDienstID)
         }
 
         this.dblKlik = true;

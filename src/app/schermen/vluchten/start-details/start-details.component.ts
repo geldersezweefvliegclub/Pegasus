@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject } from '@angular/core';
+import { Component, inject, viewChild } from '@angular/core';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
 import { HeliosStartDataset } from '../../../types/Helios';
 import { FlarmData } from '../../../services/flarm-input.service';
@@ -14,7 +14,7 @@ import { DateTime } from 'luxon';
 export class StartDetailsComponent  {
   private readonly startService = inject(StartlijstService);
 
-  @ViewChild(ModalComponent) private popup: ModalComponent;
+  private readonly popup = viewChild.required(ModalComponent);
   start: HeliosStartDataset | undefined;
   flarm: FlarmData;
   ts: string;
@@ -29,11 +29,11 @@ export class StartDetailsComponent  {
     this.startService.getStartDetails(flarm.START_ID!).then((start) =>
     {
         this.start = start;
-        this.popup.open();
+        this.popup().open();
     });
   }
 
   closePopup() {
-    this.popup.close();
+    this.popup().close();
   }
 }

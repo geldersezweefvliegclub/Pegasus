@@ -20,10 +20,10 @@
                                 <div class="d-flex">
                                     @if (deleteMode && trashMode) {
                                         <fa-icon [icon]="restoreIcon" class="restoreBtn me-2"
-                                                 (click)="editor.openRestorePopup(t.ID);"></fa-icon>
+                                                 (click)="editor().openRestorePopup(t.ID);"></fa-icon>
                                     } @if (deleteMode && !trashMode && !t.READ_ONLY) {
                                     <fa-icon [icon]="deleteIcon" class="deleteBtn me-2"
-                                             (click)="editor.openVerwijderPopup(t.ID);"></fa-icon>
+                                             (click)="editor().openVerwijderPopup(t.ID);"></fa-icon>
                                 } @if (deleteMode && !trashMode && t.READ_ONLY) {
                                     <div style="width: 23px;"></div>
                                 }

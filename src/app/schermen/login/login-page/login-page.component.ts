@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, inject, viewChild } from '@angular/core';
 import { LoginService } from '../../../services/apiservice/login.service';
 import { ErrorMessage } from '../../../types/Utils';
 import { Router } from '@angular/router';
@@ -29,7 +29,7 @@ export class LoginPageComponent implements OnInit {
     private readonly storageService = inject(StorageService);
     private readonly router = inject(Router);
 
-    @ViewChild(CodeInputComponent) private codeInput: CodeInputComponent;
+    private readonly codeInput = viewChild.required(CodeInputComponent);
 
     oogIcon: IconDefinition = faEye;
 
@@ -105,7 +105,7 @@ export class LoginPageComponent implements OnInit {
                 this.showSecret = true;
 
                 // kleine timeout om component eerst zichtbaar te maken
-                setTimeout(() => this.codeInput.focusOnField(0), 250)
+                setTimeout(() => this.codeInput().focusOnField(0), 250)
 
             } else {
                 this.error = e;

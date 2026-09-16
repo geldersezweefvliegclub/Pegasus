@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges, ViewChild, inject, input } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, inject, input, viewChild } from '@angular/core';
 import { DienstenService } from '../../../services/apiservice/diensten.service';
 import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
@@ -23,7 +23,7 @@ export class DienstenComponent implements OnInit, OnChanges {
     readonly Vlieger = input.required<HeliosLid>();
     readonly UitgebreideWeergave = input(false);
 
-    @ViewChild(DagRoosterComponent) popup: DagRoosterComponent;
+    readonly popup = viewChild.required(DagRoosterComponent);
 
     private datumAbonnement: Subscription;  // volg de keuze van de kalender
     datum: DateTime = DateTime.now();       // de gekozen dag
@@ -123,6 +123,6 @@ export class DienstenComponent implements OnInit, OnChanges {
 
     toonDagRooster(DATUM: string) {
         this.roosterDatum = DateTime.fromSQL(DATUM);
-        setTimeout(() => this.popup.openPopup(), 100); // kleine delay datum moet syncen
+        setTimeout(() => this.popup().openPopup(), 100); // kleine delay datum moet syncen
     }
 }

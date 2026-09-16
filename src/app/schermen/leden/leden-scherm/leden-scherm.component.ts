@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { faUsers } from '@fortawesome/free-solid-svg-icons';
 import { HeliosLedenDataset } from '../../../types/Helios';
 import { ColDef, RowClassParams, RowDoubleClickedEvent } from 'ag-grid-community';
@@ -48,9 +48,9 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
     private readonly sharedService = inject(SharedService);
     private readonly router = inject(Router);
 
-    @ViewChild(LedenFilterComponent) ledenFilter: LedenFilterComponent;
-    @ViewChild(TrackEditorComponent) trackEditor: TrackEditorComponent;
-    @ViewChild(DatatableComponent) grid: DatatableComponent;
+    readonly ledenFilter = viewChild.required(LedenFilterComponent);
+    readonly trackEditor = viewChild.required(TrackEditorComponent);
+    readonly grid = viewChild.required(DatatableComponent);
 
     leden: HeliosLedenDataset[] = [];
     dataset: HeliosLedenDataset[] = [];
@@ -401,7 +401,7 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
 
     // Open van het leden-filter dialoog
     filterPopup() {
-        this.ledenFilter.openPopup();
+        this.ledenFilter().openPopup();
     }
 
     // Er is een aanpassing gemaakt in het leden-filter dialoog. We filteren de volledige dataset tot wat nodig is
@@ -466,7 +466,7 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
 
     // open de track editor om nieuwe track toe te voegen. Edit opent als popup
     private openTrackEditor(LID_ID: number, NAAM: string) {
-        this.trackEditor.openPopup(null, LID_ID, undefined, NAAM);
+        this.trackEditor().openPopup(null, LID_ID, undefined, NAAM);
     }
 
     // Export naar excel
@@ -482,7 +482,7 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
         const toEmail: string  = ui!.EMAIL as string;
         let bcc="";
 
-        this.grid.filteredRecords().forEach((lid: HeliosLedenDataset) => {
+        this.grid().filteredRecords().forEach((lid: HeliosLedenDataset) => {
             bcc += lid.EMAIL + ","
         })
 

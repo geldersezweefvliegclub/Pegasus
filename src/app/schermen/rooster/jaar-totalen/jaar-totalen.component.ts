@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject, input } from '@angular/core';
+import { Component, OnInit, inject, input, viewChild } from '@angular/core';
 import { DateTime } from 'luxon';
 import { ColDef } from 'ag-grid-community';
 import { Subscription } from 'rxjs';
@@ -43,7 +43,7 @@ export class JaarTotalenComponent implements OnInit {
     private readonly sharedService = inject(SharedService);
 
     readonly leden = input<HeliosLedenDataset[]>([]);
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
 
     jaarTotalen: JaarTotaal[];
 
@@ -103,7 +103,7 @@ export class JaarTotalenComponent implements OnInit {
 
     // Open leden-filter dialoog met de leden-filter opties
     openPopup() {
-        this.popup.open();
+        this.popup().open();
         this.opvragen();
     }
 

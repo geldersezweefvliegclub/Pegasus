@@ -1,4 +1,4 @@
-import { Component, ViewChild, output } from '@angular/core';
+import { Component, output, viewChild } from '@angular/core';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
 import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
 
@@ -9,7 +9,7 @@ import { IconButtonComponent } from '../../../shared/components/icon-button/icon
     imports: [ModalComponent, IconButtonComponent]
 })
 export class ExportStartlijstComponent {
-    @ViewChild(ModalComponent) private popup: ModalComponent;
+    private readonly popup = viewChild.required(ModalComponent);
     readonly exportDataset = output<string>();
 
     exportKeuze = "dag"
@@ -17,11 +17,11 @@ export class ExportStartlijstComponent {
 
 
     openPopup() {
-        this.popup.open();
+        this.popup().open();
     }
 
     Exporteer() {
         this.exportDataset.emit(this.exportKeuze);
-        this.popup.close();
+        this.popup().close();
     }
 }
