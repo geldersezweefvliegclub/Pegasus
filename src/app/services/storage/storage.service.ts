@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+export type StorageType = 'local' | 'session';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -7,13 +9,34 @@ export class StorageService {
   vervalTijdMinuten = 60;  // 60 min
 
   /**
-   * Sla een item op in de local storage, met een tijd wanneer het vervalt.
-   * @param key Key om het item op te slaan in de localstorage
-   * @param value Het item dat opgeslagen moet worden. Kan elk type zijn.
-   * @param vervaltijdInMinuten De tijd in minuten wanneer het item vervalt. Standaard 60 minuten.
+   * Slaat een waarde op in de browseropslag.
+   *
+   * Naast de waarde wordt ook een vervaldatum opgeslagen. Zodra de waarde
+   * verlopen is, geeft {@link ophalen} deze niet meer terug.
+   *
+   * Een negatieve vervaltijd betekent dat de waarde zeer lang bewaard wordt
+   * (ongeveer 5000 dagen).
+   *
+   * @param key De unieke naam waaronder de waarde wordt opgeslagen.
+   * @param value De waarde die moet worden opgeslagen. Dit mag elk type zijn
+   *   dat door `JSON.stringify` kan worden verwerkt.
+   * @param vervaltijdInMinuten Het aantal minuten waarna de waarde verloopt.
+   *   Standaard is dit 60 minuten.
+   * @param storageType Bepaalt waar de waarde wordt opgeslagen:
+   *   `local` voor `localStorage` of `session` voor `sessionStorage`.
+   *   Standaard is `local`.
    */
-  public opslaan(key:string, value: unknown, vervaltijdInMinuten: number = this.vervalTijdMinuten): void {
+  public opslaan(
+    key: string,
+    value: unknown,
+    vervaltijdInMinuten: number | null = this.vervalTijdMinuten,
+    storageType: StorageType = 'local'
+  ): void {
     const now = new Date()
+
+    if (!vervaltijdInMinuten) {
+      vervaltijdInMinuten = this.vervalTijdMinuten;
+    }
 
     const tijdMsec = vervaltijdInMinuten * 1000 * 60 // van minuten naar msec
     let expireTimestamp = now.getTime() + tijdMsec;
@@ -26,11 +49,36 @@ export class StorageService {
       value: value,
       expiry: expireTimestamp
     }
-    localStorage.setItem(key, JSON.stringify(item))
+    this.getStorage(storageType).setItem(key, JSON.stringify(item))
   }
 
-  public ophalen(key:string): unknown {
-    const jsonString:string | null = localStorage.getItem(key)
+  /**
+   * Haalt een waarde op uit de browseropslag.
+   *
+   * Geeft `null` terug als de sleutel niet bestaat of als de opgeslagen waarde
+   * verlopen is. Verlopen waarden worden meteen uit de opslag verwijderd.
+   *
+   * Het type `T` helpt alleen TypeScript tijdens het compileren. De methode
+   * controleert of zet het type niet om tijdens runtime. Gebruik daarom alleen
+   * een type waarvan je zeker weet dat het overeenkomt met de opgeslagen waarde.
+   *
+   * @example
+   * ```ts
+   * const naam = storageService.ophalen<string>('naam');
+   * ```
+   *
+   * In dit voorbeeld verwacht TypeScript een `string | null`. Als de opslag
+   * echter een object bevat, wordt dat object ook daadwerkelijk teruggegeven.
+   *
+   * @param key De naam van de waarde die moet worden opgehaald.
+   * @param storageType Bepaalt waar de waarde wordt gezocht:
+   *   `local` voor `localStorage` of `session` voor `sessionStorage`.
+   *   Standaard is `local`.
+   * @returns De opgeslagen waarde, of `null` als deze ontbreekt of verlopen is.
+   */
+  public ophalen<T>(key: string, storageType: StorageType = 'local'): T | null {
+    const storage = this.getStorage(storageType);
+    const jsonString: string | null = storage.getItem(key)
 
     if (jsonString == null)
       return null;
@@ -41,14 +89,25 @@ export class StorageService {
     if (now.getTime() > item.expiry) {
       // If the item is expired, delete the item from storage
       // and return null
-      localStorage.removeItem(key)
+      storage.removeItem(key)
       return null;
     }
     return item.value;
   }
 
+  /**
+   * Verwijdert een waarde uit de browseropslag.
+   *
+   * @param key De naam van de waarde die moet worden verwijderd.
+   * @param storageType Bepaalt uit welke opslag de waarde wordt verwijderd:
+   *   `local` voor `localStorage` of `session` voor `sessionStorage`.
+   *   Standaard is `local`.
+   */
+  public verwijder(key: string, storageType: StorageType = 'local'): void {
+    this.getStorage(storageType).removeItem(key)
+  }
 
-  public verwijder(key: string): void {
-    localStorage.removeItem(key)
+  private getStorage(storageType: StorageType): Storage {
+    return storageType === 'session' ? sessionStorage : localStorage;
   }
 }
