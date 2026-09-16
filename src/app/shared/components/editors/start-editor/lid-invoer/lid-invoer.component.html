@@ -3,7 +3,7 @@
 } @if (uitleg) {
     <fa-icon class="text-info ms-2 clickable" [icon]="infoIcon"
              [ngbPopover]="uitleg"
-             placement="right"></fa-icon>
+             placement='right'/>
 }
 
 <ng-select id="LID"
@@ -17,5 +17,4 @@
            openOnEnter="true"
            (ngModelChange)="inputChange($event)"
            [typeahead]="lidInput$"
-           [(ngModel)]="LID_ID">
-</ng-select>
+           [(ngModel)]='LID_ID'/>

@@ -1,5 +1,5 @@
-<app-error [error]="error"></app-error>
-<app-success [success]="success"></app-success>
+<app-error [error]='error'/>
+<app-success [success]='success'/>
 
 <ng-template #startsPopover>
 EASA minimum is 15 starts en 5 uur per 24 maanden
@@ -84,15 +84,15 @@ EASA minimum is 15 starts en 5 uur per 24 maanden
                     <td class="w-100">
                         <p class="beschrijving">{{recency.STARTS_24_MND}} starts en {{recency.UREN_24_MND}} uur
                         <fa-icon [icon]="infoIcon" [ngbPopover]="startsPopover" placement="right"
-                                 class="text-info ms-2 clickable"></fa-icon>
+                                 class='text-info ms-2 clickable'/>
                         </p>
                     </td>
                     <td>
                         @if (brevet.aantal) {
-                        <fa-icon class="checkIcon" [icon]="checkIcon"></fa-icon>
+                            <fa-icon class='checkIcon' [icon]='checkIcon'/>
                         }
                         @if (!brevet.aantal) {
-                        <fa-icon class="declineIcon" [icon]="declineIcon"></fa-icon>
+                            <fa-icon class='declineIcon' [icon]='declineIcon'/>
                         }
                     </td>
                 </tr>
@@ -101,7 +101,7 @@ EASA minimum is 15 starts en 5 uur per 24 maanden
                     <td colspan="2">
                         <ul class="listHeader">Startmethode
                             <fa-icon [icon]="infoIcon" [ngbPopover]="methodePopover" placement="right"
-                                 class="text-info ms-2 clickable"></fa-icon>
+                                     class='text-info ms-2 clickable'/>
                         </ul>
                     </td>
                 </tr>
@@ -111,10 +111,10 @@ EASA minimum is 15 starts en 5 uur per 24 maanden
                     </td>
                     <td>
                         @if (brevet.lierstarts === 1) {
-                        <fa-icon class="checkIcon" [icon]="checkIcon"></fa-icon>
+                            <fa-icon class='checkIcon' [icon]='checkIcon'/>
                         }
                         @if (brevet.lierstarts === 0) {
-                        <fa-icon class="declineIcon" [icon]="declineIcon"></fa-icon>
+                            <fa-icon class='declineIcon' [icon]='declineIcon'/>
                         }
                     </td>
                 </tr>
@@ -125,10 +125,10 @@ EASA minimum is 15 starts en 5 uur per 24 maanden
                     </td>
                     <td>
                         @if (brevet.sleepstart === 1) {
-                        <fa-icon class="checkIcon" [icon]="checkIcon"></fa-icon>
+                            <fa-icon class='checkIcon' [icon]='checkIcon'/>
                         }
                         @if (brevet.sleepstart === 0) {
-                        <fa-icon class="declineIcon" [icon]="declineIcon"></fa-icon>
+                            <fa-icon class='declineIcon' [icon]='declineIcon'/>
                         }
                     </td>
                 </tr>
@@ -140,10 +140,10 @@ EASA minimum is 15 starts en 5 uur per 24 maanden
                     </td>
                     <td>
                         @if (brevet.zelfstarts === 1) {
-                        <fa-icon class="checkIcon" [icon]="checkIcon"></fa-icon>
+                            <fa-icon class='checkIcon' [icon]='checkIcon'/>
                         }
                         @if (brevet.zelfstarts === 0) {
-                        <fa-icon class="declineIcon" [icon]="declineIcon"></fa-icon>
+                            <fa-icon class='declineIcon' [icon]='declineIcon'/>
                         }
                     </td>
                 </tr>
@@ -155,10 +155,10 @@ EASA minimum is 15 starts en 5 uur per 24 maanden
                     </td>
                     <td>
                         @if (brevet.tmgstarts === 1) {
-                        <fa-icon class="checkIcon" [icon]="checkIcon"></fa-icon>
+                            <fa-icon class='checkIcon' [icon]='checkIcon'/>
                         }
                         @if (brevet.tmgstarts === 0) {
-                        <fa-icon class="declineIcon" [icon]="declineIcon"></fa-icon>
+                            <fa-icon class='declineIcon' [icon]='declineIcon'/>
                         }
                     </td>
                 </tr>
@@ -169,15 +169,15 @@ EASA minimum is 15 starts en 5 uur per 24 maanden
                     <td class="w-100">
                         <div class="beschrijving">Passagiers vliegen
                             <fa-icon [icon]="infoIcon" [ngbPopover]="paxPopover" placement="right"
-                                     class="text-info ms-2 clickable"></fa-icon>
+                                     class='text-info ms-2 clickable'/>
                         </div>
                     </td>
                     <td>
                         @if (brevet.pax === 1) {
-                        <fa-icon class="checkIcon" [icon]="checkIcon"></fa-icon>
+                            <fa-icon class='checkIcon' [icon]='checkIcon'/>
                         }
                         @if (brevet.pax === 0) {
-                        <fa-icon class="declineIcon" [icon]="declineIcon"></fa-icon>
+                            <fa-icon class='declineIcon' [icon]='declineIcon'/>
                         }
                     </td>
                 </tr>
@@ -188,10 +188,10 @@ EASA minimum is 15 starts en 5 uur per 24 maanden
                     </td>
                     <td>
                         @if (brevet.medical) {
-                        <fa-icon class="checkIcon" [icon]="checkIcon"></fa-icon>
+                            <fa-icon class='checkIcon' [icon]='checkIcon'/>
                         }
                         @if (!brevet.medical) {
-                        <fa-icon class="declineIcon" [icon]="declineIcon"></fa-icon>
+                            <fa-icon class='declineIcon' [icon]='declineIcon'/>
                         }
                     </td>
                 </tr>
@@ -199,15 +199,15 @@ EASA minimum is 15 starts en 5 uur per 24 maanden
                     <td class="w-100">
                         <div class="beschrijving"><span style="color: #0e6ffd; font-weight: bold; text-decoration: underline; cursor: pointer" (click)="toonCheckDatum()">Trainingsvluchten</span>
                             <fa-icon [icon]="infoIcon" [ngbPopover]="checksPopover" placement="right"
-                                     class="text-info ms-2 clickable"></fa-icon>
+                                     class='text-info ms-2 clickable'/>
                         </div>
                     </td>
                     <td>
                         @if (recency.CHECKS.length >= 2) {
-                        <fa-icon class="checkIcon" [icon]="checkIcon"></fa-icon>
+                            <fa-icon class='checkIcon' [icon]='checkIcon'/>
                         }
                         @if (recency.CHECKS.length < 2) {
-                        <fa-icon class="declineIcon" [icon]="declineIcon"></fa-icon>
+                            <fa-icon class='declineIcon' [icon]='declineIcon'/>
                         }
                     </td>
                 </tr>
@@ -220,10 +220,10 @@ EASA minimum is 15 starts en 5 uur per 24 maanden
 
 @if (isLoading) {
     <div class="spinnerOverlay">
-        <app-loader></app-loader>
+        <app-loader/>
     </div>
 }
 
-<app-recency-grafiek [VliegerID]="Vlieger().ID!"></app-recency-grafiek>
-<app-instructie-grafiek [VliegerID]="Vlieger().ID!"></app-instructie-grafiek>
-<app-start-grafiek [VliegerID]="Vlieger().ID!"></app-start-grafiek>
+<app-recency-grafiek [VliegerID]='Vlieger().ID!'/>
+<app-instructie-grafiek [VliegerID]='Vlieger().ID!'/>
+<app-start-grafiek [VliegerID]='Vlieger().ID!'/>

@@ -1,5 +1,5 @@
-<app-error [error]="error"></app-error>
-<app-success [success]="success"></app-success>
+<app-error [error]='error'/>
+<app-success [success]='success'/>
 
 <app-modal [titel]="formTitel">
     <div body>
@@ -16,8 +16,7 @@
                                closeOnSelect="true"
                                openOnEnter="true"
                                [ngClass]="{'ng-select-required': opslaanDisabled()}"
-                               [(ngModel)]="melding.VLIEGTUIG_ID">
-                    </ng-select>
+                               [(ngModel)]='melding.VLIEGTUIG_ID'/>
                 </div>
                 <div class="col-12 col-md-6" [hidden]="melding.VLIEGTUIG_ID !== undefined">
                     <label for="ROLLEND_ID" class="form-label">Rollend</label>
@@ -30,8 +29,7 @@
                                closeOnSelect="true"
                                openOnEnter="true"
                                [ngClass]="{'ng-select-required': opslaanDisabled()}"
-                               [(ngModel)]="melding.ROLLEND_ID">
-                    </ng-select>
+                               [(ngModel)]='melding.ROLLEND_ID'/>
                 </div>
             </div>
             <div class="row my-2">
@@ -92,8 +90,7 @@
                                closeOnSelect="true"
                                openOnEnter="true"
                                required
-                               [(ngModel)]="melding.TECHNICUS_ID">
-                    </ng-select>
+                               [(ngModel)]='melding.TECHNICUS_ID'/>
                 </div>
             </div>
             <div class="row my-2">
@@ -108,8 +105,7 @@
                                closeOnSelect="true"
                                openOnEnter="true"
                                required
-                               [(ngModel)]="melding.AFGETEKEND_ID">
-                    </ng-select>
+                               [(ngModel)]='melding.AFGETEKEND_ID'/>
                 </div>
             </div>
 
@@ -118,28 +114,26 @@
     </div>
     <div footer>
         @if (!isLoading && !isSaving && melding.ID !== undefined && !isRestoreMode && !isVerwijderMode) {
-        <app-icon-button
-                iconNaam="fas Edit" btnColor="btn-primary"
+            <app-icon-button iconNaam='fas Edit' btnColor='btn-primary'
                 [toonKlein]=false tekst="Opslaan"
                 [disabled]="opslaanDisabled() || melding.TITEL === undefined || melding.OMSCHRIJVING === undefined"
-                (btnClicked)="uitvoeren()"></app-icon-button>
+                             (btnClicked)='uitvoeren()'/>
         } @if (!isLoading && !isSaving && melding.ID === undefined && !isRestoreMode && !isVerwijderMode) {
-        <app-icon-button
-                iconNaam="fas Plus" btnColor="btn-primary"
+        <app-icon-button iconNaam='fas Plus' btnColor='btn-primary'
                 [toonKlein]=false tekst="Opslaan"
                 [disabled]="opslaanDisabled() || melding.TITEL === undefined || melding.OMSCHRIJVING === undefined"
-                (btnClicked)="uitvoeren()"></app-icon-button>
+                         (btnClicked)='uitvoeren()'/>
     } @if (!isLoading && !isSaving && isVerwijderMode) {
         <app-icon-button iconNaam="fas TrashAlt"
                          btnColor="btn-primary editorDeleteBtn"
-                         [toonKlein]=false tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
+                         [toonKlein]=false tekst='Verwijderen' (btnClicked)='uitvoeren()'/>
     } @if (!isLoading && !isSaving && isRestoreMode) {
         <app-icon-button iconNaam="fas Undo"
                          btnColor="btn-primary editorRestoreBtn"
-                         [toonKlein]=false tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
+                         [toonKlein]=false tekst='Herstellen' (btnClicked)='uitvoeren()'/>
     } @if (isLoading || isSaving) {
         <button class="btn btn-primary">
-            <span><app-loader></app-loader></span>
+            <span><app-loader/></span>
         </button>
     }
     </div>

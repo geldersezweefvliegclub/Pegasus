@@ -3,10 +3,10 @@
         <div class="d-flex">
             <div id="pREyAD" class="icon" [class.bg-primary]="!img">
                 @if (!img) {
-                    <fa-icon [icon]="icon()"></fa-icon>
+                    <fa-icon [icon]='icon()'/>
                 } @if (img) {
                 <app-avatar [url]="img" vorm="vierkant">
-                    <ng-content select="[avatar]"></ng-content>
+                    <ng-content select='[avatar]'/>
                 </app-avatar>
             }
             </div>
@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="data">
-            <ng-content select="[header]"></ng-content>
+            <ng-content select='[header]'/>
         </div>
         @if (exportEnabled()) {
             <div id="nnDsKv" class="excel">
@@ -25,6 +25,6 @@
         }
     </div>
     <div id="qCjqJL" class="card-body h-100">
-        <ng-content></ng-content>
+        <ng-content/>
     </div>
 </div>

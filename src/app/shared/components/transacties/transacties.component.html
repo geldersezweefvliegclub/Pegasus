@@ -3,11 +3,11 @@
         <div class="popupLargeWrapper" style="overflow: auto">
             @if (transactiesView === 'grid') {
                 <div>
-                    <ng-template *ngTemplateOutlet="grid"></ng-template>
+                    <ng-template *ngTemplateOutlet='grid'/>
                 </div>
             } @if (transactiesView === 'card') {
             <div>
-                <ng-template *ngTemplateOutlet="card"></ng-template>
+                <ng-template *ngTemplateOutlet='card'/>
             </div>
         }
         </div>
@@ -27,11 +27,10 @@
             (btnClicked)="nieuweBetaling()"></app-icon-button> -->
 
             @if (magCorrigeren) {
-                <app-icon-button
-                        iconNaam="fas FilePen"
+                <app-icon-button iconNaam='fas FilePen'
                         tekst="Correctie"
                         btnColor="btn-secondary"
-                        (btnClicked)="toonEditor()"></app-icon-button>
+                                 (btnClicked)='toonEditor()'/>
             }
         </div>
     </div>
@@ -132,5 +131,5 @@
     }
 </ng-template>
 
-<app-transactie-editor [toonLidSelectie]="false" (TransactieGedaan)="reload()"></app-transactie-editor>
-<app-ideal-bestellen></app-ideal-bestellen>
+<app-transactie-editor [toonLidSelectie]='false' (TransactieGedaan)='reload()'/>
+<app-ideal-bestellen/>

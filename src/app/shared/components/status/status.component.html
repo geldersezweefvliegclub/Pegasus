@@ -1,5 +1,5 @@
-<app-error [error]="error"></app-error>
-<app-success [success]="success"></app-success>
+<app-error [error]='error'/>
+<app-success [success]='success'/>
 
 <table class="statusTabel">
     <tr class="headerRow">
@@ -58,9 +58,9 @@
 
 @if (isLoading) {
     <div class="spinnerOverlay">
-        <app-loader></app-loader>
+        <app-loader/>
     </div>
 } @if (Vlieger) {
     <app-progressie-editor [competenties]="competenties" [vliegerID]="Vlieger.ID!"
-                           (aangepast)="ophalen()"></app-progressie-editor>
+                           (aangepast)='ophalen()'/>
 }

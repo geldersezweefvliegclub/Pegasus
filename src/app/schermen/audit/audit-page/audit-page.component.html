@@ -1,5 +1,5 @@
-<app-error [error]="error"></app-error>
-<app-success [success]="success"></app-success>
+<app-error [error]='error'/>
+<app-success [success]='success'/>
 
 <app-pegasus-card titel="Audit"
                   subtitel="Een overzicht van alle wijzigingen"
@@ -9,13 +9,12 @@
     <div class="box">
         <div class="d-flex h-100">
             <div class="col-9 h-100">
-                <app-datatable
-                        id="auditgrid"
+                <app-datatable id='auditgrid'
                         [rowData]="data"
                         [columnDefs]="dataColumns"
                         [loading]="isLoading"
                         (rowSelected)="selectRow($event)"
-                        class="h-100 mt-n8"></app-datatable>
+                               class='h-100 mt-n8'/>
             </div>
             @if (data) {
                 <div class="col-3 kolomRechts ml-2">
@@ -76,7 +75,7 @@
                 <div class="row justify-content-between" id="zoekbar">
                     <app-zoekbar class="col-12 col-md-8 flex-grow-1"
                                  [(zoekString)]="zoekString"
-                                 (zoeken)="opvragen()"></app-zoekbar>
+                                 (zoeken)='opvragen()'/>
                 </div>
             </div>
         </div>

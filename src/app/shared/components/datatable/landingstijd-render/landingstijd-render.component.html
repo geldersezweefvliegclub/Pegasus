@@ -4,7 +4,7 @@
             <div class="landingstijd" (click)="tijdClicked()">{{ landingsTijd }}</div>
         } @if (this.toonButton) {
         <app-icon-button class="toolbarBtn" iconNaam="fas PlaneArrival" (btnClicked)="tijdClicked()"
-                         btnColor="landingsBtn"></app-icon-button>
+                         btnColor='landingsBtn'/>
     }
     </div>
 } @if (!params.data.inTijdspan) {

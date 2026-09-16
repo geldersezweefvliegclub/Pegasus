@@ -1,4 +1,4 @@
-<app-error [error]="error"></app-error>
+<app-error [error]='error'/>
 
 <app-pegasus-card titel="Transacties"
                   subtitel={{titel}}
@@ -7,8 +7,7 @@
                   (Exporting)="exportDataset()">
     <div class="box h-100">
         <div id="data">
-            <app-datatable
-                    id="transactiesgrid"
+            <app-datatable id='transactiesgrid'
                     [pagination]="toonBladwijzer"
                     [rowData]="transacties"
                     [columnDefs]="columns"
@@ -16,7 +15,7 @@
                     [sizeToFit]="false"
                     [frameworkComponents]="frameworkComponents"
                     (rowDoubleClicked)="bewerkTransactie($event)"
-                    class="h-100 mt-n8"></app-datatable>
+                           class='h-100 mt-n8'/>
         </div>
         <div class="row justify-content-start mt-2" id="toolbar">
             <div class="col-3">
@@ -25,11 +24,11 @@
                         <app-icon-button class="toolbarBtn"
                                          tekst="Toevoegen"
                                          iconNaam="far PlusSquare" (btnClicked)="addTransactie()"
-                                         btnColor="btn-primary"></app-icon-button>
+                                         btnColor='btn-primary'/>
                         @if (this.magUploaden) {
                             <app-icon-button class="toolbarBtn" tekst="Uploaden" iconNaam="fas BasketShopping"
                                              btnColor="btn btn-outline-primary"
-                                             (btnClicked)="uploadenFacturen()"></app-icon-button>
+                                             (btnClicked)='uploadenFacturen()'/>
                         }
                     </div>
                 }
@@ -39,12 +38,11 @@
                                 placeholder="Selecteer lid"
                                 excludeLidTypes="600,607,609,610,612,613,620,625"
                                 [leden]="filteredLeden"
-                                (LidChanged)="lidGeselecteerd($event)">
-                </app-lid-invoer>
+                                (LidChanged)='lidGeselecteerd($event)'/>
             </div>
             <div class="col-1">
                 <app-icon-button class="toolbarBtn" iconNaam="fas Redo" (btnClicked)="opvragen()"
-                                 btnColor="btn-primary"></app-icon-button>
+                                 btnColor='btn-primary'/>
             </div>
             <div class="col-5 d-flex justify-content-end align-items-center">
                 @if (!deleteMode) {
@@ -57,20 +55,20 @@
                     </div>
                 } @if (deleteMode) {
                 <app-icon-button class="toolbarBtn" tekst="Alles verwijderen" iconNaam="fas MinusCircle"
-                                 btnColor="btn" class="deleteAlles" (btnClicked)="deleteAlles()"></app-icon-button>
+                                 btnColor='btn' class='deleteAlles' (btnClicked)='deleteAlles()'/>
             } @if (this.magVerwijderen && !deleteMode) {
                 <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
                                  btnColor="btn-secondary"
-                                 (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                                 (btnClicked)='deleteModeJaNee()'/>
             } @if (deleteMode) {
                 <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
                                  btnColor="btn btn-outline-primary"
-                                 (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                                 (btnClicked)='deleteModeJaNee()'/>
             }
             </div>
         </div>
     </div>
 </app-pegasus-card>
 
-<app-transactie-editor (TransactieGedaan)="opvragen()"></app-transactie-editor>
-<app-factuur-uploaden></app-factuur-uploaden>
+<app-transactie-editor (TransactieGedaan)='opvragen()'/>
+<app-factuur-uploaden/>

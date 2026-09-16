@@ -1,5 +1,5 @@
-<app-error [error]="error"></app-error>
-<app-success [success]="success"></app-success>
+<app-error [error]='error'/>
+<app-success [success]='success'/>
 
 <app-pegasus-card titel="Dashboard"
                   subtitel="Een verzameling van nuttige info"
@@ -31,7 +31,7 @@
                     <td [rowSpan]="2">
                         @if (lidData) {
                             <app-avatar class="me-2" [url]="lidData.AVATAR" [naam]="lidData.NAAM"
-                            ></app-avatar>
+                            />
                         }
                     </td>
                 </tr>
@@ -80,7 +80,7 @@
                                       subtitel="Vliegstatus"
                                       [icon]="iconStatus">
                         @if (lidData) {
-                            <app-status [Vlieger]="lidData"></app-status>
+                            <app-status [Vlieger]='lidData'/>
                         }
                     </app-pegasus-card>
                 </div>
@@ -91,7 +91,7 @@
                                       subtitel="Proef van bekwaamheid"
                                       [icon]="iconPVB">
                         @if (lidData) {
-                            <app-pvb [Vlieger]="lidData"></app-pvb>
+                            <app-pvb [Vlieger]='lidData'/>
                         }
                     </app-pegasus-card>
                 </div>
@@ -102,7 +102,7 @@
                                       subtitel="Trainingsbarometer"
                                       [icon]="iconRecency">
                         @if (lidData) {
-                            <app-recency [Vlieger]="lidData" [naam]="lidData.NAAM"></app-recency>
+                            <app-recency [Vlieger]='lidData' [naam]='lidData.NAAM'/>
                         }
                     </app-pegasus-card>
                 </div>
@@ -119,11 +119,11 @@
                                 <div class="expand">
                                     <a aria-label="Toon diensten groter" class="clickable"
                                        (click)="toonDienstenGroot()">
-                                        <fa-icon [icon]="iconExpand"></fa-icon>
+                                        <fa-icon [icon]='iconExpand'/>
                                     </a>
                                 </div>
                                 @if (lidData) {
-                                    <app-diensten [Vlieger]="lidData"></app-diensten>
+                                    <app-diensten [Vlieger]='lidData'/>
                                 }
                             </app-pegasus-card>
                         </ng-template>
@@ -133,7 +133,7 @@
                                               titel="Verjaardagen"
                                               subtitel="Komende jarigen"
                                               [icon]="iconRooster">
-                                <app-verjaardagen></app-verjaardagen>
+                                <app-verjaardagen/>
                             </app-pegasus-card>
                         </ng-template>
                         <ng-template ngbSlide class="h-100">
@@ -142,7 +142,7 @@
                                               titel="Agenda"
                                               subtitel="Komende evenementen"
                                               [icon]="iconRooster">
-                                <app-agenda></app-agenda>
+                                <app-agenda/>
                             </app-pegasus-card>
                         </ng-template>
                     </ngb-carousel>
@@ -160,15 +160,13 @@
                                   [icon]="iconLogboek">
                     <div class="expand">
                         <a aria-label="Toon logboek groter" class="clickable" (click)="toonLogboekGroot()">
-                            <fa-icon [icon]="iconExpand"></fa-icon>
+                            <fa-icon [icon]='iconExpand'/>
                         </a>
                     </div>
                     @if (lidData) {
-                        <app-vlieger-logboek
-                                MaxItems=5
+                        <app-vlieger-logboek MaxItems='5'
                                 id="vliegerlogboekgrid"
-                                [VliegerID]="lidData.ID">
-                        </app-vlieger-logboek>
+                                             [VliegerID]='lidData.ID'/>
                     }
                 </app-pegasus-card>
             </div>
@@ -179,8 +177,7 @@
                                   subtitel="Per vliegtuig"
                                   [icon]="iconPlane">
                     @if (lidData) {
-                        <app-vlieger-logboek-totalen
-                                [VliegerID]="lidData.ID"></app-vlieger-logboek-totalen>
+                        <app-vlieger-logboek-totalen [VliegerID]='lidData.ID'/>
                     }
                 </app-pegasus-card>
             </div>
@@ -198,16 +195,13 @@
                                       (Exporting)="exportProgressieKaart()"
                                       [icon]="iconProgressie">
                         @if (lidData) {
-                            <app-progressie-boom
-                                    [VliegerID]="lidData.ID">
-                            </app-progressie-boom>
+                            <app-progressie-boom [VliegerID]='lidData.ID'/>
                         }
                     </app-pegasus-card>
                 </div>
                 <div class="col-12 col-lg-4 col-xl-3 mt-4 mt-lg-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
                     @if (lidData) {
-                        <app-leden-documenten [LidID]="lidData.ID">
-                        </app-leden-documenten>
+                        <app-leden-documenten [LidID]='lidData.ID'/>
                     }
                 </div>
         </div>
@@ -223,7 +217,7 @@
                                   (Exporting)="exportTracks(lidData.ID)"
                                   [icon]="iconTracks">
                     @if (lidData) {
-                        <app-tracks [VliegerID]="lidData.ID" [VliegerNaam]="lidData.NAAM"></app-tracks>
+                        <app-tracks [VliegerID]='lidData.ID' [VliegerNaam]='lidData.NAAM'/>
                     }
                 </app-pegasus-card>
             </div>
@@ -241,12 +235,11 @@
                 <img class="logo" src="/assets/img/excel-logo.png" alt="excel logo" (click)="this.exportLogboek()"/>
             </div>
             <div class="d-flex flex-column justify-content-between h-100">
-                <app-vlieger-logboek
-                        class="maxHoogte"
+                <app-vlieger-logboek class="maxHoogte"
                         id="vliegerlogboekgrid-groot"
                         Kolommen="OPMERKINGEN,VELD,STARTMETHODE"
                         [VliegerID]="lidData.ID"
-                        [deleteMode]="verwijderMode"></app-vlieger-logboek>
+                                     [deleteMode]='verwijderMode'/>
             </div>
         </div>
         </div>
@@ -255,11 +248,11 @@
             <app-icon-button class="toolbarBtn"
                              tekst="Toevoegen"
                              iconNaam="far PlusSquare" (btnClicked)="addStart()"
-                             btnColor="btn-primary"></app-icon-button>
+                             btnColor='btn-primary'/>
             @if (magVerwijderen) {
             <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
                              btnColor="btn-secondary"
-                             (btnClicked)="verwijderMode = !verwijderMode"></app-icon-button>
+                             (btnClicked)='verwijderMode = !verwijderMode'/>
             }
         </div>
         </div>
@@ -268,9 +261,9 @@
 
 <!-- toevoegen van een start vanuit groot logboek -->
 @if (lidData) {
-    <app-start-editor [VliegerID]="lidData.ID"></app-start-editor>
+    <app-start-editor [VliegerID]='lidData.ID'/>
 }
-<app-transacties (TransactieGedaan)="opvragenLid()"></app-transacties>
+<app-transacties (TransactieGedaan)='opvragenLid()'/>
 
 
 @if (lidData) {
@@ -278,7 +271,7 @@
         <div body>
         <div>
             @if (lidData) {
-                <app-diensten [Vlieger]="lidData" UitgebreideWeergave="true"></app-diensten>
+                <app-diensten [Vlieger]='lidData' UitgebreideWeergave='true'/>
             }
         </div>
         </div>

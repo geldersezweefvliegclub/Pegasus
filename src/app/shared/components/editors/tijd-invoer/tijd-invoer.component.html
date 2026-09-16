@@ -1,5 +1,5 @@
-<app-error [error]="error"></app-error>
-<app-success [success]="success"></app-success>
+<app-error [error]='error'/>
+<app-success [success]='success'/>
 
 <app-modal [titel]="formTitel">
     <div body>
@@ -20,10 +20,10 @@
                                (keydown)="keyDown($event)"
                         />
                         <app-icon-button class="timeUpBtn" iconNaam="fas ArrowUp" (btnClicked)="timeDown()"
-                                         btnColor="btn-secondary"></app-icon-button>
+                                         btnColor='btn-secondary'/>
 
                         <app-icon-button class="timeResetBtn" iconNaam="fas ArrowDown" (btnClicked)="timeUp()"
-                                         btnColor="btn-secondary"></app-icon-button>
+                                         btnColor='btn-secondary'/>
 
                     </div>
                 </div>
@@ -33,10 +33,10 @@
     <div footer>
         @if (!isLoading && !isSaving) {
             <app-icon-button iconNaam="fas Edit" btnColor="btn-primary" [disabled]="!tijdOK" [toonKlein]=false
-                             tekst="Opslaan" (btnClicked)="opslaan()"></app-icon-button>
+                             tekst='Opslaan' (btnClicked)='opslaan()'/>
         } @if (isLoading || isSaving) {
         <button class="btn btn-primary">
-            <span><app-loader></app-loader></span>
+            <span><app-loader/></span>
         </button>
     }
     </div>

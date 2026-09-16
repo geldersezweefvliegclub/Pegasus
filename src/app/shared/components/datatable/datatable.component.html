@@ -1,5 +1,4 @@
-<ag-grid-angular
-        style="width: 100%; height:100%;"
+<ag-grid-angular style='width: 100%; height:100%;'
         class="ag-theme-material mt-n2"
         [id] = "id()"
         [gridOptions]="options"
@@ -8,5 +7,4 @@
         [components]="frameworkComponents()"
         [overlayLoadingTemplate]="loadingTemplate"
         [overlayNoRowsTemplate]="noRowsTemplate"
-        (gridReady)="gridReady($event)">
-</ag-grid-angular>
+                 (gridReady)='gridReady($event)'/>

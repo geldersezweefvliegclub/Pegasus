@@ -1,5 +1,5 @@
-<app-error [error]="error"></app-error>
-<app-success [success]="success"></app-success>
+<app-error [error]='error'/>
+<app-success [success]='success'/>
 
 <app-modal titel="{{formTitel}}">
     <div body class="ms-3 me-3">
@@ -9,16 +9,14 @@
             </div>
             @if (competentie && competentie.GELDIGHEID) {
                 <div class="row my-2">
-                    <ngb-datepicker
-                        #d
+                    <ngb-datepicker #d
                         name="datumIngave"
                         class="navCalendar w-100"
                         outsideDays="hidden"
                         [minDate]="kalenderEersteDatum"
                         [maxDate]="kalenderLaatsteDatum"
                         [(ngModel)]="geldigTot"
-                        (dateSelect)="datumAanpassen($event)">
-                    </ngb-datepicker>
+                                    (dateSelect)='datumAanpassen($event)'/>
                 </div>
             } @if (competentie && competentie.SCORE) {
             <div class="row my-2">>
@@ -31,7 +29,7 @@
                     <option [ngValue]=4>Zelfstandig</option>
                     <option [ngValue]=5>Volledig bekwaam</option>
                 </select>
-                <app-voortgang class="mt-2" [status]="progressie.SCORE"></app-voortgang>
+                <app-voortgang class='mt-2' [status]='progressie.SCORE'/>
             </div>
         }
             <div class="row my-2">
@@ -51,16 +49,16 @@
             } @if (!isLoading && !isSaving && !isLoading && isVerwijderMode) {
             <app-icon-button iconNaam="fas TrashAlt"
                              btnColor="btn-primary editorDeleteBtn"
-                             [toonKlein]=false tekst="Verwijderen" (btnClicked)="Verwijderen()"></app-icon-button>
+                             [toonKlein]=false tekst='Verwijderen' (btnClicked)='Verwijderen()'/>
         } @if (!isSaving && !isLoading) {
             <app-icon-button iconNaam="fas Edit"
                              btnColor="btn-primary" [toonKlein]=false
-                             tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
+                             tekst='Opslaan' (btnClicked)='uitvoeren()'/>
         }
         </div>
         @if (isSaving || isLoading) {
             <button class="btn btn-primary">
-                <span><app-loader></app-loader></span>
+                <span><app-loader/></span>
         </button>
         }
     </div>

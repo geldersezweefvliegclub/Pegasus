@@ -1,7 +1,7 @@
 <main class="d-flex dvh-100">
     @if (isIngelogd) {
         <div class="ps-0 d-none d-xl-block">
-            <app-navigatie class="sticky-top"></app-navigatie>
+            <app-navigatie class='sticky-top'/>
     </div>
     }
 
@@ -13,12 +13,12 @@
                     <app-icon-button iconNaam="fas ChevronLeft"
                                      btnColor="rgb(238 238 238);"
                                      (btnClicked)="hoofdmenu()"
-                    ></app-icon-button>
+                    />
                     <div class="d-flex flex-row pe-4 align-items-center">
                         <div class="pe-2">{{ datumDMY }}</div>
                         @if (!this.loginService.userInfo?.Userinfo.isStarttoren) {
                             <app-icon-button iconNaam="far Calendar" (btnClicked)="popupKalender().openPopup()"
-                                             btnColor="btn-primary"></app-icon-button>
+                                             btnColor='btn-primary'/>
                         }
                     </div>
                 </div>
@@ -38,7 +38,7 @@
     }
         <div class="card flex-grow-1">
             <div class="card-body">
-                <router-outlet></router-outlet>
+                <router-outlet/>
             </div>
         </div>
         @if (isIngelogd) {
@@ -51,4 +51,4 @@
     </div>
 </main>
 
-<app-popup-kalender></app-popup-kalender>
+<app-popup-kalender/>

@@ -1,5 +1,5 @@
-<app-error [error]="error"></app-error>
-<app-success [success]="success"></app-success>
+<app-error [error]='error'/>
+<app-success [success]='success'/>
 
 <app-modal titel="Uitbetaling crew">
     @if (diensten) {
@@ -26,6 +26,6 @@
     }
     <div footer>
         <app-icon-button iconNaam="fas EuroSign" btnColor="btn-primary" [toonKlein]=false
-                         tekst="Uitbetalen" (btnClicked)="uitbetalen()"></app-icon-button>
+                         tekst='Uitbetalen' (btnClicked)='uitbetalen()'/>
     </div>
 </app-modal>

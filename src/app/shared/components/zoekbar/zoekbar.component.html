@@ -12,7 +12,7 @@
     >
     @if (toonRefresh()) {
         <app-icon-button class="toolbarBtn d-none d-md-block" iconNaam="fas Redo" (btnClicked)="zoeken.emit()"
-                         btnColor="btn-primary"></app-icon-button>
+                         btnColor='btn-primary'/>
     }
-    <ng-content></ng-content>
+    <ng-content/>
 </div>

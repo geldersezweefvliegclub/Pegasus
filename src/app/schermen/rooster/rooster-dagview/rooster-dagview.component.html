@@ -1,27 +1,23 @@
-<app-uitbetalen-ddwv-crew-editor></app-uitbetalen-ddwv-crew-editor>
+<app-uitbetalen-ddwv-crew-editor/>
 
 <div class="w-100 h-100">
     <div class="d-flex flex-row justify-content-between">
         <div>
-            <app-icon-button
-                    class="toolbarBtn"
+            <app-icon-button class='toolbarBtn'
                     iconNaam="fas AngleDoubleLeft" (btnClicked)="zetDatum(datum().plus({days: -7}))"
-                    btnColor="btn-secondary"></app-icon-button>
-            <app-icon-button
-                    class="toolbarBtn mx-2"
+                             btnColor='btn-secondary'/>
+            <app-icon-button class='toolbarBtn mx-2'
                     iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum().plus({days: -1}))"
-                    btnColor="btn-secondary"></app-icon-button>
+                             btnColor='btn-secondary'/>
         </div>
         {{ DagVanDeWeek(datum().toISODate()) }} <br>{{ datum().day }}-{{ datum().month }}-{{ datum().year }}
         <div>
-            <app-icon-button
-                    class="toolbarBtn mx-2"
+            <app-icon-button class='toolbarBtn mx-2'
                     iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum().plus({days: 1}))"
-                    btnColor="btn-secondary"></app-icon-button>
-            <app-icon-button
-                    class="toolbarBtn"
+                             btnColor='btn-secondary'/>
+            <app-icon-button class='toolbarBtn'
                     iconNaam="fas AngleDoubleRight" (btnClicked)="zetDatum(datum().plus({days: 7}))"
-                    btnColor="btn-secondary"></app-icon-button>
+                             btnColor='btn-secondary'/>
         </div>
     </div>
     @if (tonen.toonDienst && rooster) {
@@ -80,7 +76,7 @@
                         <td class="dienstType">DDI</td>
                         <td>
                             <ng-container [ngTemplateOutlet]="roosterDienst"
-                                          [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.OCHTEND_DDI_TYPE_ID, configService.MIDDAG_DDI_TYPE_ID]}"></ng-container>
+                                          [ngTemplateOutletContext]='{dag:rooster[0], typeDienst: [ configService.OCHTEND_DDI_TYPE_ID, configService.MIDDAG_DDI_TYPE_ID]}'/>
                         </td>
                     </tr>
                 } @if ((tonen.toonDienst[configService.OCHTEND_INSTRUCTEUR_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) && tonen.Instructeurs && rooster[0].CLUB_BEDRIJF) {
@@ -88,7 +84,7 @@
                         <td class="dienstType">Instructeur</td>
                         <td>
                             <ng-container [ngTemplateOutlet]="roosterDienst"
-                                          [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.OCHTEND_INSTRUCTEUR_TYPE_ID, configService.MIDDAG_INSTRUCTEUR_TYPE_ID]}"></ng-container>
+                                          [ngTemplateOutletContext]='{dag:rooster[0], typeDienst: [ configService.OCHTEND_INSTRUCTEUR_TYPE_ID, configService.MIDDAG_INSTRUCTEUR_TYPE_ID]}'/>
                         </td>
                     </tr>
                 } @if ((tonen.toonDienst[configService.OCHTEND_STARTLEIDER_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_STARTLEIDER_TYPE_ID]) && (tonen.Startleiders || tonen.DDWV) && (rooster[0].DDWV || rooster[0].CLUB_BEDRIJF)) {
@@ -98,12 +94,12 @@
                             @if (rooster[0].CLUB_BEDRIJF) {
                                 <div>
                                     <ng-container [ngTemplateOutlet]="roosterDienst"
-                                                  [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.OCHTEND_STARTLEIDER_TYPE_ID, configService.MIDDAG_STARTLEIDER_TYPE_ID]}"></ng-container>
+                                                  [ngTemplateOutletContext]='{dag:rooster[0], typeDienst: [ configService.OCHTEND_STARTLEIDER_TYPE_ID, configService.MIDDAG_STARTLEIDER_TYPE_ID]}'/>
                                 </div>
                             } @if (rooster[0].DDWV && !rooster[0].CLUB_BEDRIJF) {
                             <div>
                                 <ng-container [ngTemplateOutlet]="roosterDienst"
-                                              [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.OCHTEND_STARTLEIDER_TYPE_ID]}"></ng-container>
+                                              [ngTemplateOutletContext]='{dag:rooster[0], typeDienst: [ configService.OCHTEND_STARTLEIDER_TYPE_ID]}'/>
                             </div>
                         }
                         </td>
@@ -113,7 +109,7 @@
                         <td class="dienstType">Startleider 2</td>
                         <td>
                             <ng-container [ngTemplateOutlet]="roosterDienst"
-                                          [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.OCHTEND_STARTLEIDER_IO_TYPE_ID, configService.MIDDAG_STARTLEIDER_IO_TYPE_ID]}"></ng-container>
+                                          [ngTemplateOutletContext]='{dag:rooster[0], typeDienst: [ configService.OCHTEND_STARTLEIDER_IO_TYPE_ID, configService.MIDDAG_STARTLEIDER_IO_TYPE_ID]}'/>
                         </td>
                     </tr>
                 } @if ((tonen.toonDienst[configService.OCHTEND_LIERIST_TYPE_ID] || tonen.toonDienst[configService.MIDDAG_LIERIST_TYPE_ID]) && (tonen.Lieristen || tonen.DDWV) && (rooster[0].DDWV || rooster[0].CLUB_BEDRIJF)) {
@@ -123,12 +119,12 @@
                             @if (rooster[0].CLUB_BEDRIJF) {
                                 <div>
                                     <ng-container [ngTemplateOutlet]="roosterDienst"
-                                                  [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.OCHTEND_LIERIST_TYPE_ID, configService.MIDDAG_LIERIST_TYPE_ID]}"></ng-container>
+                                                  [ngTemplateOutletContext]='{dag:rooster[0], typeDienst: [ configService.OCHTEND_LIERIST_TYPE_ID, configService.MIDDAG_LIERIST_TYPE_ID]}'/>
                                 </div>
                             } @if (rooster[0].DDWV && !rooster[0].CLUB_BEDRIJF) {
                             <div>
                                 <ng-container [ngTemplateOutlet]="roosterDienst"
-                                              [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.OCHTEND_LIERIST_TYPE_ID]}"></ng-container>
+                                              [ngTemplateOutletContext]='{dag:rooster[0], typeDienst: [ configService.OCHTEND_LIERIST_TYPE_ID]}'/>
                             </div>
                         }
                         </td>
@@ -138,7 +134,7 @@
                         <td class="dienstType">Hulplierist</td>
                         <td>
                             <ng-container [ngTemplateOutlet]="roosterDienst"
-                                          [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.OCHTEND_HULPLIERIST_TYPE_ID, configService.MIDDAG_HULPLIERIST_TYPE_ID]}"></ng-container>
+                                          [ngTemplateOutletContext]='{dag:rooster[0], typeDienst: [ configService.OCHTEND_HULPLIERIST_TYPE_ID, configService.MIDDAG_HULPLIERIST_TYPE_ID]}'/>
                         </td>
                     </tr>
                 } @if ((tonen.toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID] || tonen.toonDienst[configService.GASTEN_VLIEGER2_TYPE_ID]) && tonen.GastenVliegers && rooster[0].CLUB_BEDRIJF) {
@@ -146,7 +142,7 @@
                         <td class="dienstType">Gasten vlieger</td>
                         <td>
                             <ng-container [ngTemplateOutlet]="roosterDienst"
-                                          [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.GASTEN_VLIEGER1_TYPE_ID, configService.GASTEN_VLIEGER2_TYPE_ID]}"></ng-container>
+                                          [ngTemplateOutletContext]='{dag:rooster[0], typeDienst: [ configService.GASTEN_VLIEGER1_TYPE_ID, configService.GASTEN_VLIEGER2_TYPE_ID]}'/>
                         </td>
                     </tr>
                 } @if (tonen.toonDienst[configService.SLEEPVLIEGER_TYPE_ID] && tonen.Sleepvliegers && (rooster[0].DDWV || rooster[0].CLUB_BEDRIJF)) {
@@ -154,7 +150,7 @@
                         <td class="dienstType">Sleepvlieger</td>
                         <td>
                             <ng-container [ngTemplateOutlet]="roosterDienst"
-                                          [ngTemplateOutletContext]="{dag:rooster[0], typeDienst: [ configService.SLEEPVLIEGER_TYPE_ID]}"></ng-container>
+                                          [ngTemplateOutletContext]='{dag:rooster[0], typeDienst: [ configService.SLEEPVLIEGER_TYPE_ID]}'/>
                         </td>
                     </tr>
                 } @if (rooster[0].DDWV && !rooster[0].CLUB_BEDRIJF) {
@@ -191,7 +187,7 @@
                                                      tekst="Uitbetalen"
                                                      iconNaam="fas EuroSign"
                                                      (btnClicked)="uitbetalen().openPopup(rooster[0])"
-                                                     btnColor="btn-secondary"></app-icon-button>
+                                                     btnColor='btn-secondary'/>
                                 </div>
                             }
                         </td>
@@ -215,12 +211,12 @@
                     @if (zelfIndelen()(dt, dag.DATUM) && !dag.Diensten[dt]) {
                         <div
                                 (click)="toekennenDienst(dag, dt)">
-                            <ng-template *ngTemplateOutlet="assign"></ng-template>
+                            <ng-template *ngTemplateOutlet='assign'/>
                         </div>
                     } @if (magVerwijderen()(dag.Diensten[dt])) {
                     <div
                             (click)="verwijderDienst(dag, dt)">
-                        <ng-template *ngTemplateOutlet="reset"></ng-template>
+                        <ng-template *ngTemplateOutlet='reset'/>
                     </div>
                 }
                 </div>
@@ -231,17 +227,17 @@
 
 <ng-template #reset>
     <div class="d-flex flex-column justify-content-center h-100 text-black-50 clickable px-1">
-        <fa-icon [icon]="resetIcon"></fa-icon>
+        <fa-icon [icon]='resetIcon'/>
     </div>
 </ng-template>
 
 <ng-template #assign>
     <div class="d-flex flex-column justify-content-center h-100 text-black-50 clickable px-1">
-        <fa-icon [icon]="assignIcon"></fa-icon>
+        <fa-icon [icon]='assignIcon'/>
     </div>
 </ng-template>
 
-<app-dienst-editor></app-dienst-editor>
+<app-dienst-editor/>
 
 
 

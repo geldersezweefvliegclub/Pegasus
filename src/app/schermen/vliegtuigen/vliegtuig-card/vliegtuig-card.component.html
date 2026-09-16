@@ -5,7 +5,7 @@
             <td>
                 @if (vliegtuig.toonLogboek) {
                     <button class="btn btn-noborder noLeftPadding" (click)="logboekButtonClicked()">
-                        <fa-icon [icon]="logboekIcon" class="logboekBtn"></fa-icon>
+                        <fa-icon [icon]='logboekIcon' class='logboekBtn'/>
                     </button>
                 }
             </td>
@@ -20,7 +20,7 @@
             <td>
                 @if (vliegtuig.CLUBKIST) {
                     <button class="btn btn-noborder" (click)="journaalButtonClicked()">
-                        <fa-icon [icon]="journaalIcon" class="journaalBtn"></fa-icon>
+                        <fa-icon [icon]='journaalIcon' class='journaalBtn'/>
                     </button>
                 }
             </td>
@@ -43,7 +43,7 @@
                 @if (vliegtuig.magWijzigen) {
                     <td class="pt-1" style="vertical-align: bottom">
                         <div class="iconEdit">
-                            <fa-icon [icon]="iconEdit" class="mx-2" (click)="editorButtonClicked()"></fa-icon>
+                            <fa-icon [icon]='iconEdit' class='mx-2' (click)='editorButtonClicked()'/>
                         </div>
                     </td>
                 }
@@ -54,4 +54,4 @@
 }
 
 
-<app-vliegtuig-editor></app-vliegtuig-editor>
+<app-vliegtuig-editor/>

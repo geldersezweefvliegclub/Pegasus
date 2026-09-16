@@ -1,4 +1,4 @@
-<app-error [error]="error"></app-error>
+<app-error [error]='error'/>
 <app-modal titel="Bestel strippen">
     <div body>
         <fieldset>
@@ -40,12 +40,10 @@
     </div>
 
     <div footer class="w-100 d-flex justify-content-end">
-        <app-icon-button
-                iconNaam="fas CircleRight" btnColor="btn-primary"
+        <app-icon-button iconNaam='fas CircleRight' btnColor='btn-primary'
                 tekst="Doorgaan"
                 [toonKlein]="false"
                 [disabled]="bank === -1  || bestelling === -1"
-                (btnClicked)="bestellen()">
-        </app-icon-button>
+                         (btnClicked)='bestellen()'/>
     </div>
 </app-modal>

@@ -1,5 +1,5 @@
-<app-error [error]="error"></app-error>
-<app-success [success]="success"></app-success>
+<app-error [error]='error'/>
+<app-success [success]='success'/>
 
 <app-pegasus-card titel="Vluchten"
                   subtitel="Een overzicht van de starts {{datum.day}}-{{datum.month}}-{{datum.year}}"
@@ -10,24 +10,23 @@
         @if (!toonStartlijstKlein) {
             <div id="data" class="d-flex data">
                 <div class="flex-row h-100 flex-grow-1">
-                    <app-datatable
-                            id="startlijstgrid"
+                    <app-datatable id='startlijstgrid'
                             [rowData]="filteredStarts"
                             [columnDefs]="columns"
                             [loading]="isLoading"
                             [rowClassRules]="rowClassRules"
                             [frameworkComponents]="frameworkComponents"
                             (rowDoubleClicked)="openEditor($event)"
-                            class="h-100 mt-n8"></app-datatable>
+                                   class='h-100 mt-n8'/>
                 </div>
                 @if (isStarttoren) {
                     <div class="flex-row h-100 flex-column flarm-container">
                         <div class="slider">
                             <fa-icon [icon]="iconExpandShrink" class="handle" [ngClass]="{'omdraaien': !toonFlarm}"
-                                     (click)="toonFlarm = !toonFlarm"></fa-icon>
+                                     (click)='toonFlarm = !toonFlarm'/>
                         </div>
                         @if (toonFlarm) {
-                            <app-flarm-lijst [veldID]="vliegveld"></app-flarm-lijst>
+                            <app-flarm-lijst [veldID]='vliegveld'/>
                         }
                     </div>
                 }
@@ -36,7 +35,7 @@
         <div id="datacard" class="data">
             @for (vlucht of filteredStarts; track vlucht; let i = $index) {
                 <div>
-                    <app-vlucht-card [start]="vlucht"></app-vlucht-card>
+                    <app-vlucht-card [start]='vlucht'/>
                 </div>
             }
         </div>
@@ -45,35 +44,31 @@
         <div class="row justify-content-start mt-2" id="toolbar">
             <div class="col-4 col-sm-3 col-xl-4">
                 <div class="d-flex flex-row">
-                    <app-status-button
-                            class="toolbarBtn"
+                    <app-status-button class='toolbarBtn'
                             tekst="Filter"
                             [actief]="filterOn"
                             (btnClicked)="filter($event)"
-                            iconNaam="fas Filter">
-                    </app-status-button>
+                                       iconNaam='fas Filter'/>
                     <div>
                         @if (!deleteMode && magToevoegen && inTijdspan) {
                             <app-icon-button class="toolbarBtn"
                                              tekst="Toevoegen"
                                              iconNaam="far PlusSquare" (btnClicked)="addStart()"
                                              btnColor="btn-primary"
-                            ></app-icon-button>
+                            />
                         } @if (!deleteMode && magFactureren) {
                         <app-icon-button class="toolbarBtn vluchten_transactie_button"
                                          tekst="Factureren"
                                          iconNaam="fas EuroSign" (btnClicked)="maakTransacties()"
                                          btnColor="btn-primary"
-                        ></app-icon-button>
+                        />
                     } @if (this.deleteMode) {
                         <div>
-                            <app-status-button
-                                    class="toolbarBtn"
+                            <app-status-button class='toolbarBtn'
                                     tekst="Archief"
                                     [actief]="trashMode"
                                     (btnClicked)="trashModeJaNee($event)"
-                                    iconNaam="fas Inbox">
-                            </app-status-button>
+                                               iconNaam='fas Inbox'/>
                         </div>
                     }
                     </div>
@@ -99,8 +94,7 @@
                                            openOnEnter="true"
                                            [searchable]="false"
                                            (change)="filterStarts()"
-                                           [(ngModel)]="vliegveld">
-                                </ng-select>
+                                           [(ngModel)]='vliegveld'/>
                             </div>
                         }
                     </app-zoekbar>
@@ -111,11 +105,11 @@
                                 @if (magVerwijderen && !deleteMode && inTijdspan) {
                                     <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
                                                      btnColor="btn-secondary"
-                                                     (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                                                     (btnClicked)='deleteModeJaNee()'/>
                                 } @if (deleteMode) {
                                 <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
                                                  btnColor="btn btn-outline-primary"
-                                                 (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                                                 (btnClicked)='deleteModeJaNee()'/>
                             }
                             </div>
                         </div>
@@ -125,14 +119,14 @@
         </div>
     </div>
 
-    <app-tijd-invoer></app-tijd-invoer>
-    <app-start-editor [VliegerID]="VliegerID" [VliegveldID]="vliegveld"></app-start-editor>
-    <app-export-startlijst (exportDataset)="exportDataset($event)"></app-export-startlijst>
+    <app-tijd-invoer/>
+    <app-start-editor [VliegerID]='VliegerID' [VliegveldID]='vliegveld'/>
+    <app-export-startlijst (exportDataset)='exportDataset($event)'/>
 
     @if (isExporting) {
         <div class="exportOverlay">
             <div class="exportPosition">
-                <span class="exportBorder"><fa-icon [icon]="downloadIcon" class="me-3 downloadIcon"></fa-icon> Data wordt geexporteerd .....</span>
+                <span class='exportBorder'><fa-icon [icon]='downloadIcon' class='me-3 downloadIcon'/> Data wordt geexporteerd .....</span>
             </div>
     </div>
     }

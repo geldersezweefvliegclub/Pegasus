@@ -1,5 +1,5 @@
-<app-error [error]="error"></app-error>
-<app-success [success]="success"></app-success>
+<app-error [error]='error'/>
+<app-success [success]='success'/>
 
 
 <app-modal titel="Transactie {{lidNaam}}">
@@ -13,7 +13,7 @@
                             [required]=true
                             [leden]="leden"
                             (LidChanged)="lidGeselecteerd($event)"
-            ></app-lid-invoer>
+            />
         }
 
         <fieldset>
@@ -55,7 +55,7 @@
                         >
                         <div class="input-group-append">
                             <app-icon-button iconNaam="far Calendar" (btnClicked)="vdag.toggle()"
-                                             btnColor="btn-primary"></app-icon-button>
+                                             btnColor='btn-primary'/>
                         </div>
                     </div>
                 </div>
@@ -71,18 +71,14 @@
     </div>
 
     <div footer class="w-100 d-flex justify-content-between">
-        <app-icon-button
-                iconNaam="fas SquareXmark" btnColor="btn-secondary"
+        <app-icon-button iconNaam='fas SquareXmark' btnColor='btn-secondary'
                 tekst="Leeg"
-                (btnClicked)="leegMaken()">
-        </app-icon-button>
+                         (btnClicked)='leegMaken()'/>
 
-        <app-icon-button
-                iconNaam="fas Plus" btnColor="btn-primary"
+        <app-icon-button iconNaam='fas Plus' btnColor='btn-primary'
                 tekst="Opslaan"
                 [disabled]="!transactie.OMSCHRIJVING || !transactie.LID_ID || !transactie.TYPE_ID"
                 [toonKlein]="false"
-                (btnClicked)="opslaan()">
-        </app-icon-button>
+                         (btnClicked)='opslaan()'/>
     </div>
 </app-modal>

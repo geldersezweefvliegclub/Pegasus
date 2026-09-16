@@ -1,5 +1,5 @@
-<app-jaar-totalen [leden]="this.leden"></app-jaar-totalen>
-<app-uitbetalen-ddwv-crew-editor></app-uitbetalen-ddwv-crew-editor>
+<app-jaar-totalen [leden]='this.leden'/>
+<app-uitbetalen-ddwv-crew-editor/>
 
 @if (leden && rooster) {
     <div class="dataContent">
@@ -125,12 +125,12 @@
                                     @if (zelfIndelen()(configService.OCHTEND_DDI_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID]) {
                                         <div
                                                 (click)="toekennenDienst(dagInRooster, configService.OCHTEND_DDI_TYPE_ID, mijnID, mijnNaam)">
-                                            <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                            <ng-template *ngTemplateOutlet='assign'/>
                                         </div>
                                     } @if (magVerwijderen()(dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID])) {
                                     <div
                                             (click)="verwijderDienst(dagInRooster, configService.OCHTEND_DDI_TYPE_ID)">
-                                        <ng-template *ngTemplateOutlet="reset"></ng-template>
+                                        <ng-template *ngTemplateOutlet='reset'/>
                                     </div>
                                 }
                                 </div>
@@ -152,12 +152,12 @@
                                 @if (zelfIndelen()(configService.MIDDAG_DDI_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.MIDDAG_DDI_TYPE_ID, mijnID, mijnNaam)">
-                                        <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                        <ng-template *ngTemplateOutlet='assign'/>
                                     </div>
                                 } @if (magVerwijderen()(dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID])) {
                                 <div
                                         (click)="verwijderDienst(dagInRooster, configService.MIDDAG_DDI_TYPE_ID)">
-                                    <ng-template *ngTemplateOutlet="reset"></ng-template>
+                                    <ng-template *ngTemplateOutlet='reset'/>
                                 </div>
                             }
                             </div>
@@ -184,12 +184,12 @@
                                 @if (zelfIndelen()(configService.OCHTEND_INSTRUCTEUR_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.OCHTEND_INSTRUCTEUR_TYPE_ID, mijnID, mijnNaam)">
-                                        <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                        <ng-template *ngTemplateOutlet='assign'/>
                                     </div>
                                 } @if (magVerwijderen()(dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID])) {
                                 <div
                                         (click)="verwijderDienst(dagInRooster, configService.OCHTEND_INSTRUCTEUR_TYPE_ID)">
-                                    <ng-template *ngTemplateOutlet="reset"></ng-template>
+                                    <ng-template *ngTemplateOutlet='reset'/>
                                 </div>
                             }
                             </div>
@@ -211,12 +211,12 @@
                             @if (zelfIndelen()(configService.MIDDAG_INSTRUCTEUR_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) {
                                 <div
                                         (click)="toekennenDienst(dagInRooster, configService.MIDDAG_INSTRUCTEUR_TYPE_ID, mijnID, mijnNaam)">
-                                    <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                    <ng-template *ngTemplateOutlet='assign'/>
                                 </div>
                             } @if (magVerwijderen()(dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID])) {
                             <div
                                     (click)="verwijderDienst(dagInRooster, configService.MIDDAG_INSTRUCTEUR_TYPE_ID)">
-                                <ng-template *ngTemplateOutlet="reset"></ng-template>
+                                <ng-template *ngTemplateOutlet='reset'/>
                             </div>
                         }
                         </div>
@@ -242,12 +242,12 @@
                                 @if (((zelfIndelen()(configService.OCHTEND_STARTLEIDER_TYPE_ID, dagInRooster.DATUM)) || (isDDWVCrew && dagInRooster.DDWV && sharedService.datumInToekomst(dagInRooster.DATUM))) && !dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.OCHTEND_STARTLEIDER_TYPE_ID, mijnID, mijnNaam)">
-                                        <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                        <ng-template *ngTemplateOutlet='assign'/>
                                     </div>
                                 } @if (magVerwijderen()(dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID])) {
                                 <div
                                         (click)="verwijderDienst(dagInRooster, configService.OCHTEND_STARTLEIDER_TYPE_ID)">
-                                    <ng-template *ngTemplateOutlet="reset"></ng-template>
+                                    <ng-template *ngTemplateOutlet='reset'/>
                                 </div>
                             }
                             </div>
@@ -269,12 +269,12 @@
                             @if (zelfIndelen()(configService.MIDDAG_STARTLEIDER_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID]) {
                                 <div
                                         (click)="toekennenDienst(dagInRooster, configService.MIDDAG_STARTLEIDER_TYPE_ID, mijnID, mijnNaam)">
-                                    <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                    <ng-template *ngTemplateOutlet='assign'/>
                                 </div>
                             } @if (magVerwijderen()(dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID])) {
                             <div
                                     (click)="verwijderDienst(dagInRooster, configService.MIDDAG_STARTLEIDER_TYPE_ID)">
-                                <ng-template *ngTemplateOutlet="reset"></ng-template>
+                                <ng-template *ngTemplateOutlet='reset'/>
                             </div>
                         }
                         </div>
@@ -301,12 +301,12 @@
                                 @if ((zelfIndelen()(configService.OCHTEND_STARTLEIDER_IO_TYPE_ID, dagInRooster.DATUM)) && !dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.OCHTEND_STARTLEIDER_IO_TYPE_ID, mijnID, mijnNaam)">
-                                        <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                        <ng-template *ngTemplateOutlet='assign'/>
                                     </div>
                                 } @if (magVerwijderen()(dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID])) {
                                 <div
                                         (click)="verwijderDienst(dagInRooster, configService.OCHTEND_STARTLEIDER_IO_TYPE_ID)">
-                                    <ng-template *ngTemplateOutlet="reset"></ng-template>
+                                    <ng-template *ngTemplateOutlet='reset'/>
                                 </div>
                             }
                             </div>
@@ -328,12 +328,12 @@
                             @if (zelfIndelen()(configService.MIDDAG_STARTLEIDER_IO_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID]) {
                                 <div
                                         (click)="toekennenDienst(dagInRooster, configService.MIDDAG_STARTLEIDER_IO_TYPE_ID, mijnID, mijnNaam)">
-                                    <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                    <ng-template *ngTemplateOutlet='assign'/>
                                 </div>
                             } @if (magVerwijderen()(dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID])) {
                             <div
                                     (click)="verwijderDienst(dagInRooster, configService.MIDDAG_STARTLEIDER_IO_TYPE_ID)">
-                                <ng-template *ngTemplateOutlet="reset"></ng-template>
+                                <ng-template *ngTemplateOutlet='reset'/>
                             </div>
                         }
                         </div>
@@ -359,12 +359,12 @@
                                 @if (((zelfIndelen()(configService.OCHTEND_LIERIST_TYPE_ID, dagInRooster.DATUM)) || (isDDWVCrew && dagInRooster.DDWV && sharedService.datumInToekomst(dagInRooster.DATUM))) && !dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.OCHTEND_LIERIST_TYPE_ID, mijnID, mijnNaam)">
-                                        <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                        <ng-template *ngTemplateOutlet='assign'/>
                                     </div>
                                 } @if (magVerwijderen()(dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID])) {
                                 <div
                                         (click)="verwijderDienst(dagInRooster, configService.OCHTEND_LIERIST_TYPE_ID)">
-                                    <ng-template *ngTemplateOutlet="reset"></ng-template>
+                                    <ng-template *ngTemplateOutlet='reset'/>
                                 </div>
                             }
                             </div>
@@ -386,12 +386,12 @@
                             @if (zelfIndelen()(configService.MIDDAG_LIERIST_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID]) {
                                 <div
                                         (click)="toekennenDienst(dagInRooster, configService.MIDDAG_LIERIST_TYPE_ID, mijnID, mijnNaam)">
-                                    <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                    <ng-template *ngTemplateOutlet='assign'/>
                                 </div>
                             } @if (magVerwijderen()(dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID])) {
                             <div
                                     (click)="verwijderDienst(dagInRooster, configService.MIDDAG_LIERIST_TYPE_ID)">
-                                <ng-template *ngTemplateOutlet="reset"></ng-template>
+                                <ng-template *ngTemplateOutlet='reset'/>
                             </div>
                         }
                         </div>
@@ -418,12 +418,12 @@
                                 @if (zelfIndelen()(configService.OCHTEND_HULPLIERIST_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.OCHTEND_HULPLIERIST_TYPE_ID, mijnID, mijnNaam)">
-                                        <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                        <ng-template *ngTemplateOutlet='assign'/>
                                     </div>
                                 } @if (magVerwijderen()(dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID])) {
                                 <div
                                         (click)="verwijderDienst(dagInRooster, configService.OCHTEND_HULPLIERIST_TYPE_ID)">
-                                    <ng-template *ngTemplateOutlet="reset"></ng-template>
+                                    <ng-template *ngTemplateOutlet='reset'/>
                                 </div>
                             }
                             </div>
@@ -445,12 +445,12 @@
                             @if (zelfIndelen()(configService.MIDDAG_HULPLIERIST_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID]) {
                                 <div
                                         (click)="toekennenDienst(dagInRooster, configService.MIDDAG_HULPLIERIST_TYPE_ID, mijnID, mijnNaam)">
-                                    <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                    <ng-template *ngTemplateOutlet='assign'/>
                                 </div>
                             } @if (magVerwijderen()(dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID])) {
                             <div
                                     (click)="verwijderDienst(dagInRooster, configService.MIDDAG_HULPLIERIST_TYPE_ID)">
-                                <ng-template *ngTemplateOutlet="reset"></ng-template>
+                                <ng-template *ngTemplateOutlet='reset'/>
                             </div>
                         }
                         </div>
@@ -477,12 +477,12 @@
                                 @if (zelfIndelen()(configService.GASTEN_VLIEGER1_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.GASTEN_VLIEGER1_TYPE_ID, mijnID, mijnNaam)">
-                                        <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                        <ng-template *ngTemplateOutlet='assign'/>
                                     </div>
                                 } @if (magVerwijderen()(dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID])) {
                                 <div
                                         (click)="verwijderDienst(dagInRooster, configService.GASTEN_VLIEGER1_TYPE_ID)">
-                                    <ng-template *ngTemplateOutlet="reset"></ng-template>
+                                    <ng-template *ngTemplateOutlet='reset'/>
                                 </div>
                             }
                             </div>
@@ -504,12 +504,12 @@
                             @if (zelfIndelen()(configService.GASTEN_VLIEGER2_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID]) {
                                 <div
                                         (click)="toekennenDienst(dagInRooster, configService.GASTEN_VLIEGER2_TYPE_ID, mijnID, mijnNaam)">
-                                    <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                    <ng-template *ngTemplateOutlet='assign'/>
                                 </div>
                             } @if (magVerwijderen()(dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID])) {
                             <div
                                     (click)="verwijderDienst(dagInRooster, configService.GASTEN_VLIEGER2_TYPE_ID)">
-                                <ng-template *ngTemplateOutlet="reset"></ng-template>
+                                <ng-template *ngTemplateOutlet='reset'/>
                             </div>
                         }
                         </div>
@@ -534,12 +534,12 @@
                                 @if (zelfIndelen()(configService.SLEEPVLIEGER_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.SLEEPVLIEGER_TYPE_ID, mijnID, mijnNaam)">
-                                        <ng-template *ngTemplateOutlet="assign"></ng-template>
+                                        <ng-template *ngTemplateOutlet='assign'/>
                                     </div>
                                 } @if (magVerwijderen()(dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID])) {
                                 <div
                                         (click)="verwijderDienst(dagInRooster, configService.SLEEPVLIEGER_TYPE_ID)">
-                                    <ng-template *ngTemplateOutlet="reset"></ng-template>
+                                    <ng-template *ngTemplateOutlet='reset'/>
                                 </div>
                             }
                             </div>
@@ -553,7 +553,7 @@
                                                  tekst="Uitbetalen"
                                                  iconNaam="fas EuroSign"
                                                  (btnClicked)="uitbetalen().openPopup(dagInRooster)"
-                                                 btnColor="btn-secondary"></app-icon-button>
+                                                 btnColor='btn-secondary'/>
                             </div>
                         } @if (datumInToekomst(dagInRooster.DATUM) && dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF) {
                         <div class="w-100">
@@ -597,7 +597,7 @@
                 <a aria-label="Toon jaarrooster" class="class" (click)="toonJaarRooster()"><h4>Leden</h4></a>
                 <div class="expandLogboek">
                     <a aria-label="Sorteer op aantal diensten" class="clickable" (click)="sorteer()">
-                        <fa-icon [icon]="iconSort"></fa-icon>
+                        <fa-icon [icon]='iconSort'/>
                     </a>
                 </div>
                 <div
@@ -614,7 +614,7 @@
                     <div class="card my-1 mb-lg-3"
                          [cdkDragData]="lid" cdkDrag>
                         <div *cdkDragPreview>
-                            <ng-template *ngTemplateOutlet="preview; context: {$implicit: lid}"></ng-template>
+                            <ng-template *ngTemplateOutlet='preview; context: {$implicit: lid}'/>
                         </div>
                         <div *cdkDragPlaceholder>
                             {{ lid.NAAM }}
@@ -631,7 +631,7 @@
                                 </div>
                             }
                         <div class="avatar">
-                            <app-avatar [url]="lid.AVATAR"></app-avatar>
+                            <app-avatar [url]='lid.AVATAR'/>
                         </div>
                         <div class="naam">
                             {{ lid.NAAM }}
@@ -661,13 +661,13 @@
 
 <ng-template #reset>
     <div class="d-flex flex-column justify-content-center h-100 text-black-50 clickable px-1">
-        <fa-icon [icon]="resetIcon"></fa-icon>
+        <fa-icon [icon]='resetIcon'/>
     </div>
 </ng-template>
 
 <ng-template #assign>
     <div class="d-flex flex-column justify-content-center h-100 text-black-50 clickable px-1">
-        <fa-icon [icon]="assignIcon"></fa-icon>
+        <fa-icon [icon]='assignIcon'/>
     </div>
 </ng-template>
 

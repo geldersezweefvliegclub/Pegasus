@@ -1,5 +1,5 @@
-<app-error [error]="error"></app-error>
-<app-success [success]="success"></app-success>
+<app-error [error]='error'/>
+<app-success [success]='success'/>
 
 @if (data) {
     <div class="overflow-auto">
@@ -59,6 +59,6 @@
     </div>
 } @if (isLoading) {
     <div class="spinnerOverlay">
-    <app-loader></app-loader>
+        <app-loader/>
     </div>
 }

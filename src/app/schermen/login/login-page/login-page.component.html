@@ -1,4 +1,4 @@
-<app-error [error]="error"></app-error>
+<app-error [error]='error'/>
 
 
 <div id="foto" [style.background-image]="'url(' + toonFoto +')'">
@@ -32,8 +32,8 @@
                                         name="wachtwoord"
                                         minlength="2" required
                                         autocomplete="current-password">
-                                <span class="input-group-text passwordIcon" (click)="verbergWachtwoord()"><fa-icon
-                                        [icon]="oogIcon"></fa-icon></span>
+                                <span class='input-group-text passwordIcon' (click)='verbergWachtwoord()'><fa-icon
+                                        [icon]='oogIcon'/></span>
                             </div>
                         </div>
                     </div>
@@ -42,8 +42,7 @@
                         <div class="row">
                             <div class="col">
                                 <label for="cinput" class="form-label">Code</label>
-                                <code-input id="cinput" [codeLength]="6" (codeChanged)="onSecurityCodeChanged($event)">
-                                </code-input>
+                                <code-input id='cinput' [codeLength]='6' (codeChanged)='onSecurityCodeChanged($event)'/>
                             </div>
                         </div>
                     } @if (privacyUrl) {
@@ -70,7 +69,7 @@
                                 @if (!isLoading) {
                                     <span>SMS</span>
                                 } @if (isLoading) {
-                                <span><app-loader></app-loader></span>
+                                <span><app-loader/></span>
                             }
                             </button>
                         }
@@ -79,7 +78,7 @@
                                 @if (!isLoading) {
                                     <span>Login</span>
                                 } @if (isLoading) {
-                                <span><app-loader></app-loader></span>
+                                <span><app-loader/></span>
                             }
                             </button>
                         </div>

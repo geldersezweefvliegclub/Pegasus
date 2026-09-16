@@ -1,5 +1,4 @@
-<ngb-datepicker
-    #d
+<ngb-datepicker #d
     name="datumIngave"
     class="navCalendar w-100"
     outsideDays="hidden"
@@ -8,8 +7,7 @@
     [(ngModel)]="kalenderIngave"
     (dateSelect)="nieuweDatumGeselecteerd()"
     (navigate)="onMonthSelectionChange($event)"
-    [dayTemplate]="t">
-</ngb-datepicker>
+                [dayTemplate]='t'/>
 
 <ng-template #t let-date>
         <span class="custom-day calendarDag" [ngbTooltip]="getTooltipText(date)">

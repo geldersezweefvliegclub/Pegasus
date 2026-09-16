@@ -14,8 +14,7 @@
                                                [lidInRoosterClass]="lidInRoosterClass"
                                                [tonen]="tonen"
                                                [leden]="filteredLeden"
-                                               [rooster]="filteredRooster">
-                        </app-rooster-maandview>
+                                               [rooster]='filteredRooster'/>
                     </div>
                 } @if (roosterView === 'week') {
                 <div class="dataContent w-100 h-100">
@@ -27,8 +26,7 @@
                                           [datum]="datum"
                                           (nieuweDatum)="zetDatum($event)"
                                           [leden]="filteredLeden"
-                                          [rooster]="filteredRooster">
-                    </app-rooster-weekview>
+                                          [rooster]='filteredRooster'/>
                 </div>
             } @if (roosterView === 'dag') {
                 <div class="dataContent w-100 h-100">
@@ -40,8 +38,7 @@
                                          [datum]="datum"
                                          (nieuweDatum)="zetDatum($event)"
                                          [leden]="filteredLeden"
-                                         [rooster]="filteredRooster">
-                    </app-rooster-dagview>
+                                         [rooster]='filteredRooster'/>
                 </div>
             }
             </div>
@@ -49,17 +46,15 @@
                 <div class="d-flex row">
                     <div class="col-xl-4 col-sm-5">
                         @if (magWijzigen) {
-                            <app-icon-button
-                                    class="toolbarBtn"
+                            <app-icon-button class='toolbarBtn'
                                     tekst="Filter"
                                     iconNaam="fas Filter" (btnClicked)="filterPopup()"
-                                    btnColor="btn-primary"></app-icon-button>
+                                             btnColor='btn-primary'/>
                         } @if (!isDDWVer && roosterView !== 'dag') {
-                        <app-icon-button
-                                class="toolbarBtn"
+                        <app-icon-button class='toolbarBtn'
                                 [tekst]="ddwvActief ? 'Club / DDWV' : 'Club / Alles'"
                                 iconNaam="fas CalendarWeek" (btnClicked)="ToggleWeekendDDWV()"
-                                btnColor="btn-primary"></app-icon-button>
+                                         btnColor='btn-primary'/>
                     }
                     </div>
                     <div class="col-xl-8 col-sm-7">
@@ -67,14 +62,14 @@
                             <app-zoekbar id="zoekbar"
                                          [(zoekString)]="zoekString"
                                          (zoeken)="applyLedenFilter()"
-                                         [toonRefresh]="false"></app-zoekbar>
+                                         [toonRefresh]='false'/>
                         }
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <app-leden-filter [LedenDDWV]="false" (filterChanged)="applyLedenFilter()"></app-leden-filter>
+    <app-leden-filter [LedenDDWV]='false' (filterChanged)='applyLedenFilter()'/>
 </app-pegasus-card>
 
 

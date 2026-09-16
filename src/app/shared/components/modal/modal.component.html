@@ -2,13 +2,13 @@
     <div class="modal-header bg-primary text-white header">
         <h4 class="modal-title" id="modal-basic-title">{{titel()}}</h4>
         <button type="button" class="btn btn-outline-secondary" aria-label="Close" (click)="this.close()">
-            <span aria-hidden="true"><fa-icon [icon]="cross"></fa-icon> </span>
+            <span aria-hidden='true'><fa-icon [icon]='cross'/> </span>
         </button>
     </div>
     <div class="modal-body">
-        <ng-content select="[body]"></ng-content>
+        <ng-content select='[body]'/>
     </div>
     <div class="w-100 modal-footer">
-        <ng-content select="[footer]"></ng-content>
+        <ng-content select='[footer]'/>
     </div>
 </ng-template>

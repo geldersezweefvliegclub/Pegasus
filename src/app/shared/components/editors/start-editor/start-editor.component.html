@@ -1,6 +1,6 @@
-<app-error [error]="error"></app-error>
-<app-success [success]="success"></app-success>
-<app-transactie-editor [toonLidSelectie]="false"></app-transactie-editor>
+<app-error [error]='error'/>
+<app-success [success]='success'/>
+<app-transactie-editor [toonLidSelectie]='false'/>
 
 <ng-template #alleenPAX>
     Alleen vliegers met passagersbevoegdheid mogen deze vlucht uitvoeren.
@@ -20,7 +20,7 @@
                         <div class="input-group-append">
                             <app-icon-button iconNaam="far Calendar" (btnClicked)="d.toggle()"
                                              [disabled]="!magDatumAanpassen"
-                                             btnColor="btn-primary"></app-icon-button>
+                                             btnColor='btn-primary'/>
                         </div>
                         <input name="start" class="form-control dateInput" placeholder="dd-mm-yyyy" readonly
                                ngbDatepicker #d="ngbDatepicker"
@@ -44,7 +44,7 @@
                                           [vliegtuigen]="vliegtuigen"
                                           (VliegtuigChanged)="vliegtuigGeselecteerd($event)"
                                           label="Vliegtuig"
-                    ></app-vliegtuig-invoer>
+                    />
                 </div>
             </div>
 
@@ -101,13 +101,13 @@
                                                 [veldID]="start.VELD_ID"
                                                 (LidChanged)="vliegerGeselecteerd($event)"
                                                 [uitleg]="start.PAX ? alleenPAX : undefined"
-                                ></app-lid-invoer>
+                                />
                                 @if (toonTranactieKnop) {
                                     <div class="ms-2 d-flex align-items-end">
                                         <app-icon-button id="ddwvPiloot" class="toolbarBtn" style="color: white"
                                                          iconNaam="fas EuroSign"
                                                          (btnClicked)="toonTransactieEditor(start.VLIEGER_ID)"
-                                                         btnColor="euroBtn"></app-icon-button>
+                                                         btnColor='euroBtn'/>
                                     </div>
                                 }
                             </div>
@@ -142,12 +142,11 @@
                             <app-gast-invoer class="w-100"
                                              [DATUM]="startDatum"
                                              (gast)="start.VLIEGERNAAM = $event"
-                                             (opmerking)="start.OPMERKINGEN = $event">
-                            </app-gast-invoer>
+                                             (opmerking)='start.OPMERKINGEN = $event'/>
                         }
                             <button class="ms-1 btn btn-noborder gastBtn" (click)="toonGastenCombo()"
                                     [ngClass]="toonGastCombobox ? 'gastBtnAan': 'gastBtnUit'">
-                                <fa-icon [icon]="gastIcon" class="gastIcon"></fa-icon>
+                                <fa-icon [icon]='gastIcon' class='gastIcon'/>
                             </button>
                         </div>
                         </div>
@@ -167,13 +166,13 @@
                                                 [leden]="leden"
                                                 (LidChanged)="inzittendeGeselecteerd($event)"
                                                 [uitleg]="start.INSTRUCTIEVLUCHT ? alleenInstructeurs : undefined"
-                                ></app-lid-invoer>
+                                />
                                 @if (toonTranactieKnop) {
                                     <div class="ms-2 d-flex align-items-end">
                                         <app-icon-button id="ddwvInzittende" class="toolbarBtn" style="color: white"
                                                          iconNaam="fas EuroSign"
                                                          (btnClicked)="toonTransactieEditor(start.INZITTENDE_ID)"
-                                                         btnColor="euroBtn"></app-icon-button>
+                                                         btnColor='euroBtn'/>
                                     </div>
                                 }
                             </div>
@@ -203,12 +202,11 @@
                             <app-gast-invoer class="w-100"
                                              [DATUM]="startDatum"
                                              (gast)="start.INZITTENDENAAM = $event"
-                                             (opmerking)="start.EXTERNAL_ID = $event">
-                            </app-gast-invoer>
+                                             (opmerking)='start.EXTERNAL_ID = $event'/>
                         }
                             <button class="ms-1 btn btn-noborder" (click)="toonGastenCombo()"
                                     [ngClass]="toonGastCombobox ? 'gastBtnAan': 'gastBtnUit'">
-                                <fa-icon [icon]="gastIcon" class="gastIcon"></fa-icon>
+                                <fa-icon [icon]='gastIcon' class='gastIcon'/>
                             </button>
                         </div>
                     </div>
@@ -218,7 +216,7 @@
                     <div class="col-2 col-md-2 row align-items-center">
                         <app-icon-button id="switchVoorAchter" class="toolbarBtn display-1" iconNaam="fas ExchangeAlt"
                                          (btnClicked)="omwisselen()"
-                                         btnColor="btn-secondary"></app-icon-button>
+                                         btnColor='btn-secondary'/>
                     </div>
                 }
             </div>
@@ -235,8 +233,7 @@
                                closeOnSelect="true"
                                openOnEnter="true"
                                required
-                               [(ngModel)]="start.VELD_ID">
-                    </ng-select>
+                               [(ngModel)]='start.VELD_ID'/>
                 </div>
                 @if (start.VLIEGTUIG_ID) {
                     <div class="col-12 col-md-3">
@@ -249,8 +246,7 @@
                                    bindValue="ID"
                                    closeOnSelect="true"
                                    openOnEnter="true"
-                                   [(ngModel)]="start.BAAN_ID">
-                        </ng-select>
+                                   [(ngModel)]='start.BAAN_ID'/>
                     </div>
                 }
                 <div class="col-4 flex-row align-self-end">
@@ -278,7 +274,7 @@
                                           [aanwezig]="aanwezigVliegtuigen"
                                           [vliegtuigen]="vliegtuigen"
                                           (VliegtuigChanged)="start.SLEEPKIST_ID = $event"
-                    ></app-vliegtuig-invoer>
+                    />
                 </div>
                 <div class="col-12 col-md-6">
                     <label for="SLEEPHOOGTE" class="form-label">Sleep hoogte</label>
@@ -316,24 +312,22 @@
     </div>
     <div footer>
         @if (!isLoading && !isSaving && start.ID !== undefined && !isRestoreMode && !isVerwijderMode) {
-            <app-icon-button
-                    iconNaam="fas Edit" btnColor="btn-primary" [toonKlein]=false
-                    tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
+            <app-icon-button iconNaam='fas Edit' btnColor='btn-primary' [toonKlein]=false
+                             tekst='Opslaan' [disabled]='opslaanDisabled()' (btnClicked)='uitvoeren()'/>
         } @if (!isLoading && !isSaving && start.ID === undefined && !isRestoreMode && !isVerwijderMode) {
-        <app-icon-button
-                iconNaam="fas Plus" btnColor="btn-primary" [toonKlein]=false
-                tekst="Opslaan" [disabled]="opslaanDisabled()" (btnClicked)="uitvoeren()"></app-icon-button>
+        <app-icon-button iconNaam='fas Plus' btnColor='btn-primary' [toonKlein]=false
+                         tekst='Opslaan' [disabled]='opslaanDisabled()' (btnClicked)='uitvoeren()'/>
     } @if (!isLoading && !isSaving && isVerwijderMode) {
         <app-icon-button iconNaam="fas TrashAlt"
                          btnColor="btn-primary editorDeleteBtn" [toonKlein]=false
-                         tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
+                         tekst='Verwijderen' (btnClicked)='uitvoeren()'/>
     } @if (!isLoading && !isSaving && isRestoreMode) {
         <app-icon-button iconNaam="fas Undo"
                          btnColor="btn-primary editorRestoreBtn" [toonKlein]=false
-                         tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
+                         tekst='Herstellen' (btnClicked)='uitvoeren()'/>
     } @if (isLoading || isSaving) {
         <button class="btn btn-primary">
-            <span><app-loader></app-loader></span>
+            <span><app-loader/></span>
         </button>
     }
     </div>

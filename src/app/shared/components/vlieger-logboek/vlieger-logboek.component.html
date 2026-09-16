@@ -1,10 +1,9 @@
-<app-error [error]="error"></app-error>
-<app-success [success]="success"></app-success>
+<app-error [error]='error'/>
+<app-success [success]='success'/>
 
 @if (!toonLogboekKlein) {
     <div class="gridHoogte">
-    <app-datatable
-            [id]=id()
+        <app-datatable [id]=id()
             [rowData]="data"
             [columnDefs]="columns"
             [loading]="isLoading"
@@ -12,8 +11,7 @@
             [frameworkComponents]="frameworkComponents"
             (rowDoubleClicked)="openStartEditor($event.data)"
             [pagination]="true"
-            class="h-100">
-    </app-datatable>
+                       class='h-100'/>
     </div>
 } @if (toonLogboekKlein) {
     <div class="mobielHoogte">
@@ -21,7 +19,7 @@
             <div>
                 @if (i < MaxItems()) {
                     <div>
-            <app-vlucht-card [logboek]="vlucht"></app-vlucht-card>
+                        <app-vlucht-card [logboek]='vlucht'/>
                     </div>
                 }
             </div>
@@ -29,7 +27,7 @@
     </div>
 }
 
-<app-tijd-invoer></app-tijd-invoer>
-<app-start-editor [VliegerID]="VliegerID()"></app-start-editor>
-<app-track-editor></app-track-editor>
+<app-tijd-invoer/>
+<app-start-editor [VliegerID]='VliegerID()'/>
+<app-track-editor/>
 

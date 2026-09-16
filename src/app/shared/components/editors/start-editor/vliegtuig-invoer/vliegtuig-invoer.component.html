@@ -12,8 +12,7 @@
            [required]="verplicht()"
            (ngModelChange)="inputChange($event)"
            [typeahead]="vliegtuigInput$"
-           [(ngModel)]="VLIEGTUIG_ID">
-</ng-select>
+           [(ngModel)]='VLIEGTUIG_ID'/>
 @if (!inzetbaar) {
     <div class="flex-row cssWarning">
         @if (!inzetbaar) {

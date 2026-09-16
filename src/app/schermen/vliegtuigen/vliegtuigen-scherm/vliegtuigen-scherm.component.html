@@ -1,5 +1,5 @@
-<app-error [error]="error"></app-error>
-<app-success [success]="success"></app-success>
+<app-error [error]='error'/>
+<app-success [success]='success'/>
 
 <app-pegasus-card titel="Vliegtuigen"
                   subtitel="Een overzicht van de vliegtuigen"
@@ -9,8 +9,7 @@
     <div class="box h-100">
         @if (!toonKlein) {
             <div id="data" class="data">
-                <app-datatable
-                        id="vliegtuiggrid"
+                <app-datatable id='vliegtuiggrid'
                         [pagination]="false"
                         [rowData]="data"
                         [columnDefs]="columns"
@@ -18,7 +17,7 @@
                         [rowClassRules]="rowClassRules"
                         [frameworkComponents]="frameworkComponents"
                         (rowDoubleClicked)="dbClickVliegtuig($event)"
-                        class="h-100 mt-n8"></app-datatable>
+                               class='h-100 mt-n8'/>
             </div>
         } @if (toonKlein) {
         <div id="datacard" class="data">
@@ -28,7 +27,7 @@
                                         (Logboek)="openVliegtuigLogboek($event)"
                                         (Journaal)="openVliegtuigJournaal($event)"
                                         (Editor)="OpenEditor($event)"
-                    ></app-vliegtuig-card>
+                    />
                 </div>
             }
         </div>
@@ -41,16 +40,14 @@
                         <app-icon-button class="toolbarBtn"
                                          tekst="Toevoegen"
                                          iconNaam="far PlusSquare" (btnClicked)="addVliegtuig()"
-                                         btnColor="btn-primary"></app-icon-button>
+                                         btnColor='btn-primary'/>
                     } @if (this.deleteMode) {
                     <div>
-                        <app-status-button
-                                class="toolbarBtn"
+                        <app-status-button class='toolbarBtn'
                                 tekst="Archief"
                                 [actief]="trashMode"
                                 (btnClicked)="trashModeJaNee($event)"
-                                iconNaam="fas Inbox">
-                        </app-status-button>
+                                           iconNaam='fas Inbox'/>
                     </div>
                 }
                 </div>
@@ -59,18 +56,18 @@
                 <div class="row justify-content-between" id="zoekbar">
                     <app-zoekbar class="col-12 col-md-8 flex-grow-1"
                                  [(zoekString)]="zoekString"
-                                 (zoeken)="opvragen()"></app-zoekbar>
+                                 (zoeken)='opvragen()'/>
                     @if (this.magVerwijderen) {
                         <div class="col-4">
                             <div class="d-flex justify-content-end">
                                 @if (this.magVerwijderen && !deleteMode) {
                                     <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
                                                      btnColor="btn-secondary"
-                                                     (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                                                     (btnClicked)='deleteModeJaNee()'/>
                                 } @if (deleteMode) {
                                 <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
                                                  btnColor="btn btn-outline-primary"
-                                                 (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                                                 (btnClicked)='deleteModeJaNee()'/>
                             }
                             </div>
                         </div>
@@ -82,8 +79,8 @@
 
 
     @if (this.magToevoegen || this.magWijzigen || this.magVerwijderen) {
-        <app-vliegtuig-editor></app-vliegtuig-editor>
+        <app-vliegtuig-editor/>
     }
-    <app-popup-journaal></app-popup-journaal>
-    <app-vliegtuig-logboek></app-vliegtuig-logboek>
+    <app-popup-journaal/>
+    <app-vliegtuig-logboek/>
 </app-pegasus-card>

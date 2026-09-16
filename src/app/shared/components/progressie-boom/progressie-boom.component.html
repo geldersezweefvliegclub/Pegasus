@@ -1,5 +1,5 @@
-<app-error [error]="error"></app-error>
-<app-success [success]="success"></app-success>
+<app-error [error]='error'/>
+<app-success [success]='success'/>
 
 <div class="mb-2">
     <input type="text"
@@ -35,7 +35,7 @@
                             </div>
                         } @if (node.data.Score) {
                         <div class="ms-2">
-                            <app-voortgang [status]="node.data.Score"></app-voortgang>
+                            <app-voortgang [status]='node.data.Score'/>
                         </div>
                     }
                     </div>
@@ -48,4 +48,4 @@
 
 
 <app-progressie-editor [competenties]="competenties" [vliegerID]="VliegerID()"
-                       (aangepast)="ophalen()"></app-progressie-editor>
+                       (aangepast)='ophalen()'/>

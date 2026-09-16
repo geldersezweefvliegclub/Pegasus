@@ -1,5 +1,5 @@
-<app-error [error]="error"></app-error>
-<app-success [success]="success"></app-success>
+<app-error [error]='error'/>
+<app-success [success]='success'/>
 
 <app-pegasus-card titel="Kist reservering"
                   subtitel="Reserveer je kist voor een DDWV dag"
@@ -12,43 +12,40 @@
             <div id="data" class="w-100">
                 @if (reserveringView === 'maand') {
                     <div class="dataContent w-100">
-                        <ng-template *ngTemplateOutlet="maand"></ng-template>
+                        <ng-template *ngTemplateOutlet='maand'/>
                     </div>
                 } @if (reserveringView === 'week') {
                 <div class="dataContent w-100">
-                    <ng-template *ngTemplateOutlet="week"></ng-template>
+                    <ng-template *ngTemplateOutlet='week'/>
                 </div>
             } @if (reserveringView === 'dag') {
                 <div class="dataContent w-100">
-                    <ng-template *ngTemplateOutlet="dag"></ng-template>
+                    <ng-template *ngTemplateOutlet='dag'/>
                 </div>
             }
             </div>
             <div class="row justify-content-start mt-2" id="toolbar">
                 <div class="d-flex row">
                     <div class="col-8">
-                        <app-icon-button
-                                class="toolbarBtn"
+                        <app-icon-button class='toolbarBtn'
                                 tekst="Filter"
                                 iconNaam="fas Filter" (btnClicked)="toonKistSelectie()"
-                                btnColor="btn-primary"></app-icon-button>
+                                         btnColor='btn-primary'/>
 
                         @if (reserveringView !== 'dag') {
-                            <app-icon-button
-                                    class="toolbarBtn ps-2"
+                            <app-icon-button class='toolbarBtn ps-2'
                                     tekst="Club / DDWV"
                                     iconNaam="fas CalendarWeek" (btnClicked)="ToggleWeekendDDWV()"
-                                    btnColor="btn-primary"></app-icon-button>
+                                             btnColor='btn-primary'/>
                         }
                     </div>
                     <div class="col-4">
                         @if (magBoeken) {
                             <div class="d-flex justify-content-end">
-                                <app-icon-button
-                                        class="toolbarBtn"
+                                <app-icon-button class='toolbarBtn'
                                         tekst="Boeking"
                                         iconNaam="far PlusSquare" (btnClicked)="nieuweBoeking()"
-                                        btnColor="btn-primary"></app-icon-button>
+                                                 btnColor='btn-primary'/>
                             </div>
                         }
                     </div>
@@ -56,20 +53,20 @@
             </div>
         </div>
     </div>
-    <app-kist-selectie [clubVliegtuigen]="clubVliegtuigen" (aangepast)="changeTonen($event)"></app-kist-selectie>
-    <app-boeking-editor [clubVliegtuigen]="clubVliegtuigen" (boekingToegevoegd)="opvragen()"></app-boeking-editor>
-    <app-start-editor></app-start-editor>
+    <app-kist-selectie [clubVliegtuigen]='clubVliegtuigen' (aangepast)='changeTonen($event)'/>
+    <app-boeking-editor [clubVliegtuigen]='clubVliegtuigen' (boekingToegevoegd)='opvragen()'/>
+    <app-start-editor/>
 </app-pegasus-card>
 
 <ng-template #reset>
     <div class="d-flex flex-column justify-content-center h-100 text-black-50 clickable px-1">
-        <fa-icon [icon]="resetIcon"></fa-icon>
+        <fa-icon [icon]='resetIcon'/>
     </div>
 </ng-template>
 
 <ng-template #assign>
     <div class="d-flex flex-column justify-content-center h-100 text-black-50 clickable px-1">
-        <fa-icon [icon]="assignIcon"></fa-icon>
+        <fa-icon [icon]='assignIcon'/>
     </div>
 </ng-template>
 
@@ -127,7 +124,7 @@
                         <td
                     [ngStyle]="{'width.%': 100/(clubVliegtuigenFiltered.length+2)}">
                     <ng-container [ngTemplateOutlet]="reservering"
-                                  [ngTemplateOutletContext]="{dag:dagInRooster.DATUM,vliegtuigID:clubKist.ID}"></ng-container>
+                                  [ngTemplateOutletContext]='{dag:dagInRooster.DATUM,vliegtuigID:clubKist.ID}'/>
                         </td>
                     }
                 </tr>
@@ -142,19 +139,17 @@
         <div class="d-flex flex-row justify-content-between mb-2">
             <div>
                 @if (toonDatumKnoppen) {
-                    <app-icon-button
-                            class="toolbarBtn mx-2"
+                    <app-icon-button class='toolbarBtn mx-2'
                             iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum.plus({days: -7}))"
-                            btnColor="btn-secondary"></app-icon-button>
+                                     btnColor='btn-secondary'/>
                 }
             </div>
             Reserveringen voor de week van {{ maandag.day }}-{{ maandag.month }}-{{ maandag.year }}
             <div>
                 @if (toonDatumKnoppen) {
-                    <app-icon-button
-                            class="toolbarBtn mx-2"
+                    <app-icon-button class='toolbarBtn mx-2'
                             iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum.plus({days: 7}))"
-                            btnColor="btn-secondary"></app-icon-button>
+                                     btnColor='btn-secondary'/>
                 }
             </div>
         </div>
@@ -186,7 +181,7 @@
                             <td
                                     [ngClass]="isClubBedrijf(dagInRooster.DATUM) ? 'clubBedrijf' : ''">
                                 <ng-container [ngTemplateOutlet]="reservering"
-                                              [ngTemplateOutletContext]="{dag:dagInRooster.DATUM,vliegtuigID:clubKist.ID}"></ng-container>
+                                              [ngTemplateOutletContext]='{dag:dagInRooster.DATUM,vliegtuigID:clubKist.ID}'/>
                     </td>
                         }
                 </tr>
@@ -202,27 +197,23 @@
         <div class="d-flex flex-row justify-content-between">
             @if (toonDatumKnoppen) {
                 <div>
-                    <app-icon-button
-                            class="toolbarBtn"
+                    <app-icon-button class='toolbarBtn'
                             iconNaam="fas AngleDoubleLeft" (btnClicked)="zetDatum(datum.plus({days: -7}))"
-                            btnColor="btn-secondary"></app-icon-button>
-                    <app-icon-button
-                            class="toolbarBtn mx-2"
+                                     btnColor='btn-secondary'/>
+                    <app-icon-button class='toolbarBtn mx-2'
                             iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum.plus({days: -1}))"
-                            btnColor="btn-secondary"></app-icon-button>
+                                     btnColor='btn-secondary'/>
             </div>
             }
             {{ DagVanDeWeek(datum.toISODate()) }} <br>{{ datum.day }}-{{ datum.month }}-{{ datum.year }}
             @if (toonDatumKnoppen) {
                 <div>
-                    <app-icon-button
-                            class="toolbarBtn mx-2"
+                    <app-icon-button class='toolbarBtn mx-2'
                             iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum.plus({days: 1}))"
-                            btnColor="btn-secondary"></app-icon-button>
-                    <app-icon-button
-                            class="toolbarBtn"
+                                     btnColor='btn-secondary'/>
+                    <app-icon-button class='toolbarBtn'
                             iconNaam="fas AngleDoubleRight" (btnClicked)="zetDatum(datum.plus({days: 7}))"
-                            btnColor="btn-secondary"></app-icon-button>
+                                     btnColor='btn-secondary'/>
             </div>
             }
         </div>
@@ -234,7 +225,7 @@
                     </td>
                     <td class="w-100 pe-4">
                         <ng-container [ngTemplateOutlet]="reservering"
-                                      [ngTemplateOutletContext]="{dag:datum.toISODate(),vliegtuigID:clubKist.ID}"></ng-container>
+                                      [ngTemplateOutletContext]='{dag:datum.toISODate(),vliegtuigID:clubKist.ID}'/>
                     </td>
             </tr>
             }
@@ -253,12 +244,12 @@
                 @if (magReserveren(dag, vliegtuigID) && magNogReserveren) {
                     <div
                             (click)="toekennenReservering(dag, vliegtuigID)">
-                        <ng-template *ngTemplateOutlet="assign"></ng-template>
+                        <ng-template *ngTemplateOutlet='assign'/>
                     </div>
                 } @if (magVerwijderen(dag, vliegtuigID)) {
                 <div
                         (click)="verwijderReservering(dag, vliegtuigID)">
-                    <ng-template *ngTemplateOutlet="reset"></ng-template>
+                    <ng-template *ngTemplateOutlet='reset'/>
                 </div>
             }
             </div>

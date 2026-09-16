@@ -10,7 +10,7 @@
             <ng-template #treeNodeWrapperTemplate let-node let-index="index">
                 <div class="node-wrapper flex justify-content-between" [style.padding-left]="node.getNodePadding()">
                     <div>
-                        <tree-node-expander [node]="node"></tree-node-expander>
+                        <tree-node-expander [node]='node'/>
                         <div class="node-content-wrapper"
                              [class.node-content-wrapper-active]="node.isActive"
                              [class.node-content-wrapper-focused]="node.isFocused"
@@ -22,18 +22,19 @@
                              [treeDrag]="node"
                              [treeDragEnabled]="node.allowDrag()">
 
-                            <tree-node-content [node]="node" [index]="index"></tree-node-content>
+                            <tree-node-content [node]='node' [index]='index'/>
                         </div>
                     </div>
                     <div [title]="node.displayField">
                         @if (node.data.value >= 0 && node.data.blokID !== -1) {
-                            <fa-icon [icon]="upIcon" class="upBtn me-2 clickable" (click)="omhoog(node.data);"></fa-icon>
+                            <fa-icon [icon]='upIcon' class='upBtn me-2 clickable' (click)='omhoog(node.data);'/>
                         }
                         @if (node.data.value >= 0 && node.data.blokID !== -1) {
-                            <fa-icon [icon]="downIcon" class="downBtn me-2 clickable" (click)="omlaag(node.data);"></fa-icon>
+                            <fa-icon [icon]='downIcon' class='downBtn me-2 clickable' (click)='omlaag(node.data);'/>
                         }
                         @if (node.data.value >= 0) {
-                            <fa-icon [icon]="toevoegenIcon" class="addBtn me-2 clickable" (click)="toevoegen(node.data);"></fa-icon>
+                            <fa-icon [icon]='toevoegenIcon' class='addBtn me-2 clickable'
+                                     (click)='toevoegen(node.data);'/>
                         }
                     </div>
                 </div>
@@ -58,4 +59,4 @@
     </div>
 </app-pegasus-card>
 
-<app-competentie-editor></app-competentie-editor>
+<app-competentie-editor/>

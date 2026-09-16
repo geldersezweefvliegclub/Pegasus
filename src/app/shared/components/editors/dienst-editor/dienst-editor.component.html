@@ -1,5 +1,5 @@
-<app-error [error]="error"></app-error>
-<app-success [success]="success"></app-success>
+<app-error [error]='error'/>
+<app-success [success]='success'/>
 
 <app-modal titel="Dienst {{datumDMY}}">
     <div body>
@@ -14,19 +14,17 @@
                                 excludeLidTypes="606,607,608,609,610,611,612,613,620,625"
                                 [required]=false
                                 [leden]="filteredLeden"
-                                (LidChanged)="lidGeselecteerd($event)">
-
-                </app-lid-invoer>
+                                (LidChanged)='lidGeselecteerd($event)'/>
             </div>
         </form>
     </div>
     <div footer>
         @if (!isSaving) {
             <app-icon-button iconNaam="fas Edit" btnColor="btn-primary" [toonKlein]=false
-                             tekst="Opslaan" (btnClicked)="opslaan()"></app-icon-button>
+                             tekst='Opslaan' (btnClicked)='opslaan()'/>
         } @if (isSaving) {
         <button class="btn btn-primary">
-            <span><app-loader></app-loader></span>
+            <span><app-loader/></span>
         </button>
     }
     </div>

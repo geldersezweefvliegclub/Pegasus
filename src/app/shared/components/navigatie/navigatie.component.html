@@ -12,9 +12,9 @@
 
 <nav class="h-100">
     @if (!hoofdscherm()) {
-        <ng-container [ngTemplateOutlet]="menuInside"></ng-container>
+        <ng-container [ngTemplateOutlet]='menuInside'/>
     } @if (hoofdscherm()) {
-    <ng-container class="d-flex h-100" [ngTemplateOutlet]="menuScherm"></ng-container>
+    <ng-container class='d-flex h-100' [ngTemplateOutlet]='menuScherm'/>
 }
 </nav>
 
@@ -29,7 +29,7 @@
                            [routerLink]="'/' + route.path"
                         >
                             <div class="text-nowrap">
-                                <fa-icon [icon]="route.icon" class="me-3"></fa-icon>
+                                <fa-icon [icon]='route.icon' class='me-3'/>
                                 {{ route.text }}
                                 @if (route.batch) {
                                     <div class="badge bg-danger ms-2" [innerHTML]="route.batch"></div>
@@ -42,7 +42,7 @@
                     <a class="menuButton menuItemScherm" style="{{ menuItem.css }}" href="{{ menuItem.Url }}"
                        target="_blank">
                         <div class="text-nowrap">
-                            <fa-icon [icon]="toonIcon(menuItem.Icon)" class="me-3"></fa-icon>
+                            <fa-icon [icon]='toonIcon(menuItem.Icon)' class='me-3'/>
                             {{ menuItem.Titel }}
                         </div>
                     </a>
@@ -50,7 +50,7 @@
             }
                 <div class="p-0 col-12 col-sm-6 col-md-3">
                     <a class="menuButton menuItemScherm" (click)="Uitloggen()">
-                        <fa-icon [icon]="logUitIcon" class="me-3"></fa-icon>
+                        <fa-icon [icon]='logUitIcon' class='me-3'/>
                         Uitloggen
                     </a>
                 </div>
@@ -62,7 +62,7 @@
             <div class="-d-flex row align-content-end">
                 <div class="p-0 col-12 col-sm-6 col-md-3">
                     <a class="menuButton menuItemScherm" (click)="showBeheer = !showBeheer">
-                        <fa-icon [icon]="beheerIcon" class="me-3"></fa-icon>
+                        <fa-icon [icon]='beheerIcon' class='me-3'/>
                         Beheer
                     </a>
                 </div>
@@ -76,7 +76,7 @@
                                         [routerLink]="'/' + route.path"
                                 >
                                     <div class="text-nowrap">
-                                        <fa-icon [icon]="route.icon" class="me-3"></fa-icon>
+                                        <fa-icon [icon]='route.icon' class='me-3'/>
                                         {{ route.text }}
                                     </div>
                                 </a>
@@ -89,12 +89,11 @@
                         <div class="d-flex">
                             <div class="datumVeld">{{ datumDMY }}</div>
                             <app-icon-button iconNaam="far Calendar" (btnClicked)="popupKalender().openPopup()"
-                                             btnColor="btn-primary"></app-icon-button>
+                                             btnColor='btn-primary'/>
                         </div>
                     } @if (!kleineDatum() && !showBeheer) {
                     <div class="w-100 overflow-auto" style="max-width: 280px;">
-                        <app-vliegdag-selectie
-                        ></app-vliegdag-selectie>
+                        <app-vliegdag-selectie/>
                     </div>
                 }
                 </div>
@@ -121,7 +120,7 @@
                         [routerLink]="route.path"
                 >
                     <div class="text-nowrap">
-                        <fa-icon [icon]="route.icon" class="me-3"></fa-icon>
+                        <fa-icon [icon]='route.icon' class='me-3'/>
                         {{ route.text }}
                         @if (route.batch) {
                             <div class="badge bg-danger ms-2" [innerHTML]="route.batch"></div>
@@ -132,7 +131,7 @@
                 <a class="list-group-item list-group-item-action waves-effect py-2" style="{{ menuItem.css }}"
                    href="{{ menuItem.Url }}" target="_blank">
                     <div class="text-nowrap">
-                        <fa-icon [icon]="toonIcon(menuItem.Icon)" class="me-3"></fa-icon>
+                        <fa-icon [icon]='toonIcon(menuItem.Icon)' class='me-3'/>
                         {{ menuItem.Titel }}
                     </div>
                 </a>
@@ -140,7 +139,7 @@
 
                 <a class="list-group-item list-group-item-action waves-effect"
                    (click)="Uitloggen()">
-                    <fa-icon [icon]="logUitIcon" class="me-3"></fa-icon>
+                    <fa-icon [icon]='logUitIcon' class='me-3'/>
                     Uitloggen
                 </a>
             </div>
@@ -153,7 +152,7 @@
                         <div class="beheer-menu">
                             <a class="list-group-item list-group-item-action waves-effect beheer"
                                (click)="showBeheer = !showBeheer">
-                                <fa-icon [icon]="beheerIcon" class="me-3"></fa-icon>
+                                <fa-icon [icon]='beheerIcon' class='me-3'/>
                                 Beheer
                             </a>
                             @if (showBeheer) {
@@ -165,7 +164,7 @@
                                                 [routerLink]="route.path"
                                         >
                                             <div class="text-nowrap">
-                                                <fa-icon [icon]="route.icon" class="ms-3 me-3"></fa-icon>
+                                                <fa-icon [icon]='route.icon' class='ms-3 me-3'/>
                                                 {{ route.text }}
                                             </div>
                                         </a>
@@ -175,14 +174,13 @@
                         </div>
                     }
                     <div class="w-100 overflow-auto" [ngClass]="{'verbergDatum': kleineDatum() || showBeheer}">
-                        <app-vliegdag-selectie
-                        ></app-vliegdag-selectie>
+                        <app-vliegdag-selectie/>
                     </div>
                     @if (kleineDatum()) {
                         <div class="list-group-item d-flex">
                             <div class="datumVeld">{{ datumDMY }}</div>
                             <app-icon-button iconNaam="far Calendar" (btnClicked)="popupKalender().openPopup()"
-                                             btnColor="btn-primary"></app-icon-button>
+                                             btnColor='btn-primary'/>
                         </div>
                     }
                 </div>
@@ -191,4 +189,4 @@
     </div>
 </ng-template>
 
-<app-popup-kalender></app-popup-kalender>
+<app-popup-kalender/>

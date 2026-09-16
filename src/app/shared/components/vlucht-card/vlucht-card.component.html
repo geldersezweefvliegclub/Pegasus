@@ -62,17 +62,17 @@
         } @if (!start.STARTTIJD && !start.LANDINGSTIJD) {
             <td class="rechts laag" rowspan="3">
                 <app-icon-button class="toolbarBtn me-2" iconNaam="fas PlaneDeparture" (btnClicked)="startTijdClicked()"
-                                 btnColor="startBtn"></app-icon-button>
+                                 btnColor='startBtn'/>
             </td>
         } @if (start.STARTTIJD && !start.LANDINGSTIJD) {
             <td class="rechts laag" rowspan="3">
                 <app-icon-button class="toolbarBtn me-2" iconNaam="fas PlaneArrival"
                                  (btnClicked)="landingsTijdClicked()"
-                                 btnColor="landingsBtn"></app-icon-button>
+                                 btnColor='landingsBtn'/>
             </td>
         } @if (inTijdspan) {
             <td rowspan="2" class="iconEdit">
-                <fa-icon [icon]="iconEdit" class="mx-2" (click)="openStartEditor()"></fa-icon>
+                <fa-icon [icon]='iconEdit' class='mx-2' (click)='openStartEditor()'/>
             </td>
         }
         </tr>
@@ -132,8 +132,8 @@
 </div>
 }
 
-<app-tijd-invoer></app-tijd-invoer>
+<app-tijd-invoer/>
 @if (start) {
-    <app-start-editor [VliegerID]="start.VLIEGER_ID"></app-start-editor>
+    <app-start-editor [VliegerID]='start.VLIEGER_ID'/>
 }
-<app-track-editor></app-track-editor>
+<app-track-editor/>

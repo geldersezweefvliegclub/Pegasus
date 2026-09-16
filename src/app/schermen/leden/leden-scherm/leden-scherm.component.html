@@ -1,4 +1,4 @@
-<app-error [error]="error"></app-error>
+<app-error [error]='error'/>
 
 <app-pegasus-card titel="Ledenlijst"
                   subtitel="De ledenlijst"
@@ -8,8 +8,7 @@
     <div class="box h-100">
         @if (!toonKlein) {
             <div id="data" class="data">
-                <app-datatable
-                        id="ledengrid"
+                <app-datatable id='ledengrid'
                         rowHeight=70
                         [pagination]="toonBladwijzer"
                         [sizeToFit]="true"
@@ -19,7 +18,7 @@
                         [rowClassRules]="rowClassRules"
                         [frameworkComponents]="frameworkComponents"
                         (rowDoubleClicked)="bewerkLid($event)"
-                        class="h-100 mt-n8"></app-datatable>
+                               class='h-100 mt-n8'/>
             </div>
         } @if (toonKlein) {
         <div id="datacard" class="data">
@@ -31,7 +30,7 @@
                 </div>
             } @for (lid of leden; track lid; let i = $index) {
             <div>
-                <app-leden-card [lid]="lid"></app-leden-card>
+                <app-leden-card [lid]='lid'/>
             </div>
         }
         </div>
@@ -42,7 +41,7 @@
                     <app-icon-button class="toolbarBtn"
                                      tekst="Filter"
                                      iconNaam="fas Filter" (btnClicked)="filterPopup()"
-                                     btnColor="btn-primary"></app-icon-button>
+                                     btnColor='btn-primary'/>
 
                     @if (this.magToevoegen) {
                         <div>
@@ -50,16 +49,14 @@
                                 <app-icon-button class="toolbarBtn"
                                                  tekst="Toevoegen"
                                                  iconNaam="far PlusSquare" (btnClicked)="addLid()"
-                                                 btnColor="btn-primary"></app-icon-button>
+                                                 btnColor='btn-primary'/>
                             } @if (this.deleteMode) {
                             <div>
-                                <app-status-button
-                                        class="toolbarBtn"
+                                <app-status-button class='toolbarBtn'
                                         tekst="Archief"
                                         [actief]="trashMode"
                                         (btnClicked)="trashModeJaNee($event)"
-                                        iconNaam="fas Inbox">
-                                </app-status-button>
+                                                   iconNaam='fas Inbox'/>
                             </div>
                         }
                         </div>
@@ -73,7 +70,7 @@
                                  (zoeken)="opvragen()">
                         @if (toonBulkEmail) {
                             <app-icon-button class="toolbarBtn" iconNaam="fas MailBulk" (btnClicked)="bulkEmail()"
-                                             btnColor="btn-secondary"></app-icon-button>
+                                             btnColor='btn-secondary'/>
                         }
                     </app-zoekbar>
                     @if (this.magVerwijderen) {
@@ -82,11 +79,11 @@
                                 @if (this.magVerwijderen && !deleteMode) {
                                     <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
                                                      btnColor="btn-secondary"
-                                                     (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                                                     (btnClicked)='deleteModeJaNee()'/>
                                 } @if (deleteMode) {
                                 <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
                                                  btnColor="btn btn-outline-primary"
-                                                 (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                                                 (btnClicked)='deleteModeJaNee()'/>
                             }
                             </div>
                         </div>
@@ -96,6 +93,6 @@
         </div>
     </div>
 
-    <app-leden-filter (filterChanged)="applyFilter()"></app-leden-filter>
-    <app-track-editor></app-track-editor>
+    <app-leden-filter (filterChanged)='applyFilter()'/>
+    <app-track-editor/>
 </app-pegasus-card>

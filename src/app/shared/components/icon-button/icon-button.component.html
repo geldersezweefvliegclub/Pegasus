@@ -1,7 +1,7 @@
 <button class="btn" [ngClass]="btnColor()"  [type]="type()" [disabled]="disabled()"  (click)="buttonClicked($event)">
     <div class="d-flex">
         @if (faIcon) {
-            <fa-icon [icon]="faIcon" [flip]="flip()" [size]="size()"></fa-icon>
+            <fa-icon [icon]='faIcon' [flip]='flip()' [size]='size()'/>
         } @if (toonTekst || !toonKlein()) {
         <div [ngClass]="{'ms-3': tekst().length > 0 && faIcon}">{{ tekst() }}</div>
     }

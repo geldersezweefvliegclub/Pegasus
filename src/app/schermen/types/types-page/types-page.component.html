@@ -20,10 +20,10 @@
                                 <div class="d-flex">
                                     @if (deleteMode && trashMode) {
                                         <fa-icon [icon]="restoreIcon" class="restoreBtn me-2"
-                                                 (click)="editor().openRestorePopup(t.ID);"></fa-icon>
+                                                 (click)='editor().openRestorePopup(t.ID);'/>
                                     } @if (deleteMode && !trashMode && !t.READ_ONLY) {
                                     <fa-icon [icon]="deleteIcon" class="deleteBtn me-2"
-                                             (click)="editor().openVerwijderPopup(t.ID);"></fa-icon>
+                                             (click)='editor().openVerwijderPopup(t.ID);'/>
                                 } @if (deleteMode && !trashMode && t.READ_ONLY) {
                                     <div style="width: 23px;"></div>
                                 }
@@ -46,12 +46,12 @@
                                 <div class="d-flex">
                                     @if (i !== 0) {
                                         <fa-icon class="upBtn mx-3" [icon]="upIcon"
-                                                 (click)="omhoog(t.ID)"></fa-icon>
+                                                 (click)='omhoog(t.ID)'/>
                                     } @if (i === 0) {
                                     <div class="mx-3" style="min-width: 18px;max-width: 18px;"></div>
                                 } @if (i !== (filteredTypes.length - 1)) {
                                     <fa-icon class="downBtn me-5" [icon]="downIcon"
-                                             (click)="omlaag(t.ID)"></fa-icon>
+                                             (click)='omlaag(t.ID)'/>
                                 } @if (i === (filteredTypes.length - 1)) {
                                     <div style="width:66px;"></div>
                                 }
@@ -69,16 +69,14 @@
                         <app-icon-button class="toolbarBtn"
                                          tekst="Toevoegen"
                                          iconNaam="far PlusSquare" (btnClicked)="addType()"
-                                         btnColor="btn-primary"></app-icon-button>
+                                         btnColor='btn-primary'/>
                     } @if (this.deleteMode) {
                     <div>
-                        <app-status-button
-                                class="toolbarBtn"
+                        <app-status-button class='toolbarBtn'
                                 tekst="Archief"
                                 [actief]="trashMode"
                                 (btnClicked)="trashModeJaNee($event)"
-                                iconNaam="fas Inbox">
-                        </app-status-button>
+                                           iconNaam='fas Inbox'/>
                     </div>
                 }
                 </div>
@@ -88,11 +86,11 @@
                     @if (this.magVerwijderen && !deleteMode) {
                         <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
                                          btnColor="btn-secondary"
-                                         (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                                         (btnClicked)='deleteModeJaNee()'/>
                     } @if (deleteMode) {
                     <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
                                      btnColor="btn btn-outline-primary"
-                                     (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                                     (btnClicked)='deleteModeJaNee()'/>
                 }
                 </div>
             </div>
@@ -102,4 +100,4 @@
 
 </app-pegasus-card>
 
-<app-type-editor [toonBedragEenheid]="bedragEenheidActief"></app-type-editor>
+<app-type-editor [toonBedragEenheid]='bedragEenheidActief'/>

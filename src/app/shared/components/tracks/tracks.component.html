@@ -1,5 +1,5 @@
-<app-error [error]="error"></app-error>
-<app-success [success]="success"></app-success>
+<app-error [error]='error'/>
+<app-success [success]='success'/>
 
 <div class="d-flex h-100">
     <div [class]="toonLid() ? 'col-sm-12 col-xxl-9' : 'col-12'">
@@ -14,7 +14,7 @@
                                     @if (magTrackVerwijderen(trk)) {
                                         <button class="btn btn-noborder" (click)="openVerwijderPopup(trk)"
                                         >
-                                            <fa-icon [icon]="deleteIcon" class="deleteBtn"></fa-icon>
+                                            <fa-icon [icon]='deleteIcon' class='deleteBtn'/>
                                         </button>
                                     }
                                 </td>
@@ -23,7 +23,7 @@
                                 @if (magTrackHerstellen(trk)) {
                                     <button class="btn btn-noborder" (click)="openRestorePopup(trk)"
                                     >
-                                        <fa-icon [icon]="restoreIcon" class="restoreBtn"></fa-icon>
+                                        <fa-icon [icon]='restoreIcon' class='restoreBtn'/>
                                     </button>
                                 }
                             </td>
@@ -31,7 +31,7 @@
                             <td class="naamCell">
                                 <div class="d-flex">
                                     @if (trk.lid) {
-                                        <app-avatar [url]="trk.lid.AVATAR"></app-avatar>
+                                        <app-avatar [url]='trk.lid.AVATAR'/>
                                     }
                                     <div class="naam text-nowrap"><a aria-label="Naar dashboard"
                                                                      [routerLink]="['/dashboard']"
@@ -44,7 +44,7 @@
                                 @if (!lidColumn()) {
                                     <div class="d-flex">
                                         @if (trk.lid) {
-                                            <app-avatar [url]="trk.lid.AVATAR"></app-avatar>
+                                            <app-avatar [url]='trk.lid.AVATAR'/>
                                         }
                                         <div class="naam text-nowrap"><a aria-label="Naar dashboard"
                                                                          [routerLink]="['/dashboard']"
@@ -63,7 +63,7 @@
                             @if (!deleteMode) {
                                 <td class="replyColumn">
                                     <app-icon-button iconNaam="fas Reply" class="tracksReplyIcon"
-                                                     (btnClicked)="replyTrackEditor(trk)"></app-icon-button>
+                                                     (btnClicked)='replyTrackEditor(trk)'/>
                                 </td>
                             }
                         </tr>
@@ -79,18 +79,16 @@
                                     <app-icon-button class="toolbarBtn"
                                                      tekst="Toevoegen"
                                                      iconNaam="far PlusSquare" (btnClicked)="openTrackEditor()"
-                                                     btnColor="btn-primary"></app-icon-button>
+                                                     btnColor='btn-primary'/>
                                 }
                             </div>
                             @if (this.deleteMode) {
                                 <div class="ms-2">
-                                    <app-status-button
-                                            class="toolbarBtn"
+                                    <app-status-button class='toolbarBtn'
                                             tekst="Archief"
                                             [actief]="trashMode"
                                             (btnClicked)="trashModeJaNee($event)"
-                                            iconNaam="fas Inbox">
-                                    </app-status-button>
+                                                       iconNaam='fas Inbox'/>
                                 </div>
                             }
                         </div>
@@ -118,11 +116,11 @@
                                     @if (this.magVerwijderen && !deleteMode) {
                                         <app-icon-button class="toolbarBtn" tekst="Verwijderen" iconNaam="far TrashAlt"
                                                          btnColor="btn-secondary"
-                                                         (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                                                         (btnClicked)='deleteModeJaNee()'/>
                                     } @if (deleteMode) {
                                     <app-icon-button class="toolbarBtn" tekst="Terug" iconNaam="far ArrowAltCircleLeft"
                                                      btnColor="btn btn-outline-primary"
-                                                     (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                                                     (btnClicked)='deleteModeJaNee()'/>
                                 }
                                 </div>
                             </div>
@@ -145,7 +143,7 @@
                                           subtitel="Vliegstatus"
                                           minimum="true"
                                           [icon]="iconStatus">
-                            <app-status [Vlieger]="geselecteerdLid"></app-status>
+                            <app-status [Vlieger]='geselecteerdLid'/>
                         </app-pegasus-card>
                     </div>
                     <div class="container">
@@ -155,7 +153,7 @@
                                           subtitel="Proef van bekwaamheid"
                                           minimum="true"
                                           [icon]="iconPVB">
-                            <app-pvb [VliegerID]="geselecteerdLid.ID"></app-pvb>
+                            <app-pvb [VliegerID]='geselecteerdLid.ID'/>
                         </app-pegasus-card>
                     </div>
                     <div class="container">
@@ -165,7 +163,7 @@
                                           subtitel="Trainingsbarometer"
                                           minimum="true"
                                           [icon]="iconRecency">
-                            <app-recency [Vlieger]="geselecteerdLid" [naam]="geselecteerdLid.NAAM"></app-recency>
+                            <app-recency [Vlieger]='geselecteerdLid' [naam]='geselecteerdLid.NAAM'/>
                         </app-pegasus-card>
                     </div>
                     <div class="container">
@@ -175,8 +173,7 @@
                                           subtitel="Per vliegtuig"
                                           minimum="true"
                                           [icon]="iconPlane">
-                            <app-vlieger-logboek-totalen
-                                    [VliegerID]="geselecteerdLid.ID"></app-vlieger-logboek-totalen>
+                            <app-vlieger-logboek-totalen [VliegerID]='geselecteerdLid.ID'/>
                         </app-pegasus-card>
                     </div>
                 </div>
@@ -193,5 +190,5 @@
     </div>
     </div>
 } @if (this.magToevoegen || this.magWijzigen || this.magVerwijderen) {
-    <app-track-editor></app-track-editor>
+    <app-track-editor/>
 }

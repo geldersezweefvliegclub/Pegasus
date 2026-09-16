@@ -1,5 +1,5 @@
-<app-error [error]="error"></app-error>
-<app-success [success]="success"></app-success>
+<app-error [error]='error'/>
+<app-success [success]='success'/>
 <ng-template #wachtwoordPopover>
     Wachtwoorden moeten minimaal bevatten:
     <ul>
@@ -24,7 +24,7 @@
                 <div avatar>
                     @if (!this.isVerwijderMode() && !this.isRestoreMode()) {
                         <app-image-crop (opslaan)="uploadFoto($event)" (cropped)="setAvatar($event)"
-                        ></app-image-crop>
+                        />
                     }
                 </div>
                 <div header>
@@ -118,7 +118,7 @@
                                     >
                                     <div class="input-group-append">
                                         <app-icon-button iconNaam="far Calendar" (btnClicked)="d.toggle()"
-                                                         btnColor="btn-primary"></app-icon-button>
+                                                         btnColor='btn-primary'/>
                                     </div>
                                 </div>
                             </div>
@@ -136,7 +136,7 @@
                                         >
                                         <div class="input-group-append">
                                             <app-icon-button iconNaam="far Calendar" (btnClicked)="medical.toggle()"
-                                                             btnColor="btn-primary"></app-icon-button>
+                                                             btnColor='btn-primary'/>
                                         </div>
                                     </div>
                                     @if (lid.LIDTYPE_ID === 600 || lid.LIDTYPE_ID === 601 || lid.LIDTYPE_ID === 602 || lid.LIDTYPE_ID === 603) {
@@ -201,7 +201,7 @@
                                                     Twee-staps verificatie
                                                     <fa-icon class="text-info ms-2 clickable" [icon]="infoIcon"
                                                              [ngbPopover]="googleAuthPopover"
-                                                             placement="right"></fa-icon>
+                                                             placement='right'/>
                                                 </label>
                                             </div>
                                         }
@@ -250,7 +250,7 @@
                                                 Twee-staps verificatie
                                                 <fa-icon class="text-info ms-2 clickable" [icon]="infoIcon"
                                                          [ngbPopover]="googleAuthPopover"
-                                                         placement="right"></fa-icon>
+                                                         placement='right'/>
                                             </label>
                                         </div>
                                     </div>
@@ -264,15 +264,15 @@
                                         Wachtwoord
                                     </label>
                                     <fa-icon [icon]="infoIcon" [ngbPopover]="wachtwoordPopover" placement="right"
-                                             class="text-info ms-2 clickable"></fa-icon>
+                                             class='text-info ms-2 clickable'/>
                                     <div class="input-group">
                                         <input class="form-control" [type]="wachtwoordVerborgen ? 'password' : 'text'"
                                                id="wachtwoord"
                                                name="wachtwoord"
                                                appWachtwoordSterkteValidator
                                                [(ngModel)]="wachtwoord">
-                                        <span class="input-group-text" (click)="verbergWachtwoord()"><fa-icon
-                                                [icon]="oogIcon"></fa-icon></span>
+                                        <span class='input-group-text' (click)='verbergWachtwoord()'><fa-icon
+                                                [icon]='oogIcon'/></span>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6 col-xl-5 col-xxl-4">
@@ -280,27 +280,26 @@
                                         Herhaal wachtwoord
                                     </label>
                                     <fa-icon [icon]="infoIcon" [ngbPopover]="wachtwoordPopover" placement="right"
-                                             class="text-info ms-2 clickable"></fa-icon>
+                                             class='text-info ms-2 clickable'/>
                                     <div class="input-group">
                                         <input class="form-control" [type]="wachtwoordVerborgen ? 'password' : 'text'"
                                                id="herhaalwachtwoord"
                                                name="herhaalwachtwoord"
                                                appWachtwoordSterkteValidator
                                                [(ngModel)]="controleWachtwoord">
-                                        <span class="input-group-text" (click)="verbergWachtwoord()"><fa-icon
-                                                [icon]="oogIcon"></fa-icon></span>
+                                        <span class='input-group-text' (click)='verbergWachtwoord()'><fa-icon
+                                                [icon]='oogIcon'/></span>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6 col-xl-5 col-xxl-4">
                                     @if (lid.LIDTYPE_ID === 625) {
-                                        <app-lid-invoer
-                                                id="ZUSTERCLUB_ID"
+                                        <app-lid-invoer id='ZUSTERCLUB_ID'
                                                 placeholder="Zusterclub"
                                                 label="Zusterclub"
                                                 [LID_ID]="lid.ZUSTERCLUB_ID"
                                                 [leden]="zusterclubs"
                                                 (LidChanged)="lid.ZUSTERCLUB_ID=$event"
-                                        ></app-lid-invoer>
+                                        />
                                     }
                                 </div>
                             </div>
@@ -389,7 +388,7 @@
                                             [disabled]="isDisabled('BUDDY')"
                                             [leden]="instructeurs"
                                             (LidChanged)="lid.BUDDY_ID = $event"
-                            ></app-lid-invoer>
+                            />
                         </div>
                         <div class="col-5">
                             <app-lid-invoer id="BUDDY2"
@@ -399,7 +398,7 @@
                                             [disabled]="isDisabled('BUDDY')"
                                             [leden]="instructeurs"
                                             (LidChanged)="lid.BUDDY_ID2 = $event"
-                            ></app-lid-invoer>
+                            />
                         </div>
                     </div>
                     <hr>
@@ -615,26 +614,24 @@
         <div class="row mt-2 justify-content-end">
             <div class="col-3 d-flex justify-content-end">
                 @if (!isLoading && !isSaving && lid.ID !== undefined && !isRestoreMode() && !isVerwijderMode()) {
-                    <app-icon-button
-                            [disabled]="informatieGroup.invalid || persoonGroup.invalid"
+                    <app-icon-button [disabled]='informatieGroup.invalid || persoonGroup.invalid'
                             iconNaam="fas Edit" btnColor="btn-primary" [toonKlein]=false
-                            tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
+                                     tekst='Opslaan' (btnClicked)='uitvoeren()'/>
                 } @if (!isLoading && !isSaving && lid.ID === undefined && !isRestoreMode() && !isVerwijderMode()) {
-                <app-icon-button
-                        [disabled]="informatieGroup.invalid || persoonGroup.invalid"
+                <app-icon-button [disabled]='informatieGroup.invalid || persoonGroup.invalid'
                         iconNaam="fas Plus" btnColor="btn-primary" [toonKlein]=false
-                        tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
+                                 tekst='Opslaan' (btnClicked)='uitvoeren()'/>
             } @if (!isLoading && !isSaving && isVerwijderMode()) {
                 <app-icon-button iconNaam="fas TrashAlt"
                                  btnColor="btn-primary editorDeleteBtn" [toonKlein]=false
-                                 tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
+                                 tekst='Verwijderen' (btnClicked)='uitvoeren()'/>
             } @if (!isLoading && !isSaving && isRestoreMode()) {
                 <app-icon-button iconNaam="fas Undo"
                                  btnColor="btn-primary editorRestoreBtn" [toonKlein]=false
-                                 tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
+                                 tekst='Herstellen' (btnClicked)='uitvoeren()'/>
             } @if (isLoading || isSaving) {
                 <button class="btn btn-primary">
-                    <span><app-loader></app-loader></span>
+                    <span><app-loader/></span>
                 </button>
             }
             </div>
@@ -642,4 +639,4 @@
     </form>
 }
 
-<app-transacties (TransactieGedaan)="opvragen()"></app-transacties>
+<app-transacties (TransactieGedaan)='opvragen()'/>

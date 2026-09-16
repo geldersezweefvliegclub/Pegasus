@@ -2,8 +2,7 @@
     <input name="FILE" class="form-control my-3" type="file" (change)="fileChangeEvent($event)"
            accept='image/png, image/jpeg'/>
     <div>
-        <image-cropper
-                [imageChangedEvent]="imageChangedEvent"
+        <image-cropper [imageChangedEvent]='imageChangedEvent'
                 [maintainAspectRatio]="true"
                 [aspectRatio]="1"
                 [resizeToWidth]="512"
@@ -18,22 +17,22 @@
                 (imageLoaded)="imageLoaded()"
                 output='base64'
                 (loadImageFailed)="loadImageFailed()"
-        ></image-cropper>
+        />
     </div>
     @if (imageChangedEvent) {
         <div class="d-flex justify-content-between">
             <div class="btn-group justify-content-center">
                 <button class="btn btn-primary" (click)="rotateLeft()" type="button">
-                    <fa-icon [icon]="draaienIcon"></fa-icon>
+                    <fa-icon [icon]='draaienIcon'/>
                 </button>
                 <button class="btn btn-primary" (click)="rotateRight()" type="button">
-                    <fa-icon [icon]="draaienIcon" flip="horizontal"></fa-icon>
+                    <fa-icon [icon]='draaienIcon' flip='horizontal'/>
                 </button>
                 <button class="btn btn-primary" (click)="zoomIn()" type="button">
-                    <fa-icon [icon]="zoomInIcon"></fa-icon>
+                    <fa-icon [icon]='zoomInIcon'/>
                 </button>
                 <button class="btn btn-primary" (click)="zoomOut()" type="button">
-                    <fa-icon [icon]="zoomUitIcon"></fa-icon>
+                    <fa-icon [icon]='zoomUitIcon'/>
                 </button>
                 <button class="btn btn-primary" (click)="flipHorizontal()" type="button">
                     <i class="bi bi-symmetry-vertical"></i>
@@ -42,11 +41,11 @@
                     <i class="bi bi-symmetry-horizontal"></i>
                 </button>
                 <button class="btn btn-primary" (click)="resetImage()">
-                    <fa-icon [icon]="resetIcon"></fa-icon>
+                    <fa-icon [icon]='resetIcon'/>
                 </button>
             </div>
             <app-icon-button [disabled]='!croppedImage' class="ms-2" type="submit" iconNaam="fas Upload"
-                             tekst="Uploaden"></app-icon-button>
+                             tekst='Uploaden'/>
     </div>
     }
 </form>

@@ -1,5 +1,5 @@
-<app-error [error]="error"></app-error>
-<app-success [success]="success"></app-success>
+<app-error [error]='error'/>
+<app-success [success]='success'/>
 
 <app-modal titel="{{formTitel}}" [popupClass]="popupClass()">
     <div body>
@@ -16,8 +16,7 @@
                                    bindValue="ID"
                                    closeOnSelect="true"
                                    openOnEnter="true"
-                                   [(ngModel)]="dagRapport.VELD_ID">
-                        </ng-select>
+                                   [(ngModel)]='dagRapport.VELD_ID'/>
                     </div>
                 </div>
                 <!--
@@ -119,22 +118,22 @@
         @if (!isSaving && !isVerwijderMode && !isRestoreMode) {
             <app-icon-button iconNaam="fas Edit"
                              btnColor="btn-primary" [toonKlein]=false [disabled]="!dagRapport || !dagRapport.VELD_ID"
-                             tekst="Opslaan" (btnClicked)="uitvoeren()"></app-icon-button>
+                             tekst='Opslaan' (btnClicked)='uitvoeren()'/>
         } @if (!isLoading && !isSaving && isVerwijderMode) {
         <app-icon-button iconNaam="fas TrashAlt"
                          btnColor="btn-primary editorDeleteBtn"
-                         [toonKlein]=false tekst="Verwijderen" (btnClicked)="uitvoeren()"></app-icon-button>
+                         [toonKlein]=false tekst='Verwijderen' (btnClicked)='uitvoeren()'/>
     } @if (!isLoading && !isSaving && isRestoreMode) {
         <app-icon-button iconNaam="fas Undo"
                          btnColor="btn-primary editorRestoreBtn"
-                         [toonKlein]=false tekst="Herstellen" (btnClicked)="uitvoeren()"></app-icon-button>
+                         [toonKlein]=false tekst='Herstellen' (btnClicked)='uitvoeren()'/>
     } @if (isSaving) {
         <button class="btn btn-primary">
-            <span><app-loader></app-loader></span>
+            <span><app-loader/></span>
         </button>
     }
     </div>
 
-    <app-compose-meteo (opslaan)="dagRapport.METEO = $event"></app-compose-meteo>
-    <app-compose-bedrijf (opslaan)="dagRapport.VLIEGBEDRIJF = $event" [datum]="datum"></app-compose-bedrijf>
+    <app-compose-meteo (opslaan)='dagRapport.METEO = $event'/>
+    <app-compose-bedrijf (opslaan)='dagRapport.VLIEGBEDRIJF = $event' [datum]='datum'/>
 </app-modal>

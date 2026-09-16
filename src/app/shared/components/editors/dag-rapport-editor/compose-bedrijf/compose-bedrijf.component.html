@@ -10,8 +10,7 @@
                                bindValue="OMSCHRIJVING"
                                closeOnSelect="true"
                                openOnEnter="true"
-                               [(ngModel)]="club">
-                    </ng-select>
+                               [(ngModel)]='club'/>
                 </div>
 
                 <div class="">
@@ -22,8 +21,7 @@
                                bindValue="OMSCHRIJVING"
                                closeOnSelect="true"
                                openOnEnter="true"
-                               [(ngModel)]="baan">
-                    </ng-select>
+                               [(ngModel)]='baan'/>
                 </div>
 
                 <div class="mt-2">Circuit</div>
@@ -56,8 +54,7 @@
                                openOnEnter="true"
                                [closeOnSelect]="false"
                                [multiple]="true"
-                               [(ngModel)]="startMethodes">
-                    </ng-select>
+                               [(ngModel)]='startMethodes'/>
                 </div>
 
                 <div>
@@ -69,14 +66,13 @@
                                openOnEnter="true"
                                [closeOnSelect]="false"
                                [multiple]="true"
-                               [(ngModel)]="luchtruim">
-                    </ng-select>
+                               [(ngModel)]='luchtruim'/>
                 </div>
             </div>
         </div>
     </div>
     <div footer>
         <app-icon-button iconNaam="fas Edit" btnColor="btn-primary"
-                         tekst="Overnemen" (btnClicked)="Compose()"></app-icon-button>
+                         tekst='Overnemen' (btnClicked)='Compose()'/>
     </div>
 </app-modal>

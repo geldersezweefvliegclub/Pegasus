@@ -10,8 +10,7 @@
                                bindValue="OMSCHRIJVING"
                                closeOnSelect="true"
                                openOnEnter="true"
-                               [(ngModel)]="windRichting">
-                    </ng-select>
+                               [(ngModel)]='windRichting'/>
                 </div>
                 <div class="mt-2">
                     <label for="WINDKRACHT" class="form-label">Windkracht</label>
@@ -21,8 +20,7 @@
                                bindValue="OMSCHRIJVING"
                                closeOnSelect="true"
                                openOnEnter="true"
-                               [(ngModel)]="windKracht">
-                    </ng-select>
+                               [(ngModel)]='windKracht'/>
                 </div>
                 <div class="mt-2">
                     <label for="EIGENSCHAPPEN" class="form-label">Wind eigenschappen</label>
@@ -32,8 +30,7 @@
                                bindValue="OMSCHRIJVING"
                                closeOnSelect="true"
                                openOnEnter="true"
-                               [(ngModel)]="windEigenschappen">
-                    </ng-select>
+                               [(ngModel)]='windEigenschappen'/>
                 </div>
                 <div class="mt-2">
                     <label for="TERMIEK" class="form-label">Gemiddeld stijgen</label>
@@ -43,8 +40,7 @@
                                bindValue="CODE"
                                closeOnSelect="true"
                                openOnEnter="true"
-                               [(ngModel)]="gemiddeldStijgen">
-                    </ng-select>
+                               [(ngModel)]='gemiddeldStijgen'/>
                 </div>
             </div>
             <div class="col-6">
@@ -56,8 +52,7 @@
                                bindValue="OMSCHRIJVING"
                                closeOnSelect="true"
                                openOnEnter="true"
-                               [(ngModel)]="zicht">
-                    </ng-select>
+                               [(ngModel)]='zicht'/>
                 </div>
                 <div class="mt-2">
                     <label for="BEWOLKING" class="form-label">Bewolking</label>
@@ -67,8 +62,7 @@
                                bindValue="OMSCHRIJVING"
                                closeOnSelect="true"
                                openOnEnter="true"
-                               [(ngModel)]="bewolking">
-                    </ng-select>
+                               [(ngModel)]='bewolking'/>
                 </div>
                 <div class="mt-2">
                     <label for="BEDEKKING" class="form-label">Bedekkingsgraad</label>
@@ -78,8 +72,7 @@
                                bindValue="OMSCHRIJVING"
                                closeOnSelect="true"
                                openOnEnter="true"
-                               [(ngModel)]="bewolkingDekking">
-                    </ng-select>
+                               [(ngModel)]='bewolkingDekking'/>
                 </div>
                 <div class="mt-2">
                     <label for="WOLKENBASIS" class="form-label">Wolkenbasis</label>
@@ -92,6 +85,6 @@
     </div>
     <div footer>
         <app-icon-button iconNaam="fas Edit" btnColor="btn-primary"
-                         tekst="Overnemen" (btnClicked)="Compose()"></app-icon-button>
+                         tekst='Overnemen' (btnClicked)='Compose()'/>
     </div>
 </app-modal>

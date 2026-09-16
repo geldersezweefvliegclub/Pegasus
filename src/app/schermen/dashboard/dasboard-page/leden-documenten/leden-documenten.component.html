@@ -6,7 +6,7 @@
 
     @if (editMode) {
         <div class="add-doc">
-            <fa-icon [icon]="toevoegenIcon" class="addBtn me-2 clickable" (click)="toevoegen();"></fa-icon>
+            <fa-icon [icon]='toevoegenIcon' class='addBtn me-2 clickable' (click)='toevoegen();'/>
     </div>
     }
 
@@ -20,11 +20,11 @@
                              [ngClass]="{'bovenlijn': doc.ONDERSTREEP && doc.BOVEN, 'onderlijn': doc.ONDERSTREEP && !doc.BOVEN }">
                             @if (deleteMode && !trashMode) {
                                 <button class="docContent btn btn-noborder" (click)="delete(doc.ID)">
-                                    <fa-icon [icon]="deleteIcon" class="deleteBtn"></fa-icon>
+                                    <fa-icon [icon]='deleteIcon' class='deleteBtn'/>
                                 </button>
                             } @if (trashMode) {
                             <button class="docContent btn btn-noborder" (click)="restore(doc.ID)">
-                                <fa-icon [icon]="restoreIcon" class="restoreBtn"></fa-icon>
+                                <fa-icon [icon]='restoreIcon' class='restoreBtn'/>
                             </button>
                         } @if (!doc.LEGE_REGEL && !editMode) {
                             <div class="w-100">
@@ -57,17 +57,15 @@
                                              tekst="Aanpassen"
                                              [disabled]="deleteMode"
                                              iconNaam="far Edit" (btnClicked)="editMode = !editMode"
-                                             btnColor="btn-primary"></app-icon-button>
+                                             btnColor='btn-primary'/>
                         } @if (deleteMode) {
                         <div>
-                            <app-status-button
-                                    class="toolbarBtn"
+                            <app-status-button class='toolbarBtn'
                                     tekst="Archief"
                                     [actief]="trashMode"
                                     [toonKlein]="true"
                                     (btnClicked)="trashModeJaNee($event)"
-                                    iconNaam="fas Inbox">
-                            </app-status-button>
+                                               iconNaam='fas Inbox'/>
                         </div>
                     }
                     </div>
@@ -75,11 +73,11 @@
                     @if (!deleteMode) {
                         <app-icon-button class="toolbarBtn" iconNaam="far TrashAlt"
                                          btnColor="btn-secondary" [disabled]="editMode"
-                                         (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                                         (btnClicked)='deleteModeJaNee()'/>
                     } @if (deleteMode) {
                     <app-icon-button class="toolbarBtn" iconNaam="far ArrowAltCircleLeft"
                                      btnColor="btn btn-outline-primary"
-                                     (btnClicked)="deleteModeJaNee()"></app-icon-button>
+                                     (btnClicked)='deleteModeJaNee()'/>
                 }
                 </div>
             </div>
@@ -87,4 +85,4 @@
     </div>
 </app-pegasus-card>
 
-<app-document-editor (refresh)="opvragen()"></app-document-editor>
+<app-document-editor (refresh)='opvragen()'/>

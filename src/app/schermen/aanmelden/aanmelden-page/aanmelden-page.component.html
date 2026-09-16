@@ -1,4 +1,4 @@
-<app-error [error]="error"></app-error>
+<app-error [error]='error'/>
 <app-pegasus-card titel="Aanmelden"
                   subtitel="Aanmelden voor de vliegdag"
                   [icon]="aanmeldenIcon">
@@ -28,8 +28,7 @@
                        openOnEnter="true"
                        [searchable]="false"
                        (change)="filter()"
-                       [(ngModel)]="vliegveld">
-            </ng-select>
+                       [(ngModel)]='vliegveld'/>
         </div>
 
         @if (!isLoadingAanwezig &&
@@ -40,12 +39,12 @@
                 <div id="data" class="data">
                     @if (aanmeldenView === 'week') {
                         <div class="dataContent w-100 h-100">
-                            <ng-template *ngTemplateOutlet="week"></ng-template>
+                            <ng-template *ngTemplateOutlet='week'/>
                         </div>
                     }
                     @if (aanmeldenView === 'dag') {
                         <div class="dataContent w-100 h-100">
-                            <ng-template *ngTemplateOutlet="dag"></ng-template>
+                            <ng-template *ngTemplateOutlet='dag'/>
                         </div>
                     }
                 </div>
@@ -71,11 +70,11 @@
     <div footer class="row mt-2 justify-content-end">
         <div class="col-12 d-flex justify-content-end">
             <app-icon-button type="submit" iconNaam="fas PersonWalkingArrowRight" tekst="Bevestigen"
-                             (click)="afmelden()"></app-icon-button>
+                             (click)='afmelden()'/>
         </div>
     </div>
 </app-modal>
-<app-samenvatting (bulkEmail)="bulkEmail($event)" [diensten]="diensten"></app-samenvatting>
+<app-samenvatting (bulkEmail)='bulkEmail($event)' [diensten]='diensten'/>
 
 <!-- template voor week view -->
 <ng-template #week>
@@ -84,17 +83,15 @@
             <div class="d-flex justify-content-between mb-2">
                 @if (toonDatumKnoppen) {
                     <div>
-                        <app-icon-button
-                                class="toolbarBtn mx-2"
+                        <app-icon-button class='toolbarBtn mx-2'
                                 iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum.plus({days: -7}))"
-                                btnColor="btn-secondary"></app-icon-button>
+                                         btnColor='btn-secondary'/>
                     </div>
                     Aanmeldingen voor de week van {{ maandag.day }}-{{ maandag.month }}-{{ maandag.year }}
                     <div>
-                        <app-icon-button
-                                class="toolbarBtn mx-2"
+                        <app-icon-button class='toolbarBtn mx-2'
                                 iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum.plus({days: 7}))"
-                                btnColor="btn-secondary"></app-icon-button>
+                                         btnColor='btn-secondary'/>
                     </div>
                 }
             </div>
@@ -115,7 +112,7 @@
                                             </div>
                                             @if (!isDDWVer && (dagInRooster.DDWV && ddwvActief) || dagInRooster.CLUB_BEDRIJF) {
                                                 <fa-icon class="infoIcon clickable" [icon]="infoIcon" placement="right"
-                                                         (click)="samenvatting(dagInRooster)"></fa-icon>
+                                                         (click)='samenvatting(dagInRooster)'/>
                                             }
                                         </div>
                                         <!--
@@ -185,20 +182,18 @@
                                     <div class="dagInRooster"
                                          [style]="KolomBreedte()">
                                         @if (magAanmelden(dagInRooster.DATUM)) {
-                                            <app-icon-button
-                                                    class="toolbarBtn"
+                                            <app-icon-button class='toolbarBtn'
                                                     tekst="Aanmelden"
                                                     iconNaam="fas StreetView"
                                                     (btnClicked)="aanmeldenLidScherm(dagInRooster.DATUM)"
-                                                    btnColor="btn-primary"></app-icon-button>
+                                                             btnColor='btn-primary'/>
                                         }
                                         @if (isAangemeld(dagInRooster.DATUM)) {
-                                            <app-icon-button
-                                                    class="toolbarBtn"
+                                            <app-icon-button class='toolbarBtn'
                                                     tekst="Afmelden"
                                                     iconNaam="fas PersonWalkingArrowRight"
                                                     (btnClicked)="afmeldenPopup(dagInRooster.DATUM)"
-                                                    btnColor="btn-secondary"></app-icon-button>
+                                                             btnColor='btn-secondary'/>
                                         }
                                     </div>
                                 }
@@ -257,10 +252,10 @@
                                 <td colspan="8" class="gastenHeader">
                                     <div class="d-flex justify-content-between"><b>Gasten</b>
                                         @if (!toonGasten) {
-                                            <fa-icon [icon]="iconDown" (click)="toonGastenWelNiet()"></fa-icon>
+                                            <fa-icon [icon]='iconDown' (click)='toonGastenWelNiet()'/>
                                         }
                                         @if (toonGasten) {
-                                            <fa-icon [icon]="iconUp" (click)="toonGastenWelNiet()"></fa-icon>
+                                            <fa-icon [icon]='iconUp' (click)='toonGastenWelNiet()'/>
                                         }
                                     </div>
                                 </td>
@@ -275,11 +270,10 @@
                                             <div class="dagInRooster">
                                                 @if (dagInRooster.CLUB_BEDRIJF || dagInRooster.DDWV) {
                                                     <div class="d-flex">
-                                                        <app-icon-button
-                                                                class="ps-1 toolbarBtn"
+                                                        <app-icon-button class='ps-1 toolbarBtn'
                                                                 iconNaam="fas UserPlus"
                                                                 (btnClicked)="aanmeldenGastScherm(dagInRooster.DATUM)"
-                                                                btnColor="btn-primary"></app-icon-button>
+                                                                         btnColor='btn-primary'/>
                                                     </div>
                                                 }
                                             </div>
@@ -324,16 +318,14 @@
             <div class="d-flex flex-row justify-content-between dagHeader ps-1 pe-1">
                 <div class="d-flex align-items-center">
                     @if (toonDatumKnoppen) {
-                        <app-icon-button
-                                class="toolbarBtn"
+                        <app-icon-button class='toolbarBtn'
                                 iconNaam="fas AngleDoubleLeft" (btnClicked)="zetDatum(datum.plus({days: -7}))"
-                                btnColor="btn-secondary"></app-icon-button>
+                                         btnColor='btn-secondary'/>
                     }
                     @if (toonDatumKnoppen) {
-                        <app-icon-button
-                                class="toolbarBtn mx-2"
+                        <app-icon-button class='toolbarBtn mx-2'
                                 iconNaam="fas AngleLeft" (btnClicked)="zetDatum(datum.plus({days: -1}))"
-                                btnColor="btn-secondary"></app-icon-button>
+                                         btnColor='btn-secondary'/>
                     }
                 </div>
 
@@ -344,16 +336,14 @@
 
                 <div class="d-flex align-items-center">
                     @if (toonDatumKnoppen) {
-                        <app-icon-button
-                                class="toolbarBtn"
+                        <app-icon-button class='toolbarBtn'
                                 iconNaam="fas AngleRight" (btnClicked)="zetDatum(datum.plus({days: 1}))"
-                                btnColor="btn-secondary"></app-icon-button>
+                                         btnColor='btn-secondary'/>
                     }
                     @if (toonDatumKnoppen) {
-                        <app-icon-button
-                                class="toolbarBtn ms-2"
+                        <app-icon-button class='toolbarBtn ms-2'
                                 iconNaam="fas AngleDoubleRight" (btnClicked)="zetDatum(datum.plus({days: 7}))"
-                                btnColor="btn-secondary"></app-icon-button>
+                                         btnColor='btn-secondary'/>
                     }
                 </div>
             </div>
@@ -391,7 +381,7 @@
 
                                 @if (!isDDWVer && (rooster[0].DDWV && ddwvActief) || rooster[0].CLUB_BEDRIJF) {
                                     <fa-icon class="infoIcon clickable" [icon]="infoIcon" placement="right"
-                                             (click)="samenvatting(rooster[0])"></fa-icon>
+                                             (click)='samenvatting(rooster[0])'/>
                                 }
                             </div>
 
@@ -420,22 +410,20 @@
                                 <td>
                                     <div class="dagInRooster">
                                         @if (magAanmelden(rooster[0].DATUM)) {
-                                            <app-icon-button
-                                                    class="toolbarBtn"
+                                            <app-icon-button class='toolbarBtn'
                                                     tekst="Aanmelden"
                                                     iconNaam="fas StreetView"
                                                     (btnClicked)="aanmeldenLidScherm(rooster[0].DATUM)"
                                                     btnColor="btn-primary"
-                                                    [toonKlein]="false"></app-icon-button>
+                                                             [toonKlein]='false'/>
                                         }
                                         @if (isAangemeld(rooster[0].DATUM)) {
-                                            <app-icon-button
-                                                    class="toolbarBtn"
+                                            <app-icon-button class='toolbarBtn'
                                                     tekst="Afmelden"
                                                     iconNaam="fas PersonWalkingArrowRight"
                                                     (btnClicked)="afmeldenPopup(rooster[0].DATUM)"
                                                     btnColor="btn-secondary"
-                                                    [toonKlein]="false"></app-icon-button>
+                                                             [toonKlein]='false'/>
                                         }
                                     </div>
                                 </td>
@@ -500,10 +488,10 @@
                                 <td colspan="8" class="gastenHeader">
                                     <div class="d-flex justify-content-between"><b>Gasten</b>
                                         @if (!toonGasten) {
-                                            <fa-icon [icon]="iconDown" (click)="toonGastenWelNiet()"></fa-icon>
+                                            <fa-icon [icon]='iconDown' (click)='toonGastenWelNiet()'/>
                                         }
                                         @if (toonGasten) {
-                                            <fa-icon [icon]="iconUp" (click)="toonGastenWelNiet()"></fa-icon>
+                                            <fa-icon [icon]='iconUp' (click)='toonGastenWelNiet()'/>
                                         }
                                     </div>
                                 </td>
@@ -516,13 +504,12 @@
                                     @if (!verleden(rooster[0].DATUM)) {
                                         <div class="dagInRooster">
                                             <div class="d-flex">
-                                                <app-icon-button
-                                                        class="ps-1 toolbarBtn"
+                                                <app-icon-button class='ps-1 toolbarBtn'
                                                         tekst="Aanmelden"
                                                         iconNaam="fas UserPlus"
                                                         (btnClicked)="aanmeldenGastScherm(rooster[0].DATUM)"
                                                         btnColor="btn-primary"
-                                                        [toonKlein]="false"></app-icon-button>
+                                                                 [toonKlein]='false'/>
                                             </div>
                                         </div>
                                     }
@@ -551,7 +538,7 @@
     }
 </ng-template>
 
-<app-lid-aanwezig-editor (opgeslagen)="opvragen()"></app-lid-aanwezig-editor>
-<app-gast-editor (refresh)="opvragen()"></app-gast-editor>
+<app-lid-aanwezig-editor (opgeslagen)='opvragen()'/>
+<app-gast-editor (refresh)='opvragen()'/>
 
-<app-transacties (TransactieGedaan)="opvragenLid()"></app-transacties>
+<app-transacties (TransactieGedaan)='opvragenLid()'/>

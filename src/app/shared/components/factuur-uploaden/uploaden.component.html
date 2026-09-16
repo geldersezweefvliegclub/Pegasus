@@ -1,11 +1,11 @@
-<app-error [error]="error"></app-error>
+<app-error [error]='error'/>
 
 <app-modal popupClass="popupLarge" titel="Uploaden facturen">
     <div body>
         @if (isBezig) {
             <div>
                 <ngb-progressbar type="info" [value]="counter" showValue="true" [max]="max"
-                                 [striped]="true"></ngb-progressbar>
+                                 [striped]='true'/>
             </div>
         } @if (isKlaar) {
         <div class="klaar">
@@ -17,7 +17,7 @@
         @if (isBezig) {
             <div class="d-flex justify-content-end">
                 <app-icon-button class="toolbarBtn" tekst="Annuleren" iconNaam="fas BasketShopping"
-                                 btnColor="btn btn-outline-primary" (btnClicked)="closePopup()"></app-icon-button>
+                                 btnColor='btn btn-outline-primary' (btnClicked)='closePopup()'/>
             </div>
         }
     </div>
