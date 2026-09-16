@@ -17,7 +17,7 @@ import { FormsModule } from '@angular/forms';
 import { LidInvoerComponent } from '../start-editor/lid-invoer/lid-invoer.component';
 import { VliegtuigInvoerComponent } from '../start-editor/vliegtuig-invoer/vliegtuig-invoer.component';
 import { IconButtonComponent } from '../../icon-button/icon-button.component';
-import { NgClass } from '@angular/common';
+
 import { LoaderComponent } from '../../loader/loader.component';
 
 @Component({
@@ -25,7 +25,7 @@ import { LoaderComponent } from '../../loader/loader.component';
     templateUrl: './boeking-editor.component.html',
     styleUrls: ['./boeking-editor.component.scss'],
     providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
-    imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, LidInvoerComponent, VliegtuigInvoerComponent, NgbInputDatepicker, IconButtonComponent, NgClass, LoaderComponent]
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, LidInvoerComponent, VliegtuigInvoerComponent, NgbInputDatepicker, IconButtonComponent, LoaderComponent]
 })
 export class BoekingEditorComponent implements OnInit, OnDestroy {
     private readonly ledenService = inject(LedenService);

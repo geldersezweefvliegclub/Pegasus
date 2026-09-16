@@ -17,7 +17,7 @@
             </div>
         }
         <div class="ms-2 d-flex justify-content-begin align-items-end text-nowrap"
-             [ngClass]="{'veldTop':aanmeldenView === 'week', 'mb-1' : aanmeldenView === 'dag'}">
+             [class]="{'veldTop':aanmeldenView === 'week', 'mb-1' : aanmeldenView === 'dag'}">
             <label for="VELD" class="form-label me-2">Vliegveld:</label>
             <ng-select id="VELD" style="width: 160px;"
                        [items]="veldTypes$ | async"
@@ -217,7 +217,7 @@
                                                                 <div class="barometer"
                                                                      [ngClass]="kleurBarometer(lid)"></div>
                                                             }
-                                                            <div [ngClass]="{'vertrokken': lid.VERTREK && (isBeheerder || (isBeheerderDDWV && dagInRooster.DDWV))}">
+                                                            <div [class.vertrokken]="lid.VERTREK && (isBeheerder || (isBeheerderDDWV && dagInRooster.DDWV))">
                                                                 @if (lid.VERWIJDERD && (isBeheerder || (isBeheerderDDWV && dagInRooster.DDWV))) {
                                                                     <div class="verwijderd">{{ lid.NAAM }}</div>
                                                                 }
@@ -445,7 +445,7 @@
                                                                 <div class="barometer"
                                                                      [ngClass]="kleurBarometer(lid)"></div>
                                                             }
-                                                            <div [ngClass]="{'vertrokken': lid.VERTREK && (isBeheerder || (isBeheerderDDWV && dagInRooster.DDWV))}">
+                                                            <div [class.vertrokken]="lid.VERTREK && (isBeheerder || (isBeheerderDDWV && dagInRooster.DDWV))">
                                                                 @if (lid.VERWIJDERD) {
                                                                     <div class="verwijderd">{{ lid.NAAM }}</div>
                                                                 }

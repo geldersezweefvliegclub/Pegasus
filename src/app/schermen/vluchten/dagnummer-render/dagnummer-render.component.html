@@ -1,5 +1,5 @@
 @if (params.data.STARTMETHODE) {
-    <div [ngClass]="{'hasFlarm': hasFlarm}">{{ dagnummer }}</div>
+    <div [class.hasFlarm]="hasFlarm">{{ dagnummer }}</div>
 } @if (!params.data.STARTMETHODE) {
     <div class="badge bg-danger" style="font-size: larger">
     <div class="fas fa-exclamation-triangle" data-toggle="tooltip" title="Onvolledige start, open editor"></div>

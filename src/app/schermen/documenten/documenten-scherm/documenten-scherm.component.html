@@ -24,7 +24,7 @@
                                         <div>
                                             <div (dblclick)="aanpassen(doc.ID)"
                                                  class="d-flex justify-content-between w-100"
-                                                 [ngClass]="{'bovenlijn': doc.ONDERSTREEP && doc.BOVEN, 'onderlijn': doc.ONDERSTREEP && !doc.BOVEN }">
+                                                 [class]="{'bovenlijn': doc.ONDERSTREEP && doc.BOVEN, 'onderlijn': doc.ONDERSTREEP && !doc.BOVEN }">
                                                 @if (deleteMode && !trashMode) {
                                                     <button class="docContent btn btn-noborder"
                                                             (click)="delete(doc.ID)">
@@ -46,13 +46,13 @@
                                                 </div>
                                             } @if (editMode) {
                                                 <div class="docContent w-100"
-                                                     [ngClass]="{'paragraafHeader': !doc.URL && !doc.LEGE_REGEL}"> {{ doc.TEKST }}
+                                                     [class.paragraafHeader]="!doc.URL && !doc.LEGE_REGEL"> {{ doc.TEKST }}
                                                 </div>
                                             } @if (doc.LEGE_REGEL) {
                                                 <div>&nbsp;</div>
                                             } @if (editMode) {
                                                 <div class="d-flex"
-                                                     [ngClass]="{'paragraafHeader': !doc.URL && !doc.LEGE_REGEL}">
+                                                     [class.paragraafHeader]="!doc.URL && !doc.LEGE_REGEL">
                                                     @if (toonOmhoogOmlaag(docGroep.ID)) {
                                                         <fa-icon [icon]="upIcon" class="upBtn me-2 clickable"
                                                                  (click)="omhoog(doc.ID);"

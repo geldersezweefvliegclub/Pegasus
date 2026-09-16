@@ -29,7 +29,7 @@
                             <label class="form-label" for="laatsteDag">Laatste dag</label>
                             <div class="input-group">
                                 <input name="laatsteDag" class="form-control" placeholder="dd-mm-yyyy"
-                                       [ngClass]="{'ng-invalid': !vanTotOke()}"
+                                       [class.ng-invalid]="!vanTotOke()"
                                        ngbDatepicker #dl="ngbDatepicker"
                                        id="laatsteDag"
                                        appDatumValidator
@@ -44,7 +44,7 @@
                         </div>
                     }
 
-                    <div class="col-6" [ngClass]="{'mt-2': !activiteit.ID}">
+                    <div class="col-6" [class.mt-2]="!activiteit.ID">
                         <div>
                             <label class="form-label" for="ACTIVITEIT_BEGINTIJD">Begin tijd</label>
                         </div>

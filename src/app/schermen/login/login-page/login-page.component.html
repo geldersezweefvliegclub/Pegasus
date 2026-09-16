@@ -59,7 +59,7 @@
                 }
                     <div class="row mt-4">
                         <div class="col d-flex"
-                             [ngClass]="{'justify-content-end': !showSecret && !showLostPassword(), 'justify-content-between': showSecret || showLostPassword() }">
+                             [class]="{'justify-content-end': !showSecret && !showLostPassword(), 'justify-content-between': showSecret || showLostPassword() }">
                             @if (showLostPassword()) {
                                 <a class="lostPassword" (click)="recoverEmail()">Wachtwoord
                                     vergeten</a>

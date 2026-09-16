@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { AgRendererComponent } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
-import { NgClass } from '@angular/common';
+
 
 @Component({
     selector: 'app-dagnummer-render',
     templateUrl: './dagnummer-render.component.html',
-    styleUrls: ['./dagnummer-render.component.scss'],
-    imports: [NgClass]
+    styleUrls: ['./dagnummer-render.component.scss']
 })
 export class DagnummerRenderComponent implements AgRendererComponent {
   params: ICellRendererParams;

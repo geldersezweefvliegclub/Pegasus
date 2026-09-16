@@ -12,14 +12,14 @@ import { LedenService } from '../../../services/apiservice/leden.service';
 import { ErrorComponent } from '../../../shared/components/error/error.component';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { NgClass } from '@angular/common';
+
 import { LoaderComponent } from '../../../shared/components/loader/loader.component';
 
 @Component({
     selector: 'app-login-page',
     templateUrl: './login-page.component.html',
     styleUrls: ['./login-page.component.scss'],
-    imports: [ErrorComponent, FormsModule, FaIconComponent, CodeInputModule, NgClass, LoaderComponent]
+    imports: [ErrorComponent, FormsModule, FaIconComponent, CodeInputModule, LoaderComponent]
 })
 
 export class LoginPageComponent implements OnInit {

@@ -22,7 +22,7 @@
                 @if (isStarttoren) {
                     <div class="flex-row h-100 flex-column flarm-container">
                         <div class="slider">
-                            <fa-icon [icon]="iconExpandShrink" class="handle" [ngClass]="{'omdraaien': !toonFlarm}"
+                            <fa-icon [icon]="iconExpandShrink" class="handle" [class.omdraaien]="!toonFlarm"
                                      (click)='toonFlarm = !toonFlarm'/>
                         </div>
                         @if (toonFlarm) {

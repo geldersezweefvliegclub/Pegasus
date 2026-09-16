@@ -17,7 +17,7 @@ import { PegasusConfigService } from '../../../services/shared/pegasus-config.se
 import { PopupKalenderComponent } from '../popup-kalender/popup-kalender.component';
 import { NgbDateFRParserFormatter } from '../../ngb-date-fr-parser-formatter';
 import { MenuItem } from '../../../types/IPegasusConfig';
-import { NgTemplateOutlet, NgClass } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { IconButtonComponent } from '../icon-button/icon-button.component';
 import { VliegdagSelectieComponent } from '../vliegdag-selectie/vliegdag-selectie.component';
@@ -27,7 +27,7 @@ import { VliegdagSelectieComponent } from '../vliegdag-selectie/vliegdag-selecti
     templateUrl: './navigatie.component.html',
     styleUrls: ['./navigatie.component.scss'],
     providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
-    imports: [NgTemplateOutlet, RouterLinkActive, RouterLink, FaIconComponent, IconButtonComponent, VliegdagSelectieComponent, NgClass, PopupKalenderComponent]
+    imports: [NgTemplateOutlet, RouterLinkActive, RouterLink, FaIconComponent, IconButtonComponent, VliegdagSelectieComponent, PopupKalenderComponent]
 })
 
 export class NavigatieComponent implements OnInit, OnDestroy {

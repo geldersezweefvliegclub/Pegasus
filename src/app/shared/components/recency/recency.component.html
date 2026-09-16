@@ -19,7 +19,7 @@ EASA minimum is 15 starts en 5 uur per 24 maanden
     @if (Vlieger() && Vlieger().STATUSTYPE_ID === 1903) {
     <div>
         @if (!toonEASA) {
-        <p class="easa" (click)="toonEASA = !toonEASA" [ngClass]="{'geenGeldigBrevet': geenGeldigBrevet() }">EASA</p>
+        <p class="easa" (click)="toonEASA = !toonEASA" [class.geenGeldigBrevet]="geenGeldigBrevet()">EASA</p>
         }
         @if (toonEASA) {
         <p class="easa" (click)="toonEASA = !toonEASA">Barometer</p>

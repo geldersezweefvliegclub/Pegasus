@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { ICellRendererParams } from 'ag-grid-community';
 import { AgRendererComponent } from 'ag-grid-angular';
-import { NgClass } from '@angular/common';
+
 
 @Component({
     selector: 'app-leeftijd-render',
     templateUrl: './leeftijd-render.component.html',
-    styleUrls: ['./leeftijd-render.component.scss'],
-    imports: [NgClass]
+    styleUrls: ['./leeftijd-render.component.scss']
 })
 export class LeeftijdRenderComponent implements AgRendererComponent {
   value: string;

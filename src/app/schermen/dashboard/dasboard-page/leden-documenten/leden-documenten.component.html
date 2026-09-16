@@ -17,7 +17,7 @@
                 @for (doc of documenten; track doc; let d = $index) {
                     <div>
                         <div (dblclick)="aanpassen(doc.ID)" class="d-flex justify-content-between w-100"
-                             [ngClass]="{'bovenlijn': doc.ONDERSTREEP && doc.BOVEN, 'onderlijn': doc.ONDERSTREEP && !doc.BOVEN }">
+                             [class]="{'bovenlijn': doc.ONDERSTREEP && doc.BOVEN, 'onderlijn': doc.ONDERSTREEP && !doc.BOVEN }">
                             @if (deleteMode && !trashMode) {
                                 <button class="docContent btn btn-noborder" (click)="delete(doc.ID)">
                                     <fa-icon [icon]='deleteIcon' class='deleteBtn'/>
@@ -36,7 +36,7 @@
                             </div>
                         } @if (editMode) {
                             <div class="docContent linkButton editButton w-100"
-                                 [ngClass]="{'paragraafHeader': !doc.URL && !doc.LEGE_REGEL}"> {{ doc.TEKST }}
+                                 [class.paragraafHeader]="!doc.URL && !doc.LEGE_REGEL"> {{ doc.TEKST }}
                             </div>
                         } @if (doc.LEGE_REGEL) {
                             <div>&nbsp;</div>

@@ -18,7 +18,7 @@
         <div class="form-inline row-item">
         <div class="form-check w-100">
             <input type="checkbox" class="form-check-input" [ngModel]="node.data.IsBehaald > 0"
-                   [ngClass]="{'unChecked': node.data.IsBehaald === 0, 'halfChecked': node.data.IsBehaald === 1, 'fullChecked': node.data.IsBehaald === 2 }"
+                   [class]="{'unChecked': node.data.IsBehaald === 0, 'halfChecked': node.data.IsBehaald === 1, 'fullChecked': node.data.IsBehaald === 2 }"
                    (ngModelChange)="onProgressieChange(node.data)"
                    [disabled]="node.hasChildren || isDisabled" [indeterminate]="node.data.IsBehaald === 1"/>
             <label class="form-check-label" (click)="onProgressieChange(node.data)">

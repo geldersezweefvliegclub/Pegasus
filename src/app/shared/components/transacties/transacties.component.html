@@ -49,7 +49,7 @@
             <th class="text-nowrap ps-2 pe-1">Saldo na</th>
         </tr>
         @for (transactie of transacties; track transactie; let i = $index) {
-            <tr style="vertical-align: top;" [ngClass]="{'nietBetaaldRow': !transactie.BETAALD && transactie.BEDRAG}">
+            <tr style="vertical-align: top;" [class.nietBetaaldRow]="!transactie.BETAALD && transactie.BEDRAG">
                 <td style="white-space: nowrap;" class="pe-2">
                     {{ datumDMY(transactie.DATUM) }}
                 </td>
@@ -86,7 +86,7 @@
 <ng-template #card>
     @for (transactie of transacties; track transactie; let i = $index) {
         <div class="transactieCard"
-             [ngClass]="{'nietBetaaldRow': !transactie.BETAALD && transactie.BEDRAG}"
+             [class.nietBetaaldRow]="!transactie.BETAALD && transactie.BEDRAG"
              (click)="expandedView = !expandedView">
             <table class="w-100">
                 <tr class="w-100">

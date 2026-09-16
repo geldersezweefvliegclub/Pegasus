@@ -5,7 +5,7 @@
             <div class="row">
                 @for (kist of flying; track kist; let i = $index) {
                     <div class="col-6">
-                        <div class="d-flex flex-column vliegtuig" [ngClass]="{'no-start': kist.START_ID === undefined}"
+                        <div class="d-flex flex-column vliegtuig" [class.no-start]="kist.START_ID === undefined"
                              (click)="toonStartdetails(kist)">
                             <div class="d-flex flex-row justify-content-between">
                                 {{ kist.REG_CALL }}
@@ -25,7 +25,7 @@
             <div class="col-6 take-off">
                 @for (kist of takeoff; track kist; let i = $index) {
                     <div class="col-6">
-                        <div class="vliegtuig-kort" [ngClass]="{'no-start': kist.START_ID === undefined}"
+                        <div class="vliegtuig-kort" [class.no-start]="kist.START_ID === undefined"
                              (click)="toonStartdetails(kist)">
                             <div class="d-flex flex-row justify-content-between">
                                 {{ kist.REG_CALL }}
@@ -38,7 +38,7 @@
             <div class="col-6 landing">
                 @for (kist of landing; track kist; let i = $index) {
                     <div class="col-6">
-                        <div class="vliegtuig-kort" [ngClass]="{'no-start': kist.START_ID === undefined}"
+                        <div class="vliegtuig-kort" [class.no-start]="kist.START_ID === undefined"
                              (click)="toonStartdetails(kist)">
                             <div class="d-flex flex-row justify-content-between">
                                 {{ kist.REG_CALL }}
@@ -56,7 +56,7 @@
                         @if (kist.flarmID === undefined) {
                             <div></div>
                         } @if (kist.flarmID !== undefined) {
-                        <div class=" d-flex flex-column vliegtuig" [ngClass]="{'no-start': kist.START_ID === undefined}"
+                        <div class=" d-flex flex-column vliegtuig" [class.no-start]="kist.START_ID === undefined"
                              (click)="toonStartdetails(kist)">
                             <div class="d-flex flex-row justify-content-between">
                                 {{ kist.REG_CALL }}

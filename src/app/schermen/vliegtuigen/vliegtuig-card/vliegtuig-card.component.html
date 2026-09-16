@@ -1,5 +1,5 @@
 @if (vliegtuig) {
-    <div class="kaart" [ngClass]="{nietInzetbaarKaart: vliegtuig.INZETBAAR === false}">
+    <div class="kaart" [class.nietInzetbaarKaart]="vliegtuig.INZETBAAR === false">
     <table>
         <tr>
             <td>

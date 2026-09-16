@@ -11,7 +11,7 @@ import { LoginService } from '../../../../services/apiservice/login.service';
 import { ErrorComponent } from '../../error/error.component';
 import { SuccessComponent } from '../../success/success.component';
 import { NgSelectComponent } from '@ng-select/ng-select';
-import { NgClass, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IconButtonComponent } from '../../icon-button/icon-button.component';
 import { LoaderComponent } from '../../loader/loader.component';
@@ -20,7 +20,7 @@ import { LoaderComponent } from '../../loader/loader.component';
     selector: 'app-melding-editor',
     templateUrl: './journaal-editor.component.html',
     styleUrls: ['./journaal-editor.component.scss'],
-    imports: [ErrorComponent, SuccessComponent, ModalComponent, NgSelectComponent, NgClass, FormsModule, IconButtonComponent, LoaderComponent, AsyncPipe]
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, NgSelectComponent, FormsModule, IconButtonComponent, LoaderComponent, AsyncPipe]
 })
 export class JournaalEditorComponent implements OnInit, OnDestroy {
     private readonly typesService = inject(TypesService);

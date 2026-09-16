@@ -15,7 +15,7 @@
                                bindValue="ID"
                                closeOnSelect="true"
                                openOnEnter="true"
-                               [ngClass]="{'ng-select-required': opslaanDisabled()}"
+                               [class.ng-select-required]="opslaanDisabled()"
                                [(ngModel)]='melding.VLIEGTUIG_ID'/>
                 </div>
                 <div class="col-12 col-md-6" [hidden]="melding.VLIEGTUIG_ID !== undefined">
@@ -28,7 +28,7 @@
                                bindValue="ID"
                                closeOnSelect="true"
                                openOnEnter="true"
-                               [ngClass]="{'ng-select-required': opslaanDisabled()}"
+                               [class.ng-select-required]="opslaanDisabled()"
                                [(ngModel)]='melding.ROLLEND_ID'/>
                 </div>
             </div>

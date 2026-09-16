@@ -1,5 +1,5 @@
 @if (label) {
-    <label for="LID" class="form-label" [ngClass]="{'labelDisabled': disabled() }">{{ label }}</label>
+    <label for="LID" class="form-label" [class.labelDisabled]="disabled()">{{ label }}</label>
 } @if (uitleg) {
     <fa-icon class="text-info ms-2 clickable" [icon]="infoIcon"
              [ngbPopover]="uitleg"

@@ -9,7 +9,7 @@
     }
     </div>
 } @if (this.warning || this.error) {
-    <div [ngClass]="{'warning': this.warning, 'error': this.error }">
+    <div [class]="{'warning': this.warning, 'error': this.error }">
     <div class="fas fa-exclamation-triangle" data-toggle="tooltip" title="Vul de naam van de instructeur in"></div>
     </div>
 }

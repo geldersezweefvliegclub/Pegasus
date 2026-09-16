@@ -106,7 +106,7 @@
 <ng-template #menuInside>
     <div class="card ps-0 rounded-0">
         <div class="linker-menu d-flex flex-column justify-content-between min-vh-100'"
-             [ngClass]="{'linker-menu-smal': kleineDatum()}">
+             [class.linker-menu-smal]="kleineDatum()">
 
             <div class="list-group list-group-flush p-2">
                 @if (toonLogo()) {
@@ -173,7 +173,7 @@
                             }
                         </div>
                     }
-                    <div class="w-100 overflow-auto" [ngClass]="{'verbergDatum': kleineDatum() || showBeheer}">
+                    <div class="w-100 overflow-auto" [class.verbergDatum]="kleineDatum() || showBeheer">
                         <app-vliegdag-selectie/>
                     </div>
                     @if (kleineDatum()) {

@@ -7,7 +7,7 @@ import { faFile, IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { HeliosDocument, HeliosDocumentenDataset } from '../../../../types/Helios';
 import { DocumentenService } from '../../../../services/apiservice/documenten.service';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { NgClass } from '@angular/common';
+
 import { IconButtonComponent } from '../../../../shared/components/icon-button/icon-button.component';
 import { PegasusCardComponent } from '../../../../shared/components/pegasus-card/pegasus-card.component';
 import { StatusButtonComponent } from '../../../../shared/components/status-button/status-button.component';
@@ -16,7 +16,7 @@ import { StatusButtonComponent } from '../../../../shared/components/status-butt
     selector: 'app-leden-documenten',
     templateUrl: './leden-documenten.component.html',
     styleUrls: ['./leden-documenten.component.scss'],
-    imports: [DocumentEditorComponent, IconButtonComponent, PegasusCardComponent, StatusButtonComponent, FaIconComponent, NgClass]
+    imports: [DocumentEditorComponent, IconButtonComponent, PegasusCardComponent, StatusButtonComponent, FaIconComponent]
 })
 export class LedenDocumentenComponent implements OnInit {
     private readonly documentenService = inject(DocumentenService);

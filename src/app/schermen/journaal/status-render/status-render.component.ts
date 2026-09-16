@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { AgRendererComponent } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
-import { NgClass } from '@angular/common';
+
 
 @Component({
     selector: 'app-status-render',
     templateUrl: './status-render.component.html',
-    styleUrls: ['./status-render.component.scss'],
-    imports: [NgClass]
+    styleUrls: ['./status-render.component.scss']
 })
 
 

@@ -1,5 +1,5 @@
 @if (bedrag) {
-    <div class="ms-1" [ngClass]="{'betaald': betaald, 'niet_betaald': !betaald}">
+    <div class="ms-1" [class]="{'betaald': betaald, 'niet_betaald': !betaald}">
         &euro; {{ bedrag | number : '1.2-2' }}
     </div>
 }

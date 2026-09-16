@@ -39,7 +39,7 @@ import { DatatableComponent } from '../../../shared/components/datatable/datatab
 import { OpmerkingenRenderComponent } from '../opmerkingen-render/opmerkingen-render.component';
 import {DdwvService} from "../../../services/apiservice/ddwv.service";
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { NgClass, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { FlarmLijstComponent } from '../flarm-lijst/flarm-lijst.component';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
@@ -60,7 +60,7 @@ type HeliosStartDatasetExtended = HeliosStartDataset & {
     selector: 'app-startlijst-grid',
     templateUrl: './vluchten-grid.component.html',
     styleUrls: ['./vluchten-grid.component.scss'],
-    imports: [AsyncPipe, DatatableComponent, ErrorComponent, ExportStartlijstComponent, FaIconComponent, FlarmLijstComponent, FormsModule, IconButtonComponent, NgClass, NgSelectComponent, PegasusCardComponent, StartEditorComponent, StatusButtonComponent, SuccessComponent, TijdInvoerComponent, VluchtCardComponent, ZoekbarComponent]
+    imports: [AsyncPipe, DatatableComponent, ErrorComponent, ExportStartlijstComponent, FaIconComponent, FlarmLijstComponent, FormsModule, IconButtonComponent, NgSelectComponent, PegasusCardComponent, StartEditorComponent, StatusButtonComponent, SuccessComponent, TijdInvoerComponent, VluchtCardComponent, ZoekbarComponent]
 })
 export class VluchtenGridComponent implements OnInit, OnDestroy {
     private readonly startlijstService = inject(StartlijstService);

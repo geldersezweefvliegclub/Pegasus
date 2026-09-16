@@ -10,7 +10,7 @@ import { SuccessComponent } from '../../success/success.component';
 import { NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { IconButtonComponent } from '../../icon-button/icon-button.component';
-import { NgClass } from '@angular/common';
+
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { LoaderComponent } from '../../loader/loader.component';
 
@@ -18,7 +18,7 @@ import { LoaderComponent } from '../../loader/loader.component';
     selector: 'app-agenda-editor',
     templateUrl: './agenda-editor.component.html',
     styleUrls: ['./agenda-editor.component.scss'],
-    imports: [ErrorComponent, SuccessComponent, ModalComponent, NgbInputDatepicker, FormsModule, IconButtonComponent, NgClass, NgxMaterialTimepickerModule, LoaderComponent]
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, NgbInputDatepicker, FormsModule, IconButtonComponent, NgxMaterialTimepickerModule, LoaderComponent]
 })
 export class AgendaEditorComponent  {
   private readonly agendaService = inject(AgendaService);
