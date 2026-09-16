@@ -50,13 +50,17 @@ export class LoginService  {
     }
 
     isIngelogd(): boolean {
-        if (this.userInfo == null) {
-            if (this.storageService.ophalen("userInfo") == null) {
-                return false;
-            }
-            this.userInfo = this.storageService.ophalen("userInfo") as HeliosUserinfo;
+        if (this.userInfo) {
+            return true;
         }
-        return true;
+
+        const opgeslagenUserInfo = this.storageService.ophalen<HeliosUserinfo>("userInfo", "session")
+        if (opgeslagenUserInfo && this.storageService.ophalen("bearer", "session")) {
+            this.userInfo = opgeslagenUserInfo;
+            return true;
+        }
+
+        return false;
     }
 
     async login(gebruikersnaam: string, wachtwoord: string, token?: string): Promise<number | undefined> {
