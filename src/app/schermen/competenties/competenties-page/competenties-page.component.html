@@ -44,7 +44,7 @@
               <div class="form-check w-100">
                 <div class="d-flex justify-content-between">
                   <div>
-                    <label class="form-check-label" [ngStyle]="node.data.value < 0 && {'color': 'red'}">
+                    <label class="form-check-label" [style]="node.data.value < 0 && {'color': 'red'}">
                       {{node.data.text}}
                     </label>
                     @if (node.data.value >= 0) {

@@ -11,7 +11,7 @@ import {
   CompetentieEditorComponent,
 } from '../../../shared/components/editors/competentie-editor/competentie-editor.component';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { NgStyle } from '@angular/common';
+
 import { PegasusCardComponent } from '../../../shared/components/pegasus-card/pegasus-card.component';
 
 export interface CompetentieTreeviewItem {
@@ -30,7 +30,7 @@ export interface CompetentieTreeviewItem {
     selector: 'app-competenties-page',
     templateUrl: './competenties-page.component.html',
     styleUrls: ['./competenties-page.component.scss'],
-    imports: [CompetentieEditorComponent, PegasusCardComponent, TreeComponent, TreeNodeExpanderComponent, TreeDragDirective, TreeDropDirective, TreeNodeContent, FaIconComponent, NgStyle]
+    imports: [CompetentieEditorComponent, PegasusCardComponent, TreeComponent, TreeNodeExpanderComponent, TreeDragDirective, TreeDropDirective, TreeNodeContent, FaIconComponent]
 })
 export class CompetentiesPageComponent implements OnInit, OnDestroy {
     private readonly sharedService = inject(SharedService);
