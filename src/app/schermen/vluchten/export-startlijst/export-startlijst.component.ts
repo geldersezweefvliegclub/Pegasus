@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, ViewChild, output } from '@angular/core';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
 import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
 
@@ -10,7 +10,7 @@ import { IconButtonComponent } from '../../../shared/components/icon-button/icon
 })
 export class ExportStartlijstComponent {
     @ViewChild(ModalComponent) private popup: ModalComponent;
-    @Output() exportDataset: EventEmitter<string> = new EventEmitter<string>();
+    readonly exportDataset = output<string>();
 
     exportKeuze = "dag"
 

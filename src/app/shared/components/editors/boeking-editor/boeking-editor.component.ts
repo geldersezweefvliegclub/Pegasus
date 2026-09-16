@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, inject, input } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject, input, output } from '@angular/core';
 import {
     HeliosVliegtuigenDatasetExtended,
 } from '../../../../schermen/reservering/reservering-page/reservering-page.component';
@@ -32,7 +32,7 @@ export class BoekingEditorComponent implements OnInit, OnDestroy {
     private readonly reserveringenService = inject(ReserveringService);
 
     readonly clubVliegtuigen = input<HeliosVliegtuigenDatasetExtended[]>([]);
-    @Output() boekingToegevoegd: EventEmitter<void> = new EventEmitter<void>();
+    readonly boekingToegevoegd = output<void>();
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
 

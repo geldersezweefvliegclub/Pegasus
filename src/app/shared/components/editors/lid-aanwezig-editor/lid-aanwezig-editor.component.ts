@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject, output } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { HeliosAanwezigLedenDataset, HeliosType, HeliosVliegtuigenDataset } from '../../../../types/Helios';
@@ -35,7 +35,7 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
     private readonly typesService = inject(TypesService);
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
-    @Output() opgeslagen: EventEmitter<number> = new EventEmitter<number>();
+    readonly opgeslagen = output<number>();
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;

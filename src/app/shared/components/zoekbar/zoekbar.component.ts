@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, input } from '@angular/core';
+import { Component, Input, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IconButtonComponent } from '../icon-button/icon-button.component';
 
@@ -10,8 +10,8 @@ import { IconButtonComponent } from '../icon-button/icon-button.component';
 })
 export class ZoekbarComponent {
     @Input() zoekString: string;
-    @Output() zoekStringChange = new EventEmitter<string>();
-    @Output() zoeken = new EventEmitter<void>();
+    readonly zoekStringChange = output<string>();
+    readonly zoeken = output<void>();
     readonly toonRefresh = input(true);
 
     onInputChange(value: string) {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild, inject, output } from '@angular/core';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
 import { Subscription } from 'rxjs';
 import { HeliosType, HeliosVliegtuigenDataset } from '../../../types/Helios';
@@ -22,7 +22,7 @@ export class JournaalFilterComponent implements OnInit, OnDestroy {
 
     @Input() activeFilter: journaalFilter;
     @ViewChild(ModalComponent) private popup: ModalComponent;
-    @Output() aangepast: EventEmitter<void> = new EventEmitter<void>();
+    readonly aangepast = output<void>();
 
     private typesAbonnement: Subscription;
 

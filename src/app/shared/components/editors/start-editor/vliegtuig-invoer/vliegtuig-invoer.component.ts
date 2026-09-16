@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, input } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild, input, output } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
 import { HeliosVliegtuigenDataset } from '../../../../../types/Helios';
 import { NgSelectComponent } from '@ng-select/ng-select';
@@ -20,7 +20,7 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
     readonly verplicht = input(true);
     @Input() VLIEGTUIG_ID: number | undefined;
 
-    @Output() VliegtuigChanged: EventEmitter<number> = new EventEmitter<number>();
+    readonly VliegtuigChanged = output<number>();
     EventEmitterDelay: number;
 
     @ViewChild(NgSelectComponent) ngSelect: NgSelectComponent;

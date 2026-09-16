@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, inject, input } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject, input, output } from '@angular/core';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import {
     HeliosBehaaldeProgressieDataset,
@@ -37,7 +37,7 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
     readonly competenties = input.required<HeliosCompetentiesDataset[]>();
     readonly vliegerID = input.required<number>();
 
-    @Output() aangepast: EventEmitter<number> = new EventEmitter<number>();
+    readonly aangepast = output<number>();
 
     kalenderEersteDatum: NgbDateStruct;
     kalenderLaatsteDatum: NgbDateStruct;

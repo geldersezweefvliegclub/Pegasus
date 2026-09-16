@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ViewChild, inject } from '@angular/core';
+import { Component, ViewChild, inject, output } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosDocument } from '../../../../types/Helios';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
@@ -19,7 +19,7 @@ export class DocumentEditorComponent {
     private readonly documentenService = inject(DocumentenService);
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
-    @Output() refresh: EventEmitter<void> = new EventEmitter<void>();
+    readonly refresh = output<void>();
     formTitel: string;
 
     success: SuccessMessage | undefined;

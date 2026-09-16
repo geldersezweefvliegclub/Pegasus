@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Output, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject, output as output_1 } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosStart, HeliosStartDataset } from '../../../../types/Helios';
 import { StartlijstService } from '../../../../services/apiservice/startlijst.service';
@@ -34,8 +34,8 @@ export class TijdInvoerComponent {
     private readonly startlijstService = inject(StartlijstService);
     private readonly configService = inject(PegasusConfigService);
 
-    @Output() OpslaanStarttijd: EventEmitter<HeliosStart> = new EventEmitter<HeliosStart>();
-    @Output() OpslaanLandingstijd: EventEmitter<HeliosStart> = new EventEmitter<HeliosStart>();
+    readonly OpslaanStarttijd = output<HeliosStart>();
+    readonly OpslaanLandingstijd = output<HeliosStart>();
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
     @ViewChild('tijdInvoerElement') tijdInvoerElement: ElementRef;

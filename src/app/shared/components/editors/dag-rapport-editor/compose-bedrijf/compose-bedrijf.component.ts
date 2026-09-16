@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ViewChild, inject, input } from '@angular/core';
+import { Component, ViewChild, inject, input, output } from '@angular/core';
 import { ModalComponent } from '../../../modal/modal.component';
 import { Observable, of, Subscription } from 'rxjs';
 import { HeliosType } from '../../../../../types/Helios';
@@ -20,7 +20,7 @@ export class ComposeBedrijfComponent {
 
     readonly datum = input.required<DateTime>();
 
-    @Output() opslaan: EventEmitter<string> = new EventEmitter<string>();
+    readonly opslaan = output<string>();
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
     private typesAbonnement: Subscription;

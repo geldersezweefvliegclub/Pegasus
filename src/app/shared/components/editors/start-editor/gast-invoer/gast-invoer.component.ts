@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnChanges, OnInit, Output, SimpleChanges, inject, input } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, inject, input, output } from '@angular/core';
 import { GastenService } from '../../../../../services/apiservice/gasten.service';
 import { DateTime } from 'luxon';
 import { HeliosGastenDataset } from '../../../../../types/Helios';
@@ -14,8 +14,8 @@ export class GastInvoerComponent implements OnInit, OnChanges {
     private readonly gastenService = inject(GastenService);
 
     readonly DATUM = input.required<DateTime>();
-    @Output() gast:EventEmitter<string> = new EventEmitter<string>();
-    @Output() opmerking:EventEmitter<string> = new EventEmitter<string>();
+    readonly gast = output<string>();
+    readonly opmerking = output<string>();
 
     gasten: HeliosGastenDataset[] = [];
 

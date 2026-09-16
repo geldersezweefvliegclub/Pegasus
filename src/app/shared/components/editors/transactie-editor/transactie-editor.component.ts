@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild, inject, input } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, input, output } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { TransactiesService } from '../../../../services/apiservice/transacties.service';
@@ -30,7 +30,7 @@ export class TransactieEditorComponent implements OnInit {
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
     readonly toonLidSelectie = input(true);
-    @Output() TransactieGedaan: EventEmitter<void> = new EventEmitter<void>();
+    readonly TransactieGedaan = output<void>();
 
     private ledenAbonnement: Subscription;
     leden: HeliosLedenDataset[] = [];

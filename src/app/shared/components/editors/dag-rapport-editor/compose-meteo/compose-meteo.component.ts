@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ViewChild, inject } from '@angular/core';
+import { Component, ViewChild, inject, output } from '@angular/core';
 import { Observable, of, Subscription } from 'rxjs';
 import { TypesService } from '../../../../../services/apiservice/types.service';
 import { HeliosType } from '../../../../../types/Helios';
@@ -17,7 +17,7 @@ import { AsyncPipe } from '@angular/common';
 export class ComposeMeteoComponent {
     private readonly typesService = inject(TypesService);
 
-    @Output() opslaan: EventEmitter<string> = new EventEmitter<string>();
+    readonly opslaan = output<string>();
     @ViewChild(ModalComponent) private popup: ModalComponent;
 
     private typesAbonnement: Subscription;

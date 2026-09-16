@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject, output } from '@angular/core';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosGast, HeliosType } from '../../../../types/Helios';
@@ -24,7 +24,7 @@ export class GastEditorComponent implements OnInit, OnDestroy {
     private readonly typesService = inject(TypesService);
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
-    @Output() refresh: EventEmitter<void> = new EventEmitter<void>();
+    readonly refresh = output<void>();
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;

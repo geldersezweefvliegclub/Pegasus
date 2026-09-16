@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject, output } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { HeliosType, HeliosVliegtuig, HeliosVliegtuigenDataset } from '../../../../types/Helios';
 import { VliegtuigenService } from '../../../../services/apiservice/vliegtuigen.service';
@@ -29,10 +29,10 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
     private readonly loginService = inject(LoginService);
     private readonly typesService = inject(TypesService);
 
-    @Output() add: EventEmitter<HeliosVliegtuig> = new EventEmitter<HeliosVliegtuig>();
-    @Output() update: EventEmitter<HeliosVliegtuig> = new EventEmitter<HeliosVliegtuig>();
-    @Output() delete: EventEmitter<HeliosVliegtuig> = new EventEmitter<HeliosVliegtuig>();
-    @Output() restore: EventEmitter<HeliosVliegtuig> = new EventEmitter<HeliosVliegtuig>();
+    readonly add = output<HeliosVliegtuig>();
+    readonly update = output<HeliosVliegtuig>();
+    readonly delete = output<HeliosVliegtuig>();
+    readonly restore = output<HeliosVliegtuig>();
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
 

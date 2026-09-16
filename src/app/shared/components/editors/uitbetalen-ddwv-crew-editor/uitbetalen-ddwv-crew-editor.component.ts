@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ViewChild, inject } from '@angular/core';
+import { Component, ViewChild, inject, output } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { ErrorMessage, KeyValueArray, SuccessMessage } from '../../../../types/Utils';
 import { HeliosDienstenDataset } from '../../../../types/Helios';
@@ -19,7 +19,7 @@ export class UitbetalenDdwvCrewEditorComponent  {
     private readonly ddwvService = inject(DdwvService);
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
-    @Output() refresh: EventEmitter<void> = new EventEmitter<void>();
+    readonly refresh = output<void>();
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;

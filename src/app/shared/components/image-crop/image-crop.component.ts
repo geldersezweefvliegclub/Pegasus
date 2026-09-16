@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, output } from '@angular/core';
 import { ImageCroppedEvent, ImageTransform, ImageCropperComponent } from 'ngx-image-cropper';
 import { faSearchMinus, faSearchPlus, faTimesCircle, faUndoAlt } from '@fortawesome/free-solid-svg-icons';
 import { FormsModule } from '@angular/forms';
@@ -12,8 +12,8 @@ import { IconButtonComponent } from '../icon-button/icon-button.component';
     imports: [FormsModule, ImageCropperComponent, FaIconComponent, IconButtonComponent]
 })
 export class ImageCropComponent {
-  @Output() cropped: EventEmitter<string | null | undefined> = new EventEmitter<string | null | undefined>();
-  @Output() opslaan: EventEmitter<string> = new EventEmitter<string>();
+  readonly cropped = output<string | null | undefined>();
+  readonly opslaan = output<string>();
   imageChangedEvent: Event | null = null;
   croppedImage: string | undefined;
   canvasRotation = 0;

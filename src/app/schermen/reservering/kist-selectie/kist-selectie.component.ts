@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ViewChild, input } from '@angular/core';
+import { Component, ViewChild, input, output } from '@angular/core';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
 import { HeliosVliegtuigenDatasetExtended } from '../reservering-page/reservering-page.component';
 
@@ -11,7 +11,7 @@ import { HeliosVliegtuigenDatasetExtended } from '../reservering-page/reserverin
 })
 export class KistSelectieComponent  {
     readonly clubVliegtuigen = input<HeliosVliegtuigenDatasetExtended[]>([]);
-    @Output() aangepast: EventEmitter<number> = new EventEmitter<number>();
+    readonly aangepast = output<number>();
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
 

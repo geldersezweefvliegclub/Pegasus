@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject, output } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { TransactiesService } from '../../../services/apiservice/transacties.service';
 import { HeliosTransactiesDataset } from '../../../types/Helios';
@@ -26,7 +26,7 @@ export class TransactiesComponent implements OnInit, OnDestroy {
     @ViewChild(TransactieEditorComponent) private editor: TransactieEditorComponent;
     @ViewChild(IdealBestellenComponent) private bestellen: IdealBestellenComponent;
 
-    @Output() TransactieGedaan: EventEmitter<void> = new EventEmitter<void>();
+    readonly TransactieGedaan = output<void>();
 
     private resizeSubscription: Subscription;       // Abonneer op aanpassing van window grootte (of draaien mobiel)
     private maandAbonnement: Subscription;          // volg de keuze van de kalender

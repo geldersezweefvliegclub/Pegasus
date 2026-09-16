@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, inject, input } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, input, output } from '@angular/core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far, IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { FlipProp, SizeProp } from '@fortawesome/fontawesome-svg-core';
@@ -25,7 +25,7 @@ export class IconButtonComponent implements OnInit, OnDestroy {
     readonly size = input<SizeProp>();
     readonly stopPropagation = input(false);
     readonly type = input<'button' | 'submit'>('button');
-    @Output() btnClicked: EventEmitter<void> = new EventEmitter<void>();
+    readonly btnClicked = output<void>();
 
     faIcon: IconDefinition;
     toonTekst = false;

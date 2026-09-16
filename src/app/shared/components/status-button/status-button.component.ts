@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject, input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject, input, output } from '@angular/core';
 import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
 import { far, IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { fas } from '@fortawesome/free-solid-svg-icons';
@@ -21,7 +21,7 @@ export class StatusButtonComponent implements OnInit, OnDestroy {
     @Input() actief = false;
     readonly iconNaam = input<string>();
 
-    @Output() btnClicked: EventEmitter<boolean> = new EventEmitter<boolean>();
+    readonly btnClicked = output<boolean>();
 
     faIcon: IconDefinition;
     toonTekst = true;

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ViewChild, inject, input } from '@angular/core';
+import { Component, ViewChild, inject, input, output } from '@angular/core';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
 import { HeliosAanwezigSamenvatting, HeliosDienstenDataset, HeliosRoosterDataset } from '../../../types/Helios';
 import { DateTime } from 'luxon';
@@ -22,7 +22,7 @@ export class SamenvattingComponent {
 
     @ViewChild(ModalComponent) private popup: ModalComponent;
     readonly diensten = input.required<HeliosDienstenDataset[]>();
-    @Output() bulkEmail: EventEmitter<string> = new EventEmitter<string>();
+    readonly bulkEmail = output<string>();
 
     samenvatting: HeliosAanwezigSamenvatting | undefined;
     toonBulkEmail = false;

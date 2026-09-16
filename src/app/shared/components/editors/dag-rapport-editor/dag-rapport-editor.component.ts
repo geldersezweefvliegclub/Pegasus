@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, inject, input } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject, input, output } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
@@ -38,7 +38,7 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
     @ViewChild(ComposeMeteoComponent) private meteoWizard: ComposeMeteoComponent;
     @ViewChild(ComposeBedrijfComponent) private bedrijfWizard: ComposeBedrijfComponent;
 
-    @Output() aangepast: EventEmitter<number> = new EventEmitter<number>();
+    readonly aangepast = output<number>();
 
     private readonly iconMeteo: IconDefinition = faCloudSunRain;
     protected readonly iconVliegend: IconDefinition = faPaperPlane;

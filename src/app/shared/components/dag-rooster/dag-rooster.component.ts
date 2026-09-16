@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ViewChild, inject, input } from '@angular/core';
+import { Component, Input, ViewChild, inject, input, output } from '@angular/core';
 import { DienstenService } from '../../../services/apiservice/diensten.service';
 import { RoosterService } from '../../../services/apiservice/rooster.service';
 import { HeliosDienst, HeliosDienstenDataset, HeliosRoosterDataset } from '../../../types/Helios';
@@ -18,7 +18,7 @@ export class DagRoosterComponent {
     private readonly roosterService = inject(RoosterService);
     private readonly dienstenService = inject(DienstenService);
 
-    @Output() opslaan: EventEmitter<string> = new EventEmitter<string>();
+    readonly opslaan = output<string>();
 
     readonly Datum = input.required<DateTime>();
     @Input() magWijzigen = false;

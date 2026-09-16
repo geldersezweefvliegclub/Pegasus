@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, inject, input } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, inject, input, output } from '@angular/core';
 import {
     ColDef,
     GridApi,
@@ -32,8 +32,8 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     readonly multipleSelection = input(false);
     readonly pagination = input(true);
     readonly rowClassRules = input(null);
-    @Output() rowDoubleClicked: EventEmitter<RowDoubleClickedEvent> = new EventEmitter<RowDoubleClickedEvent>();
-    @Output() rowSelected: EventEmitter<RowSelectedEvent> = new EventEmitter<RowSelectedEvent>();
+    readonly rowDoubleClicked = output<RowDoubleClickedEvent>();
+    readonly rowSelected = output<RowSelectedEvent>();
 
 
     options: GridOptions = {

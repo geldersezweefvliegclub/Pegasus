@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, input } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, input, output } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
 import { HeliosAanwezigLedenDataset, HeliosLedenDataset, HeliosVliegtuigenDataset } from '../../../../../types/Helios';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
@@ -30,7 +30,7 @@ export class LidInvoerComponent implements OnInit, OnChanges {
     @Input() LID_ID: number | undefined;
     readonly vliegtuig = input<HeliosVliegtuigenDataset>();
 
-    @Output() LidChanged: EventEmitter<number> = new EventEmitter<number>();
+    readonly LidChanged = output<number>();
     EventEmitterDelay: number;
 
     readonly infoIcon: IconDefinition = faInfoCircle;

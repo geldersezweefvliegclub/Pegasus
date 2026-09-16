@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, input } from '@angular/core';
+import { Component, Input, OnInit, input, output } from '@angular/core';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { NgClass } from '@angular/common';
@@ -19,7 +19,7 @@ export class PegasusCardComponent implements OnInit{
     readonly subtitel = input.required();
     readonly exportEnabled = input(true);
     readonly exportImg = input("/assets/img/excel-logo.png");
-    @Output() Exporting: EventEmitter<void> = new EventEmitter<void>();
+    readonly Exporting = output<void>();
 
     hasExportListener: boolean;
 

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, inject, input } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject, input, output } from '@angular/core';
 import { DagVanDeWeek } from '../../../utils/Utils';
 
 import {
@@ -47,7 +47,7 @@ export class RoosterWeekviewComponent implements OnInit, OnChanges,OnDestroy {
     readonly zelfIndelen = input.required<(dienstType: number, datum: string) => boolean>();
     readonly magVerwijderen = input.required<(dienstData: HeliosDienstenDataset) => boolean>();
     readonly lidInRoosterClass = input.required<(dienst: HeliosDienstenDataset) => string>();
-    @Output() nieuweDatum: EventEmitter<DateTime> = new EventEmitter<DateTime>();
+    readonly nieuweDatum = output<DateTime>();
 
     @ViewChild(DienstEditorComponent) dienstEditor: DienstEditorComponent;
     @ViewChild(UitbetalenDdwvCrewEditorComponent) protected uitbetalen: UitbetalenDdwvCrewEditorComponent;
