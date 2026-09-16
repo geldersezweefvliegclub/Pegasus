@@ -122,7 +122,7 @@
                 </td>
                     @for (clubKist of clubVliegtuigenFiltered; track clubKist; let i = $index) {
                         <td
-                    [ngStyle]="{'width.%': 100/(clubVliegtuigenFiltered.length+2)}">
+                    [style.width.%]="100/(clubVliegtuigenFiltered.length+2)">
                     <ng-container [ngTemplateOutlet]="reservering"
                                   [ngTemplateOutletContext]='{dag:dagInRooster.DATUM,vliegtuigID:clubKist.ID}'/>
                         </td>

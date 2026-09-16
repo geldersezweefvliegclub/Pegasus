@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
-import { DatePipe, NgClass, NgStyle, NgTemplateOutlet } from '@angular/common';
+import { DatePipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
@@ -53,7 +53,6 @@ export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
         StartEditorComponent,
         FormsModule,
         NgClass,
-        NgStyle,
         NgTemplateOutlet,
         DatePipe,
         FaIconComponent
