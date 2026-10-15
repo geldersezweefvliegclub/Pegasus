@@ -221,7 +221,7 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
     // sluiten van window en inform parent dat data aangepast is.
     closePopup() {
         const id = this.dagRapport.ID;
-        if (id === undefined) {
+        if (id === undefined || id === null) {
             console.error("Kan dagrapport niet sluiten zonder rapport-ID.");
             return;
         }

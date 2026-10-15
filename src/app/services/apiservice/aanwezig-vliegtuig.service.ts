@@ -5,7 +5,6 @@ import { APIService } from './api.service';
 import {
   HeliosAanwezigVliegtuigen,
   HeliosAanwezigVliegtuigenDataset,
-  HeliosVliegtuigenDataset,
 } from '../../types/Helios';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { SharedService } from '../shared/shared.service';
@@ -22,7 +21,7 @@ export class AanwezigVliegtuigService {
     private readonly sharedService = inject(SharedService);
 
     private aanwezigCache: HeliosAanwezigVliegtuigen = { dataset: []};   // return waarde van API call
-    private aanwezigDagCache: HeliosVliegtuigenDataset[] = [];       // vliegtuigen aanwezig op de geselecteerde dag
+    private aanwezigDagCache: HeliosAanwezigVliegtuigenDataset[] = [];       // vliegtuigen aanwezig op de geselecteerde dag
 
     private datumAbonnement: Subscription;                      // volg de keuze van de kalender
     private datum: DateTime = DateTime.now();                   // de gekozen dag

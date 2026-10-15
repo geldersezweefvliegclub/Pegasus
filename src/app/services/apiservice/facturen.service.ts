@@ -67,12 +67,12 @@ export class FacturenService {
 
 
   async addFactuur(factuur: HeliosFactuur) {
-    const response: Response = await this.apiService.post('Facturen/SaveObject', JSON.stringify(factuur));
+    const response: Response = await this.apiService.post('Facturen/SaveObject', JSON.stringify(this.naarApiFormaat(factuur)));
     return response.json();
   }
 
   async updateFactuur(factuur: HeliosFactuur) {
-    const response: Response = await this.apiService.put('Facturen/SaveObject', JSON.stringify(factuur));
+    const response: Response = await this.apiService.put('Facturen/SaveObject', JSON.stringify(this.naarApiFormaat(factuur)));
 
     return response.json();
   }
@@ -101,5 +101,11 @@ export class FacturenService {
     const f = {LID_ID: LidID, DATUM: datum.toISODate()}
     const response: Response = await this.apiService.post('Facturen/UploadTransactieFactuur', JSON.stringify(f));
     return response.json();
+  }
+
+  // NAAM komt uit GetObject/GetObjects (de naam van het lid) en mag niet meegestuurd worden (onbekende velden geven HTTP 400)
+  private naarApiFormaat(factuur: HeliosFactuur & {NAAM?: string | null}): HeliosFactuur {
+    const {NAAM, ...data} = factuur;
+    return data;
   }
 }

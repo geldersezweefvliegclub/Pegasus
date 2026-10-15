@@ -3,7 +3,7 @@ import {
   HeliosCompetentie,
   HeliosCompetenties,
   HeliosCompetentiesDataset,
-  HeliosProgressieBoom,
+  HeliosCompetentiesBoom,
   HeliosType,
 } from '../../types/Helios';
 import { KeyValueArray } from '../../types/Utils';
@@ -27,7 +27,7 @@ export class CompetentieService {
     private competentiesStore = new BehaviorSubject(this.competentiesCache.dataset);
     public readonly competentiesChange = this.competentiesStore.asObservable();      // nieuwe aanwezigheid beschikbaar
 
-    private boom: HeliosProgressieBoom[] = [];
+    private boom: HeliosCompetentiesBoom[] = [];
 
     constructor() {
         const loginService = this.loginService;
@@ -94,7 +94,7 @@ export class CompetentieService {
         return this.competentiesCache?.dataset as HeliosCompetentiesDataset[];
     }
 
-    async getBoom(): Promise<HeliosProgressieBoom[]> {
+    async getBoom(): Promise<HeliosCompetentiesBoom[]> {
         const getParams: KeyValueArray = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn
@@ -110,7 +110,7 @@ export class CompetentieService {
         const response: Response = await this.apiService.get('Competenties/CompetentiesBoom', getParams);
         this.boom = await response.json();
 
-        return this.boom as HeliosProgressieBoom[];
+        return this.boom as HeliosCompetentiesBoom[];
     }
 
     async getCompetentie(id: number): Promise<HeliosType> {
@@ -123,12 +123,12 @@ export class CompetentieService {
     }
 
     async addCompetentie(competentie: HeliosCompetentie) {
-        const response: Response = await this.apiService.post('Competenties/SaveObject', JSON.stringify(competentie));
+        const response: Response = await this.apiService.post('Competenties/SaveObject', JSON.stringify(this.naarApiFormaat(competentie)));
         return response.json();
     }
 
     async updateCompetentie(competentie: HeliosCompetentie) {
-        const response: Response = await this.apiService.put('Competenties/SaveObject', JSON.stringify(competentie, CustomJsonSerializer));
+        const response: Response = await this.apiService.put('Competenties/SaveObject', JSON.stringify(this.naarApiFormaat(competentie), CustomJsonSerializer));
         return response.json();
     }
 
@@ -138,5 +138,13 @@ export class CompetentieService {
 
     async restoreCompetentie(id: number) {
         await this.apiService.patch('Competenties/RestoreObject', {'ID': id.toString()});
+    }
+
+    // SCORE is een integer in de API, de checkbox in de editor levert een boolean op. LEERFASE komt uit GetObjects
+    // en kan niet opgeslagen worden (onbekende velden geven HTTP 400)
+    private naarApiFormaat(competentie: HeliosCompetentie & {LEERFASE?: string}): HeliosCompetentie {
+        const {LEERFASE, ...data} = competentie;
+        if (data.SCORE !== undefined && data.SCORE !== null) data.SCORE = Number(data.SCORE);
+        return data;
     }
 }

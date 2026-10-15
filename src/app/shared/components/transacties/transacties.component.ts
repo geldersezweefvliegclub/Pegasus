@@ -7,7 +7,6 @@ import { DateTime } from 'luxon';
 import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
 import { LoginService } from '../../../services/apiservice/login.service';
 import { TransactieEditorComponent } from '../editors/transactie-editor/transactie-editor.component';
-import { IdealBestellenComponent } from '../ideal-bestellen/ideal-bestellen.component';
 import { NgTemplateOutlet, DecimalPipe } from '@angular/common';
 import { IconButtonComponent } from '../icon-button/icon-button.component';
 
@@ -15,7 +14,7 @@ import { IconButtonComponent } from '../icon-button/icon-button.component';
     selector: 'app-transacties',
     templateUrl: './transacties.component.html',
     styleUrls: ['./transacties.component.scss'],
-    imports: [ModalComponent, NgTemplateOutlet, IconButtonComponent, TransactieEditorComponent, IdealBestellenComponent, DecimalPipe]
+    imports: [ModalComponent, NgTemplateOutlet, IconButtonComponent, TransactieEditorComponent, DecimalPipe]
 })
 export class TransactiesComponent implements OnInit, OnDestroy {
     private readonly sharedService = inject(SharedService);
@@ -24,7 +23,6 @@ export class TransactiesComponent implements OnInit, OnDestroy {
 
     private readonly popup = viewChild.required(ModalComponent);
     private readonly editor = viewChild.required(TransactieEditorComponent);
-    private readonly bestellen = viewChild.required(IdealBestellenComponent);
 
     readonly TransactieGedaan = output<void>();
 
@@ -34,7 +32,6 @@ export class TransactiesComponent implements OnInit, OnDestroy {
     datum: DateTime = DateTime.now();               // de gekozen dag
 
     magCorrigeren = false;
-    magBestellen = false;
     lidID: number;
 
     transacties: HeliosTransactiesDataset[];
@@ -88,15 +85,10 @@ export class TransactiesComponent implements OnInit, OnDestroy {
         }
     }
 
-    openPopup(lidID: number, magBestellen: boolean) {
+    openPopup(lidID: number) {
         this.lidID = lidID;
-        this.magBestellen = magBestellen;
         this.opvragen(lidID);
         this.popup().open();
-    }
-
-    nieuweBetaling() {
-        this.bestellen().openPopup(this.lidID)
     }
 
     toonEditor() {

@@ -47,7 +47,6 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDest
                     if (ophalen) {
                         this.data = {
                             "totaal": 0,
-                            "laatste_aanpassing": "0000-00-00 00:00:00",
                             "hash": "0",
                             "starts": [],
                             "vliegtuigen": [],
@@ -77,7 +76,6 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDest
                     if (ophalen) {
                         this.data = {
                             "totaal": 0,
-                            "laatste_aanpassing": "0000-00-00 00:00:00",
                             "hash": "0",
                             "starts": [],
                             "vliegtuigen": [],

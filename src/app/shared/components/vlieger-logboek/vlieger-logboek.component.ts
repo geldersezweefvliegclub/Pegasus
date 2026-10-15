@@ -1,6 +1,6 @@
 import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, inject, input, viewChild } from '@angular/core';
 import { ColDef, RowClassParams } from 'ag-grid-community';
-import { HeliosLogboekDataset, HeliosTrack } from '../../../types/Helios';
+import { HeliosLogboekDataset, HeliosStartDataset, HeliosTrack } from '../../../types/Helios';
 import { DateTime, Interval } from 'luxon';
 import { Subscription } from 'rxjs';
 import { StartlijstService } from '../../../services/apiservice/startlijst.service';
@@ -267,7 +267,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
     // openen van popup om bestaande start te kunnen aanpassen
     openStartEditor(vlucht: HeliosLogboekDatasetExtended) {
         if (vlucht.inTijdspan) {
-            this.startEditor().openPopup(vlucht);
+            this.startEditor().openPopup({ID: vlucht.ID} as HeliosStartDataset);    // de editor haalt de start op via ID
         }
     }
 

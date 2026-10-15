@@ -21,6 +21,15 @@ enum TypeTijdInvoer {
     Landingstijd
 }
 
+// de velden die we nodig hebben, de popup wordt geopend vanuit de startlijst en vanuit het logboek
+type TijdInvoerRecord = Pick<HeliosStartDataset, 'ID'> & {
+    DAGNUMMER?: number | null;
+    REG_CALL?: string | null;
+    DATUM?: string | null;
+    STARTTIJD?: string | null;
+    LANDINGSTIJD?: string | null;
+}
+
 @Component({
     selector: 'app-tijd-invoer',
     templateUrl: './tijd-invoer.component.html',
@@ -73,7 +82,7 @@ export class TijdInvoerComponent {
 
     // open popup, maar haal eerst de start op. De eerder ingevoerde tijd wordt als default waarde gebruikt
     // indien niet eerder ingvuld, dan de huidige tijd. Buiten de daglicht periode is het veld leeg
-    openStarttijdPopup(record: HeliosStartDataset) {
+    openStarttijdPopup(record: TijdInvoerRecord) {
         this.Invoer = TypeTijdInvoer.Starttijd;                 // dan weten we later dat we een starttijd aan het invoeren zijn
 
         this.haalStartOp(record.ID as number).then(() => {
@@ -111,7 +120,7 @@ export class TijdInvoerComponent {
 
     // open popup, maar haal eerst de start op. De eerder ingevoerde tijd wordt als default waarde gebruikt
     // indien niet eerder ingvuld, dan de huidige tijd. Buiten de daglicht periode is het veld leeg
-    openLandingsTijdPopup(record: HeliosStartDataset) {
+    openLandingsTijdPopup(record: TijdInvoerRecord) {
         this.Invoer = TypeTijdInvoer.Landingstijd;                 // dan weten we later dat we een landingstijd aan het invoeren zijn
 
         this.haalStartOp(record.ID as number).then(() => {

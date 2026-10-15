@@ -6,7 +6,6 @@ import {
   HeliosAanwezigLeden,
   HeliosAanwezigLedenDataset,
   HeliosAanwezigSamenvatting,
-  HeliosAanwezigVliegtuigenDataset,
 } from '../../types/Helios';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { SharedService } from '../shared/shared.service';
@@ -162,7 +161,7 @@ export class AanwezigLedenService {
         return response.json();
     }
 
-    async aanmelden(record: HeliosAanwezigVliegtuigenDataset): Promise<any> {
+    async aanmelden(record: HeliosAanwezigLedenDataset): Promise<any> {
         const response: Response = await this.apiService.post('AanwezigLeden/Aanmelden', JSON.stringify(record));
         return response.json();
     }

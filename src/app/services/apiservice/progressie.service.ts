@@ -7,7 +7,6 @@ import {
   HeliosDagRapport,
   HeliosProgressie,
   HeliosProgressieBoom,
-  HeliosProgressieKaart,
   HeliosProgressieKaartDataset,
 } from '../../types/Helios';
 import { KeyValueArray } from '../../types/Utils';
@@ -22,7 +21,7 @@ export class ProgressieService {
     private readonly storageService = inject(StorageService);
 
     private progressieCache: HeliosBehaaldeProgressie = { dataset: []};  // return waarde van API call
-    private kaartCache:HeliosProgressieKaart = { dataset: []};           // return waarde van API call
+    private kaartCache: HeliosProgressieKaartDataset[] = [];             // return waarde van API call
 
     private boom: HeliosProgressieBoom[] = [];
 
@@ -62,7 +61,7 @@ export class ProgressieService {
         return await response.json();
     }
 
-    async addProgressie(progressie: HeliosProgressie):Promise<HeliosProgressie> {
+    async addProgressie(progressie: HeliosProgressie):Promise<HeliosBehaaldeProgressieDataset> {
         const response: Response = await this.apiService.post('Progressie/SaveObject', JSON.stringify(progressie));
         return await response.json();
     }
@@ -107,6 +106,6 @@ export class ProgressieService {
         const response: Response = await this.apiService.get('Progressie/ProgressieKaart', getParams);
         this.kaartCache = await response.json();
 
-        return this.kaartCache?.dataset as HeliosProgressieKaartDataset[];
+        return this.kaartCache;
     }
 }

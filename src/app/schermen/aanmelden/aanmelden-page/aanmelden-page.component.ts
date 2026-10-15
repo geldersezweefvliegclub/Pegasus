@@ -725,7 +725,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
 
     // openen van windows voor het tonen van de transacties
     toonTransacties() {
-        this.transactieScherm().openPopup(this.lid!.ID!, this.ddwvService.magBestellen(this.lid.TEGOED));
+        this.transactieScherm().openPopup(this.lid!.ID!);
     }
 
     // toon de samenvatting van de dag

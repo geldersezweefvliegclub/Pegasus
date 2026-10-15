@@ -264,12 +264,12 @@ export class StartlijstService {
     }
 
     async addStart(start: HeliosStart) {
-        const response: Response = await this.apiService.post('Startlijst/SaveObject', JSON.stringify(start));
+        const response: Response = await this.apiService.post('Startlijst/SaveObject', JSON.stringify(this.naarApiFormaat(start)));
         return response.json();
     }
 
     async updateStart(start: HeliosStart) {
-        const response: Response = await this.apiService.put('Startlijst/SaveObject', JSON.stringify(start, CustomJsonSerializer));
+        const response: Response = await this.apiService.put('Startlijst/SaveObject', JSON.stringify(this.naarApiFormaat(start), CustomJsonSerializer));
 
         return response.json();
     }
@@ -292,5 +292,11 @@ export class StartlijstService {
         const response: Response = await this.apiService.put('Startlijst/SaveObject', JSON.stringify({ID: id,LANDINGSTIJD: (tijd) ? tijd : null }));
 
         return response.json();
+    }
+
+    // DAGNUMMER bepaalt Helios.js zelf en mag niet meegestuurd worden (onbekende velden geven HTTP 400)
+    private naarApiFormaat(start: HeliosStart & {DAGNUMMER?: number}): HeliosStart {
+        const {DAGNUMMER, ...data} = start;
+        return data;
     }
 }

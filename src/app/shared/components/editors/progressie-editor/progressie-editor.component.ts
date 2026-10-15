@@ -170,15 +170,15 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
         }
 
         let retValue = "";
-        if (competentie.BLOK_ID) {
-            retValue = this.vullenCompetentieString(competentie.BLOK_ID, false)
+        if (competentie.OUDER_ID) {
+            retValue = this.vullenCompetentieString(competentie.OUDER_ID, false)
         }
         else {
             const t = this.topLevels.find((t) => t.ID == competentie.LEERFASE_ID)
             retValue = t!.OMSCHRIJVING!
         }
         retValue += (retValue != "") ? " - " : "";
-        retValue += competentie.ONDERWERP;
+        retValue += competentie.OMSCHRIJVING;
 
         return retValue;
     }
@@ -199,7 +199,7 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
             this.isSaving = false;
             this.success = {
                 titel: "Progressie",
-                beschrijving: "Competentie '" + this.competentie!.ONDERWERP  +"' behaald"
+                beschrijving: "Competentie '" + this.competentie!.OMSCHRIJVING  +"' behaald"
             }
             this.progressie = p;
             this.closePopup();

@@ -120,13 +120,13 @@ export class LedenService {
     async addLid(lid: HeliosLid) {
         const response: Response  = await this.apiService.post('Leden/SaveObject', JSON.stringify(lid));
         const dbLid = await response.json();
-        this.syncSynapse(dbLid.ID!, lid.WACHTWOORD);
+        this.syncSynapse(dbLid.ID!, lid.WACHTWOORD ?? undefined);
         return dbLid;
     }
 
     async updateLid(lid: HeliosLid) {
         const response: Response = await this.apiService.put('Leden/SaveObject', JSON.stringify(lid, CustomJsonSerializer));
-        this.syncSynapse(lid.ID!, lid.WACHTWOORD)
+        this.syncSynapse(lid.ID!, lid.WACHTWOORD ?? undefined)
         return response.json();
     }
 

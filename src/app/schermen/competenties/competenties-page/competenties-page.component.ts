@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faCaretSquareDown, faCaretSquareUp, faGraduationCap, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
-import { HeliosCompetentie, HeliosCompetentiesDataset, HeliosProgressieBoom, HeliosType } from '../../../types/Helios';
+import { HeliosCompetentie, HeliosCompetentiesDataset, HeliosCompetentiesBoom, HeliosType } from '../../../types/Helios';
 import { SharedService } from '../../../services/shared/shared.service';
 import { CompetentieService } from '../../../services/apiservice/competentie.service';
 import { ITreeOptions, TreeComponent, TreeNodeExpanderComponent, TreeDragDirective, TreeDropDirective, TreeNodeContent } from '@ali-hm/angular-tree-component';
@@ -17,13 +17,13 @@ import { PegasusCardComponent } from '../../../shared/components/pegasus-card/pe
 export interface CompetentieTreeviewItem {
     nodeId: string;
     text: string;
-    value: number | undefined;
+    value: number | null | undefined;
     expanded: boolean;
     children?: CompetentieTreeviewItem[];
     leerfaseID: number | undefined;
     blok: string | undefined;
-    blokID: number | undefined;
-    competentieID: number | undefined;
+    blokID: number | null | undefined;
+    competentieID: number | null | undefined;
 }
 
 @Component({
@@ -101,25 +101,27 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
         }).catch(() => this.isLoading = false);
     }
 
-    TreeView(boomTak: HeliosProgressieBoom): CompetentieTreeviewItem {
+    TreeView(boomTak: HeliosCompetentiesBoom): CompetentieTreeviewItem {
         let tekst = ''
 
         if (boomTak.BLOK)
             tekst += boomTak.BLOK.toString();
 
         tekst += " ";
-        if (boomTak.ONDERWERP)
-            tekst += boomTak.ONDERWERP.toString()
+        if (boomTak.OMSCHRIJVING)
+            tekst += boomTak.OMSCHRIJVING.toString()
 
+        // Helios.js geeft de wortel (leerfase) ID -1, en de competenties direct onder de wortel OUDER_ID -1
+        const competentieID = (boomTak.ID === -1) ? null : boomTak.ID;
         const nieuwetak: CompetentieTreeviewItem = {
-            nodeId: `competentie-${boomTak.COMPETENTIE_ID}`,
+            nodeId: (competentieID === null) ? `leerfase-${boomTak.LEERFASE_ID}` : `competentie-${competentieID}`,
             text: (tekst).trim(),
-            value: boomTak.COMPETENTIE_ID,
+            value: competentieID,
             expanded: true,
             leerfaseID: boomTak.LEERFASE_ID,
-            blok: boomTak.BLOK,
-            blokID: boomTak.BLOK_ID,
-            competentieID: boomTak.COMPETENTIE_ID,
+            blok: boomTak.BLOK ?? undefined,
+            blokID: (boomTak.OUDER_ID === -1) ? null : boomTak.OUDER_ID,
+            competentieID: competentieID,
         };
 
         if (boomTak.children) {
@@ -143,7 +145,7 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
     }
 
     // insert een nieuwe tak in de boom
-    nieuweBoomTak(boomTak: CompetentieTreeviewItem, parentID: number | undefined) {
+    nieuweBoomTak(boomTak: CompetentieTreeviewItem, parentID: number | null | undefined) {
         // toevoegen van de tak onder de parent
         if (boomTak.competentieID == parentID) {
             const nieuwetak: CompetentieTreeviewItem = {
@@ -175,7 +177,7 @@ export class CompetentiesPageComponent implements OnInit, OnDestroy {
             const children = this.competenties.filter(c => c.BLOK == item.blok)
 
             const c: HeliosCompetentie = {
-                BLOK_ID: item.blokID,
+                OUDER_ID: item.blokID,
                 BLOK: item.blok,
                 LEERFASE_ID: item.leerfaseID,
                 VOLGORDE: children.length

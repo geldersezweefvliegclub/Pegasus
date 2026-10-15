@@ -144,9 +144,9 @@ export class DienstenService {
     }
 
     async updateDienst(dienst: HeliosDienst) {
-        dienst.ROOSTER_ID = undefined;
-        dienst.INGEVOERD_DOOR_ID = undefined;
-        const response: Response = await this.apiService.put('Diensten/SaveObject', JSON.stringify(dienst, CustomJsonSerializer));
+        // ROOSTER_ID mag niet gewijzigd worden, de overige velden komen uit GetObjects en kunnen niet opgeslagen worden
+        const {ROOSTER_ID, INGEVOERD_DOOR, INGEVOERD_DOOR_ID, NAAM, TYPE_DIENST, UITBETAALD, ...data} = dienst as HeliosDienst & Partial<HeliosDienstenDataset>;
+        const response: Response = await this.apiService.put('Diensten/SaveObject', JSON.stringify(data, CustomJsonSerializer));
 
         return response.json();
     }

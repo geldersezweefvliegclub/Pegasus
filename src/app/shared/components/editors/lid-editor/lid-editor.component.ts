@@ -15,7 +15,6 @@ import { Subscription } from 'rxjs';
 import { SchermGrootte, SharedService } from '../../../../services/shared/shared.service';
 import { TransactiesComponent } from '../../transacties/transacties.component';
 import { PegasusConfigService } from '../../../../services/shared/pegasus-config.service';
-import { DdwvService } from '../../../../services/apiservice/ddwv.service';
 import { ErrorComponent } from '../../error/error.component';
 import { SuccessComponent } from '../../success/success.component';
 import { FormsModule } from '@angular/forms';
@@ -39,7 +38,6 @@ import { LoaderComponent } from '../../loader/loader.component';
 })
 export class LidEditorComponent implements OnInit, OnDestroy {
     private readonly router = inject(Router);
-    private readonly ddwvService = inject(DdwvService);
     private readonly typesService = inject(TypesService);
     private readonly ledenService = inject(LedenService);
     private readonly loginService = inject(LoginService);
@@ -307,7 +305,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     }
 
     // Datum velden komen in ISO formaat van API, conversie naar NgbDate zodat invoer gedaan kan worden
-    converteerDatumNaarNgbDate(datum: string | undefined): NgbDate | null {
+    converteerDatumNaarNgbDate(datum: string | null | undefined): NgbDate | null {
         if (datum) {
             return NgbDate.from(DateTime.fromSQL(datum));
         } else
@@ -529,6 +527,6 @@ export class LidEditorComponent implements OnInit, OnDestroy {
 
     // openen van windows voor het tonen van de transacties
     toonTransacties() {
-        this.transactieScherm().openPopup(this.lid!.ID!, this.ddwvService.magBestellen(this.lid.TEGOED));
+        this.transactieScherm().openPopup(this.lid!.ID!);
     }
 }

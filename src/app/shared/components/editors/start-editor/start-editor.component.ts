@@ -75,7 +75,7 @@ export class StartEditorComponent implements OnInit {
 
     gastIcon: IconDefinition = faStreetView;
 
-    start: HeliosStart = {};
+    start: HeliosStart & Pick<HeliosStartDataset, 'DAGNUMMER'> = {};      // DAGNUMMER alleen om te tonen, bepaalt Helios.js zelf
     toonTranactieKnop = false;        // Moet de transactie editor geopend kunnen worden?
     toonGastCombobox = false;
     toonVliegerNaam = false;
@@ -241,7 +241,7 @@ export class StartEditorComponent implements OnInit {
             this.formTitel = `Start aanmaken`;
             this.toonGastCombobox = this.storageService.ophalen("toonGastenCombo") ? this.storageService.ophalen("toonGastenCombo") as boolean : false;
 
-            let veld_id = this.VliegveldID();
+            let veld_id: number | null | undefined = this.VliegveldID();
             let baan_id = undefined;
             let startmethode_id = undefined;
 
@@ -335,7 +335,7 @@ export class StartEditorComponent implements OnInit {
     }
 
     // Er is een vliegtuig geselecteerd in de dropdown box
-    vliegtuigGeselecteerd(id: number | undefined) {
+    vliegtuigGeselecteerd(id: number | null | undefined) {
         this.start.VLIEGTUIG_ID = id;
         this.gekozenVliegtuig = this.vliegtuigen.find(vliegtuig => vliegtuig.ID == id) as HeliosVliegtuigenDataset;
         this.vliegtuigTypeBevoegd();
@@ -386,7 +386,7 @@ export class StartEditorComponent implements OnInit {
     }
 
     // De vlieger is nu ingevoerd
-    vliegerGeselecteerd(id: number | undefined) {
+    vliegerGeselecteerd(id: number | null | undefined) {
         this.start.VLIEGER_ID = id;
         const gekozenVlieger = this.leden.find(lid => lid.ID == id) as HeliosLedenDataset;
 
@@ -824,8 +824,8 @@ export class StartEditorComponent implements OnInit {
         }
 
         // tijdelijke variablen
-        const tmpID: number | undefined = this.start.VLIEGER_ID;
-        const tmpNaam: string | undefined = this.start.VLIEGERNAAM;
+        const tmpID = this.start.VLIEGER_ID;
+        const tmpNaam = this.start.VLIEGERNAAM;
 
         if (!alleenNamenOmwisselen) {
             this.vliegerGeselecteerd(this.start.INZITTENDE_ID);
@@ -883,6 +883,6 @@ export class StartEditorComponent implements OnInit {
 
     // open de transactie om sleep of 3e lierstart strippen te afschrijven
     toonTransactieEditor(VLIEGER_ID: number) {
-       this.transactieEditor().openPopup(VLIEGER_ID, this.start.DATUM)
+       this.transactieEditor().openPopup(VLIEGER_ID, this.start.DATUM ?? undefined)
     }
 }

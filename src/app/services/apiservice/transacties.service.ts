@@ -4,7 +4,6 @@ import { LoginService } from './login.service';
 import {
     HeliosTransactie,
     HeliosTransacties,
-    HeliosTransactiesBanken,
     HeliosTransactiesDataset,
 } from '../../types/Helios';
 import { KeyValueArray } from '../../types/Utils';
@@ -67,36 +66,6 @@ export class TransactiesService {
         const response: Response = await this.apiService.get('Transacties/GetObject', {'ID': id.toString()});
         return response.json();
     }
-
-    async getBanken(): Promise<HeliosTransactiesBanken[]> {
-        let banken:HeliosTransactiesBanken[] = [];
-
-        // kunnen alleen data ophalen als we ingelogd zijn
-        if (!this.loginService.isIngelogd()) {
-            return [];
-        }
-
-        try {
-            const response: Response = await this.apiService.get('Transacties/GetBanken');
-            banken = await response.json();
-        } catch (e) {
-            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde starts als cache
-                throw(e);
-            }
-        }
-        return banken;
-    }
-
-    async StartIDealTransactie(lidID: number, bestellingID: number, bankID: string, url: string): Promise<string> {
-        const response: Response = await this.apiService.post('Transacties/StartIDealTransactie', JSON.stringify({
-            LID_ID: lidID,
-            BESTELLING_ID: bestellingID,
-            BANK_ID: bankID,
-            url: url
-        }));
-        return response.json();
-    }
-
 
     async addTransactie(transactie: HeliosTransactie) {
         const response: Response = await this.apiService.post('Transacties/SaveObject', JSON.stringify(this.naarApiFormaat(transactie)));

@@ -199,14 +199,14 @@ export class CompetentieEditorComponent implements OnInit, OnDestroy {
 
     // Opslaan knop staat uit als we niet weten over wie het gaat, of er nog geen tekst is ingevoerd
     opslaanDisabled() {
-        return !this.competentie.ONDERWERP
+        return !this.competentie.OMSCHRIJVING
     }
 
     parentChange(parentID: number) {
         const parent = this.competenties.find(c => c.ID == parentID);
 
         if (parent) {
-            this.competentie.BLOK_ID = parent.ID;
+            this.competentie.OUDER_ID = parent.ID;
             this.competentie.LEERFASE_ID = parent.LEERFASE_ID;
         }
     }
@@ -216,7 +216,7 @@ export class CompetentieEditorComponent implements OnInit, OnDestroy {
         this.lijst$ = of(l.map((i) => {
             const l: CompetentieLijst = {
                 ID: i.ID,
-                label: '[' + i.ID + '] ' + i.ONDERWERP
+                label: '[' + i.ID + '] ' + i.OMSCHRIJVING
             }
             return l;
         }))

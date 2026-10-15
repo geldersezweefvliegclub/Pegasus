@@ -49,9 +49,9 @@ export class VluchtCardComponent implements OnInit {
             // mismatch start & logboek oplossen, in logboek zijn VLIEGERNAAM en INZITTENDENAAM altijd ingevuld
             // bij een start zijn de namen VLIEGERNAAM_LID en INZITTENDENAAM_LID
             // VLIEGERNAAM en INZITTENDENAAM  worden gebruikt voor handmatig naam invoer
-            this.start.VLIEGERNAAM_LID = logboek.VLIEGERNAAM;
+            this.start.VLIEGERNAAM_LID = logboek.VLIEGERNAAM ?? undefined;
             this.start.VLIEGERNAAM = undefined;
-            this.start.INZITTENDENAAM_LID = logboek.INZITTENDENAAM;
+            this.start.INZITTENDENAAM_LID = logboek.INZITTENDENAAM ?? undefined;
             this.start.INZITTENDENAAM = undefined
         }
 

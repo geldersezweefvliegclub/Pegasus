@@ -120,12 +120,13 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
                 const tak = this.TreeView(b[i], `root-${i}`);
 
                 if (this.opleidingBlok) {
-                    // toevoegen van ext ref aan wortel van de boom (komt uit types). in ext_ref staat versie nummer van progressie kaart
-                    const blok: HeliosType|undefined = this.opleidingBlok.find((b) => {
-                        const txt = (b.CODE) ? b.CODE + ": " +b.OMSCHRIJVING : b.OMSCHRIJVING
-                        return txt == tak.text
-                    })
+                    // de wortel van de boom is het opleidingsblok (komt uit types). Helios.js geeft alleen de omschrijving,
+                    // de code zetten we ervoor. In ext_ref staat versie nummer van progressie kaart
+                    const blok: HeliosType|undefined = this.opleidingBlok.find((t) => t.ID == b[i].LEERFASE_ID)
 
+                    if (blok && blok.CODE) {
+                        tak.text = blok.CODE + ": " + tak.text
+                    }
                     if (blok && blok.EXT_REF) {
                         tak.text += " (" + blok.EXT_REF +")"
                     }
@@ -146,38 +147,50 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
 
         tekst += ' ';
 
-        if (boomTak.ONDERWERP)
-            tekst += boomTak.ONDERWERP.toString()
+        if (boomTak.OMSCHRIJVING)
+            tekst += boomTak.OMSCHRIJVING.toString()
 
         const nieuwetak: ProgressieTreeviewItem = {
             nodeId,
             text: (tekst).trim(),
-            value: boomTak.COMPETENTIE_ID,
+            value: (boomTak.ID === -1) ? undefined : boomTak.ID,       // Helios.js geeft de wortel (leerfase) ID -1
             expanded: false,
             ProgresssieID: undefined,
             Instructeur: undefined,
             Behaald: undefined,
             Score: undefined,
             GeldigTot: undefined,
-            IsBehaald: boomTak.IS_BEHAALD,
+            IsBehaald: undefined,
         };
 
-        if (!boomTak.children) {
+        // Helios.js geeft een blad een lege children array
+        if (!boomTak.children?.length) {
             const datum = boomTak.INGEVOERD ? this.sharedService.datumDMJ(boomTak.INGEVOERD!.substring(0, 10)) : undefined;
 
             nieuwetak.Instructeur = boomTak.INSTRUCTEUR_NAAM!;
             nieuwetak.ProgresssieID = boomTak.PROGRESSIE_ID!;
             nieuwetak.Behaald = datum;
-            nieuwetak.Score = boomTak.SCORE;
+            nieuwetak.Score = boomTak.SCORE ?? undefined;
             nieuwetak.GeldigTot = (boomTak.GELDIG_TOT) ? this.sharedService.datumDMJ(boomTak.GELDIG_TOT) : undefined;
+            nieuwetak.IsBehaald = (boomTak.PROGRESSIE_ID) ? 2 : 0;
         } else {
             for (let index = 0; index < boomTak.children.length; index++) {
                 const item = boomTak.children[index];
                 const extraTak = this.TreeView(item, `${nodeId}-${index}`);   // recursion
                 nieuwetak.children = [...(nieuwetak.children ?? []), extraTak];
             }
+            nieuwetak.IsBehaald = this.isBehaald(nieuwetak.children!);
         }
         return nieuwetak;
+    }
+
+    // 0 = niets behaald, 1 = gedeeltelijk behaald, 2 = alles behaald (zat in PHP in Boom::isBehaald)
+    private isBehaald(children: ProgressieTreeviewItem[]): number {
+        if (children.some((c) => c.IsBehaald === 1)) return 1;
+
+        const behaald = children.filter((c) => c.IsBehaald === 2).length;
+        if (behaald === 0) return 0;
+        return (behaald === children.length) ? 2 : 1;
     }
 
     onProgressieChange(item: ProgressieTreeviewItem) {

@@ -30,7 +30,7 @@
                                closeOnSelect="true"
                                openOnEnter="true"
                                name="VliegtuigID"
-                               [ngModel]="competentie.BLOK_ID"
+                               [ngModel]="competentie.OUDER_ID"
                                (ngModelChange)='parentChange($event)'/>
                 </div>
             </div>
@@ -42,8 +42,8 @@
                 </div>
                 <div class="col-10">
                     <label for="OMSCHRIJVING" class="form-label">Omschrijving</label>
-                    <input type="text" name="ONDERWERP" class="form-control" id="OMSCHRIJVING" required
-                           [(ngModel)]="competentie.ONDERWERP">
+                    <input type="text" name="OMSCHRIJVING" class="form-control" id="OMSCHRIJVING" required
+                           [(ngModel)]="competentie.OMSCHRIJVING">
                 </div>
             </div>
             <div class="row mt-2">

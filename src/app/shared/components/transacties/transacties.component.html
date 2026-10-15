@@ -15,16 +15,7 @@
 
     <div footer class="w-100">
         <div class="d-flex justify-content-between">
-            @if (!magBestellen) {
-                <div>&nbsp;</div>
-            }
-            <!--
-            <app-icon-button *ngIf="magBestellen"
-              iconNaam="fas EuroSign"
-              tekst="Bestel strippen"
-              btnColor="btn-primary"
-              [toonKlein]="false"
-            (btnClicked)="nieuweBetaling()"></app-icon-button> -->
+            <div>&nbsp;</div>
 
             @if (magCorrigeren) {
                 <app-icon-button iconNaam='fas FilePen'
@@ -132,4 +123,3 @@
 </ng-template>
 
 <app-transactie-editor [toonLidSelectie]='false' (TransactieGedaan)='reload()'/>
-<app-ideal-bestellen/>

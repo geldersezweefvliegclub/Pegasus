@@ -71,12 +71,12 @@ export class DagRapportenService {
     }
 
     async addDagRapport(dr: HeliosDagRapport) {
-        const response: Response = await this.apiService.post('DagRapporten/SaveObject', JSON.stringify(dr));
+        const response: Response = await this.apiService.post('DagRapporten/SaveObject', JSON.stringify(this.naarApiFormaat(dr)));
         return response.json();
     }
 
     async updateDagRapport(dr: HeliosDagRapport) {
-        const response: Response = await this.apiService.put('DagRapporten/SaveObject', JSON.stringify(dr));
+        const response: Response = await this.apiService.put('DagRapporten/SaveObject', JSON.stringify(this.naarApiFormaat(dr)));
         return response.json();
     }
 
@@ -121,5 +121,12 @@ export class DagRapportenService {
     magDagInfoOphalen(): boolean {
         const ui = this.loginService.userInfo?.Userinfo;
         return (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isInstructeur || ui?.isCIMT || ui?.isDDWVCrew) ? true : false;
+    }
+
+    // INGEVOERD_ID bepaalt Helios.js zelf (de ingelogde gebruiker), de overige velden komen uit GetObjects.
+    // Deze velden mogen niet meegestuurd worden (onbekende velden geven HTTP 400)
+    private naarApiFormaat(dr: HeliosDagRapport & {INGEVOERD_ID?: number; INGEVOERD?: string; VELD_CODE?: string; VELD_OMS?: string}): HeliosDagRapport {
+        const {INGEVOERD_ID, INGEVOERD, VELD_CODE, VELD_OMS, ...data} = dr;
+        return data;
     }
 }

@@ -1,127 +1,122 @@
+import { components as heliosComponents } from './generated/HeliosJs';
+
+// Onderstaande endpoints hebben (nog) geen schema in de Helios.js swagger, daarom nog de types uit de PHP yml
 import { components as loginComponents } from './generated/Login';
-import { components as vliegtuigenComponents } from './generated/Vliegtuigen';
-import { components as ledenComponents } from './generated/Leden';
-import { components as startlijstComponents } from './generated/Startlijst';
-import { components as aanwezigVliegtuigenComponents } from './generated/AanwezigVliegtuigen';
-import { components as aanwezigLedenComponents } from './generated/AanwezigLeden';
-import { components as DaginfoComponents } from './generated/Daginfo';
-import { components as DagRapportenComponents } from './generated/DagRapporten';
-import { components as typesComponents } from './generated/Types';
-import { components as typesGroepenComponents } from './generated/TypesGroepen';
-import { components as progressieComponents } from './generated/Progressie';
-import { components as roosterComponents } from './generated/Rooster';
-import { components as tracksComponents } from './generated/Tracks';
-import { components as transactiesComponents } from './generated/Transacties';
-import { components as dienstenComponents } from './generated/Diensten';
-import { components as competentiesComponents } from './generated/Competenties';
-import { components as auditComponents } from './generated/Audit';
-import { components as reserveringComponents } from './generated/Reservering';
-import { components as gastenComponents } from './generated/Gasten';
-import { components as documentenComponents } from './generated/Documenten';
 import { components as ddwvComponents } from './generated/DDWV';
-import { components as journaalComponents } from './generated/Journaal';
-import { components as facturenComponents } from './generated/Facturen';
-import { components as agendaComponents } from './generated/Agenda';
+import { components as gastenComponents } from './generated/Gasten';
+
+type schemas = heliosComponents['schemas'];
+
+// Response van alle GetObjects endpoints, zie IHeliosGetObjectsResponse in Helios.js
+export interface HeliosGetObjects<T> {
+  totaal?: number;
+  hash?: string;
+  dataset?: T[];
+}
+
+// Invoer voor SaveObject. Helios.js accepteert null voor optionele velden (@IsOptional), een record uit GetObjects
+// (waar lege velden null zijn) kan dus ook weer opgeslagen worden
+export type HeliosInput<T> = { [K in keyof T]?: T[K] | null };
 
 export type HeliosUserinfo = loginComponents['schemas']['Userinfo'];
 export type HeliosLidData = loginComponents["schemas"]["ref_leden"];
 
 export type HeliosConfigDDWV = ddwvComponents['schemas']['ddwv_config'];
 
-export type HeliosAanwezigVliegtuigen = aanwezigVliegtuigenComponents['schemas']['view_aanwezig_vliegtuigen'];
-export type HeliosAanwezigVliegtuigenDataset = aanwezigVliegtuigenComponents['schemas']['view_aanwezig_vliegtuigen_dataset'];
+export type HeliosAanwezigVliegtuigen = HeliosGetObjects<HeliosAanwezigVliegtuigenDataset>;
+export type HeliosAanwezigVliegtuigenDataset = Partial<schemas['GetObjectsOperAanwezigVliegtuigenResponse']>;
 
-export type HeliosAanwezigLeden = aanwezigLedenComponents['schemas']['view_aanwezig_leden'];
-export type HeliosAanwezigLedenDataset = aanwezigLedenComponents['schemas']['view_aanwezig_leden_dataset'];
-export type HeliosAanwezigSamenvatting = aanwezigLedenComponents['schemas']['samenvatting'];
+export type HeliosAanwezigLeden = HeliosGetObjects<HeliosAanwezigLedenDataset>;
+export type HeliosAanwezigLedenDataset = Partial<schemas['GetObjectsOperAanwezigLedenResponse']>;
+export type HeliosAanwezigSamenvatting = Partial<schemas['AanwezigLedenSamenvattingResponse']>;
 
-export type HeliosDocumenten = documentenComponents['schemas']['view_documenten'];
-export type HeliosDocumentenDataset = documentenComponents['schemas']['view_documenten_dataset'];
-export type HeliosDocument = documentenComponents['schemas']['document_in'];
+export type HeliosDocumenten = HeliosGetObjects<HeliosDocumentenDataset>;
+export type HeliosDocumentenDataset = Partial<schemas['GetObjectsHeliosDocumentenResponse']>;
+export type HeliosDocument = HeliosInput<schemas['CreateHeliosDocumentRequest']>;
 
-export type HeliosVliegtuigen = vliegtuigenComponents['schemas']['view_vliegtuigen'];
-export type HeliosVliegtuigenDataset = vliegtuigenComponents['schemas']['view_vliegtuigen_dataset'];
-export type HeliosVliegtuig = vliegtuigenComponents['schemas']['ref_vliegtuigen_in'];
+export type HeliosVliegtuigen = HeliosGetObjects<HeliosVliegtuigenDataset>;
+export type HeliosVliegtuigenDataset = Partial<schemas['GetRefVliegtuigenResponse']>;
+export type HeliosVliegtuig = HeliosInput<schemas['CreateRefVliegtuigDto']>;
 
-export type HeliosStarts = startlijstComponents['schemas']['view_startlijst'];
-export type HeliosStartDataset = startlijstComponents['schemas']['view_startlijst_dataset'];
-export type HeliosStart = startlijstComponents['schemas']['oper_startlijst_in'];
-export type HeliosLogboek = startlijstComponents['schemas']['logboek'];
-export type HeliosLogboekDataset = startlijstComponents['schemas']['logboek_dataset'];
-export type HeliosLogboekTotalen = startlijstComponents['schemas']['logboek_totalen'];
-export type HeliosVliegtuigLogboek = startlijstComponents['schemas']['vliegtuig_logboek'];
-export type HeliosVliegtuigLogboekDataset = startlijstComponents['schemas']['vliegtuig_logboek_dataset'];
-export type HeliosVliegtuigLogboekTotalen = startlijstComponents['schemas']['vliegtuig_logboek_totalen'];
-export type HeliosRecency = startlijstComponents['schemas']['recency'];
+export type HeliosStarts = HeliosGetObjects<HeliosStartDataset>;
+export type HeliosStartDataset = Partial<schemas['GetObjectsOperStartlijstResponse']>;
+export type HeliosStart = HeliosInput<schemas['CreateOperStartlijstDto']>;
+export type HeliosLogboek = HeliosGetObjects<HeliosLogboekDataset>;
+export type HeliosLogboekDataset = Partial<schemas['GetLogboekResponse']>;
+export type HeliosLogboekTotalen = Partial<schemas['GetLogboekTotalenResponse']>;
+export type HeliosVliegtuigLogboek = HeliosGetObjects<HeliosVliegtuigLogboekDataset>;
+export type HeliosVliegtuigLogboekDataset = Partial<schemas['GetVliegtuigLogboekResponse']>;
+export type HeliosVliegtuigLogboekTotalen = Partial<schemas['GetVliegtuigLogboekTotalenResponse']>;
+export type HeliosRecency = Partial<schemas['RecencyResponse']>;
 
-export type HeliosVliegdagen = startlijstComponents['schemas']['vliegdagen'];
+export type HeliosVliegdagen = HeliosGetObjects<Partial<schemas['GetVliegDagenResponse']>>;
 
-export type HeliosLeden = ledenComponents['schemas']['view_leden'];
-export type HeliosLedenDataset = ledenComponents['schemas']['view_leden_dataset'];
-export type HeliosLid = ledenComponents['schemas']['ref_leden'];
+export type HeliosLeden = HeliosGetObjects<HeliosLedenDataset>;
+export type HeliosLedenDataset = Partial<schemas['GetObjectsRefLedenResponse']>;
+export type HeliosLid = HeliosInput<schemas['CreateRefLidDto']>;
+export type HeliosVerjaardag = Partial<schemas['VerjaardagenResponse']>;
 
-export type HeliosDagInfoDagen = DaginfoComponents['schemas']['view_daginfo'];
-export type HeliosDagInfosDataset = DaginfoComponents['schemas']['view_daginfo_dataset'];
-export type HeliosDagInfo = DaginfoComponents['schemas']['oper_daginfo'];
+export type HeliosDagInfoDagen = HeliosGetObjects<HeliosDagInfosDataset>;
+export type HeliosDagInfosDataset = Partial<schemas['GetObjectsOperDagInfoResponse']>;
+export type HeliosDagInfo = HeliosInput<schemas['CreateOperDagInfoDto']>;
 
-export type HeliosDagRapporten = DagRapportenComponents['schemas']['view_dagrapporten'];
-export type HeliosDagRapportenDataset = DagRapportenComponents['schemas']['view_dagrapporten_dataset'];
-export type HeliosDagRapport = DagRapportenComponents['schemas']['oper_dagrapport_in'];
+export type HeliosDagRapporten = HeliosGetObjects<HeliosDagRapportenDataset>;
+export type HeliosDagRapportenDataset = Partial<schemas['GetObjectsOperDagRapportenResponse']>;
+export type HeliosDagRapport = HeliosInput<schemas['CreateOperDagRapportDto']>;
 
-export type HeliosType = typesComponents['schemas']['ref_types_in']
-export type HeliosTypes = typesComponents['schemas']['view_types']
+export type HeliosType = Partial<schemas['GetRefTypesResponse']>;
+export type HeliosTypes = HeliosGetObjects<HeliosType>;
 
-export type HeliosTypesGroep = typesGroepenComponents['schemas']['ref_types_in']
-export type HeliosTypesGroepen = typesGroepenComponents['schemas']['view_types']
+export type HeliosTypesGroep = HeliosInput<schemas['CreateRefTypesGroepDto']>;
+export type HeliosTypesGroepen = HeliosGetObjects<Partial<schemas['GetObjectsRefTypesGroepenResponse']>>;
 
-export type HeliosCompetenties = competentiesComponents['schemas']['view_competenties']
-export type HeliosCompetentiesDataset = competentiesComponents['schemas']['view_competenties_dataset'];
-export type HeliosCompetentie = competentiesComponents['schemas']['ref_competenties_in'];
+export type HeliosCompetenties = HeliosGetObjects<HeliosCompetentiesDataset>;
+export type HeliosCompetentiesDataset = Partial<schemas['GetObjectsRefCompetentiesResponse']>;
+export type HeliosCompetentie = HeliosInput<schemas['CreateRefCompetentieDto']>;
+export type HeliosCompetentiesBoom = Partial<schemas['CompetentiesBoomResponse']>;
 
-export type HeliosGasten = gastenComponents['schemas']['view_gasten']
+export type HeliosGasten = gastenComponents['schemas']['view_gasten'];
 export type HeliosGastenDataset = gastenComponents['schemas']['view_gasten_dataset'];
 export type HeliosGast = gastenComponents['schemas']['oper_gast_in'];
 
-export type HeliosProgressie = progressieComponents['schemas']['ref_progressie_in']
-export type HeliosBehaaldeProgressie = progressieComponents['schemas']['view_progressie']
-export type HeliosBehaaldeProgressieDataset = progressieComponents['schemas']['view_progressie_dataset']
-export type HeliosProgressieBoom = progressieComponents['schemas']['progressie_boom']
-export type HeliosProgressieKaart = progressieComponents['schemas']['progressie_kaart']
-export type HeliosProgressieKaartDataset = progressieComponents['schemas']['progressie_kaart_dataset']
+export type HeliosProgressie = HeliosInput<schemas['CreateOperProgressieDto']>;
+export type HeliosBehaaldeProgressie = HeliosGetObjects<HeliosBehaaldeProgressieDataset>;
+export type HeliosBehaaldeProgressieDataset = Partial<schemas['GetObjectsOperProgressieResponse']>;
+export type HeliosProgressieBoom = Partial<schemas['ProgressieKaartResponse']>;
+export type HeliosProgressieKaartDataset = Partial<schemas['ProgressieKaartResponse']>;
 
-export type HeliosRooster = roosterComponents['schemas']['view_rooster']
-export type HeliosRoosterDataset = roosterComponents['schemas']['view_rooster_dataset']
-export type HeliosRoosterDag = roosterComponents['schemas']['oper_rooster']
+export type HeliosRooster = HeliosGetObjects<HeliosRoosterDataset>;
+export type HeliosRoosterDataset = Partial<schemas['GetObjectsOperRoosterResponse']>;
+export type HeliosRoosterDag = HeliosInput<schemas['CreateOperRoosterDto']>;
 
-export type HeliosAudit = auditComponents['schemas']['view_audit']
-export type HeliosAuditDataset = auditComponents['schemas']['view_audit_dataset']
+export type HeliosAudit = HeliosGetObjects<HeliosAuditDataset>;
+export type HeliosAuditDataset = Partial<schemas['GetObjectsAuditResponse']>;
 
-export type HeliosTrack = tracksComponents['schemas']['oper_tracks'];
-export type HeliosTracks = tracksComponents['schemas']['view_tracks'];
-export type HeliosTracksDataset = tracksComponents['schemas']['view_tracks_dataset'];
+export type HeliosTrack = HeliosInput<schemas['CreateOperTrackDto']>;
+export type HeliosTracks = HeliosGetObjects<HeliosTracksDataset>;
+export type HeliosTracksDataset = Partial<schemas['GetObjectsOperTracksResponse']>;
 
-export type HeliosTransactie = transactiesComponents['schemas']['oper_transactie'];
-export type HeliosTransacties = transactiesComponents['schemas']['view_transactie'];
-export type HeliosTransactiesDataset = transactiesComponents['schemas']['view_transactie_dataset'];
-export type HeliosTransactiesBanken = transactiesComponents['schemas']['banken'];
+export type HeliosTransactie = HeliosInput<schemas['CreateOperTransactieDto']>;
+export type HeliosTransacties = HeliosGetObjects<HeliosTransactiesDataset>;
+export type HeliosTransactiesDataset = Partial<schemas['GetObjectsOperTransactiesResponse']>;
 
-export type HeliosDienst = dienstenComponents['schemas']['oper_diensten'];
-export type HeliosDiensten = dienstenComponents['schemas']['view_diensten'];
-export type HeliosDienstenDataset = dienstenComponents['schemas']['view_diensten_dataset'];
-export type HeliosDienstenTotaal = dienstenComponents['schemas']['diensten_totaal'];
+export type HeliosDienst = HeliosInput<schemas['CreateOperDienstDto']>;
+export type HeliosDiensten = HeliosGetObjects<HeliosDienstenDataset>;
+export type HeliosDienstenDataset = Partial<schemas['GetOperDienstenResponse']>;
+export type HeliosDienstenTotaal = Partial<schemas['TotaalDienstenResponse']>;
 
-export type HeliosReservering = reserveringComponents['schemas']['oper_reservering'];
-export type HeliosReserveringen = reserveringComponents['schemas']['view_reserveringen'];
-export type HeliosReserveringenDataset = reserveringComponents['schemas']['view_reserveringen_dataset'];
+export type HeliosReservering = HeliosInput<schemas['CreateOperReserveringDto']>;
+export type HeliosReserveringen = HeliosGetObjects<HeliosReserveringenDataset>;
+export type HeliosReserveringenDataset = Partial<schemas['GetObjectsOperReserveringResponse']>;
 
-export type HeliosJournaals = journaalComponents['schemas']['view_journaal'];
-export type HeliosJournaalDataset = journaalComponents['schemas']['view_journaal_dataset'];
-export type HeliosJournaal = journaalComponents['schemas']['oper_journaal_in'];
+export type HeliosJournaals = HeliosGetObjects<HeliosJournaalDataset>;
+export type HeliosJournaalDataset = Partial<schemas['GetObjectsOperJournaalResponse']>;
+export type HeliosJournaal = HeliosInput<schemas['CreateOperJournaalDto']>;
 
-export type HeliosFacturen = facturenComponents['schemas']['view_facturen'];
-export type HeliosFacturenDataset = facturenComponents['schemas']['view_facturen_dataset'];
-export type HeliosFactuur = facturenComponents['schemas']['oper_factuur_in'];
+export type HeliosFacturen = HeliosGetObjects<HeliosFacturenDataset>;
+export type HeliosFacturenDataset = Partial<schemas['GetObjectsOperFacturenResponse']>;
+export type HeliosFactuur = HeliosInput<schemas['CreateOperFactuurDto']>;
 
-export type HeliosAgenda = agendaComponents['schemas']['view_agenda'];
-export type HeliosAgendaDataset = agendaComponents['schemas']['view_agenda_dataset'];
-export type HeliosAgendaActiviteit = agendaComponents['schemas']['oper_agenda_in'];
+export type HeliosAgenda = HeliosGetObjects<HeliosAgendaDataset>;
+export type HeliosAgendaDataset = Partial<schemas['GetObjectsOperAgendaResponse']>;
+export type HeliosAgendaActiviteit = HeliosInput<schemas['CreateOperAgendaDto']>;

@@ -424,7 +424,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
         })
 
         if (reservering) {
-            return reservering.OPMERKINGEN;
+            return reservering.OPMERKINGEN ?? undefined;
         }
         return undefined;
     }

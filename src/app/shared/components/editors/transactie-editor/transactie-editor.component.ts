@@ -160,7 +160,7 @@ export class TransactieEditorComponent implements OnInit {
                 this.transactie.EENHEDEN = ttype!.EENHEDEN;
             }
             if ((!this.transactie.BEDRAG) && (ttype!.BEDRAG)) {
-                this.transactie.BEDRAG = ttype!.BEDRAG;
+                this.transactie.BEDRAG = ttype!.BEDRAG.toString();
             }
         }
     }

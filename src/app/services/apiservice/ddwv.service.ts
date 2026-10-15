@@ -33,13 +33,6 @@ export class DdwvService {
         return this.configDDWV.DDWV!;
     }
 
-    public magBestellen(strippen: number | undefined): boolean {
-        if (!this.configDDWV) return false;
-        if (!this.configDDWV.MAX_STRIPPEN) return false;
-
-        return ((!strippen) || (strippen < this.configDDWV.MAX_STRIPPEN)) ? true : false;
-    }
-
     public getTransactieTypeID(datum: DateTime): number {
         const nu: DateTime = DateTime.now();
 

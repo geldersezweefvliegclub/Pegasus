@@ -44,7 +44,6 @@ import {
 import { saveAs } from 'file-saver';
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
 import { TransactiesComponent } from '../../../shared/components/transacties/transacties.component';
-import { DdwvService } from '../../../services/apiservice/ddwv.service';
 import { FormsModule } from '@angular/forms';
 import { NgbCarousel, NgbSlide } from '@ng-bootstrap/ng-bootstrap/carousel';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -72,7 +71,6 @@ import { VliegerLogboekTotalenComponent } from '../../../shared/components/vlieg
     imports: [AgendaComponent, AvatarComponent, DienstenComponent, ErrorComponent, FormsModule, IconButtonComponent, LedenDocumentenComponent, ModalComponent, NgbCarousel, NgbSlide, FaIconComponent, PegasusCardComponent, ProgressieBoomComponent, PvbComponent, RecencyComponent, StartEditorComponent, StatusComponent, SuccessComponent, TracksComponent, TransactiesComponent, VerjaardagenComponent, VliegerLogboekComponent, VliegerLogboekTotalenComponent]
 })
 export class DashboardPageComponent implements OnInit, OnDestroy {
-    private readonly ddwvService = inject(DdwvService);
     private readonly ledenService = inject(LedenService);
     private readonly loginService = inject(LoginService);
     private readonly typesService = inject(TypesService);
@@ -242,7 +240,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
                 for (const item of dataset) {
                     item.ID = undefined;
                     item.LEERFASE_ID = undefined;
-                    item.BLOK_ID = undefined;
+                    item.OUDER_ID = undefined;
                     item.PROGRESSIE_ID = undefined;
                 }
                 const ws = xlsx.utils.json_to_sheet(dataset);
@@ -429,7 +427,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
     // openen van windows voor het tonen van de transacties
     toonTransacties() {
-        this.transactieScherm().openPopup(this.lidData!.ID!, this.ddwvService.magBestellen(this.lidData.TEGOED));
+        this.transactieScherm().openPopup(this.lidData!.ID!);
     }
 
     magSaldoTonen() {

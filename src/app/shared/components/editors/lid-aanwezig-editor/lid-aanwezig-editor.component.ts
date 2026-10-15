@@ -151,7 +151,7 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
         this.aanwezig.VOORKEUR_VLIEGTUIG_TYPE = (voorkeur !== "") ? voorkeur : undefined;
     }
 
-    vliegtuigType2Vinkjes(types: string | undefined) {
+    vliegtuigType2Vinkjes(types: string | null | undefined) {
         this.vliegtuigTypes.forEach((vliegtuigType) => {
             vliegtuigType.Geselecteerd = false;
         });
