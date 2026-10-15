@@ -50,10 +50,10 @@
                                             <select class="form-select" id="STATUS" name="STATUS"
                                                     [(ngModel)]="lidData.STATUSTYPE_ID"
                                                     (change)="wijzigVliegStatus()">
-                                                <option value="undefined">n.v.t.</option>
+                                                <option [ngValue]="null">n.v.t.</option>
                                                 @for (type of statusTypes; track type) {
                                                     <option
-                                                            [value]="type.ID">{{ type.OMSCHRIJVING }}
+                                                            [ngValue]="type.ID">{{ type.OMSCHRIJVING }}
                                                     </option>
                                                 }
                                             </select>

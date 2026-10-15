@@ -114,24 +114,29 @@ export class SharedService {
         this.heliosFailedSubject.next(error);
     }
 
+    // datum als dd-mm-jjjj
     datumDMJ(ISOdatum: string): string {
-        if (ISOdatum.includes(":"))     // er zit ook een tijd in
-        {
-            const datePart = ISOdatum.split(' ');
-            ISOdatum = datePart[0];
-        }
-        const datum = ISOdatum.split('-');
-        return datum[2] + '-' + datum[1] + '-' + datum[0];
+        return this.formatDatum(ISOdatum, 'dd-MM-yyyy');
     }
 
+    // datum als dd-mm
     datumDM(ISOdatum: string): string {
-        if (ISOdatum.includes(":"))     // er zit ook een tijd in
-        {
-            const datePart = ISOdatum.split(' ');
-            ISOdatum = datePart[0];
+        return this.formatDatum(ISOdatum, 'dd-MM');
+    }
+
+    // datum en tijd als dd-mm-jjjj uu:mm:ss
+    datumTijdDMJ(ISOdatum: string): string {
+        return this.formatDatum(ISOdatum, 'dd-MM-yyyy HH:mm:ss');
+    }
+
+    // Helios.js geeft ISO 8601 (2026-10-15T13:45:00.000Z, in UTC), de PHP API gaf 2026-10-15 13:45:00. Beide
+    // worden als lokale datum getoond. Een onbekend formaat wordt ongewijzigd teruggegeven
+    private formatDatum(datum: string, formaat: string): string {
+        let dt = DateTime.fromISO(datum);
+        if (!dt.isValid) {
+            dt = DateTime.fromSQL(datum);
         }
-        const datum = ISOdatum.split('-');
-        return datum[2] + '-' + datum[1];
+        return dt.isValid ? dt.toFormat(formaat) : datum;
     }
 
     // Hebben we een datum in de toekomst, vandaag is geen toekomst

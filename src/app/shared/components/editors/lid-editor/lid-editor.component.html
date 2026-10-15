@@ -344,7 +344,7 @@
                                     [(ngModel)]="lid.LIDTYPE_ID">
                                 @for (type of lidTypes; track type) {
                                     <option
-                                            [value]="type.ID"
+                                            [ngValue]="type.ID"
                                     >{{ type.OMSCHRIJVING }}
                                     </option>
                                 }
@@ -369,10 +369,10 @@
                             <select class="form-select" id="STATUS" name="STATUS"
                                     [disabled]="isDisabled('STATUS')"
                                     [(ngModel)]="lid.STATUSTYPE_ID">
-                                <option value="undefined">n.v.t.</option>
+                                <option [ngValue]="null">n.v.t.</option>
                                 @for (type of statusTypes; track type) {
                                     <option
-                                            [value]="type.ID"
+                                            [ngValue]="type.ID"
                                     >{{ type.OMSCHRIJVING }}
                                     </option>
                                 }

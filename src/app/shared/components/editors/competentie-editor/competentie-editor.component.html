@@ -13,7 +13,7 @@
                             name="LEERFASE_ID">
                         @for (top of topLevels; track top) {
                             <option
-                                    [value]="top.ID">{{ top.OMSCHRIJVING }}
+                                    [ngValue]="top.ID">{{ top.OMSCHRIJVING }}
                             </option>
                         }
                     </select>

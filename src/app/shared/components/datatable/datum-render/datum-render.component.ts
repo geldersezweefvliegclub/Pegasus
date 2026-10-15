@@ -15,11 +15,7 @@ export class DatumRenderComponent implements AgRendererComponent {
 
     agInit(params: ICellRendererParams): void {
 
-        if (params.value) {
-            this.datum = this.sharedService.datumDMJ(params.value);
-        } else {
-            this.datum = "";
-        }
+        this.datum = (params.value) ? this.sharedService.datumDMJ(params.value) : "";
     }
 
     refresh(_: ICellRendererParams): boolean {

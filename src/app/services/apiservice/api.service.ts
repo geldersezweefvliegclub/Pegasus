@@ -75,8 +75,7 @@ export class APIService {
             body: body,
             credentials: 'include'
         });
-        //todo response heeft een .ok property. Mogelijk beter te gebruiken? (Zoals get())
-        if (response.status != 200) {  // 200 is normaal voor post
+        if (!response.ok) {     // elke 2xx is goed, Helios.js geeft 201 bij aanmaken record
             this.handleError(response);
         }
         try {
@@ -109,8 +108,7 @@ export class APIService {
             body: body,
             credentials: 'include'
         });
-        // todo .ok property gebruiken?
-        if (response.status != 200) {  // 200 is normaal voor put
+        if (!response.ok) {     // elke 2xx is goed
             this.handleError(response);
         }
         response.clone().json().then((d) => {
@@ -135,8 +133,7 @@ export class APIService {
             headers: apiHeaders,
             credentials: 'include'
         });
-        // todo .ok gebruiken?
-        if (response.status != 204) { // 204 is normaal voor delete
+        if (!response.ok) {     // elke 2xx is goed, Helios.js geeft 204 bij verwijderen
             this.handleError(response);
         }
         this.sharedService.fireHeliosEvent({actie: HeliosActie.Delete, tabel: url.split('/')[0], data: params[0]});
@@ -159,8 +156,7 @@ export class APIService {
             credentials: 'include'
         });
 
-        // todo .ok gebruiken?
-        if (response.status != 202) { // 204 is normaal voor patch
+        if (!response.ok) {     // elke 2xx is goed, Helios.js geeft 200 bij herstellen
             this.handleError(response);
         }
         this.sharedService.fireHeliosEvent({actie: HeliosActie.Restore, tabel: url.split('/')[0], data: params[0]});
@@ -188,7 +184,8 @@ export class APIService {
     private handleError(response: Response): ErrorMessage {
         let beschrijving = response.headers.get('X-Error-Message')      // Helios implementaie fout melding
         if (!beschrijving) {
-            beschrijving = response.statusText;                         // HTTP error berichten
+            // HTTP status en naam, bijv "409 Conflict". Bij HTTP/2 is statusText leeg, dan alleen de status
+            beschrijving = `${response.status} ${response.statusText}`.trim();
         }
 
         const error: ErrorMessage = {

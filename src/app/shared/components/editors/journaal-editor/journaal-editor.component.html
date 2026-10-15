@@ -48,7 +48,7 @@
                             name="STATUS_ID">
                         @for (s of status; track s) {
                             <option
-                                    [value]="s.ID">{{ s.OMSCHRIJVING }}
+                                    [ngValue]="s.ID">{{ s.OMSCHRIJVING }}
                             </option>
                         }
                     </select>
@@ -72,7 +72,7 @@
                             name="CATEGORIE_ID">
                         @for (c of categorie; track c) {
                             <option
-                                    [value]="c.ID">{{ c.CODE }}: {{ c.OMSCHRIJVING }}
+                                    [ngValue]="c.ID">{{ c.CODE }}: {{ c.OMSCHRIJVING }}
                             </option>
                         }
                     </select>

@@ -15,12 +15,7 @@ export class DatumtijdRenderComponent implements AgRendererComponent{
 
     agInit(params: ICellRendererParams): void {
 
-        if (params.value) {
-            const datetimePart = params.value.split(' ');
-            this.datumtijd = this.sharedService.datumDMJ(datetimePart[0]) + " " + datetimePart[1];
-        } else {
-            this.datumtijd = "";
-        }
+        this.datumtijd = (params.value) ? this.sharedService.datumTijdDMJ(params.value) : "";
     }
 
     refresh(_: ICellRendererParams): boolean {

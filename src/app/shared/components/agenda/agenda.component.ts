@@ -5,6 +5,7 @@ import { DateTime } from 'luxon';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
+import { SharedService } from '../../../services/shared/shared.service';
 
 @Component({
     selector: 'app-agenda',
@@ -14,6 +15,7 @@ import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 })
 export class AgendaComponent implements OnInit {
   private readonly agendaService = inject(AgendaService);
+  private readonly sharedService = inject(SharedService);
 
 
   agenda: HeliosAgendaDataset[] = [];
@@ -28,9 +30,7 @@ export class AgendaComponent implements OnInit {
   }
 
   datumDM(dagDatum: string) {
-    const dt = dagDatum.split(' ');
-    const d = dt[0].split('-');
-    return d[2] + '-' + d[1]
+    return this.sharedService.datumDM(dagDatum);
   }
 
     protected readonly infoIcon = faInfoCircle;
