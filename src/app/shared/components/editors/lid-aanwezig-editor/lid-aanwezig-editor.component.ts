@@ -89,6 +89,7 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
 
     // open popup, maar haal eerst de aanwezigheid op.
     openPopup(record: HeliosAanwezigLedenDataset, strippen: number | undefined = undefined) {
+        this.isSaving = false;
         const ui = this.loginService.userInfo;
         this.isDDWVer = ui!.Userinfo!.isDDWV!;
 

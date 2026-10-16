@@ -11,7 +11,7 @@
                             (change)="filterBovenliggend()" required
                             id="LEERFASE"
                             name="LEERFASE_ID">
-                        @for (top of topLevels; track top) {
+                        @for (top of topLevels; track top.ID) {
                             <option
                                     [ngValue]="top.ID">{{ top.OMSCHRIJVING }}
                             </option>

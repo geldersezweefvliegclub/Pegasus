@@ -53,6 +53,7 @@ export class GastEditorComponent implements OnInit, OnDestroy {
     // open popup, maar haal eerst de start op. De eerder ingevoerde tijd wordt als default waarde gebruikt
     // indien niet eerder ingvuld, dan de huidige tijd. Buiten de daglicht periode is het veld leeg
     openPopup(record: HeliosGast) {
+        this.isSaving = false;
         this.gast = record;
 
         // Ophalen uit de database, er kan iets veranderd zijn. Alleen als we bestaand record aanpassen

@@ -11,7 +11,7 @@
         } @if (!isLoading) {
         <div>
             <div id="datacard" class="data">
-                @for (dag of data; track dag; let i = $index) {
+                @for (dag of data; track dag.DATUM; let i = $index) {
                     <div>
                         <div class="kaart">
                             <table class="w-100">

@@ -99,7 +99,7 @@
                 <table class="table" style="width: calc(100% - 15px);">
                     <thead>
                     <tr style="vertical-align: top;">
-                        @for (dagInRooster of rooster; track dagInRooster; let r = $index) {
+                        @for (dagInRooster of rooster; track dagInRooster.DATUM; let r = $index) {
                             <td>
                                 @if (magTonen(dagInRooster.DATUM)) {
                                     <div
@@ -137,7 +137,7 @@
                         }
                     </tr>
                     <tr>
-                        @for (dagInRooster of rooster; track dagInRooster; let r = $index) {
+                        @for (dagInRooster of rooster; track dagInRooster.DATUM; let r = $index) {
                             <td>
                                 @if (magTonen(dagInRooster.DATUM)) {
                                     <div>
@@ -159,7 +159,7 @@
                         }
                     </tr>
                     <tr>
-                        @for (dagInRooster of rooster; track dagInRooster; let r = $index) {
+                        @for (dagInRooster of rooster; track dagInRooster.DATUM; let r = $index) {
                             <td class="dagInRooster">
                                 @if (magTonen(dagInRooster.DATUM)) {
                                     <div class="w-100" [style]="KolomBreedte()">
@@ -170,7 +170,7 @@
                         }
                     </tr>
                     <tr>
-                        @for (dagInRooster of rooster; track dagInRooster; let r = $index) {
+                        @for (dagInRooster of rooster; track dagInRooster.DATUM; let r = $index) {
                             <td>
                                 @if (!verleden(dagInRooster.DATUM) && magTonen(dagInRooster.DATUM)) {
                                     <div class="dagInRooster"
@@ -195,12 +195,12 @@
                         }
                     </tr>
                     <tr>
-                        @for (dagInRooster of rooster; track dagInRooster; let r = $index) {
+                        @for (dagInRooster of rooster; track dagInRooster.DATUM; let r = $index) {
                             <td class="aanwezigenLijst">
                                 @if (magTonen(dagInRooster.DATUM)) {
                                     <div>
                                         <table>
-                                            @for (lid of aanwezigen(dagInRooster.DATUM); track lid) {
+                                            @for (lid of aanwezigen(dagInRooster.DATUM); track lid.ID) {
                                                 <tr>
                                                     <td (dblclick)="openLidAanwezigEditor(lid)">
                                                         <div class="nowrap">
@@ -258,7 +258,7 @@
                     <!-- sectie met gasten lijst -->
                         @if (toonGasten && !isDDWVer) {
                             <tr class="gastenHeader">
-                                @for (dagInRooster of rooster; track dagInRooster; let r = $index) {
+                                @for (dagInRooster of rooster; track dagInRooster.DATUM; let r = $index) {
                                     <td>
                                         @if (!verleden(dagInRooster.DATUM) && magTonen(dagInRooster.DATUM)) {
                                             <div class="dagInRooster">
@@ -278,12 +278,12 @@
                         }
                         @if (toonGasten && !isDDWVer) {
                             <tr class="gastenHeader">
-                                @for (dagInRooster of rooster; track dagInRooster; let r = $index) {
+                                @for (dagInRooster of rooster; track dagInRooster.DATUM; let r = $index) {
                                     <td class="aanwezigenLijst">
                                         @if (magTonen(dagInRooster.DATUM) && dagInRooster.CLUB_BEDRIJF || dagInRooster.DDWV) {
                                             <div>
                                                 <table>
-                                                    @for (gast of gastenAanwezig(dagInRooster.DATUM); track gast) {
+                                                    @for (gast of gastenAanwezig(dagInRooster.DATUM); track gast.ID) {
                                                         <tr>
                                                             <td (dblclick)="openGastAanwezigEditor(gast)">
                                                                 {{ gast.NAAM }}
@@ -419,7 +419,7 @@
                                 @if (rooster[0]; as dagInRooster) {
                                     <td class="aanwezigenLijst">
                                         <table>
-                                            @for (lid of aanwezigen(dagInRooster.DATUM); track lid) {
+                                            @for (lid of aanwezigen(dagInRooster.DATUM); track lid.ID) {
                                                 <tr>
                                                     <td (dblclick)="openLidAanwezigEditor(lid)">
                                                         <div class="nowrap">

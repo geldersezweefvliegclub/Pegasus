@@ -14,7 +14,7 @@
     <div class="d-flex flex-column justify-content-between box h-100">
         <div>
             <div class="d-flex flex-column">
-                @for (doc of documenten; track doc; let d = $index) {
+                @for (doc of documenten; track doc.ID; let d = $index) {
                     <div>
                         <div (dblclick)="aanpassen(doc.ID)" class="d-flex justify-content-between w-100"
                              [class]="{'bovenlijn': doc.ONDERSTREEP && doc.BOVEN, 'onderlijn': doc.ONDERSTREEP && !doc.BOVEN }">

@@ -39,7 +39,7 @@
             <th class="text-nowrap ps-2">Mutatie</th>
             <th class="text-nowrap ps-2 pe-1">Saldo na</th>
         </tr>
-        @for (transactie of transacties; track transactie; let i = $index) {
+        @for (transactie of transacties; track transactie.ID; let i = $index) {
             <tr style="vertical-align: top;" [class.nietBetaaldRow]="!transactie.BETAALD && transactie.BEDRAG">
                 <td style="white-space: nowrap;" class="pe-2">
                     {{ datumDMY(transactie.DATUM) }}
@@ -75,7 +75,7 @@
 
 <!-- template voor grid view -->
 <ng-template #card>
-    @for (transactie of transacties; track transactie; let i = $index) {
+    @for (transactie of transacties; track transactie.ID; let i = $index) {
         <div class="transactieCard"
              [class.nietBetaaldRow]="!transactie.BETAALD && transactie.BEDRAG"
              (click)="expandedView = !expandedView">

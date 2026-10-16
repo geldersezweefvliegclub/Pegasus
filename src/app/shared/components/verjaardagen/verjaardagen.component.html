@@ -3,7 +3,7 @@
         <th style="width: 70px;">Datum</th>
         <th>Naam</th>
     </tr>
-    @for (verjaardag of verjaardagen; track verjaardag) {
+    @for (verjaardag of verjaardagen; track $index) {
         <tr>
             <td>{{ verjaardag.DAG }}-{{ verjaardag.MAAND }}</td>
             <td>{{ verjaardag.NAAM }}</td>

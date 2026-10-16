@@ -21,7 +21,7 @@
             </div>
         } @if (toonKlein) {
         <div id="datacard" class="data">
-            @for (vliegtuig of data; track vliegtuig; let i = $index) {
+            @for (vliegtuig of data; track vliegtuig.ID; let i = $index) {
                 <div>
                     <app-vliegtuig-card [vliegtuig]="vliegtuig"
                                         (Logboek)="openVliegtuigLogboek($event)"

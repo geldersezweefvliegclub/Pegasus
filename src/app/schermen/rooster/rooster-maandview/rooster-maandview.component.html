@@ -55,7 +55,7 @@
             </tr>
             </thead>
             <tbody>
-            @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+            @for (dagInRooster of rooster; track dagInRooster.DATUM; let i = $index) {
                 <tr>
                     <td class="WeekdagKolom" [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
                         <div class="rotation-wrapper">
@@ -610,7 +610,7 @@
                         <div class="d-flex justify-content-center">
                             Geen resultaten gevonden
                         </div>
-                    } @for (lid of leden; track lid) {
+                    } @for (lid of leden; track lid.ID) {
                     <div class="card my-1 mb-lg-3"
                          [cdkDragData]="lid" cdkDrag>
                         <div *cdkDragPreview>
@@ -631,7 +631,7 @@
                                 </div>
                             }
                         <div class="avatar">
-                            <app-avatar [url]='lid.AVATAR'/>
+                            <app-avatar [url]='lid.AVATAR' [naam]='lid.NAAM'/>
                         </div>
                         <div class="naam">
                             {{ lid.NAAM }}

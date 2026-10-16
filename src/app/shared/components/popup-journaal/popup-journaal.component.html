@@ -9,7 +9,7 @@
         } @if (!isLoading) {
         <div class="spinnerOverlay">
             <div id="datacard" class="data">
-                @for (melding of data; track melding; let i = $index) {
+                @for (melding of data; track melding.ID; let i = $index) {
                     <div>
                         <app-journaal-card [melding]='melding'/>
                     </div>

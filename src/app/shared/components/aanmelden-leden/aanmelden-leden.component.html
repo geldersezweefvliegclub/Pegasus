@@ -14,7 +14,7 @@
                 <div class="w-50 pe-2">
                     <h4>Leden</h4>
                     <div class="ledenlijst">
-                        @for (lid of filteredLeden; track lid) {
+                        @for (lid of filteredLeden; track lid.ID) {
                             <div class="card aanmeldkaart flex-row justify-content-between">
                                 <div class="fw-bold">
                                     {{ lid.NAAM }}
@@ -32,7 +32,7 @@
                     <h4>Aanwezig</h4>
                     <div class="d-flex flex-row aanwezig">
                         <div class="aanweziglijst">
-                            @for (aanwezig of filteredAanwezigLeden; track aanwezig) {
+                            @for (aanwezig of filteredAanwezigLeden; track aanwezig.ID) {
                                 <div class="card aanmeldkaart row flex-row"
                                      [ngClass]="{'highlight' : geselecteerdLid &&  aanwezig.ID === geselecteerdLid.ID}"
                                      (click)="selecteerLid(aanwezig)">

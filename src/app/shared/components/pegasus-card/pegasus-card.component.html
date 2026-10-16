@@ -5,7 +5,7 @@
                 @if (!img) {
                     <fa-icon [icon]='icon()'/>
                 } @if (img) {
-                <app-avatar [url]="img" vorm="vierkant">
+                <app-avatar [url]="img" [naam]="titel()" vorm="vierkant">
                     <ng-content select='[avatar]'/>
                 </app-avatar>
             }

@@ -5,7 +5,7 @@
         <div id="data">
             <select class="form-select" id="groep" name="groep" required
                     [ngModel]="toonGroep" (ngModelChange)="filterGroep($event)">
-                @for (groep of groepen; track groep) {
+                @for (groep of groepen; track groep.ID) {
                     <option
                             [value]="groep.ID">{{ groep.OMSCHRIJVING }}
                     </option>
@@ -13,7 +13,7 @@
             </select>
 
             <ul class="list-group mt-4 typelijst">
-                @for (t of filteredTypes; track t; let i = $index) {
+                @for (t of filteredTypes; track t.ID; let i = $index) {
                     <li class="list-group-item" (dblclick)="openEditor(t)">
                         <div class="d-flex justify-content-between">
                             <div class="w-100 d-flex justify-content-between">

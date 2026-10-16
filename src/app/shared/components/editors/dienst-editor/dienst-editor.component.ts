@@ -68,6 +68,7 @@ export class DienstEditorComponent implements OnInit, OnDestroy {
 
     // Openen van popup scherm
     openPopup(dag: HeliosRoosterDagExtended, typeDienstID: number) {
+        this.isSaving = false;
         this.dag = dag;
         this.typeDienstID = typeDienstID;
 

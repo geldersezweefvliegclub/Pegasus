@@ -342,7 +342,7 @@
                             <select class="form-select" id="lidmaatschap" name="lidmaatschap" required
                                     [disabled]="isDisabled('lidmaatschap')"
                                     [(ngModel)]="lid.LIDTYPE_ID">
-                                @for (type of lidTypes; track type) {
+                                @for (type of lidTypes; track type.ID) {
                                     <option
                                             [ngValue]="type.ID"
                                     >{{ type.OMSCHRIJVING }}
@@ -370,7 +370,7 @@
                                     [disabled]="isDisabled('STATUS')"
                                     [(ngModel)]="lid.STATUSTYPE_ID">
                                 <option [ngValue]="null">n.v.t.</option>
-                                @for (type of statusTypes; track type) {
+                                @for (type of statusTypes; track type.ID) {
                                     <option
                                             [ngValue]="type.ID"
                                     >{{ type.OMSCHRIJVING }}

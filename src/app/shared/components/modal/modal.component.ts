@@ -22,6 +22,10 @@ export class ModalComponent {
     private modalRef: NgbModalRef;
 
     open() {
+        // NgbModal zet aria-hidden op <app-root>. Als de knop waarmee de popup geopend wordt dan nog focus heeft,
+        // weigert de browser dat (melding "Blocked aria-hidden on an element because its descendant retained focus")
+        (document.activeElement as HTMLElement | null)?.blur();
+
         this.modalRef = this.modalService.open(this.content(), {
             ariaLabelledBy: 'modal-basic-title',
             backdrop: "static",

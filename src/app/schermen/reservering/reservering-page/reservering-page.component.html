@@ -76,7 +76,7 @@
             <thead>
             <th></th>
             <th></th>
-            @for (clubKist of clubVliegtuigenFiltered; track clubKist; let i = $index) {
+            @for (clubKist of clubVliegtuigenFiltered; track clubKist.ID; let i = $index) {
                 <th>
                     {{ clubKist.CALLSIGN }}
                 </th>
@@ -84,7 +84,7 @@
             </thead>
             <tbody>
 
-            @for (dagInRooster of filteredRooster; track dagInRooster; let r = $index) {
+            @for (dagInRooster of filteredRooster; track dagInRooster.DATUM; let r = $index) {
                 <tr
                         [ngClass]="isClubBedrijf(dagInRooster.DATUM) ? 'clubBedrijf' : ''">
                     <td class="WeekdagKolom" [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
@@ -120,7 +120,7 @@
                             </div>
                         </div>
                 </td>
-                    @for (clubKist of clubVliegtuigenFiltered; track clubKist; let i = $index) {
+                    @for (clubKist of clubVliegtuigenFiltered; track clubKist.ID; let i = $index) {
                         <td
                     [style.width.%]="100/(clubVliegtuigenFiltered.length+2)">
                     <ng-container [ngTemplateOutlet]="reservering"
@@ -159,7 +159,7 @@
                 <thead>
                 <tr style="vertical-align: top;">
                     <td></td>
-                    @for (dagInRooster of filteredRooster; track dagInRooster; let r = $index) {
+                    @for (dagInRooster of filteredRooster; track dagInRooster.DATUM; let r = $index) {
                         <td
                                 [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
                             {{ DagVanDeWeek(dagInRooster.DATUM) }}
@@ -174,10 +174,10 @@
                 </thead>
                 <tbody>
 
-                @for (clubKist of clubVliegtuigenFiltered; track clubKist; let i = $index) {
+                @for (clubKist of clubVliegtuigenFiltered; track clubKist.ID; let i = $index) {
                     <tr>
                         <td>{{ clubKist.CALLSIGN }}</td>
-                        @for (dagInRooster of filteredRooster; track dagInRooster; let r = $index) {
+                        @for (dagInRooster of filteredRooster; track dagInRooster.DATUM; let r = $index) {
                             <td
                                     [ngClass]="isClubBedrijf(dagInRooster.DATUM) ? 'clubBedrijf' : ''">
                                 <ng-container [ngTemplateOutlet]="reservering"
@@ -218,7 +218,7 @@
             }
         </div>
         <table>
-            @for (clubKist of clubVliegtuigenFiltered; track clubKist; let i = $index) {
+            @for (clubKist of clubVliegtuigenFiltered; track clubKist.ID; let i = $index) {
                 <tr class="w-100" style="height: 45px;">
                     <td class="me-2 mt-4">
                         {{ clubKist.CALLSIGN }}

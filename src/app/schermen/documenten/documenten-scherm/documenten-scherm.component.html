@@ -6,7 +6,7 @@
         <div class="content">
             <div class="mb-2">
                 <div class="row mt-n8">
-                    @for (docGroep of documentGroepen; track docGroep; let i = $index) {
+                    @for (docGroep of documentGroepen; track docGroep.ID; let i = $index) {
                         <div class="col-12 col-sm-6 col-md-3">
                             <div class="card mb-2">
                                 <div class="d-flex w-100 groepHeader">
@@ -20,7 +20,7 @@
                                     </div>
                                 </div>
                                 <div class="d-flex flex-column">
-                                    @for (doc of toonDocumenten(docGroep.ID); track doc; let d = $index) {
+                                    @for (doc of toonDocumenten(docGroep.ID); track doc.ID; let d = $index) {
                                         <div>
                                             <div (dblclick)="aanpassen(doc.ID)"
                                                  class="d-flex justify-content-between w-100"

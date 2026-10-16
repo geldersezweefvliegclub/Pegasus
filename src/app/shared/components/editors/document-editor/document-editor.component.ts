@@ -39,6 +39,7 @@ export class DocumentEditorComponent {
     // open popup, maar haal eerst de start op. De eerder ingevoerde tijd wordt als default waarde gebruikt
     // indien niet eerder ingvuld, dan de huidige tijd. Buiten de daglicht periode is het veld leeg
     openPopup(record: HeliosDocument) {
+        this.isSaving = false;
         this.docUrl("url");
         this.document = record;
         this.isVerwijderMode = false;
@@ -132,6 +133,7 @@ export class DocumentEditorComponent {
     // het type herstellen, haal de markering 'verwijderd' weg
     herstellen() {
         this.documentenService.restoreDocument(this.document.ID!).then(() => {
+            this.isSaving = false;
             this.success = {
                 titel: "Document",
                 beschrijving: "Document is weer beschikbaar"

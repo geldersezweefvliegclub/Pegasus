@@ -28,7 +28,7 @@
                         <span><img src="assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Data wordt geladen .....</span>
                     </div>
                 </div>
-            } @for (lid of leden; track lid; let i = $index) {
+            } @for (lid of leden; track lid.ID; let i = $index) {
             <div>
                 <app-leden-card [lid]='lid'/>
             </div>

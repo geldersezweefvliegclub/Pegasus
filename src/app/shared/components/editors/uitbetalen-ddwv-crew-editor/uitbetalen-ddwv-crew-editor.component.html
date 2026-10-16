@@ -5,7 +5,7 @@
     @if (diensten) {
         <div body>
             <table>
-                @for (dienst of diensten; track dienst; let i = $index) {
+                @for (dienst of diensten; track dienst.ID; let i = $index) {
                     <tr>
                         @if (!dienst.UITBETAALD) {
                             <td>

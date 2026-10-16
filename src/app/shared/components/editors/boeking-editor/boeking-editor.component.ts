@@ -63,6 +63,7 @@ export class BoekingEditorComponent implements OnInit, OnDestroy {
 
     // Openen van popup scherm
     openPopup() {
+        this.isSaving = false;
         this.popup().open();
     }
 

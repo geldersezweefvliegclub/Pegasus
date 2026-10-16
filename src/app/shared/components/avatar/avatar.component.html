@@ -1,4 +1,4 @@
-<img defaultImage="/assets/img/avatar.png" alt="Avatar klein" [lazyLoad]="url" [class]="vorm()" class="clickable" (click)="showPopup()" />
+<img defaultImage="/assets/img/avatar.png" alt="Avatar klein" [lazyLoad]="url" [class]="vorm()" [class.clickable]="url" (click)="showPopup()" />
 
 <app-modal [titel]="naam()">
     <div body>

@@ -129,13 +129,16 @@ export class SharedService {
         return this.formatDatum(ISOdatum, 'dd-MM-yyyy HH:mm:ss');
     }
 
-    // Helios.js geeft ISO 8601 (2026-10-15T13:45:00.000Z, in UTC), de PHP API gaf 2026-10-15 13:45:00. Beide
-    // worden als lokale datum getoond. Een onbekend formaat wordt ongewijzigd teruggegeven
+    // Helios.js geeft ISO 8601 (2026-10-15T13:45:00.000Z, in UTC), de PHP API gaf 2026-10-15 13:45:00.
+    // Beide worden omgezet naar lokale tijd
+    parseDatum(datum: string): DateTime {
+        const dt = DateTime.fromISO(datum);
+        return dt.isValid ? dt : DateTime.fromSQL(datum);
+    }
+
+    // Een onbekend formaat wordt ongewijzigd teruggegeven
     private formatDatum(datum: string, formaat: string): string {
-        let dt = DateTime.fromISO(datum);
-        if (!dt.isValid) {
-            dt = DateTime.fromSQL(datum);
-        }
+        const dt = this.parseDatum(datum);
         return dt.isValid ? dt.toFormat(formaat) : datum;
     }
 

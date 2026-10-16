@@ -9,14 +9,15 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
     imports: [LazyLoadImageModule, ModalComponent]
 })
 export class AvatarComponent {
-  readonly naam = input.required();
+  readonly naam = input<string>('');      // titel van de popup, optioneel
   @Input() url = '';
   readonly vorm = input<'cirkel' | 'vierkant'>('cirkel');
   private readonly popup = viewChild.required(ModalComponent);
 
 
-  // Toon grote avatar in popup window
+  // Toon grote avatar in popup window. Zonder avatar staat er een standaard symbool, dan geen popup
   showPopup() {
+    if (!this.url) return;
     this.popup().open();
   }
 

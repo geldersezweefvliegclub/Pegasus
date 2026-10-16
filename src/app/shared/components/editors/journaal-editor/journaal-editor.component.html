@@ -46,7 +46,7 @@
                             [disabled]="isVerwijderMode || isRestoreMode || !superGebruiker()"
                             id="STATUS_ID"
                             name="STATUS_ID">
-                        @for (s of status; track s) {
+                        @for (s of status; track s.ID) {
                             <option
                                     [ngValue]="s.ID">{{ s.OMSCHRIJVING }}
                             </option>
@@ -70,7 +70,7 @@
                     <select class="form-select" required [(ngModel)]="melding.CATEGORIE_ID"
                             id="CATEGORIE_ID"
                             name="CATEGORIE_ID">
-                        @for (c of categorie; track c) {
+                        @for (c of categorie; track c.ID) {
                             <option
                                     [ngValue]="c.ID">{{ c.CODE }}: {{ c.OMSCHRIJVING }}
                             </option>

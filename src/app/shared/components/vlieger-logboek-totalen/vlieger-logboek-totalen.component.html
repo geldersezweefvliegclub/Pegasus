@@ -11,7 +11,7 @@
                 <th>Starts</th>
                 <th class="kolom3">Vliegtijd</th>
             </tr>
-            @for (v of data.vliegtuigen; track v) {
+            @for (v of data.vliegtuigen; track v.REG_CALL) {
                 <tr>
                     <td class="kolom1">
                         {{ v.REG_CALL }}
@@ -43,7 +43,7 @@
         <div>
         <p class="textStartMethode"><b>Start methode</b></p>
         <table class="startsTabel">
-            @for (s of data.starts; track s) {
+            @for (s of data.starts; track s.METHODE) {
                 <tr>
                     <td class="kolom1">
                         {{ s.METHODE }}

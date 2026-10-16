@@ -25,7 +25,7 @@
                                     <div class="header">Orgineel</div>
                                 </td>
                             </tr>
-                            @for (item of voor | keyvalue; track item) {
+                            @for (item of voor | keyvalue; track item.key) {
                                 <tr>
                                     <td>
                                         <div class="auditlineKey">{{ item.key }}</div>
@@ -40,7 +40,7 @@
                                     <div class="header">Data</div>
                                 </td>
                             </tr>
-                            @for (item of wijziging | keyvalue; track item) {
+                            @for (item of wijziging | keyvalue; track item.key) {
                                 <tr>
                                     <td>
                                         <div class="auditlineKey">{{ item.key }}</div>
@@ -55,7 +55,7 @@
                                     <div class="header">Resultaat</div>
                                 </td>
                             </tr>
-                            @for (item of resultaat | keyvalue; track item) {
+                            @for (item of resultaat | keyvalue; track item.key) {
                                 <tr>
                                     <td>
                                         <div class="auditlineKey">{{ item.key }}</div>

@@ -15,7 +15,7 @@
     </div>
 } @if (toonLogboekKlein) {
     <div class="mobielHoogte">
-        @for (vlucht of data; track vlucht; let i = $index) {
+        @for (vlucht of data; track vlucht.ID; let i = $index) {
             <div>
                 @if (i < MaxItems()) {
                     <div>

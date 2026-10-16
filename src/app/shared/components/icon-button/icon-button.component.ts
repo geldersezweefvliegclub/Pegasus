@@ -17,7 +17,7 @@ export class IconButtonComponent implements OnInit, OnDestroy {
     private readonly sharedService = inject(SharedService);
 
     readonly tekst = input('');
-    readonly iconNaam = input.required<string>();
+    readonly iconNaam = input<string>('');  // optioneel, zonder icon alleen tekst
     readonly btnColor = input('btn-secondary');
     readonly disabled = input(false);
     readonly toonKlein = input(true);

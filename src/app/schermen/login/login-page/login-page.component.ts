@@ -8,7 +8,6 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { CodeInputComponent, CodeInputModule } from 'angular-code-input';
 import { StorageService } from '../../../services/storage/storage.service';
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
-import { LedenService } from '../../../services/apiservice/leden.service';
 import { ErrorComponent } from '../../../shared/components/error/error.component';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -24,7 +23,6 @@ import { LoaderComponent } from '../../../shared/components/loader/loader.compon
 
 export class LoginPageComponent implements OnInit {
     private readonly loginService = inject(LoginService);
-    private readonly ledenService = inject(LedenService);
     private readonly configService = inject(PegasusConfigService);
     private readonly storageService = inject(StorageService);
     private readonly router = inject(Router);
@@ -91,10 +89,9 @@ export class LoginPageComponent implements OnInit {
     // Nu gaan we inloggen
     login(): void {
         this.isLoading = true;
-        this.loginService.login(this.gebruikersnaam, this.wachtwoord, this.secret).then((ID) => {
+        this.loginService.login(this.gebruikersnaam, this.wachtwoord, this.secret).then(() => {
             this.isLoading = false;
             this.storageService.opslaan("privacyOk", "true", 60 * 24 * 90);     // 90 dagen
-            this.ledenService.syncSynapse(ID!, this.wachtwoord)
 
             const url = (this.storageService.ophalen("url")) ? this.storageService.ophalen("url") : "/";
             this.router.navigate([url]);

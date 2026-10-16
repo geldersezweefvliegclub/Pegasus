@@ -11,7 +11,7 @@
         <div class="col pe-2 h-100">
             <h4>Vliegtuigen</h4>
             <div class="lijst">
-                @for (vliegtuig of filteredVliegtuigen; track vliegtuig) {
+                @for (vliegtuig of filteredVliegtuigen; track vliegtuig.ID) {
                     <div class="card aanmeldkaart row flex-row">
                         <div class="col-9">
                             <div class="fw-bold">
@@ -39,7 +39,7 @@
         <div class="col ps-2 h-100">
             <h4>Aanwezig</h4>
             <div class="lijst">
-                @for (aanwezig of filteredAanwezigVliegtuigen; track aanwezig) {
+                @for (aanwezig of filteredAanwezigVliegtuigen; track aanwezig.ID) {
                     <div class="card aanmeldkaart row flex-row">
                         <div class="col-3 d-flex flex-column justify-content-center p-0">
                             <div class="d-flex flex-row justify-content-end">

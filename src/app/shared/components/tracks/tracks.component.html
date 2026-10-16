@@ -6,7 +6,7 @@
         <div class="box h-100">
             <div id="data" style="height: 1px">
                 <table class="w-100">
-                    @for (trk of data; track trk) {
+                    @for (trk of data; track trk.ID) {
                         <tr class="trkRow" (click)="trackSelected(trk)"
                             (dblclick)="openEditor(trk)">
                             @if (deleteMode && !trashMode) {
@@ -31,7 +31,7 @@
                             <td class="naamCell">
                                 <div class="d-flex">
                                     @if (trk.lid) {
-                                        <app-avatar [url]='trk.lid.AVATAR'/>
+                                        <app-avatar [url]='trk.lid.AVATAR' [naam]='trk.lid.NAAM'/>
                                     }
                                     <div class="naam text-nowrap"><a aria-label="Naar dashboard"
                                                                      [routerLink]="['/dashboard']"
@@ -44,7 +44,7 @@
                                 @if (!lidColumn()) {
                                     <div class="d-flex">
                                         @if (trk.lid) {
-                                            <app-avatar [url]='trk.lid.AVATAR'/>
+                                            <app-avatar [url]='trk.lid.AVATAR' [naam]='trk.lid.NAAM'/>
                                         }
                                         <div class="naam text-nowrap"><a aria-label="Naar dashboard"
                                                                          [routerLink]="['/dashboard']"

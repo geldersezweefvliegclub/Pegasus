@@ -33,7 +33,7 @@
             </div>
         } @if (toonStartlijstKlein) {
         <div id="datacard" class="data">
-            @for (vlucht of filteredStarts; track vlucht; let i = $index) {
+            @for (vlucht of filteredStarts; track vlucht.ID; let i = $index) {
                 <div>
                     <app-vlucht-card [start]='vlucht'/>
                 </div>

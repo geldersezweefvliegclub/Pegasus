@@ -22,7 +22,7 @@
                     <label for="TYPE_ID" class="form-label">Type</label>
                     <select class="form-select" required name="TYPE_ID" id="TYPE_ID"
                             [(ngModel)]="transactie.TYPE_ID" (change)="typeAangepast()">
-                        @for (tType of transactieTypes; track tType) {
+                        @for (tType of transactieTypes; track tType.ID) {
                             <option
                                     [value]="tType.ID">{{ tType.OMSCHRIJVING }}
                             </option>

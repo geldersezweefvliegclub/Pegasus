@@ -98,6 +98,7 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
 
     // Openen van popup scherm
     openPopup(dagRapport: HeliosDagRapport|undefined = undefined) {
+        this.isSaving = false;
         this.isVerwijderMode = false;
         this.isRestoreMode = false;
 
@@ -192,6 +193,7 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
     // markeer een track als verwijderd
     Verwijderen(dr:HeliosDagRapport) {
         this.dagRapportenService.deleteDagRapport(dr.ID!).then(() => {
+            this.isSaving = false;
             this.success = {
                 titel: "Dag rapporten",
                 beschrijving: "Rapport is verwijderd"
@@ -207,6 +209,7 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
     // markeer een track als verwijderd
     Herstellen(dr:HeliosDagRapport) {
         this.dagRapportenService.restoreRapport (dr.ID!).then(() => {
+            this.isSaving = false;
             this.success = {
                 titel: "Dag rapporten",
                 beschrijving: "Rapport is hersteld"

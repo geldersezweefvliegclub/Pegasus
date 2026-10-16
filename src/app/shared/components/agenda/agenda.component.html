@@ -3,7 +3,7 @@
         <th style="width: 70px;">Datum</th>
         <th>Agenda</th>
     </tr>
-    @for (a of agenda; track a) {
+    @for (a of agenda; track a.ID) {
         <tr>
             <ng-template #tipContent><span class="oms">{{ a.OMSCHRIJVING }}</span></ng-template>
             <td>{{ datumDM(a.DATUM) }}</td>

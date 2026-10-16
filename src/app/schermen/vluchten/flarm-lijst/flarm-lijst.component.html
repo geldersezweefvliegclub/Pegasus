@@ -3,7 +3,7 @@
     <div class="d-flex flex-column justify-content-between h-100 w-100">
         <div class="vliegt w-100">
             <div class="row">
-                @for (kist of flying; track kist; let i = $index) {
+                @for (kist of flying; track kist.flarmID ?? $index; let i = $index) {
                     <div class="col-6">
                         <div class="d-flex flex-column vliegtuig" [class.no-start]="kist.START_ID === undefined"
                              (click)="toonStartdetails(kist)">
@@ -23,7 +23,7 @@
         </div>
         <div class="row take-off-landing w-100">
             <div class="col-6 take-off">
-                @for (kist of takeoff; track kist; let i = $index) {
+                @for (kist of takeoff; track kist.flarmID ?? $index; let i = $index) {
                     <div class="col-6">
                         <div class="vliegtuig-kort" [class.no-start]="kist.START_ID === undefined"
                              (click)="toonStartdetails(kist)">
@@ -36,7 +36,7 @@
                 }
             </div>
             <div class="col-6 landing">
-                @for (kist of landing; track kist; let i = $index) {
+                @for (kist of landing; track kist.flarmID ?? $index; let i = $index) {
                     <div class="col-6">
                         <div class="vliegtuig-kort" [class.no-start]="kist.START_ID === undefined"
                              (click)="toonStartdetails(kist)">
@@ -51,7 +51,7 @@
         </div>
         <div class="grond w-100">
             <div class="row">
-                @for (kist of grond; track kist; let i = $index) {
+                @for (kist of grond; track kist.flarmID ?? $index; let i = $index) {
                     <div class="col-6">
                         @if (kist.flarmID === undefined) {
                             <div></div>

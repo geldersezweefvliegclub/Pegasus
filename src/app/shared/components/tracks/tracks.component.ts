@@ -225,12 +225,12 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     tijdString(dt: string): string {
-        const datumtijd = DateTime.fromSQL(dt);
+        const datumtijd = this.sharedService.parseDatum(dt);
         return datumtijd.toFormat("HH:mm")
     }
 
     datumString(dt: string): string {
-        const datumtijd = DateTime.fromSQL(dt);
+        const datumtijd = this.sharedService.parseDatum(dt);
         return datumtijd.day + "-" + datumtijd.month + "-" + datumtijd.year;
     }
 

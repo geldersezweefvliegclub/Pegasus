@@ -403,12 +403,12 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     }
 
     tijdString(dt: string|undefined = undefined): string {
-        const datumtijd = dt ? DateTime.fromSQL(dt) : DateTime.now();
+        const datumtijd = dt ? this.sharedService.parseDatum(dt) : DateTime.now();
         return datumtijd.toFormat("HH:mm")
     }
 
     datumString(dt: string|undefined = undefined): string {
-        const datumtijd = dt ? DateTime.fromSQL(dt) : DateTime.now();
+        const datumtijd = dt ? this.sharedService.parseDatum(dt) : DateTime.now();
         return datumtijd.day + "-" + datumtijd.month + "-" + datumtijd.year;
     }
 

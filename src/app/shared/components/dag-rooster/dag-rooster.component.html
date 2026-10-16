@@ -31,7 +31,7 @@
                 <th scope="col">Aanwezig</th>
             }
             </tr>
-            @for (dienst of diensten; track dienst; let i = $index) {
+            @for (dienst of diensten; track dienst.ID; let i = $index) {
                 <tr>
                 <td>{{dienst.NAAM}}</td>
                 <td>{{dienst.TYPE_DIENST}}</td>

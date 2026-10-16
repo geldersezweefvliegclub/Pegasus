@@ -20,7 +20,7 @@
             <thead>
             <tr style="vertical-align: top;">
                 <td></td>
-                @for (dagInRooster of rooster; track dagInRooster; let r = $index) {
+                @for (dagInRooster of rooster; track dagInRooster.DATUM; let r = $index) {
                     <td class="dagInRooster" [style]="KolomBreedte()"
                         [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
                         <div>
@@ -65,7 +65,7 @@
             </tr>
             <tr>
                 <td></td>
-                @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                @for (dagInRooster of rooster; track dagInRooster.DATUM; let i = $index) {
                     <td class="dagInRooster" [style]="KolomBreedte()">
                       <textarea
                               [id]="'OPMERKINGEN' + i"
@@ -83,7 +83,7 @@
             @if ((tonen().toonDienst[configService.OCHTEND_DDI_TYPE_ID] || tonen().toonDienst[configService.MIDDAG_DDI_TYPE_ID]) && tonen().Instructeurs && tonen().toonClubDDWV !== 2) {
                 <tr>
                     <td class="dienstType">DDI</td>
-                    @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                    @for (dagInRooster of rooster; track dagInRooster.DATUM; let i = $index) {
                         <td class="dagInRooster" [style]="KolomBreedte()">
                             @if (dagInRooster.CLUB_BEDRIJF) {
                                 <div>
@@ -97,7 +97,7 @@
             } @if ((tonen().toonDienst[configService.OCHTEND_INSTRUCTEUR_TYPE_ID] || tonen().toonDienst[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) && tonen().Instructeurs && tonen().toonClubDDWV !== 2) {
                 <tr>
                     <td class="dienstType">Instructeur</td>
-                    @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                    @for (dagInRooster of rooster; track dagInRooster.DATUM; let i = $index) {
                         <td class="dagInRooster" [style]="KolomBreedte()">
                             @if (dagInRooster.CLUB_BEDRIJF) {
                                 <div>
@@ -111,7 +111,7 @@
             } @if ((tonen().toonDienst[configService.OCHTEND_STARTLEIDER_TYPE_ID] || tonen().toonDienst[configService.MIDDAG_STARTLEIDER_TYPE_ID]) && (tonen().Startleiders || tonen().DDWV)) {
                 <tr>
                     <td class="dienstType">Startleider</td>
-                    @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                    @for (dagInRooster of rooster; track dagInRooster.DATUM; let i = $index) {
                         <td class="dagInRooster" [style]="KolomBreedte()">
                             @if (dagInRooster.CLUB_BEDRIJF) {
                                 <div>
@@ -130,7 +130,7 @@
             } @if ((tonen().toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID] || tonen().toonDienst[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]) && tonen().Startleiders && tonen().toonClubDDWV !== 2) {
                 <tr>
                     <td class="dienstType">Startleider 2</td>
-                    @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                    @for (dagInRooster of rooster; track dagInRooster.DATUM; let i = $index) {
                         <td class="dagInRooster" [style]="KolomBreedte()">
                             @if (dagInRooster.CLUB_BEDRIJF) {
                                 <div>
@@ -144,7 +144,7 @@
             } @if ((tonen().toonDienst[configService.OCHTEND_LIERIST_TYPE_ID] || tonen().toonDienst[configService.MIDDAG_LIERIST_TYPE_ID]) && (tonen().Lieristen || tonen().DDWV)) {
                 <tr>
                     <td class="dienstType">Lierist</td>
-                    @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                    @for (dagInRooster of rooster; track dagInRooster.DATUM; let i = $index) {
                         <td class="dagInRooster" [style]="KolomBreedte()">
                             @if (dagInRooster.CLUB_BEDRIJF) {
                                 <div>
@@ -163,7 +163,7 @@
             } @if ((tonen().toonDienst[configService.OCHTEND_HULPLIERIST_TYPE_ID] || tonen().toonDienst[configService.MIDDAG_HULPLIERIST_TYPE_ID]) && tonen().LIO && tonen().toonClubDDWV !== 2) {
                 <tr>
                     <td class="dienstType">Hulplierist</td>
-                    @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                    @for (dagInRooster of rooster; track dagInRooster.DATUM; let i = $index) {
                         <td class="dagInRooster" [style]="KolomBreedte()">
                             @if (dagInRooster.CLUB_BEDRIJF) {
                                 <div>
@@ -177,7 +177,7 @@
             } @if ((tonen().toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID] || tonen().toonDienst[configService.GASTEN_VLIEGER2_TYPE_ID]) && tonen().GastenVliegers && tonen().toonClubDDWV !== 2) {
                 <tr>
                     <td class="dienstType">Gasten vlieger</td>
-                    @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                    @for (dagInRooster of rooster; track dagInRooster.DATUM; let i = $index) {
                         <td class="dagInRooster" [style]="KolomBreedte()">
                             @if (dagInRooster.CLUB_BEDRIJF) {
                                 <div>
@@ -191,7 +191,7 @@
             } @if (tonen().toonDienst[configService.SLEEPVLIEGER_TYPE_ID] && tonen().Sleepvliegers) {
                 <tr>
                     <td class="dienstType">Sleepvlieger</td>
-                    @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                    @for (dagInRooster of rooster; track dagInRooster.DATUM; let i = $index) {
                         <td class="dagInRooster" [style]="KolomBreedte()">
                             @if (dagInRooster.DDWV || dagInRooster.CLUB_BEDRIJF) {
                                 <div>
@@ -205,7 +205,7 @@
             } @if (tonen().toonClubDDWV === 2) {
                 <tr>
                     <td class="dienstType">Slepen</td>
-                    @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                    @for (dagInRooster of rooster; track dagInRooster.DATUM; let i = $index) {
                         <td class="dagInRooster" [style]="KolomBreedte()">
                             @if (dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF) {
                                 <div class="d-flex flex-row">
@@ -222,7 +222,7 @@
             } @if (tonen().toonClubDDWV === 2) {
                 <tr>
                     <td class="dienstType">Lieren</td>
-                    @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                    @for (dagInRooster of rooster; track dagInRooster.DATUM; let i = $index) {
                         <td class="dagInRooster" [style]="KolomBreedte()">
                             @if (dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF) {
                                 <div class="d-flex flex-row">
@@ -238,7 +238,7 @@
             } @if (tonen().toonClubDDWV === 2) {
                 <tr>
                     <td></td>
-                    @for (dagInRooster of rooster; track dagInRooster; let i = $index) {
+                    @for (dagInRooster of rooster; track dagInRooster.DATUM; let i = $index) {
                         <td class="dagInRooster" [style]="KolomBreedte()">
                             @if (!datumInToekomst(dagInRooster.DATUM) && dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF && (isBeheerderDDWV || isBeheerder)) {
                                 <div class="w-100">

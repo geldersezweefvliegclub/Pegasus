@@ -40,7 +40,7 @@
                             id="TYPE_ID"
                             name="TYPE_ID">
                         <option [ngValue]="-1">onbekend</option>
-                        @for (vliegtuigType of vliegtuigTypes; track vliegtuigType) {
+                        @for (vliegtuigType of vliegtuigTypes; track vliegtuigType.ID) {
                             <option
                                     [ngValue]="vliegtuigType.ID">{{ vliegtuigType.OMSCHRIJVING }}
                             </option>

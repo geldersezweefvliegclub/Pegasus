@@ -51,7 +51,7 @@
                                                     [(ngModel)]="lidData.STATUSTYPE_ID"
                                                     (change)="wijzigVliegStatus()">
                                                 <option [ngValue]="null">n.v.t.</option>
-                                                @for (type of statusTypes; track type) {
+                                                @for (type of statusTypes; track type.ID) {
                                                     <option
                                                             [ngValue]="type.ID">{{ type.OMSCHRIJVING }}
                                                     </option>

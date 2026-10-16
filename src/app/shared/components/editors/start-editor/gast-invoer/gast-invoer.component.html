@@ -2,7 +2,7 @@
 <select class="form-select" id="gast" name="gast"
         (change)="gastGeselecteerd($event.target.value)">
     <option value="-1"></option>                               <!-- lege optie -->
-    @for (gast of gasten; track gast) {
+    @for (gast of gasten; track gast.ID) {
     <option
             [value]="gast.ID"
     >{{gast.NAAM}}</option>

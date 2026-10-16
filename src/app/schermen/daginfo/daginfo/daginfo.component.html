@@ -134,7 +134,7 @@
                                   [minimum]="true"
                                   [icon]="iconDiensten">
                     <table class="w-100">
-                        @for (dr of dagRapporten; track dr) {
+                        @for (dr of dagRapporten; track dr.ID) {
                             <tr class="drRow" (dblclick)="openEditor(dr)">
                                 @if (deleteMode && !trashMode) {
                                     <td>

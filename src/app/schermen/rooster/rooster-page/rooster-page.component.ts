@@ -604,7 +604,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
 
         const datum: DateTime = DateTime.fromSQL(dienstData.DATUM as string);
         const nu: DateTime = DateTime.now();
-        const la: DateTime = DateTime.fromSQL(dienstData.LAATSTE_AANPASSING as string);
+        const la: DateTime = this.sharedService.parseDatum(dienstData.LAATSTE_AANPASSING as string);
 
         if (dienstData.UITBETAALD) {    // Als er uitbetaald is, dan geen wijzigingen meer maken
             return false;

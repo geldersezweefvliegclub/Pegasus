@@ -66,7 +66,7 @@
                     <div>
                         <h4>Vliegtuig types</h4>
                         <table>
-                            @for (type of samenvatting.types; track type) {
+                            @for (type of samenvatting.types; track type.id) {
                                 <tr>
                                     <td class="vtype">
                                         {{ type.type }}
@@ -81,7 +81,7 @@
                     @if (samenvatting.overland.length > 0) {
                         <div class="ms-4"><h4>Overland aanvragen</h4>
                             <table>
-                                @for (ovl of samenvatting.overland; track ovl) {
+                                @for (ovl of samenvatting.overland; track $index) {
                                     <tr>
                                         <td>
                                             {{ ovl.reg_call }}
