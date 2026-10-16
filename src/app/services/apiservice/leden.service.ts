@@ -30,11 +30,17 @@ export class LedenService {
 
 
         // nadat we ingelogd zijn kunnen we de vliegtuigen ophalen
-        loginService.inloggenSucces.subscribe(() => {
+        const naInloggen = () => {
             this.ophalenLeden().then(() => {
                 this.ledenStore.next(this.ledenCache.dataset)    // afvuren event
             });
-        });
+        };
+        loginService.inloggenSucces.subscribe(naInloggen);
+
+        // service wordt pas aangemaakt als een component hem injecteert, dat kan na het inloggenSucces event zijn
+        if (loginService.isIngelogd()) {
+            naInloggen();
+        }
 
         this.ophaalTimer = window.setInterval(() => {
             this.ophalenLeden().then(() => {

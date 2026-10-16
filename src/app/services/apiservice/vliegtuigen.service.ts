@@ -38,11 +38,17 @@ export class VliegtuigenService {
         }
 
         // nadat we ingelogd zijn kunnen we de vliegtuigen ophalen
-        loginService.inloggenSucces.subscribe(() => {
+        const naInloggen = () => {
             this.ophalenVliegtuigen().then(() => {
                 this.vliegtuigenStore.next(this.vliegtuigenCache.dataset)    // afvuren event
             });
-        });
+        };
+        loginService.inloggenSucces.subscribe(naInloggen);
+
+        // service wordt pas aangemaakt als een component hem injecteert, dat kan na het inloggenSucces event zijn
+        if (loginService.isIngelogd()) {
+            naInloggen();
+        }
 
         // Deze timer kijkt periodiek of de starts er is. API call bij inloggen kan mislukt zijn dus dit is de fallback
         this.fallbackTimer = window.setInterval(() => {

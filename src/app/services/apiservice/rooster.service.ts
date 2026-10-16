@@ -62,7 +62,7 @@ export class RoosterService {
 
         // nadat we ingelogd zijn kunnen we de rooster ophalen, starttoren heeft niets nodig
         if (!this.loginService.userInfo?.Userinfo!.isStarttoren) {
-            loginService.inloggenSucces.subscribe(() => {
+            const naInloggen = () => {
                 this.datum = DateTime.now();
                 const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
 
@@ -70,7 +70,13 @@ export class RoosterService {
                     if (!this.vulMissendeDagenAan(dataset))
                         this.roosterStore.next(this.roosterCache.dataset)    // afvuren event
                 });
-            });
+            };
+            loginService.inloggenSucces.subscribe(naInloggen);
+
+            // service wordt pas aangemaakt als een component hem injecteert, dat kan na het inloggenSucces event zijn
+            if (loginService.isIngelogd()) {
+                naInloggen();
+            }
         }
     }
 

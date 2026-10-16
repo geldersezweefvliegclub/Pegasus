@@ -21,6 +21,7 @@ import {
   faWaveSquare,
 } from '@fortawesome/free-solid-svg-icons';
 import { faAvianex } from '@fortawesome/free-brands-svg-icons';
+import { ingelogdGuard } from './services/shared/ingelogd.guard';
 
 export interface CustomRoute extends Route {
     excluded: boolean;
@@ -48,6 +49,7 @@ export const routes: CustomRoute[] = [
     {
         path: 'hoofdscherm',
         loadComponent: () => import('./schermen/hoofmenu/hoofdscherm/hoofdscherm.component').then(m => m.HoofdschermComponent),
+        canActivate: [ingelogdGuard],
         excluded: true,
         icon: faKey,
         text: 'Hoofdscherm'
@@ -55,6 +57,7 @@ export const routes: CustomRoute[] = [
     {
         path: 'dashboard',
         loadComponent: () => import('./schermen/dashboard/dasboard-page/dashboard-page.component').then(m => m.DashboardPageComponent),
+        canActivate: [ingelogdGuard],
         excluded: false,
         icon: faChartPie,
         text: 'Dashboard'
@@ -62,6 +65,7 @@ export const routes: CustomRoute[] = [
     {
         path: 'aanmelden',
         loadComponent: () => import('./schermen/aanmelden/aanmelden-page/aanmelden-page.component').then(m => m.default),
+        canActivate: [ingelogdGuard],
         excluded: false,
         icon: faStreetView,
         text: 'Aanmelden'
@@ -69,6 +73,7 @@ export const routes: CustomRoute[] = [
     {
         path: 'vluchten',
         loadComponent: () => import('./schermen/vluchten/vluchten-grid/vluchten-grid.component').then(m => m.VluchtenGridComponent),
+        canActivate: [ingelogdGuard],
         excluded: false,
         icon: faPlaneDeparture,
         text: 'Vluchten'
@@ -76,6 +81,7 @@ export const routes: CustomRoute[] = [
     {
         path: 'daginfo',
         loadComponent: () => import('./schermen/daginfo/daginfo/daginfo.component').then(m => m.DaginfoComponent),
+        canActivate: [ingelogdGuard],
         excluded: false,
         icon: faCalendarAlt,
         text: 'Dag info'
@@ -83,6 +89,7 @@ export const routes: CustomRoute[] = [
     {
         path: 'tracks',
         loadComponent: () => import('./schermen/tracks/tracks-grid/tracks-grid.component').then(m => m.TracksGridComponent),
+        canActivate: [ingelogdGuard],
         excluded: false,
         icon: faAddressCard,
         text: 'Tracks'
@@ -90,6 +97,7 @@ export const routes: CustomRoute[] = [
     {
         path: 'reserveringen',
         loadComponent: () => import('./schermen/reservering/reservering-page/reservering-page.component').then(m => m.ReserveringPageComponent),
+        canActivate: [ingelogdGuard],
         excluded: false,
         icon: faAvianex,
         text: 'Kist reserveren'
@@ -97,6 +105,7 @@ export const routes: CustomRoute[] = [
     {
         path: 'leden',
         loadComponent: () => import('./schermen/leden/leden-scherm/leden-scherm.component').then(m => m.LedenSchermComponent),
+        canActivate: [ingelogdGuard],
         excluded: false,
         icon: faUsers,
         text: 'Ledenlijst'
@@ -104,6 +113,7 @@ export const routes: CustomRoute[] = [
     {
         path: 'vliegtuigen',
         loadComponent: () => import('./schermen/vliegtuigen/vliegtuigen-scherm/vliegtuigen-scherm.component').then(m => m.VliegtuigenSchermComponent),
+        canActivate: [ingelogdGuard],
         excluded: false,
         icon: faPlane,
         text: 'Vliegtuigen'
@@ -111,6 +121,7 @@ export const routes: CustomRoute[] = [
     {
         path: 'profiel',
         loadComponent: () => import('./schermen/profiel/profiel/profiel-page.component').then(m => m.ProfielPageComponent),
+        canActivate: [ingelogdGuard],
         excluded: false,
         icon: faUser,
         text: 'Profiel'
@@ -118,6 +129,7 @@ export const routes: CustomRoute[] = [
     {
         path: 'rooster',
         loadComponent: () => import('./schermen/rooster/rooster-page/rooster-page.component').then(m => m.RoosterPageComponent),
+        canActivate: [ingelogdGuard],
         excluded: false,
         icon: faCalendarDay,
         text: 'Rooster'
@@ -125,6 +137,7 @@ export const routes: CustomRoute[] = [
     {
         path: 'documenten',
         loadComponent: () => import('./schermen/documenten/documenten-scherm/documenten-scherm.component').then(m => m.DocumentenSchermComponent),
+        canActivate: [ingelogdGuard],
         excluded: false,
         icon: faFile,
         text: 'Documenten'
@@ -132,6 +145,7 @@ export const routes: CustomRoute[] = [
     {
         path: 'journaal',
         loadComponent: () => import('./schermen/journaal/journaal-scherm/journaal-scherm.component').then(m => m.JournaalSchermComponent),
+        canActivate: [ingelogdGuard],
         excluded: false,
         icon: faBug,
         text: 'Journaal'
@@ -140,6 +154,7 @@ export const routes: CustomRoute[] = [
     {
         path: 'audit',
         loadComponent: () => import('./schermen/audit/audit-page/audit-page.component').then(m => m.AuditPageComponent),
+        canActivate: [ingelogdGuard],
         excluded: true,
         icon: faWaveSquare,
         text: 'Audit'
@@ -148,6 +163,7 @@ export const routes: CustomRoute[] = [
     {
         path: 'agenda',
         loadComponent: () => import('./schermen/agenda/agenda-scherm/agenda-scherm.component').then(m => m.AgendaSchermComponent),
+        canActivate: [ingelogdGuard],
         excluded: true,
         icon: faCalendar,
         text: 'Agenda'
@@ -156,6 +172,7 @@ export const routes: CustomRoute[] = [
     {
         path: 'types',
         loadComponent: () => import('./schermen/types/types-page/types-page.component').then(m => m.TypesPageComponent),
+        canActivate: [ingelogdGuard],
         excluded: true,
         icon: faKeyboard,
         text: 'Types'
@@ -164,6 +181,7 @@ export const routes: CustomRoute[] = [
     {
         path: 'competenties',
         loadComponent: () => import('./schermen/competenties/competenties-page/competenties-page.component').then(m => m.CompetentiesPageComponent),
+        canActivate: [ingelogdGuard],
         excluded: true,
         icon: faGraduationCap,
         text: 'Competenties'
@@ -172,6 +190,7 @@ export const routes: CustomRoute[] = [
     {
         path: 'rapportage',
         loadComponent: () => import('./schermen/rapportage/rapport-scherm/rapport-scherm.component').then(m => m.RapportSchermComponent),
+        canActivate: [ingelogdGuard],
         excluded: true,
         icon: faFilm,
         text: 'Rapportage'
@@ -180,6 +199,7 @@ export const routes: CustomRoute[] = [
     {
         path: 'facturen',
         loadComponent: () => import('./schermen/facturen/facturen-scherm/facturen-scherm.component').then(m => m.FacturenSchermComponent),
+        canActivate: [ingelogdGuard],
         excluded: true,
         icon: faLayerGroup,
         text: 'Facturen'
@@ -188,6 +208,7 @@ export const routes: CustomRoute[] = [
     {
         path: 'transacties',
         loadComponent: () => import('./schermen/transacties/transacties-grid/transacties-grid.component').then(m => m.TransactiesGridComponent),
+        canActivate: [ingelogdGuard],
         excluded: true,
         icon: faEuroSign,
         text: 'Transacties'

@@ -140,7 +140,12 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
         // Als lidID is meegegeven in URL, moeten we de lidData ophalen
         this.activatedRoute.queryParams.subscribe(params => {
-            const hl= this.loginService.userInfo?.LidData as HeliosLid;
+            // niet ingelogd, app component stuurt ons door naar de login pagina
+            const hl = this.loginService.userInfo?.LidData as HeliosLid | undefined;
+            if (!hl) {
+                return;
+            }
+
             let lidID = hl.ID!
             if (params['lidID']) {
                 lidID = params['lidID'];

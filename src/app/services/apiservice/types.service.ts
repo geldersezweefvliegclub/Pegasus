@@ -51,11 +51,17 @@ export class TypesService {
         }, 1000 * 60);  // iedere minuut
 
         // nadat we ingelogd zijn kunnen we de lidTypes ophalen
-        loginService.inloggenSucces.subscribe(() => {
+        const naInloggen = () => {
             this.getTypes().then(() => {
                 this.typesStore.next(this.typesCache.dataset!)    // afvuren event
             });
-        })
+        };
+        loginService.inloggenSucces.subscribe(naInloggen);
+
+        // service wordt pas aangemaakt als een component hem injecteert, dat kan na het inloggenSucces event zijn
+        if (loginService.isIngelogd()) {
+            naInloggen();
+        }
 
     }
 

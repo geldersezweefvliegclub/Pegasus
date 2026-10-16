@@ -55,11 +55,11 @@ export class AppComponent implements OnDestroy{
             });
         }
         router.events.subscribe((val) => {
-            if (router.url != "/login") {
-                this.storageService.opslaan("url", router.url, 5)
-            }
-
+            // alleen bij NavigationEnd, bij een afgebroken navigatie (ingelogdGuard) is router.url nog de vorige url
             if (val instanceof NavigationEnd) {
+                if (router.url != "/login") {
+                    this.storageService.opslaan("url", router.url, 5)
+                }
                 this.navigeerNaarLogin();
             }
         });

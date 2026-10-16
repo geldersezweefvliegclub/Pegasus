@@ -57,11 +57,17 @@ export class CompetentieService {
         }, 1000 * 60);  // iedere minuut
 
         // nadat we ingelogd zijn kunnen we de comptenties ophalen
-        loginService.inloggenSucces.subscribe(() => {
+        const naInloggen = () => {
             this.getCompetenties().then((_) => {
                 this.competentiesStore.next(this.competentiesCache.dataset!)    // afvuren event
             });
-        });
+        };
+        loginService.inloggenSucces.subscribe(naInloggen);
+
+        // service wordt pas aangemaakt als een component hem injecteert, dat kan na het inloggenSucces event zijn
+        if (loginService.isIngelogd()) {
+            naInloggen();
+        }
     }
 
     async getCompetenties(): Promise<HeliosCompetentiesDataset[]> {
