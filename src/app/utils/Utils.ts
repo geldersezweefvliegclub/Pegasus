@@ -79,3 +79,16 @@ export const DateDiff = (datum1 : string, datum2: string|undefined = undefined) 
  * console.log(json); // {"a":null,"b":2,"c":null}
  */
 export const CustomJsonSerializer = (_:string, value:unknown) => typeof value === 'undefined' ? null : value;
+
+// Helios.js accepteert alleen een ISO 8601 datum string voor TIME kolommen (bv. STARTTIJD, AANKOMST), de API levert
+// "HH:mm" of "HH:mm:ss". We combineren de tijd met de datum van het record, Helios.js slaat alleen de tijd op.
+// De TIME kolom bevat de lokale tijd, maar Prisma leest/schrijft deze als UTC. Daarom "Z", anders schuift de
+// tijd met de tijdzone van de server
+export const naarApiTijd = (datum: string | null | undefined, tijd: string | null | undefined): string | null => {
+    if (!tijd) return null;
+    if (tijd.includes('T')) return tijd;   // is al ISO 8601
+
+    const hhmmss = (tijd.length == 5) ? `${tijd}:00` : tijd;
+    const dag = (datum) ? datum.substring(0, 10) : DateTime.now().toISODate();   // DATUM is "YYYY-MM-DD"
+    return `${dag}T${hhmmss}Z`;
+}

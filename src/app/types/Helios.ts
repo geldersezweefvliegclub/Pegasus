@@ -29,6 +29,8 @@ export type HeliosAanwezigVliegtuigenDataset = Partial<schemas['GetObjectsOperAa
 export type HeliosAanwezigLeden = HeliosGetObjects<HeliosAanwezigLedenDataset>;
 export type HeliosAanwezigLedenDataset = Partial<schemas['GetObjectsOperAanwezigLedenResponse']>;
 export type HeliosAanwezigSamenvatting = Partial<schemas['AanwezigLedenSamenvattingResponse']>;
+export type HeliosAanmelden = schemas['AanmeldenRequest'];
+export type HeliosAanwezigLidUpdate = HeliosInput<schemas['UpdateOperAanwezigLidDto']>;
 
 export type HeliosDocumenten = HeliosGetObjects<HeliosDocumentenDataset>;
 export type HeliosDocumentenDataset = Partial<schemas['GetObjectsHeliosDocumentenResponse']>;

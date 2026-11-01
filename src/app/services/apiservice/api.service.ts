@@ -136,7 +136,7 @@ export class APIService {
         if (!response.ok) {     // elke 2xx is goed, Helios.js geeft 204 bij verwijderen
             this.handleError(response);
         }
-        this.sharedService.fireHeliosEvent({actie: HeliosActie.Delete, tabel: url.split('/')[0], data: params[0]});
+        this.sharedService.fireHeliosEvent({actie: HeliosActie.Delete, tabel: url.split('/')[0], data: params});   // params bevat het ID
     }
 
     // Aanroepen patch request om verwijderen record ongedaan te maken
@@ -159,7 +159,7 @@ export class APIService {
         if (!response.ok) {     // elke 2xx is goed, Helios.js geeft 200 bij herstellen
             this.handleError(response);
         }
-        this.sharedService.fireHeliosEvent({actie: HeliosActie.Restore, tabel: url.split('/')[0], data: params[0]});
+        this.sharedService.fireHeliosEvent({actie: HeliosActie.Restore, tabel: url.split('/')[0], data: params});   // params bevat het ID
     }
 
     private prepareEndpoint(url: string, params: KeyValueArray): string {

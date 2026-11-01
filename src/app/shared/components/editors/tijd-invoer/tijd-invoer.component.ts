@@ -200,7 +200,7 @@ export class TijdInvoerComponent {
     // De starttijd is ingevoerd/aangepast. Opslaan van de starttijd
     opslaanStartTijd(start: HeliosStart) {
         this.isSaving = true;
-        this.startlijstService.startTijd(start.ID as number, start.STARTTIJD as string).then((s) => {
+        this.startlijstService.startTijd(start.ID as number, start.DATUM as string, start.STARTTIJD as string).then((s) => {
             const b = (s.STARTTIJD) ? `Starttijd ${s.STARTTIJD} opgeslagen` : 'Starttijd verwijderd'
             this.success = {
                 titel: "Startlijst",
@@ -217,7 +217,7 @@ export class TijdInvoerComponent {
     // De landingstijd is ingevoerd/aangepast. Opslaan van de landingstijd
     opslaanLandingsTijd(start: HeliosStart) {
         this.isSaving = true;
-        this.startlijstService.landingsTijd(start.ID as number, start.LANDINGSTIJD as string).then((s) =>
+        this.startlijstService.landingsTijd(start.ID as number, start.DATUM as string, start.LANDINGSTIJD as string).then((s) =>
         {
             const b = (s.LANDINGSTIJD) ? `Landingstijd ${s.LANDINGSTIJD} opgeslagen` : 'Landingstijd verwijderd'
             this.success = {

@@ -1,9 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { DateTime } from 'luxon';
 import { KeyValueArray } from '../../types/Utils';
+import { naarApiTijd } from '../../utils/Utils';
 import { APIService } from './api.service';
 import {
+  HeliosAanmelden,
   HeliosAanwezigLeden,
+  HeliosAanwezigLidUpdate,
   HeliosAanwezigLedenDataset,
   HeliosAanwezigSamenvatting,
 } from '../../types/Helios';
@@ -162,7 +165,7 @@ export class AanwezigLedenService {
     }
 
     async aanmelden(record: HeliosAanwezigLedenDataset): Promise<any> {
-        const response: Response = await this.apiService.post('AanwezigLeden/Aanmelden', JSON.stringify(record));
+        const response: Response = await this.apiService.post('AanwezigLeden/Aanmelden', JSON.stringify(this.naarAanmeldenFormaat(record)));
         return response.json();
     }
 
@@ -176,11 +179,34 @@ export class AanwezigLedenService {
     }
 
     async updateAanmelding(record: HeliosAanwezigLedenDataset): Promise<any> {
-        const response: Response = await this.apiService.put('AanwezigLeden/SaveObject', JSON.stringify(record));
+        const response: Response = await this.apiService.put('AanwezigLeden/SaveObject', JSON.stringify(this.naarUpdateFormaat(record)));
         return response.json();
     }
 
     async deleteAanmelding(id: number) {
         await this.apiService.delete('AanwezigLeden/DeleteObject', {'ID': id.toString()});
+    }
+
+    // Aanmelden accepteert alleen de velden van AanmeldenRequest. Het record komt uit de GetObjects dataset en bevat
+    // ook velden zoals NAAM, onbekende velden geven HTTP 400
+    private naarAanmeldenFormaat(record: HeliosAanwezigLedenDataset): HeliosAanmelden {
+        const velden: (keyof HeliosAanmelden)[] = ['LID_ID', 'DATUM', 'TIJDSTIP', 'POSITIE', 'VOORAANMELDING', 'AANKOMST',
+            'OVERLAND_VLIEGTUIG_ID', 'VOORKEUR_VLIEGTUIG_TYPE', 'VELD_ID', 'OPMERKINGEN'];
+
+        const data = record as Record<string, unknown>;
+        return Object.fromEntries(velden.filter(v => data[v] !== undefined).map(v => [v, data[v]])) as HeliosAanmelden;
+    }
+
+    // SaveObject accepteert alleen de velden van UpdateOperAanwezigLidDto, onbekende velden uit de dataset geven HTTP 400.
+    // AANKOMST en VERTREK komen als "HH:mm:ss" uit GetObjects, Helios.js wil een ISO 8601 datum string
+    private naarUpdateFormaat(record: HeliosAanwezigLedenDataset): HeliosAanwezigLidUpdate {
+        const velden: (keyof HeliosAanwezigLidUpdate)[] = ['ID', 'DATUM', 'POSITIE', 'LID_ID', 'VOORAANMELDING', 'AANKOMST',
+            'VERTREK', 'OVERLAND_VLIEGTUIG_ID', 'VOORKEUR_VLIEGTUIG_TYPE', 'TRANSACTIE_ID', 'VELD_ID', 'OPMERKINGEN'];
+
+        const data = record as Record<string, unknown>;
+        const update = Object.fromEntries(velden.filter(v => data[v] !== undefined).map(v => [v, data[v]])) as HeliosAanwezigLidUpdate;
+        if (update.AANKOMST !== undefined) update.AANKOMST = naarApiTijd(update.DATUM, update.AANKOMST);
+        if (update.VERTREK !== undefined) update.VERTREK = naarApiTijd(update.DATUM, update.VERTREK);
+        return update;
     }
 }

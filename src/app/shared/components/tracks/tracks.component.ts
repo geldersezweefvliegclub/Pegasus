@@ -13,7 +13,7 @@ import {
     faTachometerAlt,
     faUndo,
 } from '@fortawesome/free-solid-svg-icons';
-import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { ErrorMessage, HeliosActie, SuccessMessage } from '../../../types/Utils';
 import { LedenService } from '../../../services/apiservice/leden.service';
 import { LoginService } from '../../../services/apiservice/login.service';
 import { faAvianex } from '@fortawesome/free-brands-svg-icons';
@@ -115,7 +115,8 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
             this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
                 if (ev.tabel == "Tracks") {
                     const VliegerID = this.VliegerID();
-                    if (!VliegerID) {
+                    // bij verwijderen/herstellen bevat data enkel het ID, dan altijd opvragen
+                    if (!VliegerID || ev.actie == HeliosActie.Delete || ev.actie == HeliosActie.Restore) {
                         this.opvragen();
                     } else if (ev.data.LID_ID == VliegerID) {
                         this.opvragen();

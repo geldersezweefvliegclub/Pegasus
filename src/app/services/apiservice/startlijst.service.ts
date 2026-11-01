@@ -18,7 +18,7 @@ import { StorageService } from '../storage/storage.service';
 import { KeyValueArray } from '../../types/Utils';
 import { DateTime } from 'luxon';
 import { LoginService } from './login.service';
-import { CustomJsonSerializer } from '../../utils/Utils';
+import { CustomJsonSerializer, naarApiTijd } from '../../utils/Utils';
 
 type parameters = Record<string, string>;
 
@@ -282,14 +282,14 @@ export class StartlijstService {
         await this.apiService.patch('Startlijst/RestoreObject', {'ID': id.toString()});
     }
 
-    async startTijd(id: number, tijd: string) {
-        const response: Response = await this.apiService.put('Startlijst/SaveObject', JSON.stringify({ID: id,STARTTIJD: (tijd) ? tijd : null }));
+    async startTijd(id: number, datum: string, tijd: string) {
+        const response: Response = await this.apiService.put('Startlijst/SaveObject', JSON.stringify({ID: id, STARTTIJD: naarApiTijd(datum, tijd)}));
 
         return response.json();
     }
 
-    async landingsTijd(id: number, tijd: string) {
-        const response: Response = await this.apiService.put('Startlijst/SaveObject', JSON.stringify({ID: id,LANDINGSTIJD: (tijd) ? tijd : null }));
+    async landingsTijd(id: number, datum: string, tijd: string) {
+        const response: Response = await this.apiService.put('Startlijst/SaveObject', JSON.stringify({ID: id, LANDINGSTIJD: naarApiTijd(datum, tijd)}));
 
         return response.json();
     }
@@ -297,6 +297,8 @@ export class StartlijstService {
     // DAGNUMMER bepaalt Helios.js zelf en mag niet meegestuurd worden (onbekende velden geven HTTP 400)
     private naarApiFormaat(start: HeliosStart & {DAGNUMMER?: number}): HeliosStart {
         const {DAGNUMMER, ...data} = start;
+        if (data.STARTTIJD !== undefined) data.STARTTIJD = naarApiTijd(data.DATUM, data.STARTTIJD) as string;
+        if (data.LANDINGSTIJD !== undefined) data.LANDINGSTIJD = naarApiTijd(data.DATUM, data.LANDINGSTIJD) as string;
         return data;
     }
 }
