@@ -4193,7 +4193,7 @@ export interface components {
             /**
              * Format: date-time
              * @description Tijdstempel wanneer de progressie is afgetekend
-             * @default 2026-10-15T14:49:36.009Z
+             * @default 2026-11-01T18:07:05.344Z
              */
             INGEVOERD?: string | null;
             /**
@@ -4249,7 +4249,7 @@ export interface components {
             /**
              * Format: date-time
              * @description Tijdstempel wanneer de progressie is afgetekend
-             * @default 2026-10-15T14:49:36.009Z
+             * @default 2026-11-01T18:07:05.346Z
              */
             INGEVOERD?: string | null;
             /**
@@ -4640,6 +4640,25 @@ export interface components {
             /** @description Het wachtwoord voor deze gebruiker */
             Wachtwoord: string;
         };
+        UserInfoRollen: {
+            isBeheerderDDWV: boolean;
+            isBeheerder: boolean;
+            isRooster: boolean;
+            isInstructeur: boolean;
+            isCIMT: boolean;
+            isStarttoren: boolean;
+            isRapporteur: boolean;
+            isDDWVCrew: boolean;
+            isAangemeld: boolean;
+            isClubVlieger: boolean;
+            isDDWV: boolean;
+        };
+        UserInfo: {
+            /** @description Gegevens van het ingelogde lid */
+            LidData: components["schemas"]["RefLidDto"];
+            /** @description Rollen en status van het ingelogde lid */
+            Userinfo: components["schemas"]["UserInfoRollen"];
+        };
         OperAanwezigLidDto: {
             /**
              * Format: int32
@@ -4815,8 +4834,6 @@ export interface components {
             ZUSTERCLUB_ID?: number;
             /** @description Inlognaam van het lid */
             INLOGNAAM?: string;
-            /** @description Secret (2FA) van het lid */
-            SECRET?: string;
             /** @description Avatar van het lid */
             AVATAR?: string;
             /** @description Heeft het lid een startverbod */
@@ -6205,6 +6222,22 @@ export interface components {
              */
             LAATSTE_AANPASSING?: string;
         };
+        DDWVConfiguratie: {
+            /** @description Is er een DDWV bedrijf actief */
+            DDWV: boolean;
+            /** @description Begindatum van het DDWV seizoen */
+            START: string;
+            /** @description Einddatum van het DDWV seizoen */
+            EIND: string;
+            /** @description Maximaal aantal strippen dat een DDWV'er mag hebben */
+            MAX_STRIPPEN: number;
+            /** @description Aantal strippen dat retour gaat als de vliegdag doorgaat */
+            STRIPPEN_RETOUR_OP_VLIEGDAG: number;
+            /** @description Transactie type ID per aantal dagen voor de vliegdag, met 'default' als terugval */
+            TARIEVEN?: {
+                [key: string]: number;
+            };
+        };
         GetOperDienstenResponse: {
             /**
              * Format: int32
@@ -6800,7 +6833,7 @@ export interface components {
             /**
              * Format: date-time
              * @description Tijdstempel met de laatste wijziging van het record
-             * @default 2026-10-15T14:49:36.088Z
+             * @default 2026-11-01T18:07:05.633Z
              */
             LAATSTE_AANPASSING?: string;
         };
@@ -6846,7 +6879,7 @@ export interface components {
             /**
              * Format: date-time
              * @description Tijdstempel met de laatste wijziging van het record
-             * @default 2026-10-15T14:49:36.089Z
+             * @default 2026-11-01T18:07:05.635Z
              */
             LAATSTE_AANPASSING?: string;
         };
@@ -7128,7 +7161,7 @@ export interface components {
             /**
              * Format: date-time
              * @description Datum van het journaal
-             * @default 2026-10-15T14:49:36.097Z
+             * @default 2026-11-01T18:07:05.654Z
              */
             DATUM?: string;
             /**
@@ -7191,7 +7224,7 @@ export interface components {
             /**
              * Format: date-time
              * @description Datum van het journaal
-             * @default 2026-10-15T14:49:36.098Z
+             * @default 2026-11-01T18:07:05.656Z
              */
             DATUM?: string;
             /**
@@ -8230,7 +8263,7 @@ export interface components {
             /**
              * Format: date-time
              * @description Datum van aanmaken van de transactie
-             * @default 2026-10-15T14:49:36.121Z
+             * @default 2026-11-01T18:07:05.724Z
              */
             DATUM?: string;
             /**
@@ -8312,7 +8345,7 @@ export interface components {
             /**
              * Format: date-time
              * @description Datum van aanmaken van de transactie
-             * @default 2026-10-15T14:49:36.122Z
+             * @default 2026-11-01T18:07:05.726Z
              */
             DATUM?: string;
             /**
@@ -8820,7 +8853,7 @@ export interface components {
             /**
              * Format: date-time
              * @description Tijdstempel wanneer de track is ingevoerd
-             * @default 2026-10-15T14:49:36.133Z
+             * @default 2026-11-01T18:07:05.759Z
              */
             INGEVOERD?: string | null;
             /**
@@ -8861,7 +8894,7 @@ export interface components {
             /**
              * Format: date-time
              * @description Tijdstempel wanneer de track is ingevoerd
-             * @default 2026-10-15T14:49:36.133Z
+             * @default 2026-11-01T18:07:05.761Z
              */
             INGEVOERD?: string | null;
             /**
@@ -9367,6 +9400,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -9397,13 +9437,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -9775,6 +9808,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -9798,13 +9838,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -10208,6 +10241,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -10238,13 +10278,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -10663,6 +10696,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -10686,13 +10726,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -11214,6 +11247,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -11244,13 +11284,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -11757,6 +11790,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -11780,13 +11820,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -12088,11 +12121,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Gegevens en rollen van het ingelogde lid */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["UserInfo"];
+                };
             };
         };
     };
@@ -12400,6 +12436,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -12423,13 +12466,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -12931,6 +12967,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -12954,13 +12997,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -13678,6 +13714,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -13701,13 +13744,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -14071,6 +14107,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -14094,13 +14137,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -14179,11 +14215,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description DDWV configuratie */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["DDWVConfiguratie"];
+                };
             };
         };
     };
@@ -14487,6 +14526,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -14510,13 +14556,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -14921,6 +14960,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -14944,13 +14990,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -15408,6 +15447,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -15431,13 +15477,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -15801,6 +15840,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -15824,13 +15870,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -16212,6 +16251,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -16235,13 +16281,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -16606,6 +16645,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -16629,13 +16675,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -16999,6 +17038,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -17022,13 +17068,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -17393,6 +17432,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -17416,13 +17462,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -17786,6 +17825,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -17809,13 +17855,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -18185,6 +18224,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -18208,13 +18254,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -18605,6 +18644,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -18628,13 +18674,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -19180,6 +19219,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -19203,13 +19249,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -19591,6 +19630,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description Het record is succesvol verwijderd. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Verkeerde input data. */
             400: {
                 headers: {
@@ -19614,13 +19660,6 @@ export interface operations {
             };
             /** @description Record moet eerst gemarkeerd worden als verwijderd voordat het permanent verwijderd kan worden. */
             405: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Het record is succesvol verwijderd. */
-            410: {
                 headers: {
                     [name: string]: unknown;
                 };

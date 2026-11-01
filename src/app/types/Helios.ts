@@ -1,9 +1,5 @@
 import { components as heliosComponents } from './generated/HeliosJs';
 
-// Onderstaande endpoints hebben (nog) geen schema in de Helios.js swagger, daarom nog de types uit de PHP yml
-import { components as loginComponents } from './generated/Login';
-import { components as ddwvComponents } from './generated/DDWV';
-
 type schemas = heliosComponents['schemas'];
 
 // Response van alle GetObjects endpoints, zie IHeliosGetObjectsResponse in Helios.js
@@ -17,10 +13,10 @@ export interface HeliosGetObjects<T> {
 // (waar lege velden null zijn) kan dus ook weer opgeslagen worden
 export type HeliosInput<T> = { [K in keyof T]?: T[K] | null };
 
-export type HeliosUserinfo = loginComponents['schemas']['Userinfo'];
-export type HeliosLidData = loginComponents["schemas"]["ref_leden"];
+export type HeliosUserinfo = Partial<schemas['UserInfo']>;
+export type HeliosLidData = schemas['RefLidDto'];
 
-export type HeliosConfigDDWV = ddwvComponents['schemas']['ddwv_config'];
+export type HeliosConfigDDWV = schemas['DDWVConfiguratie'];
 
 export type HeliosAanwezigVliegtuigen = HeliosGetObjects<HeliosAanwezigVliegtuigenDataset>;
 export type HeliosAanwezigVliegtuigenDataset = Partial<schemas['GetObjectsOperAanwezigVliegtuigenResponse']>;
