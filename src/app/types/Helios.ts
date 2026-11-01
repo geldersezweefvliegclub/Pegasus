@@ -3,7 +3,6 @@ import { components as heliosComponents } from './generated/HeliosJs';
 // Onderstaande endpoints hebben (nog) geen schema in de Helios.js swagger, daarom nog de types uit de PHP yml
 import { components as loginComponents } from './generated/Login';
 import { components as ddwvComponents } from './generated/DDWV';
-import { components as gastenComponents } from './generated/Gasten';
 
 type schemas = heliosComponents['schemas'];
 
@@ -76,10 +75,6 @@ export type HeliosCompetenties = HeliosGetObjects<HeliosCompetentiesDataset>;
 export type HeliosCompetentiesDataset = Partial<schemas['GetObjectsRefCompetentiesResponse']>;
 export type HeliosCompetentie = HeliosInput<schemas['CreateRefCompetentieDto']>;
 export type HeliosCompetentiesBoom = Partial<schemas['CompetentiesBoomResponse']>;
-
-export type HeliosGasten = gastenComponents['schemas']['view_gasten'];
-export type HeliosGastenDataset = gastenComponents['schemas']['view_gasten_dataset'];
-export type HeliosGast = gastenComponents['schemas']['oper_gast_in'];
 
 export type HeliosProgressie = HeliosInput<schemas['CreateOperProgressieDto']>;
 export type HeliosBehaaldeProgressie = HeliosGetObjects<HeliosBehaaldeProgressieDataset>;

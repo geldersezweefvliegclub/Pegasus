@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
-import { faChevronDown, faChevronUp, faInfoCircle, faStreetView } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faStreetView } from '@fortawesome/free-solid-svg-icons';
 import { Observable, of, Subscription } from 'rxjs';
 import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
 import { DagVanDeWeek, DateDiff } from '../../../utils/Utils';
@@ -9,8 +9,6 @@ import {
     HeliosAanwezigLedenDataset, HeliosBehaaldeProgressieDataset,
     HeliosDagInfosDataset,
     HeliosDienstenDataset,
-    HeliosGast,
-    HeliosGastenDataset,
     HeliosLedenDataset,
     HeliosLid,
     HeliosRoosterDataset,
@@ -23,10 +21,7 @@ import {
 } from '../../../shared/components/editors/lid-aanwezig-editor/lid-aanwezig-editor.component';
 import { LoginService } from '../../../services/apiservice/login.service';
 import { AanwezigLedenService } from '../../../services/apiservice/aanwezig-leden.service';
-import { GastenService } from '../../../services/apiservice/gasten.service';
-import { GastEditorComponent } from '../../../shared/components/editors/gast-editor/gast-editor.component';
 import { DienstenService } from '../../../services/apiservice/diensten.service';
-import { StorageService } from '../../../services/storage/storage.service';
 import { TypesService } from '../../../services/apiservice/types.service';
 import { DdwvService } from '../../../services/apiservice/ddwv.service';
 import { LedenService } from '../../../services/apiservice/leden.service';
@@ -64,7 +59,7 @@ export type HeliosAanwezigLedenDatasetExtended = HeliosAanwezigLedenDataset & {
     selector: 'app-aanmelden-page',
     templateUrl: './aanmelden-page.component.html',
     styleUrls: ['./aanmelden-page.component.scss'],
-    imports: [ErrorComponent, GastEditorComponent, IconButtonComponent, LidAanwezigEditorComponent, ModalComponent, NgSelectComponent, FormsModule, NgTemplateOutlet, PegasusCardComponent, SamenvattingComponent, FaIconComponent, RouterLink, AsyncPipe, TransactiesComponent]
+    imports: [ErrorComponent, IconButtonComponent, LidAanwezigEditorComponent, ModalComponent, NgSelectComponent, FormsModule, NgTemplateOutlet, PegasusCardComponent, SamenvattingComponent, FaIconComponent, RouterLink, AsyncPipe, TransactiesComponent]
 })
 class AanmeldenPageComponent implements OnInit, OnDestroy {
     private readonly ddwvService = inject(DdwvService);
@@ -72,9 +67,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
     private readonly loginService = inject(LoginService);
     private readonly ledenService = inject(LedenService);
     private readonly sharedService = inject(SharedService);
-    private readonly gastenService = inject(GastenService);
     private readonly roosterService = inject(RoosterService);
-    private readonly storageService = inject(StorageService);
     private readonly daginfoService = inject(DaginfoService);
     private readonly dienstenService = inject(DienstenService);
     private readonly configService = inject(PegasusConfigService);
@@ -83,15 +76,12 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
 
     private readonly bevestigAfmeldenPopup = viewChild.required(ModalComponent);
     readonly aanmeldEditor = viewChild.required(LidAanwezigEditorComponent);
-    readonly gastEditor = viewChild.required(GastEditorComponent);
     readonly samenvattingPopup = viewChild.required(SamenvattingComponent);
 
     readonly transactieScherm = viewChild.required(TransactiesComponent);
 
     readonly aanmeldenIcon: IconDefinition = faStreetView;
     readonly infoIcon: IconDefinition = faInfoCircle;
-    readonly iconDown: IconDefinition = faChevronDown;
-    readonly iconUp: IconDefinition = faChevronUp;
 
     private aanwezigLedenAbonnement: Subscription;  // Wie zijn er op welke dag aanwezig
     private resizeSubscription: Subscription;       // Abonneer op aanpassing van window grootte (of draaien mobiel)
@@ -116,18 +106,15 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
     isLoadingRooster = false;
     isLoadingDiensten = false;
     isLoadingAanwezig = false;
-    isLoadingGasten = false;
 
     aanmeldenView = "week";
     rooster: HeliosRoosterDatasetExtended[];        // rooster voor gekozen periode (dag/week/maand)
     diensten: HeliosDienstenDataset[];              // Wie hebben er dienst
     aanmeldingen: HeliosAanwezigLedenDataset[];     // De aanmeldingen
     filteredAanmeldingen: HeliosAanwezigLedenDataset[];     // De aanmeldingen na filteren
-    gasten: HeliosGastenDataset[];                  // De gasten voor de vliegdag
     dagInfo: HeliosDagInfosDataset[];               // De bijhoorende dag info
 
     toonDatumKnoppen = false;              // Mag de gebruiker een andere datum kiezen
-    toonGasten = false;
     isDDWVer = false;                      // DDWV'ers mogen geen club dagen zien
     isBeheerder = false;                   // Beheerders mogen meer zien
     isBeheerderDDWV = false;               // Beheerders mogen meer zien
@@ -189,10 +176,6 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
             this.veldTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));            // vliegvelden
         });
 
-        const toonGasten = this.storageService.ophalen("toonGasten") as boolean;
-        if (toonGasten != null) {
-            this.toonGasten = toonGasten;
-        }
 
         const competentieIDs = (this.configService.DDWVtoestemmingID() !== undefined) ? this.configService.DDWVtoestemmingID().toString() + "," + this.configService.DDWVvragenlijstID().toString() :this.configService.DDWVvragenlijstID().toString();
         this.progressieService.getProgressiesLid(this.loginService.userInfo!.LidData?.ID!, competentieIDs).then((progressie:  HeliosBehaaldeProgressieDataset[]) => {
@@ -286,12 +269,6 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
             this.UitschrijvingenDDWV(beginDatum, eindDatum);
 
         }).catch(() => this.isLoadingAanwezig = false)
-
-        this.isLoadingGasten = true;
-        this.gastenService.getGasten(false, beginDatum, eindDatum).then((gasten) => {
-            this.gasten = gasten;
-            this.isLoadingGasten = false;
-        }).catch(() => this.isLoadingGasten = false)
 
         // lid informatie hebben we alleen nodig als we ddwv kunnen aanmelden
         // Het tegoed moet dan beschikbaar zijn
@@ -458,19 +435,6 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
         this.aanmeldEditor().openPopup(lidAanwezig);
     }
 
-    // openen van windows voor aanmelden gast
-    aanmeldenGastScherm(datum: string) {
-        const aanmelding: HeliosGast = {
-            DATUM: datum
-        }
-        this.gastEditor().openPopup(aanmelding);
-    }
-
-    // open van editor voor aanmelden van een gast
-    openGastAanwezigEditor(gast: HeliosGastenDataset) {
-        this.gastEditor().openPopup(gast);
-    }
-
     // hoe breed moeten de kolommen zijn in week view
     KolomBreedte(): string {
         return `width: calc(100%/${this.rooster.length});`;
@@ -533,18 +497,6 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
             return a.ID! - b.ID!;
         })
         return aanwezig ? aanwezig : []
-    }
-
-    gastenAanwezig(dagDatum: string): HeliosGastenDataset[] {
-        if (!this.gasten) {
-            return [];
-        }
-
-        const gasten = this.gasten.filter((a: HeliosGastenDataset) => {
-            return a.DATUM == dagDatum;
-        });
-
-        return gasten ? gasten : []
     }
 
     isAangemeld(dagDatum: string): boolean {
@@ -670,12 +622,6 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
             return false;
         }
         return true;
-    }
-
-    // Moeten we de gastenlijst tonen
-    toonGastenWelNiet() {
-        this.toonGasten = !this.toonGasten;
-        this.storageService.opslaan("toonGasten", this.toonGasten, 24 * 7);   // 7 dagen
     }
 
     naarDashboard(lidAanwezig: HeliosAanwezigLedenDataset): boolean {

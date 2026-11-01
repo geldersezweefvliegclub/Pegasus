@@ -26,9 +26,6 @@ import { LoginService } from '../../../../services/apiservice/login.service';
 import { PegasusConfigService } from '../../../../services/shared/pegasus-config.service';
 import { NgbDate, NgbDateParserFormatter, NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateFRParserFormatter } from '../../../ngb-date-fr-parser-formatter';
-import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
-import { faStreetView } from '@fortawesome/free-solid-svg-icons';
-import { StorageService } from '../../../../services/storage/storage.service';
 import { TransactieEditorComponent } from '../transactie-editor/transactie-editor.component';
 import { DienstenService } from '../../../../services/apiservice/diensten.service';
 import { RoosterService } from '../../../../services/apiservice/rooster.service';
@@ -38,8 +35,6 @@ import { IconButtonComponent } from '../../icon-button/icon-button.component';
 import { FormsModule } from '@angular/forms';
 import { NgClass, AsyncPipe } from '@angular/common';
 import { LidInvoerComponent } from './lid-invoer/lid-invoer.component';
-import { GastInvoerComponent } from './gast-invoer/gast-invoer.component';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { LoaderComponent } from '../../loader/loader.component';
 
@@ -48,7 +43,7 @@ import { LoaderComponent } from '../../loader/loader.component';
     templateUrl: './start-editor.component.html',
     styleUrls: ['./start-editor.component.scss'],
     providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
-    imports: [ErrorComponent, SuccessComponent, TransactieEditorComponent, ModalComponent, IconButtonComponent, NgbInputDatepicker, FormsModule, NgClass, VliegtuigInvoerComponent, LidInvoerComponent, GastInvoerComponent, FaIconComponent, NgSelectComponent, LoaderComponent, AsyncPipe]
+    imports: [ErrorComponent, SuccessComponent, TransactieEditorComponent, ModalComponent, IconButtonComponent, NgbInputDatepicker, FormsModule, NgClass, VliegtuigInvoerComponent, LidInvoerComponent, NgSelectComponent, LoaderComponent, AsyncPipe]
 })
 
 export class StartEditorComponent implements OnInit {
@@ -58,7 +53,6 @@ export class StartEditorComponent implements OnInit {
     private readonly sharedService = inject(SharedService);
     private readonly daginfoService = inject(DaginfoService);
     private readonly roosterService = inject(RoosterService);
-    private readonly storageService = inject(StorageService);
     private readonly dienstenService = inject(DienstenService);
     private readonly configService = inject(PegasusConfigService);
     private readonly startlijstService = inject(StartlijstService);
@@ -73,11 +67,8 @@ export class StartEditorComponent implements OnInit {
     readonly vliegtuigInvoerComponent = viewChild.required(VliegtuigInvoerComponent);
     readonly transactieEditor = viewChild.required(TransactieEditorComponent);
 
-    gastIcon: IconDefinition = faStreetView;
-
     start: HeliosStart & Pick<HeliosStartDataset, 'DAGNUMMER'> = {};      // DAGNUMMER alleen om te tonen, bepaalt Helios.js zelf
     toonTranactieKnop = false;        // Moet de transactie editor geopend kunnen worden?
-    toonGastCombobox = false;
     toonVliegerNaam = false;
     toonInzittendeNaam = 0;             // 0, naam hoeft niet ingevoerd te worden
                                                 // 1, naam mag ingevoerd worden, maar ook inzittende combobox tonen
@@ -200,8 +191,6 @@ export class StartEditorComponent implements OnInit {
     }
 
     openPopup(start: HeliosStartDataset | null) {
-        this.toonGastCombobox = false;
-
         if (start) {
             // vul alvast de editor met starts uit het grid
             this.start = {
@@ -234,12 +223,9 @@ export class StartEditorComponent implements OnInit {
             else
             {
                 this.formTitel = `Start aanmaken`;
-                this.toonGastCombobox = this.storageService.ophalen("toonGastenCombo") ? this.storageService.ophalen("toonGastenCombo") as boolean : false;
-
             }
         } else {
             this.formTitel = `Start aanmaken`;
-            this.toonGastCombobox = this.storageService.ophalen("toonGastenCombo") ? this.storageService.ophalen("toonGastenCombo") as boolean : false;
 
             let veld_id: number | null | undefined = this.VliegveldID();
             let baan_id = undefined;
@@ -868,16 +854,6 @@ export class StartEditorComponent implements OnInit {
                     }
                 }
             })
-        }
-    }
-
-    // laten we de combobox zien of standaard invoerveld
-    toonGastenCombo() {
-        this.toonGastCombobox = !this.toonGastCombobox;
-
-        // alleen opslaan van status combobox als we een nieuwe invoer doen
-        if (!this.start.ID) {
-            this.storageService.opslaan("toonGastenCombo", this.toonGastCombobox, -1);
         }
     }
 

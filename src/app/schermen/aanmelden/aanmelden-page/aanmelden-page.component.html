@@ -33,7 +33,6 @@
 
         @if (!isLoadingAanwezig &&
         !isLoadingRooster &&
-        !isLoadingGasten &&
         !isLoadingDiensten) {
             <div class="box">
                 <div id="data" class="data">
@@ -54,7 +53,7 @@
 </app-pegasus-card>
 
 
-@if (isLoadingAanwezig || isLoadingRooster || isLoadingGasten || isLoadingDiensten) {
+@if (isLoadingAanwezig || isLoadingRooster || isLoadingDiensten) {
     <div class="spinnerOverlay">
     <div class="spinnerPosition">
         <span><img src="../../../../assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Data wordt geladen .....</span>
@@ -125,7 +124,7 @@
                                         @if (dagInRooster.DDWV && ddwvActief) {
                                             <div>DDWV</div>
                                         }
-                                        @if (dagInRooster.WINTER_WERK && ddwvActief) {
+                                        @if (dagInRooster.WINTER_WERK) {
                                             <div>Winterwerk</div>
                                         }
                                         @if ((!dagInRooster.DDWV || !ddwvActief) && !dagInRooster.CLUB_BEDRIJF && !dagInRooster.WINTER_WERK) {
@@ -241,62 +240,6 @@
                             </td>
                         }
                     </tr>
-                        @if (!isDDWVer) {
-                            <tr>
-                                <td colspan="8" class="gastenHeader">
-                                    <div class="d-flex justify-content-between"><b>Gasten</b>
-                                        @if (!toonGasten) {
-                                            <fa-icon [icon]='iconDown' (click)='toonGastenWelNiet()'/>
-                                        }
-                                        @if (toonGasten) {
-                                            <fa-icon [icon]='iconUp' (click)='toonGastenWelNiet()'/>
-                                        }
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    <!-- sectie met gasten lijst -->
-                        @if (toonGasten && !isDDWVer) {
-                            <tr class="gastenHeader">
-                                @for (dagInRooster of rooster; track dagInRooster.DATUM; let r = $index) {
-                                    <td>
-                                        @if (!verleden(dagInRooster.DATUM) && magTonen(dagInRooster.DATUM)) {
-                                            <div class="dagInRooster">
-                                                @if (dagInRooster.CLUB_BEDRIJF || dagInRooster.DDWV) {
-                                                    <div class="d-flex">
-                                                        <app-icon-button class='ps-1 toolbarBtn'
-                                                                iconNaam="fas UserPlus"
-                                                                (btnClicked)="aanmeldenGastScherm(dagInRooster.DATUM)"
-                                                                         btnColor='btn-primary'/>
-                                                    </div>
-                                                }
-                                            </div>
-                                        }
-                                    </td>
-                                }
-                            </tr>
-                        }
-                        @if (toonGasten && !isDDWVer) {
-                            <tr class="gastenHeader">
-                                @for (dagInRooster of rooster; track dagInRooster.DATUM; let r = $index) {
-                                    <td class="aanwezigenLijst">
-                                        @if (magTonen(dagInRooster.DATUM) && dagInRooster.CLUB_BEDRIJF || dagInRooster.DDWV) {
-                                            <div>
-                                                <table>
-                                                    @for (gast of gastenAanwezig(dagInRooster.DATUM); track gast.ID) {
-                                                        <tr>
-                                                            <td (dblclick)="openGastAanwezigEditor(gast)">
-                                                                {{ gast.NAAM }}
-                                                            </td>
-                                                        </tr>
-                                                    }
-                                                </table>
-                                            </div>
-                                        }
-                                    </td>
-                                }
-                            </tr>
-                        }
                     </thead>
                 </table>
             </div>
@@ -468,54 +411,6 @@
                                 }
                             </tr>
                         }
-                        @if (!isDDWVer && magTonen(rooster[0].DATUM) && (rooster[0].DDWV || rooster[0].CLUB_BEDRIJF)) {
-                            <tr>
-                                <td colspan="8" class="gastenHeader">
-                                    <div class="d-flex justify-content-between"><b>Gasten</b>
-                                        @if (!toonGasten) {
-                                            <fa-icon [icon]='iconDown' (click)='toonGastenWelNiet()'/>
-                                        }
-                                        @if (toonGasten) {
-                                            <fa-icon [icon]='iconUp' (click)='toonGastenWelNiet()'/>
-                                        }
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    <!-- sectie met gasten lijst -->
-                        @if (toonGasten && !isDDWVer && (rooster[0].DDWV || rooster[0].CLUB_BEDRIJF)) {
-                            <tr class="gastenHeader">
-                                <td>
-                                    @if (!verleden(rooster[0].DATUM)) {
-                                        <div class="dagInRooster">
-                                            <div class="d-flex">
-                                                <app-icon-button class='ps-1 toolbarBtn'
-                                                        tekst="Aanmelden"
-                                                        iconNaam="fas UserPlus"
-                                                        (btnClicked)="aanmeldenGastScherm(rooster[0].DATUM)"
-                                                        btnColor="btn-primary"
-                                                                 [toonKlein]='false'/>
-                                            </div>
-                                        </div>
-                                    }
-                                </td>
-                            </tr>
-                        }
-                        @if ((rooster[0].DDWV || rooster[0].CLUB_BEDRIJF) && toonGasten && !isDDWVer && magTonen(rooster[0].DATUM)) {
-                            <tr class="gastenHeader">
-                                <td class="aanwezigenLijst">
-                                    <table>
-                                        @for (gast of gastenAanwezig(rooster[0].DATUM); track gast.ID) {
-                                            <tr>
-                                                <td (dblclick)="openGastAanwezigEditor(gast)">
-                                                    {{ gast.NAAM }}
-                                                </td>
-                                            </tr>
-                                        }
-                                    </table>
-                                </td>
-                            </tr>
-                        }
                     </thead>
                 </table>
             </div>
@@ -524,6 +419,5 @@
 </ng-template>
 
 <app-lid-aanwezig-editor (opgeslagen)='opvragen()'/>
-<app-gast-editor (refresh)='opvragen()'/>
 
 <app-transacties (TransactieGedaan)='opvragenLid()'/>

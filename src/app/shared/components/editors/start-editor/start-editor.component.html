@@ -132,23 +132,10 @@
                     @if (toonVliegerNaam) {
                         <div class="namenInvullen">
                         <label for="VLIEGER_NAAM" class="form-label">Naam van de vlieger</label>
-                        <div class="d-flex flex-row">
-                            @if (!toonGastCombobox) {
-                            <input required name="vliegernaam" type="text" class="form-control" id="VLIEGER_NAAM"
-                                   [(ngModel)]="start.VLIEGERNAAM"
-                                   placeholder="Vul de volledige naam in"
-                                   min="0">
-                            } @if (toonGastCombobox) {
-                            <app-gast-invoer class="w-100"
-                                             [DATUM]="startDatum"
-                                             (gast)="start.VLIEGERNAAM = $event"
-                                             (opmerking)='start.OPMERKINGEN = $event'/>
-                        }
-                            <button class="ms-1 btn btn-noborder gastBtn" (click)="toonGastenCombo()"
-                                    [ngClass]="toonGastCombobox ? 'gastBtnAan': 'gastBtnUit'">
-                                <fa-icon [icon]='gastIcon' class='gastIcon'/>
-                            </button>
-                        </div>
+                        <input required name="vliegernaam" type="text" class="form-control" id="VLIEGER_NAAM"
+                               [(ngModel)]="start.VLIEGERNAAM"
+                               placeholder="Vul de volledige naam in"
+                               min="0">
                         </div>
                     } @if (gekozenVliegtuig?.ZITPLAATSEN === 2 && toonInzittendeNaam < 2 && !start.PAX) {
                     <div class="row my-2"
@@ -192,23 +179,10 @@
                 } @if (start.PAX || toonInzittendeNaam > 0) {
                     <div class="namenInvullen">
                         <label for="INZITTENDE_NAAM" class="form-label">Naam van de inzittende</label>
-                        <div class="d-flex flex-row">
-                            @if (!toonGastCombobox) {
-                            <input name="inzittende" type="text" class="form-control" id="INZITTENDE_NAAM"
-                                   [(ngModel)]="start.INZITTENDENAAM"
-                                   placeholder="Vul de volledige naam in"
-                                   min="0">
-                            } @if (toonGastCombobox) {
-                            <app-gast-invoer class="w-100"
-                                             [DATUM]="startDatum"
-                                             (gast)="start.INZITTENDENAAM = $event"
-                                             (opmerking)='start.EXTERNAL_ID = $event'/>
-                        }
-                            <button class="ms-1 btn btn-noborder" (click)="toonGastenCombo()"
-                                    [ngClass]="toonGastCombobox ? 'gastBtnAan': 'gastBtnUit'">
-                                <fa-icon [icon]='gastIcon' class='gastIcon'/>
-                            </button>
-                        </div>
+                        <input name="inzittende" type="text" class="form-control" id="INZITTENDE_NAAM"
+                               [(ngModel)]="start.INZITTENDENAAM"
+                               placeholder="Vul de volledige naam in"
+                               min="0">
                     </div>
                 }
                 </div>
