@@ -9,7 +9,6 @@ import {
     HeliosAanwezigLedenDataset, HeliosBehaaldeProgressieDataset,
     HeliosDagInfosDataset,
     HeliosDienstenDataset,
-    HeliosLedenDataset,
     HeliosLid,
     HeliosRoosterDataset,
     HeliosType,
@@ -23,7 +22,6 @@ import { LoginService } from '../../../services/apiservice/login.service';
 import { AanwezigLedenService } from '../../../services/apiservice/aanwezig-leden.service';
 import { DienstenService } from '../../../services/apiservice/diensten.service';
 import { TypesService } from '../../../services/apiservice/types.service';
-import { DdwvService } from '../../../services/apiservice/ddwv.service';
 import { LedenService } from '../../../services/apiservice/leden.service';
 import { TransactiesComponent } from '../../../shared/components/transacties/transacties.component';
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
@@ -39,10 +37,6 @@ import { RouterLink } from '@angular/router';
 import { ErrorComponent } from '../../../shared/components/error/error.component';
 import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
 import { PegasusCardComponent } from '../../../shared/components/pegasus-card/pegasus-card.component';
-
-export type HeliosRoosterDatasetExtended = HeliosRoosterDataset & {
-    EENHEDEN?: number
-}
 
 export interface TrancactiesDDWV {
     AANGEMELD: boolean,
@@ -62,7 +56,6 @@ export type HeliosAanwezigLedenDatasetExtended = HeliosAanwezigLedenDataset & {
     imports: [ErrorComponent, IconButtonComponent, LidAanwezigEditorComponent, ModalComponent, NgSelectComponent, FormsModule, NgTemplateOutlet, PegasusCardComponent, SamenvattingComponent, FaIconComponent, RouterLink, AsyncPipe, TransactiesComponent]
 })
 class AanmeldenPageComponent implements OnInit, OnDestroy {
-    private readonly ddwvService = inject(DdwvService);
     private readonly typesService = inject(TypesService);
     private readonly loginService = inject(LoginService);
     private readonly ledenService = inject(LedenService);
@@ -97,7 +90,6 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
 
     private typesAbonnement: Subscription;
     private magAanmeldenDDWV: boolean;
-    ddwvTypes: HeliosType[];
 
     afmeldDatumDMY: string;                         // De datum waarop we ons afmelden
     afmeldDatum: DateTime;
@@ -108,7 +100,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
     isLoadingAanwezig = false;
 
     aanmeldenView = "week";
-    rooster: HeliosRoosterDatasetExtended[];        // rooster voor gekozen periode (dag/week/maand)
+    rooster: HeliosRoosterDataset[];                // rooster voor gekozen periode (dag/week/maand)
     diensten: HeliosDienstenDataset[];              // Wie hebben er dienst
     aanmeldingen: HeliosAanwezigLedenDataset[];     // De aanmeldingen
     filteredAanmeldingen: HeliosAanwezigLedenDataset[];     // De aanmeldingen na filteren
@@ -118,7 +110,6 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
     isDDWVer = false;                      // DDWV'ers mogen geen club dagen zien
     isBeheerder = false;                   // Beheerders mogen meer zien
     isBeheerderDDWV = false;               // Beheerders mogen meer zien
-    ddwvActief = true;                     // Doen we aan een DDWV bedrijf
 
     veldTypes$: Observable<HeliosType[]>;
     vliegveld: number | undefined;                      // laat aanmeldingen van een speciek vliegveld zien
@@ -128,7 +119,6 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo?.Userinfo;
-        this.ddwvActief = this.ddwvService.actief();
         this.isDDWVer = ui!.isDDWV ?? false;
         this.isBeheerder = ui!.isBeheerder ?? false;
         this.isBeheerderDDWV = ui!.isBeheerderDDWV ?? false;
@@ -167,12 +157,8 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
             this.opvragen();
         });
 
-        // abonneer op wijziging van transactie types
+        // abonneer op wijziging van types
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
-            this.ddwvTypes = dataset!.filter((t: HeliosType) => {
-                return t.GROEP == 20
-            });
-
             this.veldTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));            // vliegvelden
         });
 
@@ -249,7 +235,6 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
         this.roosterService.getRooster(beginDatum, eindDatum).then((rooster) => {
             this.rooster = rooster;
             this.isLoadingRooster = false;
-            this.berekenStrippen();
             this.UitschrijvingenDDWV(beginDatum, eindDatum);
 
             // We hebben  diensten nodig.Startleider/instructeur mag lid status zien (en mail sturen)
@@ -263,18 +248,14 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
         this.aanwezigLedenService.getAanwezig(beginDatum, eindDatum).then((aanmeldingen) => {
             this.aanmeldingen = aanmeldingen;
             this.filter();  // filter de aanmeldingen op vliegveld
-            this.berekenStrippen();
             this.isLoadingAanwezig = false;
 
             this.UitschrijvingenDDWV(beginDatum, eindDatum);
 
         }).catch(() => this.isLoadingAanwezig = false)
 
-        // lid informatie hebben we alleen nodig als we ddwv kunnen aanmelden
-        // Het tegoed moet dan beschikbaar zijn
-        if (this.ddwvService.actief()) {
-            this.opvragenLid();
-        }
+        // lid informatie is nodig voor het tonen van het tegoed
+        this.opvragenLid();
     }
 
     UitschrijvingenDDWV(beginDatum: DateTime, eindDatum: DateTime)
@@ -292,7 +273,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
         else {
             this.aanwezigLedenService.getAanwezigVerwijderd(beginDatum, eindDatum).then((afmeldingen) => {
                 for (const afmelding of afmeldingen) {
-                    const dag: HeliosRoosterDatasetExtended = this.rooster.find(d => d.DATUM == afmelding.DATUM) as HeliosLedenDataset;
+                    const dag = this.rooster.find(d => d.DATUM == afmelding.DATUM)!;
                     // we zijn niet geintresseerd in afmeldingen bij club dagen
                     if (!dag.DDWV && dag.CLUB_BEDRIJF)
                         continue
@@ -334,44 +315,6 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
         return d[2] + '-' + d[1] + '-' + d[0];
     }
 
-    berekenStrippen() {
-        if (this.isLoadingRooster || this.isLoadingAanwezig) {
-            for (const item of this.rooster) {
-                item.EENHEDEN = -1;
-            }
-        } else {
-            for (const item of this.rooster) {
-                item.EENHEDEN = this.dagStrip(item.DATUM!);
-            }
-        }
-    }
-
-    dagStrip(datum: string): number {
-        const d = DateTime.fromSQL(datum);
-        const clubVlieger = this.loginService.userInfo?.Userinfo?.isClubVlieger;    // is DDWVer
-
-        if (!this.ddwvService.actief()) return -1; // als er geen DDWV bedrijf is, hebben we niets met strippen te maken
-
-        if (this.isAangemeld(datum)) {  // als we al aangemeld zijn, zijn strippen niet meer relevant
-            return -1
-        }
-        const roosterDag = this.rooster.find((r: HeliosRoosterDataset) => {
-            return r.DATUM == datum
-        });
-
-        if (!roosterDag) return -1;
-        if (!roosterDag.DDWV) return -1;
-        if (roosterDag.CLUB_BEDRIJF && clubVlieger) return -1;
-
-        const typeID = this.ddwvService.getTransactieTypeID(d);
-        const transactie = this.ddwvTypes.find((t: HeliosType) => {
-            return t.ID == typeID
-        });
-
-        if (!transactie) return -1;
-        return Math.abs(transactie.EENHEDEN!)
-    }
-
     // toon popup dat de gebruiker zich wil afmelden voor de vliegdag
     afmeldenPopup(datum: string) {
         const d = datum.split('-');
@@ -411,7 +354,6 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
     // openen van windows voor aanmelden vlieger
     aanmeldenLidScherm(datum: string) {
         const rooster = this.rooster.find((r) => r.DATUM == datum);
-        const strippen = (this.ddwvService.actief() && rooster && rooster.EENHEDEN! > 0) ? rooster.EENHEDEN : undefined;
 
         const lidData = this.loginService.userInfo!.LidData!
         const aanmelding: HeliosAanwezigLedenDataset = {
@@ -425,7 +367,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
             this.aanwezigLedenService.aanmelden(aanmelding).then(() => this.opvragen(true))
         }
         else {
-            this.aanmeldEditor().openPopup(aanmelding, strippen);
+            this.aanmeldEditor().openPopup(aanmelding);
         }
 
     }
@@ -590,20 +532,6 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
             }
         }
 
-        // Bij een DDWV bedrijf moeten we ook naar het tegoed van de vlieger kijken
-        if (this.ddwvService.actief()) {
-            if (!this.lid) { // we weten niet hoeveel saldo het lid heeft om dat lid data onbekend is
-                console.log(dagDatum, "lid onbekend");
-                return false;
-            }
-
-            if (!this.rooster[idx].CLUB_BEDRIJF) {
-                if ((this.rooster[idx].EENHEDEN! > 0) && (this.rooster[idx].EENHEDEN! > this.lid.TEGOED!)) {
-                    console.log(dagDatum, "onvoldoende saldo");
-                    return false;
-                }
-            }
-        }
         return true;
     }
 
@@ -724,7 +652,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
 
     protected readonly DateDiff = DateDiff;
 
-    TypeBedrijf(DATUM: string, dagInRooster: HeliosRoosterDatasetExtended): string {
+    TypeBedrijf(DATUM: string, dagInRooster: HeliosRoosterDataset): string {
         const tbc = this.TypeBedrijfClass(DATUM, dagInRooster)
         switch (tbc) {
             case "geenBedrijf": return "Onvoldoende aanmeldingen";
@@ -735,7 +663,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
     }
 
 
-    TypeBedrijfClass(DATUM: string, dagInRooster: HeliosRoosterDatasetExtended): string {
+    TypeBedrijfClass(DATUM: string, dagInRooster: HeliosRoosterDataset): string {
         if (this.aanmeldingen === undefined) {
             return "geenBedrijf";
         }

@@ -17,7 +17,6 @@ import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faCalendarCheck, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { DateTime } from 'luxon';
 import { DienstEditorComponent } from '../../../shared/components/editors/dienst-editor/dienst-editor.component';
-import { DdwvService } from '../../../services/apiservice/ddwv.service';
 import {
     UitbetalenDdwvCrewEditorComponent,
 } from '../../../shared/components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component';
@@ -33,7 +32,6 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
     imports: [UitbetalenDdwvCrewEditorComponent, IconButtonComponent, FormsModule, NgTemplateOutlet, NgClass, FaIconComponent, DienstEditorComponent]
 })
 export class RoosterDagviewComponent implements OnInit, OnDestroy {
-    private readonly ddwvService = inject(DdwvService);
     private readonly loginService = inject(LoginService);
     private readonly typesService = inject(TypesService);
     private readonly roosterService = inject(RoosterService);
@@ -58,7 +56,6 @@ export class RoosterDagviewComponent implements OnInit, OnDestroy {
     private typesAbonnement: Subscription;
     dienstTypes: HeliosType[] = [];
 
-    ddwvActief = true;
     isBeheerder: boolean;
     isBeheerderDDWV: boolean;
     magWijzigen = false;
@@ -81,7 +78,6 @@ export class RoosterDagviewComponent implements OnInit, OnDestroy {
             });    // type diensten
         });
 
-        this.ddwvActief = this.ddwvService.actief();
     }
 
     ngOnDestroy(): void {

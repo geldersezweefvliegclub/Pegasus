@@ -1456,22 +1456,6 @@ export interface paths {
         patch: operations["RoosterController_RestoreObject"];
         trace?: never;
     };
-    "/DDWV/GetConfiguratie": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["DdwvController_getConfiguratie"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/Diensten/GetObject": {
         parameters: {
             query?: never;
@@ -4193,7 +4177,7 @@ export interface components {
             /**
              * Format: date-time
              * @description Tijdstempel wanneer de progressie is afgetekend
-             * @default 2026-11-01T18:07:05.344Z
+             * @default 2026-11-01T20:10:32.976Z
              */
             INGEVOERD?: string | null;
             /**
@@ -4249,7 +4233,7 @@ export interface components {
             /**
              * Format: date-time
              * @description Tijdstempel wanneer de progressie is afgetekend
-             * @default 2026-11-01T18:07:05.346Z
+             * @default 2026-11-01T20:10:32.977Z
              */
             INGEVOERD?: string | null;
             /**
@@ -6222,22 +6206,6 @@ export interface components {
              */
             LAATSTE_AANPASSING?: string;
         };
-        DDWVConfiguratie: {
-            /** @description Is er een DDWV bedrijf actief */
-            DDWV: boolean;
-            /** @description Begindatum van het DDWV seizoen */
-            START: string;
-            /** @description Einddatum van het DDWV seizoen */
-            EIND: string;
-            /** @description Maximaal aantal strippen dat een DDWV'er mag hebben */
-            MAX_STRIPPEN: number;
-            /** @description Aantal strippen dat retour gaat als de vliegdag doorgaat */
-            STRIPPEN_RETOUR_OP_VLIEGDAG: number;
-            /** @description Transactie type ID per aantal dagen voor de vliegdag, met 'default' als terugval */
-            TARIEVEN?: {
-                [key: string]: number;
-            };
-        };
         GetOperDienstenResponse: {
             /**
              * Format: int32
@@ -6833,7 +6801,7 @@ export interface components {
             /**
              * Format: date-time
              * @description Tijdstempel met de laatste wijziging van het record
-             * @default 2026-11-01T18:07:05.633Z
+             * @default 2026-11-01T20:10:33.061Z
              */
             LAATSTE_AANPASSING?: string;
         };
@@ -6879,7 +6847,7 @@ export interface components {
             /**
              * Format: date-time
              * @description Tijdstempel met de laatste wijziging van het record
-             * @default 2026-11-01T18:07:05.635Z
+             * @default 2026-11-01T20:10:33.061Z
              */
             LAATSTE_AANPASSING?: string;
         };
@@ -7161,7 +7129,7 @@ export interface components {
             /**
              * Format: date-time
              * @description Datum van het journaal
-             * @default 2026-11-01T18:07:05.654Z
+             * @default 2026-11-01T20:10:33.067Z
              */
             DATUM?: string;
             /**
@@ -7224,7 +7192,7 @@ export interface components {
             /**
              * Format: date-time
              * @description Datum van het journaal
-             * @default 2026-11-01T18:07:05.656Z
+             * @default 2026-11-01T20:10:33.068Z
              */
             DATUM?: string;
             /**
@@ -8263,7 +8231,7 @@ export interface components {
             /**
              * Format: date-time
              * @description Datum van aanmaken van de transactie
-             * @default 2026-11-01T18:07:05.724Z
+             * @default 2026-11-01T20:10:33.088Z
              */
             DATUM?: string;
             /**
@@ -8345,7 +8313,7 @@ export interface components {
             /**
              * Format: date-time
              * @description Datum van aanmaken van de transactie
-             * @default 2026-11-01T18:07:05.726Z
+             * @default 2026-11-01T20:10:33.088Z
              */
             DATUM?: string;
             /**
@@ -8853,7 +8821,7 @@ export interface components {
             /**
              * Format: date-time
              * @description Tijdstempel wanneer de track is ingevoerd
-             * @default 2026-11-01T18:07:05.759Z
+             * @default 2026-11-01T20:10:33.099Z
              */
             INGEVOERD?: string | null;
             /**
@@ -8894,7 +8862,7 @@ export interface components {
             /**
              * Format: date-time
              * @description Tijdstempel wanneer de track is ingevoerd
-             * @default 2026-11-01T18:07:05.761Z
+             * @default 2026-11-01T20:10:33.099Z
              */
             INGEVOERD?: string | null;
             /**
@@ -14203,26 +14171,6 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
-            };
-        };
-    };
-    DdwvController_getConfiguratie: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description DDWV configuratie */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["DDWVConfiguratie"];
-                };
             };
         };
     };

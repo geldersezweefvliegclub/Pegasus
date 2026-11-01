@@ -109,7 +109,7 @@
                                             <div class="me-2"
                                                  style="white-space: nowrap;">{{ datumDMY(dagInRooster.DATUM) }}
                                             </div>
-                                            @if (!isDDWVer && (dagInRooster.DDWV && ddwvActief) || dagInRooster.CLUB_BEDRIJF) {
+                                            @if (!isDDWVer && dagInRooster.DDWV || dagInRooster.CLUB_BEDRIJF) {
                                                 <fa-icon class="infoIcon clickable" [icon]="infoIcon" placement="right"
                                                          (click)='samenvatting(dagInRooster)'/>
                                             }
@@ -121,13 +121,13 @@
                                         @if (dagInRooster.CLUB_BEDRIJF) {
                                             <div class="me-2">Clubbedrijf</div>
                                         }
-                                        @if (dagInRooster.DDWV && ddwvActief) {
+                                        @if (dagInRooster.DDWV) {
                                             <div>DDWV</div>
                                         }
                                         @if (dagInRooster.WINTER_WERK) {
                                             <div>Winterwerk</div>
                                         }
-                                        @if ((!dagInRooster.DDWV || !ddwvActief) && !dagInRooster.CLUB_BEDRIJF && !dagInRooster.WINTER_WERK) {
+                                        @if (!dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF && !dagInRooster.WINTER_WERK) {
                                             <div>Geen activiteiten</div>
                                         }
                                     </div>
@@ -140,13 +140,13 @@
                             <td>
                                 @if (magTonen(dagInRooster.DATUM)) {
                                     <div>
-                                        @if (!dagInRooster.CLUB_BEDRIJF && dagInRooster.DDWV && ddwvActief && dagInfoDefaultStartMetode(dagInRooster.DATUM)) {
+                                        @if (!dagInRooster.CLUB_BEDRIJF && dagInRooster.DDWV && dagInfoDefaultStartMetode(dagInRooster.DATUM)) {
                                             <div
                                                     [ngClass] class="aanmeldingen">
                                                 {{ dagInfoDefaultStartMetode(dagInRooster.DATUM) }}
                                             </div>
                                         }
-                                        @if (!dagInRooster.CLUB_BEDRIJF && dagInRooster.DDWV && ddwvActief && !dagInfoDefaultStartMetode(dagInRooster.DATUM)) {
+                                        @if (!dagInRooster.CLUB_BEDRIJF && dagInRooster.DDWV && !dagInfoDefaultStartMetode(dagInRooster.DATUM)) {
                                             <div
                                                     [ngClass]="TypeBedrijfClass(dagInRooster.DATUM, dagInRooster)">
                                                 {{ TypeBedrijf(dagInRooster.DATUM, dagInRooster) }}
@@ -297,17 +297,17 @@
                                 @if (rooster[0].CLUB_BEDRIJF && rooster[0].DDWV) {
                                     <div class="me-2">&</div>
                                 }
-                                @if (rooster[0].DDWV && ddwvActief) {
+                                @if (rooster[0].DDWV) {
                                     <div>DDWV</div>
                                 }
                                 @if (rooster[0].WINTER_WERK) {
                                     <div>Winterwerk</div>
                                 }
-                                @if ((!rooster[0].DDWV || !ddwvActief) && !rooster[0].CLUB_BEDRIJF && !rooster[0].WINTER_WERK) {
+                                @if (!rooster[0].DDWV && !rooster[0].CLUB_BEDRIJF && !rooster[0].WINTER_WERK) {
                                     <div>Geen activiteiten</div>
                                 }
 
-                                @if (!isDDWVer && (rooster[0].DDWV && ddwvActief) || rooster[0].CLUB_BEDRIJF) {
+                                @if (!isDDWVer && rooster[0].DDWV || rooster[0].CLUB_BEDRIJF) {
                                     <fa-icon class="infoIcon clickable" [icon]="infoIcon" placement="right"
                                              (click)='samenvatting(rooster[0])'/>
                                 }
@@ -315,7 +315,7 @@
 
                         </td>
                     </tr>
-                        @if (ddwvActief && magTonen(rooster[0].DATUM) && rooster[0].DDWV && !rooster[0].CLUB_BEDRIJF) {
+                        @if (magTonen(rooster[0].DATUM) && rooster[0].DDWV && !rooster[0].CLUB_BEDRIJF) {
                             <tr>
                                 <td>
                                     <div [ngClass]="TypeBedrijfClass(rooster[0].DATUM, rooster[0])">

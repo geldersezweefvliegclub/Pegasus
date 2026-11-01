@@ -65,16 +65,14 @@
                                 <div class="text-nowrap fw-bold">
                                     {{ dagInRooster.DATUM | date: 'dd-MM-yyyy' }}
                                 </div>
-                                @if (ddwvActief) {
-                                    <div>
-                                        <input type="checkbox" class="form-check-inline" [id]="'DDWV' + i"
-                                               [name]="'DDWV' + i"
-                                               [(ngModel)]="dagInRooster.DDWV"
-                                               (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
-                                               [disabled]="!magWijzigen && !isCIMT && !isBeheerderDDWV">
-                                        <label [for]="'DDWV' + i" class="form-check-label">DDWV</label>
-                                    </div>
-                                }
+                                <div>
+                                    <input type="checkbox" class="form-check-inline" [id]="'DDWV' + i"
+                                           [name]="'DDWV' + i"
+                                           [(ngModel)]="dagInRooster.DDWV"
+                                           (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
+                                           [disabled]="!magWijzigen && !isCIMT && !isBeheerderDDWV">
+                                    <label [for]="'DDWV' + i" class="form-check-label">DDWV</label>
+                                </div>
                                 <div class="text-nowrap">
                                     <input type="checkbox" class="form-check-inline"
                                            [id]="'Clubbedrijf' + i"

@@ -60,11 +60,7 @@
     }
     <div footer class="w-100">
         <div class="d-flex justify-content-between">
-            @if (eenheden) {
-                <div>Er worden {{ eenheden }} strippen afgeschreven</div>
-            } @if (!eenheden) {
-            <div>&nbsp;</div>
-        } <!-- zet de opslaan knop op rechts -->
+            <div>&nbsp;</div> <!-- zet de opslaan knop op rechts -->
             @if (!isLoading && !isSaving) {
                 <app-icon-button iconNaam="fas Edit" btnColor="btn-primary" [toonKlein]=false
                                  tekst='Opslaan' (btnClicked)='opslaan()' [disabled]='knopUit()'/>

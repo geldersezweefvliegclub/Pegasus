@@ -27,7 +27,6 @@ import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faCalendarCheck, faSortAmountDownAlt, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { DateTime } from 'luxon';
 import { SharedService } from '../../../services/shared/shared.service';
-import { DdwvService } from '../../../services/apiservice/ddwv.service';
 import {
   UitbetalenDdwvCrewEditorComponent,
 } from '../../../shared/components/editors/uitbetalen-ddwv-crew-editor/uitbetalen-ddwv-crew-editor.component';
@@ -45,7 +44,6 @@ import { AvatarComponent } from '../../../shared/components/avatar/avatar.compon
     imports: [JaarTotalenComponent, UitbetalenDdwvCrewEditorComponent, NgClass, FormsModule, CdkDropList, CdkDrag, NgTemplateOutlet, IconButtonComponent, FaIconComponent, CdkDragPreview, CdkDragPlaceholder, AvatarComponent, DecimalPipe, DatePipe]
 })
 export class RoosterMaandviewComponent implements OnInit, OnDestroy {
-    private readonly ddwvService = inject(DdwvService);
     private readonly loginService = inject(LoginService);
     private readonly typesService = inject(TypesService);
     protected readonly sharedService = inject(SharedService);
@@ -78,7 +76,6 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
     isBeheerder: boolean;
     isBeheerderDDWV: boolean;
     magWijzigen = false;
-    ddwvActief = true;
     dragDisabled = true;
 
     opslaanTimer: number;
@@ -103,7 +100,6 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
             });    // type diensten
         });
 
-        this.ddwvActief = this.ddwvService.actief();
     }
 
     ngOnDestroy(): void {

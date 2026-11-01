@@ -16,7 +16,6 @@ export type HeliosInput<T> = { [K in keyof T]?: T[K] | null };
 export type HeliosUserinfo = Partial<schemas['UserInfo']>;
 export type HeliosLidData = schemas['RefLidDto'];
 
-export type HeliosConfigDDWV = schemas['DDWVConfiguratie'];
 
 export type HeliosAanwezigVliegtuigen = HeliosGetObjects<HeliosAanwezigVliegtuigenDataset>;
 export type HeliosAanwezigVliegtuigenDataset = Partial<schemas['GetObjectsOperAanwezigVliegtuigenResponse']>;

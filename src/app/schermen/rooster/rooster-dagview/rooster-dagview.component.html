@@ -26,16 +26,14 @@
                 <thead>
                 <tr style="vertical-align: top;">
                     <td class="dagInRooster">
-                        @if (ddwvActief) {
-                            <div>
-                                <input type="checkbox" class="form-check-inline" id="DDWV"
-                                       name="DDWV"
-                                       [(ngModel)]="rooster[0].DDWV"
-                                       (ngModelChange)="opslaanRooster(rooster[0].DATUM)"
-                                       [disabled]="!magWijzigen && !isCIMT && !isBeheerderDDWV">
-                                <label for="DDWV" class="form-check-label">DDWV</label>
-                            </div>
-                        }
+                        <div>
+                            <input type="checkbox" class="form-check-inline" id="DDWV"
+                                   name="DDWV"
+                                   [(ngModel)]="rooster[0].DDWV"
+                                   (ngModelChange)="opslaanRooster(rooster[0].DATUM)"
+                                   [disabled]="!magWijzigen && !isCIMT && !isBeheerderDDWV">
+                            <label for="DDWV" class="form-check-label">DDWV</label>
+                        </div>
                         <div class="text-nowrap">
                             <input type="checkbox" class="form-check-inline"
                                    id="Clubbedrijf"

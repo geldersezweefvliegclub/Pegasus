@@ -40,7 +40,6 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
     aanwezig: HeliosAanwezigLedenDataset;
-    eenheden: number | undefined;
 
     isDDWVer = false;
     isLoading = false;
@@ -88,13 +87,12 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
     }
 
     // open popup, maar haal eerst de aanwezigheid op.
-    openPopup(record: HeliosAanwezigLedenDataset, strippen: number | undefined = undefined) {
+    openPopup(record: HeliosAanwezigLedenDataset) {
         this.isSaving = false;
         const ui = this.loginService.userInfo;
         this.isDDWVer = ui!.Userinfo!.isDDWV!;
 
         this.aanwezig = record;
-        this.eenheden = strippen;
 
         if (this.isDDWVer) {
             this.vliegtuigenFiltered = this.vliegtuigen.filter((v) => v.CLUBKIST == false);

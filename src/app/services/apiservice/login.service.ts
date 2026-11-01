@@ -5,7 +5,6 @@ import { HeliosUserinfo } from '../../types/Helios';
 import { StorageService } from '../storage/storage.service';
 import { SharedService } from '../shared/shared.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { DdwvService } from './ddwv.service';
 import { KeyValueArray } from '../../types/Utils';
 
 interface BearerToken {
@@ -25,7 +24,6 @@ type LoginResponse = BearerToken | HeliosJsLoginResponse;
 
 export class LoginService  {
     private readonly apiService = inject(APIService);
-    private readonly ddwwService = inject(DdwvService);
     private readonly sharedService = inject(SharedService);
     private readonly storageService = inject(StorageService);
 
@@ -84,7 +82,6 @@ export class LoginService  {
             this.apiService.setBearerToken(bearerToken);
 
             await this.getUserInfo();
-            await this.ddwwService.loadConfigDDWV();
             this.successEmit();
 
             return this.userInfo!.LidData!.ID;

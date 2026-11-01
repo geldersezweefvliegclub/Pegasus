@@ -22,7 +22,6 @@ import { TypesService } from '../../../services/apiservice/types.service';
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
 import { getBeginEindDatumVanMaand } from '../../../utils/Utils';
 import { KeyValueArray } from '../../../types/Utils';
-import { DdwvService } from '../../../services/apiservice/ddwv.service';
 import { PegasusCardComponent } from '../../../shared/components/pegasus-card/pegasus-card.component';
 import { CdkDropListGroup } from '@angular/cdk/drag-drop';
 import { RoosterMaandviewComponent } from '../rooster-maandview/rooster-maandview.component';
@@ -61,7 +60,6 @@ export interface WeergaveData {
     imports: [PegasusCardComponent, CdkDropListGroup, RoosterMaandviewComponent, RoosterWeekviewComponent, RoosterDagviewComponent, IconButtonComponent, ZoekbarComponent, LedenFilterComponent]
 })
 export class RoosterPageComponent implements OnInit, OnDestroy {
-    private readonly ddwvService = inject(DdwvService);
     private readonly loginService = inject(LoginService);
     private readonly ledenService = inject(LedenService);
     private readonly typesService = inject(TypesService);
@@ -96,7 +94,6 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
     private datumAbonnement: Subscription;          // volg de keuze van de kalender
     datum: DateTime = DateTime.now();               // de gekozen dag
     maandag: DateTime                               // de eerste dag van de week
-    ddwvActief = true;
 
 
     protected tonen: WeergaveData = {                 // Welke diensten worden wel/niet getoond
@@ -212,7 +209,6 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             this.opvragen();
         });
 
-        this.ddwvActief = this.ddwvService.actief();
     }
 
     ngOnDestroy(): void {
@@ -470,12 +466,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
 
     // welke dagen willen we laten zien, DDWV'ers kunnen alleen DDWV dagen zien
     ToggleWeekendDDWV() {
-        if (this.ddwvActief) {
-            this.tonen.toonClubDDWV = ++this.tonen.toonClubDDWV % 3;
-        }
-        else {
-            this.tonen.toonClubDDWV = ++this.tonen.toonClubDDWV % 2;    // DDWV is niet actief, dus niet tonen
-        }
+        this.tonen.toonClubDDWV = ++this.tonen.toonClubDDWV % 3;
         this.applyRoosterFilter();
     }
 
@@ -503,10 +494,8 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
 
         // op DDWV dagen mag de DDWV crew zichzelf indelen
         // Sleep vlieger mogen zichzelf ook op DDWV dagen indelen, ze zijn geen DDWWV crew
-        if (this.ddwvService.actief()) {
-            if (rooster.DDWV && !rooster.CLUB_BEDRIJF && dienstType != this.configService.SLEEPVLIEGER_TYPE_ID) {
-                return ui!.Userinfo!.isDDWVCrew!;
-            }
+        if (rooster.DDWV && !rooster.CLUB_BEDRIJF && dienstType != this.configService.SLEEPVLIEGER_TYPE_ID) {
+            return ui!.Userinfo!.isDDWVCrew!;
         }
 
         switch (dienstType) {
