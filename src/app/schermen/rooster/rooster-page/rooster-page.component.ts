@@ -46,7 +46,6 @@ export interface WeergaveData {
     Lieristen: boolean;
     LIO: boolean;
     Sleepvliegers: boolean;
-    GastenVliegers: boolean;
     DDWV: boolean;
 
     toonTotalen: boolean;
@@ -106,7 +105,6 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         Lieristen: true,
         LIO: true,
         Sleepvliegers: true,
-        GastenVliegers: true,
         DDWV: true,
 
         toonTotalen: true,
@@ -151,8 +149,6 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         this.tonen.toonDienst[this.configService.OCHTEND_HULPLIERIST_TYPE_ID] = this.toonDienst(this.configService.OCHTEND_HULPLIERIST_TYPE_ID);
         this.tonen.toonDienst[this.configService.MIDDAG_HULPLIERIST_TYPE_ID] = this.toonDienst(this.configService.MIDDAG_HULPLIERIST_TYPE_ID);
         this.tonen.toonDienst[this.configService.SLEEPVLIEGER_TYPE_ID] = this.toonDienst(this.configService.SLEEPVLIEGER_TYPE_ID);
-        this.tonen.toonDienst[this.configService.GASTEN_VLIEGER1_TYPE_ID] = this.toonDienst(this.configService.GASTEN_VLIEGER1_TYPE_ID);
-        this.tonen.toonDienst[this.configService.GASTEN_VLIEGER2_TYPE_ID] = this.toonDienst(this.configService.GASTEN_VLIEGER2_TYPE_ID);
 
         this.tonen.toonTotalen = (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isCIMT || ui?.Userinfo?.isRooster) ? true : false;
 
@@ -339,7 +335,6 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
         this.tonen.Lieristen = false;
         this.tonen.LIO = false;
         this.tonen.Sleepvliegers = false;
-        this.tonen.GastenVliegers = false;
         this.tonen.DDWV = false;
 
         // als er geen filters zijn, dan tonen we alles
@@ -348,7 +343,6 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             !this.sharedService.ledenlijstFilter.lio &&
             !this.sharedService.ledenlijstFilter.instructeurs &&
             !this.sharedService.ledenlijstFilter.sleepvliegers &&
-            !this.sharedService.ledenlijstFilter.gastenVliegers &&
             !this.sharedService.ledenlijstFilter.crew) {
             toonAlles = true;
         }
@@ -359,7 +353,6 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             this.tonen.Lieristen = true;
             this.tonen.LIO = true;
             this.tonen.Sleepvliegers = true;
-            this.tonen.GastenVliegers = true;
         } else {      // aha, er zijn wel filters gezet
             if (this.sharedService.ledenlijstFilter.startleiders) {
                 this.tonen.Startleiders = true;
@@ -376,9 +369,6 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             if (this.sharedService.ledenlijstFilter.sleepvliegers) {
                 this.tonen.Sleepvliegers = true;
             }
-            if (this.sharedService.ledenlijstFilter.gastenVliegers) {
-                this.tonen.GastenVliegers = true;
-            }
             if (this.sharedService.ledenlijstFilter.crew) {
                 this.tonen.DDWV = true;
             }
@@ -393,8 +383,7 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
                     item.STARTLEIDER == true ||
                     item.LIERIST == true ||
                     item.LIERIST_IO == true  ||
-                    item.SLEEPVLIEGER == true ||
-                    item.GASTENVLIEGER == true)
+                    item.SLEEPVLIEGER == true)
                 {
                     tonen = true;
                 }
@@ -409,8 +398,6 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             } else if (this.sharedService.ledenlijstFilter.crew && item.DDWV_CREW == true) {
                 tonen = true;
             } else if (this.sharedService.ledenlijstFilter.sleepvliegers && item.SLEEPVLIEGER == true) {
-                tonen = true;
-            } else if (this.sharedService.ledenlijstFilter.gastenVliegers && item.GASTENVLIEGER == true) {
                 tonen = true;
             }
 
@@ -555,14 +542,6 @@ export class RoosterPageComponent implements OnInit, OnDestroy {
             case this.configService.MIDDAG_HULPLIERIST_TYPE_ID:
             {
                 if (ui!.LidData!.LIERIST_IO == false) {
-                    return false;
-                }
-                break;
-            }
-            case this.configService.GASTEN_VLIEGER1_TYPE_ID:
-            case this.configService.GASTEN_VLIEGER2_TYPE_ID:
-            {
-                if (ui!.LidData!.GASTENVLIEGER == false) {
                     return false;
                 }
                 break;

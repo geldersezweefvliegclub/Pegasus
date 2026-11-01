@@ -36,11 +36,6 @@
                 <th scope="col"
                     [style]="KolomBreedte()">Hulplierist
                 </th>
-            } @if ((tonen.toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID] || tonen.toonDienst[configService.GASTEN_VLIEGER2_TYPE_ID]) && tonen.GastenVliegers && tonen.toonClubDDWV !== 2) {
-                <th scope="col"
-                    [style]="KolomBreedte()">
-                    Gastenvlieger
-                </th>
             } @if ((tonen.toonDienst[configService.SLEEPVLIEGER_TYPE_ID]) && tonen.Sleepvliegers) {
                 <th scope="col"
                     [style]="KolomBreedte()">
@@ -456,65 +451,6 @@
                         </div>
                     }
                     </td>
-                } @if ((tonen.toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID] ||
-                    tonen.toonDienst[configService.GASTEN_VLIEGER2_TYPE_ID]) && tonen.GastenVliegers && tonen.toonClubDDWV !== 2) {
-                    <td>
-                        @if (dagInRooster.CLUB_BEDRIJF && tonen.toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID]) {
-                            <div class="d-flex"
-                            >
-                                <div
-                                        class="drop-container"
-                                        [ngClass]="lidInRoosterClass()(dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID])"
-                                        cdkDropList
-                                        [id]="dagInRooster.DATUM + ',' + configService.GASTEN_VLIEGER1_TYPE_ID"
-                                        (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.GASTEN_VLIEGER1_TYPE_ID);"
-                                        [cdkDropListData]="dagInRooster"
-                                        [cdkDropListEnterPredicate]="gastVliegerEvaluatie.bind(this, dagInRooster.DATUM, configService.GASTEN_VLIEGER1_TYPE_ID)">
-                                    <div cdkDrag [cdkDragDisabled]="dragDisabled">
-                                {{ (dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID]) ? dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID].NAAM : "" }}
-                                    </div>
-                                </div>
-                                @if (zelfIndelen()(configService.GASTEN_VLIEGER1_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID]) {
-                                    <div
-                                            (click)="toekennenDienst(dagInRooster, configService.GASTEN_VLIEGER1_TYPE_ID, mijnID, mijnNaam)">
-                                        <ng-template *ngTemplateOutlet='assign'/>
-                                    </div>
-                                } @if (magVerwijderen()(dagInRooster.Diensten[configService.GASTEN_VLIEGER1_TYPE_ID])) {
-                                <div
-                                        (click)="verwijderDienst(dagInRooster, configService.GASTEN_VLIEGER1_TYPE_ID)">
-                                    <ng-template *ngTemplateOutlet='reset'/>
-                                </div>
-                            }
-                            </div>
-                        } @if (dagInRooster.CLUB_BEDRIJF && tonen.toonDienst[configService.GASTEN_VLIEGER2_TYPE_ID]) {
-                        <div class="d-flex"
-                        >
-                            <div
-                                    class="drop-container"
-                                    [ngClass]="lidInRoosterClass()(dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID])"
-                                    cdkDropList
-                                    [id]="dagInRooster.DATUM + ',' + configService.GASTEN_VLIEGER2_TYPE_ID"
-                                    (cdkDropListDropped)="onDropInRooster($event, dagInRooster, configService.GASTEN_VLIEGER2_TYPE_ID);"
-                                    [cdkDropListData]="dagInRooster"
-                                    [cdkDropListEnterPredicate]="gastVliegerEvaluatie.bind(this, dagInRooster.DATUM, configService.GASTEN_VLIEGER2_TYPE_ID)">
-                                <div cdkDrag [cdkDragDisabled]="dragDisabled">
-                                {{ (dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID]) ? dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID].NAAM : "" }}
-                                </div>
-                            </div>
-                            @if (zelfIndelen()(configService.GASTEN_VLIEGER2_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID]) {
-                                <div
-                                        (click)="toekennenDienst(dagInRooster, configService.GASTEN_VLIEGER2_TYPE_ID, mijnID, mijnNaam)">
-                                    <ng-template *ngTemplateOutlet='assign'/>
-                                </div>
-                            } @if (magVerwijderen()(dagInRooster.Diensten[configService.GASTEN_VLIEGER2_TYPE_ID])) {
-                            <div
-                                    (click)="verwijderDienst(dagInRooster, configService.GASTEN_VLIEGER2_TYPE_ID)">
-                                <ng-template *ngTemplateOutlet='reset'/>
-                            </div>
-                        }
-                        </div>
-                    }
-                    </td>
                 } @if (tonen.toonDienst[configService.SLEEPVLIEGER_TYPE_ID] && tonen.Sleepvliegers) {
                     <td>
                         @if (dagInRooster.CLUB_BEDRIJF || dagInRooster.DDWV) {
@@ -644,8 +580,6 @@
                                 <span>Instructeur </span>
                             } @if (lid.SLEEPVLIEGER) {
                                 <span>Sleepvlieger </span>
-                            } @if (lid.GASTENVLIEGER) {
-                                <span>Gastenvlieger </span>
                             }
                             </p>
                         </div>
@@ -683,8 +617,6 @@
             <span>Instructeur </span>
         } @if (lid.SLEEPVLIEGER) {
             <span>Sleepvlieger </span>
-        } @if (lid.GASTENVLIEGER) {
-            <span>Gastenvlieger </span>
         }
         </p>
 

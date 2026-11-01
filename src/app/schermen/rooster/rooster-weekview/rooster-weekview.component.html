@@ -174,20 +174,6 @@
                         </td>
                     }
                 </tr>
-            } @if ((tonen().toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID] || tonen().toonDienst[configService.GASTEN_VLIEGER2_TYPE_ID]) && tonen().GastenVliegers && tonen().toonClubDDWV !== 2) {
-                <tr>
-                    <td class="dienstType">Gasten vlieger</td>
-                    @for (dagInRooster of rooster; track dagInRooster.DATUM; let i = $index) {
-                        <td class="dagInRooster" [style]="KolomBreedte()">
-                            @if (dagInRooster.CLUB_BEDRIJF) {
-                                <div>
-                                    <ng-container [ngTemplateOutlet]="roosterDienst"
-                                                  [ngTemplateOutletContext]='{dag:dagInRooster, typeDienst: [ configService.GASTEN_VLIEGER1_TYPE_ID, configService.GASTEN_VLIEGER2_TYPE_ID]}'/>
-                                </div>
-                            }
-                        </td>
-                    }
-                </tr>
             } @if (tonen().toonDienst[configService.SLEEPVLIEGER_TYPE_ID] && tonen().Sleepvliegers) {
                 <tr>
                     <td class="dienstType">Sleepvlieger</td>

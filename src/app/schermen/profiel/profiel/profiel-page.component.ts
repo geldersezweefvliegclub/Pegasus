@@ -2,10 +2,8 @@ import { Component, inject } from '@angular/core';
 import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateFRParserFormatter } from '../../../shared/ngb-date-fr-parser-formatter';
 import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
-import { StorageService } from '../../../services/storage/storage.service';
 import { ActivatedRoute } from '@angular/router';
 import { LoginService } from '../../../services/apiservice/login.service';
-import { HeliosUserinfo } from '../../../types/Helios';
 import { LidEditorComponent } from '../../../shared/components/editors/lid-editor/lid-editor.component';
 
 @Component({
@@ -17,7 +15,6 @@ import { LidEditorComponent } from '../../../shared/components/editors/lid-edito
 })
 export class ProfielPageComponent {
     private readonly loginService = inject(LoginService);
-    private readonly storageService = inject(StorageService);
     private readonly activatedRoute = inject(ActivatedRoute);
 
     lidID: number;
@@ -47,7 +44,7 @@ export class ProfielPageComponent {
                     }
                 }
             } else {
-                this.lidID = (this.storageService.ophalen('userInfo') as HeliosUserinfo).LidData?.ID ?? -1;
+                this.lidID = this.loginService.userInfo?.LidData?.ID ?? -1;
             }
         });
     }

@@ -38,19 +38,29 @@
                         <label for="Sleepvliegers" class="form-check-label">Sleepvliegers</label>
                     </div>
                         <div>
-                        <input type="checkbox"
-                               id="Gastenvliegers" class="form-check-inline"
-                               [(ngModel)]="sharedService.ledenlijstFilter.gastenVliegers"
-                               (ngModelChange)="filterDataChanged()">
-                            <label for="Gastenvliegers" class="form-check-label">Gastenvliegers</label>
-                        </div>
-                        <div>
                             <input type="checkbox"
                                    id="DDWV-Crew" class="form-check-inline"
                                    [(ngModel)]="sharedService.ledenlijstFilter.crew"
                                    (ngModelChange)="filterDataChanged()">
                             <label for="DDWV-Crew" class="form-check-label">DDWV crew</label>
                         </div>
+                        <!-- filteren op (DDWV) beheerders mag alleen door een beheerder of DDWV beheerder -->
+                        @if (Beheerders() && (isBeheerder || isBeheerderDDWV)) {
+                            <div>
+                                <input type="checkbox"
+                                       id="Beheerders" class="form-check-inline"
+                                       [(ngModel)]="sharedService.ledenlijstFilter.beheerders"
+                                       (ngModelChange)="filterDataChanged()">
+                                <label for="Beheerders" class="form-check-label">Beheerders</label>
+                            </div>
+                            <div>
+                                <input type="checkbox"
+                                       id="DDWV-Beheerders" class="form-check-inline"
+                                       [(ngModel)]="sharedService.ledenlijstFilter.ddwvBeheerders"
+                                       (ngModelChange)="filterDataChanged()">
+                                <label for="DDWV-Beheerders" class="form-check-label">DDWV beheerders</label>
+                            </div>
+                        }
                     </div>
                 </div>
             } @if (LedenDDWV()) {

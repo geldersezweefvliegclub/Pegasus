@@ -17,17 +17,20 @@ export class LedenFilterComponent {
     readonly sharedService = inject(SharedService);
 
     readonly LedenDDWV = input(true);
+    readonly Beheerders = input(true);          // filter op (DDWV) beheerders, niet zinvol in het rooster
     readonly filterChanged = output<void>();
 
     private readonly popup = viewChild.required(ModalComponent);
 
     isBeheerder: boolean;
+    isBeheerderDDWV: boolean;
     isDDWVer: boolean;
 
     // Open leden-filter dialoog met de leden-filter opties
     openPopup() {
         const ui = this.loginService.userInfo;
         this.isBeheerder = ui!.Userinfo?.isBeheerder ?? false;
+        this.isBeheerderDDWV = ui!.Userinfo?.isBeheerderDDWV ?? false;
         this.isDDWVer = ui!.Userinfo?.isDDWV ?? false;
 
         this.popup().open();

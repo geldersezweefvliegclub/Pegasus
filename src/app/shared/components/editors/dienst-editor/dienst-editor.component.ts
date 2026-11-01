@@ -108,10 +108,6 @@ export class DienstEditorComponent implements OnInit, OnDestroy {
                     case this.configService.MIDDAG_STARTLEIDER_IO_TYPE_ID: {
                         return lid.STARTLEIDER;
                     }
-                    case this.configService.GASTEN_VLIEGER1_TYPE_ID:
-                    case this.configService.GASTEN_VLIEGER2_TYPE_ID: {
-                        return lid.GASTENVLIEGER;
-                    }
                     case this.configService.SLEEPVLIEGER_TYPE_ID: {
                         return lid.SLEEPVLIEGER;
                     }

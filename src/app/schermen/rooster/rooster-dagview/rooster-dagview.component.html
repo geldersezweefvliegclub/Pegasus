@@ -137,14 +137,6 @@
                                           [ngTemplateOutletContext]='{dag:rooster[0], typeDienst: [ configService.OCHTEND_HULPLIERIST_TYPE_ID, configService.MIDDAG_HULPLIERIST_TYPE_ID]}'/>
                         </td>
                     </tr>
-                } @if ((tonen.toonDienst[configService.GASTEN_VLIEGER1_TYPE_ID] || tonen.toonDienst[configService.GASTEN_VLIEGER2_TYPE_ID]) && tonen.GastenVliegers && rooster[0].CLUB_BEDRIJF) {
-                    <tr>
-                        <td class="dienstType">Gasten vlieger</td>
-                        <td>
-                            <ng-container [ngTemplateOutlet]="roosterDienst"
-                                          [ngTemplateOutletContext]='{dag:rooster[0], typeDienst: [ configService.GASTEN_VLIEGER1_TYPE_ID, configService.GASTEN_VLIEGER2_TYPE_ID]}'/>
-                        </td>
-                    </tr>
                 } @if (tonen.toonDienst[configService.SLEEPVLIEGER_TYPE_ID] && tonen.Sleepvliegers && (rooster[0].DDWV || rooster[0].CLUB_BEDRIJF)) {
                     <tr>
                         <td class="dienstType">Sleepvlieger</td>

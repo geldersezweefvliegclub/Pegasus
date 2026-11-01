@@ -15,7 +15,8 @@ export interface FilterLedenData {
     startleiders: boolean,
     instructeurs: boolean,
     sleepvliegers: boolean,
-    gastenVliegers: boolean,
+    beheerders: boolean,
+    ddwvBeheerders: boolean,
 }
 
 export enum SchermGrootte {
@@ -71,7 +72,8 @@ export class SharedService {
         lieristen: false,
         lio: false,
         sleepvliegers: false,
-        gastenVliegers: false
+        beheerders: false,
+        ddwvBeheerders: false
     }
 
     // laat andere component weten dat er iets in de database is aangepast

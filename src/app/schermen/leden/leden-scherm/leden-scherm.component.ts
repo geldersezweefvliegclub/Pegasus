@@ -93,7 +93,6 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
         {field: 'LIDNR', headerName: 'Lid nummer', sortable: true, hide: true},
         {field: 'STATUS', headerName: 'Status', sortable: true, hide: true},
         {field: 'ZUSTERCLUB', headerName: 'Club', sortable: true, hide: true},
-        {field: 'TEGOED', headerName: 'Tegoed', sortable: true, hide: true},
 
         {field: 'BUDDY', headerName: 'Buddy', sortable: true, hide: true},
         {field: 'BUDDY2', headerName: 'Buddy', sortable: true, hide: true},
@@ -107,9 +106,6 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
         {field: 'STARTTOREN', headerName: 'Starttoren', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
         {field: 'ROOSTER', headerName: 'Rooster', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
         {field: 'AUTH', headerName: '2 Factor', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
-
-        {field: 'DDWV_CREW', headerName: 'DDWV crew', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
-        {field: 'DDWV_BEHEERDER', headerName: 'DDWV beheerder', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
 
         {field: 'BEHEERDER', headerName: 'Beheerder', sortable: true, hide: true, cellRenderer: 'checkboxRender'},
         {field: 'SLEUTEL1', headerName: 'Sleutel GeZC', sortable: true, hide: true },
@@ -324,22 +320,6 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
             kolom.hide = true;
         }
 
-        kolom = this.columns.find(c => c.field == "DDWV_CREW") as ColDef;
-        if (ui?.isBeheerderDDWV || ui?.isBeheerder){
-            kolom.hide = this.sharedService.getSchermSize() < SchermGrootte.xl;
-        }
-        else  {
-            kolom.hide = true;
-        }
-
-        kolom = this.columns.find(c => c.field == "DDWV_BEHEERDER") as ColDef;
-        if (ui?.isBeheerderDDWV || ui?.isBeheerder){
-            kolom.hide = this.sharedService.getSchermSize() < SchermGrootte.xl;
-        }
-        else  {
-            kolom.hide = true;
-        }
-
         kolom = this.columns.find(c => c.field == "LIDTYPE") as ColDef;
         if (ui?.isInstructeur || ui?.isCIMT || ui?.isBeheerder || ui?.isBeheerderDDWV){
             kolom.hide = this.sharedService.getSchermSize() <= SchermGrootte.xl;
@@ -367,14 +347,6 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
         kolom = this.columns.find(c => c.field == "LIDNR") as ColDef;
         if (ui?.isBeheerder) {
             kolom.hide = this.sharedService.getSchermSize() <= SchermGrootte.xl;
-        }
-        else  {
-            kolom.hide = true;
-        }
-
-        kolom = this.columns.find(c => c.field == "TEGOED") as ColDef;
-        if (ui?.isBeheerder || ui?.isBeheerderDDWV) {
-            kolom.hide = this.sharedService.getSchermSize() <= SchermGrootte.md;
         }
         else  {
             kolom.hide = true;
@@ -456,7 +428,10 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
             if (this.sharedService.ledenlijstFilter.sleepvliegers && item.SLEEPVLIEGER == false) {
                 continue;
             }
-            if (this.sharedService.ledenlijstFilter.gastenVliegers && item.GASTENVLIEGER == false) {
+            if (this.sharedService.ledenlijstFilter.beheerders && item.BEHEERDER == false) {
+                continue;
+            }
+            if (this.sharedService.ledenlijstFilter.ddwvBeheerders && item.DDWV_BEHEERDER == false) {
                 continue;
             }
 

@@ -203,18 +203,6 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
         return this.controleerGeschiktheid(item, datum, 'SLEEPVLIEGER');
     }
 
-    /**
-     * Wordt in de template gebruikt om te controleren of iemand in een vakje gesleept mag worden. Gaat over instructeurs.
-     * @param datum
-     * @param dienst
-     * @param {CdkDrag<HeliosLid | HeliosRoosterDataset>} item
-     * @return {boolean}
-     */
-    gastVliegerEvaluatie(datum: string, dienst: number, item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
-        if (!this.dienstBeschikbaar(datum, dienst)) return false;
-        return this.controleerGeschiktheid(item, datum, 'GASTENVLIEGER');
-    }
-
     // voorkom dat ingevulde dienst overschreven wordt
     dienstBeschikbaar(datum: string, dienst: number): boolean {
         const roosterIndex = this.rooster.findIndex((dag => dag.DATUM == datum));
@@ -230,7 +218,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
      * Deze functie evalueert of de content een bepaalde rol is. Als dat zo is, returned hij true, anders false.
      * Als de meegegeven rol bijv. LIERIST is, kan een instructeur bijv. geen lieristdienst draaien.
      */
-    controleerGeschiktheid(item: CdkDrag<HeliosLid | HeliosRoosterDataset>, datum: string, rol: 'LIERIST' | 'LIERIST_IO' | 'INSTRUCTEUR' | 'STARTLEIDER' | 'SLEEPVLIEGER' | 'GASTENVLIEGER'): boolean {
+    controleerGeschiktheid(item: CdkDrag<HeliosLid | HeliosRoosterDataset>, datum: string, rol: 'LIERIST' | 'LIERIST_IO' | 'INSTRUCTEUR' | 'STARTLEIDER' | 'SLEEPVLIEGER'): boolean {
         // Content komt uit de ledenlijst of niet
 
         const roosterIndex = this.rooster.findIndex((dag => dag.DATUM == datum));
@@ -259,8 +247,6 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
                     return data.SLEEPVLIEGER!;
                 case 'STARTLEIDER':
                     return (ddwv) ? data.DDWV_CREW! : data.STARTLEIDER!;
-                case 'GASTENVLIEGER':
-                    return data.GASTENVLIEGER!;
             }
             return false;
         } else {
@@ -284,8 +270,6 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
                     return data.SLEEPVLIEGER!;
                 case 'STARTLEIDER':
                     return (ddwv) ? data.DDWV_CREW! : lid.STARTLEIDER!;
-                case 'GASTENVLIEGER':
-                    return data.GASTENVLIEGER!;
             }
 
             return false;

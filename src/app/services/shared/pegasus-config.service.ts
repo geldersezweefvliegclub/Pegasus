@@ -24,8 +24,6 @@ export class PegasusConfigService {
     public readonly MIDDAG_STARTLEIDER_TYPE_ID: number = 1809;
     public readonly MIDDAG_STARTLEIDER_IO_TYPE_ID: number = 1812;
     public readonly SLEEPVLIEGER_TYPE_ID: number = 1810;
-    public readonly GASTEN_VLIEGER1_TYPE_ID: number = 1813;
-    public readonly GASTEN_VLIEGER2_TYPE_ID: number = 1814;
 
     public load() {
         return new Promise<IPegasusConfig>((resolve, reject) => {

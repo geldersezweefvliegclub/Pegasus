@@ -127,8 +127,6 @@ export class SamenvattingComponent {
                 case this.configService.SLEEPVLIEGER_TYPE_ID:
                     this.ochtendSleper = dienst.NAAM!;
                     break;
-                // case this.configService.GASTEN_VLIEGER1_TYPE_ID:
-                // case this.configService.GASTEN_VLIEGER2_TYPE_ID:
             }
         })
     }
