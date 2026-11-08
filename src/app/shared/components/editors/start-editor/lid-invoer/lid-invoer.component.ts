@@ -107,6 +107,7 @@ export class LidInvoerComponent implements OnInit, OnChanges {
         this.aanwezigFiltered = this.aanwezig().filter((lid: HeliosAanwezigLedenDataset) => {
             if (!lid.INSTRUCTEUR && this.alleenInstructeurs()) return false;
             if (lid.LID_ID == this.LID_ID) return true;  // reeds invoerde lid moet ook in de lijst
+            if (lid.VERTREK) return false;               // lid is vertrokken, alleen nog te vinden via de ledenlijst
 
             // We laten alleen vlieger zien die zich voor dit veld hebben aangemeld. Handig voor kampen als er
             // op twee velden gevlogen wordt.
@@ -154,7 +155,7 @@ export class LidInvoerComponent implements OnInit, OnChanges {
             this.ledenSelectie$ = of(this.ledenFiltered);     // complete ledenlijst
         } else if (defaultLijst.length > 0) {
             this.ledenSelectie$ = of(defaultLijst);           // leden die graag op dit vliegtuig vliegen
-        } else if (this.aanwezig().length > 0) {
+        } else if (this.aanwezigFiltered.length > 0) {
             this.ledenSelectie$ = of(this.aanwezigFiltered);  // alle aanwezig leden
         } else {
             this.ledenSelectie$ = of(this.ledenFiltered);     // complete ledenlijst
