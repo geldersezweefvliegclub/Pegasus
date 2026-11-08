@@ -206,9 +206,8 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     private resizeSubscription: Subscription;           // Abonneer op aanpassing van window grootte (of draaien mobiel)
     private dbEventAbonnement: Subscription;            // Abonneer op aanpassingen in de database
     private dienstenAbonnement: Subscription;
-    private roosterAbonnement: Subscription;
     private flarmStartAbonnement: Subscription;         // abonneer op wijziging van starts door flarm
-    rooster: HeliosRoosterDataset[];
+    rooster: HeliosRoosterDataset[] = [];
     diensten: HeliosDienstenDataset[];
     flarm: FlarmData[] = [];
 
@@ -273,20 +272,13 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
                 }
             }
             this.opvragen();
+            this.opvragenRooster();
             this.magVerwijderen = (!this.beperkteInvoer()) ? true : false;
         });
 
         // abonneer op wijziging van diensten
         this.dienstenAbonnement = this.dienstenService.dienstenChange.subscribe(diensten => {
             this.diensten = (diensten) ? diensten : [];
-            this.beperkteInvoer();
-        });
-
-        // abonneer op wijziging van rooster
-        this.rooster = this.roosterService.getDataset();        // haal rooster op uit cache
-        this.roosterAbonnement = this.roosterService.roosterChange.subscribe(maandRooster => {
-            this.rooster = (maandRooster) ? maandRooster : [];
-            this.toonFacturenKnop()
             this.beperkteInvoer();
         });
 
@@ -298,6 +290,10 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Startlijst") {
                 this.opvragen();
+            }
+
+            if (ev.tabel == "Rooster") {
+                this.opvragenRooster();
             }
         });
 
@@ -325,7 +321,6 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         if (this.dbEventAbonnement)     this.dbEventAbonnement.unsubscribe();
-        if (this.roosterAbonnement)     this.roosterAbonnement.unsubscribe();
         if (this.dienstenAbonnement)    this.dienstenAbonnement.unsubscribe();
         if (this.datumAbonnement)       this.datumAbonnement.unsubscribe();
         if (this.typesAbonnement)       this.typesAbonnement.unsubscribe();
@@ -453,6 +448,17 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
             this.error = e;
             this.isLoading = false;
             this.magFactureren = false;
+        });
+    }
+
+    // rooster van de gekozen dag ophalen, nodig om te bepalen of het een DDWV dag is
+    private opvragenRooster(): void {
+        const datum = this.datum;
+        this.roosterService.getRooster(datum, datum).then((rooster) => {
+            if (!datum.equals(this.datum)) return;     // intussen een andere dag gekozen
+            this.rooster = rooster;
+            this.toonFacturenKnop();
+            this.magVerwijderen = (!this.beperkteInvoer()) ? true : false;
         });
     }
 

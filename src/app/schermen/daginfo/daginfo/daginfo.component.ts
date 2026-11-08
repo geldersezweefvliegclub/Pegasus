@@ -65,7 +65,7 @@ export class DaginfoComponent implements OnInit, OnDestroy{
 
     private dienstenAbonnement: Subscription;
     private roosterAbonnement: Subscription;
-    rooster: HeliosRoosterDataset[];
+    rooster: HeliosRoosterDataset[] = [];
     diensten: HeliosDienstenDataset[];
     dagRapporten: HeliosDagRapportenDataset[];
 
@@ -103,6 +103,7 @@ export class DaginfoComponent implements OnInit, OnDestroy{
                 day: datum.day
             })
             this.opvragen();
+            this.opvragenRooster();
             this.heeftToegangDagRapport();
         })
 
@@ -119,11 +120,11 @@ export class DaginfoComponent implements OnInit, OnDestroy{
             this.heeftToegangDagRapport();
         });
 
-        // abonneer op wijziging van rooster
-        this.rooster = this.roosterService.getDataset();        // haal rooster op uit cache
-        this.roosterAbonnement = this.roosterService.roosterChange.subscribe(maandRooster => {
-            this.rooster = (maandRooster) ? maandRooster : [];
-            this.heeftToegangDagRapport();
+        // als het rooster is aangepast, opnieuw ophalen
+        this.roosterAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
+            if (ev.tabel == "Rooster") {
+                this.opvragenRooster();
+            }
         });
     }
 
@@ -276,5 +277,15 @@ export class DaginfoComponent implements OnInit, OnDestroy{
 
     openRestorePopup(dagRapport: HeliosDagRapportenDataset) {
         this.editor().openRestorePopup(dagRapport)
+    }
+
+    // rooster van de gekozen dag ophalen, nodig om te bepalen of het een DDWV dag is
+    private opvragenRooster(): void {
+        const datum = this.datum;
+        this.roosterService.getRooster(datum, datum).then((rooster) => {
+            if (!datum.equals(this.datum)) return;     // intussen een andere dag gekozen
+            this.rooster = rooster;
+            this.heeftToegangDagRapport();
+        });
     }
 }

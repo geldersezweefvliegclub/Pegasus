@@ -3,11 +3,8 @@ import { DateTime } from 'luxon';
 import { APIService } from './api.service';
 import { KeyValueArray } from '../../types/Utils';
 import { HeliosRooster, HeliosRoosterDag, HeliosRoosterDataset } from '../../types/Helios';
-import { BehaviorSubject, Subscription } from 'rxjs';
-import { SharedService } from '../shared/shared.service';
-import { CustomJsonSerializer, getBeginEindDatumVanMaand } from '../../utils/Utils';
+import { CustomJsonSerializer } from '../../utils/Utils';
 import { LoginService } from './login.service';
-import { debounceTime } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -15,148 +12,73 @@ import { debounceTime } from 'rxjs/operators';
 export class RoosterService {
     private readonly apiService = inject(APIService);
     private readonly loginService = inject(LoginService);
-    private readonly sharedService = inject(SharedService);
 
-    private roosterCache: HeliosRooster = {dataset: []};    // return waarde van API call
-    private datumAbonnement: Subscription;                  // volg de keuze van de kalender
-    private datum: DateTime = DateTime.now();               // de gekozen dag
+    private roosterCache = new Map<string, HeliosRooster>();                        // return waarde van API call, per maand (yyyy-MM)
+    private lopendeVerzoeken = new Map<string, Promise<HeliosRoosterDataset[]>>();  // verzoeken die nog onderweg zijn, per maand
 
-    private roosterStore = new BehaviorSubject(this.roosterCache.dataset);
-    public readonly roosterChange = this.roosterStore.asObservable();      // nieuw rooster beschikbaar
-
-    constructor() {
-        const loginService = this.loginService;
-
-
-        // de datum zoals die in de kalender gekozen is
-        this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(datum => {
-            this.datum = DateTime.fromObject({
-                year: datum.year,
-                month: datum.month,
-                day: 1
-            });
-
-            // we kunnen alleen rooster ophalen als we ingelogd zijn, en starttoren heeft niets nodig
-            if (this.loginService.isIngelogd() && (datum.year > 1900)) {
-                const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
-
-                this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
-                    if (!this.vulMissendeDagenAan(dataset))
-                        this.roosterStore.next(this.roosterCache.dataset)    // afvuren event
-                });
-            }
-        });
-
-        // Als roosterdagen zijn toegevoegd, dan moeten we overzicht opnieuw ophalen
-        // een timeout. roosterdagen worden per maand toegevoegd.
-        // Niet voor iedere dag meteen opvragen, maar bundelen en 1 keer opvragen
-        this.sharedService.heliosEventFired.pipe(debounceTime(1500)).subscribe(ev => {
-            if (ev.tabel == "Rooster") {
-                const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
-
-                this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then(() => {
-                    this.roosterStore.next(this.roosterCache.dataset)    // afvuren event
-                });
-            }
-        });
-
-        // nadat we ingelogd zijn kunnen we de rooster ophalen, starttoren heeft niets nodig
-        if (!this.loginService.userInfo?.Userinfo!.isStarttoren) {
-            const naInloggen = () => {
-                this.datum = DateTime.now();
-                const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
-
-                this.getRooster(beginEindDatum.begindatum, beginEindDatum.einddatum).then((dataset) => {
-                    if (!this.vulMissendeDagenAan(dataset))
-                        this.roosterStore.next(this.roosterCache.dataset)    // afvuren event
-                });
-            };
-            loginService.inloggenSucces.subscribe(naInloggen);
-
-            // service wordt pas aangemaakt als een component hem injecteert, dat kan na het inloggenSucces event zijn
-            if (loginService.isIngelogd()) {
-                naInloggen();
-            }
-        }
-    }
-
+    // Het rooster wordt altijd per maand opgehaald. Voor een kortere periode (week, dag) filteren we uit de maand(en).
     async getRooster(startDatum: DateTime, eindDatum: DateTime): Promise<HeliosRoosterDataset[]> {
-        const getParams: KeyValueArray = {};
-        getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
-        getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
-
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
             return [];
         }
 
-        if ((this.roosterCache != undefined)  && (this.roosterCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
-            getParams['HASH'] = this.roosterCache.hash;
+        // een periode kan over meerdere maanden lopen, bijv. een week aan het eind van de maand
+        const maanden: DateTime[] = [];
+        for (let maand = startDatum.startOf('month'); maand <= eindDatum; maand = maand.plus({months: 1})) {
+            maanden.push(maand);
         }
+        const perMaand = await Promise.all(maanden.map((maand) => this.getMaand(maand)));
 
-        try {
-            const response: Response = await this.apiService.get('Rooster/GetObjects', getParams);
-            this.roosterCache = await response.json();
-
-        } catch (e) {
-
-            if (e.responseCode === 404) { // er is geen starts
-                return [];
-            }
-
-            if ((e.responseCode !== 304) && (e.responseCode !== 704)) {  // er is geen nieuwe starts
-                throw(e);
-            }
-        }
-        return this.roosterCache!.dataset as HeliosRoosterDataset[];
-    }
-
-    getDataset(): HeliosRoosterDataset[] {
-        if (this.roosterCache)
-            return this.roosterCache.dataset as HeliosRoosterDataset[];
-        else
-            return [];
-    }
-
-    /**
-     * Het opgehaalde rooster kan dagen in de maand missen. Deze functie vult alle starts aan zodat elke dag in de maand getoond wordt.
-     * @private
-     * @return {void}
-     */
-    private vulMissendeDagenAan(roosterDagen: HeliosRoosterDataset[]): boolean {
-        const dagenInDeMaand = this.datum.daysInMonth ?? 0;
-        let retValue = false;
-
-        const nu: DateTime = DateTime.now();
-
-        // als maand in het verleden is, gaan we niets doen
-        if (this.datum.year*100 + this.datum.month < nu.year*100+nu.month) {
-            return false;
-        }
-
-        for (let i = 0; i < dagenInDeMaand; i++) {
-            const d: DateTime = DateTime.fromObject({month: this.datum.month, year: this.datum.year, day: i + 1});
-            const inRooster = roosterDagen.findIndex(roosterDag => roosterDag.DATUM == d.toISODate()) >= 0;
-
-            if (!inRooster) {       // datum staat nog niet in de database, gaan we aanmaken
-                const roosterRecord: HeliosRoosterDag = {
-                    DATUM: d.toISODate() as string,
-                }
-                this.addRoosterdag(roosterRecord);
-                retValue = true;
-            }
-        }
-        return retValue;
-    }
-
-    async addRoosterdag(roosterDag: HeliosRoosterDag) {
-        const response: Response = await this.apiService.post('Rooster/SaveObject', JSON.stringify(roosterDag));
-        return response.json();
+        // nieuwe array, zodat aanroepers de cache niet kunnen aanpassen
+        const begin = startDatum.toISODate() as string;
+        const eind = eindDatum.toISODate() as string;
+        return perMaand.flat().filter((dag) => dag.DATUM !== undefined && dag.DATUM >= begin && dag.DATUM <= eind);
     }
 
     async updateRoosterdag(roosterDag: HeliosRoosterDag) {
         const response: Response = await this.apiService.put('Rooster/SaveObject', JSON.stringify(roosterDag, CustomJsonSerializer));
 
         return response.json();
+    }
+
+    // als dezelfde maand al opgevraagd wordt, wachten we op dat verzoek in plaats van een nieuw verzoek te sturen
+    private getMaand(maand: DateTime): Promise<HeliosRoosterDataset[]> {
+        const sleutel = maand.toFormat('yyyy-MM');
+        let verzoek = this.lopendeVerzoeken.get(sleutel);
+        if (!verzoek) {
+            verzoek = this.ophalenMaand(sleutel, maand).finally(() => this.lopendeVerzoeken.delete(sleutel));
+            this.lopendeVerzoeken.set(sleutel, verzoek);
+        }
+        return verzoek;
+    }
+
+    private async ophalenMaand(sleutel: string, maand: DateTime): Promise<HeliosRoosterDataset[]> {
+        const getParams: KeyValueArray = {};
+        getParams['BEGIN_DATUM'] = maand.startOf('month').toISODate() as string;
+        getParams['EIND_DATUM'] = maand.endOf('month').toISODate() as string;
+
+        // de hash hoort bij een specifieke maand
+        const cache = this.roosterCache.get(sleutel);
+        if (cache?.hash != undefined) { // we hebben eerder de lijst opgehaald
+            getParams['HASH'] = cache.hash;
+        }
+
+        try {
+            const response: Response = await this.apiService.get('Rooster/GetObjects', getParams);
+            const resultaat: HeliosRooster = await response.json();
+            this.roosterCache.set(sleutel, resultaat);
+            return (resultaat.dataset ?? []) as HeliosRoosterDataset[];
+        } catch (e) {
+            if (e.responseCode === 404) { // er is geen rooster voor deze maand
+                this.roosterCache.delete(sleutel);
+                return [];
+            }
+
+            if ((e.responseCode !== 304) && (e.responseCode !== 704)) {  // er is geen nieuw rooster
+                throw(e);
+            }
+        }
+        return (cache?.dataset ?? []) as HeliosRoosterDataset[];
     }
 }
