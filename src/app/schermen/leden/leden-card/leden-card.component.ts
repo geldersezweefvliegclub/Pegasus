@@ -17,12 +17,10 @@ export class LedenCardComponent implements OnInit {
 
     @Input() lid: HeliosLedenDataset;
 
-    toonTegoed = false;        // toon DDWV tegoed
     naarDashboard = false;
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo?.Userinfo;
-        this.toonTegoed = (ui?.isBeheerder || ui?.isBeheerderDDWV) ?? false
         this.naarDashboard = (ui?.isBeheerder || ui?.isCIMT || ui?.isInstructeur) ?? false;
     }
 

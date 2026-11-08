@@ -45,7 +45,6 @@ export interface IPegasusConfig {
   DDWVtoestemmingID: number;
   DDWVvragenlijstID: number;
 
-  saldo_actief: boolean;
   maxZelfDienstenIndelen: number;
   maxZelfEditDagen: number;
 

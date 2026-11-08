@@ -42,8 +42,6 @@ import {
   UnderlineType,
 } from 'docx';
 import { saveAs } from 'file-saver';
-import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
-import { TransactiesComponent } from '../../../shared/components/transacties/transacties.component';
 import { FormsModule } from '@angular/forms';
 import { NgbCarousel, NgbSlide } from '@ng-bootstrap/ng-bootstrap/carousel';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -68,7 +66,7 @@ import { VliegerLogboekTotalenComponent } from '../../../shared/components/vlieg
     selector: 'app-dashboard',
     templateUrl: './dashboard-page.component.html',
     styleUrls: ['./dashboard-page.component.scss'],
-    imports: [AgendaComponent, AvatarComponent, DienstenComponent, ErrorComponent, FormsModule, IconButtonComponent, LedenDocumentenComponent, ModalComponent, NgbCarousel, NgbSlide, FaIconComponent, PegasusCardComponent, ProgressieBoomComponent, PvbComponent, RecencyComponent, StartEditorComponent, StatusComponent, SuccessComponent, TracksComponent, TransactiesComponent, VerjaardagenComponent, VliegerLogboekComponent, VliegerLogboekTotalenComponent]
+    imports: [AgendaComponent, AvatarComponent, DienstenComponent, ErrorComponent, FormsModule, IconButtonComponent, LedenDocumentenComponent, ModalComponent, NgbCarousel, NgbSlide, FaIconComponent, PegasusCardComponent, ProgressieBoomComponent, PvbComponent, RecencyComponent, StartEditorComponent, StatusComponent, SuccessComponent, TracksComponent, VerjaardagenComponent, VliegerLogboekComponent, VliegerLogboekTotalenComponent]
 })
 export class DashboardPageComponent implements OnInit, OnDestroy {
     private readonly ledenService = inject(LedenService);
@@ -76,7 +74,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     private readonly typesService = inject(TypesService);
     private readonly trackService = inject(TracksService);
     private readonly sharedService = inject(SharedService);
-    private readonly configService = inject(PegasusConfigService);
     private readonly startlijstService = inject(StartlijstService);
     private readonly progressieService = inject(ProgressieService);
     private readonly router = inject(Router);
@@ -102,7 +99,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     datum: DateTime = DateTime.now();      // de gekozen dag
 
     isDDWVer = false;             // is ingelogde gebruiker een DDWV'er
-    saldoTonen = false;           // Tonen van DDWV saldo
     toonTracks = false;           // mogen de tracks vertoond worden
 
     success: SuccessMessage | undefined;
@@ -110,7 +106,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
     private readonly popupLogboek = viewChild.required<ModalComponent>('logboekPopup');
     private readonly popupDiensten = viewChild.required<ModalComponent>('dienstenPopup');
-    readonly transactieScherm = viewChild.required(TransactiesComponent);
     private readonly startEditor = viewChild.required(StartEditorComponent);
 
     verwijderMode = false;
@@ -154,8 +149,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
             this.ledenService.getLid(lidID).then((l) => {
                 this.lidData = l
                 this.isDDWVer = (this.lidData.LIDTYPE_ID == 625);
-
-                this.magSaldoTonen();
             });
         });
 
@@ -428,29 +421,5 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
         const ui = this.loginService.userInfo?.LidData;
         return !(this.lidData &&  ui!.ID === this.lidData.ID)
-    }
-
-    // openen van windows voor het tonen van de transacties
-    toonTransacties() {
-        this.transactieScherm().openPopup(this.lidData!.ID!);
-    }
-
-    magSaldoTonen() {
-        const ui = this.loginService.userInfo?.Userinfo;
-
-        if (this.lidData) {
-            // saldo tonen we alleen voor onszelf, behalve als we (DDWV) beheerder zijn, dan mogen we ook ondere leden zien
-            if (this.lidData.ID == this.loginService.userInfo?.LidData?.ID) {
-                this.saldoTonen = this.configService.saldoActief() && (ui!.isDDWV! || ui!.isClubVlieger!);
-            } else {
-                this.saldoTonen = this.configService.saldoActief() && ((ui?.isBeheerder || ui?.isBeheerderDDWV) ?? false);
-            }
-        }
-    }
-
-    opvragenLid() {
-        this.ledenService.getLid(this.lidData!.ID!).then((lid: HeliosLid) => {
-            this.lidData = lid;
-        });
     }
 }

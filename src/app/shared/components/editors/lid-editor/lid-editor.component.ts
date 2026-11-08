@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, input, OnDestroy, OnInit, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, input, OnDestroy, OnInit } from '@angular/core';
 import { NgbDate, NgbDateParserFormatter, NgbInputDatepicker, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { DateTime } from 'luxon';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
@@ -13,8 +13,6 @@ import { ImageService } from '../../../../services/apiservice/image.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SchermGrootte, SharedService } from '../../../../services/shared/shared.service';
-import { TransactiesComponent } from '../../transacties/transacties.component';
-import { PegasusConfigService } from '../../../../services/shared/pegasus-config.service';
 import { ErrorComponent } from '../../error/error.component';
 import { SuccessComponent } from '../../success/success.component';
 import { FormsModule } from '@angular/forms';
@@ -34,7 +32,7 @@ import { LoaderComponent } from '../../loader/loader.component';
     templateUrl: './lid-editor.component.html',
     styleUrls: ['./lid-editor.component.scss'],
     providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
-    imports: [ErrorComponent, SuccessComponent, FormsModule, PegasusCardComponent, ImageCropComponent, WachtwoordMatchValidatorDirective, TelefoonValidatorDirective, NgbInputDatepicker, IconButtonComponent, NgClass, FaIconComponent, NgbPopover, WachtwoordSterkteValidatorDirective, LidInvoerComponent, LoaderComponent, TransactiesComponent]
+    imports: [ErrorComponent, SuccessComponent, FormsModule, PegasusCardComponent, ImageCropComponent, WachtwoordMatchValidatorDirective, TelefoonValidatorDirective, NgbInputDatepicker, IconButtonComponent, NgClass, FaIconComponent, NgbPopover, WachtwoordSterkteValidatorDirective, LidInvoerComponent, LoaderComponent]
 })
 export class LidEditorComponent implements OnInit, OnDestroy {
     private readonly router = inject(Router);
@@ -43,14 +41,12 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     private readonly loginService = inject(LoginService);
     private readonly imageService = inject(ImageService);
     private readonly sharedService = inject(SharedService);
-    private readonly configService = inject(PegasusConfigService);
     private readonly changeDetector = inject(ChangeDetectorRef);
 
     readonly lidID = input.required<number>();
     readonly isVerwijderMode = input(false);
     readonly isRestoreMode = input(false);
 
-    readonly transactieScherm = viewChild.required(TransactiesComponent);
 
     private resizeSubscription: Subscription;       // Abonneer op aanpassing van window grootte (of draaien mobiel)
     private ledenAbonnement: Subscription;
@@ -78,7 +74,6 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     isSaving = false;
     isMobiel = true;
 
-    saldoTonen = false;
 
     MedicalDatum: NgbDate | null;
     GeboorteDatum: NgbDate | null;
@@ -132,8 +127,6 @@ export class LidEditorComponent implements OnInit, OnDestroy {
 
     // opvragen van lid informatie, of creeer nieuw lid
     opvragen() {
-        this.saldoTonen = false;
-
         // als lidID > 0, dan wijzigen we een bestaand lid profiel
         if (this.lidID() >= 0) {
             this.isLoading = true;
@@ -155,15 +148,6 @@ export class LidEditorComponent implements OnInit, OnDestroy {
                     this.GeboorteDatum = this.converteerDatumNaarNgbDate(lid.GEBOORTE_DATUM);
                     this.avatar = lid.AVATAR + "";  // voorkom dat lid.avatar undefined is. Dan kan je geen avatar uploaden
                     this.isLoading = false;
-
-                    // saldo tonen we alleen voor onszelf, behalve als we (DDWV) beheerder zijn, dan mogen we ook ondere leden zien
-                    const ui = this.loginService.userInfo?.Userinfo;
-                    if (this.lid.ID == this.loginService.userInfo?.LidData?.ID) {
-                        this.saldoTonen = this.configService.saldoActief() && (ui!.isDDWV! || ui!.isClubVlieger!);
-                    }
-                    else {
-                        this.saldoTonen = this.configService.saldoActief() && ((ui?.isBeheerder || ui?.isBeheerderDDWV) ?? false);
-                    }
                 });
             } catch (_) {
                 this.isLoading = false;
@@ -522,10 +506,5 @@ export class LidEditorComponent implements OnInit, OnDestroy {
             day: this.MedicalDatum.day
         })
         return (d < DateTime.now());
-    }
-
-    // openen van windows voor het tonen van de transacties
-    toonTransacties() {
-        this.transactieScherm().openPopup(this.lid!.ID!);
     }
 }

@@ -27,21 +27,6 @@
                         />
                     }
                 </div>
-                <div header>
-                    @if (saldoTonen) {
-                        <div class="DDWVtegoed d-flex flex-column" (click)="toonTransacties()">
-                            <div style="font-size: x-small">
-                                Tegoed
-                            </div>
-                            <div class="d-flex align-items-end justify-content-end">
-                                {{ lid.TEGOED }}&nbsp;
-                                <div style="font-size: x-small;  margin-bottom: 2px;">
-                                    strippen
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </div>
                 @if (lid.AVATAR === null) {
                     <div class="cssWarning cssWarningAvatar">
                         <div class="fas fa-exclamation-triangle"></div>
@@ -630,4 +615,3 @@
     </form>
 }
 
-<app-transacties (TransactieGedaan)='opvragen()'/>

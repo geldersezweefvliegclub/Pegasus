@@ -88,10 +88,6 @@ export class PegasusConfigService {
         return this.pegasusConfig.privacy_url;
     }
 
-    public saldoActief(): boolean {
-        return this.pegasusConfig.saldo_actief;
-    }
-
     public getRapporten(): Rapport[] {
         return this.pegasusConfig.rapporten;
     }

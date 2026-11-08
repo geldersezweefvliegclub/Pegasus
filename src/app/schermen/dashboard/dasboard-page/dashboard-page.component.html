@@ -5,20 +5,6 @@
                   subtitel="Een verzameling van nuttige info"
                   [icon]="iconCardIcon">
 
-    @if (saldoTonen && lidData) {
-        <div header class="DDWVtegoed d-flex flex-column" (click)="toonTransacties()">
-            <div style="font-size: x-small">
-                Tegoed
-            </div>
-            <div class="d-flex align-items-end justify-content-end">
-                {{ lidData.TEGOED }}&nbsp;
-                <div style="font-size: x-small;  margin-bottom: 2px;">
-                    strippen
-                </div>
-            </div>
-    </div>
-    }
-
     <div class="box">
         <div class="bg-tertiary rounded text-white " ngClass.gt-sm="px-5">
             <table class="w-100">
@@ -263,7 +249,6 @@
 @if (lidData) {
     <app-start-editor [VliegerID]='lidData.ID'/>
 }
-<app-transacties (TransactieGedaan)='opvragenLid()'/>
 
 
 @if (lidData) {
