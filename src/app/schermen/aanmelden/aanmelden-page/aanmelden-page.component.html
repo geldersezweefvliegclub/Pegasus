@@ -3,24 +3,11 @@
                   subtitel="Aanmelden voor de vliegdag"
                   [icon]="aanmeldenIcon">
     <div class="h-100">
-        @if (saldoTonen && lid) {
-            <div class="DDWVtegoed d-flex flex-column" (click)="toonTransacties()">
-                <div style="font-size: x-small">
-                    Tegoed
-                </div>
-                <div class="d-flex align-items-end justify-content-end">
-                    {{ lid.TEGOED }}&nbsp;
-                    <div style="font-size: x-small;  margin-bottom: 2px;">
-                        strippen
-                    </div>
-                </div>
-            </div>
-        }
         <div class="ms-2 d-flex justify-content-begin align-items-end text-nowrap"
              [class]="{'veldTop':aanmeldenView === 'week', 'mb-1' : aanmeldenView === 'dag'}">
             <label for="VELD" class="form-label me-2">Vliegveld:</label>
             <ng-select id="VELD" style="width: 160px;"
-                       [items]="veldTypes$ | async"
+                       [items]="(veldTypes$ | async) ?? []"
                        placeholder="Filter op vliegveld"
                        bindLabel="OMSCHRIJVING"
                        bindValue="ID"
@@ -98,7 +85,7 @@
                 <table class="table" style="width: calc(100% - 15px);">
                     <thead>
                     <tr style="vertical-align: top;">
-                        @for (dagInRooster of rooster; track dagInRooster.DATUM; let r = $index) {
+                        @for (dagInRooster of rooster; track dagInRooster.DATUM) {
                             <td>
                                 @if (magTonen(dagInRooster.DATUM)) {
                                     <div
@@ -136,13 +123,12 @@
                         }
                     </tr>
                     <tr>
-                        @for (dagInRooster of rooster; track dagInRooster.DATUM; let r = $index) {
+                        @for (dagInRooster of rooster; track dagInRooster.DATUM) {
                             <td>
                                 @if (magTonen(dagInRooster.DATUM)) {
                                     <div>
                                         @if (!dagInRooster.CLUB_BEDRIJF && dagInRooster.DDWV && dagInfoDefaultStartMetode(dagInRooster.DATUM)) {
-                                            <div
-                                                    [ngClass] class="aanmeldingen">
+                                            <div class="aanmeldingen">
                                                 {{ dagInfoDefaultStartMetode(dagInRooster.DATUM) }}
                                             </div>
                                         }
@@ -158,7 +144,7 @@
                         }
                     </tr>
                     <tr>
-                        @for (dagInRooster of rooster; track dagInRooster.DATUM; let r = $index) {
+                        @for (dagInRooster of rooster; track dagInRooster.DATUM) {
                             <td class="dagInRooster">
                                 @if (magTonen(dagInRooster.DATUM)) {
                                     <div class="w-100" [style]="KolomBreedte()">
@@ -169,7 +155,7 @@
                         }
                     </tr>
                     <tr>
-                        @for (dagInRooster of rooster; track dagInRooster.DATUM; let r = $index) {
+                        @for (dagInRooster of rooster; track dagInRooster.DATUM) {
                             <td>
                                 @if (!verleden(dagInRooster.DATUM) && magTonen(dagInRooster.DATUM)) {
                                     <div class="dagInRooster"
@@ -194,7 +180,7 @@
                         }
                     </tr>
                     <tr>
-                        @for (dagInRooster of rooster; track dagInRooster.DATUM; let r = $index) {
+                        @for (dagInRooster of rooster; track dagInRooster.DATUM) {
                             <td class="aanwezigenLijst">
                                 @if (magTonen(dagInRooster.DATUM)) {
                                     <div>
@@ -210,7 +196,7 @@
                                                                 <div class="barometer"
                                                                      [ngClass]="kleurBarometer(lid)"></div>
                                                             }
-                                                            <div [class.vertrokken]="lid.VERTREK && (isBeheerder || (isBeheerderDDWV && dagInRooster.DDWV))">
+                                                            <div [class.vertrokken]="!!lid.VERTREK">
                                                                 @if (lid.VERWIJDERD && (isBeheerder || (isBeheerderDDWV && dagInRooster.DDWV))) {
                                                                     <div class="verwijderd">{{ lid.NAAM }}</div>
                                                                 }
@@ -373,7 +359,7 @@
                                                                 <div class="barometer"
                                                                      [ngClass]="kleurBarometer(lid)"></div>
                                                             }
-                                                            <div [class.vertrokken]="lid.VERTREK && (isBeheerder || (isBeheerderDDWV && dagInRooster.DDWV))">
+                                                            <div [class.vertrokken]="!!lid.VERTREK">
                                                                 @if (lid.VERWIJDERD) {
                                                                     <div class="verwijderd">{{ lid.NAAM }}</div>
                                                                 }
@@ -420,4 +406,3 @@
 
 <app-lid-aanwezig-editor (opgeslagen)='opvragen()'/>
 
-<app-transacties (TransactieGedaan)='opvragenLid()'/>

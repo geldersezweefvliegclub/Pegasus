@@ -117,25 +117,13 @@
   width: 30px;
 }
 
-.DDWVtegoed {
-  cursor: pointer;
-  position: relative;
-  float: right;
-  margin-top: -70px;
-  padding: 10px 10px 10px 10px;
-
-  background-color: #28a745;
-  border-radius: 10px;
-  color: white;
-  font-weight: bold;
-}
-
 .verwijderd {
-  text-decoration: line-through;
+  text-decoration: line-through double;
+  font-style: italic;
 }
 
 .vertrokken {
-  font-style: italic;
+  text-decoration: line-through;
 }
 
 

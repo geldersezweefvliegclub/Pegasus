@@ -30,7 +30,7 @@ export const getBeginEindDatumVanMaand = (maand: number, jaar: number): { begind
 };
 
 
-export const DagVanDeWeek = (datum: string | null): string => {
+export const DagVanDeWeek = (datum: string | null | undefined): string => {
   if(!datum) return "??"
   const dt: DateTime = DateTime.fromSQL(datum);
 

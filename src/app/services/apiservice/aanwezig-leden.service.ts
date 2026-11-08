@@ -24,14 +24,14 @@ export class AanwezigLedenService {
     private readonly loginService = inject(LoginService);
     private readonly sharedService = inject(SharedService);
 
-    private aanwezigCache: HeliosAanwezigLeden = {dataset: []};     // return waarde van API call
+    private aanwezigCache = new Map<string, HeliosAanwezigLeden>(); // return waarde van API call, per opgevraagde periode/selectie
     private aanwezigDagCache: HeliosAanwezigLedenDataset[] = [];    // cache van de gekozen dag
     private datumAbonnement: Subscription;                          // volg de keuze van de kalender
     private datum: DateTime = DateTime.now();                       // de gekozen dag
 
     private overslaan = false;
     private ophaalTimer: number;                                // Iedere 15 min halen we de aanwezige leden op
-    private aanwezigStore = new BehaviorSubject(this.aanwezigCache.dataset);
+    private aanwezigStore = new BehaviorSubject<HeliosAanwezigLedenDataset[]>([]);
     public readonly aanwezigChange = this.aanwezigStore.asObservable();      // nieuwe aanwezigheid beschikbaar
 
     constructor() {
@@ -98,15 +98,19 @@ export class AanwezigLedenService {
 
     // Ophalen van alle leden die zich aangemeld hebben
     async getAanwezig(startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosAanwezigLedenDataset[]> {
-        const getParams: KeyValueArray = params;
+        const getParams: KeyValueArray = {...params};     // kopie, params van de aanroeper niet aanpassen
 
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
             return [];
         }
 
-        if ((this.aanwezigCache != undefined)  && (this.aanwezigCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
-            getParams['HASH'] = this.aanwezigCache.hash;
+        // de hash hoort bij een specifieke query, dus per periode/selectie/params bijhouden
+        const cacheKey = JSON.stringify([startDatum.toISODate(), eindDatum.toISODate(), zoekString ?? '', params]);
+        const cache = this.aanwezigCache.get(cacheKey);
+
+        if (cache?.hash != undefined) { // we hebben eerder de lijst opgehaald
+            getParams['HASH'] = cache.hash;
         }
         getParams['BEGIN_DATUM'] = startDatum.toISODate() as string;
         getParams['EIND_DATUM'] = eindDatum.toISODate() as string;
@@ -117,13 +121,16 @@ export class AanwezigLedenService {
 
         try {
             const response: Response = await this.apiService.get('AanwezigLeden/GetObjects', getParams);
-            this.aanwezigCache = await response.json();
+            const resultaat: HeliosAanwezigLeden = await response.json();
+            this.aanwezigCache.set(cacheKey, resultaat);
+            return [...(resultaat.dataset ?? [])] as HeliosAanwezigLedenDataset[];
         } catch (e) {
             if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde starts als cache
                 throw(e);
             }
         }
-        return this.aanwezigCache.dataset as HeliosAanwezigLedenDataset[];
+        // kopie teruggeven, zodat aanroepers de cache niet kunnen aanpassen
+        return [...(cache?.dataset ?? [])] as HeliosAanwezigLedenDataset[];
     }
 
     // Ophalen va leden die zich uitgeschreven hebben
