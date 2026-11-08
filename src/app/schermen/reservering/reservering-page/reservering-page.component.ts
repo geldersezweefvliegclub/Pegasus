@@ -68,6 +68,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     private readonly dagInfoService = inject(DaginfoService);
     private readonly storageService = inject(StorageService);
     private readonly sharedService = inject(SharedService);
+    private readonly userInfo = this.loginService.userInfo?.Userinfo;
 
     readonly kistSelector = viewChild.required(KistSelectieComponent);
     readonly boeking = viewChild.required(BoekingEditorComponent);
@@ -87,7 +88,8 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     reserveringView = "maand";            // toon rooster voor maand, week of dag
     zoekString: string;
     isLoading = false;
-    magBoeken = false;
+    private roosterPeriode: { beginDatum: DateTime, eindDatum: DateTime } | undefined;   // periode van het opgehaalde rooster
+    readonly magBoeken = (this.userInfo?.isBeheerder || this.userInfo?.isBeheerderDDWV) ?? false;
     magNogReserveren = false;
 
     private vliegtuigenAbonnement: Subscription;
@@ -101,27 +103,17 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     maandag: DateTime                               // de eerste dag van de week
     nu: DateTime = DateTime.now()                   // vandaag
 
-    toonDatumKnoppen = false;              // Mag de gebruiker een andere datum kiezen
+    readonly toonDatumKnoppen = (this.userInfo?.isDDWV || this.userInfo?.isClubVlieger) ?? false;     // Mag de gebruiker een andere datum kiezen
     toonClubDDWV = 2;                       // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
     behaaldeCompetenties: string;
-    magExporteren = false;
+    readonly magExporteren = this.userInfo?.isClubVlieger ?? false;
 
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
 
     ngOnInit(): void {
-        const ui = this.loginService.userInfo?.Userinfo;
-
-        this.nu = DateTime.now();
-        this.toonDatumKnoppen = (ui!.isDDWV! || ui!.isClubVlieger!);
-
         this.bepaalDagWeek()
 
-        if (ui!.isBeheerder || ui!.isBeheerderDDWV) {
-            this.magBoeken = true;
-        }
-
-        this.magExporteren = ui!.isClubVlieger!;
         this.reserveringenService.MagNogReserveren().then((magNogReserveren) => {
             this.magNogReserveren = magNogReserveren;
         });
@@ -240,36 +232,8 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     }
 
     opvragen(): void {
-        const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
-
-        let beginDatum: DateTime = beginEindDatum.begindatum;
-        let eindDatum: DateTime = beginEindDatum.einddatum.plus({months: 2}); // datum 2 maanden vanaf nu, dan weten ook toekomstige reserveringen
-
-        switch (this.reserveringView) {
-            case "dag" : {
-                beginDatum = this.datum;
-                eindDatum = this.datum;
-                break;
-            }
-            case "week": {
-                beginDatum = this.datum.startOf('week');     // maandag in de 1e week vande maand, kan in de vorige maand vallen
-                eindDatum = this.datum.endOf('week');        // zondag van de laaste week, kan in de volgende maand vallen
-                break;
-            }
-        }
-
-        this.roosterService.getRooster(beginDatum, eindDatum).then((rooster) => {
-            this.rooster = rooster;
-            this.applyRoosterFilter();
-
-            this.reserveringenService.getReserveringen(beginDatum, eindDatum).then((dataset) => {
-                this.data = (dataset) ? dataset : [];
-                this.isLoading = false;
-            }).catch(e => {
-                this.error = e;
-                this.isLoading = false;
-            });
-        })
+        this.opvragenRooster();
+        this.opvragenReserveringen();
     }
 
     // Laat hele rooster zien, of alleen weekend / DDWV
@@ -278,27 +242,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
 
         const tmpRooster: HeliosRoosterDataset[] = [];
 
-        const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
-
-        let beginDatum: DateTime = beginEindDatum.begindatum;
-        let eindDatum: DateTime = beginEindDatum.einddatum.plus({months: 2}); // datum 2 maanden vanaf nu, dan weten ook toekomstige reserveringen
-
-        switch (this.reserveringView) {
-            case "dag" : {
-                beginDatum = this.datum;
-                eindDatum = this.datum;
-                break;
-            }
-            case "week": {
-                beginDatum = this.datum.startOf('week');     // maandag in de 1e week vande maand, kan in de vorige maand vallen
-                eindDatum = this.datum.endOf('week');        // zondag van de laaste week, kan in de volgende maand vallen
-                break;
-            }
-            case "maand": {
-                eindDatum = beginEindDatum.einddatum               // alleen deze maand tonen
-                break;
-            }
-        }
+        const { beginDatum, eindDatum } = this.getPeriode();
 
         for (const item of this.rooster) {
 
@@ -374,7 +318,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
         });
 
         this.data.push(r);  // update grid zonder reload
-        setTimeout(() => this.opvragen(), 1000);  // we gaan wel laatste reserveringen ophalen, er kan nog iemand bezig zijn
+        setTimeout(() => this.opvragenReserveringen(), 1000);  // we gaan wel laatste reserveringen ophalen, er kan nog iemand bezig zijn
     }
 
     // De reservering is niet langer meer van toepassing
@@ -392,7 +336,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
             });
             this.data.splice(idx, 1);
 
-            setTimeout(() => this.opvragen(), 1000);  // we gaan wel laatste reserveringen ophalen, er kan nog iemand bezig zijn
+            setTimeout(() => this.opvragenReserveringen(), 1000);  // we gaan wel laatste reserveringen ophalen, er kan nog iemand bezig zijn
         }
     }
 
@@ -563,8 +507,57 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
 
         if (opvragen || this.reserveringView == "dag") {
             this.opvragen();
+        } else if (!this.roosterBevatPeriode()) {
+            this.opvragenRooster();     // bijv. week view, de nieuwe week zit nog niet in het opgehaalde rooster
         } else {
             this.applyRoosterFilter();  // zorg dat we de juiste starts hebben om weer te geven
         }
+    }
+
+    // het rooster is alleen nodig voor de getoonde periode
+    private opvragenRooster(): void {
+        const periode = this.getPeriode();
+        this.roosterPeriode = periode;
+
+        this.roosterService.getRooster(periode.beginDatum, periode.eindDatum).then((rooster) => {
+            this.rooster = rooster;
+            this.applyRoosterFilter();
+        });
+    }
+
+    // reserveringen halen we in de maand view 2 maanden vooruit op, zodat we ook toekomstige reserveringen weten
+    private opvragenReserveringen(): void {
+        const { beginDatum, eindDatum } = this.getPeriode(true);
+
+        this.reserveringenService.getReserveringen(beginDatum, eindDatum).then((dataset) => {
+            this.data = (dataset) ? dataset : [];
+            this.isLoading = false;
+        }).catch(e => {
+            this.error = e;
+            this.isLoading = false;
+        });
+    }
+
+    // de getoonde periode, afhankelijk van dag / week / maand view
+    private getPeriode(metToekomstigeReserveringen = false): { beginDatum: DateTime, eindDatum: DateTime } {
+        switch (this.reserveringView) {
+            case "dag":
+                return { beginDatum: this.datum, eindDatum: this.datum };
+            case "week":
+                return { beginDatum: this.datum.startOf('week'), eindDatum: this.datum.endOf('week') };    // kan in de vorige / volgende maand vallen
+            default: {
+                const beginEindDatum = getBeginEindDatumVanMaand(this.datum.month, this.datum.year);
+                const eindDatum = metToekomstigeReserveringen ? beginEindDatum.einddatum.plus({months: 2}) : beginEindDatum.einddatum;
+                return { beginDatum: beginEindDatum.begindatum, eindDatum: eindDatum };
+            }
+        }
+    }
+
+    // valt de getoonde periode binnen het rooster dat we al opgehaald hebben
+    private roosterBevatPeriode(): boolean {
+        const periode = this.getPeriode();
+        return this.roosterPeriode !== undefined
+            && periode.beginDatum >= this.roosterPeriode.beginDatum
+            && periode.eindDatum <= this.roosterPeriode.eindDatum;
     }
 }
