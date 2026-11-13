@@ -8,10 +8,9 @@ import { AgRendererComponent } from 'ag-grid-angular';
     styleUrls: ['./adres-render.component.scss']
 })
 export class AdresRenderComponent implements AgRendererComponent {
-  regel1: string;
-  regel2: string;
-
-
+  // variablen in html formulier
+  protected regel1: string;
+  protected regel2: string;
 
   agInit(params: ICellRendererParams): void {
     this.regel1 = (params.data.ADRES) ? params.data.ADRES : '';

@@ -12,12 +12,10 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
     imports: [FaIconComponent]
 })
 export class EmailRenderComponent implements AgRendererComponent {
-  email: string;
-  emailHref: string;
-
-  faIcon: IconDefinition = faEnvelope
-
-
+  // variablen in html formulier
+  protected email: string;
+  protected emailHref: string;
+  protected faIcon: IconDefinition = faEnvelope
 
   agInit(params: ICellRendererParams): void {
     this.email = params.data.EMAIL;

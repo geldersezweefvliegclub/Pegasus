@@ -8,10 +8,8 @@ import { ICellRendererParams } from 'ag-grid-community';
     styleUrls: ['./onderdruk-nul.component.scss']
 })
 export class OnderdrukNulComponent implements AgRendererComponent {
-
-  waarde: number;
-
-
+  // variablen in html formulier
+  protected waarde: number;
 
   agInit(params: ICellRendererParams): void {
     this.waarde = params.value;

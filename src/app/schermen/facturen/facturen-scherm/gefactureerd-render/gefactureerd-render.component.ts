@@ -7,9 +7,8 @@ import { ICellRendererParams } from 'ag-grid-community';
     styleUrls: ['./gefactureerd-render.component.scss']
 })
 export class GefactureerdRenderComponent {
-  gridTekst: string | undefined
-
-
+  // variablen in html formulier
+  protected gridTekst: string | undefined
 
   agInit(params: ICellRendererParams): void {
     this.gridTekst = this.isGetal(params.value) ? "€ " + params.value.toLocaleString(undefined, {minimumFractionDigits: 2}) : params.data.value;
@@ -19,7 +18,7 @@ export class GefactureerdRenderComponent {
     return false;
   }
 
-  isGetal(val: string | undefined): string
+  private isGetal(val: string | undefined): string
   {
     return (typeof val === 'number') ? "rechts" : "";
   }

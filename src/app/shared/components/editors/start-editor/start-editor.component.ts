@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, input, viewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, input, viewChild } from '@angular/core';
 import {
     HeliosAanwezigLedenDataset,
     HeliosBehaaldeProgressieDataset,
@@ -13,7 +13,7 @@ import { ModalComponent } from '../../modal/modal.component';
 import { StartlijstService } from '../../../../services/apiservice/startlijst.service';
 import { VliegtuigenService } from '../../../../services/apiservice/vliegtuigen.service';
 import { AanwezigVliegtuigService } from '../../../../services/apiservice/aanwezig-vliegtuig.service';
-import { Observable, of, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { DateTime, Interval } from 'luxon';
 import { LedenService } from '../../../../services/apiservice/leden.service';
 import { AanwezigLedenService } from '../../../../services/apiservice/aanwezig-leden.service';
@@ -33,9 +33,8 @@ import { ErrorComponent } from '../../error/error.component';
 import { SuccessComponent } from '../../success/success.component';
 import { IconButtonComponent } from '../../icon-button/icon-button.component';
 import { FormsModule } from '@angular/forms';
-import { NgClass, AsyncPipe } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { LidInvoerComponent } from './lid-invoer/lid-invoer.component';
-import { NgSelectComponent } from '@ng-select/ng-select';
 import { LoaderComponent } from '../../loader/loader.component';
 
 @Component({
@@ -43,10 +42,57 @@ import { LoaderComponent } from '../../loader/loader.component';
     templateUrl: './start-editor.component.html',
     styleUrls: ['./start-editor.component.scss'],
     providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
-    imports: [ErrorComponent, SuccessComponent, TransactieEditorComponent, ModalComponent, IconButtonComponent, NgbInputDatepicker, FormsModule, NgClass, VliegtuigInvoerComponent, LidInvoerComponent, NgSelectComponent, LoaderComponent, AsyncPipe]
+    imports: [ErrorComponent, SuccessComponent, TransactieEditorComponent, ModalComponent, IconButtonComponent, NgbInputDatepicker, FormsModule, NgClass, VliegtuigInvoerComponent, LidInvoerComponent, LoaderComponent]
 })
 
-export class StartEditorComponent implements OnInit {
+export class StartEditorComponent implements OnInit, OnDestroy {
+    readonly VliegerID = input<number>();                     // wordt gezet bij aanroep vanuit logboek
+    readonly VliegveldID = input<number>();       // wordt gezet als we van start / vluchten een start aanmaken
+
+    // variablen in html formulier
+    protected start: HeliosStart & Pick<HeliosStartDataset, 'DAGNUMMER'> = {};      // DAGNUMMER alleen om te tonen, bepaalt Helios.js zelf
+    protected toonTranactieKnop = false;        // Moet de transactie editor geopend kunnen worden?
+    protected toonVliegerNaam = false;
+    protected toonInzittendeNaam = 0;             // 0, naam hoeft niet ingevoerd te worden
+
+                                                // 1, naam mag ingevoerd worden, maar ook inzittende combobox tonen
+                                                // 2, toon alleen de naam invoer
+    protected toonStartMethode = true;
+    protected toonWaarschuwing = false;          // mag het lid op die vliegtuig vliegen volgens kruisjeslijst?
+    protected medicalWaarschuwing = false;       // Controleer op geldigheid medical
+    protected startVerbod = false;               // Vlieger heeft een startverbod
+    protected startMethodeTypesFiltered: HeliosType[];
+    protected veldenTypes: HeliosType[] = [];
+    protected baanTypes: HeliosType[] = [];
+    protected vliegtuigen: HeliosVliegtuigenDataset[] = [];
+    protected aanwezigVliegtuigen: HeliosVliegtuigenDataset[] = [];
+    protected gekozenVliegtuig: HeliosVliegtuigenDataset;     // het gekozen vliegtuig uit de editor
+
+    // 607 = zusterclub
+    // 610 = oprotkabel
+    // 612 = penningmeester
+    // 613 = systeem gebruiker
+    // 620 = Wachtlijst
+    // 625 = DDWV'er
+    protected exclLidtypeAlsInzittende = "607,610,612,613,620"
+    protected exclLidtypeAlsVlieger = "613,620"
+    protected leden: HeliosLedenDataset[] = [];
+    protected aanwezigLeden: HeliosAanwezigLedenDataset[] = [];
+    protected datum: DateTime = DateTime.now();           // de gekozen dag
+    protected isLoading = false;
+    protected isSaving = false;
+    protected magAltijdWijzigen = false;
+    protected magDatumAanpassen = false;
+    protected isVerwijderMode = false;
+    protected isRestoreMode = false;
+    protected formTitel = "";
+    protected vandaag: DateTime = DateTime.now();
+    protected minDatum: DateTime = DateTime.now();
+    protected startDatum: DateTime;
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+
+    // private variable voor ts script
     private readonly typesService = inject(TypesService);
     private readonly ledenService = inject(LedenService);
     private readonly loginService = inject(LoginService);
@@ -60,68 +106,17 @@ export class StartEditorComponent implements OnInit {
     private readonly vliegtuigenService = inject(VliegtuigenService);
     private readonly aanwezigLedenService = inject(AanwezigLedenService);
     private readonly aanwezigVliegtuigenService = inject(AanwezigVliegtuigService);
-
-    readonly VliegerID = input<number>();                     // wordt gezet bij aanroep vanuit logboek
-    readonly VliegveldID = input<number>();       // wordt gezet als we van start / vluchten een start aanmaken
     private readonly popup = viewChild.required(ModalComponent);
-    readonly vliegtuigInvoerComponent = viewChild.required(VliegtuigInvoerComponent);
-    readonly transactieEditor = viewChild.required(TransactieEditorComponent);
-
-    start: HeliosStart & Pick<HeliosStartDataset, 'DAGNUMMER'> = {};      // DAGNUMMER alleen om te tonen, bepaalt Helios.js zelf
-    toonTranactieKnop = false;        // Moet de transactie editor geopend kunnen worden?
-    toonVliegerNaam = false;
-    toonInzittendeNaam = 0;             // 0, naam hoeft niet ingevoerd te worden
-                                                // 1, naam mag ingevoerd worden, maar ook inzittende combobox tonen
-                                                // 2, toon alleen de naam invoer
-    toonStartMethode = true;
-    toonWaarschuwing = false;          // mag het lid op die vliegtuig vliegen volgens kruisjeslijst?
-    medicalWaarschuwing = false;       // Controleer op geldigheid medical
-    startVerbod = false;               // Vlieger heeft een startverbod
+    private readonly vliegtuigInvoerComponent = viewChild.required(VliegtuigInvoerComponent);
+    private readonly transactieEditor = viewChild.required(TransactieEditorComponent);
 
     private typesAbonnement: Subscription;
-    startMethodeTypes: HeliosType[];
-    startMethodeTypesFiltered: HeliosType[];
-    veldenTypes$: Observable<HeliosType[]>;
-    baanTypes$: Observable<HeliosType[]>;
-
+    private startMethodeTypes: HeliosType[];
     private vliegtuigenAbonnement: Subscription;
-    vliegtuigen: HeliosVliegtuigenDataset[] = [];
     private aanwezigVliegtuigenAbonnement: Subscription;
-    aanwezigVliegtuigen: HeliosVliegtuigenDataset[] = [];
-    gekozenVliegtuig: HeliosVliegtuigenDataset;     // het gekozen vliegtuig uit de editor
-
-    // 607 = zusterclub
-    // 610 = oprotkabel
-    // 612 = penningmeester
-    // 613 = systeem gebruiker
-    // 620 = Wachtlijst
-    // 625 = DDWV'er
-    exclLidtypeAlsInzittende = "607,610,612,613,620"
-    exclLidtypeAlsVlieger = "613,620"
-
     private ledenAbonnement: Subscription;
-    leden: HeliosLedenDataset[] = [];
-
     private aanwezigLedenAbonnement: Subscription;
-    aanwezigLeden: HeliosAanwezigLedenDataset[] = [];
-
     private datumAbonnement: Subscription;      // volg de keuze van de kalender
-    datum: DateTime = DateTime.now();           // de gekozen dag
-
-    isLoading = false;
-    isSaving = false;
-    magAltijdWijzigen = false;
-    magDatumAanpassen = false;
-
-    isVerwijderMode = false;
-    isRestoreMode = false;
-    formTitel = "";
-
-    vandaag: DateTime = DateTime.now();
-    minDatum: DateTime = DateTime.now();
-    startDatum: DateTime;
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo?.Userinfo;
@@ -147,8 +142,8 @@ export class StartEditorComponent implements OnInit {
         // abonneer op wijziging van lidTypes
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
             this.startMethodeTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 5});
-            this.veldenTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));
-            this.baanTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 1}));
+            this.veldenTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 9});
+            this.baanTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 1});
         });
 
         // abonneer op wijziging van vliegtuigen
@@ -188,6 +183,15 @@ export class StartEditorComponent implements OnInit {
 
             }
         });
+    }
+
+    ngOnDestroy(): void {
+        if (this.datumAbonnement) this.datumAbonnement.unsubscribe();
+        if (this.typesAbonnement) this.typesAbonnement.unsubscribe();
+        if (this.vliegtuigenAbonnement) this.vliegtuigenAbonnement.unsubscribe();
+        if (this.ledenAbonnement) this.ledenAbonnement.unsubscribe();
+        if (this.aanwezigLedenAbonnement) this.aanwezigLedenAbonnement.unsubscribe();
+        if (this.aanwezigVliegtuigenAbonnement) this.aanwezigVliegtuigenAbonnement.unsubscribe();
     }
 
     openPopup(start: HeliosStartDataset | null) {
@@ -292,12 +296,12 @@ export class StartEditorComponent implements OnInit {
         }
     }
 
-    closePopup() {
+    private closePopup() {
         this.popup().close();
     }
 
     // Ophalen van de start uit de database (via API)
-    haalStartOp(id: number): void {
+    private haalStartOp(id: number): void {
         this.isLoading = true;
 
         try {
@@ -321,7 +325,7 @@ export class StartEditorComponent implements OnInit {
     }
 
     // Er is een vliegtuig geselecteerd in de dropdown box
-    vliegtuigGeselecteerd(id: number | null | undefined) {
+    protected vliegtuigGeselecteerd(id: number | null | undefined) {
         this.start.VLIEGTUIG_ID = id;
         this.gekozenVliegtuig = this.vliegtuigen.find(vliegtuig => vliegtuig.ID == id) as HeliosVliegtuigenDataset;
         this.vliegtuigTypeBevoegd();
@@ -372,7 +376,7 @@ export class StartEditorComponent implements OnInit {
     }
 
     // De vlieger is nu ingevoerd
-    vliegerGeselecteerd(id: number | null | undefined) {
+    protected vliegerGeselecteerd(id: number | null | undefined) {
         this.start.VLIEGER_ID = id;
         const gekozenVlieger = this.leden.find(lid => lid.ID == id) as HeliosLedenDataset;
 
@@ -405,7 +409,7 @@ export class StartEditorComponent implements OnInit {
     }
 
     // De inzittende is nu ook bekend
-    inzittendeGeselecteerd($event: number |undefined ) {
+    protected inzittendeGeselecteerd($event: number |undefined ) {
         this.start.INZITTENDE_ID = $event;
         this.tonenInzittendeNaam();
         this.vliegtuigTypeBevoegd();
@@ -416,7 +420,7 @@ export class StartEditorComponent implements OnInit {
     //  this.toonInzittendeNaam: 0, naam hoeft niet ingevoerd te worden
     //  this.toonInzittendeNaam: 1, naam mag ingevoerd worden, maar ook inzittende combobox tonen
     //  this.toonInzittendeNaam: 2, toon alleen de naam invoer
-    tonenInzittendeNaam() {
+    private tonenInzittendeNaam() {
         if ((this.gekozenVliegtuig) && (this.gekozenVliegtuig.ZITPLAATSEN !== 2)) return false;  // voor eenzitters geen naam tonen
         const gekozenVlieger = this.leden.find(lid => lid.ID == this.start.VLIEGER_ID) as HeliosLedenDataset;
         const gekozenInzittende = this.leden.find(lid => lid.ID == this.start.INZITTENDE_ID) as HeliosLedenDataset;
@@ -469,7 +473,7 @@ export class StartEditorComponent implements OnInit {
     }
 
     // Opslaan van de informatie
-    uitvoeren() {
+    protected uitvoeren() {
         // extra vraag om instructie vlucht, indien nodig
         let doorgaan = true;
 
@@ -509,7 +513,7 @@ export class StartEditorComponent implements OnInit {
     }
 
     // nieuwe start is ingevoerd, nu opslaan
-    Toevoegen() {
+    private Toevoegen() {
         if (!this.toonVliegerNaam) {
             this.start.VLIEGERNAAM = undefined;
         }
@@ -533,7 +537,7 @@ export class StartEditorComponent implements OnInit {
     }
 
     // bestaande start is aangepast, nu opslaan
-    Aanpassen() {
+    private Aanpassen() {
         if (!this.toonVliegerNaam) {
             this.start.VLIEGERNAAM = undefined;
         }
@@ -558,7 +562,7 @@ export class StartEditorComponent implements OnInit {
     }
 
     // markeer een start als verwijderd
-    Verwijderen() {
+    protected Verwijderen() {
         this.startlijstService.deleteStart(this.start.ID!).then(() => {
             this.success = {
                 titel: "Startlijst",
@@ -572,7 +576,7 @@ export class StartEditorComponent implements OnInit {
     }
 
     // de start moet hersteld worden, haal de markering 'verwijderd' weg
-    Herstellen() {
+    protected Herstellen() {
         this.startlijstService.restoreStart(this.start.ID!).then(() => {
             this.success = {
                 titel: "Startlijst",
@@ -586,15 +590,14 @@ export class StartEditorComponent implements OnInit {
     }
 
     // Heeft de vlieger een startverbod
-    startVerbodCheck()
+    private startVerbodCheck()
     {
         const gekozenVlieger = this.leden.find(lid => lid.ID == this.start.VLIEGER_ID) as HeliosLedenDataset;
         this.startVerbod = (gekozenVlieger) ? gekozenVlieger.STARTVERBOD == true: false;
     }
 
-
     // check of medical op orde is. Check inzittende wanneer het een instructie vlucht is
-    medicalCheck() {
+    private medicalCheck() {
         const checkID = this.start.INSTRUCTIEVLUCHT ? this.start.INZITTENDE_ID : this.start.VLIEGER_ID
         const gekozenVlieger = this.leden.find(lid => lid.ID == checkID) as HeliosLedenDataset;
 
@@ -628,7 +631,7 @@ export class StartEditorComponent implements OnInit {
 
     // Mag het lid vliegen op het gekozen vliegtuig. Alleen van toepassing op clubkisten
     // Voor instructie vlucht, checken we de inzittende ipv vlieger
-    vliegtuigTypeBevoegd() {
+    private vliegtuigTypeBevoegd() {
         // moeten natuurlijk vlieger en vliegtuig ingevoerd hebben
         if (!this.start.VLIEGTUIG_ID || !this.start.VLIEGER_ID) {
             this.toonWaarschuwing = false;
@@ -687,7 +690,7 @@ export class StartEditorComponent implements OnInit {
     }
 
     // mag de gebruiker de vlucht afvinken als trainingsvlucht
-    magCheckZetten() {
+    protected magCheckZetten() {
         const ui = this.loginService.userInfo?.Userinfo;
         const magCheckZetten = (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) ? true : false;
 
@@ -737,7 +740,7 @@ export class StartEditorComponent implements OnInit {
     }
 
     // Kan de vlucht een instructie vlucht zijn? Instrcuteur moet dan achterin
-    kanInstructieVluchtZijn() {
+    protected kanInstructieVluchtZijn() {
         const inzittende = this.leden.find(lid => lid.ID == this.start.INZITTENDE_ID) as HeliosLedenDataset;
         if (!inzittende) {
             return true;            // Inzittende is niet ingevoerd, laten we checkbox maar tonen
@@ -746,7 +749,7 @@ export class StartEditorComponent implements OnInit {
     }
 
     // Is de start methode ingevoerd
-    StartMethodeIngevuld(): string {
+    protected StartMethodeIngevuld(): string {
         if (this.start.STARTMETHODE_ID) {
             return ""
         }
@@ -756,7 +759,7 @@ export class StartEditorComponent implements OnInit {
     }
 
     // Er mag alleen opgeslagen worden als aan de minimale voorwaarden zijn voldaan
-    opslaanDisabled() {
+    protected opslaanDisabled() {
         if (!this.start.VLIEGTUIG_ID || !this.start.STARTMETHODE_ID || !this.start.VELD_ID || this.startVerbod) {
             return true;
         }
@@ -776,7 +779,7 @@ export class StartEditorComponent implements OnInit {
     }
 
     // Mag de vlieger pax vliegen? Staat in zijn profiel (dus niet in progressiekaart)
-    magPaxVliegen() {
+    protected magPaxVliegen() {
         const gekozenVlieger = this.leden.find(lid => lid.ID == this.start.VLIEGER_ID) as HeliosLedenDataset;
         if (!gekozenVlieger) {
             return true;            // Vlieger is niet ingevoerd, laten we checkbox maar tonen
@@ -785,7 +788,7 @@ export class StartEditorComponent implements OnInit {
     }
 
     // Mogen de vlieger voorin / achterin omgewisseld worden?
-    magOmwisselen() {
+    protected magOmwisselen() {
         if (this.gekozenVliegtuig?.ZITPLAATSEN !== 2)     return false;
         if (this.start.PAX == true)                       return false;
         if (this.start.INSTRUCTIEVLUCHT == true)          return false;
@@ -794,7 +797,7 @@ export class StartEditorComponent implements OnInit {
     }
 
     // De knop omwissellen is gebruikt, dus nu vlieger en inzittende omwisselen. Soms alleen de ingevoerde namen, anders de ID's
-    omwisselen() {
+    protected omwisselen() {
         let alleenNamenOmwisselen = false;
 
         const gekozenVlieger = this.leden.find(lid => lid.ID == this.start.VLIEGER_ID) as HeliosLedenDataset;
@@ -823,14 +826,14 @@ export class StartEditorComponent implements OnInit {
     }
 
     // Datum van de start aanpassen
-    datumAanpassen($datum: NgbDate) {
+    protected datumAanpassen($datum: NgbDate) {
         this.startDatum = DateTime.fromObject({year: $datum.year, month: $datum.month, day: $datum.day});
         this.start.DATUM = this.startDatum.toISODate() as string;
 
         this.magWijzigen(this.start.DATUM);
     }
 
-    magWijzigen(datum: string) {
+    private magWijzigen(datum: string) {
         const ui = this.loginService.userInfo!;
         const dt = DateTime.fromSQL(datum);
 
@@ -858,7 +861,7 @@ export class StartEditorComponent implements OnInit {
     }
 
     // open de transactie om sleep of 3e lierstart strippen te afschrijven
-    toonTransactieEditor(VLIEGER_ID: number) {
+    protected toonTransactieEditor(VLIEGER_ID: number) {
        this.transactieEditor().openPopup(VLIEGER_ID, this.start.DATUM ?? undefined)
     }
 }

@@ -1,73 +1,76 @@
-import { Component, inject, output, viewChild } from '@angular/core';
-import { Observable, of, Subscription } from 'rxjs';
+import { Component, OnDestroy, inject, output, viewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { TypesService } from '../../../../../services/apiservice/types.service';
 import { HeliosType } from '../../../../../types/Helios';
 import { ModalComponent } from '../../../modal/modal.component';
-import { NgSelectComponent } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import { IconButtonComponent } from '../../../icon-button/icon-button.component';
-import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-compose-meteo',
     templateUrl: './compose-meteo.component.html',
     styleUrls: ['./compose-meteo.component.scss'],
-    imports: [ModalComponent, NgSelectComponent, FormsModule, IconButtonComponent, AsyncPipe]
+    imports: [ModalComponent, FormsModule, IconButtonComponent]
 })
-export class ComposeMeteoComponent {
-    private readonly typesService = inject(TypesService);
-
+export class ComposeMeteoComponent implements OnDestroy {
     readonly opslaan = output<string>();
+
+    // variablen in html formulier
+    protected windSterkteTypes: HeliosType[] = [];
+    protected windRichtingTypes: HeliosType[] = [];
+    protected windEigenschappenTypes: HeliosType[] = [];
+    protected stijgenTypes: HeliosType[] = [];
+    protected bewolkingTypes: HeliosType[] = [];
+    protected dekkingTypes: HeliosType[] = [];
+    protected zichtTypes: HeliosType[] = [];
+    protected windRichting: string;
+    protected windKracht: string;
+    protected windEigenschappen: string;
+    protected bewolking: string;
+    protected bewolkingDekking: string;
+    protected wolkenBasis: number;
+    protected gemiddeldStijgen: string;
+    protected zicht: string;
+
+    // private variable voor ts script
+    private readonly typesService = inject(TypesService);
     private readonly popup = viewChild.required(ModalComponent);
 
     private typesAbonnement: Subscription;
 
-    windSterkteTypes$: Observable<HeliosType[]>;
-    windRichtingTypes$: Observable<HeliosType[]>;
-    windEigenschappenTypes$: Observable<HeliosType[]>;
-    stijgenTypes$: Observable<HeliosType[]>;
-    bewolkingTypes$: Observable<HeliosType[]>;
-    dekkingTypes$: Observable<HeliosType[]>;
-    zichtTypes$: Observable<HeliosType[]>;
-
-    windRichting: string;
-    windKracht: string;
-    windEigenschappen: string;
-    bewolking: string;
-    bewolkingDekking: string;
-    wolkenBasis: number;
-    gemiddeldStijgen: string;
-    zicht: string;
-
     constructor() {
         // abonneer op wijziging van competenties
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
-            this.windRichtingTypes$ = of(dataset!.filter((t: HeliosType) => {
+            this.windRichtingTypes = dataset!.filter((t: HeliosType) => {
                 return t.GROEP == 2
-            }));
-            this.windSterkteTypes$ = of(dataset!.filter((t: HeliosType) => {
+            });
+            this.windSterkteTypes = dataset!.filter((t: HeliosType) => {
                 return t.GROEP == 3
-            }));
-            this.bewolkingTypes$ = of(dataset!.filter((t: HeliosType) => {
+            });
+            this.bewolkingTypes = dataset!.filter((t: HeliosType) => {
                 return t.GROEP == 11
-            }));
-            this.windEigenschappenTypes$ = of(dataset!.filter((t: HeliosType) => {
+            });
+            this.windEigenschappenTypes = dataset!.filter((t: HeliosType) => {
                 return t.GROEP == 12
-            }));
-            this.zichtTypes$ = of(dataset!.filter((t: HeliosType) => {
+            });
+            this.zichtTypes = dataset!.filter((t: HeliosType) => {
                 return t.GROEP == 13
-            }));
-            this.stijgenTypes$ = of(dataset!.filter((t: HeliosType) => {
+            });
+            this.stijgenTypes = dataset!.filter((t: HeliosType) => {
                 return t.GROEP == 16
-            }));
-            this.dekkingTypes$ = of(dataset!.filter((t: HeliosType) => {
+            });
+            this.dekkingTypes = dataset!.filter((t: HeliosType) => {
                 return t.GROEP == 17
-            }));
+            });
         });
     }
 
+    ngOnDestroy(): void {
+        if (this.typesAbonnement) this.typesAbonnement.unsubscribe();
+    }
+
     // Alle tags beginnen met * en eindigen met #. Via replace worden de tags vervangen door werkelijke waarde
-    Compose() {
+    protected Compose() {
         let tekst: string = "Het zicht was #ZICHT#. De windrichting was #RICHTING# met #KRACHT#. " +
             "De wind had de volgende eigenschap(pen): #WIND_EIGENSCHAPPEN#. " +
             "Er was #BEWOLKING_DEKKING# bewolking en was #BEWOLKING# met een basis van #WOLKENBASIS# meter hoog. Het gemiddeld stijgen was #STIJGEN# m/s.";

@@ -8,21 +8,24 @@ import { LidEditorComponent } from '../../../shared/components/editors/lid-edito
 
 @Component({
     selector: 'app-profile',
+    host: { class: 'scherm-pagina' },
     templateUrl: './profiel-page.component.html',
     styleUrls: ['./profiel-page.component.scss'],
     providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
     imports: [LidEditorComponent]
 })
 export class ProfielPageComponent {
-    private readonly loginService = inject(LoginService);
-    private readonly activatedRoute = inject(ActivatedRoute);
-
-    lidID: number;
-    isVerwijderMode = false;
-    isRestoreMode = false;
-
     success: SuccessMessage | undefined;
     error: ErrorMessage | undefined;
+
+    // variablen in html formulier
+    protected lidID: number;
+    protected isVerwijderMode = false;
+    protected isRestoreMode = false;
+
+    // private variable voor ts script
+    private readonly loginService = inject(LoginService);
+    private readonly activatedRoute = inject(ActivatedRoute);
 
     constructor() {
 

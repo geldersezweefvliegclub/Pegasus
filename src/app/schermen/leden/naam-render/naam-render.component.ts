@@ -11,11 +11,13 @@ import { RouterLink } from '@angular/router';
     imports: [RouterLink]
 })
 export class NaamRenderComponent implements AgRendererComponent {
-  private readonly loginService = inject(LoginService);
+  // variablen in html formulier
+  protected naam: string;
+  protected lidID: string;
+  protected naarDashboard = false;
 
-  naam: string;
-  lidID: string;
-  naarDashboard = false;
+  // private variable voor ts script
+  private readonly loginService = inject(LoginService);
 
   agInit(params: ICellRendererParams): void {
     const ui = this.loginService.userInfo?.Userinfo;
@@ -29,9 +31,4 @@ export class NaamRenderComponent implements AgRendererComponent {
     return false;
   }
 }
-
-
-
-
-
 

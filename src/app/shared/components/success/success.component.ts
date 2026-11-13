@@ -12,7 +12,8 @@ export class SuccessComponent implements OnChanges {
     @Input() success: SuccessMessage | undefined = undefined;
     readonly errorOverlay = viewChild.required<ElementRef>('successOverlay');
 
-    showSuccess = false;
+    // variablen in html formulier
+    protected showSuccess = false;
 
     ngOnChanges(_: SimpleChanges) {
         this.showSuccess = true;

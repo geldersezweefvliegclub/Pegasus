@@ -16,8 +16,9 @@ export class TypesGroepenService {
     private readonly storageService = inject(StorageService);
 
     private typesGroepenCache: HeliosTypesGroepen = {dataset: []};        // return waarde van API call
-
     private typesGroepenStore = new BehaviorSubject(this.typesGroepenCache.dataset);
+
+    // afgeleid van bovenstaande variabelen, moet daarom na de declaratie ervan staan
     public readonly typesGroepenChange = this.typesGroepenStore.asObservable();      // nieuwe aanwezigheid beschikbaar
 
     constructor() {

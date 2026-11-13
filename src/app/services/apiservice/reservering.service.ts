@@ -12,7 +12,6 @@ export class ReserveringService {
     private readonly apiService = inject(APIService);
     private readonly loginService = inject(LoginService);
 
-
     private reserveringenCache: HeliosReserveringen = { dataset: []};
 
     async getReserveringen(startDatum: DateTime, eindDatum: DateTime, maxRecords?: number): Promise<HeliosReserveringenDataset[]> {
@@ -54,10 +53,8 @@ export class ReserveringService {
         await this.apiService.delete('Reservering/DeleteObject', {'ID': id.toString()});
     }
 
-
     async MagNogReserveren(): Promise<boolean> {
         const response: Response = await this.apiService.get('Reservering/MagNogReserveren');
         return response.json();
     }
-
 }

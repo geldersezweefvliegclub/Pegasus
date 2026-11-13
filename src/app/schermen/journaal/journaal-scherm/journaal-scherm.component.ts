@@ -33,35 +33,58 @@ import { StatusButtonComponent } from '../../../shared/components/status-button/
 import { ZoekbarComponent } from '../../../shared/components/zoekbar/zoekbar.component';
 import { PopupJournaalComponent } from '../../../shared/components/popup-journaal/popup-journaal.component';
 
-
 @Component({
     selector: 'app-meldingen-scherm',
+    host: { class: 'scherm-pagina' },
     templateUrl: './journaal-scherm.component.html',
     styleUrls: ['./journaal-scherm.component.scss'],
     imports: [ErrorComponent, SuccessComponent, PegasusCardComponent, DatatableComponent, JournaalCardComponent, IconButtonComponent, StatusButtonComponent, ZoekbarComponent, JournaalEditorComponent, JournaalFilterComponent, PopupJournaalComponent]
 })
 
 export class JournaalSchermComponent implements OnInit, OnDestroy {
+    // variablen in html formulier
+    protected readonly editor = viewChild.required(JournaalEditorComponent);
+
+    protected data:HeliosJournaalDataset[] = [];
+    protected isLoading = false;
+    protected toonKlein = false;                 // Klein formaat van het journaal
+    protected columns: ColDef[];
+    protected frameworkComponents = {
+        deleteAction: DeleteActionComponent,
+        restoreAction: RestoreActionComponent,
+        materieelRender: MaterieelRenderComponent,
+        statusRender: StatusRenderComponent,
+        categorieRender: CategorieRenderComponent,
+        datumRender: DatumRenderComponent,
+        titleRender: TitleRenderComponent
+    };
+    protected iconCardIcon: IconDefinition = faBug;
+    protected zoekString: string;
+    protected deleteMode = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
+    protected trashMode = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
+    protected activeFilter: journaalFilter;      // geavanceerd filter via popup
+    protected magToevoegen = false;
+    protected magVerwijderen = false;
+    protected magWijzigen = false;
+    protected magExporten = false;
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+
+    // private variable voor ts script
     private readonly loginService = inject(LoginService);
     private readonly sharedService = inject(SharedService);
     private readonly activatedRoute = inject(ActivatedRoute);
     private readonly meldingenService = inject(JournaalService);
-
     private readonly filter = viewChild.required(JournaalFilterComponent);
-    readonly editor = viewChild.required(JournaalEditorComponent);
-
-    data:HeliosJournaalDataset[] = [];
-    isLoading = false;
-    toonKlein = false;                 // Klein formaat van het journaal
 
     private dbEventAbonnement: Subscription;    // Abonneer op aanpassingen in de database
     private datumAbonnement: Subscription;      // volg de keuze van de kalender
     private maandAbonnement: Subscription;      // volg de keuze van de kalender
-    datum: DateTime = DateTime.now();           // de gekozen dag
+    private datum: DateTime = DateTime.now();           // de gekozen dag
 
     // Data kolommen voor het grid
     // Elke kolom kan ene comparator hebben om de kolom juist te kunnen sorteren. Elke comparator functie neemt argumenten (valueA, valueB, nodeA, nodeB, isDescending), zie AG Grid docs.
-    dataColumns: ColDef[] = [
+    private dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
         {field: 'DATUM', headerName: 'Ingevoerd', cellRenderer: 'datumRender', sortable: true},
         {field: 'MELDER', headerName: 'Melder', sortable: true},
@@ -80,9 +103,8 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
         {field: 'TECHNICUS', headerName: 'Technicus', sortable: true},
         {field: 'LAATSTE_AANPASSING', headerName: 'Laatste aanpassing', cellRenderer: 'datumRender', sortable: true},
     ];
-
     // kolom om record te verwijderen
-    deleteColumn: ColDef[] = [{
+    private deleteColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 100,
         initialWidth: 100,
@@ -96,9 +118,8 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
             }
         },
     }];
-
     // kolom om terug te kunnen terughalen
-    restoreColumn: ColDef[] = [{
+    private restoreColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 100,
         initialWidth: 100,
@@ -112,36 +133,7 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
             }
         },
     }];
-
-    columns: ColDef[];
-
-    frameworkComponents = {
-        deleteAction: DeleteActionComponent,
-        restoreAction: RestoreActionComponent,
-        materieelRender: MaterieelRenderComponent,
-        statusRender: StatusRenderComponent,
-        categorieRender: CategorieRenderComponent,
-        datumRender: DatumRenderComponent,
-        titleRender: TitleRenderComponent
-    };
-    iconCardIcon: IconDefinition = faBug;
-
-    zoekString: string;
-    zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
-    deleteMode = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
-    trashMode = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
-
-    activeFilter: journaalFilter;      // geavanceerd filter via popup
-
-    magToevoegen = false;
-    magVerwijderen = false;
-    magWijzigen = false;
-    magClubkistWijzigen = false;
-    magExporten = false;
-
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
-
+    private zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
     private resizeSubscription: Subscription;
 
     ngOnInit(): void {
@@ -222,7 +214,7 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
     }
 
     // aanpassen wat we op het scherm kwijt kunnen nadat scherm groote gewijzigd is
-    onWindowResize() {
+    private onWindowResize() {
         if(this.sharedService.getSchermSize() === SchermGrootte.xs)
         {
             this.kolomDefinitie();
@@ -236,21 +228,21 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
     }
 
     // openen van popup om nieuwe melding te kunnen invoeren
-    addMelding(): void {
+    protected addMelding(): void {
         if (this.magToevoegen) {
             this.editor().openPopup(null);
         }
     }
 
     // openen van popup om gegevens van een bestaand vliegtuig aan te passen
-    openEditor(event?: RowDoubleClickedEvent) {
+    protected openEditor(event?: RowDoubleClickedEvent) {
         if (this.magWijzigen) {
             this.editor().openPopup(event?.data as HeliosJournaalDataset);
         }
     }
 
     // schakelen tussen deleteMode JA/NEE. In deleteMode kun je vliegtuigen verwijderen
-    deleteModeJaNee() {
+    protected deleteModeJaNee() {
         this.deleteMode = !this.deleteMode;
 
         if (this.trashMode) {
@@ -260,14 +252,16 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
     }
 
     // schakelen tussen trashMode JA/NEE. In trashMode worden te verwijderde vliegtuigen getoond
-    trashModeJaNee(actief: boolean) {
+    protected trashModeJaNee(actief: boolean) {
         this.trashMode = actief
         this.kolomDefinitie();
         this.opvragen();
     }
 
-    zetPermissie() {
+    private zetPermissie() {
         const ui = this.loginService.userInfo?.Userinfo;
+        // TODO: rechtencontrole voor wijzigen van meldingen over een clubkist ontbreekt. Er was magClubkistWijzigen
+        //  (isBeheerder of isCIMT), maar die werd nergens gecontroleerd. Bepalen of dit nodig is
         this.magToevoegen = (!ui?.isDDWV) ? true : false;
 
         if (this.sharedService.getSchermSize() < SchermGrootte.lg) {
@@ -275,7 +269,6 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
             this.magWijzigen = false;
         }
         else {
-            this.magClubkistWijzigen = (ui?.isBeheerder || ui?.isCIMT) ?? false;
 
             this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ? true : false;
             this.magWijzigen = (!ui?.isDDWV) ? true : false;
@@ -284,7 +277,7 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
     }
 
     // Welke kolommen moet worden getoond in het grid
-    kolomDefinitie() {
+    private kolomDefinitie() {
         this.toonKlein = (this.sharedService.getSchermSize() < SchermGrootte.xl);
 
         if (!this.deleteMode) {
@@ -299,7 +292,7 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
     }
 
     // Opvragen van de starts via de api
-    opvragen() {
+    protected opvragen() {
         clearTimeout(this.zoekTimer);
 
         let startDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 1, day: 1});
@@ -323,7 +316,7 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
     }
 
     // Export naar excel
-    exportDataset() {
+    protected exportDataset() {
         const ws = xlsx.utils.json_to_sheet(this.data);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
@@ -331,7 +324,7 @@ export class JournaalSchermComponent implements OnInit, OnDestroy {
     }
 
     // Open van het filter dialoog
-    filterPopup() {
+    protected filterPopup() {
         this.filter().openPopup();
     }
 }

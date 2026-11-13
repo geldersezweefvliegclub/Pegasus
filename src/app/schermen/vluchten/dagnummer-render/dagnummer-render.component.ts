@@ -2,18 +2,16 @@ import { Component } from '@angular/core';
 import { AgRendererComponent } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 
-
 @Component({
     selector: 'app-dagnummer-render',
     templateUrl: './dagnummer-render.component.html',
     styleUrls: ['./dagnummer-render.component.scss']
 })
 export class DagnummerRenderComponent implements AgRendererComponent {
-  params: ICellRendererParams;
-  dagnummer: number;
-  hasFlarm = false;
-
-
+  // variablen in html formulier
+  protected params: ICellRendererParams;
+  protected dagnummer: number;
+  protected hasFlarm = false;
 
   agInit(params: ICellRendererParams): void {
     this.params = params;
@@ -24,5 +22,4 @@ export class DagnummerRenderComponent implements AgRendererComponent {
   refresh(_: ICellRendererParams): boolean {
     return false;
   }
-
 }

@@ -8,66 +8,60 @@ import { ComposeMeteoComponent } from './compose-meteo/compose-meteo.component';
 import { ComposeBedrijfComponent } from './compose-bedrijf/compose-bedrijf.component';
 import { faArtstation } from '@fortawesome/free-brands-svg-icons';
 import { DateTime } from 'luxon';
-import { Observable, of, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { SchermGrootte, SharedService } from '../../../../services/shared/shared.service';
 import { HeliosDagRapport, HeliosType } from '../../../../types/Helios';
 import { TypesService } from '../../../../services/apiservice/types.service';
 import { DagRapportenService } from '../../../../services/apiservice/dag-rapporten.service';
 import { ErrorComponent } from '../../error/error.component';
 import { SuccessComponent } from '../../success/success.component';
-import { NgSelectComponent } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import { PegasusCardComponent } from '../../pegasus-card/pegasus-card.component';
 import { IconButtonComponent } from '../../icon-button/icon-button.component';
 import { LoaderComponent } from '../../loader/loader.component';
-import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-dag-rapport-editor',
     templateUrl: './dag-rapport-editor.component.html',
     styleUrls: ['./dag-rapport-editor.component.scss'],
-    imports: [ErrorComponent, SuccessComponent, ModalComponent, NgSelectComponent, FormsModule, PegasusCardComponent, IconButtonComponent, LoaderComponent, ComposeMeteoComponent, ComposeBedrijfComponent, AsyncPipe]
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, PegasusCardComponent, IconButtonComponent, LoaderComponent, ComposeMeteoComponent, ComposeBedrijfComponent]
 })
 export class DagRapportEditorComponent implements OnInit, OnDestroy {
-    private readonly typesService = inject(TypesService);
-    private readonly sharedService = inject(SharedService);
-    private readonly dagRapportenService = inject(DagRapportenService);
-
     readonly veld_id = input<number>();
-    private readonly popup = viewChild.required(ModalComponent);
-    private readonly meteoWizard = viewChild.required(ComposeMeteoComponent);
-    private readonly bedrijfWizard = viewChild.required(ComposeBedrijfComponent);
-
     readonly aangepast = output<number>();
 
-    private readonly iconMeteo: IconDefinition = faCloudSunRain;
+    // variablen in html formulier
     protected readonly iconVliegend: IconDefinition = faPaperPlane;
     protected readonly iconRollend: IconDefinition = faTruck;
     protected readonly iconVerslag: IconDefinition = faFlagCheckered;
     protected readonly iconIncident: IconDefinition = faFrown;
-    private readonly iconBedrijf: IconDefinition = faArtstation;
+
+    protected datum: DateTime = DateTime.now();              // de gekozen dag
+    protected veldTypes: HeliosType[] = [];
+    protected dagRapport: HeliosDagRapport;
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+    protected isSaving = false;
+    protected isLoading = false;
+    protected isVerwijderMode = false;
+    protected isRestoreMode = false;
+    protected formTitel = "";
+
+    // private variable voor ts script
+    private readonly typesService = inject(TypesService);
+    private readonly sharedService = inject(SharedService);
+    private readonly dagRapportenService = inject(DagRapportenService);
+    private readonly popup = viewChild.required(ModalComponent);
+    protected readonly iconMeteo: IconDefinition = faCloudSunRain;
+    protected readonly iconBedrijf: IconDefinition = faArtstation;
 
     private datumAbonnement: Subscription;         // volg de keuze van de kalender
-    datum: DateTime = DateTime.now();              // de gekozen dag
-
     private typesAbonnement: Subscription;
-    veldTypes$: Observable<HeliosType[]>;
-
-    dagRapport: HeliosDagRapport;
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
-
-    isSaving = false;
-    isLoading = false;
-    isVerwijderMode = false;
-    isRestoreMode = false;
-
-    formTitel = "";
 
     ngOnInit(): void {
         // abonneer op wijziging van lidTypes
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
-            this.veldTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));            // vliegvelden
+            this.veldTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 9});            // vliegvelden
         });
 
         // de datum zoals die in de kalender gekozen is
@@ -86,7 +80,7 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
     }
 
     // ophalen van een dag rapport
-    ophalen(id:number) {
+    private ophalen(id:number) {
         this.isLoading = true;
         this.dagRapportenService.getDagRapport(id).then ((dr) => {
             this.dagRapport = dr
@@ -140,7 +134,7 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
     }
 
     // uitvoeren van de actie waar we mee bezig zijn
-    uitvoeren() {
+    protected uitvoeren() {
         this.isSaving = true;
         if (this.isRestoreMode) {
             this.Herstellen(this.dagRapport);
@@ -160,7 +154,7 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
     }
 
     // opslaan van de starts van een nieuwe dag rapport
-    Toevoegen() {
+    private Toevoegen() {
         this.dagRapportenService.addDagRapport(this.dagRapport).then((dr) => {
             this.isSaving = false;
             this.success = {
@@ -176,7 +170,7 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
     }
 
     // bestaande dag rapport is aangepast.
-    Aanpassen() {
+    private Aanpassen() {
         this.dagRapportenService.updateDagRapport(this.dagRapport).then((_) => {
             this.isSaving = false;
             this.success = {
@@ -191,7 +185,7 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
     }
 
     // markeer een track als verwijderd
-    Verwijderen(dr:HeliosDagRapport) {
+    protected Verwijderen(dr:HeliosDagRapport) {
         this.dagRapportenService.deleteDagRapport(dr.ID!).then(() => {
             this.isSaving = false;
             this.success = {
@@ -207,7 +201,7 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
 
     // de track herstellen, haal de markering 'verwijderd' weg
     // markeer een track als verwijderd
-    Herstellen(dr:HeliosDagRapport) {
+    protected Herstellen(dr:HeliosDagRapport) {
         this.dagRapportenService.restoreRapport (dr.ID!).then(() => {
             this.isSaving = false;
             this.success = {
@@ -222,7 +216,7 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
     }
 
     // sluiten van window en inform parent dat data aangepast is.
-    closePopup() {
+    private closePopup() {
         const id = this.dagRapport.ID;
         if (id === undefined || id === null) {
             console.error("Kan dagrapport niet sluiten zonder rapport-ID.");
@@ -233,7 +227,7 @@ export class DagRapportEditorComponent implements OnInit, OnDestroy {
     }
 
     // Hoe groot moet de popup worden
-    popupClass() {
+    protected popupClass() {
         return (this.sharedService.getSchermSize() > SchermGrootte.md) ? "popupMedium" : "popupLarge";
     }
 }

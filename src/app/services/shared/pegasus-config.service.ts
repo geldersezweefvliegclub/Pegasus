@@ -6,11 +6,6 @@ import { Airport, Check, Dienst, IPegasusConfig, MenuItem, Overig, PVB, Rapport 
     providedIn: 'root'
 })
 export class PegasusConfigService {
-    private http = inject(HttpClient);
-
-    private configURL = './assets/pegasus.config.json';
-    private pegasusConfig: IPegasusConfig;
-
     public readonly OCHTEND_DDI_TYPE_ID: number = 1800;
     public readonly OCHTEND_INSTRUCTEUR_TYPE_ID: number = 1801;
     public readonly OCHTEND_LIERIST_TYPE_ID: number = 1802;
@@ -24,6 +19,10 @@ export class PegasusConfigService {
     public readonly MIDDAG_STARTLEIDER_TYPE_ID: number = 1809;
     public readonly MIDDAG_STARTLEIDER_IO_TYPE_ID: number = 1812;
     public readonly SLEEPVLIEGER_TYPE_ID: number = 1810;
+
+    private http = inject(HttpClient);
+    private configURL = './assets/pegasus.config.json';
+    private pegasusConfig: IPegasusConfig;
 
     public load() {
         return new Promise<IPegasusConfig>((resolve, reject) => {

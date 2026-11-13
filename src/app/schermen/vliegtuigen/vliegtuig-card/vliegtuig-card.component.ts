@@ -1,7 +1,6 @@
-import { Component, Input, inject, output } from '@angular/core';
+import { Component, Input, output } from '@angular/core';
 import { HeliosVliegtuigenDataset } from '../../../types/Helios';
 import { faBug, faFileAlt, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
-import { SharedService } from '../../../services/shared/shared.service';
 import { HeliosVliegtuigenDatasetExtended } from '../vliegtuigen-scherm/vliegtuigen-scherm.component';
 
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -14,20 +13,23 @@ import { VliegtuigEditorComponent } from '../../../shared/components/editors/vli
     imports: [FaIconComponent, VliegtuigEditorComponent]
 })
 export class VliegtuigCardComponent  {
-  private readonly sharedService = inject(SharedService);
-
   @Input() vliegtuig: HeliosVliegtuigenDatasetExtended;
   readonly Journaal = output<number>();
   readonly Logboek = output<number>();
   readonly Editor = output<HeliosVliegtuigenDatasetExtended>();
 
+  // variablen in html formulier
   protected readonly iconEdit = faPenToSquare;
+  protected readonly journaalIcon = faBug;
+  protected readonly logboekIcon = faFileAlt;
 
-  editorButtonClicked() {
+  // private variable voor ts script
+
+  protected editorButtonClicked() {
     this.Editor.emit(this.vliegtuig as HeliosVliegtuigenDataset);
   }
 
-  logboekButtonClicked() {
+  protected logboekButtonClicked() {
     const id = this.vliegtuig.ID;
     if (id === undefined) {
       console.error("Kan logboek niet openen zonder vliegtuig-ID.");
@@ -36,7 +38,7 @@ export class VliegtuigCardComponent  {
     this.Logboek.emit(id);
   }
 
-  journaalButtonClicked() {
+  protected journaalButtonClicked() {
     const id = this.vliegtuig.ID;
     if (id === undefined) {
       console.error("Kan journaal niet openen zonder vliegtuig-ID.");
@@ -44,7 +46,4 @@ export class VliegtuigCardComponent  {
     }
     this.Journaal.emit(id);
   }
-
-  protected readonly journaalIcon = faBug;
-  protected readonly logboekIcon = faFileAlt;
 }

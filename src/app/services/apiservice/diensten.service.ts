@@ -9,7 +9,7 @@ import {
 import { APIService } from './api.service';
 import { KeyValueArray } from '../../types/Utils';
 import { DateTime } from 'luxon';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { SharedService } from '../shared/shared.service';
 import { CustomJsonSerializer, getBeginEindDatumVanMaand } from '../../utils/Utils';
 import { debounceTime } from 'rxjs/operators';
@@ -26,19 +26,18 @@ export class DienstenService {
 
     private dienstenCache: HeliosDiensten = { dataset: []};     // return waarde van API call
     private totalenCache: HeliosDienstenTotaal[] = [];          // return waarde van API call
-
-    private datumAbonnement: Subscription;                     // volg de keuze van de kalender
     private datum: DateTime = DateTime.now();                  // de gekozen dag
-
     private dienstenStore = new BehaviorSubject(this.dienstenCache.dataset);
+
+    // afgeleid van bovenstaande variabelen, moet daarom na de declaratie ervan staan
     public readonly dienstenChange = this.dienstenStore.asObservable();      // nieuw rooster beschikbaar
 
     constructor() {
         const loginService = this.loginService;
 
-
         // de datum zoals die in de kalender gekozen is
-        this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(datum => {
+        // service leeft net zo lang als de app, dit abonnement hoeft nooit opgezegd te worden
+        this.sharedService.kalenderMaandChange.subscribe(datum => {
             this.datum = DateTime.fromObject({
                 year: datum.year,
                 month: datum.month,
@@ -109,7 +108,6 @@ export class DienstenService {
         }
         return this.dienstenCache?.dataset as HeliosTracksDataset[];
     }
-
 
     async getTotalen(jaar: number, lidID?: number): Promise<HeliosDienstenTotaal[]> {
         const getParams: KeyValueArray = {};

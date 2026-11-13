@@ -1,12 +1,12 @@
 <app-error [error]='error'/>
 <app-success [success]='success'/>
 
-<app-pegasus-card titel="Dashboard"
+<app-pegasus-card class="scherm-vullend" titel="Dashboard"
                   subtitel="Een verzameling van nuttige info"
                   [icon]="iconCardIcon">
 
-    <div class="box">
-        <div class="bg-tertiary rounded text-white " ngClass.gt-sm="px-5">
+    <div class="box scroll-vlak scroll-vlak-rijen">
+        <div class="bg-tertiary rounded text-white px-md-5">
             <table class="w-100">
                 <tr>
                     <td class="w-100">
@@ -59,7 +59,7 @@
         </div>
         @if (!alleenLogboekTonen()) {
             <div class="row mt-4">
-                <div class="col-12 col-sm-6 col-xl-3 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
+                <div class="col-12 col-sm-6 col-xl-3 ps-0 pe-0 ps-md-2 pe-md-2">
                     <app-pegasus-card id="statusCard"
                                       class="kleineKaart"
                                       titel="Status"
@@ -70,7 +70,7 @@
                         }
                     </app-pegasus-card>
                 </div>
-                <div class="col-12 col-sm-6 col-xl-3 mt-4 mt-sm-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
+                <div class="col-12 col-sm-6 col-xl-3 mt-4 mt-sm-0 ps-0 pe-0 ps-md-2 pe-md-2">
                     <app-pegasus-card id="pvbCard"
                                       class="kleineKaart"
                                       titel="PVB"
@@ -81,7 +81,7 @@
                         }
                     </app-pegasus-card>
                 </div>
-                <div class="col-12 col-sm-6 col-xl-3 mt-4 mt-xl-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
+                <div class="col-12 col-sm-6 col-xl-3 mt-4 mt-xl-0 ps-0 pe-0 ps-md-2 pe-md-2">
                     <app-pegasus-card id="recencyCard"
                                       class="kleineKaart"
                                       titel="Recency"
@@ -92,7 +92,7 @@
                         }
                     </app-pegasus-card>
                 </div>
-                <div class="col-12 col-sm-6 col-xl-3 mt-4 mt-xl-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
+                <div class="col-12 col-sm-6 col-xl-3 mt-4 mt-xl-0 ps-0 pe-0 ps-md-2 pe-md-2">
                     <!-- carousel met diensten / verjaardagen -->
                     <ngb-carousel [showNavigationIndicators]="true" [pauseOnHover]="true" [interval]="10000"
                                   class="carousel-dva h-100 overflow-x-clip">
@@ -138,7 +138,7 @@
 
         <!-- logboek -->
         <div class="row mt-4 datatable-hoogte">
-            <div class="col-12 col-lg-8 col-xl-9 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
+            <div class="col-12 col-lg-8 col-xl-9 ps-0 pe-0 ps-md-2 pe-md-2">
                 <app-pegasus-card id="logboekCard"
                                   class="kleineKaart"
                                   titel="Logboek {{datum.year}}"
@@ -156,7 +156,7 @@
                     }
                 </app-pegasus-card>
             </div>
-            <div class="col-12 col-lg-4 col-xl-3 mt-4 mt-lg-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
+            <div class="col-12 col-lg-4 col-xl-3 mt-4 mt-lg-0 ps-0 pe-0 ps-md-2 pe-md-2">
                 <app-pegasus-card id="logboekCardSummary"
                                   class="kleineKaart"
                                   titel="Totalen {{datum.year}}"
@@ -172,7 +172,7 @@
         <!-- progressie -->
         @if (!alleenLogboekTonen()) {
             <div class="row mt-4 progressie-hoogte">
-                <div class="col-12 col-lg-8 col-xl-9 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
+                <div class="col-12 col-lg-8 col-xl-9 ps-0 pe-0 ps-md-2 pe-md-2">
                     <app-pegasus-card id="progressieCard"
                                       class="kleineKaart"
                                       titel="Progressiekaart"
@@ -185,7 +185,7 @@
                         }
                     </app-pegasus-card>
                 </div>
-                <div class="col-12 col-lg-4 col-xl-3 mt-4 mt-lg-0 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
+                <div class="col-12 col-lg-4 col-xl-3 mt-4 mt-lg-0 ps-0 pe-0 ps-md-2 pe-md-2">
                     @if (lidData) {
                         <app-leden-documenten [LidID]='lidData.ID'/>
                     }
@@ -193,7 +193,7 @@
         </div>
         } @if (toonTracks) {
         <div class="row mt-4 tracks-hoogte flex-grow">
-            <div class="col-12 ps-0 pe-0" ngClass.gt-sm="ps-2 pe-2">
+            <div class="col-12 ps-0 pe-0 ps-md-2 pe-md-2">
                 <app-pegasus-card id="tracksCard"
                                   class="kleineKaart"
                                   titel="Tracks"

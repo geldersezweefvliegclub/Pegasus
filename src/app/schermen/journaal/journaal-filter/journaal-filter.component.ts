@@ -9,7 +9,6 @@ import { FormsModule } from '@angular/forms';
 import { NgSelectComponent, NgOptionComponent } from '@ng-select/ng-select';
 import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
 
-
 @Component({
     selector: 'app-meldingen-filter',
     templateUrl: './journaal-filter.component.html',
@@ -17,21 +16,22 @@ import { IconButtonComponent } from '../../../shared/components/icon-button/icon
     imports: [ModalComponent, FormsModule, NgSelectComponent, NgOptionComponent, IconButtonComponent]
 })
 export class JournaalFilterComponent implements OnInit, OnDestroy {
-    private readonly typesService = inject(TypesService);
-    private readonly vliegtuigenService = inject(VliegtuigenService);
-
     @Input() activeFilter: journaalFilter;
-    private readonly popup = viewChild.required(ModalComponent);
     readonly aangepast = output<void>();
 
+    // variablen in html formulier
+    protected categorieTypes: HeliosType[];
+    protected statusTypes: HeliosType[];
+    protected rollendTypes: HeliosType[];
+    protected clubVliegtuigen: HeliosVliegtuigenDataset[] = [];
+
+    // private variable voor ts script
+    private readonly typesService = inject(TypesService);
+    private readonly vliegtuigenService = inject(VliegtuigenService);
+    private readonly popup = viewChild.required(ModalComponent);
+
     private typesAbonnement: Subscription;
-
-    categorieTypes: HeliosType[];
-    statusTypes: HeliosType[];
-    rollendTypes: HeliosType[];
-
     private vliegtuigenAbonnement: Subscription;
-    clubVliegtuigen: HeliosVliegtuigenDataset[] = [];
 
     ngOnInit(): void {
         // abonneer op wijziging van transactie types
@@ -63,7 +63,7 @@ export class JournaalFilterComponent implements OnInit, OnDestroy {
         this.popup().open();
     }
 
-    filter(): void {
+    protected filter(): void {
         this.aangepast.emit();
     }
 }

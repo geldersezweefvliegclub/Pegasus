@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, input, viewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, input, viewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
 import { SharedService } from '../../../../services/shared/shared.service';
@@ -11,7 +11,6 @@ import { ModalComponent } from '../../modal/modal.component';
 import { NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
 import { BaseChartDirective } from 'ng2-charts';
 
-
 @Component({
     selector: 'app-start-grafiek',
     templateUrl: './start-grafiek.component.html',
@@ -19,29 +18,30 @@ import { BaseChartDirective } from 'ng2-charts';
     imports: [ModalComponent, NgbProgressbar, BaseChartDirective]
 })
 
-export class StartGrafiekComponent implements OnInit {
-    private readonly startlijstService = inject(StartlijstService);
-    private readonly sharedService = inject(SharedService);
-
+export class StartGrafiekComponent implements OnInit, OnDestroy {
     readonly VliegerID = input.required<number>();
     readonly naam = input<string>();
-
-    private readonly popup = viewChild.required(ModalComponent);
-
-    private datumAbonnement: Subscription;  // volg de keuze van de kalender
-    datum: DateTime = DateTime.now();       // de gekozen dag
-
     lierstarts: number[] = [];
-    sleepstarts: number[] = [];
     zelfstarts: number[] = [];
     tmgstarts: number[] = [];
 
-    bezig = false;
-    counter = 0;
+    // variablen in html formulier
+    protected bezig = false;
+    protected counter = 0;
+    protected startsLineChartLabels: string[] = []
+    protected startsLineChartData: ChartDataset[] = [];
 
+    // private variable voor ts script
+    private readonly startlijstService = inject(StartlijstService);
+    private readonly sharedService = inject(SharedService);
+    private readonly popup = viewChild.required(ModalComponent);
+
+    private datumAbonnement: Subscription;  // volg de keuze van de kalender
+    private datum: DateTime = DateTime.now();       // de gekozen dag
+    private sleepstarts: number[] = [];
 
     // Teken een verticale lijn op de 1e jaargrens zodat je de jaren goed kunt onderscheiden
-    JaarGrens1: AnnotationOptions =
+    private JaarGrens1: AnnotationOptions =
         {
             type: 'line',
             scaleID: 'x',
@@ -49,9 +49,8 @@ export class StartGrafiekComponent implements OnInit {
             borderColor: '#bfbebe',
             borderWidth: 1,
         }
-
     // Teken een sverticale lijn op de 2e jaargrens zodat je de jaren goed kunt onderscheiden
-    JaarGrens2: AnnotationOptions =
+    private JaarGrens2: AnnotationOptions =
         {
             type: 'line',
             scaleID: 'x',
@@ -60,9 +59,8 @@ export class StartGrafiekComponent implements OnInit {
             borderWidth: 1,
         }
 
-    startsLineChartLabels: string[] = []
-    startsLineChartData: ChartDataset[] = [];
-    startsLineChartOptions: ChartOptions = {
+    // afgeleid van bovenstaande variabelen, moet daarom na de declaratie ervan staan
+    protected startsLineChartOptions: ChartOptions = {
         responsive: true,
         maintainAspectRatio: false,
         layout: {
@@ -133,6 +131,10 @@ export class StartGrafiekComponent implements OnInit {
         });
     }
 
+    ngOnDestroy(): void {
+        if (this.datumAbonnement) this.datumAbonnement.unsubscribe();
+    }
+
     openPopup() {
         this.opvragen();
 
@@ -147,7 +149,7 @@ export class StartGrafiekComponent implements OnInit {
         this.popup().open();
     }
 
-    async opvragen(): Promise<void> {
+    private async opvragen(): Promise<void> {
         const lineChartLabels = [];
 
         const lierstarts = [];

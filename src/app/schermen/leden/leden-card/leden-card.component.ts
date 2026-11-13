@@ -13,16 +13,18 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
     imports: [AvatarComponent, RouterLink, FaIconComponent]
 })
 export class LedenCardComponent implements OnInit {
-    private readonly loginService = inject(LoginService);
-
     @Input() lid: HeliosLedenDataset;
 
-    naarDashboard = false;
+    // variablen in html formulier
+    protected readonly faIcon = faEnvelope;
+
+    protected naarDashboard = false;
+
+    // private variable voor ts script
+    private readonly loginService = inject(LoginService);
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo?.Userinfo;
         this.naarDashboard = (ui?.isBeheerder || ui?.isCIMT || ui?.isInstructeur) ?? false;
     }
-
-    protected readonly faIcon = faEnvelope;
 }

@@ -4,7 +4,6 @@
   flex-direction: column;
   justify-content: space-around;
   align-items: stretch;
-  height: calc(100dvh - 195px);
 }
 
 .row {
@@ -22,7 +21,7 @@
 }
 
 #toolbar {
-  flex-grow: 1;
+  flex: 0 0 auto;           // niet meegroeien, de ruimte is voor het grid
   position: sticky;
   bottom: 0;
   background-color: #fff;
@@ -30,6 +29,8 @@
 }
 
 .kolomRechts {
+  flex: 1 1 0;              // de rest naast het grid, zonder breder te worden dan het scherm
+  min-width: 0;
   border-left-style: double;
   border-color: #626161;
   margin-left: 10px;
@@ -57,3 +58,8 @@
   font-size: 8px;
 }
 
+.laadStatus {
+  font-size: 12px;
+  color: #8c8c8c;
+  white-space: nowrap;
+}

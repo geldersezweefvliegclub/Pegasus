@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, input, output, viewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, input, output, viewChild } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { TransactiesService } from '../../../../services/apiservice/transacties.service';
@@ -22,30 +22,28 @@ import { IconButtonComponent } from '../../icon-button/icon-button.component';
     providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
     imports: [ErrorComponent, SuccessComponent, ModalComponent, LidInvoerComponent, FormsModule, NgbInputDatepicker, IconButtonComponent]
 })
-export class TransactieEditorComponent implements OnInit {
-    private readonly ledenService = inject(LedenService);
-    private readonly typesService = inject(TypesService);
-    private readonly transactiesService = inject(TransactiesService);
-
-    private readonly popup = viewChild.required(ModalComponent);
-
+export class TransactieEditorComponent implements OnInit, OnDestroy {
     readonly toonLidSelectie = input(true);
     readonly TransactieGedaan = output<void>();
 
+    // variablen in html formulier
+    protected leden: HeliosLedenDataset[] = [];
+    protected lidNaam: string;
+    protected transactieTypes: HeliosType[];
+    protected transactie:HeliosTransactie = {}
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+    protected vliegdag: DateTime | undefined;
+
+    // private variable voor ts script
+    private readonly ledenService = inject(LedenService);
+    private readonly typesService = inject(TypesService);
+    private readonly transactiesService = inject(TransactiesService);
+    private readonly popup = viewChild.required(ModalComponent);
+
     private ledenAbonnement: Subscription;
-    leden: HeliosLedenDataset[] = [];
-    lidID: number;
-    lidNaam: string;
-
+    private lidID: number;
     private typesAbonnement: Subscription;
-    transactieTypes: HeliosType[];
-
-    transactie:HeliosTransactie = {}
-
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
-
-    vliegdag: DateTime | undefined;
 
     ngOnInit(): void {
         // abonneer op wijziging van leden
@@ -57,6 +55,11 @@ export class TransactieEditorComponent implements OnInit {
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
             this.transactieTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 20});
         });
+    }
+
+    ngOnDestroy(): void {
+        if (this.ledenAbonnement) this.ledenAbonnement.unsubscribe();
+        if (this.typesAbonnement) this.typesAbonnement.unsubscribe();
     }
 
     openPopup(lidID: number | undefined, vliegdag: string | undefined = undefined, ID: number | undefined = undefined) {
@@ -94,7 +97,7 @@ export class TransactieEditorComponent implements OnInit {
     }
 
     // opslaan van de transactie
-    opslaan() {
+    protected opslaan() {
         if (this.transactie.ID)
         {
             this.transactiesService.updateTransactie(this.transactie).then(() => {
@@ -148,11 +151,11 @@ export class TransactieEditorComponent implements OnInit {
     }
 
     // Over welke vlieger gaat deze track
-    lidGeselecteerd(id: number | undefined) {
+    protected lidGeselecteerd(id: number | undefined) {
         this.transactie.LID_ID = id;
     }
 
-    typeAangepast() {
+    protected typeAangepast() {
         const ttype = this.transactieTypes.find (t => t.ID == this.transactie.TYPE_ID)
 
         if (ttype) {
@@ -166,12 +169,12 @@ export class TransactieEditorComponent implements OnInit {
     }
 
     // Datum van de start aanpassen
-    vliegdagAanpassen($datum: NgbDate) {
+    protected vliegdagAanpassen($datum: NgbDate) {
         this.vliegdag = DateTime.fromObject({year: $datum.year, month: $datum.month, day: $datum.day});
         this.transactie.VLIEGDAG = this.vliegdag.toISODate() ?? undefined;
     }
 
-    leegMaken() {
+    protected leegMaken() {
         this.vliegdag = undefined;
         this.transactie = {LID_ID: this.lidID}
     }

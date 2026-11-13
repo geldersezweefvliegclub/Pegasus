@@ -19,40 +19,40 @@ import { StatusButtonComponent } from '../../../../shared/components/status-butt
     imports: [DocumentEditorComponent, IconButtonComponent, PegasusCardComponent, StatusButtonComponent, FaIconComponent]
 })
 export class LedenDocumentenComponent implements OnInit {
-    private readonly documentenService = inject(DocumentenService);
-
     readonly LidID = input.required<number>();
-    readonly editor = viewChild.required(DocumentEditorComponent);
 
-    iconCardIcon: IconDefinition = faFile;
-    toevoegenIcon: IconDefinition = faPlusCircle;
-    deleteIcon: IconDefinition = faMinusCircle;
-    restoreIcon: IconDefinition = faUndo;
+    // variablen in html formulier
+    protected readonly editor = viewChild.required(DocumentEditorComponent);
 
-    documenten: HeliosDocumentenDataset[];
+    protected iconCardIcon: IconDefinition = faFile;
+    protected toevoegenIcon: IconDefinition = faPlusCircle;
+    protected deleteIcon: IconDefinition = faMinusCircle;
+    protected restoreIcon: IconDefinition = faUndo;
+    protected documenten: HeliosDocumentenDataset[];
+    protected editMode = false;          // zitten we in edit mode om documenten te kunnen aanpassen
+    protected deleteMode = false;        // zitten we in delete mode om documenten te kunnen verwijderen
+    protected trashMode = false;
 
-    editMode = false;          // zitten we in edit mode om documenten te kunnen aanpassen
-    deleteMode = false;        // zitten we in delete mode om documenten te kunnen verwijderen
-    trashMode = false;
+    // private variable voor ts script
+    private readonly documentenService = inject(DocumentenService);
 
     ngOnInit(): void {
         this.opvragen();
     }
 
     // ophalen document van de server
-    opvragen() {
+    protected opvragen() {
         this.documentenService.getDocumenten(this.trashMode, this.LidID()).then((docs) => this.documenten = docs);
     }
 
-
     // schakelen tussen trashMode JA/NEE. In trashMode worden te verwijderde documenten getoond
-    trashModeJaNee(actief: boolean) {
+    protected trashModeJaNee(actief: boolean) {
         this.trashMode = actief
 
         this.opvragen();
     }
 
-    deleteModeJaNee() {
+    protected deleteModeJaNee() {
         this.deleteMode = !this.deleteMode;
 
         if (this.trashMode) {
@@ -60,7 +60,7 @@ export class LedenDocumentenComponent implements OnInit {
         }
     }
 
-    delete(id: number) {
+    protected delete(id: number) {
         const doc = this.documenten.find(d => d.ID == id);
 
         if (doc) {
@@ -68,7 +68,7 @@ export class LedenDocumentenComponent implements OnInit {
         }
     }
 
-    restore(id: number) {
+    protected restore(id: number) {
         const doc = this.documenten.find(d => d.ID == id);
 
         if (doc) {
@@ -76,7 +76,7 @@ export class LedenDocumentenComponent implements OnInit {
         }
     }
 
-    aanpassen(id: number) {
+    protected aanpassen(id: number) {
         const doc = this.documenten.find(d => d.ID == id);
 
         if (doc) {
@@ -84,7 +84,7 @@ export class LedenDocumentenComponent implements OnInit {
         }
     }
 
-    toevoegen() {
+    protected toevoegen() {
         const doc: HeliosDocument = {
             LID_ID: this.LidID(),
             GROEP_ID: 22                      // Speciaal type
@@ -93,7 +93,7 @@ export class LedenDocumentenComponent implements OnInit {
         this.editor().openPopup(doc);
     }
 
-    openUrl(url: string | URL) {
+    protected openUrl(url: string | URL) {
         window.open(url);
     }
 }

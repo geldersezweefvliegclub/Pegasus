@@ -25,38 +25,56 @@ import { ZoekbarComponent } from '../../../shared/components/zoekbar/zoekbar.com
 
 @Component({
     selector: 'app-facturen-scherm',
+    host: { class: 'scherm-pagina' },
     templateUrl: './facturen-scherm.component.html',
     styleUrls: ['./facturen-scherm.component.scss'],
     imports: [DatatableComponent, ErrorComponent, FactuurUploadenComponent, IconButtonComponent, PegasusCardComponent, SuccessComponent, ZoekbarComponent]
 })
 export class FacturenSchermComponent implements OnInit, OnDestroy {
+  // variablen in html formulier
+  protected data:HeliosFacturenDataset[] = [];
+  protected isLoading = false;
+  protected jaar = 1900;                        // gekozen jaar
+  protected mode = 'facturen';                  // welke mode is actief
+  protected columns: ColDef[];
+  protected rowClassRules = {
+    'rode_regel_niet_inzetbaar': (params: RowClassParams) => !params.data.LIDNR || params.data.OPGEZEGD,
+  }
+  protected frameworkComponents = {
+    deleteAction: DeleteActionComponent,
+    restoreAction: RestoreActionComponent,
+    typeRender: TypeRenderComponent,
+    leeftijdRender: LeeftijdRenderComponent,
+    gefactureerdRender: GefactureerdRenderComponent
+  };
+  protected iconCardIcon: IconDefinition = faLayerGroup;
+  protected zoekString: string;
+  protected deleteMode = false;        // zitten we in delete mode om facturen te kunnen verwijderen
+  protected magVerwijderen = false;
+  protected magExporten = false;
+  protected success: SuccessMessage | undefined;
+  protected error: ErrorMessage | undefined;
+
+  // private variable voor ts script
   private readonly loginService = inject(LoginService);
   private readonly sharedService = inject(SharedService);
   private readonly facturenService = inject(FacturenService);
-
-  readonly grid = viewChild.required(DatatableComponent);
+  private readonly grid = viewChild.required(DatatableComponent);
   private readonly uploaden = viewChild.required(FactuurUploadenComponent);
 
-  data:HeliosFacturenDataset[] = [];
-  facturenData:HeliosFacturenDataset[] = [];
-  teDoenData:HeliosFacturenDataset[] = [];
-  isLoading = false;
-
+  private facturenData:HeliosFacturenDataset[] = [];
+  private teDoenData:HeliosFacturenDataset[] = [];
   private dbEventAbonnement: Subscription;    // Abonneer op aanpassingen in de database
   private datumAbonnement: Subscription;      // volg de keuze van de kalender
   private maandAbonnement: Subscription;      // volg de keuze van de kalender
-  jaar = 1900;                        // gekozen jaar
-  mode = 'facturen';                  // welke mode is actief
-
-  dataColumns: ColDef[] = [
+  private dataColumns: ColDef[] = [
     {field: 'ID', headerName: 'ID',  sortable: true, hide: true, comparator: nummerSort},
     {field: 'LIDNR', headerName: 'Lid nummer', sortable: true},
     {field: 'FACTUUR_NUMMER', headerName: 'Factuur nummer', sortable: true},
     {field: 'OMSCHRIJVING', headerName: 'Omschrijving', sortable: true},
     {field: 'GEFACTUREERD', headerName: 'Gefactureerd', cellRenderer:'gefactureerdRender', sortable: true}
   ];
-
-  teDoenColumns: ColDef[] = [
+  private teDoenColumns: ColDef[] = [
     {field: 'NAAM', headerName: 'Naam', headerCheckboxSelection:true, checkboxSelection: true, sortable: true},
     {field: 'LIDMAATSCHAP', headerName: 'Lidmaatschap', cellRenderer:'typeRender',  sortable: true},
     {field: 'CONTRIBUTIE', headerName: 'Contributie', cellRenderer:'typeRender', sortable: true},
@@ -69,7 +87,7 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
   ];
 
   // kolom om record te verwijderen
-  deleteColumn: ColDef[] = [{
+  private deleteColumn: ColDef[] = [{
     pinned: 'left',
     maxWidth: 100,
     initialWidth: 100,
@@ -85,41 +103,13 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
       }
     },
   }];
-
-  naamColumn: ColDef[] = [
+  private naamColumn: ColDef[] = [
     {field: 'NAAM', headerName: 'Naam',  sortable: true}
   ]
-
-  naamSelColumn: ColDef[] = [
+  private naamSelColumn: ColDef[] = [
     {field: 'NAAM', headerName: 'Naam', headerCheckboxSelection:true, checkboxSelection: true, sortable: true}
   ]
-
-  columns: ColDef[];
-
-  rowClassRules = {
-    'rode_regel_niet_inzetbaar': (params: RowClassParams) => !params.data.LIDNR || params.data.OPGEZEGD,
-  }
-
-  frameworkComponents = {
-    deleteAction: DeleteActionComponent,
-    restoreAction: RestoreActionComponent,
-    typeRender: TypeRenderComponent,
-    leeftijdRender: LeeftijdRenderComponent,
-    gefactureerdRender: GefactureerdRenderComponent
-  };
-  iconCardIcon: IconDefinition = faLayerGroup;
-
-  zoekString: string;
-  zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
-  deleteMode = false;        // zitten we in delete mode om facturen te kunnen verwijderen
-
-  magToevoegen = false;
-  magVerwijderen = false;
-  magWijzigen = false;
-  magExporten = false;
-
-  success: SuccessMessage | undefined;
-  error: ErrorMessage | undefined;
+  private zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
 
   ngOnInit(): void {
     // Op safari hebben we een korte vertraging nodig op te zorgen dat initialisatie gedaan is
@@ -168,21 +158,21 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
   }
 
   // schakelen tussen deleteMode JA/NEE. In deleteMode kun je vliegtuigen verwijderen
-  deleteModeJaNee() {
+  protected deleteModeJaNee() {
     this.deleteMode = !this.deleteMode;
     this.kolomDefinitie();
   }
 
-  zetPermissie() {
+  private zetPermissie() {
     const ui = this.loginService.userInfo?.Userinfo;
-    this.magToevoegen = (ui?.isBeheerder) ? true : false;
+    // TODO: rechtencontrole voor toevoegen en wijzigen van facturen ontbreekt. Er was magToevoegen en magWijzigen
+    //  (alleen isBeheerder), maar die werden nergens gecontroleerd. Bepalen of dit nodig is en dan in de UI toepassen
     this.magVerwijderen = (ui?.isBeheerder) ? true : false;
-    this.magWijzigen = (ui?.isBeheerder) ? true : false;
     this.magExporten = (ui?.isBeheerder) ? true : false;
   }
 
   // Welke kolommen moet worden getoond in het grid
-  kolomDefinitie() {
+  private kolomDefinitie() {
     if (!this.deleteMode) {
       if (this.mode === 'facturen') {
         this.columns = this.naamSelColumn.concat(this.dataColumns);
@@ -196,7 +186,7 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
   }
 
   // Opvragen van de starts via de api
-  opvragen() {
+  protected opvragen() {
     clearTimeout(this.zoekTimer);
 
     this.zoekTimer = window.setTimeout(() => {
@@ -228,14 +218,14 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
   }
 
   // Export naar excel
-  exportDataset() {
+  protected exportDataset() {
     const ws = xlsx.utils.json_to_sheet(this.data);
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
     xlsx.writeFile(wb, 'facturen ' + new Date().toJSON().slice(0,10) +'.xlsx');
   }
 
-  modeSwitch() {
+  protected modeSwitch() {
     this.deleteMode = false;
     if (this.mode === 'facturen')
     {
@@ -249,7 +239,7 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
     this.kolomDefinitie()
   }
 
-  maakFacturen() {
+  protected maakFacturen() {
     const IDs: number[] = [];
 
     this.grid().selectedRecords().forEach(row => {
@@ -267,7 +257,7 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
     });
   }
 
-  uploadenFacturen() {
+  protected uploadenFacturen() {
     const IDs: number[] = [];
 
     this.grid().selectedRecords().forEach(row => {
@@ -281,5 +271,4 @@ export class FacturenSchermComponent implements OnInit, OnDestroy {
     }
   }
 }
-
 

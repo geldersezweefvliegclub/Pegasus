@@ -8,9 +8,8 @@ import { ICellRendererParams } from 'ag-grid-community';
     styleUrls: ['./opmerkingen-render.component.scss']
 })
 export class OpmerkingenRenderComponent implements AgRendererComponent  {
-
-  opm: string;
-
+  // variablen in html formulier
+  protected opm: string;
 
   agInit(params: ICellRendererParams): void {
     this.opm = params.data.EXTERNAL_ID ? params.data.EXTERNAL_ID + ' ' : '';

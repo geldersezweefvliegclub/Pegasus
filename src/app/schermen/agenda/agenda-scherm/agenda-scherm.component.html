@@ -2,11 +2,11 @@
 <app-success [success]='success'/>
 <app-agenda-editor/>
 
-<app-pegasus-card titel="Agenda"
+<app-pegasus-card class="scherm-vullend" titel="Agenda"
                   subtitel="Activiteiten"
                   [icon]="iconCardIcon">
-    <div class="box h-100">
-        <div id="data" class="data">
+    <div class="box scherm-kolom">
+        <div id="data" class="data scroll-vlak">
             <app-datatable id='agendagrid'
                     [pagination]="true"
                     [rowData]="data"
@@ -58,5 +58,3 @@
         </div>
     </div>
 </app-pegasus-card>
-
-

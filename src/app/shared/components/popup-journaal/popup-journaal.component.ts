@@ -14,18 +14,19 @@ import { JournaalCardComponent } from '../journaal-card/journaal-card.component'
     imports: [ModalComponent, JournaalCardComponent]
 })
 export class PopupJournaalComponent implements OnInit, OnDestroy {
+  // variablen in html formulier
+  protected data:HeliosJournaalDataset[] = [];
+  protected isLoading = false;
+
+  // private variable voor ts script
   private readonly sharedService = inject(SharedService);
   private readonly journaalService = inject(JournaalService);
-
   private readonly popup = viewChild.required(ModalComponent);
-
-  data:HeliosJournaalDataset[] = [];
 
   private datumAbonnement: Subscription;      // volg de keuze van de kalender
   private maandAbonnement: Subscription;      // volg de keuze van de kalender
   private vliegtuigID:  number;
-  datum: DateTime = DateTime.now();           // de gekozen dag
-  isLoading = false;
+  private datum: DateTime = DateTime.now();           // de gekozen dag
 
   ngOnInit(): void {
     // Op safari hebben we een korte vertraging nodig op te zorgen dat initialisatie gedaan is
@@ -68,7 +69,7 @@ export class PopupJournaalComponent implements OnInit, OnDestroy {
     this.popup().close();
   }
 
-  opvragen() : void {
+  private opvragen() : void {
     if (this.vliegtuigID) {
       const startDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 1, day: 1});
       const eindDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 12, day: 31});

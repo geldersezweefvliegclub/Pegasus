@@ -1,8 +1,9 @@
-<app-pegasus-card titel="Types"
+<app-error [error]='error'/>
+<app-pegasus-card class="scherm-vullend" titel="Types"
                   subtitel="Items voor invoer"
                   [icon]="iconCardIcon">
-    <div class="box h-100">
-        <div id="data">
+    <div class="box scherm-kolom">
+        <div id="data" class="scroll-vlak">
             <select class="form-select" id="groep" name="groep" required
                     [ngModel]="toonGroep" (ngModelChange)="filterGroep($event)">
                 @for (groep of groepen; track groep.ID) {
@@ -12,9 +13,13 @@
                 }
             </select>
 
-            <ul class="list-group mt-4 typelijst">
+            <!-- slepen om de volgorde aan te passen, niet in delete / trash mode -->
+            <ul class="list-group mt-4 typelijst"
+                cdkDropList [cdkDropListData]="filteredTypes" [cdkDropListDisabled]="deleteMode"
+                (cdkDropListDropped)="naVerslepen($event)">
                 @for (t of filteredTypes; track t.ID; let i = $index) {
-                    <li class="list-group-item" (dblclick)="openEditor(t)">
+                    <li class="list-group-item" cdkDrag [class.geselecteerd]="t.ID === geselecteerdID"
+                        (click)="geselecteerdID = t.ID" (dblclick)="openEditor(t)">
                         <div class="d-flex justify-content-between">
                             <div class="w-100 d-flex justify-content-between">
                                 <div class="d-flex">
@@ -44,17 +49,20 @@
                             </div>
                             @if (!deleteMode) {
                                 <div class="d-flex">
-                                    @if (i !== 0) {
+                                    <!-- pijlen alleen bij de geselecteerde regel en niet aan de rand. Anders een lege
+                                         ruimte van dezelfde breedte, zodat de bedragen niet verspringen -->
+                                    @if (t.ID === geselecteerdID && i !== 0) {
                                         <fa-icon class="upBtn mx-3" [icon]="upIcon"
                                                  (click)='omhoog(t.ID)'/>
-                                    } @if (i === 0) {
-                                    <div class="mx-3" style="min-width: 18px;max-width: 18px;"></div>
-                                } @if (i !== (filteredTypes.length - 1)) {
-                                    <fa-icon class="downBtn me-5" [icon]="downIcon"
-                                             (click)='omlaag(t.ID)'/>
-                                } @if (i === (filteredTypes.length - 1)) {
-                                    <div style="width:66px;"></div>
-                                }
+                                    } @else {
+                                        <div class="mx-3" style="min-width: 18px;max-width: 18px;"></div>
+                                    }
+                                    @if (t.ID === geselecteerdID && i !== (filteredTypes.length - 1)) {
+                                        <fa-icon class="downBtn me-5" [icon]="downIcon"
+                                                 (click)='omlaag(t.ID)'/>
+                                    } @else {
+                                        <div style="width:66px;"></div>
+                                    }
                                 </div>
                             }
                         </div>

@@ -142,7 +142,18 @@ input.ng-dirty.ng-invalid {
 textarea.ng-invalid {
   border: 1px solid #ffc107;
 }
-.ng-select-required > .ng-select-container {
+// <select> waarvan nog niets gekozen is (de placeholder optie met ngValue null of undefined): grijze tekst,
+// net als de placeholder van een invoerveld. De opties in de uitklaplijst houden hun normale kleur
+select.form-select:has(option:checked[value$=": null"], option:checked[value$=": undefined"]) {
+  color: var(--bs-secondary-color);
+
+  option {
+    color: var(--bs-body-color);
+  }
+}
+
+// verplicht veld dat (nog) leeg is, bv. vliegtuig of rollend in de journaal editor
+select.verplicht-leeg {
   border: 1px solid #ffc107 !important;
 }
 
@@ -492,4 +503,62 @@ body > .popupMedium > div {
 
 .form-check-input[disabled] ~ .form-check-label, .form-check-input:disabled ~ .form-check-label {
   opacity: 1 !important;
+}
+
+// ===== Schermvullende pagina's =====
+// De pagina is precies zo hoog als de ruimte in de app, alleen het .scroll-vlak scrollt.
+// Iedere laag tussen pagina en scroll-vlak moet een flex kolom met min-height: 0 zijn,
+// anders groeit die laag mee met de inhoud en scrollt de hele pagina (vooral op mobiel).
+//  - scherm-pagina  : host van de pagina component, via host: { class: 'scherm-pagina' }
+//  - scherm-vullend : op <app-pegasus-card>
+//  - scherm-kolom   : op iedere tussenliggende div
+//  - scroll-vlak    : op het deel dat mag scrollen
+.scherm-pagina {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+app-pegasus-card.scherm-vullend {
+  display: block;
+  flex: 1 1 auto;
+  min-height: 0;
+
+  > .card > .card-body {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+}
+
+.scherm-kolom {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.scroll-vlak {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+// Voor een scroll-vlak met kaarten in bootstrap .row's. Een scroll-vlak knipt alles buiten zichzelf af:
+//  - links / rechts: een .row heeft een negatieve marge van een halve gutter. Zonder ruimte verdwijnen links de randen
+//    en komt rechts een horizontale scrollbalk
+//  - boven: het icoon of de avatar van een pegasus-card steekt 1em boven de kaart uit (margin-top: -1em). Zonder
+//    ruimte wordt dat bij de bovenste kaarten afgeknipt
+//  - onder: zodat de onderrand van de laatste kaart niet tegen de rand (of een knoppenbalk eronder) plakt
+.scroll-vlak-rijen {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 1.25rem;
+  padding-bottom: 0.75rem;
+}
+
+// dropdowns hangen aan <body> (zie main.ts), ze moeten boven een popup (z-index 1055) liggen
+body > .ng-dropdown-panel,
+body > ngb-datepicker {
+  z-index: 1060;
 }

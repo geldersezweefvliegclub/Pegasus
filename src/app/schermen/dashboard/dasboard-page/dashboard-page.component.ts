@@ -64,11 +64,34 @@ import { VliegerLogboekTotalenComponent } from '../../../shared/components/vlieg
 
 @Component({
     selector: 'app-dashboard',
+    host: { class: 'scherm-pagina' },
     templateUrl: './dashboard-page.component.html',
     styleUrls: ['./dashboard-page.component.scss'],
     imports: [AgendaComponent, AvatarComponent, DienstenComponent, ErrorComponent, FormsModule, IconButtonComponent, LedenDocumentenComponent, ModalComponent, NgbCarousel, NgbSlide, FaIconComponent, PegasusCardComponent, ProgressieBoomComponent, PvbComponent, RecencyComponent, StartEditorComponent, StatusComponent, SuccessComponent, TracksComponent, VerjaardagenComponent, VliegerLogboekComponent, VliegerLogboekTotalenComponent]
 })
 export class DashboardPageComponent implements OnInit, OnDestroy {
+    // variablen in html formulier
+    protected readonly iconCardIcon: IconDefinition = faChartPie;
+    protected readonly iconProgressie: IconDefinition = faChartLine;
+    protected readonly iconLogboek: IconDefinition = faClipboardList;
+    protected readonly iconRooster: IconDefinition = faCalendarAlt;
+    protected readonly iconRecency: IconDefinition = faTachometerAlt;
+    protected readonly iconPVB: IconDefinition = faAvianex;
+    protected readonly iconStatus: IconDefinition = faBookmark;
+    protected readonly iconExpand: IconDefinition = faExternalLinkSquareAlt;
+    protected readonly iconPlane: IconDefinition = faPlane;
+    protected readonly iconTracks: IconDefinition = faAddressCard;
+
+    protected statusTypes: HeliosType[] = [];
+    protected lidData: HeliosLid;
+    protected datum: DateTime = DateTime.now();      // de gekozen dag
+    protected toonTracks = false;           // mogen de tracks vertoond worden
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+    protected verwijderMode = false;
+    protected magVerwijderen = false;
+
+    // private variable voor ts script
     private readonly ledenService = inject(LedenService);
     private readonly loginService = inject(LoginService);
     private readonly typesService = inject(TypesService);
@@ -78,38 +101,14 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     private readonly progressieService = inject(ProgressieService);
     private readonly router = inject(Router);
     private readonly activatedRoute = inject(ActivatedRoute);
-
-    readonly iconCardIcon: IconDefinition = faChartPie;
-    readonly iconProgressie: IconDefinition = faChartLine;
-    readonly iconLogboek: IconDefinition = faClipboardList;
-    readonly iconRooster: IconDefinition = faCalendarAlt;
-    readonly iconRecency: IconDefinition = faTachometerAlt;
-    readonly iconPVB: IconDefinition = faAvianex;
-    readonly iconStatus: IconDefinition = faBookmark;
-    readonly iconExpand: IconDefinition = faExternalLinkSquareAlt;
-    readonly iconPlane: IconDefinition = faPlane;
-    readonly iconTracks: IconDefinition = faAddressCard;
-
-    private typesAbonnement: Subscription;
-    lidTypes: HeliosType[] = [];
-    statusTypes: HeliosType[] = [];
-    lidData: HeliosLid;
-
-    private datumAbonnement: Subscription; // volg de keuze van de kalender
-    datum: DateTime = DateTime.now();      // de gekozen dag
-
-    isDDWVer = false;             // is ingelogde gebruiker een DDWV'er
-    toonTracks = false;           // mogen de tracks vertoond worden
-
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
-
     private readonly popupLogboek = viewChild.required<ModalComponent>('logboekPopup');
     private readonly popupDiensten = viewChild.required<ModalComponent>('dienstenPopup');
     private readonly startEditor = viewChild.required(StartEditorComponent);
 
-    verwijderMode = false;
-    magVerwijderen = false;
+    private typesAbonnement: Subscription;
+    private lidTypes: HeliosType[] = [];
+    private datumAbonnement: Subscription; // volg de keuze van de kalender
+    private isDDWVer = false;             // is ingelogde gebruiker een DDWV'er
 
     ngOnInit(): void {
         // de datum zoals die in de kalender gekozen is
@@ -168,7 +167,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     }
 
     // Met welk lidmaatschap hebben te maken, geef de omschrijving
-    getLidType(): string {
+    protected getLidType(): string {
         const t = this.lidTypes.find(type => type.ID == this.lidData.LIDTYPE_ID) as HeliosType;
         if (t) {
             return t.OMSCHRIJVING!;
@@ -177,7 +176,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     }
 
     // Welke vlieg status heeft dit lid
-    getStatusType(): string {
+    protected getStatusType(): string {
         const t = this.statusTypes.find(type => type.ID == this.lidData.STATUSTYPE_ID) as HeliosType;
         if (t) {
             return t.OMSCHRIJVING!;
@@ -186,27 +185,27 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     }
 
     // laat meer vluchten zien van logboek in een popupLogboek window
-    toonLogboekGroot(): void {
+    protected toonLogboekGroot(): void {
         this.popupLogboek().open();
     }
 
-    toonDienstenGroot() {
+    protected toonDienstenGroot() {
         this.popupDiensten().open();
     }
 
     // mogen we vlieger status aanpassen
-    statusWijzigbaar(): boolean {
+    protected statusWijzigbaar(): boolean {
         const ui = this.loginService.userInfo?.Userinfo;
         return (ui?.isBeheerder || ui?.isCIMT) ?? false;
     }
 
     // Toevoegen van een start
-    addStart() {
+    protected addStart() {
         this.startEditor().openPopup(null);
     }
 
     // export het vlieger logboek naar excel
-    exportLogboek() {
+    protected exportLogboek() {
         if (this.lidData.ID) {
             const startDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 1, day: 1});
             const eindDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 12, day: 31});
@@ -230,7 +229,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     }
 
     // export de comptentiekaart naar excel
-    exportProgressieKaart() {
+    protected exportProgressieKaart() {
         if (this.lidData.ID) {
             this.progressieService.getProgressieKaart(this.lidData.ID).then((dataset) => {
 
@@ -250,7 +249,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     }
 
     // aanpassen van de vliegstatus in lid record
-    wijzigVliegStatus() {
+    protected wijzigVliegStatus() {
         const upd: HeliosLid = {ID: this.lidData.ID, STATUSTYPE_ID: this.lidData.STATUSTYPE_ID}
 
         this.ledenService.updateLid(upd).then((l) => {
@@ -268,16 +267,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         });
     }
 
-    getMeta(url:string) {
-        return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.onload = () => resolve(img);
-            img.onerror = () => reject();
-            img.src = url;
-        });
-    }
-
-    async exportTracks(ID: number) {
+    protected async exportTracks(ID: number) {
 
         // bereken hoogte / breedte
         const img = new Image()
@@ -400,18 +390,18 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         })
     }
 
-    tijdString(dt: string|undefined = undefined): string {
+    private tijdString(dt: string|undefined = undefined): string {
         const datumtijd = dt ? this.sharedService.parseDatum(dt) : DateTime.now();
         return datumtijd.toFormat("HH:mm")
     }
 
-    datumString(dt: string|undefined = undefined): string {
+    private datumString(dt: string|undefined = undefined): string {
         const datumtijd = dt ? this.sharedService.parseDatum(dt) : DateTime.now();
         return datumtijd.day + "-" + datumtijd.month + "-" + datumtijd.year;
     }
 
     // gebruiker mag alleen logboek zien
-    alleenLogboekTonen() : boolean  {
+    protected alleenLogboekTonen() : boolean  {
         if (this.toonTracks) {      // als je tracks mag zien, dan de rest ook
             return false;
         }

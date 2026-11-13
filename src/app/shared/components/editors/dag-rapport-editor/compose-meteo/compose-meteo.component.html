@@ -4,75 +4,103 @@
             <div class="col-6">
                 <div class="">
                     <label for="WINDRICHTING" class="form-label">Windrichting</label>
-                    <ng-select id="WINDRICHTING"
-                               [items]="windRichtingTypes$ | async"
-                               bindLabel="OMSCHRIJVING"
-                               bindValue="OMSCHRIJVING"
-                               closeOnSelect="true"
-                               openOnEnter="true"
-                               [(ngModel)]='windRichting'/>
+                    <select class="form-select"
+                            id="WINDRICHTING"
+                            name="WINDRICHTING"
+                            [(ngModel)]="windRichting">
+                        <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                        <option [ngValue]="null"None></option>
+                        <option [ngValue]="undefined" disabled hidden></option>
+                        @for (item of windRichtingTypes; track item.ID) {
+                            <option [ngValue]="item.OMSCHRIJVING">{{ item.OMSCHRIJVING }}</option>
+                        }
+                    </select>
                 </div>
                 <div class="mt-2">
                     <label for="WINDKRACHT" class="form-label">Windkracht</label>
-                    <ng-select id="WINDKRACHT"
-                               [items]="windSterkteTypes$ | async"
-                               bindLabel="OMSCHRIJVING"
-                               bindValue="OMSCHRIJVING"
-                               closeOnSelect="true"
-                               openOnEnter="true"
-                               [(ngModel)]='windKracht'/>
+                    <select class="form-select"
+                            id="WINDKRACHT"
+                            name="WINDKRACHT"
+                            [(ngModel)]="windKracht">
+                        <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                        <option [ngValue]="null"None></option>
+                        <option [ngValue]="undefined" disabled hidden></option>
+                        @for (item of windSterkteTypes; track item.ID) {
+                            <option [ngValue]="item.OMSCHRIJVING">{{ item.OMSCHRIJVING }}</option>
+                        }
+                    </select>
                 </div>
                 <div class="mt-2">
                     <label for="EIGENSCHAPPEN" class="form-label">Wind eigenschappen</label>
-                    <ng-select id="EIGENSCHAPPEN"
-                               [items]="windEigenschappenTypes$ | async"
-                               bindLabel="OMSCHRIJVING"
-                               bindValue="OMSCHRIJVING"
-                               closeOnSelect="true"
-                               openOnEnter="true"
-                               [(ngModel)]='windEigenschappen'/>
+                    <select class="form-select"
+                            id="EIGENSCHAPPEN"
+                            name="EIGENSCHAPPEN"
+                            [(ngModel)]="windEigenschappen">
+                        <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                        <option [ngValue]="null"None></option>
+                        <option [ngValue]="undefined" disabled hidden></option>
+                        @for (item of windEigenschappenTypes; track item.ID) {
+                            <option [ngValue]="item.OMSCHRIJVING">{{ item.OMSCHRIJVING }}</option>
+                        }
+                    </select>
                 </div>
                 <div class="mt-2">
                     <label for="TERMIEK" class="form-label">Gemiddeld stijgen</label>
-                    <ng-select id="TERMIEK"
-                               [items]="stijgenTypes$ | async"
-                               bindLabel="OMSCHRIJVING"
-                               bindValue="CODE"
-                               closeOnSelect="true"
-                               openOnEnter="true"
-                               [(ngModel)]='gemiddeldStijgen'/>
+                    <select class="form-select"
+                            id="TERMIEK"
+                            name="TERMIEK"
+                            [(ngModel)]="gemiddeldStijgen">
+                        <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                        <option [ngValue]="null"None></option>
+                        <option [ngValue]="undefined" disabled hidden></option>
+                        @for (item of stijgenTypes; track item.ID) {
+                            <option [ngValue]="item.CODE">{{ item.OMSCHRIJVING }}</option>
+                        }
+                    </select>
                 </div>
             </div>
             <div class="col-6">
                 <div class="">
                     <label for="ZICHT" class="form-label">Zicht</label>
-                    <ng-select id="ZICHT"
-                               [items]="zichtTypes$ | async"
-                               bindLabel="OMSCHRIJVING"
-                               bindValue="OMSCHRIJVING"
-                               closeOnSelect="true"
-                               openOnEnter="true"
-                               [(ngModel)]='zicht'/>
+                    <select class="form-select"
+                            id="ZICHT"
+                            name="ZICHT"
+                            [(ngModel)]="zicht">
+                        <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                        <option [ngValue]="null"None></option>
+                        <option [ngValue]="undefined" disabled hidden></option>
+                        @for (item of zichtTypes; track item.ID) {
+                            <option [ngValue]="item.OMSCHRIJVING">{{ item.OMSCHRIJVING }}</option>
+                        }
+                    </select>
                 </div>
                 <div class="mt-2">
                     <label for="BEWOLKING" class="form-label">Bewolking</label>
-                    <ng-select id="BEWOLKING"
-                               [items]="bewolkingTypes$ | async"
-                               bindLabel="OMSCHRIJVING"
-                               bindValue="OMSCHRIJVING"
-                               closeOnSelect="true"
-                               openOnEnter="true"
-                               [(ngModel)]='bewolking'/>
+                    <select class="form-select"
+                            id="BEWOLKING"
+                            name="BEWOLKING"
+                            [(ngModel)]="bewolking">
+                        <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                        <option [ngValue]="null"None></option>
+                        <option [ngValue]="undefined" disabled hidden></option>
+                        @for (item of bewolkingTypes; track item.ID) {
+                            <option [ngValue]="item.OMSCHRIJVING">{{ item.OMSCHRIJVING }}</option>
+                        }
+                    </select>
                 </div>
                 <div class="mt-2">
                     <label for="BEDEKKING" class="form-label">Bedekkingsgraad</label>
-                    <ng-select id="BEDEKKING"
-                               [items]="dekkingTypes$ | async"
-                               bindLabel="OMSCHRIJVING"
-                               bindValue="OMSCHRIJVING"
-                               closeOnSelect="true"
-                               openOnEnter="true"
-                               [(ngModel)]='bewolkingDekking'/>
+                    <select class="form-select"
+                            id="BEDEKKING"
+                            name="BEDEKKING"
+                            [(ngModel)]="bewolkingDekking">
+                        <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                        <option [ngValue]="null"None></option>
+                        <option [ngValue]="undefined" disabled hidden></option>
+                        @for (item of dekkingTypes; track item.ID) {
+                            <option [ngValue]="item.OMSCHRIJVING">{{ item.OMSCHRIJVING }}</option>
+                        }
+                    </select>
                 </div>
                 <div class="mt-2">
                     <label for="WOLKENBASIS" class="form-label">Wolkenbasis</label>

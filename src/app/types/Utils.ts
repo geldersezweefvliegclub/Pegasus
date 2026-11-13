@@ -11,6 +11,11 @@ export interface SuccessMessage {
     beschrijving: string | null
 }
 
+export interface InfoMessage {
+    titel: string | null,
+    beschrijving: string | null
+}
+
 export interface KalenderMaand {
     year: number,
     month: number

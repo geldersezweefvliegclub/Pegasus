@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { APIService } from './api.service';
-import { HeliosAudit, HeliosAuditDataset } from '../../types/Helios';
-import { StorageService } from '../storage/storage.service';
+import { HeliosAudit } from '../../types/Helios';
 import { KeyValueArray } from '../../types/Utils';
 import { LoginService } from './login.service';
 
@@ -11,33 +10,25 @@ import { LoginService } from './login.service';
 export class AuditService {
     private readonly apiService = inject(APIService);
     private readonly loginService = inject(LoginService);
-    private readonly storageService = inject(StorageService);
 
-    private auditCache: HeliosAudit = {dataset: []};
-
-    async getAudit(zoekString: string): Promise<HeliosAuditDataset[]> {
-        const getParams: KeyValueArray = {};
-
+    // Haal een blok audit records op, nieuwste eerst (ID DESC). Met MAX leest de server alleen dit blok en geeft hij
+    // in totaal het aantal records dat aan de selectie voldoet. Met totID haal je het volgende blok op: alle records
+    // met een lager ID. Dat blijft kloppen als er tussendoor nieuwe audit records bijkomen, START zou dan verschuiven.
+    async getAudit(zoekString: string, max: number, totID?: number): Promise<HeliosAudit> {
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
-            return [];
+            return {dataset: [], totaal: 0};
         }
 
-        if ((this.auditCache != undefined) && (this.auditCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
-            getParams['HASH'] = this.auditCache.hash;
+        const getParams: KeyValueArray = {'MAX': max.toString()};
+        if (totID !== undefined) {
+            getParams['EIND_ID'] = (totID - 1).toString();
         }
         if (zoekString) {
             getParams['SELECTIE'] = zoekString;
         }
 
-        try {
-            const response = await this.apiService.get('Audit/GetObjects', getParams);
-            this.auditCache = await response.json();
-        } catch (e) {
-            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde starts als cache
-                throw(e);
-            }
-        }
-        return this.auditCache?.dataset as HeliosAuditDataset[];
+        const response = await this.apiService.get('Audit/GetObjects', getParams);
+        return response.json();
     }
 }

@@ -1,0 +1,14 @@
+@if (info) {
+    <div
+            id="infoOverlay"
+            [ngClass]="toonInfo ? 'show' : ''"
+            class="alert alert-info alert-dismissable"
+            role="alert">
+        @if (info.titel) {
+            <div class="fw-bold">{{ info.titel }}</div>
+        }
+        @if (info.beschrijving) {
+            <div>{{ info.beschrijving }}</div>
+        }
+    </div>
+}

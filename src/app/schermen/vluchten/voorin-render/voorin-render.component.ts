@@ -4,7 +4,6 @@ import { AgRendererComponent } from 'ag-grid-angular';
 import { LoginService } from '../../../services/apiservice/login.service';
 import { RouterLink } from '@angular/router';
 
-
 @Component({
     selector: 'app-vlieger-render',
     templateUrl: './voorin-render.component.html',
@@ -12,13 +11,14 @@ import { RouterLink } from '@angular/router';
     imports: [RouterLink]
 })
 export class VoorinRenderComponent implements AgRendererComponent {
+    // variablen in html formulier
+    protected lidID: string;
+    protected grid_vliegernaam: string;
+    protected naarDashboard = false;
+    protected error = false;
+
+    // private variable voor ts script
     private readonly loginService = inject(LoginService);
-
-    lidID: string;
-    grid_vliegernaam: string;
-    naarDashboard = false;
-
-    error = false;
 
     // Als de vlieger geen clublid is, dan is de naam handmatig ingevoerd
     agInit(params: ICellRendererParams): void {

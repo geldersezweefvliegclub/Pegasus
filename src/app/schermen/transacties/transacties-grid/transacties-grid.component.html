@@ -1,12 +1,12 @@
 <app-error [error]='error'/>
 
-<app-pegasus-card titel="Transacties"
+<app-pegasus-card class="scherm-vullend" titel="Transacties"
                   subtitel={{titel}}
                   [icon]="iconCardIcon"
                   [exportEnabled]="this.magExporteren"
                   (Exporting)="exportDataset()">
-    <div class="box h-100">
-        <div id="data">
+    <div class="box scherm-kolom">
+        <div id="data" class="scroll-vlak">
             <app-datatable id='transactiesgrid'
                     [pagination]="toonBladwijzer"
                     [rowData]="transacties"

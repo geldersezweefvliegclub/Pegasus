@@ -22,16 +22,14 @@ export class CompetentieService {
     private readonly storageService = inject(StorageService);
 
     private competentiesCache: HeliosCompetenties = {dataset: []};  // return waarde van API call
-    private fallbackTimer: number;                           // Timer om te zorgen dat starts geladen echt is
-
     private competentiesStore = new BehaviorSubject(this.competentiesCache.dataset);
-    public readonly competentiesChange = this.competentiesStore.asObservable();      // nieuwe aanwezigheid beschikbaar
-
     private boom: HeliosCompetentiesBoom[] = [];
+
+    // afgeleid van bovenstaande variabelen, moet daarom na de declaratie ervan staan
+    public readonly competentiesChange = this.competentiesStore.asObservable();      // nieuwe aanwezigheid beschikbaar
 
     constructor() {
         const loginService = this.loginService;
-
 
         // We hebben misschien eerder de comptenties opgehaald. Die gebruiken we totdat de API starts heeft opgehaald
         if (this.storageService.ophalen('competenties') != null) {
@@ -40,7 +38,7 @@ export class CompetentieService {
         }
 
         // Deze timer kijkt periodiek of de competenties er is. API call bij inloggen kan mislukt zijn dus dit is de fallback
-        this.fallbackTimer = window.setInterval(() => {
+        window.setInterval(() => {
             if (this.loginService.isIngelogd()) {
                 let ophalen = false;
                 if (this.competentiesCache === undefined) {
@@ -70,7 +68,7 @@ export class CompetentieService {
         }
     }
 
-    async getCompetenties(): Promise<HeliosCompetentiesDataset[]> {
+    private async getCompetenties(): Promise<HeliosCompetentiesDataset[]> {
         const getParams: KeyValueArray = {};
 
         // kunnen alleen data ophalen als we ingelogd zijn

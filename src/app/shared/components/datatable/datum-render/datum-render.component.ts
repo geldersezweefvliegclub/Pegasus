@@ -9,9 +9,10 @@ import { SharedService } from '../../../../services/shared/shared.service';
     styleUrls: ['./datum-render.component.scss']
 })
 export class DatumRenderComponent implements AgRendererComponent {
-    private readonly sharedService = inject(SharedService);
-
     public datum: string;
+
+    // private variable voor ts script
+    private readonly sharedService = inject(SharedService);
 
     agInit(params: ICellRendererParams): void {
 

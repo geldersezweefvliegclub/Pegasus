@@ -1,9 +1,9 @@
-<app-pegasus-card titel="Documenten"
+<app-pegasus-card class="scherm-vullend" titel="Documenten"
                   subtitel="Verzameling van documenten die van belang zijn voor onze leden"
                   [icon]="iconCardIcon">
 
-    <div class="d-flex flex-column justify-content-between box h-100">
-        <div class="content">
+    <div class="d-flex flex-column justify-content-between box scherm-kolom">
+        <div class="content scroll-vlak scroll-vlak-rijen">
             <div class="mb-2">
                 <div class="row mt-n8">
                     @for (docGroep of documentGroepen; track docGroep.ID; let i = $index) {

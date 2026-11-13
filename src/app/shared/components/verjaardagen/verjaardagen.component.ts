@@ -8,10 +8,11 @@ import { HeliosLedenDataset } from '../../../types/Helios';
     styleUrls: ['./verjaardagen.component.scss']
 })
 export class VerjaardagenComponent implements OnInit {
+  // variablen in html formulier
+  protected verjaardagen: HeliosLedenDataset[] = [];
+
+  // private variable voor ts script
   private readonly ledenService = inject(LedenService);
-
-
-  verjaardagen: HeliosLedenDataset[] = [];
 
   ngOnInit(): void {
     this.ledenService.getVerjaardagen().then((dataset) => {

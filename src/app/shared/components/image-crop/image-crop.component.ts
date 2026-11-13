@@ -14,42 +14,42 @@ import { IconButtonComponent } from '../icon-button/icon-button.component';
 export class ImageCropComponent {
   readonly cropped = output<string | null | undefined>();
   readonly opslaan = output<string>();
-  imageChangedEvent: Event | null = null;
-  croppedImage: string | undefined;
-  canvasRotation = 0;
-  rotation = 0;
-  scale = 1;
-  showCropper = false;
   transform: ImageTransform = {};
 
-  draaienIcon = faUndoAlt;
-  zoomInIcon = faSearchPlus;
-  zoomUitIcon = faSearchMinus;
-  resetIcon = faTimesCircle;
+  // variablen in html formulier
+  protected imageChangedEvent: Event | null = null;
+  protected croppedImage: string | undefined;
+  protected canvasRotation = 0;
+  protected draaienIcon = faUndoAlt;
+  protected zoomInIcon = faSearchPlus;
+  protected zoomUitIcon = faSearchMinus;
+  protected resetIcon = faTimesCircle;
 
-  fileChangeEvent(event: Event): void {
+  // private variable voor ts script
+  private scale = 1;
+
+  protected fileChangeEvent(event: Event): void {
     this.imageChangedEvent = event;
   }
 
-  imageCropped(event: ImageCroppedEvent) {
+  protected imageCropped(event: ImageCroppedEvent) {
     this.croppedImage = event.base64 as string;
     this.cropped.emit(this.croppedImage);
   }
 
-  imageLoaded() {
-    this.showCropper = true;
+  protected imageLoaded() {
   }
 
-  loadImageFailed() {
+  protected loadImageFailed() {
     console.error('Load failed');
   }
 
-  rotateLeft() {
+  protected rotateLeft() {
     this.canvasRotation--;
     this.flipAfterRotate();
   }
 
-  rotateRight() {
+  protected rotateRight() {
     this.canvasRotation++;
     this.flipAfterRotate();
   }
@@ -64,29 +64,27 @@ export class ImageCropComponent {
     };
   }
 
-
-  flipHorizontal() {
+  protected flipHorizontal() {
     this.transform = {
       ...this.transform,
       flipH: !this.transform.flipH
     };
   }
 
-  flipVertical() {
+  protected flipVertical() {
     this.transform = {
       ...this.transform,
       flipV: !this.transform.flipV
     };
   }
 
-  resetImage() {
+  protected resetImage() {
     this.scale = 1;
-    this.rotation = 0;
     this.canvasRotation = 0;
     this.transform = {};
   }
 
-  zoomOut() {
+  protected zoomOut() {
     this.scale -= .1;
     this.transform = {
       ...this.transform,
@@ -94,7 +92,7 @@ export class ImageCropComponent {
     };
   }
 
-  zoomIn() {
+  protected zoomIn() {
     this.scale += .1;
     this.transform = {
       ...this.transform,
@@ -103,7 +101,7 @@ export class ImageCropComponent {
   }
 
   // laat parent weten dat we kunnen opslaan
-  submit() {
+  protected submit() {
     const croppedImage = this.croppedImage;
     if (croppedImage != null) {
       this.opslaan.emit(croppedImage);

@@ -29,34 +29,55 @@ import { IconButtonComponent } from '../../../shared/components/icon-button/icon
 import { LidInvoerComponent } from '../../../shared/components/editors/start-editor/lid-invoer/lid-invoer.component';
 import { FormsModule } from '@angular/forms';
 
-
 @Component({
     selector: 'app-transacties-grid',
+    host: { class: 'scherm-pagina' },
     templateUrl: './transacties-grid.component.html',
     styleUrls: ['./transacties-grid.component.scss'],
     providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
     imports: [ErrorComponent, PegasusCardComponent, DatatableComponent, IconButtonComponent, LidInvoerComponent, FormsModule, TransactieEditorComponent, FactuurUploadenComponent]
 })
 export class TransactiesGridComponent implements OnInit, OnDestroy {
+    // variablen in html formulier
+    protected leden: HeliosLedenDataset[] = [];
+    protected filteredLeden: HeliosLedenDataset[] = [];
+    protected columns: ColDef[];
+    protected frameworkComponents = {
+        deleteAction: DeleteActionComponent,
+        checkboxRender: CheckboxRenderComponent,
+        bedragRender: BedragRenderComponent,
+        omschrijvingRender: OmschrijvingRenderComponent,
+        datumtijdRender: DatumtijdRenderComponent,
+        datumRender: DatumRenderComponent
+    };
+    protected transacties: HeliosTransactiesDataset[];
+    protected titel = "Overzicht transacties in geld en strippen";
+    protected deleteMode = false;        // zitten we in delete mode om leden te kunnen verwijderen
+    protected isLoading = false;
+    protected iconCardIcon: IconDefinition = faEuroSign;
+    protected error: ErrorMessage | undefined;
+    protected magToevoegen = true;
+    protected magExporteren = false;
+    protected magVerwijderen = false;
+    protected magUploaden = false;
+    protected toonBladwijzer = false;
+    protected toonAlles= false;
+
+    // private variable voor ts script
     private readonly loginService = inject(LoginService);
     private readonly ledenService = inject(LedenService);
     private readonly sharedService = inject(SharedService);
     private readonly transactiesService = inject(TransactiesService);
-
     private readonly editor = viewChild.required(TransactieEditorComponent);
     private readonly uploaden = viewChild.required(FactuurUploadenComponent);
 
     private ledenAbonnement: Subscription;
-    leden: HeliosLedenDataset[] = [];
-    filteredLeden: HeliosLedenDataset[] = [];
-
     private resizeSubscription: Subscription;
     private dbEventAbonnement: Subscription;
     private maandAbonnement: Subscription;          // volg de keuze van de kalender
     private datumAbonnement: Subscription;          // volg de keuze van de kalender
     private datum: DateTime = DateTime.now();       // de gekozen dag
-
-    dataColumns: ColDef[] = [
+    private dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
         {
             field: 'NAAM',
@@ -118,7 +139,7 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
     ];
 
     // kolom om record te verwijderen
-    deleteColumn: ColDef[] = [{
+    private deleteColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 100,
         initialWidth: 100,
@@ -150,36 +171,8 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
             }
         },
     }];
-
-    columns: ColDef[];
-
-    frameworkComponents = {
-        deleteAction: DeleteActionComponent,
-        checkboxRender: CheckboxRenderComponent,
-        bedragRender: BedragRenderComponent,
-        omschrijvingRender: OmschrijvingRenderComponent,
-        datumtijdRender: DatumtijdRenderComponent,
-        datumRender: DatumRenderComponent
-    };
-
-    transacties: HeliosTransactiesDataset[];
-    titel = "Overzicht transacties in geld en strippen";
-    deleteMode = false;        // zitten we in delete mode om leden te kunnen verwijderen
-    isLoading = false;
-
-    iconCardIcon: IconDefinition = faEuroSign;
-
-    error: ErrorMessage | undefined;
-    magToevoegen = true;
-    magExporteren = false;
-    magVerwijderen = false;
-    magUploaden = false;
-
-    toonBladwijzer = false;
-    toonAlles= false;
-    lidID: number | undefined;
-
-    timerID: number;
+    private lidID: number | undefined;
+    private timerID: number;
 
     ngOnInit(): void {
         setTimeout(() => {
@@ -243,11 +236,12 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
         if (this.dbEventAbonnement) this.dbEventAbonnement.unsubscribe();
         if (this.datumAbonnement) this.datumAbonnement.unsubscribe();
         if (this.maandAbonnement) this.maandAbonnement.unsubscribe();
+        if (this.ledenAbonnement) this.ledenAbonnement.unsubscribe();
         if (this.resizeSubscription) this.resizeSubscription.unsubscribe();
     }
 
     // aanpassen wat we op het scherm kwijt kunnen nadat scherm groote gewijzigd is
-    onWindowResize() {
+    private onWindowResize() {
         if (this.sharedService.getSchermSize() == SchermGrootte.xs) {
             this.toonBladwijzer = false;
         } else {
@@ -256,7 +250,7 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
     }
 
     // ophalen data via de rest API
-    opvragen() {
+    protected opvragen() {
         this.isLoading = true;
 
         const vanDatum= (!this.toonAlles) ? undefined :
@@ -301,7 +295,7 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
     }
 
     // laat in de dropdown alleen de leden zien die een transactie hebben
-    filterLeden() {
+    private filterLeden() {
         // TODO:  Check performance als transactie array gevuld is met veel records
         if (this.leden && this.transacties)
         {
@@ -314,12 +308,12 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
     }
 
     // schakelen tussen deleteMode JA/NEE. In deleteMode kun je leden verwijderen
-    deleteModeJaNee() {
+    protected deleteModeJaNee() {
         this.deleteMode = !this.deleteMode;
         this.kolomDefinitie();
     }
 
-    kolomDefinitie()
+    private kolomDefinitie()
     {
         if (!this.deleteMode)
         {
@@ -331,14 +325,13 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
         }
     }
 
-
     // Openen van editor
-    addTransactie() {
+    protected addTransactie() {
         this.editor().openPopup(this.lidID)
     }
 
     // export de huidige dataset naar excel
-    exportDataset() {
+    protected exportDataset() {
         const ws = xlsx.utils.json_to_sheet(this.transacties);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
@@ -346,7 +339,7 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
     }
 
     // van welk lid willen we de transacties zien
-    lidGeselecteerd(id: number | undefined) {
+    protected lidGeselecteerd(id: number | undefined) {
         this.lidID = id;
 
         clearTimeout(this.timerID)
@@ -354,19 +347,19 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
     }
 
     // Wordt aangeroepen bij een dubbel klik op een rij.
-    bewerkTransactie($event: RowDoubleClickedEvent) {
+    protected bewerkTransactie($event: RowDoubleClickedEvent) {
         const ui = this.loginService.userInfo?.Userinfo;
         if (ui?.isBeheerder || ui?.isBeheerderDDWV) {
             this.editor().openPopup(undefined, undefined, $event.data.ID);
         }
     }
 
-    switchToonAlles() {
+    protected switchToonAlles() {
         this.toonAlles = !this.toonAlles;
         this.opvragen();
     }
 
-    async deleteAlles() {
+    protected async deleteAlles() {
         for (const t of this.transacties)
         {
             if (t.EXT_REF === null)
@@ -377,7 +370,7 @@ export class TransactiesGridComponent implements OnInit, OnDestroy {
         this.opvragen();
     }
 
-    uploadenFacturen()
+    protected uploadenFacturen()
     {
         const transacties = this.transacties.filter(t => t.VLIEGDAG == this.datum.toISODate() && t.BEDRAG != undefined && t.EXT_REF === null);
         this.uploaden().showPopupAndUploadTransacties(transacties, this.datum);

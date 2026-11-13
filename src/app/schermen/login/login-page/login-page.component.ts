@@ -22,28 +22,27 @@ import { LoaderComponent } from '../../../shared/components/loader/loader.compon
 })
 
 export class LoginPageComponent implements OnInit {
+    // variablen in html formulier
+    protected oogIcon: IconDefinition = faEye;
+    protected privacyUrl : string | undefined;
+    protected privacyOk: boolean;
+    protected gebruikersnaam = '';
+    protected wachtwoord = '';
+    protected wachtwoordVerborgen = true;
+    protected showSecret = false;
+    protected isLoading = false;
+    protected error: ErrorMessage;
+    protected toonFoto = '';
+
+    // private variable voor ts script
     private readonly loginService = inject(LoginService);
     private readonly configService = inject(PegasusConfigService);
     private readonly storageService = inject(StorageService);
     private readonly router = inject(Router);
-
     private readonly codeInput = viewChild.required(CodeInputComponent);
 
-    oogIcon: IconDefinition = faEye;
-
-    privacyUrl : string | undefined;
-    privacyOk: boolean;
-
-    gebruikersnaam = '';
-    wachtwoord = '';
-    wachtwoordVerborgen = true;
-
-    showSecret = false;
-    secret = '';
-    isLoading = false;
-    error: ErrorMessage;
-
-    fotoAlbum = [
+    private secret = '';
+    private fotoAlbum = [
         "/assets/img/15143.jpg",
         "/assets/img/17424.jpg",
         "/assets/img/17552.jpg",
@@ -64,9 +63,9 @@ export class LoginPageComponent implements OnInit {
         "/assets/img/20201025.jpg",
         "/assets/img/20201025.jpg"
     ];
-    toonFoto: string = this.urlFoto();
 
     ngOnInit() {
+        this.toonFoto = this.urlFoto();
         setInterval(() => {
             this.toonFoto = this.urlFoto()
         }, 15000)
@@ -76,18 +75,18 @@ export class LoginPageComponent implements OnInit {
     }
 
     // geef de url terug van een willekeurige foto
-    urlFoto(): string {
+    private urlFoto(): string {
         const index = Math.floor(Math.random() * this.fotoAlbum.length)
         return this.fotoAlbum[index];
     }
 
     // De Google authenticator is aangepast. Variable opslaan in this.secret
-    onSecurityCodeChanged(code: string) {
+    protected onSecurityCodeChanged(code: string) {
         this.secret = code;
     }
 
     // Nu gaan we inloggen
-    login(): void {
+    protected login(): void {
         this.isLoading = true;
         this.loginService.login(this.gebruikersnaam, this.wachtwoord, this.secret).then(() => {
             this.isLoading = false;
@@ -110,17 +109,17 @@ export class LoginPageComponent implements OnInit {
         })
     }
 
-    verbergWachtwoord() {
+    protected verbergWachtwoord() {
         this.wachtwoordVerborgen = !this.wachtwoordVerborgen;
         this.oogIcon = this.wachtwoordVerborgen ? faEye : faEyeSlash;
     }
 
-    showLostPassword(): boolean {
+    protected showLostPassword(): boolean {
         return this.gebruikersnaam.length > 2;
     }
 
     // Als je geen Google authenticator hebt, kan de code per SMS verstuurd worden door het backend
-    sendSMS(): void {
+    protected sendSMS(): void {
         this.isLoading = true;
         this.loginService.sendSMS(this.gebruikersnaam, this.wachtwoord).then(() => {
             this.isLoading = false;
@@ -133,7 +132,7 @@ export class LoginPageComponent implements OnInit {
     }
 
     // stuur een email met nieuw wachtwoord
-    recoverEmail() {
+    protected recoverEmail() {
         this.loginService.resetWachtwoord(this.gebruikersnaam).then(() => alert("Een SMS met het nieuwe wachtwoord is verstuurd"));
     }
 }

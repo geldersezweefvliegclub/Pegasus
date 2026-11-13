@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, input, viewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, input, viewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
 import { SharedService } from '../../../../services/shared/shared.service';
@@ -11,7 +11,6 @@ import { ModalComponent } from '../../modal/modal.component';
 import { NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
 import { BaseChartDirective } from 'ng2-charts';
 
-
 @Component({
     selector: 'app-recency-grafiek',
     templateUrl: './recency-grafiek.component.html',
@@ -19,24 +18,39 @@ import { BaseChartDirective } from 'ng2-charts';
     imports: [ModalComponent, NgbProgressbar, BaseChartDirective]
 })
 
-export class RecencyGrafiekComponent implements OnInit {
-    private readonly startlijstService = inject(StartlijstService);
-    private readonly sharedService = inject(SharedService);
-
+export class RecencyGrafiekComponent implements OnInit, OnDestroy {
     readonly VliegerID = input.required<number>();
     readonly naam = input<string>();
 
+    // variablen in html formulier
+    protected waardes: number[] = [];
+    protected bezig = false;
+    protected counter = 0;
+    protected lineChartData: ChartConfiguration['data'] = {
+        datasets: [
+            {
+                data: [],                                       // wordt later gevuld
+                backgroundColor: 'rgba(148,159,177,0.2)',
+                borderColor: 'rgb(79,75,75)',
+                pointBackgroundColor: 'rgba(148,159,177,1)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgba(148,159,177,0.8)',
+            },
+        ],
+        labels: []                                              // wordt later gevuld
+    }
+
+    // private variable voor ts script
+    private readonly startlijstService = inject(StartlijstService);
+    private readonly sharedService = inject(SharedService);
     private readonly popup = viewChild.required(ModalComponent);
 
     private datumAbonnement: Subscription;  // volg de keuze van de kalender
-    datum: DateTime = DateTime.now();       // de gekozen dag
-
-    waardes: number[] = [];
-    bezig = false;
-    counter = 0;
+    private datum: DateTime = DateTime.now();       // de gekozen dag
 
     // De rode zone tekenen in de grafiek
-    RodeBalk: AnnotationOptions =
+    private RodeBalk: AnnotationOptions =
         {
             type: 'box',
             yScaleID: 'y',
@@ -44,9 +58,8 @@ export class RecencyGrafiekComponent implements OnInit {
             yMax: 10,
             backgroundColor: 'rgba(220,53,69,0.75)',
         };
-
     // De gele zone tekenen in de grafiek
-    GeleBalk: AnnotationOptions =
+    private GeleBalk: AnnotationOptions =
         {
             type: 'box',
             yScaleID: 'y',
@@ -54,9 +67,8 @@ export class RecencyGrafiekComponent implements OnInit {
             yMax: 20,
             backgroundColor: 'rgba(255,193,7,0.75)',
         }
-
     // De groene zone tekenen in de grafiek
-    GroeneBalk: AnnotationOptions =
+    private GroeneBalk: AnnotationOptions =
         {
             type: 'box',
             yScaleID: 'y',
@@ -65,9 +77,8 @@ export class RecencyGrafiekComponent implements OnInit {
 
             backgroundColor: 'rgba(40,167,69,0.75)',
         }
-
     // Teken een verticale lijn op de 1e jaargrens zodat je de jaren goed kunt onderscheiden
-    JaarGrens1: AnnotationOptions =
+    private JaarGrens1: AnnotationOptions =
         {
             type: 'line',
             scaleID: 'x',
@@ -75,9 +86,8 @@ export class RecencyGrafiekComponent implements OnInit {
             borderColor: '#bfbebe',
             borderWidth: 1,
         }
-
     // Teken een sverticale lijn op de 2e jaargrens zodat je de jaren goed kunt onderscheiden
-    JaarGrens2: AnnotationOptions =
+    private JaarGrens2: AnnotationOptions =
         {
             type: 'line',
             scaleID: 'x',
@@ -86,8 +96,9 @@ export class RecencyGrafiekComponent implements OnInit {
             borderWidth: 1,
         }
 
+    // afgeleid van bovenstaande variabelen, moet daarom na de declaratie ervan staan
     // alle opties voor het tekenen van de lijn
-    lineChartOptions: ChartOptions = {
+    protected lineChartOptions: ChartOptions = {
         responsive: true,
         maintainAspectRatio: false,
         layout: {
@@ -153,21 +164,6 @@ export class RecencyGrafiekComponent implements OnInit {
         }
     }
 
-    lineChartData: ChartConfiguration['data'] = {
-        datasets: [
-            {
-                data: [],                                       // wordt later gevuld
-                backgroundColor: 'rgba(148,159,177,0.2)',
-                borderColor: 'rgb(79,75,75)',
-                pointBackgroundColor: 'rgba(148,159,177,1)',
-                pointBorderColor: '#fff',
-                pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: 'rgba(148,159,177,0.8)',
-            },
-        ],
-        labels: []                                              // wordt later gevuld
-    }
-
     ngOnInit(): void {
         // de datum zoals die in de kalender gekozen is
         this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
@@ -179,6 +175,10 @@ export class RecencyGrafiekComponent implements OnInit {
                 })
             }
         });
+    }
+
+    ngOnDestroy(): void {
+        if (this.datumAbonnement) this.datumAbonnement.unsubscribe();
     }
 
     openPopup() {
@@ -195,7 +195,7 @@ export class RecencyGrafiekComponent implements OnInit {
         this.popup().open();
     }
 
-    async opvragen(): Promise<void> {
+    private async opvragen(): Promise<void> {
         const waardes = [];
         const lineChartLabels = [];
 

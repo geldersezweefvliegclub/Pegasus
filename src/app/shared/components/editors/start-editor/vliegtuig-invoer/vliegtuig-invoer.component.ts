@@ -19,16 +19,16 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
     readonly Sleep = input(false);
     readonly verplicht = input(true);
     @Input() VLIEGTUIG_ID: number | undefined;
-
     readonly VliegtuigChanged = output<number>();
-    EventEmitterDelay: number;
-
     readonly ngSelect = viewChild.required(NgSelectComponent);
 
-    vliegtuigInput$ = new Subject<string>();
-    vliegtuigenSelectie$: Observable<HeliosVliegtuigenDataset[]>;
+    // variablen in html formulier
+    protected vliegtuigInput$ = new Subject<string>();
+    protected vliegtuigenSelectie$: Observable<HeliosVliegtuigenDataset[]>;
+    protected inzetbaar = true;
 
-    inzetbaar = true;
+    // private variable voor ts script
+    private EventEmitterDelay: number;
 
     ngOnInit(): void {
         this.vliegtuigInput$.subscribe((newTerm) => {
@@ -75,7 +75,6 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
             return;
         }
 
-
         // Indien we sleepkist moeten invoeren, halen we de andere kisten weg uit het array
         if (this.Sleep()) {
             this.aanwezig = this.aanwezig.filter((vliegtuig: HeliosVliegtuigenDataset) => {
@@ -87,7 +86,6 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
             });
         }
 
-
         if (this.aanwezig.length > 0) {
             this.vliegtuigenSelectie$ = of(this.aanwezig);
         } else {
@@ -95,7 +93,7 @@ export class VliegtuigInvoerComponent implements OnInit, OnChanges {
         }
     }
 
-    inputChange(id: number | undefined) {
+    protected inputChange(id: number | undefined) {
         if (!id) {
             return;
         }

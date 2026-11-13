@@ -10,7 +10,6 @@ import { KeyValueArray } from '../../types/Utils';
 import { LoginService } from './login.service';
 import { DateTime } from 'luxon';
 
-
 @Injectable({
     providedIn: 'root'
 })
@@ -118,7 +117,7 @@ export class DagRapportenService {
     }
 
     // als we weten dat gebruiker geen toegang heeft, hoeven we ook niets op te vragen
-    magDagInfoOphalen(): boolean {
+    private magDagInfoOphalen(): boolean {
         const ui = this.loginService.userInfo?.Userinfo;
         return (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isInstructeur || ui?.isCIMT || ui?.isDDWVCrew) ? true : false;
     }

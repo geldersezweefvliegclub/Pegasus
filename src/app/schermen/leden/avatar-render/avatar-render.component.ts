@@ -10,8 +10,9 @@ import { AvatarComponent } from '../../../shared/components/avatar/avatar.compon
     imports: [AvatarComponent]
 })
 export class AvatarRenderComponent implements AgRendererComponent {
-  url: string;
-  naam: string;
+  // variablen in html formulier
+  protected url: string;
+  protected naam: string;
 
   agInit(params: ICellRendererParams): void {
     this.url = params.value;

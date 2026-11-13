@@ -4,12 +4,11 @@ import { LoginService } from '../../../services/apiservice/login.service';
 import { DaginfoService } from '../../../services/apiservice/daginfo.service';
 import { SharedService } from '../../../services/shared/shared.service';
 import { DateTime } from 'luxon';
-import { Observable, of, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
 import {
     HeliosDagInfo,
     HeliosDagRapportenDataset,
-    HeliosDienstenDataset,
     HeliosRoosterDataset,
     HeliosType,
 } from '../../../types/Helios';
@@ -28,18 +27,40 @@ import { IconButtonComponent } from '../../../shared/components/icon-button/icon
 import { PegasusCardComponent } from '../../../shared/components/pegasus-card/pegasus-card.component';
 import { StatusButtonComponent } from '../../../shared/components/status-button/status-button.component';
 import { SuccessComponent } from '../../../shared/components/success/success.component';
-import { NgSelectComponent } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-daginfo',
+    host: { class: 'scherm-pagina' },
     templateUrl: './daginfo.component.html',
     styleUrls: ['./daginfo.component.scss'],
-    imports: [DagRapportEditorComponent, DagRoosterComponent, ErrorComponent, IconButtonComponent, NgSelectComponent, FormsModule, FaIconComponent, AsyncPipe, PegasusCardComponent, StatusButtonComponent, SuccessComponent]
+    imports: [DagRapportEditorComponent, DagRoosterComponent, ErrorComponent, IconButtonComponent, FormsModule, FaIconComponent, PegasusCardComponent, StatusButtonComponent, SuccessComponent]
 })
 export class DaginfoComponent implements OnInit, OnDestroy{
+    // variablen in html formulier
+    protected readonly editor = viewChild.required(DagRapportEditorComponent);
+
+    protected iconCardIcon: IconDefinition = faInfo;
+    protected iconVliegveld: IconDefinition = faPlane;
+    protected iconDiensten: IconDefinition = faUsers;
+    protected deleteIcon: IconDefinition = faMinusCircle;
+    protected restoreIcon: IconDefinition = faUndo;
+    protected datum: DateTime = DateTime.now();              // de gekozen dag
+    protected dagInfo: HeliosDagInfo;
+    protected rooster: HeliosRoosterDataset[] = [];
+    protected dagRapporten: HeliosDagRapportenDataset[];
+    protected veldTypes: HeliosType[] = [];
+    protected baanTypes: HeliosType[] = [];
+    protected startMethodeTypes: HeliosType[] = [];
+    protected toonDagRapport = false;
+    protected deleteMode = false;
+    protected trashMode = false;
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+    protected veld_id: number| undefined;
+
+    // private variable voor ts script
     private readonly loginService = inject(LoginService);
     private readonly typesService = inject(TypesService);
     private readonly sharedService = inject(SharedService);
@@ -47,52 +68,23 @@ export class DaginfoComponent implements OnInit, OnDestroy{
     private readonly roosterService = inject(RoosterService);
     private readonly dienstenService = inject(DienstenService);
     private readonly dagRapportenService = inject(DagRapportenService);
-
-    readonly dienstenWizard = viewChild.required(DagRoosterComponent);
-    readonly editor = viewChild.required(DagRapportEditorComponent);
-
-    iconCardIcon: IconDefinition = faInfo;
-    iconVliegveld: IconDefinition = faPlane;
-    iconDiensten: IconDefinition = faUsers;
-    deleteIcon: IconDefinition = faMinusCircle;
-    restoreIcon: IconDefinition = faUndo;
+    private readonly dienstenWizard = viewChild.required(DagRoosterComponent);
 
     private datumAbonnement: Subscription;         // volg de keuze van de kalender
-    datum: DateTime = DateTime.now();              // de gekozen dag
-
     private dagInfoAbonnement: Subscription;
-    dagInfo: HeliosDagInfo;
-
     private dienstenAbonnement: Subscription;
     private roosterAbonnement: Subscription;
-    rooster: HeliosRoosterDataset[] = [];
-    diensten: HeliosDienstenDataset[];
-    dagRapporten: HeliosDagRapportenDataset[];
-
     private typesAbonnement: Subscription;
-    veldTypes$: Observable<HeliosType[]>;
-    baanTypes$: Observable<HeliosType[]>;
-    startMethodeTypes$: Observable<HeliosType[]>;
-
-    magOpslaan = false;
-    toonDagRapport = false;
-    deleteMode = false;
-    trashMode = false;
-
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
-
-    veld_id: number| undefined;
 
     ngOnInit(): void {
-        const ui = this.loginService.userInfo?.Userinfo;
-        this.magOpslaan = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT) ? true : false;
+        // TODO: rechtencontrole voor opslaan van de daginfo ontbreekt. Er was magOpslaan (isBeheerder, isBeheerderDDWV,
+        //  isStarttoren of isCIMT), maar die werd nergens gecontroleerd. Bepalen of dit nodig is
 
         // abonneer op wijziging van lidTypes
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
-            this.startMethodeTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 5}));    // startmethodes
-            this.veldTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));            // vliegvelden
-            this.baanTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 1}));            // vliegvelden
+            this.startMethodeTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 5});    // startmethodes
+            this.veldTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 9});            // vliegvelden
+            this.baanTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 1});            // vliegvelden
         });
 
         // de datum zoals die in de kalender gekozen is
@@ -116,7 +108,6 @@ export class DaginfoComponent implements OnInit, OnDestroy{
 
         // abonneer op wijziging van diensten
         this.dienstenAbonnement = this.dienstenService.dienstenChange.subscribe(diensten => {
-            this.diensten = (diensten) ? diensten : [];
             this.heeftToegangDagRapport();
         });
 
@@ -136,12 +127,12 @@ export class DaginfoComponent implements OnInit, OnDestroy{
         if (this.roosterAbonnement)     this.roosterAbonnement.unsubscribe();
     }
 
-    opvragen(): void {
+    protected opvragen(): void {
         this.dagRapportenService.getDagRapporten(this.trashMode, this.datum.toISODate() as string).then((dr) => this.dagRapporten = dr);
     }
 
     // mag de gebruiker de dag info zien?
-    heeftToegangDagRapport(): void {
+    private heeftToegangDagRapport(): void {
         const ui = this.loginService.userInfo?.Userinfo;
         let tonen = false;
 
@@ -167,12 +158,12 @@ export class DaginfoComponent implements OnInit, OnDestroy{
     }
 
     // Mogen we uberhaupt de daginfo opslaan
-    opslaanDisabled() {
+    protected opslaanDisabled() {
         return !(this.dagInfo.VELD_ID && this.dagInfo.STARTMETHODE_ID && this.dagInfo.STARTMETHODE_ID > 0);
     }
 
     // opslaan van de ingevoerde dag rapport
-    opslaanDagInfo() {
+    protected opslaanDagInfo() {
         try {
             if (this.dagInfo.ID == undefined) {
                 this.dagInfo.DATUM = this.datum.year + '-' + this.datum.month + '-' + this.datum.day
@@ -193,27 +184,7 @@ export class DaginfoComponent implements OnInit, OnDestroy{
         }
     }
 
-    // Extra vraag voordat de daginfo als verwijderd gemarkeerd wordt
-    bevestigVerwijderen() {
-        if (this.dagInfo.ID != undefined) {
-            if (confirm("Weet u zeker dat de daginfo verwijderd mag worden?")) {
-                try {
-                    this.daginfoService.deleteDagInfo(this.dagInfo.ID).then(() => {
-                        const datum = this.dagInfo.DATUM!.split('-');
-                        const d = datum[2] + '-' + datum[1] + '-' + datum[0];
-                        this.success = {titel: "Dag info", beschrijving: d + " is verwijderd"}
-                        this.error = undefined;
-
-                        this.dagInfo = {};
-                    });
-                } catch (e) {
-                    this.error = e;
-                }
-            }
-        }
-    }
-
-    deleteModeJaNee() {
+    protected deleteModeJaNee() {
         this.deleteMode = !this.deleteMode;
 
         if (this.trashMode) {
@@ -221,40 +192,38 @@ export class DaginfoComponent implements OnInit, OnDestroy{
         }
     }
 
-    trashModeJaNee(actief: boolean) {
+    protected trashModeJaNee(actief: boolean) {
         this.trashMode = actief;
         this.opvragen();
     }
 
-
-    magDagRapportVerwijderen(dr: HeliosDagRapportenDataset) {
+    protected magDagRapportVerwijderen(dr: HeliosDagRapportenDataset) {
         const ui = this.loginService.userInfo;
         return (ui?.Userinfo?.isCIMT || ui?.Userinfo?.isBeheerder || ui?.LidData?.ID == dr.INGEVOERD_ID);
     }
 
-    magDagRapportHerstellen(dr: HeliosDagRapportenDataset) {
+    protected magDagRapportHerstellen(dr: HeliosDagRapportenDataset) {
         const ui = this.loginService.userInfo;
         return  (ui?.Userinfo?.isCIMT || ui?.Userinfo?.isBeheerder || ui?.LidData?.ID == dr.INGEVOERD_ID);
     }
 
-
     // Wizard om tekst te genereren voor aanwezige leden. Tekst kan daarna aangepast worden
-    invullenDiensten() {
+    protected invullenDiensten() {
         this.dienstenWizard().openPopup();
     }
 
-    tijdString(dt: string): string {
+    protected tijdString(dt: string): string {
         const datumtijd = this.sharedService.parseDatum(dt);
         return datumtijd.toFormat("HH:mm")
     }
 
-    datumString(dt: string): string {
+    protected datumString(dt: string): string {
         const datumtijd = this.sharedService.parseDatum(dt);
         return datumtijd.day + "-" + datumtijd.month + "-" + datumtijd.year;
     }
 
     // Hebben we een datum in de toekomst, vandaag is geen toekomst
-    datumInToekomst(): boolean {
+    protected datumInToekomst(): boolean {
         const datum = this.datum.toISODate() as string;
 
         const nu: DateTime = DateTime.now();
@@ -263,19 +232,19 @@ export class DaginfoComponent implements OnInit, OnDestroy{
         return (d > nu) // datum is in het toekomst
     }
 
-    addDagRapport() {
+    protected addDagRapport() {
         this.editor().openPopup()
     }
 
-    openEditor(dagRapport: HeliosDagRapportenDataset) {
+    protected openEditor(dagRapport: HeliosDagRapportenDataset) {
         this.editor().openPopup(dagRapport)
     }
 
-    openVerwijderPopup(dagRapport: HeliosDagRapportenDataset) {
+    protected openVerwijderPopup(dagRapport: HeliosDagRapportenDataset) {
         this.editor().openVerwijderPopup(dagRapport)
     }
 
-    openRestorePopup(dagRapport: HeliosDagRapportenDataset) {
+    protected openRestorePopup(dagRapport: HeliosDagRapportenDataset) {
         this.editor().openRestorePopup(dagRapport)
     }
 

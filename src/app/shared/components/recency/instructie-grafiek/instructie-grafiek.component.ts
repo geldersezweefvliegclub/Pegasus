@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, input, viewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, input, viewChild } from '@angular/core';
 import { ModalComponent } from '../../modal/modal.component';
 import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
@@ -15,25 +15,29 @@ import { BaseChartDirective } from 'ng2-charts';
     styleUrls: ['./instructie-grafiek.component.scss'],
     imports: [ModalComponent, NgbProgressbar, BaseChartDirective]
 })
-export class InstructieGrafiekComponent implements OnInit {
-    private readonly startlijstService = inject(StartlijstService);
-    private readonly sharedService = inject(SharedService);
-
+export class InstructieGrafiekComponent implements OnInit, OnDestroy {
     readonly VliegerID = input.required<number>();
     readonly naam = input<string>();
 
+    // variablen in html formulier
+    protected uren: number[] = [];
+    protected bezig = false;
+    protected counter = 0;
+    protected lineChartLabels: string[] = []
+    protected lineChartLegend = true;
+    protected lineChartData: ChartDataset[] = [];
+
+    // private variable voor ts script
+    private readonly startlijstService = inject(StartlijstService);
+    private readonly sharedService = inject(SharedService);
     private readonly popup = viewChild.required(ModalComponent);
 
     private datumAbonnement: Subscription;  // volg de keuze van de kalender
-    datum: DateTime = DateTime.now();       // de gekozen dag
-
-    starts: number[] = [];
-    uren: number[] = [];
-    bezig = false;
-    counter = 0;
+    private datum: DateTime = DateTime.now();       // de gekozen dag
+    private starts: number[] = [];
 
     // Teken een verticale lijn op de 1e jaargrens zodat je de jaren goed kunt onderscheiden
-    JaarGrens1: AnnotationOptions =
+    private JaarGrens1: AnnotationOptions =
         {
             type: 'line',
             scaleID: 'x',
@@ -41,9 +45,8 @@ export class InstructieGrafiekComponent implements OnInit {
             borderColor: '#9b9b9b',
             borderWidth: 1,
         }
-
     // Teken een verticale lijn op de 2e jaargrens zodat je de jaren goed kunt onderscheiden
-    JaarGrens2: AnnotationOptions =
+    private JaarGrens2: AnnotationOptions =
         {
             type: 'line',
             scaleID: 'x',
@@ -51,9 +54,8 @@ export class InstructieGrafiekComponent implements OnInit {
             borderColor: '#9b9b9b',
             borderWidth: 1,
         }
-
     // Teken een verticale lijn op de 3e jaargrens zodat je de jaren goed kunt onderscheiden
-    JaarGrens3: AnnotationOptions =
+    private JaarGrens3: AnnotationOptions =
         {
             type: 'line',
             scaleID: 'x',
@@ -61,8 +63,7 @@ export class InstructieGrafiekComponent implements OnInit {
             borderColor: '#9b9b9b',
             borderWidth: 1,
         }
-
-    MinimaleEisUren: AnnotationOptions =
+    private MinimaleEisUren: AnnotationOptions =
         {
             type: 'line',
             scaleID: 'y',
@@ -71,8 +72,7 @@ export class InstructieGrafiekComponent implements OnInit {
             borderWidth: 2,
             borderDash: [10,5],
         }
-
-    MinimaleEisStarts: AnnotationOptions =
+    private MinimaleEisStarts: AnnotationOptions =
         {
             type: 'line',
             scaleID: 'y',
@@ -82,8 +82,9 @@ export class InstructieGrafiekComponent implements OnInit {
             borderDash: [10,5],
         }
 
+    // afgeleid van bovenstaande variabelen, moet daarom na de declaratie ervan staan
     // alle opties voor het tekenen van de lijn
-    lineChartOptions: ChartOptions = {
+    protected lineChartOptions: ChartOptions = {
         responsive: true,
         maintainAspectRatio: false,
         layout: {
@@ -143,11 +144,6 @@ export class InstructieGrafiekComponent implements OnInit {
         }
     }
 
-    lineChartLabels: string[] = []
-    lineChartLegend = true;
-
-    lineChartData: ChartDataset[] = [];
-
     ngOnInit(): void {
         // de datum zoals die in de kalender gekozen is
         this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
@@ -159,6 +155,10 @@ export class InstructieGrafiekComponent implements OnInit {
                 })
             }
         });
+    }
+
+    ngOnDestroy(): void {
+        if (this.datumAbonnement) this.datumAbonnement.unsubscribe();
     }
 
     openPopup() {
@@ -179,7 +179,7 @@ export class InstructieGrafiekComponent implements OnInit {
         this.popup().open();
     }
 
-    async opvragen(): Promise<void> {
+    private async opvragen(): Promise<void> {
         const starts = [];
         const uren = [];
         const lineChartLabels = [];
@@ -246,7 +246,6 @@ export class InstructieGrafiekComponent implements OnInit {
                 const hours =  +vliegtijdParts![0];
                 const minutes = +vliegtijdParts![1];
                 uren.push(hours + minutes /60);
-
 
                 // de maximale waarde die de grafiek heeft
                 if (recency.STARTS_INSTRUCTIE as number > maxWaarde) {

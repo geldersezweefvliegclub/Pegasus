@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, inject, input, OnDestroy, OnInit } from '
 import { NgbDate, NgbDateParserFormatter, NgbInputDatepicker, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { DateTime } from 'luxon';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
-import { faEye, faEyeSlash, faInfo, faInfoCircle, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faInfo, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { TypesService } from '../../../../services/apiservice/types.service';
 import { HeliosLedenDataset, HeliosLid, HeliosType } from '../../../../types/Helios';
 import { LedenService } from '../../../../services/apiservice/leden.service';
@@ -35,6 +35,36 @@ import { LoaderComponent } from '../../loader/loader.component';
     imports: [ErrorComponent, SuccessComponent, FormsModule, PegasusCardComponent, ImageCropComponent, WachtwoordMatchValidatorDirective, TelefoonValidatorDirective, NgbInputDatepicker, IconButtonComponent, NgClass, FaIconComponent, NgbPopover, WachtwoordSterkteValidatorDirective, LidInvoerComponent, LoaderComponent]
 })
 export class LidEditorComponent implements OnInit, OnDestroy {
+    readonly lidID = input.required<number>();
+    readonly isVerwijderMode = input(false);
+    readonly isRestoreMode = input(false);
+
+    // variablen in html formulier
+    protected readonly informatieIcon: IconDefinition = faInfo;
+    protected readonly infoIcon: IconDefinition = faInfoCircle;
+
+    protected instructeurs: HeliosLedenDataset[] = [];
+    protected zusterclubs: HeliosLedenDataset[] = []
+    protected lidTypes: HeliosType[];
+    protected statusTypes: HeliosType[];
+    protected lid: HeliosLid = {};
+    protected wachtwoordVerborgen = true;
+    protected oogIcon: IconDefinition = faEye;
+    protected controleWachtwoord = '';
+    protected wachtwoord = '';
+    protected subtitel = 'Instellen van gegevens en voorkeuren';
+    protected titel = 'Aanpassen profiel';
+    protected avatar: string | null | undefined;
+    protected isLoading = false;
+    protected isSaving = false;
+    protected isMobiel = true;
+    protected MedicalDatum: NgbDate | null;
+    protected GeboorteDatum: NgbDate | null;
+    protected vandaag: DateTime = DateTime.now();
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+
+    // private variable voor ts script
     private readonly router = inject(Router);
     private readonly typesService = inject(TypesService);
     private readonly ledenService = inject(LedenService);
@@ -43,45 +73,9 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     private readonly sharedService = inject(SharedService);
     private readonly changeDetector = inject(ChangeDetectorRef);
 
-    readonly lidID = input.required<number>();
-    readonly isVerwijderMode = input(false);
-    readonly isRestoreMode = input(false);
-
-
     private resizeSubscription: Subscription;       // Abonneer op aanpassing van window grootte (of draaien mobiel)
     private ledenAbonnement: Subscription;
-    instructeurs: HeliosLedenDataset[] = [];
-    zusterclubs: HeliosLedenDataset[] = []
-
     private typesAbonnement: Subscription;
-    lidTypes: HeliosType[];
-    statusTypes: HeliosType[];
-    lid: HeliosLid = {};
-
-    wachtwoordVerborgen = true;
-    oogIcon: IconDefinition = faEye;
-    readonly informatieIcon: IconDefinition = faInfo;
-    readonly infoIcon: IconDefinition = faInfoCircle;
-
-    controleWachtwoord = '';
-    wachtwoord = '';
-
-    subtitel = 'Instellen van gegevens en voorkeuren';
-    titel = 'Aanpassen profiel';
-    avatar: string | null | undefined;
-
-    isLoading = false;
-    isSaving = false;
-    isMobiel = true;
-
-
-    MedicalDatum: NgbDate | null;
-    GeboorteDatum: NgbDate | null;
-
-    vandaag: DateTime = DateTime.now();
-
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
 
     ngOnInit(): void {
         this.onWindowResize();
@@ -121,12 +115,12 @@ export class LidEditorComponent implements OnInit, OnDestroy {
         this.typesAbonnement.unsubscribe();
     }
 
-    onWindowResize() {
+    private onWindowResize() {
         this.isMobiel = (this.sharedService.getSchermSize() <= SchermGrootte.md);
     }
 
     // opvragen van lid informatie, of creeer nieuw lid
-    opvragen() {
+    private opvragen() {
         // als lidID > 0, dan wijzigen we een bestaand lid profiel
         if (this.lidID() >= 0) {
             this.isLoading = true;
@@ -162,7 +156,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     }
 
     // opslaan van starts
-    uitvoeren() {
+    protected uitvoeren() {
         // even kijken of wachtwoorden ingevuld en goed zijn
         if (this.wachtwoord === '' || (this.controleWachtwoord !== this.wachtwoord)) {
             this.lid.WACHTWOORD = undefined;
@@ -214,7 +208,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     }
 
     // markeer lid als verwijderd
-    delete(): void {
+    private delete(): void {
         this.isSaving = true;
         this.ledenService.deleteLid(this.lidID()).then(() => {
             this.isSaving = false;
@@ -230,7 +224,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     }
 
     // haal een lid terug door verwijderd vlag te resetten
-    restore(): void {
+    private restore(): void {
         this.isSaving = true;
         this.ledenService.restoreLid(this.lid.ID!).then(() => {
             this.isSaving = false;
@@ -246,7 +240,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     }
 
     // update bestaand lid
-    updateLid(): void {
+    private updateLid(): void {
         this.isSaving = true;
         this.ledenService.updateLid(this.lid).then((l) => {
             this.isSaving = false;
@@ -266,7 +260,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     }
 
     // nieuw lid toevoegen aan het leden bestand
-    nieuwLid(): void {
+    private nieuwLid(): void {
         this.isSaving = true;
         this.ledenService.addLid(this.lid).then((l) => {
             this.lid = l;
@@ -283,13 +277,13 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     }
 
     // Datum velden moeten in YYYY-MM-DD aan api worden aangeboden
-    converteerDatumNaarISO($event: NgbDate): string {
+    private converteerDatumNaarISO($event: NgbDate): string {
         const unformatted = DateTime.fromObject($event);
         return unformatted.isValid ? (unformatted.toISODate() as string) : '';
     }
 
     // Datum velden komen in ISO formaat van API, conversie naar NgbDate zodat invoer gedaan kan worden
-    converteerDatumNaarNgbDate(datum: string | null | undefined): NgbDate | null {
+    private converteerDatumNaarNgbDate(datum: string | null | undefined): NgbDate | null {
         if (datum) {
             return NgbDate.from(DateTime.fromSQL(datum));
         } else
@@ -297,20 +291,19 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     }
 
     // Laat het wachtwoorden wel / niet zien
-    verbergWachtwoord() {
+    protected verbergWachtwoord() {
         this.wachtwoordVerborgen = !this.wachtwoordVerborgen;
         this.oogIcon = this.wachtwoordVerborgen ? faEye : faEyeSlash;
     }
 
     // Avatar is aangepast in editor, meteen avatar in het profiel aanpassen
-    setAvatar($event: string) {
+    protected setAvatar($event: string) {
         this.avatar = $event;
         this.changeDetector.detectChanges();
     }
 
-
     // nu opslaan van de avatar
-    uploadFoto(image: string) {
+    protected uploadFoto(image: string) {
         this.setAvatar(image);
         try {
             this.imageService.uploadFoto(this.lidID(), image).then(() => {
@@ -323,7 +316,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     }
 
     // Voor sommige gebruikers is 2 factor authenticatie verplicht
-    isgoogleAuthNodig(): boolean {
+    protected isgoogleAuthNodig(): boolean {
         if (this.lid.BEHEERDER || this.lid.DDWV_BEHEERDER || this.lid.INSTRUCTEUR || this.lid.CIMT ||
             this.lid.DDWV_CREW || this.lid.ROOSTER || this.lid.STARTTOREN || this.lid.RAPPORTEUR) {
             this.lid.AUTH = true;
@@ -333,7 +326,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     }
 
     // Logica om te bepalen of je veld wel/niet mag invullen
-    isDisabled(veld: string) {
+    protected isDisabled(veld: string) {
         const ui = this.loginService.userInfo?.Userinfo;
 
         if (this.isRestoreMode() || this.isVerwijderMode()) {
@@ -424,7 +417,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     }
 
     // Logica om te bepalen of je veld wel/niet mag zien
-    isVisible(veld: string) {
+    protected isVisible(veld: string) {
         const ui = this.loginService.userInfo?.Userinfo;
 
         switch (veld) {
@@ -471,12 +464,12 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     }
 
     // Ben ik mijn eigen profiel aan het aanpassen?
-    ikBenHetZelf(): boolean {
+    private ikBenHetZelf(): boolean {
         return this.loginService.userInfo?.LidData?.ID == this.lidID()
     }
 
     // Als veld disabled is, dan extra class toevoegen voor label
-    disabledClass(veld: string) {
+    protected disabledClass(veld: string) {
         if (this.isDisabled(veld)) {
             return "disableVeld";
         }
@@ -484,7 +477,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     }
 
     // Toon de QR code voor Google Authenticator
-    toonSecret() {
+    protected toonSecret() {
         if (this.isRestoreMode() || this.isVerwijderMode()) {
             return false;
         }
@@ -496,7 +489,7 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     }
 
     // Check of medical ingevoerd is, of misschien wel verlopen is.
-    medicalVerlopen() {
+    protected medicalVerlopen() {
         if (this.MedicalDatum == null) {
             return false;
         }

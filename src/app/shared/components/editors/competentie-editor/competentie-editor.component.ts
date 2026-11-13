@@ -3,7 +3,7 @@ import { ModalComponent } from '../../modal/modal.component';
 import { HeliosCompetentie, HeliosCompetentiesDataset, HeliosType } from '../../../../types/Helios';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { CompetentieService } from '../../../../services/apiservice/competentie.service';
-import { Observable, of, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TypesService } from '../../../../services/apiservice/types.service';
 import { ErrorComponent } from '../../error/error.component';
 import { SuccessComponent } from '../../success/success.component';
@@ -11,7 +11,6 @@ import { FormsModule } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { IconButtonComponent } from '../../icon-button/icon-button.component';
 import { LoaderComponent } from '../../loader/loader.component';
-import { AsyncPipe } from '@angular/common';
 
 export interface CompetentieLijst {
     ID: number | undefined;
@@ -22,30 +21,29 @@ export interface CompetentieLijst {
     selector: 'app-competentie-editor',
     templateUrl: './competentie-editor.component.html',
     styleUrls: ['./competentie-editor.component.scss'],
-    imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, NgSelectComponent, IconButtonComponent, LoaderComponent, AsyncPipe]
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, NgSelectComponent, IconButtonComponent, LoaderComponent]
 })
 export class CompetentieEditorComponent implements OnInit, OnDestroy {
+    // variablen in html formulier
+    protected formTitel: string;
+    protected topLevels: HeliosType[];
+    protected lijst: CompetentieLijst[] = [];
+    protected competentie: HeliosCompetentie = {};
+    protected isLoading = false;
+    protected isSaving = false;
+    protected isVerwijderMode = false;
+    protected isRestoreMode = false;
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+
+    // private variable voor ts script
     private readonly typesService = inject(TypesService);
     private readonly competentieService = inject(CompetentieService);
-
     private readonly popup = viewChild.required(ModalComponent);
-    formTitel: string;
 
     private typesAbonnement: Subscription;
-    topLevels: HeliosType[];
-
     private competentiesAbonnement: Subscription;
-    lijst$: Observable<CompetentieLijst[]>;
-    competenties: HeliosCompetentiesDataset[] = [];
-    competentie: HeliosCompetentie = {};
-    isLoading = false;
-    isSaving = false;
-
-    isVerwijderMode = false;
-    isRestoreMode = false;
-
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
+    private competenties: HeliosCompetentiesDataset[] = [];
 
     ngOnInit() {
         // abonneer op wijziging van top level competenties
@@ -81,12 +79,12 @@ export class CompetentieEditorComponent implements OnInit, OnDestroy {
         this.popup().open();
     }
 
-    closePopup() {
+    private closePopup() {
         this.popup().close();
     }
 
     // ophalen van type uit de database (via API)
-    haalCompetentieOp(id: number): void {
+    private haalCompetentieOp(id: number): void {
         this.isLoading = true;
 
         try {
@@ -122,7 +120,7 @@ export class CompetentieEditorComponent implements OnInit, OnDestroy {
     }
 
     // uitvoeren van de actie waar we mee bezig zijn
-    uitvoeren() {
+    protected uitvoeren() {
         this.isSaving = true;
         if (this.isRestoreMode) {
             this.Herstellen(this.competentie);
@@ -142,7 +140,7 @@ export class CompetentieEditorComponent implements OnInit, OnDestroy {
     }
 
     // opslaan in de database
-    Toevoegen(competentie: HeliosCompetentie) {
+    private Toevoegen(competentie: HeliosCompetentie) {
         this.competentieService.addCompetentie(competentie).then(() => {
             this.success = {
                 titel: "Competentie",
@@ -156,7 +154,7 @@ export class CompetentieEditorComponent implements OnInit, OnDestroy {
     }
 
     // bestaande type is aangepast. Opslaan van het type
-    Aanpassen(competentie: HeliosCompetentie) {
+    private Aanpassen(competentie: HeliosCompetentie) {
         this.competentieService.updateCompetentie(competentie).then(() => {
             this.success = {
                 titel: "Competentie",
@@ -170,7 +168,7 @@ export class CompetentieEditorComponent implements OnInit, OnDestroy {
     }
 
     // markeer een type als verwijderd
-    Verwijderen(competentie: HeliosCompetentie) {
+    protected Verwijderen(competentie: HeliosCompetentie) {
         this.competentieService.deleteCompetentie(competentie.ID!).then(() => {
             this.success = {
                 titel: "Competentie",
@@ -184,7 +182,7 @@ export class CompetentieEditorComponent implements OnInit, OnDestroy {
     }
 
     // het type herstellen, haal de markering 'verwijderd' weg
-    Herstellen(competentie: HeliosCompetentie) {
+    protected Herstellen(competentie: HeliosCompetentie) {
         this.competentieService.restoreCompetentie(competentie.ID!).then(() => {
             this.success = {
                 titel: "Competentie",
@@ -198,11 +196,11 @@ export class CompetentieEditorComponent implements OnInit, OnDestroy {
     }
 
     // Opslaan knop staat uit als we niet weten over wie het gaat, of er nog geen tekst is ingevoerd
-    opslaanDisabled() {
+    protected opslaanDisabled() {
         return !this.competentie.OMSCHRIJVING
     }
 
-    parentChange(parentID: number) {
+    protected parentChange(parentID: number) {
         const parent = this.competenties.find(c => c.ID == parentID);
 
         if (parent) {
@@ -211,16 +209,15 @@ export class CompetentieEditorComponent implements OnInit, OnDestroy {
         }
     }
 
-    filterBovenliggend() {
+    protected filterBovenliggend() {
         const l = this.competenties.filter((c:HeliosCompetentiesDataset) => { return c.LEERFASE_ID == this.competentie.LEERFASE_ID})
-        this.lijst$ = of(l.map((i) => {
+        this.lijst = l.map((i) => {
             const l: CompetentieLijst = {
                 ID: i.ID,
                 label: '[' + i.ID + '] ' + i.OMSCHRIJVING
             }
             return l;
-        }))
+        })
     }
 }
-
 

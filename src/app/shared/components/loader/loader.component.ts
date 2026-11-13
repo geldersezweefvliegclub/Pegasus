@@ -10,6 +10,8 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 })
 export class LoaderComponent {
   readonly isLoading = input(false);
-  loader = faCircleNotch;
+
+  // variablen in html formulier
+  protected loader = faCircleNotch;
 }
 

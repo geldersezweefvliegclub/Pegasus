@@ -8,11 +8,10 @@ import { ICellRendererParams } from 'ag-grid-community';
     styleUrls: ['./telefoon-render.component.scss']
 })
 export class TelefoonRenderComponent implements AgRendererComponent {
-  telefoon: string;
-  mobiel: string;
-  noodnummer: string;
-
-
+  // variablen in html formulier
+  protected telefoon: string;
+  protected mobiel: string;
+  protected noodnummer: string;
 
   agInit(params: ICellRendererParams): void {
     this.telefoon = params.data.TELEFOON;

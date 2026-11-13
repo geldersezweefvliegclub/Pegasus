@@ -16,9 +16,10 @@ interface ButtonClicked {
     imports: [FaIconComponent]
 })
 export class IconRenderComponent implements AgRendererComponent {
-    params: ICellRendererParams & ButtonClicked;
-    logboekIcon: IconDefinition = faFileAlt;
-    journaalIcon: IconDefinition = faBug;
+    // variablen in html formulier
+    protected params: ICellRendererParams & ButtonClicked;
+    protected logboekIcon: IconDefinition = faFileAlt;
+    protected journaalIcon: IconDefinition = faBug;
 
     agInit(params: ICellRendererParams & ButtonClicked): void {
         this.params = params;
@@ -28,11 +29,11 @@ export class IconRenderComponent implements AgRendererComponent {
         return false;
     }
 
-    logboekButtonClicked() {
+    protected logboekButtonClicked() {
         this.params.onLogboekClicked(this.params.data.ID);
     }
 
-    journaalButtonClicked() {
+    protected journaalButtonClicked() {
         this.params.onJournaalClicked(this.params.data.ID);
     }
 }

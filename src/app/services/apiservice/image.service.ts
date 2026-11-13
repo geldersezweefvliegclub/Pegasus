@@ -7,7 +7,6 @@ import { APIService } from './api.service';
 export class ImageService {
   private readonly apiService = inject(APIService);
 
-
   /**
    * Upload een avatar van een lid
    * @param {number} ID - Het ID van het lid

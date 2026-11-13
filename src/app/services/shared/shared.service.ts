@@ -4,7 +4,6 @@ import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { ErrorMessage, HeliosEvent, KalenderMaand } from '../../types/Utils';
 import { DateTime } from 'luxon';
 
-
 export interface FilterLedenData {
     leden: boolean,
     ddwv: boolean,
@@ -40,27 +39,6 @@ export enum SchermGrootte {
     providedIn: 'root'
 })
 export class SharedService {
-    nu = new Date()
-    vandaag: NgbDateStruct = {
-        year: this.nu.getFullYear(),
-        month: this.nu.getMonth() + 1,
-        day: this.nu.getDate()
-    };
-
-    private datum: NgbDateStruct;
-    private kalenderMaand: KalenderMaand = {year: 1900, month: 1};                          // initieele waarde ver in verleden
-
-    private datumStore = new BehaviorSubject(this.vandaag);
-    private kalenderMaandStore = new BehaviorSubject(this.kalenderMaand);
-
-    private heliosEventSubject: Subject<HeliosEvent> = new Subject<HeliosEvent>();          // starts in de database is aangepast
-    private heliosFailedSubject: Subject<ErrorMessage> = new Subject<ErrorMessage>();       // api call heef gefaald
-
-    private resizeSubject = new Subject<Window>();                                                 // resize window, of draaien mobiel device
-
-    public readonly ingegevenDatum = this.datumStore.asObservable();                // nieuwe datum gekozen
-    public readonly kalenderMaandChange = this.kalenderMaandStore.asObservable();   // nieuwe maand / jaar gekozen in de kalender
-
     // om de ledenlijst te filteren
     public ledenlijstFilter: FilterLedenData = {
         leden: true,
@@ -76,17 +54,32 @@ export class SharedService {
         ddwvBeheerders: false
     }
 
+    private nu = new Date()
+    private vandaag: NgbDateStruct = {
+        year: this.nu.getFullYear(),
+        month: this.nu.getMonth() + 1,
+        day: this.nu.getDate()
+    };
+    private datum: NgbDateStruct;
+    private kalenderMaand: KalenderMaand = {year: 1900, month: 1};                          // initieele waarde ver in verleden
+    private datumStore = new BehaviorSubject(this.vandaag);
+    private kalenderMaandStore = new BehaviorSubject(this.kalenderMaand);
+    private heliosEventSubject: Subject<HeliosEvent> = new Subject<HeliosEvent>();          // starts in de database is aangepast
+    private heliosFailedSubject: Subject<ErrorMessage> = new Subject<ErrorMessage>();       // api call heef gefaald
+    private resizeSubject = new Subject<Window>();                                                 // resize window, of draaien mobiel device
+
+    // afgeleid van bovenstaande variabelen, moet daarom na de declaratie ervan staan
+    public readonly ingegevenDatum = this.datumStore.asObservable();                // nieuwe datum gekozen
+    public readonly kalenderMaandChange = this.kalenderMaandStore.asObservable();   // nieuwe maand / jaar gekozen in de kalender
+
     // laat andere component weten dat er iets in de database is aangepast
     public readonly heliosEventFired: Observable<HeliosEvent> = this.heliosEventSubject.asObservable();
-
     // laat andere component weten dat er iets in de database is aangepast
     public readonly heliosEventFailed: Observable<ErrorMessage> = this.heliosFailedSubject.asObservable();
-
 
     constructor() {
         fromEvent(window, 'resize').subscribe((x: Event) => this.resizeSubject.next(x.target as Window));
     }
-
 
     // afvuren event dat een andere maand / jaar gekozen is in de kalender
     zetKalenderMaand(kalenderMaand: KalenderMaand) {
@@ -124,6 +117,11 @@ export class SharedService {
     // datum als dd-mm
     datumDM(ISOdatum: string): string {
         return this.formatDatum(ISOdatum, 'dd-MM');
+    }
+
+    // tijd als uu:mm, vanuit ISO 8601 (2026-10-15T13:45:00.000Z wordt lokale tijd) of alleen een tijd (13:45:00)
+    tijdHM(ISOtijd: string): string {
+        return this.formatDatum(ISOtijd, 'HH:mm');
     }
 
     // datum en tijd als dd-mm-jjjj uu:mm:ss

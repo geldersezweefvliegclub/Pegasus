@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, input, viewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, input, viewChild } from '@angular/core';
 import { DateTime } from 'luxon';
 import { ColDef } from 'ag-grid-community';
 import { Subscription } from 'rxjs';
@@ -38,19 +38,13 @@ interface JaarTotaal {
     styleUrls: ['./jaar-totalen.component.scss'],
     imports: [ModalComponent, DatatableComponent]
 })
-export class JaarTotalenComponent implements OnInit {
-    private readonly dienstenService = inject(DienstenService);
-    private readonly sharedService = inject(SharedService);
-
+export class JaarTotalenComponent implements OnInit, OnDestroy {
     readonly leden = input<HeliosLedenDataset[]>([]);
-    private readonly popup = viewChild.required(ModalComponent);
 
-    jaarTotalen: JaarTotaal[];
-
-    private datumAbonnement: Subscription;      // volg de keuze van de kalender
-    datum: DateTime = DateTime.now();           // de gekozen dag
-
-    dataColumns: ColDef[] = [
+    // variablen in html formulier
+    protected jaarTotalen: JaarTotaal[];
+    protected datum: DateTime = DateTime.now();           // de gekozen dag
+    protected dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
         {field: 'NAAM', headerName: 'NAAM', sortable: true},
 
@@ -83,10 +77,16 @@ export class JaarTotalenComponent implements OnInit {
         },
         {field: 'OKTOBER', headerName: 'Oktober', sortable: true, comparator: nummerSort, cellRenderer: 'nummerRender'},
     ];
-
-    frameworkComponents = {
+    protected frameworkComponents = {
         nummerRender: OnderdrukNulComponent,
     };
+
+    // private variable voor ts script
+    private readonly dienstenService = inject(DienstenService);
+    private readonly sharedService = inject(SharedService);
+    private readonly popup = viewChild.required(ModalComponent);
+
+    private datumAbonnement: Subscription;      // volg de keuze van de kalender
 
     ngOnInit(): void {
         // de datum zoals die in de kalender gekozen is
@@ -101,6 +101,10 @@ export class JaarTotalenComponent implements OnInit {
         })
     }
 
+    ngOnDestroy(): void {
+        if (this.datumAbonnement) this.datumAbonnement.unsubscribe();
+    }
+
     // Open leden-filter dialoog met de leden-filter opties
     openPopup() {
         this.popup().open();
@@ -108,7 +112,7 @@ export class JaarTotalenComponent implements OnInit {
     }
 
     // opvragen van alle diensten
-    opvragen(): void {
+    private opvragen(): void {
         const totals: JaarTotaal[] = [];
 
         // alle leden met lege starts toevoegen aan het grid
@@ -190,7 +194,7 @@ export class JaarTotalenComponent implements OnInit {
         });
     }
 
-    exportJaarRooster() {
+    protected exportJaarRooster() {
         const ws = xlsx.utils.json_to_sheet(this.jaarTotalen);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');

@@ -39,30 +39,20 @@ interface brevetEASA {
 })
 
 export class RecencyComponent implements OnInit, OnChanges {
-    private readonly startlijstService = inject(StartlijstService);
-    private readonly progressieService = inject(ProgressieService);
-
     readonly Vlieger = input.required<HeliosLid>();
     readonly naam = input.required();
 
-    private readonly grafiekRecency = viewChild.required(RecencyGrafiekComponent);
-    private readonly grafiekInstructie = viewChild.required(InstructieGrafiekComponent);
-    private readonly grafiekStarts = viewChild.required(StartGrafiekComponent);
+    // variablen in html formulier
+    protected readonly checkIcon: IconDefinition = faCircleCheck;
+    protected readonly declineIcon: IconDefinition = faCircleXmark;
+    protected readonly infoIcon: IconDefinition = faInfoCircle;
 
-    readonly checkIcon: IconDefinition = faCircleCheck;
-    readonly declineIcon: IconDefinition = faCircleXmark;
-    readonly infoIcon: IconDefinition = faInfoCircle;
-
-    aantekeningen: HeliosBehaaldeProgressieDataset[];
-
-    recency: HeliosRecency;
-    isLoading = false;
-    toonEASA = false;
-
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
-
-    brevet: brevetEASA = {
+    protected recency: HeliosRecency;
+    protected isLoading = false;
+    protected toonEASA = false;
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+    protected brevet: brevetEASA = {
         aantal: false,
         medical: false,
         lierstarts: -1,
@@ -72,11 +62,20 @@ export class RecencyComponent implements OnInit, OnChanges {
         pax: -1
     };
 
+    // private variable voor ts script
+    private readonly startlijstService = inject(StartlijstService);
+    private readonly progressieService = inject(ProgressieService);
+    private readonly grafiekRecency = viewChild.required(RecencyGrafiekComponent);
+    private readonly grafiekInstructie = viewChild.required(InstructieGrafiekComponent);
+    private readonly grafiekStarts = viewChild.required(StartGrafiekComponent);
+
+    private aantekeningen: HeliosBehaaldeProgressieDataset[];
+
     ngOnInit(): void {
         this.ophalen();
     }
 
-    ophalen(): void {
+    private ophalen(): void {
         this.isLoading = true;
 
         const Vlieger = this.Vlieger();
@@ -157,19 +156,19 @@ export class RecencyComponent implements OnInit, OnChanges {
         }
     }
 
-    openRecencyPopup(): void {
+    protected openRecencyPopup(): void {
         this.grafiekRecency().openPopup();
     }
 
-    openInstructiePopup(): void {
+    protected openInstructiePopup(): void {
         this.grafiekInstructie().openPopup();
     }
 
-    openStartPopup() {
+    protected openStartPopup() {
         this.grafiekStarts().openPopup();
     }
 
-    geenGeldigBrevet() {
+    protected geenGeldigBrevet() {
         if (this.recency) {
             if (this.recency.CHECKS!.length < 2) {
                 return true;
@@ -184,7 +183,7 @@ export class RecencyComponent implements OnInit, OnChanges {
     }
 
     // Toon een popup met de datums waarop de check is afgenomen
-    toonCheckDatum() {
+    protected toonCheckDatum() {
         let datumString = "";
         if (this.recency) {
             if (this.recency.CHECKS!.length == 0) {

@@ -8,6 +8,20 @@ import { LoginService } from '../../../services/apiservice/login.service';
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
 import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
 
+// lege namen van de diensten, wordt gebruikt om weergave te resetten
+const LEGE_WEERGAVE = {
+    ochtendDDI: "",
+    ochtendInstructeur: "",
+    ochtendStartleider: "",
+    ochtendLierist: "",
+    ochtendSleper: "",
+    middagDDI: "",
+    middagInstructeur: "",
+    middagStartleider: "",
+    middagLierist: "",
+    middagSleper: "",
+};
+
 @Component({
     selector: 'app-samenvatting',
     templateUrl: './samenvatting.component.html',
@@ -15,31 +29,22 @@ import { IconButtonComponent } from '../../../shared/components/icon-button/icon
     imports: [ModalComponent, IconButtonComponent]
 })
 export class SamenvattingComponent {
+    readonly diensten = input.required<HeliosDienstenDataset[]>();
+    readonly bulkEmail = output<string>();
+
+    // variablen in html formulier
+    protected samenvatting: HeliosAanwezigSamenvatting | undefined;
+    protected toonBulkEmail = false;
+    protected formTitel: string;
+    protected rooster: HeliosRoosterDataset;
+    protected weergave = { ...LEGE_WEERGAVE };
+
+    // private variable voor ts script
     private readonly sharedService = inject(SharedService);
     private readonly loginService = inject(LoginService);
     private readonly configService = inject(PegasusConfigService);
     private readonly aanwezigLedenService = inject(AanwezigLedenService);
-
     private readonly popup = viewChild.required(ModalComponent);
-    readonly diensten = input.required<HeliosDienstenDataset[]>();
-    readonly bulkEmail = output<string>();
-
-    samenvatting: HeliosAanwezigSamenvatting | undefined;
-    toonBulkEmail = false;
-    formTitel: string;
-    rooster: HeliosRoosterDataset;
-
-    ochtendDDI = "";
-    ochtendInstructeur = "";
-    ochtendStartleider = "";
-    ochtendLierist = "";
-    ochtendSleper = "";
-
-    middagDDI = "";
-    middagInstructeur = "";
-    middagStartleider = "";
-    middagLierist = "";
-    middagSleper = "";
 
     openPopup(rooster: HeliosRoosterDataset) {
         const ui = this.loginService.userInfo;
@@ -68,64 +73,53 @@ export class SamenvattingComponent {
     }
 
     // stuur alle aangemelde leden een email. Die hebben we alleen niet hier, maar 1 niveau hoger in aanmeld pagina
-    sendBulkEmail() {
+    protected sendBulkEmail() {
        const datum = this.rooster.DATUM;
        if (datum === undefined) {
-           console.error("Kan bulk email niet versturen zonder roosterdatum.");
+           console.error("Kan bulk email niet versturen zonder rooster datum.");
            return;
        }
        this.bulkEmail.emit(datum);
     }
 
     // zet de namen van de diensten
-    dienstNamen() {
-        this.ochtendDDI = "";
-        this.ochtendInstructeur = "";
-        this.ochtendStartleider = "";
-        this.ochtendLierist = "";
-        this.ochtendSleper = "";
-
-        this.middagDDI = "";
-        this.middagInstructeur = "";
-        this.middagStartleider = "";
-        this.middagLierist = "";
-        this.middagSleper = "";
+    private dienstNamen() {
+        this.weergave = { ...LEGE_WEERGAVE };
 
         const dagDiensten = this.diensten().filter((dienst) => dienst.DATUM == this.rooster.DATUM)
 
-        console.log(this.diensten())
         dagDiensten.forEach((dienst) => {
             switch (dienst.TYPE_DIENST_ID) {
                 case this.configService.OCHTEND_DDI_TYPE_ID:
-                    this.ochtendDDI = dienst.NAAM!;
+                    this.weergave.ochtendDDI = dienst.NAAM!;
                     break;
                 case this.configService.OCHTEND_INSTRUCTEUR_TYPE_ID:
-                    this.ochtendInstructeur = dienst.NAAM!;
+                    this.weergave.ochtendInstructeur = dienst.NAAM!;
                     break;
                 case this.configService.OCHTEND_LIERIST_TYPE_ID:
-                    this.ochtendLierist = dienst.NAAM!;
+                    this.weergave.ochtendLierist = dienst.NAAM!;
                     break;
                 // case this.configService.OCHTEND_HULPLIERIST_TYPE_ID:
                 case this.configService.OCHTEND_STARTLEIDER_TYPE_ID:
-                    this.ochtendStartleider = dienst.NAAM!;
+                    this.weergave.ochtendStartleider = dienst.NAAM!;
                     break;
                 // case this.configService.OCHTEND_STARTLEIDER_IO_TYPE_ID:
                 case this.configService.MIDDAG_DDI_TYPE_ID:
-                    this.middagDDI = dienst.NAAM!;
+                    this.weergave.middagDDI = dienst.NAAM!;
                     break;
                 case this.configService.MIDDAG_INSTRUCTEUR_TYPE_ID:
-                    this.middagInstructeur = dienst.NAAM!;
+                    this.weergave.middagInstructeur = dienst.NAAM!;
                     break;
                 case this.configService.MIDDAG_LIERIST_TYPE_ID:
-                    this.middagLierist = dienst.NAAM!;
+                    this.weergave.middagLierist = dienst.NAAM!;
                     break;
                 // case this.configService.MIDDAG_HULPLIERIST_TYPE_ID:
                 case this.configService.MIDDAG_STARTLEIDER_TYPE_ID:
-                    this.middagStartleider = dienst.NAAM!;
+                    this.weergave.middagStartleider = dienst.NAAM!;
                     break;
                 // case this.configService.MIDDAG_STARTLEIDER_IO_TYPE_ID:
                 case this.configService.SLEEPVLIEGER_TYPE_ID:
-                    this.ochtendSleper = dienst.NAAM!;
+                    this.weergave.ochtendSleper = dienst.NAAM!;
                     break;
             }
         })

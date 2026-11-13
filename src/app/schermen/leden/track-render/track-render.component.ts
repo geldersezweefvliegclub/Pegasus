@@ -15,8 +15,11 @@ interface onTrackClicked {
     imports: [FaIconComponent]
 })
 export class TrackRenderComponent implements AgRendererComponent {
+  // variablen in html formulier
+  protected trackIcon: IconDefinition = faAddressCard;
+
+  // private variable voor ts script
   private params: ICellRendererParams & onTrackClicked;
-  trackIcon: IconDefinition = faAddressCard;
 
   agInit(params: ICellRendererParams & onTrackClicked): void {
     this.params = params;
@@ -26,7 +29,7 @@ export class TrackRenderComponent implements AgRendererComponent {
     return false;
   }
 
-  buttonClicked() {
+  protected buttonClicked() {
     this.params.onTrackClicked(this.params.data.ID, this.params.data.NAAM);
   }
 }

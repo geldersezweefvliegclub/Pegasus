@@ -39,36 +39,49 @@ type HeliosLogboekDatasetExtended = HeliosLogboekDataset & {
 })
 
 export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
-    private readonly startlijstService = inject(StartlijstService);
-    private readonly trackService = inject(TracksService);
-    private readonly configService = inject(PegasusConfigService);
-    private readonly sharedService = inject(SharedService);
-    private readonly loginService = inject(LoginService);
-
     readonly id = input.required<string>();
     readonly VliegerID = input.required<number>();
     readonly deleteMode = input(false);
     readonly Kolommen = input("");
     readonly MaxItems = input(1000);
 
-    readonly tijdInvoerEditor = viewChild.required(TijdInvoerComponent);
-    readonly trackEditor = viewChild.required(TrackEditorComponent);
-    readonly startEditor = viewChild.required(StartEditorComponent);
+    // variablen in html formulier
+    protected toonLogboekKlein = false;     // Klein formaat van het vliegerlogboek
+    protected data: HeliosLogboekDatasetExtended[] = [];
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+    protected isLoading = false;
+    protected rowClassRules = {
+        // todo moet deze controleren met RJ of de logica nog klopt! Data is optional, dus wat als data niet bestaat??
+        'start_niet_wijzigbaar': (params: RowClassParams<HeliosLogboekDatasetExtended>) => !params.data?.inTijdspan,
+    }
+    protected frameworkComponents = {
+        datumRender: DatumRenderComponent,
+        datumKortRender: DatumKortRenderComponent,
+        iconRender: IconRenderComponent,
+        naamRender: NaamRenderComponent,
+        trackRender: TrackRenderComponent,
+        startTijdRender: StarttijdRenderComponent,
+        landingsTijdRender: LandingstijdRenderComponent,
+        deleteAction: DeleteActionComponent,
+    };
 
-    toonLogboekKlein = false;     // Klein formaat van het vliegerlogboek
+    // private variable voor ts script
+    private readonly startlijstService = inject(StartlijstService);
+    private readonly trackService = inject(TracksService);
+    private readonly configService = inject(PegasusConfigService);
+    private readonly sharedService = inject(SharedService);
+    private readonly loginService = inject(LoginService);
+    private readonly tijdInvoerEditor = viewChild.required(TijdInvoerComponent);
+    private readonly trackEditor = viewChild.required(TrackEditorComponent);
+    private readonly startEditor = viewChild.required(StartEditorComponent);
 
-    data: HeliosLogboekDatasetExtended[] = [];
     private dbEventAbonnement: Subscription;
     private resizeSubscription: Subscription;   // Abonneer op aanpassing van window grootte (of draaien mobiel)
     private datumAbonnement: Subscription;      // volg de keuze van de kalender
     private maandAbonnement: Subscription;      // volg de keuze van de kalender
-    datum: DateTime = DateTime.now();           // de gekozen dag
-
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
-    isLoading = false;
-
-    dataColumns: ColDef[] = [
+    private datum: DateTime = DateTime.now();           // de gekozen dag
+    private dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
         {field: 'DATUM', headerName: 'Datum', sortable: true, maxWidth: 70, minWidth: 60, cellRenderer: 'datumKortRender'},
         {field: 'REG_CALL', headerName: 'Vliegtuig', sortable: true},
@@ -110,10 +123,9 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
         {headerName: 'I T P', cellRenderer: 'iconRender', maxWidth: 60, minWidth: 60},
         {field: 'OPMERKINGEN', headerName: 'Opmerkingen', hide: true}
     ];
-    columns: ColDef[] = this.dataColumns;
 
     // kolom om vlieger track aan te maken
-    aanmakenTrackColumn: ColDef[] = [{
+    private aanmakenTrackColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 70,
         initialWidth: 70,
@@ -128,9 +140,8 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
             }
         },
     }];
-
     // kolom om record te verwijderen
-    deleteColumn: ColDef[] = [{
+    private deleteColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 100,
         initialWidth: 100,
@@ -145,21 +156,8 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
         },
     }];
 
-    rowClassRules = {
-        // todo moet deze controleren met RJ of de logica nog klopt! Data is optional, dus wat als data niet bestaat??
-        'start_niet_wijzigbaar': (params: RowClassParams<HeliosLogboekDatasetExtended>) => !params.data?.inTijdspan,
-    }
-
-    frameworkComponents = {
-        datumRender: DatumRenderComponent,
-        datumKortRender: DatumKortRenderComponent,
-        iconRender: IconRenderComponent,
-        naamRender: NaamRenderComponent,
-        trackRender: TrackRenderComponent,
-        startTijdRender: StarttijdRenderComponent,
-        landingsTijdRender: LandingstijdRenderComponent,
-        deleteAction: DeleteActionComponent,
-    };
+    // afgeleid van bovenstaande variabelen, moet daarom na de declaratie ervan staan
+    protected columns: ColDef[] = this.dataColumns;
 
     ngOnInit(): void {
         // Op safari hebben we een korte vertraging nodig op te zorgen dat initialisatie gedaan is
@@ -227,12 +225,12 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     // toon groot of klein logboek zijn, afhankelijk van scherm breedte
-    onWindowResize() {
+    private onWindowResize() {
         this.kolomDefinitie();
     }
 
     // opvragen van het vlieger logboek
-    opvragen(): void {
+    private opvragen(): void {
         if (this.datum) {
             const startDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 1, day: 1});
             const eindDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 12, day: 31});
@@ -265,7 +263,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     // openen van popup om bestaande start te kunnen aanpassen
-    openStartEditor(vlucht: HeliosLogboekDatasetExtended) {
+    protected openStartEditor(vlucht: HeliosLogboekDatasetExtended) {
         if (vlucht.inTijdspan) {
             this.startEditor().openPopup({ID: vlucht.ID} as HeliosStartDataset);    // de editor haalt de start op via ID
         }
@@ -283,7 +281,7 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     // Welke kolommen moet worden getoond in het grid
-    kolomDefinitie() {
+    private kolomDefinitie() {
         this.toonLogboekKlein = (this.sharedService.getSchermSize() < SchermGrootte.xl);
 
         let kolom: ColDef;
@@ -316,7 +314,6 @@ export class VliegerLogboekComponent implements OnInit, OnChanges, OnDestroy {
 
         kolom = this.columns.find(c => c.field == "INZITTENDENAAM") as ColDef;
         kolom.hide = this.sharedService.getSchermSize() <= SchermGrootte.lg;
-
 
         this.columns = this.dataColumns;
         if (!this.deleteMode()) {

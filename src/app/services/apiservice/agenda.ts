@@ -3,9 +3,8 @@ import { DateTime } from 'luxon';
 import { APIService } from './api.service';
 import { KeyValueArray } from '../../types/Utils';
 import { HeliosAgenda, HeliosAgendaActiviteit, HeliosAgendaDataset, HeliosRoosterDataset } from '../../types/Helios';
-import { Subscription } from 'rxjs';
-import { SharedService } from '../shared/shared.service';
 import { LoginService } from './login.service';
+import { naarApiTijd } from '../../utils/Utils';
 
 @Injectable({
     providedIn: 'root'
@@ -13,10 +12,8 @@ import { LoginService } from './login.service';
 export class AgendaService {
     private readonly apiService = inject(APIService);
     private readonly loginService = inject(LoginService);
-    private readonly sharedService = inject(SharedService);
 
     private agendaCache: HeliosAgenda = {dataset: []};    // return waarde van API call
-    private datumAbonnement: Subscription;
 
     async getAgenda(startDatum: DateTime, eindDatum: DateTime, max?: number, verwijderd = false): Promise<HeliosAgendaDataset[]> {
         const getParams: KeyValueArray = {};
@@ -62,12 +59,12 @@ export class AgendaService {
     }
 
     async addActiviteit(activiteit: HeliosAgendaActiviteit) {
-        const response: Response = await this.apiService.post('Agenda/SaveObject', JSON.stringify(activiteit));
+        const response: Response = await this.apiService.post('Agenda/SaveObject', JSON.stringify(this.naarApiFormaat(activiteit)));
         return response.json();
     }
 
     async updateActiviteit(activiteit: HeliosAgendaActiviteit) {
-        const response: Response = await this.apiService.put('Agenda/SaveObject', JSON.stringify(activiteit));
+        const response: Response = await this.apiService.put('Agenda/SaveObject', JSON.stringify(this.naarApiFormaat(activiteit)));
 
         return response.json();
     }
@@ -78,5 +75,11 @@ export class AgendaService {
 
     async restoreActiviteit(id: number) {
         await this.apiService.patch('Journaal/RestoreObject', {'ID': id.toString()});
+    }
+
+    // TIJD komt als "HH:mm" uit de timepicker of "HH:mm:ss" uit GetObjects, Helios.js wil een ISO 8601 datum string.
+    // Een leeggemaakte tijd wordt null, zodat de server hem ook echt wist
+    private naarApiFormaat(activiteit: HeliosAgendaActiviteit): HeliosAgendaActiviteit {
+        return {...activiteit, TIJD: naarApiTijd(activiteit.DATUM, activiteit.TIJD)};
     }
 }

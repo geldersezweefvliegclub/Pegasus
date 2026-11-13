@@ -16,20 +16,22 @@ import { LoaderComponent } from '../loader/loader.component';
     imports: [ErrorComponent, SuccessComponent, LoaderComponent]
 })
 export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDestroy {
+    readonly VliegerID = input.required<number>();
+
+    // variablen in html formulier
+    protected datum: DateTime = DateTime.now();               // de gekozen dag
+    protected data: HeliosLogboekTotalen;
+    protected isLoading = false;
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+
+    // private variable voor ts script
     private readonly startlijstService = inject(StartlijstService);
     private readonly sharedService = inject(SharedService);
-
-    readonly VliegerID = input.required<number>();
 
     private dbEventAbonnement: Subscription;
     private maandAbonnement: Subscription;          // volg de keuze van de kalender
     private datumAbonnement: Subscription;          // volg de keuze van de kalender
-    datum: DateTime = DateTime.now();               // de gekozen dag
-    data: HeliosLogboekTotalen;
-    isLoading = false;
-
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
 
     ngOnInit(): void {
         setTimeout(() => {
@@ -113,7 +115,7 @@ export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDest
     }
 
     // opvragen van de totalen uit het vlieger logboek
-    opvragen(): void {
+    private opvragen(): void {
         if (this.datum) {
             if (this.datum.year == 1900) {        // 1900 is initialisatie
                 return;

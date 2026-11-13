@@ -1,13 +1,13 @@
 <app-error [error]='error'/>
 <app-success [success]='success'/>
 
-<app-pegasus-card [titel]="(mode === 'facturen') ? 'Facturen ' +jaar : 'Nog te doen ' + jaar"
+<app-pegasus-card class="scherm-vullend" [titel]="(mode === 'facturen') ? 'Facturen ' +jaar : 'Nog te doen ' + jaar"
                   subtitel="Maak contributie facturen"
                   [icon]="iconCardIcon"
                   [exportEnabled]="this.magExporten"
                   (Exporting)="exportDataset()">
-    <div class="box h-100">
-        <div id="data" class="data">
+    <div class="box scherm-kolom">
+        <div id="data" class="data scroll-vlak">
             <app-datatable id='facturengrid'
                     [pagination]="false"
                     [rowData]="data"

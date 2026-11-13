@@ -1,50 +1,54 @@
-import { Component, inject, input, output, viewChild } from '@angular/core';
+import { Component, OnDestroy, inject, input, output, viewChild } from '@angular/core';
 import { ModalComponent } from '../../../modal/modal.component';
-import { Observable, of, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { HeliosType } from '../../../../../types/Helios';
 import { TypesService } from '../../../../../services/apiservice/types.service';
 import { DateTime } from 'luxon';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import { IconButtonComponent } from '../../../icon-button/icon-button.component';
-import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-compose-bedrijf',
     templateUrl: './compose-bedrijf.component.html',
     styleUrls: ['./compose-bedrijf.component.scss'],
-    imports: [ModalComponent, NgSelectComponent, FormsModule, IconButtonComponent, AsyncPipe]
+    imports: [ModalComponent, NgSelectComponent, FormsModule, IconButtonComponent]
 })
-export class ComposeBedrijfComponent {
-    private readonly typesService = inject(TypesService);
-
+export class ComposeBedrijfComponent implements OnDestroy {
     readonly datum = input.required<DateTime>();
-
     readonly opslaan = output<string>();
+
+    // variablen in html formulier
+    protected startMethodeTypes: HeliosType[] = [];
+    protected clubTypes: HeliosType[] = [];
+    protected baanTypes: HeliosType[] = [];
+    protected luchtruimTypes: HeliosType[] = [];
+    protected club: string;
+    protected baan: string;
+    protected startMethodes: [] = [];
+    protected luchtruim: [] = [];
+    protected linkerhandCircuit: boolean;
+    protected rechterhandCircuit: boolean;
+
+    // private variable voor ts script
+    private readonly typesService = inject(TypesService);
     private readonly popup = viewChild.required(ModalComponent);
 
     private typesAbonnement: Subscription;
-    startMethodeTypes$: Observable<HeliosType[]>;
-    clubTypes$: Observable<HeliosType[]>;
-    baanTypes$: Observable<HeliosType[]>;
-    luchtruimTypes$: Observable<HeliosType[]>;
-
-    club: string;
-    baan: string;
-    startMethodes: [] = [];
-    luchtruim: [] = [];
-    linkerhandCircuit: boolean;
-    rechterhandCircuit: boolean;
 
     constructor() {
 
         // abonneer op wijziging van lidTypes
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
-            this.baanTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 1}));
-            this.startMethodeTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 5}));
-            this.luchtruimTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 14}));
-            this.clubTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 15}));
+            this.baanTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 1});
+            this.startMethodeTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 5});
+            this.luchtruimTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 14});
+            this.clubTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 15});
         });
+    }
+
+    ngOnDestroy(): void {
+        if (this.typesAbonnement) this.typesAbonnement.unsubscribe();
     }
 
     // open het popup scherm voor de wizard
@@ -53,20 +57,20 @@ export class ComposeBedrijfComponent {
     }
 
     // linkerhand circuit, dus niet rechtsom. Of LH = true of RH = true, beide false mag wel
-    zetLH(isLinkerhand: boolean) {
+    protected zetLH(isLinkerhand: boolean) {
         if (isLinkerhand) {
             this.rechterhandCircuit = false;
         }
     }
 
     // rechterhand circuit, dus niet linksom. Of LH = true of RH = true, beide false mag wel
-    zetRH(isRechterhand: boolean) {
+    protected zetRH(isRechterhand: boolean) {
         if (isRechterhand) {
             this.linkerhandCircuit = false;
         }
     }
 
-    Compose() {
+    protected Compose() {
         // dag van de week in een string stoppen
         let dagVDweek = "";
         const datum = this.datum();

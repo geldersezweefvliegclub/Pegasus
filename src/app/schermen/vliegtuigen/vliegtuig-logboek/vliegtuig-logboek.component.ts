@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, viewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { HeliosVliegtuig, HeliosVliegtuigLogboekDataset } from '../../../types/Helios';
 import { StartlijstService } from '../../../services/apiservice/startlijst.service';
 import { Subscription } from 'rxjs';
@@ -9,28 +9,28 @@ import { ModalComponent } from '../../../shared/components/modal/modal.component
 import { ErrorMessage } from '../../../types/Utils';
 import { ErrorComponent } from '../../../shared/components/error/error.component';
 
-
 @Component({
     selector: 'app-vliegtuig-logboek',
     templateUrl: './vliegtuig-logboek.component.html',
     styleUrls: ['./vliegtuig-logboek.component.scss'],
     imports: [ErrorComponent, ModalComponent]
 })
-export class VliegtuigLogboekComponent implements OnInit {
+export class VliegtuigLogboekComponent implements OnInit, OnDestroy {
+    // variablen in html formulier
+    protected data: HeliosVliegtuigLogboekDataset[] = [];
+    protected vliegtuig: HeliosVliegtuig = {};
+    protected isLoading = false;
+    protected error: ErrorMessage | undefined;
+
+    // private variable voor ts script
     private readonly startlijstService = inject(StartlijstService);
     private readonly vliegtuigenService = inject(VliegtuigenService);
     private readonly sharedService = inject(SharedService);
-
     private readonly popup = viewChild.required(ModalComponent);
 
-    data: HeliosVliegtuigLogboekDataset[] = [];
-    vliegtuig: HeliosVliegtuig = {};
     private vliegtuigID:  number;
-    isLoading = false;
-
     private datumAbonnement: Subscription; // volg de keuze van de kalender
-    datum: DateTime = DateTime.now();      // de gekozen dag
-    error: ErrorMessage | undefined;
+    private datum: DateTime = DateTime.now();      // de gekozen dag
 
     ngOnInit(): void {
 
@@ -44,6 +44,10 @@ export class VliegtuigLogboekComponent implements OnInit {
         })
     }
 
+    ngOnDestroy(): void {
+        if (this.datumAbonnement) this.datumAbonnement.unsubscribe();
+    }
+
     showPopup(ID: number) {
         this.vliegtuigID = ID;
         this.opvragen();
@@ -54,9 +58,8 @@ export class VliegtuigLogboekComponent implements OnInit {
         this.popup().close();
     }
 
-
     // Opvragen van de starts via de api
-    opvragen() {
+    private opvragen() {
         this.isLoading = true;
 
         const startDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 1, day: 1});
@@ -72,5 +75,4 @@ export class VliegtuigLogboekComponent implements OnInit {
         });
     }
 }
-
 

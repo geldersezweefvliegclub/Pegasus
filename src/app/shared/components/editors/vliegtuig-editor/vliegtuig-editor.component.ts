@@ -6,7 +6,6 @@ import { TypesService } from '../../../../services/apiservice/types.service';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { Subscription } from 'rxjs';
 import { LoginService } from '../../../../services/apiservice/login.service';
-import { CompetentieService } from '../../../../services/apiservice/competentie.service';
 import { PegasusConfigService } from '../../../../services/shared/pegasus-config.service';
 import { PVB } from '../../../../types/IPegasusConfig';
 import { ErrorComponent } from '../../error/error.component';
@@ -23,20 +22,14 @@ import { LoaderComponent } from '../../loader/loader.component';
     imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, RegistratieDirective, IconButtonComponent, LoaderComponent]
 })
 export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
-    private readonly vliegtuigenService = inject(VliegtuigenService);
-    private readonly competentiesService = inject(CompetentieService);
-    private readonly configService = inject(PegasusConfigService);
-    private readonly loginService = inject(LoginService);
-    private readonly typesService = inject(TypesService);
-
     readonly add = output<HeliosVliegtuig>();
     readonly update = output<HeliosVliegtuig>();
     readonly delete = output<HeliosVliegtuig>();
     readonly restore = output<HeliosVliegtuig>();
+    magWijzigen = false;
 
-    private readonly popup = viewChild.required(ModalComponent);
-
-    vliegtuig: HeliosVliegtuig = {
+    // variablen in html formulier
+    protected vliegtuig: HeliosVliegtuig = {
         ID: undefined,
         REGISTRATIE: undefined,
         CALLSIGN: undefined,
@@ -56,24 +49,25 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
         OPMERKINGEN: undefined,
 
     };
+    protected vliegtuigTypes: HeliosType[];
+    protected isLoading = false;
+    protected isSaving = false;
+    protected magClubkistWijzigen = false;
+    protected isVerwijderMode = false;
+    protected isRestoreMode = false;
+    protected formTitel = "";
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+    protected PVBs: PVB[];
+
+    // private variable voor ts script
+    private readonly vliegtuigenService = inject(VliegtuigenService);
+    private readonly configService = inject(PegasusConfigService);
+    private readonly loginService = inject(LoginService);
+    private readonly typesService = inject(TypesService);
+    private readonly popup = viewChild.required(ModalComponent);
+
     private typesAbonnement: Subscription;
-    vliegtuigTypes: HeliosType[];
-
-    isLoading = false;
-    isSaving = false;
-
-    magWijzigen = false;
-
-    magClubkistWijzigen = false;
-
-    isVerwijderMode = false;
-    isRestoreMode = false;
-    formTitel = "";
-
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
-
-    PVBs: PVB[];
 
     ngOnInit(): void {
         // abonneer op wijziging van vliegtuigTypes
@@ -131,11 +125,11 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
         this.popup().open();
     }
 
-    closePopup() {
+    private closePopup() {
         this.popup().close();
     }
 
-    haalVliegtuigOp(id: number): void {
+    private haalVliegtuigOp(id: number): void {
         this.isLoading = true;
 
         try {
@@ -168,7 +162,7 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
         this.popup().open();
     }
 
-    uitvoeren() {
+    protected uitvoeren() {
         this.isSaving = true;
         if (this.isRestoreMode) {
             this.Herstellen(this.vliegtuig);
@@ -197,7 +191,7 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
     }
 
     // opslaan van de starts van een nieuw vliegtuig
-    Toevoegen(vliegtuig: HeliosVliegtuig) {
+    private Toevoegen(vliegtuig: HeliosVliegtuig) {
         this.vliegtuigenService.addVliegtuig(vliegtuig).then(() => {
             const regCall = (vliegtuig.CALLSIGN) ? `${vliegtuig.REGISTRATIE} (${vliegtuig.CALLSIGN})` : vliegtuig.REGISTRATIE;
             this.success = {
@@ -212,7 +206,7 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
     }
 
     // bestaand vliegtuig is aangepast. Opslaan van de starts
-    Aanpassen(vliegtuig: HeliosVliegtuig) {
+    private Aanpassen(vliegtuig: HeliosVliegtuig) {
         this.vliegtuigenService.updateVliegtuig(vliegtuig).then(() => {
             const regCall = (vliegtuig.CALLSIGN) ? `${vliegtuig.REGISTRATIE} (${vliegtuig.CALLSIGN})` : vliegtuig.REGISTRATIE;
             this.success = {
@@ -227,7 +221,7 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
     }
 
     // markeer een vliegtuig als verwijderd
-    Verwijderen(vliegtuig: HeliosVliegtuig) {
+    protected Verwijderen(vliegtuig: HeliosVliegtuig) {
         this.vliegtuigenService.deleteVliegtuig(vliegtuig.ID!).then(() => {
             const regCall = (vliegtuig.CALLSIGN) ? `${vliegtuig.REGISTRATIE} (${vliegtuig.CALLSIGN})` : vliegtuig.REGISTRATIE;
             this.success = {
@@ -242,7 +236,7 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
     }
 
     // de vliegtuig is weer terug, haal de markering 'verwijderd' weg
-    Herstellen(vliegtuig: HeliosVliegtuig) {
+    protected Herstellen(vliegtuig: HeliosVliegtuig) {
         this.vliegtuigenService.restoreVliegtuig(vliegtuig.ID!).then(() => {
             const regCall = (vliegtuig.CALLSIGN) ? `${vliegtuig.REGISTRATIE} (${vliegtuig.CALLSIGN})` : vliegtuig.REGISTRATIE;
             this.success = {
@@ -256,7 +250,7 @@ export class VliegtuigEditorComponent  implements  OnInit, OnDestroy {
         })
     }
 
-    opslaanDisabled() {
+    protected opslaanDisabled() {
         if (!this.vliegtuig.CLUBKIST) {
             return !(this.vliegtuig.REGISTRATIE && this.vliegtuig.ZITPLAATSEN)
         }

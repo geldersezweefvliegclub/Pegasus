@@ -7,7 +7,6 @@ import { ModalComponent } from '../modal/modal.component';
 import { FormsModule } from '@angular/forms';
 import { IconButtonComponent } from '../icon-button/icon-button.component';
 
-
 @Component({
     selector: 'app-dag-rooster',
     templateUrl: './dag-rooster.component.html',
@@ -15,17 +14,18 @@ import { IconButtonComponent } from '../icon-button/icon-button.component';
     imports: [ModalComponent, FormsModule, IconButtonComponent]
 })
 export class DagRoosterComponent {
-    private readonly roosterService = inject(RoosterService);
-    private readonly dienstenService = inject(DienstenService);
-
     readonly opslaan = output<string>();
-
     readonly Datum = input.required<DateTime>();
     @Input() magWijzigen = false;
-    private readonly popup = viewChild.required(ModalComponent);
 
-    rooster: HeliosRoosterDataset;
-    diensten: HeliosDienstenDataset[];
+    // variablen in html formulier
+    protected rooster: HeliosRoosterDataset;
+    protected diensten: HeliosDienstenDataset[];
+
+    // private variable voor ts script
+    private readonly roosterService = inject(RoosterService);
+    private readonly dienstenService = inject(DienstenService);
+    private readonly popup = viewChild.required(ModalComponent);
 
     // Open leden-filter dialoog met de leden-filter opties
     openPopup() {
@@ -33,7 +33,7 @@ export class DagRoosterComponent {
         this.popup().open();
     }
 
-    ophalen(): void {
+    private ophalen(): void {
         const Datum = this.Datum();
         if (Datum) {
             this.roosterService.getRooster(Datum, Datum).then(r => {
@@ -47,18 +47,18 @@ export class DagRoosterComponent {
     }
 
     // Datum in de titel in het juiste formaat
-    toonDatum() {
+    protected toonDatum() {
         return (this.Datum()) ? this.Datum().day + "-" + this.Datum().month + "-" + this.Datum().year : "";
     }
 
-    afwezig(i: number) {
+    protected afwezig(i: number) {
         if ((this.diensten[i].AANWEZIG) && (this.diensten[i].AFWEZIG)) {
             this.diensten[i].AANWEZIG = false;
         }
         this.diensten[i].ROOSTER_ID = -1; // indicatie dat afwezigheid is aangepast
     }
 
-    aanwezig(i: number) {
+    protected aanwezig(i: number) {
         if ((this.diensten[i].AANWEZIG) && (this.diensten[i].AFWEZIG)) {
             this.diensten[i].AFWEZIG = false;
         }
@@ -66,7 +66,7 @@ export class DagRoosterComponent {
         this.diensten[i].ROOSTER_ID = -1; // indicatie dat aanwezigheid is aangepast
     }
 
-    opslaanData() {
+    protected opslaanData() {
         let aanwezigString = "";
         let afwezigString = "";
         let onbekendString = "";

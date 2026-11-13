@@ -10,11 +10,10 @@ import {
   HeliosAanwezigLedenDataset,
   HeliosAanwezigSamenvatting,
 } from '../../types/Helios';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { SharedService } from '../shared/shared.service';
 import { debounceTime } from 'rxjs/operators';
 import { LoginService } from './login.service';
-
 
 @Injectable({
     providedIn: 'root'
@@ -26,17 +25,18 @@ export class AanwezigLedenService {
 
     private aanwezigCache = new Map<string, HeliosAanwezigLeden>(); // return waarde van API call, per opgevraagde periode/selectie
     private aanwezigDagCache: HeliosAanwezigLedenDataset[] = [];    // cache van de gekozen dag
-    private datumAbonnement: Subscription;                          // volg de keuze van de kalender
     private datum: DateTime = DateTime.now();                       // de gekozen dag
-
     private overslaan = false;
     private ophaalTimer: number;                                // Iedere 15 min halen we de aanwezige leden op
     private aanwezigStore = new BehaviorSubject<HeliosAanwezigLedenDataset[]>([]);
+
+    // afgeleid van bovenstaande variabelen, moet daarom na de declaratie ervan staan
     public readonly aanwezigChange = this.aanwezigStore.asObservable();      // nieuwe aanwezigheid beschikbaar
 
     constructor() {
         // de datum zoals die in de kalender gekozen is
-        this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
+        // service leeft net zo lang als de app, dit abonnement hoeft nooit opgezegd te worden
+        this.sharedService.ingegevenDatum.subscribe(datum => {
             this.datum = DateTime.fromObject({
                 year: datum.year,
                 month: datum.month,
@@ -151,7 +151,6 @@ export class AanwezigLedenService {
 
         return obj.dataset as HeliosAanwezigLedenDataset[];
     }
-
 
     async getSamenvatting(datum: DateTime): Promise<HeliosAanwezigSamenvatting> {
         // kunnen alleen data ophalen als we ingelogd zijn

@@ -11,11 +11,11 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
     imports: [FaIconComponent]
 })
 export class CheckboxRenderComponent implements AgRendererComponent {
-  boolWaarde = false;
-  check = faCheck;
   cross = faTimes;
 
-
+  // variablen in html formulier
+  protected boolWaarde = false;
+  protected check = faCheck;
 
   agInit(params: ICellRendererParams): void {
     if ((params.value === 1) || (params.value === '1') || (params.value == true)) {
@@ -26,5 +26,4 @@ export class CheckboxRenderComponent implements AgRendererComponent {
   refresh(_: ICellRendererParams): boolean {
     return false;
   }
-
 }

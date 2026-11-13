@@ -1,6 +1,5 @@
 import { Injectable, inject } from '@angular/core';
 import { APIService } from './api.service';
-import { StorageService } from '../storage/storage.service';
 import {
   HeliosBehaaldeProgressie,
   HeliosBehaaldeProgressieDataset,
@@ -18,11 +17,9 @@ import { LoginService } from './login.service';
 export class ProgressieService {
     private readonly apiService = inject(APIService);
     private readonly loginService = inject(LoginService);
-    private readonly storageService = inject(StorageService);
 
     private progressieCache: HeliosBehaaldeProgressie = { dataset: []};  // return waarde van API call
     private kaartCache: HeliosProgressieKaartDataset[] = [];             // return waarde van API call
-
     private boom: HeliosProgressieBoom[] = [];
 
     async getProgressiesLid(lidID:number, comptentiesIDs?: string): Promise<HeliosBehaaldeProgressieDataset[]> {

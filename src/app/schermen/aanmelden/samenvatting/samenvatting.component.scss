@@ -19,3 +19,14 @@
 .vtype {
   padding-right: 5px;
 }
+
+// vaste kolombreedte vanaf medium schermen (was ngClass.gt-sm van @angular/flex-layout)
+@media (min-width: 960px) {
+  .kolom-25 {
+    width: 25%;
+  }
+
+  .kolom-20 {
+    width: 20%;
+  }
+}

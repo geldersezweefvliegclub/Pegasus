@@ -9,9 +9,10 @@ import { AgRendererComponent } from 'ag-grid-angular';
     styleUrls: ['./datumtijd-render.component.scss']
 })
 export class DatumtijdRenderComponent implements AgRendererComponent{
-    private readonly sharedService = inject(SharedService);
-
     public datumtijd: string;
+
+    // private variable voor ts script
+    private readonly sharedService = inject(SharedService);
 
     agInit(params: ICellRendererParams): void {
 

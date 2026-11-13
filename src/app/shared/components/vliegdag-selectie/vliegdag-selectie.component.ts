@@ -8,8 +8,6 @@ import { SharedService } from '../../../services/shared/shared.service';
 import { Subscription } from 'rxjs';
 import { StartlijstService } from '../../../services/apiservice/startlijst.service';
 import { getBeginEindDatumVanMaand } from '../../../utils/Utils';
-import { DaginfoService } from '../../../services/apiservice/daginfo.service';
-import { RoosterService } from '../../../services/apiservice/rooster.service';
 import { DagRapportenService } from '../../../services/apiservice/dag-rapporten.service';
 import { DienstenService } from '../../../services/apiservice/diensten.service';
 import { FormsModule } from '@angular/forms';
@@ -23,28 +21,31 @@ import { NgClass } from '@angular/common';
 })
 export class VliegdagSelectieComponent implements OnInit, OnDestroy {
     readonly loginService = inject(LoginService);
+
+    // variablen in html formulier
+    protected kalenderEersteDatum: NgbDateStruct;
+    protected kalenderLaatsteDatum: NgbDateStruct;
+
+    // private variable voor ts script
     private readonly calendar = inject(NgbCalendar);
     private readonly sharedService = inject(SharedService);
     private readonly dienstenService = inject(DienstenService);
     private readonly startlijstService = inject(StartlijstService);
     private readonly dagRapportenService = inject(DagRapportenService);
+    private readonly vandaag = this.calendar.getToday();
 
     private dbEventAbonnement: Subscription;
     private dagInfoAbonnement: Subscription;
     private dienstenAbonnement: Subscription;
+    private kalenderMaand: KalenderMaand;
+    private startDatum: DateTime;
+    private eindDatum: DateTime;
+    private vliegdagen = "";        // vliegdagen van deze maand in json formaat
+    private diensten = "";          // daginfos van deze maand in json formaat
+    private daginfo = "";
 
-    readonly vandaag = this.calendar.getToday();
-    kalenderIngave: NgbDateStruct = {year: this.vandaag.year, month: this.vandaag.month, day: this.vandaag.day};  // de gekozen dag
-    kalenderMaand: KalenderMaand;
-    startDatum: DateTime;
-    eindDatum: DateTime;
-
-    kalenderEersteDatum: NgbDateStruct;
-    kalenderLaatsteDatum: NgbDateStruct;
-
-    vliegdagen = "";        // vliegdagen van deze maand in json formaat
-    diensten = "";          // daginfos van deze maand in json formaat
-    daginfo = "";
+    // afgeleid van bovenstaande variabelen, moet daarom na de declaratie ervan staan
+    protected kalenderIngave: NgbDateStruct = {year: this.vandaag.year, month: this.vandaag.month, day: this.vandaag.day};  // de gekozen dag
 
     ngOnInit() {
         const ui = this.loginService.userInfo?.Userinfo;
@@ -94,7 +95,6 @@ export class VliegdagSelectieComponent implements OnInit, OnDestroy {
             }
         })
 
-
         // abonneer op wijziging van diensten
         this.dienstenAbonnement = this.dienstenService.dienstenChange.subscribe(maandDiensten => {
             const ui = this.loginService.userInfo?.LidData;
@@ -110,19 +110,19 @@ export class VliegdagSelectieComponent implements OnInit, OnDestroy {
         if (this.dagInfoAbonnement) this.dagInfoAbonnement.unsubscribe();
     }
 
-    isDagVliegdag(dag: DateTime): boolean {
+    private isDagVliegdag(dag: DateTime): boolean {
         return this.vliegdagen.includes(dag.toISODate() as string)
     }
 
-    isDagInfoIngevuldVoorDag(dag: DateTime): boolean {
+    private isDagInfoIngevuldVoorDag(dag: DateTime): boolean {
         return this.daginfo.includes(dag.toString())
     }
 
-    isGebruikerIngeroosterdVoorDag(dag: DateTime): boolean {
+    private isGebruikerIngeroosterdVoorDag(dag: DateTime): boolean {
         return this.diensten.includes('"DATUM":"' + dag.toISODate());
     }
 
-    cssCustomDay(date: NgbDate): string {
+    protected cssCustomDay(date: NgbDate): string {
         const datum: DateTime = DateTime.fromObject({year: date.year, month: date.month, day: date.day})
 
         let classes = "";
@@ -150,7 +150,7 @@ export class VliegdagSelectieComponent implements OnInit, OnDestroy {
         return classes;
     }
 
-    nieuweDatumGeselecteerd() {
+    protected nieuweDatumGeselecteerd() {
         this.sharedService.zetKalenderDatum({
             year: this.kalenderIngave.year,
             month: this.kalenderIngave.month,
@@ -159,11 +159,11 @@ export class VliegdagSelectieComponent implements OnInit, OnDestroy {
     }
 
     // de kalender popup toont andere maand, ophalen vliegdagen
-    onMonthSelectionChange($event: NgbDatepickerNavigateEvent) {
+    protected onMonthSelectionChange($event: NgbDatepickerNavigateEvent) {
         this.KalenderAndereMaand($event);
     }
 
-    KalenderAndereMaand($event: NgbDatepickerNavigateEvent) {
+    private KalenderAndereMaand($event: NgbDatepickerNavigateEvent) {
         this.kalenderMaand = $event.next;
 
         // laat iedereen weten dat we een ander maand-jaar hebben
@@ -190,7 +190,6 @@ export class VliegdagSelectieComponent implements OnInit, OnDestroy {
         });
     }
 
-
     /**
      * Als voor een dag één of meer waar is:
      * - Je bent op de dag ingeroosterd
@@ -199,7 +198,7 @@ export class VliegdagSelectieComponent implements OnInit, OnDestroy {
      * Dan returned deze functie een string die verteld welk van de bovenstaande waar is.
      * Als geen conditie waar is dan geeft deze functie undefined terug, zodat er geen tooltip voor deze dag komt
      */
-    getTooltipText(ngDate: NgbDate): string | undefined {
+    protected getTooltipText(ngDate: NgbDate): string | undefined {
         const tooltipParts: string[] = [];
         const datum: DateTime = DateTime.fromObject({year: ngDate.year, month: ngDate.month, day: ngDate.day})
         if (this.isDagInfoIngevuldVoorDag(datum)) tooltipParts.push("Daginfo ingevuld")

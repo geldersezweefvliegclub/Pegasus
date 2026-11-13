@@ -2,9 +2,7 @@ import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, inject, input, 
 import { FlarmData, FlarmInputService } from '../../../services/flarm-input.service';
 import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
-import { StartlijstService } from '../../../services/apiservice/startlijst.service';
 import { StartDetailsComponent } from '../start-details/start-details.component';
-
 
 interface FlarmDataExt extends FlarmData {
     flarmOntvangstStatusClass?: string;
@@ -16,20 +14,20 @@ interface FlarmDataExt extends FlarmData {
     imports: [StartDetailsComponent]
 })
 export class FlarmLijstComponent implements OnInit, OnDestroy, OnChanges {
-  private readonly flarmService = inject(FlarmInputService);
-  private readonly startService = inject(StartlijstService);
-
   readonly veldID = input<number>();
-  readonly startDetails = viewChild.required(StartDetailsComponent);
+
+  // variablen in html formulier
+  protected grond: FlarmDataExt[] = [];
+  protected takeoff: FlarmDataExt[] = [];
+  protected flying: FlarmDataExt[] = [];
+  protected landing: FlarmDataExt[] = [];
+
+  // private variable voor ts script
+  private readonly flarmService = inject(FlarmInputService);
+  private readonly startDetails = viewChild.required(StartDetailsComponent);
 
   private flarmAbonnement: Subscription;
-
-  flarmData: FlarmDataExt[] = [];
-  grond: FlarmDataExt[] = [];
-  takeoff: FlarmDataExt[] = [];
-  flying: FlarmDataExt[] = [];
-  landing: FlarmDataExt[] = [];
-
+  private flarmData: FlarmDataExt[] = [];
   private classTimer: number;
 
   ngOnInit(): void {
@@ -59,6 +57,7 @@ export class FlarmLijstComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnDestroy(): void {
     if (this.flarmAbonnement)     this.flarmAbonnement.unsubscribe();
+    clearInterval(this.classTimer);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -66,7 +65,7 @@ export class FlarmLijstComponent implements OnInit, OnDestroy, OnChanges {
       this.splitOnStatus(this.flarmData);
   }
 
-  splitOnStatus(flarmData: FlarmData[]): void {
+  private splitOnStatus(flarmData: FlarmData[]): void {
     this.flarmData = flarmData.sort(function (a, b): number {
       if (b.altitude_agl! !== a.altitude_agl!) return b.altitude_agl! - a.altitude_agl!
       if (a.START_ID == undefined) return 1;
@@ -108,7 +107,7 @@ export class FlarmLijstComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  flarmOntvangstStatus(flarm: FlarmData): string {
+  private flarmOntvangstStatus(flarm: FlarmData): string {
     const now= Math.round(DateTime.now().hour*60 + DateTime.now().minute + DateTime.now().second/60);
 
     if (flarm.ts === undefined) return "";
@@ -118,7 +117,7 @@ export class FlarmLijstComponent implements OnInit, OnDestroy, OnChanges {
     return "color-" + step;
   }
 
-  toonStartdetails(flarm: FlarmData) {
+  protected toonStartdetails(flarm: FlarmData) {
     if (flarm.START_ID === undefined) return;
     this.startDetails().openPopup(flarm);
   }

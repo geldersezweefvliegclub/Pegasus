@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, viewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { HeliosLedenDataset, HeliosTrack } from '../../../../types/Helios';
 import { ModalComponent } from '../../modal/modal.component';
 import { TracksService } from '../../../../services/apiservice/tracks.service';
@@ -20,33 +20,36 @@ import { LoaderComponent } from '../../loader/loader.component';
     styleUrls: ['./track-editor.component.scss'],
     imports: [ErrorComponent, SuccessComponent, ModalComponent, LidInvoerComponent, FormsModule, IconButtonComponent, LoaderComponent]
 })
-export class TrackEditorComponent implements OnInit{
+export class TrackEditorComponent implements OnInit, OnDestroy {
+    // variablen in html formulier
+    protected leden: HeliosLedenDataset[] = [];
+    protected track: HeliosTrack = {}
+    protected isLoading = false;
+    protected isSaving = false;
+    protected isVerwijderMode = false;
+    protected isRestoreMode = false;
+    protected toonLidSelectie = false;
+    protected formTitel: string;
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+
+    // private variable voor ts script
     private readonly trackService = inject(TracksService);
     private readonly ledenService = inject(LedenService);
     private readonly loginService = inject(LoginService);
-
     private readonly popup = viewChild.required(ModalComponent);
 
     private ledenAbonnement: Subscription;
-    leden: HeliosLedenDataset[] = [];
-    track: HeliosTrack = {}
-
-    isLoading = false;
-    isSaving = false;
-
-    isVerwijderMode = false;
-    isRestoreMode = false;
-    toonLidSelectie = false;
-    formTitel: string;
-
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
 
     ngOnInit() {
         // abonneer op wijziging van leden
         this.ledenAbonnement = this.ledenService.ledenChange.subscribe(leden => {
             this.leden = (leden) ? leden : [];
         });
+    }
+
+    ngOnDestroy(): void {
+        if (this.ledenAbonnement) this.ledenAbonnement.unsubscribe();
     }
 
     // Open invoer popup voor de track. Als track ingevuld is, wijzigen we bestaande track
@@ -86,7 +89,7 @@ export class TrackEditorComponent implements OnInit{
     }
 
     // ophalen van track uit de database (via API)
-    haalTrackOp(id: number): void {
+    private haalTrackOp(id: number): void {
         this.isLoading = true;
 
         try {
@@ -124,7 +127,7 @@ export class TrackEditorComponent implements OnInit{
     }
 
     // uitvoeren van de actie waar we mee bezig zijn
-    uitvoeren() {
+    protected uitvoeren() {
         this.isSaving = true;
         if (this.isRestoreMode) {
             this.Herstellen(this.track);
@@ -144,7 +147,7 @@ export class TrackEditorComponent implements OnInit{
     }
 
     // opslaan van de starts van een nieuwe track
-    Toevoegen(track: HeliosTrack) {
+    private Toevoegen(track: HeliosTrack) {
         this.trackService.addTrack(track).then(() => {
             this.success = {
                 titel: "Track",
@@ -158,7 +161,7 @@ export class TrackEditorComponent implements OnInit{
     }
 
     // bestaande track is aangepast. Opslaan van de starts
-    Aanpassen(track: HeliosTrack) {
+    private Aanpassen(track: HeliosTrack) {
         this.trackService.updateTrack(track).then(() => {
             this.success = {
                 titel: "Track",
@@ -172,7 +175,7 @@ export class TrackEditorComponent implements OnInit{
     }
 
     // markeer een track als verwijderd
-    Verwijderen(track: HeliosTrack) {
+    protected Verwijderen(track: HeliosTrack) {
         this.trackService.deleteTrack(track.ID!).then(() => {
             this.success = {
                 titel: "Track",
@@ -186,7 +189,7 @@ export class TrackEditorComponent implements OnInit{
     }
 
     // de track herstellen, haal de markering 'verwijderd' weg
-    Herstellen(track: HeliosTrack) {
+    protected Herstellen(track: HeliosTrack) {
         this.trackService.restoreTrack(track.ID!).then(() => {
             this.success = {
                 titel: "Track",
@@ -200,12 +203,12 @@ export class TrackEditorComponent implements OnInit{
     }
 
     // Over welke vlieger gaat deze track
-    lidGeselecteerd(id: number | undefined) {
+    protected lidGeselecteerd(id: number | undefined) {
         this.track.LID_ID = id;
     }
 
     // Opslaan knop staat uit als we niet weten over wie het gaat, of er nog geen tekst is ingevoerd
-    opslaanDisabled() {
+    protected opslaanDisabled() {
         if (this.toonLidSelectie) {
            return !(this.track.LID_ID && this.track.TEKST) ;
         }

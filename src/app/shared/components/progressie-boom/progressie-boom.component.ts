@@ -37,40 +37,38 @@ export interface ProgressieTreeviewItem {
 })
 
 export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
-    private readonly loginService = inject(LoginService);
-    private readonly typesService = inject(TypesService);
-    private readonly sharedService = inject(SharedService);
-    private readonly competentieService = inject(CompetentieService);
-    private readonly progressieService = inject(ProgressieService);
-
     readonly VliegerID = input.required<number>();
-    private readonly editor = viewChild.required(ProgressieEditorComponent);
-    private readonly progressieTree = viewChild<TreeComponent>('progressieTree');
-
-    private dbEventAbonnement: Subscription;
-    private competentiesAbonnement: Subscription;
-    boom: ProgressieTreeviewItem[] = [];
-
-    private typesAbonnement: Subscription;
-    opleidingBlok: HeliosType[];         // welke opleidingen hebben we
-
-    competenties: HeliosCompetentiesDataset[];
     values: number[];
-    suspend = false;
-    isDisabled = true;
 
-    treeOptions: ITreeOptions = {
+    // variablen in html formulier
+    protected boom: ProgressieTreeviewItem[] = [];
+    protected competenties: HeliosCompetentiesDataset[];
+    protected isDisabled = true;
+    protected treeOptions: ITreeOptions = {
         idField: 'nodeId',
         displayField: 'text',
         childrenField: 'children',
         isExpandedField: 'expanded',
     };
-    treeState: ITreeState = {};
-    filterText = '';
+    protected treeState: ITreeState = {};
+    protected filterText = '';
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
 
-    verwijderCompetentie: ProgressieTreeviewItem;
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
+    // private variable voor ts script
+    private readonly loginService = inject(LoginService);
+    private readonly typesService = inject(TypesService);
+    private readonly sharedService = inject(SharedService);
+    private readonly competentieService = inject(CompetentieService);
+    private readonly progressieService = inject(ProgressieService);
+    private readonly editor = viewChild.required(ProgressieEditorComponent);
+    private readonly progressieTree = viewChild<TreeComponent>('progressieTree');
+
+    private dbEventAbonnement: Subscription;
+    private competentiesAbonnement: Subscription;
+    private typesAbonnement: Subscription;
+    private opleidingBlok: HeliosType[];         // welke opleidingen hebben we
+    private suspend = false;
 
     ngOnInit(): void {
         // abonneer op wijziging van types
@@ -109,7 +107,7 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
         }
     }
 
-    ophalen(): void {
+    protected ophalen(): void {
         const ui = this.loginService.userInfo?.Userinfo;
         this.isDisabled = !(ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) || (this.VliegerID() == this.loginService.userInfo?.LidData?.ID);
         this.treeState = this.progressieTree()?.treeModel.getState() ?? this.treeState;
@@ -139,7 +137,7 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
         });
     }
 
-    TreeView(boomTak: HeliosProgressieBoom, nodeId: string): ProgressieTreeviewItem {
+    private TreeView(boomTak: HeliosProgressieBoom, nodeId: string): ProgressieTreeviewItem {
         let tekst = ''
 
         if (boomTak.BLOK)
@@ -193,13 +191,12 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
         return (behaald === children.length) ? 2 : 1;
     }
 
-    onProgressieChange(item: ProgressieTreeviewItem) {
+    protected onProgressieChange(item: ProgressieTreeviewItem) {
         if (this.isDisabled) {
             return;
         }
 
         if (item.ProgresssieID) {
-            this.verwijderCompetentie = item
 
             this.editor().openVerwijderWijzigPopup(item.ProgresssieID);
         } else if (item.value !== undefined) {
@@ -213,12 +210,12 @@ export class ProgressieBoomComponent implements OnInit, OnDestroy, OnChanges {
         setTimeout(() => this.suspend = false, 1000);
     }
 
-    onFilterChange(value: string): void {
+    protected onFilterChange(value: string): void {
         this.filterText = value;
         this.applyFilter();
     }
 
-    onTreeStateChange(state: ITreeState): void {
+    protected onTreeStateChange(state: ITreeState): void {
         this.treeState = state;
     }
 

@@ -1,6 +1,5 @@
 import { Component, input } from '@angular/core';
 
-
 @Component({
     selector: 'app-voortgang',
     templateUrl: './voortgang.component.html',

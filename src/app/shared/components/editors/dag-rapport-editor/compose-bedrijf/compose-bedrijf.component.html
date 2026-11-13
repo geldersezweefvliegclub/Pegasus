@@ -4,24 +4,32 @@
             <div class="col-6">
                 <div class="">
                     <label for="CLUB" class="form-label">Leiding</label>
-                    <ng-select id="CLUB"
-                               [items]="clubTypes$ | async"
-                               bindLabel="OMSCHRIJVING"
-                               bindValue="OMSCHRIJVING"
-                               closeOnSelect="true"
-                               openOnEnter="true"
-                               [(ngModel)]='club'/>
+                    <select class="form-select"
+                            id="CLUB"
+                            name="CLUB"
+                            [(ngModel)]="club">
+                        <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                        <option [ngValue]="null"None></option>
+                        <option [ngValue]="undefined" disabled hidden></option>
+                        @for (item of clubTypes; track item.ID) {
+                            <option [ngValue]="item.OMSCHRIJVING">{{ item.OMSCHRIJVING }}</option>
+                        }
+                    </select>
                 </div>
 
                 <div class="">
                     <label for="BAAN" class="form-label">Baan</label>
-                    <ng-select id="Baan"
-                               [items]="baanTypes$ | async"
-                               bindLabel="OMSCHRIJVING"
-                               bindValue="OMSCHRIJVING"
-                               closeOnSelect="true"
-                               openOnEnter="true"
-                               [(ngModel)]='baan'/>
+                    <select class="form-select"
+                            id="Baan"
+                            name="Baan"
+                            [(ngModel)]="baan">
+                        <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                        <option [ngValue]="null"None></option>
+                        <option [ngValue]="undefined" disabled hidden></option>
+                        @for (item of baanTypes; track item.ID) {
+                            <option [ngValue]="item.OMSCHRIJVING">{{ item.OMSCHRIJVING }}</option>
+                        }
+                    </select>
                 </div>
 
                 <div class="mt-2">Circuit</div>
@@ -47,7 +55,7 @@
                 <div>
                     <label for="STARTMETHODE" class="form-label">Start methode</label>
                     <ng-select id="STARTMETHODE"
-                               [items]="startMethodeTypes$ | async"
+                               [items]="startMethodeTypes"
                                placeholder="Alle methodes"
                                bindLabel="OMSCHRIJVING"
                                bindValue="OMSCHRIJVING"
@@ -60,7 +68,7 @@
                 <div>
                     <label for="LUCHTRUIM" class="form-label">Beschikbaar luchtruim</label>
                     <ng-select id="LUCHTRUIM"
-                               [items]="luchtruimTypes$ | async"
+                               [items]="luchtruimTypes"
                                bindLabel="OMSCHRIJVING"
                                bindValue="OMSCHRIJVING"
                                openOnEnter="true"

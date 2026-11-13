@@ -10,8 +10,9 @@ import { DecimalPipe } from '@angular/common';
     imports: [DecimalPipe]
 })
 export class BedragRenderComponent implements AgRendererComponent {
-    bedrag: number | undefined;
-    betaald: boolean | undefined;
+    // variablen in html formulier
+    protected bedrag: number | undefined;
+    protected betaald: boolean | undefined;
 
     agInit(params: ICellRendererParams): void {
         this.bedrag = params.value;

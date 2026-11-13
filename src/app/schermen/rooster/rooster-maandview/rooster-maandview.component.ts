@@ -13,14 +13,11 @@ import {
   HeliosLidData,
   HeliosRoosterDag,
   HeliosRoosterDataset,
-  HeliosType,
 } from '../../../types/Helios';
 import { JaarTotalenComponent } from '../jaar-totalen/jaar-totalen.component';
 import { DienstenService } from '../../../services/apiservice/diensten.service';
 import { DagVanDeWeek } from '../../../utils/Utils';
 import { LoginService } from '../../../services/apiservice/login.service';
-import { Subscription } from 'rxjs';
-import { TypesService } from '../../../services/apiservice/types.service';
 import { RoosterService } from '../../../services/apiservice/rooster.service';
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
@@ -36,7 +33,6 @@ import { IconButtonComponent } from '../../../shared/components/icon-button/icon
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { AvatarComponent } from '../../../shared/components/avatar/avatar.component';
 
-
 @Component({
     selector: 'app-rooster-maandview',
     templateUrl: './rooster-maandview.component.html',
@@ -44,13 +40,6 @@ import { AvatarComponent } from '../../../shared/components/avatar/avatar.compon
     imports: [JaarTotalenComponent, UitbetalenDdwvCrewEditorComponent, NgClass, FormsModule, CdkDropList, CdkDrag, NgTemplateOutlet, IconButtonComponent, FaIconComponent, CdkDragPreview, CdkDragPlaceholder, AvatarComponent, DecimalPipe, DatePipe]
 })
 export class RoosterMaandviewComponent implements OnInit, OnDestroy {
-    private readonly loginService = inject(LoginService);
-    private readonly typesService = inject(TypesService);
-    protected readonly sharedService = inject(SharedService);
-    private readonly roosterService = inject(RoosterService);
-    private readonly dienstenService = inject(DienstenService);
-    readonly configService = inject(PegasusConfigService);
-
     @Input() rooster: HeliosRoosterDagExtended[];
     @Input() leden:HeliosLedenDatasetExtended[];
     @Input() tonen: WeergaveData;
@@ -58,27 +47,31 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
     readonly magVerwijderen = input.required<(dienstData: HeliosDienstenDataset) => boolean>();
     readonly lidInRoosterClass = input.required<(dienst: HeliosDienstenDataset) => string>();
 
-    private readonly jaarTotalen = viewChild.required(JaarTotalenComponent);
+    // variablen in html formulier
+    protected readonly sharedService = inject(SharedService);
+    protected readonly configService = inject(PegasusConfigService);
     protected readonly uitbetalen = viewChild.required(UitbetalenDdwvCrewEditorComponent);
+    protected readonly resetIcon: IconDefinition = faTimesCircle;
+    protected readonly assignIcon: IconDefinition = faCalendarCheck;
+    protected readonly iconSort: IconDefinition = faSortAmountDownAlt;
 
-    readonly resetIcon: IconDefinition = faTimesCircle;
-    readonly assignIcon: IconDefinition = faCalendarCheck;
-    readonly iconSort: IconDefinition = faSortAmountDownAlt;
+    protected mijnID: string;
+    protected mijnNaam: string;
+    protected isCIMT: boolean;
+    protected isDDWVCrew: boolean;
+    protected isBeheerder: boolean;
+    protected isBeheerderDDWV: boolean;
+    protected magWijzigen = false;
+    protected dragDisabled = true;
 
-    private typesAbonnement: Subscription;
-    dienstTypes: HeliosType[] = [];
+    // private variable voor ts script
+    private readonly loginService = inject(LoginService);
+    private readonly roosterService = inject(RoosterService);
+    private readonly dienstenService = inject(DienstenService);
+    private readonly jaarTotalen = viewChild.required(JaarTotalenComponent);
 
-    lidData: HeliosLidData | undefined;
-    mijnID: string;
-    mijnNaam: string;
-    isCIMT: boolean;
-    isDDWVCrew: boolean;
-    isBeheerder: boolean;
-    isBeheerderDDWV: boolean;
-    magWijzigen = false;
-    dragDisabled = true;
-
-    opslaanTimer: number;
+    private lidData: HeliosLidData | undefined;
+    private opslaanTimer: number;
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo;
@@ -93,20 +86,13 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
 
         this.magWijzigen = (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isRooster) ? true : false;
 
-        // abonneer op wijziging van lidTypes
-        this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
-            this.dienstTypes = dataset!.filter((t: HeliosType) => {
-                return t.GROEP == 18
-            });    // type diensten
-        });
 
     }
 
     ngOnDestroy(): void {
-        if (this.typesAbonnement) this.typesAbonnement.unsubscribe();
     }
 
-    KolomBreedte(factor=1) {
+    protected KolomBreedte(factor=1) {
         if (this.tonen.DDWV) {
             return 'width: 50%'
         }
@@ -130,7 +116,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
 
     // Het html id is een combinatie van datum en de dienst gescheiden door een comma.
     // Bijvoorbeeld 2021-12-01,1800
-    decodeerID(id: string): { datum: string, typeDienst: number } {
+    private decodeerID(id: string): { datum: string, typeDienst: number } {
         const splittedString = id.split(',');
         return {
             datum: splittedString[0],
@@ -145,7 +131,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
      * @param {CdkDrag<HeliosLid | HeliosRoosterDataset>} item
      * @return {boolean}
      */
-    lieristEvaluatie(datum: string, dienst: number, item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
+    protected lieristEvaluatie(datum: string, dienst: number, item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
         if (!this.dienstBeschikbaar(datum, dienst)) return false;
         return this.controleerGeschiktheid(item, datum, 'LIERIST');
     }
@@ -157,11 +143,10 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
      * @param {CdkDrag<HeliosLid | HeliosRoosterDataset>} item
      * @return {boolean}
      */
-    lioEvaluatie(datum: string, dienst: number, item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
+    protected lioEvaluatie(datum: string, dienst: number, item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
         if (!this.dienstBeschikbaar(datum, dienst)) return false;
         return this.controleerGeschiktheid(item, datum, 'LIERIST_IO');
     }
-
 
     /**
      * Wordt in de template gebruikt om te controleren of iemand in een vakje gesleept mag worden. Gaat over instructeurs.
@@ -170,7 +155,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
      * @param {CdkDrag<HeliosLid | HeliosRoosterDataset>} item
      * @return {boolean}
      */
-    instructeurEvaluatie(datum: string, dienst: number, item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
+    protected instructeurEvaluatie(datum: string, dienst: number, item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
         if (!this.dienstBeschikbaar(datum, dienst)) return false;
         return this.controleerGeschiktheid(item, datum, 'INSTRUCTEUR');
     }
@@ -182,7 +167,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
      * @param {CdkDrag<HeliosLid | HeliosRoosterDataset>} item
      * @return {boolean}
      */
-    startleiderEvaluatie(datum: string, dienst: number, item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
+    protected startleiderEvaluatie(datum: string, dienst: number, item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
         if (!this.dienstBeschikbaar(datum, dienst)) return false;
         return this.controleerGeschiktheid(item, datum, 'STARTLEIDER');
     }
@@ -194,13 +179,13 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
      * @param {CdkDrag<HeliosLid | HeliosRoosterDataset>} item
      * @return {boolean}
      */
-    sleepvliegerEvaluatie(datum: string, dienst: number, item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
+    protected sleepvliegerEvaluatie(datum: string, dienst: number, item: CdkDrag<HeliosLid | HeliosRoosterDataset>): boolean {
         if (!this.dienstBeschikbaar(datum, dienst)) return false;
         return this.controleerGeschiktheid(item, datum, 'SLEEPVLIEGER');
     }
 
     // voorkom dat ingevulde dienst overschreven wordt
-    dienstBeschikbaar(datum: string, dienst: number): boolean {
+    private dienstBeschikbaar(datum: string, dienst: number): boolean {
         const roosterIndex = this.rooster.findIndex((dag => dag.DATUM == datum));
 
         if (roosterIndex < 0) {
@@ -214,7 +199,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
      * Deze functie evalueert of de content een bepaalde rol is. Als dat zo is, returned hij true, anders false.
      * Als de meegegeven rol bijv. LIERIST is, kan een instructeur bijv. geen lieristdienst draaien.
      */
-    controleerGeschiktheid(item: CdkDrag<HeliosLid | HeliosRoosterDataset>, datum: string, rol: 'LIERIST' | 'LIERIST_IO' | 'INSTRUCTEUR' | 'STARTLEIDER' | 'SLEEPVLIEGER'): boolean {
+    private controleerGeschiktheid(item: CdkDrag<HeliosLid | HeliosRoosterDataset>, datum: string, rol: 'LIERIST' | 'LIERIST_IO' | 'INSTRUCTEUR' | 'STARTLEIDER' | 'SLEEPVLIEGER'): boolean {
         // Content komt uit de ledenlijst of niet
 
         const roosterIndex = this.rooster.findIndex((dag => dag.DATUM == datum));
@@ -272,7 +257,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
         }
     }
 
-    onDropInLedenlijst(event: CdkDragDrop<HeliosLedenDataset[]>): void {
+    protected onDropInLedenlijst(event: CdkDragDrop<HeliosLedenDataset[]>): void {
         // De nieuwe container is hetzelfde als de vorige, doe dan niks.
         if (event.container === event.previousContainer) {
             return;
@@ -286,7 +271,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
         }
     }
 
-    onDropInRooster(event: CdkDragDrop<HeliosLedenDataset>, roosterdag: HeliosRoosterDagExtended, typeDienstID: number): void {
+    protected onDropInRooster(event: CdkDragDrop<HeliosLedenDataset>, roosterdag: HeliosRoosterDagExtended, typeDienstID: number): void {
         // Haal de nieuwe en oude ID's op. Een id is bijvoorbeeld:
         // 1800,0
         // 0 is de index in het rooster, dus de eerste dag van de maand.
@@ -323,7 +308,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
         }
     }
 
-    toekennenDienst(roosterdag: HeliosRoosterDagExtended, typeDienstID: number, lid_id: string | undefined, naam: string | undefined): void {
+    protected toekennenDienst(roosterdag: HeliosRoosterDagExtended, typeDienstID: number, lid_id: string | undefined, naam: string | undefined): void {
         const roosterIndex = this.rooster.findIndex((dag => dag.DATUM == roosterdag.DATUM));
 
         if (roosterIndex < 0) {
@@ -367,7 +352,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
         }
     }
 
-    aanpassenDienst(oudeRoosterdag: HeliosRoosterDagExtended, oudeTypeDienstID: number, nieuweRoosterdag: HeliosRoosterDagExtended, nieuweTypeDienstID: number) {
+    private aanpassenDienst(oudeRoosterdag: HeliosRoosterDagExtended, oudeTypeDienstID: number, nieuweRoosterdag: HeliosRoosterDagExtended, nieuweTypeDienstID: number) {
 
         const gewijzigdeDienst: HeliosDienst = {
             ID: oudeRoosterdag.Diensten[oudeTypeDienstID].ID,
@@ -384,7 +369,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
         });
     }
 
-    verwijderDienst(roosterdag: HeliosRoosterDagExtended, typeDienstID: number) {
+    protected verwijderDienst(roosterdag: HeliosRoosterDagExtended, typeDienstID: number) {
         const roosterIndex = this.rooster.findIndex((dag => dag.DATUM == roosterdag.DATUM));
 
         if (roosterIndex < 0) {
@@ -405,7 +390,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
         }
     }
 
-    opslaanRooster(datum: string) {
+    protected opslaanRooster(datum: string) {
         clearTimeout(this.opslaanTimer);
         const roosterIndex = this.rooster.findIndex((dag => dag.DATUM == datum));
 
@@ -431,7 +416,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
         }, 1000);
     }
 
-    toonRechts() {
+    protected toonRechts() {
         if (!this.magWijzigen && !this.isBeheerderDDWV) {
             return false;
         }
@@ -444,14 +429,13 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
         return true;
     }
 
-
     // laat zien hoe vaak een lid is ingedeeld voor het gekozen jaar
-    toonJaarRooster(): void {
+    protected toonJaarRooster(): void {
         this.jaarTotalen().openPopup();
     }
 
     // sorteer zodanig dat lid met minste diensten bovenaan staat
-    sorteer() {
+    protected sorteer() {
         this.leden.sort((a, b) => {
             if (a.INGEDEELD_JAAR == b.INGEDEELD_JAAR) {
                 if (a.INGEDEELD_MAAND == b.INGEDEELD_MAAND) {
@@ -463,14 +447,13 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
         })
     }
 
-
     // Dit is al geimplementeerd in util.ts
-    DagVanDeWeek(DATUM: string) {
+    protected DagVanDeWeek(DATUM: string) {
         return DagVanDeWeek(DATUM);
     }
 
     // Hebben we een datum in de toekomst, vandaag is geen toekomst
-    datumInToekomst(datum: string): boolean {
+    protected datumInToekomst(datum: string): boolean {
         const nu: DateTime = DateTime.now();
         const d: DateTime = DateTime.fromSQL(datum);
 

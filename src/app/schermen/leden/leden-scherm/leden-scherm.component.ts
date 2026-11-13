@@ -22,7 +22,6 @@ import { NaamRenderComponent } from '../naam-render/naam-render.component';
 import { Router } from '@angular/router';
 import { nummerSort } from '../../../utils/Utils';
 import { TrackEditorComponent } from '../../../shared/components/editors/track-editor/track-editor.component';
-import { TracksService } from '../../../services/apiservice/tracks.service';
 import { TrackRenderComponent } from '../track-render/track-render.component';
 import { DatumRenderComponent } from '../../../shared/components/datatable/datum-render/datum-render.component';
 import { Subscription } from 'rxjs';
@@ -34,32 +33,58 @@ import { IconButtonComponent } from '../../../shared/components/icon-button/icon
 import { StatusButtonComponent } from '../../../shared/components/status-button/status-button.component';
 import { ZoekbarComponent } from '../../../shared/components/zoekbar/zoekbar.component';
 
-
 @Component({
     selector: 'app-leden-grid',
+    host: { class: 'scherm-pagina' },
     templateUrl: './leden-scherm.component.html',
     styleUrls: ['./leden-scherm.component.scss'],
     imports: [ErrorComponent, PegasusCardComponent, DatatableComponent, LedenCardComponent, IconButtonComponent, StatusButtonComponent, ZoekbarComponent, LedenFilterComponent, TrackEditorComponent]
 })
 export class LedenSchermComponent implements OnInit, OnDestroy {
+    // variablen in html formulier
+    protected readonly grid = viewChild.required(DatatableComponent);
+
+    protected leden: HeliosLedenDataset[] = [];
+    protected isLoading = false;
+    protected toonKlein = false;                 // Klein formaat
+    protected columns: ColDef[];
+    protected rowClassRules = {
+        'rode_regel_startverbod': (params: RowClassParams) => params.data.STARTVERBOD === true,
+    }
+    protected frameworkComponents = {
+        avatarRender: AvatarRenderComponent,
+        naamRender: NaamRenderComponent,
+        adresRender: AdresRenderComponent,
+        telefoonRender: TelefoonRenderComponent,
+        checkboxRender: CheckboxRenderComponent,
+        emailRender: EmailRenderComponent,
+        deleteAction: DeleteActionComponent,
+        restoreAction: RestoreActionComponent,
+        trackRender: TrackRenderComponent,
+        datumRender: DatumRenderComponent
+    };
+    protected iconCardIcon: IconDefinition = faUsers;
+    protected zoekString: string;
+    protected deleteMode = false;        // zitten we in delete mode om leden te kunnen verwijderen
+    protected trashMode = false;         // zitten in restore mode om leden te kunnen terughalen
+    protected error: ErrorMessage | undefined;
+    protected magToevoegen = false;
+    protected magVerwijderen = false;
+    protected magExporteren = false;
+    protected toonBulkEmail = false;
+    protected toonBladwijzer = false;
+
+    // private variable voor ts script
     private readonly ledenService = inject(LedenService);
     private readonly loginService = inject(LoginService);
-    private readonly trackService = inject(TracksService);
     private readonly sharedService = inject(SharedService);
     private readonly router = inject(Router);
+    private readonly ledenFilter = viewChild.required(LedenFilterComponent);
+    private readonly trackEditor = viewChild.required(TrackEditorComponent);
 
-    readonly ledenFilter = viewChild.required(LedenFilterComponent);
-    readonly trackEditor = viewChild.required(TrackEditorComponent);
-    readonly grid = viewChild.required(DatatableComponent);
-
-    leden: HeliosLedenDataset[] = [];
-    dataset: HeliosLedenDataset[] = [];
-    isLoading = false;
-    toonKlein = false;                 // Klein formaat
-
+    private dataset: HeliosLedenDataset[] = [];
     private resizeSubscription: Subscription;
-
-    dataColumns: ColDef[] = [
+    private dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
         {
             field: 'AVATAR',
@@ -121,7 +146,7 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
     ];
 
     // kolom om record te verwijderen
-    deleteColumn: ColDef[] = [{
+    private deleteColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 100,
         initialWidth: 100,
@@ -135,9 +160,8 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
             }
         },
     }];
-
     // kolom om terug te kunnen terughalen
-    restoreColumn: ColDef[] = [{
+    private restoreColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 100,
         initialWidth: 100,
@@ -151,9 +175,8 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
             }
         },
     }];
-
     // kolom om vlieger track aan te maken
-    aanmakenTrackColumn: ColDef[] = [{
+    private aanmakenTrackColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 60,
         initialWidth: 60,
@@ -168,39 +191,7 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
             }
         },
     }];
-
-    columns: ColDef[];
-
-    rowClassRules = {
-        'rode_regel_startverbod': (params: RowClassParams) => params.data.STARTVERBOD === true,
-    }
-
-    frameworkComponents = {
-        avatarRender: AvatarRenderComponent,
-        naamRender: NaamRenderComponent,
-        adresRender: AdresRenderComponent,
-        telefoonRender: TelefoonRenderComponent,
-        checkboxRender: CheckboxRenderComponent,
-        emailRender: EmailRenderComponent,
-        deleteAction: DeleteActionComponent,
-        restoreAction: RestoreActionComponent,
-        trackRender: TrackRenderComponent,
-        datumRender: DatumRenderComponent
-    };
-    iconCardIcon: IconDefinition = faUsers;
-
-    zoekString: string;
-    zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
-    deleteMode = false;        // zitten we in delete mode om leden te kunnen verwijderen
-    trashMode = false;         // zitten in restore mode om leden te kunnen terughalen
-
-    error: ErrorMessage | undefined;
-    magToevoegen = false;
-    magVerwijderen = false;
-    magWijzigen = false;
-    magExporteren = false;
-    toonBulkEmail = false;
-    toonBladwijzer = false;
+    private zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
 
     ngOnInit(): void {
         // plaats de juiste kolommen in het grid
@@ -221,26 +212,26 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
     }
 
     // aanpassen wat we op het scherm kwijt kunnen nadat scherm groote gewijzigd is
-    onWindowResize() {
+    private onWindowResize() {
         this.toonBladwijzer = (this.sharedService.getSchermSize() == SchermGrootte.xs) ? false : true;
         this.kolomDefinitie();
         this.zetPermissie();
     }
 
-    zetPermissie(): void {
+    private zetPermissie(): void {
         const ui = this.loginService.userInfo?.Userinfo;
+        // TODO: rechtencontrole voor wijzigen van leden ontbreekt. Er was magWijzigen (isBeheerder, isBeheerderDDWV of
+        //  isCIMT, en nooit op een klein scherm), maar die werd nergens gecontroleerd. Bepalen of dit nodig is
 
         if (this.sharedService.getSchermSize() < SchermGrootte.lg) {
             this.magToevoegen = false;
             this.magVerwijderen = false;
-            this.magWijzigen = false;
             this.magExporteren = false;
             this.toonBulkEmail = false;
         }
         else {
             this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ?? false;
             this.magVerwijderen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ?? false;
-            this.magWijzigen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT) ?? false;
             this.magExporteren = (!ui?.isDDWV && !ui?.isStarttoren) ?? false;
             this.toonBulkEmail = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isCIMT || ui?.isRooster) ?? false;
         }
@@ -254,12 +245,12 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
     }
 
     // openen van popup om lid starts van een nieuw lid te kunnen invoeren
-    addLid(): void {
+    protected addLid(): void {
         this.router.navigate(['profiel'], {queryParams: {lidID: -1}}).then();
     }
 
     // schakelen tussen deleteMode JA/NEE. In deleteMode kun je leden verwijderen
-    deleteModeJaNee() {
+    protected deleteModeJaNee() {
         this.deleteMode = !this.deleteMode;
 
         if (this.trashMode) {
@@ -269,7 +260,7 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
     }
 
     // schakelen tussen trashMode JA/NEE. In trashMode worden te verwijderde leden getoond
-    trashModeJaNee(actief: boolean) {
+    protected trashModeJaNee(actief: boolean) {
         this.trashMode = actief;
 
         this.kolomDefinitie();
@@ -277,7 +268,7 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
     }
 
     // Welke kolommen moet worden getoond in het grid
-    kolomDefinitie() {
+    private kolomDefinitie() {
         const ui = this.loginService.userInfo?.Userinfo;
         this.toonKlein = (this.sharedService.getSchermSize() < SchermGrootte.xl);
 
@@ -354,7 +345,7 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
     }
 
     // Opvragen van de starts via de api
-    opvragen() {
+    protected opvragen() {
         clearTimeout(this.zoekTimer);
 
         // Wacht even de gebruiker kan nog aan het typen zijn
@@ -372,13 +363,13 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
     }
 
     // Open van het leden-filter dialoog
-    filterPopup() {
+    protected filterPopup() {
         this.ledenFilter().openPopup();
     }
 
     // Er is een aanpassing gemaakt in het leden-filter dialoog. We filteren de volledige dataset tot wat nodig is
     // We hoeven dus niet terug naar de server om leden opnieuw op te halen (minder starts verkeer)
-    applyFilter() {
+    protected applyFilter() {
         // leden-filter de dataset naar de lijst
         this.leden = [];
         for (const item of this.dataset) {
@@ -445,14 +436,14 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
     }
 
     // Export naar excel
-    exportDataset() {
+    protected exportDataset() {
         const ws = xlsx.utils.json_to_sheet(this.leden);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');
         xlsx.writeFile(wb, 'leden ' + new Date().toJSON().slice(0, 10) + '.xlsx');
     }
 
-    bulkEmail() {
+    protected bulkEmail() {
         const ui = this.loginService.userInfo?.LidData;
         const toEmail: string  = ui!.EMAIL as string;
         let bcc="";
@@ -465,7 +456,7 @@ export class LedenSchermComponent implements OnInit, OnDestroy {
     }
 
     // Wordt aangeroepen bij een dubbel klik op een rij.
-    bewerkLid($event: RowDoubleClickedEvent) {
+    protected bewerkLid($event: RowDoubleClickedEvent) {
         const ui = this.loginService.userInfo?.Userinfo;
         if (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isInstructeur || ui?.isCIMT || ui!.isRooster) {
             this.router.navigate(['profiel'], {queryParams: {lidID: $event.data.ID}});

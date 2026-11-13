@@ -17,13 +17,15 @@ export interface buttonClicked {
     imports: [FaIconComponent]
 })
 export class TrackRenderComponent implements AgRendererComponent {
+    // variablen in html formulier
+    protected params: ICellRendererParams & buttonClicked;
+    protected trackIcon: IconDefinition = faAddressCard;
+    protected LID_ID: number;
+
+    // private variable voor ts script
     private readonly loginService = inject(LoginService);
 
-    params: ICellRendererParams & buttonClicked;
-    trackIcon: IconDefinition = faAddressCard;
-
-    LID_ID: number;
-    NAAM: string;
+    private NAAM: string;
 
     agInit(params: ICellRendererParams & buttonClicked): void {
         this.params = params;
@@ -46,7 +48,7 @@ export class TrackRenderComponent implements AgRendererComponent {
         return false;
     }
 
-    buttonClicked() {
+    protected buttonClicked() {
         const startID = this.params.data.ID;
 
         // datum naar dd-mm-yyyy

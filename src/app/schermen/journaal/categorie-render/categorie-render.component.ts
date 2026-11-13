@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { AgRendererComponent } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 
-
 @Component({
     selector: 'app-categorie-render',
     templateUrl: './categorie-render.component.html',
@@ -10,8 +9,9 @@ import { ICellRendererParams } from 'ag-grid-community';
 })
 
 export class CategorieRenderComponent implements AgRendererComponent {
-    categorie: string | undefined;
-    id: number | undefined;
+    // variablen in html formulier
+    protected categorie: string | undefined;
+    protected id: number | undefined;
 
     agInit(params: ICellRendererParams): void {
         this.categorie = params.data.CATEGORIE_CODE;

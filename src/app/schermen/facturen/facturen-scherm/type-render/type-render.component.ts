@@ -8,11 +8,12 @@ import { AgRendererComponent } from 'ag-grid-angular';
     styleUrls: ['./type-render.component.scss']
 })
 export class TypeRenderComponent implements AgRendererComponent {
-  gridTekst: string | undefined
-  value: string
+  // variablen in html formulier
+  protected gridTekst: string | undefined
+
+  // private variable voor ts script
 
   agInit(params: ICellRendererParams): void {
-    this.value = params.value
     this.gridTekst = this.isGetal(params.value) ? "€ " + params.value.toLocaleString( undefined, { minimumFractionDigits: 2 }) : params.value;
   }
 
@@ -21,7 +22,7 @@ export class TypeRenderComponent implements AgRendererComponent {
   }
 
   // todo: bijzonder. Type is string | undefined, maar toch wordt gecheckt op typeof val === 'number'? Dus val kan ook een nummer zijn, of die check is niet nodig
-  isGetal(val: string | undefined): string {
+  private isGetal(val: string | undefined): string {
     return (typeof val === 'number') ? "rechts" : "";
   }
 }

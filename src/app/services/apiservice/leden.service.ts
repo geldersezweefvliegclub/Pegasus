@@ -3,7 +3,7 @@ import { APIService } from './api.service';
 
 import { HeliosLeden, HeliosLedenDataset, HeliosLid } from '../../types/Helios';
 import { KeyValueArray } from '../../types/Utils';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { SharedService } from '../shared/shared.service';
 import { LoginService } from './login.service';
 import { CustomJsonSerializer } from '../../utils/Utils';
@@ -17,17 +17,14 @@ export class LedenService {
     private readonly sharedService = inject(SharedService);
 
     private ledenCache: HeliosLeden  = { dataset: []};       // return waarde van API call
-
     private overslaan = false;
-    private ophaalTimer: number;                                // Iedere 15 min halen we de leden op
-    private fallbackTimer: number;                              // Timer om te zorgen dat starts geladen echt is
     private ledenStore = new BehaviorSubject(this.ledenCache.dataset);
-    private dbEventAbonnement: Subscription;
+
+    // afgeleid van bovenstaande variabelen, moet daarom na de declaratie ervan staan
     public readonly ledenChange = this.ledenStore.asObservable();      // nieuwe leden beschikbaar
 
     constructor() {
         const loginService = this.loginService;
-
 
         // nadat we ingelogd zijn kunnen we de vliegtuigen ophalen
         const naInloggen = () => {
@@ -42,14 +39,14 @@ export class LedenService {
             naInloggen();
         }
 
-        this.ophaalTimer = window.setInterval(() => {
+        window.setInterval(() => {
             this.ophalenLeden().then(() => {
                 this.ledenStore.next(this.ledenCache.dataset)    // afvuren event
             });
         }, 1000 * 60 * 15);
 
         // Deze timer kijkt periodiek of de starts er is. API call bij inloggen kan mislukt zijn dus dit is de fallback
-        this.fallbackTimer = window.setInterval(() => {
+        window.setInterval(() => {
             if (this.loginService.isIngelogd()) {
                 let ophalen = false;
                 if (this.ledenCache === undefined) {
@@ -66,7 +63,8 @@ export class LedenService {
         }, 1000 * 60);  // iedere minuut
 
         // Als leden zijn aangepast, dan moeten we overzicht opnieuw ophalen
-        this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
+        // service leeft net zo lang als de app, dit abonnement hoeft nooit opgezegd te worden
+        this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Leden") {
                 this.ophalenLeden().then(() => {
                     this.ledenStore.next(this.ledenCache.dataset)    // afvuren event

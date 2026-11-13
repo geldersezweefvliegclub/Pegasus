@@ -1,10 +1,4 @@
 
-#data {
-  overflow: scroll;
-  height: calc(100vh - 215px);
-}
-
-
 .deleteBtn {
   color: #dc3545;
 }
@@ -21,4 +15,30 @@
 .downBtn {
   color: #d5ac49;
   font-size: 20px;
+}
+
+.geselecteerd {
+  background-color: #f3ead2;
+}
+
+// slepen (CDK): de regel die meebeweegt, de lege plek waar hij neergezet wordt en het opschuiven van de andere regels
+// de preview staat buiten de .list-group, dus zonder de padding en rand van bootstrap: die zetten we zelf
+.cdk-drag-preview {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  background-color: #fff;
+  padding: 0.5rem 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.3;
+}
+
+.typelijst.cdk-drop-list-dragging .list-group-item:not(.cdk-drag-placeholder) {
+  transition: transform 200ms ease;
+}
+
+.list-group-item[cdkDrag] {
+  cursor: grab;
 }

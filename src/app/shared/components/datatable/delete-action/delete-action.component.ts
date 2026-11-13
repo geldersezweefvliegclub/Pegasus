@@ -16,8 +16,11 @@ export interface DeleteButton {
     imports: [FaIconComponent]
 })
 export class DeleteActionComponent implements AgRendererComponent {
+    // variablen in html formulier
+    protected deleteIcon:IconDefinition = faMinusCircle;
+
+    // private variable voor ts script
     private params: ICellRendererParams & DeleteButton;
-    deleteIcon:IconDefinition = faMinusCircle;
 
     agInit(params: ICellRendererParams & DeleteButton): void {
         this.params = params;
@@ -27,7 +30,7 @@ export class DeleteActionComponent implements AgRendererComponent {
         return false;
     }
 
-    buttonClicked() {
+    protected buttonClicked() {
         this.params.onDeleteClicked(this.params.data.ID);
     }
 }

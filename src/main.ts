@@ -3,7 +3,8 @@ import {bootstrapApplication} from '@angular/platform-browser';
 import {provideHttpClient} from '@angular/common/http';
 import {provideRouter} from '@angular/router';
 import {provideServiceWorker} from '@angular/service-worker';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbInputDatepickerConfig, NgbModule, NgbPopoverConfig, NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
+import {NgSelectConfig} from '@ng-select/ng-select';
 import {provideCharts, withDefaultRegisterables} from 'ng2-charts';
 import AnnotationPlugin from 'chartjs-plugin-annotation';
 import {AppComponent} from './app/main-layout/app/app.component';
@@ -60,7 +61,14 @@ bootstrapApplication(AppComponent, {
       enabled: environment.production,
       registrationStrategy: 'registerImmediately'
     }),
-    provideAppInitializer(() => inject(PegasusConfigService).load())
+    provideAppInitializer(() => inject(PegasusConfigService).load()),
+    provideAppInitializer(() => {
+      // popups scrollen hun body, dropdowns daarin zouden afgeknipt worden. Daarom aan <body> hangen.
+      inject(NgSelectConfig).appendTo = 'body';
+      inject(NgbInputDatepickerConfig).container = 'body';
+      inject(NgbPopoverConfig).container = 'body';
+      inject(NgbTooltipConfig).container = 'body';
+    })
   ]
 })
   .catch(err => console.error(err));

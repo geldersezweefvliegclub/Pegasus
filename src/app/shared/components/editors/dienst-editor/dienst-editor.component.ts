@@ -22,30 +22,28 @@ import { LoaderComponent } from '../../loader/loader.component';
     imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, LidInvoerComponent, IconButtonComponent, LoaderComponent]
 })
 export class DienstEditorComponent implements OnInit, OnDestroy {
+    // variablen in html formulier
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+    protected filteredLeden: HeliosLedenDataset[] = [];
+    protected datumDMY: string;
+    protected lidID: number | undefined;
+    protected dienstBeschrijving: string;
+    protected isSaving: boolean;
+
+    // private variable voor ts script
     private readonly typesService = inject(TypesService);
     private readonly ledenService = inject(LedenService);
     private readonly dienstenService = inject(DienstenService);
     private readonly configService = inject(PegasusConfigService);
-
     private readonly popup = viewChild.required(ModalComponent);
 
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
-
     private typesAbonnement: Subscription;
-    dienstTypes: HeliosType[] = [];
-
+    private dienstTypes: HeliosType[] = [];
     private ledenAbonnement: Subscription;
     private leden: HeliosLedenDataset[] = [];
-    filteredLeden: HeliosLedenDataset[] = [];
-
     private dag: HeliosRoosterDagExtended;
     private typeDienstID: number;
-
-    datumDMY: string;
-    lidID: number | undefined;
-    dienstBeschrijving: string;
-    isSaving: boolean;
 
     ngOnInit(): void {
         // abonneer op wijziging van leden
@@ -123,11 +121,11 @@ export class DienstEditorComponent implements OnInit, OnDestroy {
         this.popup().open();
     }
 
-    lidGeselecteerd(id: number | undefined) {
+    protected lidGeselecteerd(id: number | undefined) {
         this.lidID = id;
     }
 
-    opslaan() {
+    protected opslaan() {
         const id = (this.dag.Diensten[this.typeDienstID]) ? +this.dag.Diensten[this.typeDienstID].ID! : -1;
         this.isSaving = true;
 

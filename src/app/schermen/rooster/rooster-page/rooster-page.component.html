@@ -1,11 +1,11 @@
-<app-pegasus-card titel="Rooster"
+<app-pegasus-card class="scherm-vullend" titel="Rooster"
                   subtitel="Rooster inplannen"
                   [icon]="roosterIcon"
                   [exportEnabled]="this.magExporteren"
                   (Exporting)="exportRooster()">
-    <div cdkDropListGroup class="h-100">
-        <div class="box h-100">
-            <div id="data">
+    <div cdkDropListGroup class="scherm-kolom">
+        <div class="box scherm-kolom">
+            <div id="data" class="scherm-kolom">
                 @if (roosterView === 'maand') {
                     <div class="dataContent w-100 h-100">
                         <app-rooster-maandview class="w-100 h-100"

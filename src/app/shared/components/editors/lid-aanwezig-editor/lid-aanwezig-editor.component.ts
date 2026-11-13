@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, inject, output, viewChild } from '@angula
 import { ModalComponent } from '../../modal/modal.component';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { HeliosAanwezigLedenDataset, HeliosType, HeliosVliegtuigenDataset } from '../../../../types/Helios';
-import { Observable, of, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TypesService } from '../../../../services/apiservice/types.service';
 import { AanwezigLedenService } from '../../../../services/apiservice/aanwezig-leden.service';
 import { VliegtuigenService } from '../../../../services/apiservice/vliegtuigen.service';
@@ -10,12 +10,10 @@ import { LoginService } from '../../../../services/apiservice/login.service';
 import { StorageService } from '../../../../services/storage/storage.service';
 import { ErrorComponent } from '../../error/error.component';
 import { SuccessComponent } from '../../success/success.component';
-import { NgSelectComponent } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import { VliegtuigInvoerComponent } from '../start-editor/vliegtuig-invoer/vliegtuig-invoer.component';
 import { IconButtonComponent } from '../../icon-button/icon-button.component';
 import { LoaderComponent } from '../../loader/loader.component';
-import { AsyncPipe } from '@angular/common';
 
 type HeliosTypeExtended = HeliosType & {
     Geselecteerd?: boolean;
@@ -25,35 +23,34 @@ type HeliosTypeExtended = HeliosType & {
     selector: 'app-lid-aanwezig-editor',
     templateUrl: './lid-aanwezig-editor.component.html',
     styleUrls: ['./lid-aanwezig-editor.component.scss'],
-    imports: [ErrorComponent, SuccessComponent, ModalComponent, NgSelectComponent, FormsModule, VliegtuigInvoerComponent, IconButtonComponent, LoaderComponent, AsyncPipe]
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, VliegtuigInvoerComponent, IconButtonComponent, LoaderComponent]
 })
 export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
+    readonly opgeslagen = output<number>();
+
+    // variablen in html formulier
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+    protected aanwezig: HeliosAanwezigLedenDataset;
+    protected isDDWVer = false;
+    protected isLoading = false;
+    protected isSaving = false;
+    protected formTitel = "";
+    protected veldenTypes: HeliosType[] = [];
+    protected vliegtuigTypes: HeliosTypeExtended[];
+    protected vliegtuigen: HeliosVliegtuigenDataset[] = [];
+    protected vliegtuigenFiltered: HeliosVliegtuigenDataset[] = [];
+
+    // private variable voor ts script
     private readonly aanwezigLedenService = inject(AanwezigLedenService);
     private readonly vliegtuigenService = inject(VliegtuigenService);
     private readonly storageService = inject(StorageService);
     private readonly loginService = inject(LoginService);
     private readonly typesService = inject(TypesService);
-
     private readonly popup = viewChild.required(ModalComponent);
-    readonly opgeslagen = output<number>();
-
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
-    aanwezig: HeliosAanwezigLedenDataset;
-
-    isDDWVer = false;
-    isLoading = false;
-    isSaving = false;
-    formTitel = "";
-
-    veldenTypes$: Observable<HeliosType[]>;
 
     private typesAbonnement: Subscription;
-    vliegtuigTypes: HeliosTypeExtended[];
-
     private vliegtuigenAbonnement: Subscription;
-    vliegtuigen: HeliosVliegtuigenDataset[] = [];
-    vliegtuigenFiltered: HeliosVliegtuigenDataset[] = [];
 
     ngOnInit(): void {
         // abonneer op wijziging van vliegtuigen
@@ -77,7 +74,7 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
 
         // abonneer op wijziging van types
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
-            this.veldenTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));
+            this.veldenTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 9});
         });
     }
 
@@ -135,7 +132,7 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
     }
 
     // zet vinkje geselecteerd in de vliegtuig types. Wordt later gebruikt om toe te voegen bij aanmelden
-    zetVoorkeur(event: Event, id: number) {
+    protected zetVoorkeur(event: Event, id: number) {
         const idx = this.vliegtuigTypes.findIndex(t => t.ID == id)
 
         this.vliegtuigTypes[idx].Geselecteerd = (event.target as HTMLInputElement).checked;
@@ -150,7 +147,7 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
         this.aanwezig.VOORKEUR_VLIEGTUIG_TYPE = (voorkeur !== "") ? voorkeur : undefined;
     }
 
-    vliegtuigType2Vinkjes(types: string | null | undefined) {
+    private vliegtuigType2Vinkjes(types: string | null | undefined) {
         this.vliegtuigTypes.forEach((vliegtuigType) => {
             vliegtuigType.Geselecteerd = false;
         });
@@ -166,7 +163,7 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
         }
     }
 
-    opslaan() {
+    protected opslaan() {
         this.isSaving = true;
 
         const ui = this.loginService.userInfo?.LidData
@@ -213,7 +210,7 @@ export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
         }
     }
 
-    knopUit(): boolean {
+    protected knopUit(): boolean {
         if (this.aanwezig) {
             return !(this.aanwezig.VELD_ID! > 0)
         }

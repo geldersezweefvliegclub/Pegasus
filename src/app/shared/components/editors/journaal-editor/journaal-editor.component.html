@@ -5,31 +5,37 @@
     <div body>
         <fieldset [disabled]="isVerwijderMode || isRestoreMode || isLoading || isSaving">
             <div class="row">
-                <div class="col-12 col-md-6" [hidden]="melding.ROLLEND_ID !== undefined">
+                <div class="col-12 col-md-6" [hidden]="melding.ROLLEND_ID != null">
                     <label for="VLIEGTUIG_ID" class="form-label">Vliegtuig</label>
-                    <ng-select id="VLIEGTUIG_ID"
-                               [disabled]="isVerwijderMode || isRestoreMode"
-                               [items]="clubVliegtuigen$ | async"
-                               placeholder="Vliegtuig"
-                               bindLabel="REG_CALL"
-                               bindValue="ID"
-                               closeOnSelect="true"
-                               openOnEnter="true"
-                               [class.ng-select-required]="opslaanDisabled()"
-                               [(ngModel)]='melding.VLIEGTUIG_ID'/>
+                    <select class="form-select"
+                            id="VLIEGTUIG_ID"
+                            [disabled]="isVerwijderMode || isRestoreMode"
+                            [class.verplicht-leeg]="opslaanDisabled()"
+                            name="VLIEGTUIG_ID"
+                            [(ngModel)]="melding.VLIEGTUIG_ID">
+                        <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                        <option [ngValue]="null"None>Vliegtuig</option>
+                        <option [ngValue]="undefined" disabled hidden>Vliegtuig</option>
+                        @for (item of clubVliegtuigen; track item.ID) {
+                            <option [ngValue]="item.ID">{{ item.REG_CALL }}</option>
+                        }
+                    </select>
                 </div>
-                <div class="col-12 col-md-6" [hidden]="melding.VLIEGTUIG_ID !== undefined">
+                <div class="col-12 col-md-6" [hidden]="melding.VLIEGTUIG_ID != null">
                     <label for="ROLLEND_ID" class="form-label">Rollend</label>
-                    <ng-select id="ROLLEND_ID"
-                               [disabled]="isVerwijderMode || isRestoreMode"
-                               [items]="rollend$ | async"
-                               placeholder="Rollend"
-                               bindLabel="OMSCHRIJVING"
-                               bindValue="ID"
-                               closeOnSelect="true"
-                               openOnEnter="true"
-                               [class.ng-select-required]="opslaanDisabled()"
-                               [(ngModel)]='melding.ROLLEND_ID'/>
+                    <select class="form-select"
+                            id="ROLLEND_ID"
+                            [disabled]="isVerwijderMode || isRestoreMode"
+                            [class.verplicht-leeg]="opslaanDisabled()"
+                            name="ROLLEND_ID"
+                            [(ngModel)]="melding.ROLLEND_ID">
+                        <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                        <option [ngValue]="null"None>Rollend</option>
+                        <option [ngValue]="undefined" disabled hidden>Rollend</option>
+                        @for (item of rollend; track item.ID) {
+                            <option [ngValue]="item.ID">{{ item.OMSCHRIJVING }}</option>
+                        }
+                    </select>
                 </div>
             </div>
             <div class="row my-2">
@@ -81,31 +87,37 @@
             <div class="row my-2">
                 <div class="col-12 col-md-8">
                     <label for="TECHNICUS_ID" class="form-label">Beoordeeld door</label>
-                    <ng-select id="TECHNICUS_ID"
-                               [disabled]="isVerwijderMode || isRestoreMode || !superGebruiker()"
-                               [items]="techneuten$ | async"
-                               placeholder="Eerste inspectie gedaan door"
-                               bindLabel="NAAM"
-                               bindValue="ID"
-                               closeOnSelect="true"
-                               openOnEnter="true"
-                               required
-                               [(ngModel)]='melding.TECHNICUS_ID'/>
+                    <select class="form-select"
+                            id="TECHNICUS_ID"
+                            [disabled]="isVerwijderMode || isRestoreMode || !superGebruiker()"
+                            name="TECHNICUS_ID"
+                            required
+                            [(ngModel)]="melding.TECHNICUS_ID">
+                        <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                        <option [ngValue]="null" disabled>Eerste inspectie gedaan door</option>
+                        <option [ngValue]="undefined" disabled hidden>Eerste inspectie gedaan door</option>
+                        @for (item of techneuten; track item.ID) {
+                            <option [ngValue]="item.ID">{{ item.NAAM }}</option>
+                        }
+                    </select>
                 </div>
             </div>
             <div class="row my-2">
                 <div class="col-12 col-md-8">
                     <label for="ROLLEND_ID" class="form-label">Afgetekend door</label>
-                    <ng-select id="AFGETEKEND_ID"
-                               [disabled]="isVerwijderMode || isRestoreMode || !superGebruiker()"
-                               [items]="techneuten$ | async"
-                               placeholder="Naam van Techneut"
-                               bindLabel="NAAM"
-                               bindValue="ID"
-                               closeOnSelect="true"
-                               openOnEnter="true"
-                               required
-                               [(ngModel)]='melding.AFGETEKEND_ID'/>
+                    <select class="form-select"
+                            id="AFGETEKEND_ID"
+                            [disabled]="isVerwijderMode || isRestoreMode || !superGebruiker()"
+                            name="AFGETEKEND_ID"
+                            required
+                            [(ngModel)]="melding.AFGETEKEND_ID">
+                        <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                        <option [ngValue]="null" disabled>Naam van Techneut</option>
+                        <option [ngValue]="undefined" disabled hidden>Naam van Techneut</option>
+                        @for (item of techneuten; track item.ID) {
+                            <option [ngValue]="item.ID">{{ item.NAAM }}</option>
+                        }
+                    </select>
                 </div>
             </div>
 

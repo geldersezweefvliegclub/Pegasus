@@ -15,13 +15,11 @@ export interface TijdButton {
     imports: [IconButtonComponent]
 })
 
-
 export class LandingstijdRenderComponent implements AgRendererComponent {
-  params: ICellRendererParams & TijdButton;
-  landingsTijd: string;         // string met de tijd om te tonen
-  toonButton = false;
-
-
+  // variablen in html formulier
+  protected params: ICellRendererParams & TijdButton;
+  protected landingsTijd: string;         // string met de tijd om te tonen
+  protected toonButton = false;
 
   agInit(params: ICellRendererParams & TijdButton): void {
     this.params = params;
@@ -33,7 +31,7 @@ export class LandingstijdRenderComponent implements AgRendererComponent {
     return false;
   }
 
-  tijdClicked() {
+  protected tijdClicked() {
     this.params.tijdClicked(this.params.data);
   }
 }

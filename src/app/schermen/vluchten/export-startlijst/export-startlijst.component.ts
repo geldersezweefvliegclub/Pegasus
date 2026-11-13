@@ -9,18 +9,19 @@ import { IconButtonComponent } from '../../../shared/components/icon-button/icon
     imports: [ModalComponent, IconButtonComponent]
 })
 export class ExportStartlijstComponent {
-    private readonly popup = viewChild.required(ModalComponent);
     readonly exportDataset = output<string>();
 
-    exportKeuze = "dag"
+    // variablen in html formulier
+    protected exportKeuze = "dag"
 
-
+    // private variable voor ts script
+    private readonly popup = viewChild.required(ModalComponent);
 
     openPopup() {
         this.popup().open();
     }
 
-    Exporteer() {
+    protected Exporteer() {
         this.exportDataset.emit(this.exportKeuze);
         this.popup().close();
     }

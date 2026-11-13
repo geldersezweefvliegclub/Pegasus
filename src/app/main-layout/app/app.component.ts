@@ -20,32 +20,33 @@ import { Subscription } from 'rxjs';
 })
 
 export class AppComponent implements OnDestroy{
-    readonly router = inject(Router);
+    // variablen in html formulier
+    protected readonly router = inject(Router);
+    protected readonly loginService = inject(LoginService);
+    protected readonly popupKalender = viewChild.required(PopupKalenderComponent);
+
+    protected isIngelogd: boolean = this.loginService.isIngelogd();
+    protected heeftStartVerbod = false;
+    protected contactBeheerderDDWV = false
+    protected updateAvailable = false;
+
+    // private variable voor ts script
     private readonly updates = inject(SwUpdate);
     private readonly calendar = inject(NgbCalendar);
-    readonly loginService = inject(LoginService);
     private readonly sharedService = inject(SharedService);
     private readonly storageService = inject(StorageService);
 
-    readonly popupKalender = viewChild.required(PopupKalenderComponent);
-
     private maandAbonnement: Subscription;          // volg de keuze van de kalender
     private datumAbonnement: Subscription;          // volg de keuze van de kalender
-
-    vandaag = this.calendar.getToday();
-    datumDMY: string = this.vandaag.day + "-" + this.vandaag.month + "-" + this.vandaag.year;
-
-    isIngelogd: boolean = this.loginService.isIngelogd();
-    heeftStartVerbod = false;
-    contactBeheerderDDWV = false
-    zusterclubOntbreekDDWV = false;
-    updateAvailable = false;
+    private vandaag = this.calendar.getToday();
     private keepAliveTimer: number;
+
+    // afgeleid van bovenstaande variabelen, moet daarom na de declaratie ervan staan
+    protected datumDMY: string = this.vandaag.day + "-" + this.vandaag.month + "-" + this.vandaag.year;
 
     constructor() {
         const router = this.router;
         const loginService = this.loginService;
-
 
         // Service worker update, but only in production. During development, the service worker is disabled which results in an error.
         // Enabling the service worker would result in a lot of caching, which is not desired during development because it would be hard to test changes.
@@ -75,7 +76,6 @@ export class AppComponent implements OnDestroy{
                 const ui = this.loginService.userInfo?.LidData;
                 this.heeftStartVerbod = (ui!.LIDTYPE_ID != 625 && ui!.STARTVERBOD!);
                 this.contactBeheerderDDWV = (ui!.LIDTYPE_ID == 625 && ui!.STARTVERBOD!);
-                this.zusterclubOntbreekDDWV = (ui!.LIDTYPE_ID == 625 && ui!.ZUSTERCLUB_ID == undefined)
             }
 
             this.keepAliveTimer = window.setInterval(() => {
@@ -90,7 +90,6 @@ export class AppComponent implements OnDestroy{
                     const ui = this.loginService.userInfo?.LidData;
                     this.heeftStartVerbod = (ui!.LIDTYPE_ID != 625 && ui!.STARTVERBOD!);
                     this.contactBeheerderDDWV = (ui!.LIDTYPE_ID == 625 && ui!.STARTVERBOD!);
-                    this.zusterclubOntbreekDDWV = (ui!.LIDTYPE_ID == 625 && ui!.ZUSTERCLUB_ID == undefined)
 
                 })
             }, 1000 * 60 * 10);   // 10 minuten
@@ -125,7 +124,7 @@ export class AppComponent implements OnDestroy{
     }
 
     // ga noar hoofdscherm pagina, alleen voor toepassing bij kleine schermen
-    hoofdmenu() {
+    protected hoofdmenu() {
         this.router.navigate(['hoofdscherm']).then();
     }
 
@@ -139,7 +138,7 @@ export class AppComponent implements OnDestroy{
     }
 
     // Er is een nieuwe software update en de gebruiker wil deze software gebruiken
-    applyUpdate() {
+    protected applyUpdate() {
         this.updates.activateUpdate().then(() => document.location.reload());
     }
 }

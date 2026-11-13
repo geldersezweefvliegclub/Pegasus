@@ -1,13 +1,17 @@
+<app-error [error]='error'/>
+<app-info [info]='info'/>
 
-<app-pegasus-card titel="Competenties"
+<app-pegasus-card class="scherm-vullend" titel="Competenties"
                   subtitel="Te behalen vaardigheden voor een lid"
                   [icon]="iconCardIcon">
-    <div class="box h-100">
+    <div class="box scherm-kolom">
 
-        <tree-root class="w-100 h-100"
+        <!-- de boom vult de rest van de kaart, alleen de boom zelf (tree-viewport) scrollt -->
+        <tree-root class="w-100 scherm-kolom"
                    [nodes]="boom"
-                   [options]="treeOptions">
-            <ng-template #treeNodeWrapperTemplate let-node let-index="index">
+                   [options]="treeOptions"
+                   (moveNode)="naVerslepen($event)">
+            <ng-template #treeNodeWrapperTemplate let-node let-index="index" let-templates="templates">
                 <div class="node-wrapper flex justify-content-between" [style.padding-left]="node.getNodePadding()">
                     <div>
                         <tree-node-expander [node]='node'/>
@@ -22,17 +26,23 @@
                              [treeDrag]="node"
                              [treeDragEnabled]="node.allowDrag()">
 
-                            <tree-node-content [node]='node' [index]='index'/>
+                            <!-- template doorgeven, anders toont de boom alleen de kale tekst en niet #treeNodeTemplate
+                                 (met de dubbelklik naar de editor) -->
+                            <tree-node-content [node]='node' [index]='index' [template]='templates.treeNodeTemplate'/>
                         </div>
                     </div>
                     <div [title]="node.displayField">
-                        @if (node.data.value >= 0 && node.data.blokID !== -1) {
-                            <fa-icon [icon]='upIcon' class='upBtn me-2 clickable' (click)='omhoog(node.data);'/>
+                        <!-- omhoog / omlaag alleen bij de geselecteerde competentie, en niet aan de rand -->
+                        @if (node.isActive && node.data.value >= 0 && node.data.blokID !== -1) {
+                            @if (!isEerste(node)) {
+                                <fa-icon [icon]='upIcon' class='upBtn me-2 clickable' (click)='omhoog(node.data);'/>
+                            }
+                            @if (!isLaatste(node)) {
+                                <fa-icon [icon]='downIcon' class='downBtn me-2 clickable' (click)='omlaag(node.data);'/>
+                            }
                         }
-                        @if (node.data.value >= 0 && node.data.blokID !== -1) {
-                            <fa-icon [icon]='downIcon' class='downBtn me-2 clickable' (click)='omlaag(node.data);'/>
-                        }
-                        @if (node.data.value >= 0) {
+                        <!-- toevoegen alleen bij de geselecteerde regel -->
+                        @if (node.isActive) {
                             <fa-icon [icon]='toevoegenIcon' class='addBtn me-2 clickable'
                                      (click)='toevoegen(node.data);'/>
                         }
@@ -40,20 +50,20 @@
                 </div>
             </ng-template>
             <ng-template #treeNodeTemplate let-node>
-            <div class="form-inline row-item competentieRegel" (dblclick)="openEditor(node.data)">
-              <div class="form-check w-100">
-                <div class="d-flex justify-content-between">
-                  <div>
-                    <label class="form-check-label" [style]="node.data.value < 0 && {'color': 'red'}">
-                      {{node.data.text}}
-                    </label>
-                    @if (node.data.value >= 0) {
-                      <div class="badge bg-secondary ms-2" [innerHTML]="node.data.value"></div>
-                    }
-                  </div>
+                <div class="form-inline row-item competentieRegel" (dblclick)="openEditor(node.data)">
+                    <div class="form-check w-100">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <label class="form-check-label">
+                                    {{ node.data.text }}
+                                </label>
+                                @if (node.data.value >= 0) {
+                                    <div class="badge bg-secondary ms-2" [innerHTML]="node.data.value"></div>
+                                }
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
             </ng-template>
         </tree-root>
     </div>

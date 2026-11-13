@@ -28,27 +28,26 @@ import { LoaderComponent } from '../../loader/loader.component';
     imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, LidInvoerComponent, VliegtuigInvoerComponent, NgbInputDatepicker, IconButtonComponent, LoaderComponent]
 })
 export class BoekingEditorComponent implements OnInit, OnDestroy {
-    private readonly ledenService = inject(LedenService);
-    private readonly reserveringenService = inject(ReserveringService);
-
     readonly clubVliegtuigen = input<HeliosVliegtuigenDatasetExtended[]>([]);
     readonly boekingToegevoegd = output<void>();
 
+    // variablen in html formulier
+    protected leden: HeliosLedenDataset[] = [];
+    protected isSaving = false;
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+    protected lidID: number | undefined;
+    protected vliegtuigID: number;
+    protected opmerkingen: string;
+    protected eersteDag: NgbDate | null;
+    protected laatsteDag: NgbDate | null;
+
+    // private variable voor ts script
+    private readonly ledenService = inject(LedenService);
+    private readonly reserveringenService = inject(ReserveringService);
     private readonly popup = viewChild.required(ModalComponent);
 
     private ledenAbonnement: Subscription;
-    leden: HeliosLedenDataset[] = [];
-
-    isSaving = false;
-
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
-
-    lidID: number | undefined;
-    vliegtuigID: number;
-    opmerkingen: string;
-    eersteDag: NgbDate | null;
-    laatsteDag: NgbDate | null;
 
     ngOnInit(): void {
         // abonneer op wijziging van leden
@@ -68,17 +67,17 @@ export class BoekingEditorComponent implements OnInit, OnDestroy {
     }
 
     // Aan wie wordt het vliegtuig toegekend
-    lidGeselecteerd(id: number | undefined) {
+    protected lidGeselecteerd(id: number | undefined) {
         this.lidID = id;
     }
 
     // Voor welk vliegtuig gaan we de reservering toevoegen
-    vliegtuigGeselecteerd(id: number) {
+    protected vliegtuigGeselecteerd(id: number) {
         this.vliegtuigID = id;
     }
 
     // is eerste datum eerder dan eind datum?
-    vanTotOke(): boolean {
+    protected vanTotOke(): boolean {
         if (this.eersteDag && this.laatsteDag) {
             const begin = this.eersteDag.year * 10000 + this.eersteDag.month * 100 + this.eersteDag.day;
             const eind = this.laatsteDag.year * 10000 + this.laatsteDag.month * 100 + this.laatsteDag.day;
@@ -89,7 +88,7 @@ export class BoekingEditorComponent implements OnInit, OnDestroy {
     }
 
     // als we niet aan de invoer condities voldoen, moet de invoerbutton uitgeschakeld zijn
-    opslaanDisabled(): boolean {
+    protected opslaanDisabled(): boolean {
         if (this.lidID && this.vliegtuigID && this.eersteDag && this.laatsteDag) {
             return !this.vanTotOke();
         }
@@ -97,7 +96,7 @@ export class BoekingEditorComponent implements OnInit, OnDestroy {
     }
 
     // controle & aanmaken van de reserveringen
-    async aanmakenReserveringen() {
+    protected async aanmakenReserveringen() {
         if (this.eersteDag && this.laatsteDag) {
             this.isSaving = true;
 

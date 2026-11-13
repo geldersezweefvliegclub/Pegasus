@@ -11,8 +11,8 @@ import { VliegdagSelectieComponent } from '../vliegdag-selectie/vliegdag-selecti
     imports: [ModalComponent, VliegdagSelectieComponent]
 })
 export class PopupKalenderComponent implements OnInit, OnDestroy {
+  // private variable voor ts script
   private readonly sharedService = inject(SharedService);
-
   private readonly popup = viewChild.required(ModalComponent);
 
   private datumAbonnement: Subscription;
@@ -34,6 +34,4 @@ export class PopupKalenderComponent implements OnInit, OnDestroy {
   openPopup() {
     this.popup().open();
   }
-
-
 }

@@ -1,14 +1,14 @@
 <app-error [error]='error'/>
 <app-success [success]='success'/>
 
-<app-pegasus-card titel="Vliegtuigen"
+<app-pegasus-card class="scherm-vullend" titel="Vliegtuigen"
                   subtitel="Een overzicht van de vliegtuigen"
                   [icon]="iconCardIcon"
                   [exportEnabled]="this.magExporten"
                   (Exporting)="exportDataset()">
-    <div class="box h-100">
+    <div class="box scherm-kolom">
         @if (!toonKlein) {
-            <div id="data" class="data">
+            <div id="data" class="data scroll-vlak">
                 <app-datatable id='vliegtuiggrid'
                         [pagination]="false"
                         [rowData]="data"
@@ -20,7 +20,7 @@
                                class='h-100 mt-n8'/>
             </div>
         } @if (toonKlein) {
-        <div id="datacard" class="data">
+        <div id="datacard" class="data scroll-vlak">
             @for (vliegtuig of data; track vliegtuig.ID; let i = $index) {
                 <div>
                     <app-vliegtuig-card [vliegtuig]="vliegtuig"

@@ -16,22 +16,21 @@ import { LoaderComponent } from '../../loader/loader.component';
     imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, IconButtonComponent, LoaderComponent]
 })
 export class TypeEditorComponent  {
-    private readonly typesService = inject(TypesService);
-
     readonly toonBedragEenheid = input(false);
 
+    // variablen in html formulier
+    protected formTitel: string;
+    protected type: HeliosType = {};
+    protected isLoading = false;
+    protected isSaving = false;
+    protected isVerwijderMode = false;
+    protected isRestoreMode = false;
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+
+    // private variable voor ts script
+    private readonly typesService = inject(TypesService);
     private readonly popup = viewChild.required(ModalComponent);
-    formTitel: string;
-
-    type: HeliosType = {};
-    isLoading = false;
-    isSaving = false;
-
-    isVerwijderMode = false;
-    isRestoreMode = false;
-
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
 
     // Open invoer popup voor de track. Als track ingevuld is, wijzigen we bestaande track
     openPopup(type: HeliosType) {
@@ -48,12 +47,12 @@ export class TypeEditorComponent  {
         this.popup().open();
     }
 
-    closePopup() {
+    private closePopup() {
         this.popup().close();
     }
 
     // ophalen van type uit de database (via API)
-    haalTypeOp(id: number): void {
+    private haalTypeOp(id: number): void {
         this.isLoading = true;
 
         try {
@@ -89,7 +88,7 @@ export class TypeEditorComponent  {
     }
 
     // uitvoeren van de actie waar we mee bezig zijn
-    uitvoeren() {
+    protected uitvoeren() {
         this.isSaving = true;
         if (this.isRestoreMode) {
             this.Herstellen(this.type);
@@ -109,7 +108,7 @@ export class TypeEditorComponent  {
     }
 
     // opslaan in de database
-    Toevoegen(type: HeliosType) {
+    private Toevoegen(type: HeliosType) {
         this.typesService.addType(type).then(() => {
             this.success = {
                 titel: "Type",
@@ -123,7 +122,7 @@ export class TypeEditorComponent  {
     }
 
     // bestaande type is aangepast. Opslaan van het type
-    Aanpassen(type: HeliosType) {
+    private Aanpassen(type: HeliosType) {
         let t:HeliosType;
 
         if (!this.type.READ_ONLY) {
@@ -151,7 +150,7 @@ export class TypeEditorComponent  {
     }
 
     // markeer een type als verwijderd
-    Verwijderen(type: HeliosType) {
+    protected Verwijderen(type: HeliosType) {
         this.typesService.deleteType(type.ID!).then(() => {
             this.success = {
                 titel: "Type",
@@ -165,7 +164,7 @@ export class TypeEditorComponent  {
     }
 
     // het type herstellen, haal de markering 'verwijderd' weg
-    Herstellen(type: HeliosType) {
+    protected Herstellen(type: HeliosType) {
         this.typesService.restoreType(type.ID!).then(() => {
             this.success = {
                 titel: "Type",
@@ -179,7 +178,7 @@ export class TypeEditorComponent  {
     }
 
     // Opslaan knop staat uit als we niet weten over wie het gaat, of er nog geen tekst is ingevoerd
-    opslaanDisabled() {
+    protected opslaanDisabled() {
         return !this.type.OMSCHRIJVING
     }
 }

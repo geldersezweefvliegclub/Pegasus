@@ -1,11 +1,11 @@
-import { Component, OnChanges, OnInit, SimpleChanges, inject, input, viewChild } from '@angular/core';
+import { Component, OnDestroy, OnChanges, OnInit, SimpleChanges, inject, input, viewChild } from '@angular/core';
 import { DienstenService } from '../../../services/apiservice/diensten.service';
 import { Subscription } from 'rxjs';
 import { DateTime } from 'luxon';
 import { SharedService } from '../../../services/shared/shared.service';
 import { HeliosDienstenDataset, HeliosLid } from '../../../types/Helios';
 import { DagRoosterComponent } from '../dag-rooster/dag-rooster.component';
-import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { SuccessMessage } from '../../../types/Utils';
 import { LoginService } from '../../../services/apiservice/login.service';
 import { LoaderComponent } from '../loader/loader.component';
 
@@ -15,25 +15,24 @@ import { LoaderComponent } from '../loader/loader.component';
     styleUrls: ['./diensten.component.scss'],
     imports: [LoaderComponent, DagRoosterComponent]
 })
-export class DienstenComponent implements OnInit, OnChanges {
+export class DienstenComponent implements OnInit, OnChanges, OnDestroy {
+    readonly Vlieger = input.required<HeliosLid>();
+    readonly UitgebreideWeergave = input(false);
+    success: SuccessMessage | undefined;
+
+    // variablen in html formulier
+    protected datum: DateTime = DateTime.now();       // de gekozen dag
+    protected diensten: HeliosDienstenDataset[];
+    protected roosterDatum: DateTime;
+    protected isLoading = false;
+
+    // private variable voor ts script
     private readonly dienstenService = inject(DienstenService);
     private readonly loginService = inject(LoginService);
     private readonly sharedService = inject(SharedService);
-
-    readonly Vlieger = input.required<HeliosLid>();
-    readonly UitgebreideWeergave = input(false);
-
-    readonly popup = viewChild.required(DagRoosterComponent);
+    private readonly popup = viewChild.required(DagRoosterComponent);
 
     private datumAbonnement: Subscription;  // volg de keuze van de kalender
-    datum: DateTime = DateTime.now();       // de gekozen dag
-
-    diensten: HeliosDienstenDataset[];
-    roosterDatum: DateTime;
-    isLoading = false;
-
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
 
     ngOnInit(): void {
         // de datum zoals die in de kalender gekozen is
@@ -48,11 +47,15 @@ export class DienstenComponent implements OnInit, OnChanges {
         })
     }
 
+    ngOnDestroy(): void {
+        if (this.datumAbonnement) this.datumAbonnement.unsubscribe();
+    }
+
     ngOnChanges(_: SimpleChanges) {
         this.ophalen()
     }
 
-    ophalen(): void {
+    private ophalen(): void {
         // starttoren heeft geen starts nodig
         if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
             return;
@@ -94,13 +97,13 @@ export class DienstenComponent implements OnInit, OnChanges {
                     this.diensten = d.slice(0, 7);
                 }
             }).catch(e => {
-                this.error = e;
+                console.error(e);
                 this.isLoading = false;
             });
         }
     }
 
-    toonDatum(datum: string): string {
+    protected toonDatum(datum: string): string {
         const d:DateTime = DateTime.fromSQL(datum)
         let retValue: string = d.day + " ";
 
@@ -121,7 +124,7 @@ export class DienstenComponent implements OnInit, OnChanges {
         return retValue;
     }
 
-    toonDagRooster(DATUM: string) {
+    protected toonDagRooster(DATUM: string) {
         this.roosterDatum = DateTime.fromSQL(DATUM);
         setTimeout(() => this.popup().openPopup(), 100); // kleine delay datum moet syncen
     }

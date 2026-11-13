@@ -31,14 +31,17 @@ export interface FlarmStartData {
   providedIn: 'root'
 })
 export class FlarmInputService  {
+  public flarmCache: FlarmData[] = [];
+
   private readonly loginService = inject(LoginService);
   private readonly configService = inject(PegasusConfigService);
 
   private socket: Socket;
-  public flarmCache: FlarmData[] = [];
   private flarmStore = new BehaviorSubject(this.flarmCache);
-  public readonly flarmUpdate = this.flarmStore.asObservable();      // nieuwe flarm
   private startStore = new BehaviorSubject({START_ID: -1} as FlarmStartData);
+
+  // afgeleid van bovenstaande variabelen, moet daarom na de declaratie ervan staan
+  public readonly flarmUpdate = this.flarmStore.asObservable();      // nieuwe flarm
   public readonly startUpdate = this.startStore.asObservable();
 
   constructor()
@@ -58,7 +61,7 @@ export class FlarmInputService  {
   }
 
   // Opstarten van de verbinding met de Flarm server
-  Connect() {
+  private Connect() {
     this.socket = io(this.configService.getFlarmURL(), {transports: ['websocket']}).connect();
 
     this.socket.on("flarm", (message) => {

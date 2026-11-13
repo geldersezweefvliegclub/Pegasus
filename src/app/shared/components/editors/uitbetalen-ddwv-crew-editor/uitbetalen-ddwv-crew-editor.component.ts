@@ -8,7 +8,6 @@ import { ErrorComponent } from '../../error/error.component';
 import { SuccessComponent } from '../../success/success.component';
 import { IconButtonComponent } from '../../icon-button/icon-button.component';
 
-
 @Component({
     selector: 'app-uitbetalen-ddwv-crew-editor',
     templateUrl: './uitbetalen-ddwv-crew-editor.component.html',
@@ -16,20 +15,21 @@ import { IconButtonComponent } from '../../icon-button/icon-button.component';
     imports: [ErrorComponent, SuccessComponent, ModalComponent, IconButtonComponent]
 })
 export class UitbetalenDdwvCrewEditorComponent  {
-    private readonly ddwvService = inject(DdwvService);
-
-    private readonly popup = viewChild.required(ModalComponent);
     readonly refresh = output<void>();
-
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
-
     isLoading = false;
     isSaving = false;
 
-    datum: string;
-    diensten: HeliosDienstenDataset[];
-    uitbetalenCrew: KeyValueArray = {};
+    // variablen in html formulier
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+    protected diensten: HeliosDienstenDataset[];
+
+    // private variable voor ts script
+    private readonly ddwvService = inject(DdwvService);
+    private readonly popup = viewChild.required(ModalComponent);
+
+    private datum: string;
+    private uitbetalenCrew: KeyValueArray = {};
 
     // open popup, maar haal eerst de start op. De eerder ingevoerde tijd wordt als default waarde gebruikt
     // indien niet eerder ingvuld, dan de huidige tijd. Buiten de daglicht periode is het veld leeg
@@ -40,7 +40,7 @@ export class UitbetalenDdwvCrewEditorComponent  {
         this.popup().open();
     }
 
-    uitbetalen() {
+    protected uitbetalen() {
         let IDs = "";
 
         Object.entries(this.uitbetalenCrew).forEach(([key, value]) => {
@@ -57,7 +57,7 @@ export class UitbetalenDdwvCrewEditorComponent  {
         }).catch((e) => this.error = e)
     }
 
-    selectieChanged($event: Event, ID: number) {
+    protected selectieChanged($event: Event, ID: number) {
         this.uitbetalenCrew[ID.toString()] = ($event.target as HTMLInputElement).checked;
     }
 }

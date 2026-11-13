@@ -1,35 +1,38 @@
 <app-error [error]='error'/>
-<app-pegasus-card titel="Aanmelden"
+<app-pegasus-card class="scherm-vullend" titel="Aanmelden"
                   subtitel="Aanmelden voor de vliegdag"
                   [icon]="aanmeldenIcon">
-    <div class="h-100">
+    <div class="scherm-kolom">
         <div class="ms-2 d-flex justify-content-begin align-items-end text-nowrap"
              [class]="{'veldTop':aanmeldenView === 'week', 'mb-1' : aanmeldenView === 'dag'}">
             <label for="VELD" class="form-label me-2">Vliegveld:</label>
-            <ng-select id="VELD" style="width: 160px;"
-                       [items]="(veldTypes$ | async) ?? []"
-                       placeholder="Filter op vliegveld"
-                       bindLabel="OMSCHRIJVING"
-                       bindValue="ID"
-                       closeOnSelect="true"
-                       openOnEnter="true"
-                       [searchable]="false"
-                       (change)="filter()"
-                       [(ngModel)]='vliegveld'/>
+            <select class="form-select"
+                    id="VELD"
+                    style="width: 160px;"
+                    name="VELD"
+                    [(ngModel)]="vliegveld"
+                    (ngModelChange)="filter()">
+                <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                <option [ngValue]="null"None>Filter op vliegveld</option>
+                <option [ngValue]="undefined" disabled hidden>Filter op vliegveld</option>
+                @for (item of veldTypes; track item.ID) {
+                    <option [ngValue]="item.ID">{{ item.OMSCHRIJVING }}</option>
+                }
+            </select>
         </div>
 
         @if (!isLoadingAanwezig &&
         !isLoadingRooster &&
         !isLoadingDiensten) {
-            <div class="box">
-                <div id="data" class="data">
+            <div class="box scherm-kolom">
+                <div id="data" class="data scherm-kolom">
                     @if (aanmeldenView === 'week') {
-                        <div class="dataContent w-100 h-100">
+                        <div class="dataContent w-100 scherm-kolom">
                             <ng-template *ngTemplateOutlet='week'/>
                         </div>
                     }
                     @if (aanmeldenView === 'dag') {
-                        <div class="dataContent w-100 h-100">
+                        <div class="dataContent w-100 scherm-kolom">
                             <ng-template *ngTemplateOutlet='dag'/>
                         </div>
                     }
@@ -65,7 +68,7 @@
 <!-- template voor week view -->
 <ng-template #week>
     @if (rooster) {
-        <div class="dataContent">
+        <div class="dataContent scherm-kolom">
             <div class="d-flex justify-content-between mb-2">
                 @if (toonDatumKnoppen) {
                     <div>
@@ -81,7 +84,7 @@
                     </div>
                 }
             </div>
-            <div class="roosterTabel volSchermWeekView">
+            <div class="roosterTabel scroll-vlak">
                 <table class="table" style="width: calc(100% - 15px);">
                     <thead>
                     <tr style="vertical-align: top;">
@@ -237,7 +240,7 @@
 <!-- template voor dag view -->
 <ng-template #dag>
     @if (rooster) {
-        <div class="dataContent">
+        <div class="dataContent scherm-kolom">
             <div class="d-flex flex-row justify-content-between dagHeader ps-1 pe-1">
                 <div class="d-flex align-items-center">
                     @if (toonDatumKnoppen) {
@@ -271,7 +274,7 @@
                 </div>
             </div>
 
-            <div class="roosterTabel volSchermDagView">
+            <div class="roosterTabel scroll-vlak">
                 <table class="table" style="width: calc(100% - 15px);">
                     <thead>
                     <tr style="vertical-align: top;">

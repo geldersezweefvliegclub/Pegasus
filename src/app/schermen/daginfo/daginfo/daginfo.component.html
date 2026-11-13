@@ -1,12 +1,12 @@
 <app-error [error]='error'/>
 <app-success [success]='success'/>
 
-<app-pegasus-card titel="Dag info"
+<app-pegasus-card class="scherm-vullend" titel="Dag info"
                   subtitel="Informatie over de vliegdag {{datum.day}}-{{datum.month}}-{{datum.year}}"
                   [icon]="iconCardIcon">
 
-    <div class="d-flex flex-column justify-content-between box h-100">
-        <div class="content">
+    <div class="d-flex flex-column justify-content-between box scherm-kolom">
+        <div class="content scroll-vlak scroll-vlak-rijen">
             <div class="mb-4">
                 <div class="row mt-n8 rowDagInfo1">
                     <div class="col-12 col-sm-6 col-md-3">
@@ -18,39 +18,48 @@
                             <div class="d-flex flex-row mb-2">
                                 <div class="col-7 ">
                                     <label for="VELD" class="form-label">Vliegveld</label>
-                                    <ng-select id="VELD"
-                                               required
-                                               [items]="veldTypes$ | async"
-                                               placeholder="Vliegveld waar we starten"
-                                               bindLabel="OMSCHRIJVING"
-                                               bindValue="ID"
-                                               closeOnSelect="true"
-                                               openOnEnter="true"
-                                               [(ngModel)]='dagInfo.VELD_ID'/>
+                                    <select class="form-select"
+                                            id="VELD"
+                                            name="VELD"
+                                            required
+                                            [(ngModel)]="dagInfo.VELD_ID">
+                                        <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                                        <option [ngValue]="null" disabled>Vliegveld waar we starten</option>
+                                        <option [ngValue]="undefined" disabled hidden>Vliegveld waar we starten</option>
+                                        @for (item of veldTypes; track item.ID) {
+                                            <option [ngValue]="item.ID">{{ item.OMSCHRIJVING }}</option>
+                                        }
+                                    </select>
 
                                 </div>
                                 <div class="col-5 ms-2">
                                     <label for="Baan" class="form-label">Strip</label>
-                                    <ng-select id="BAAN"
-                                               [items]="baanTypes$ | async"
-                                               placeholder="Strip"
-                                               bindLabel="OMSCHRIJVING"
-                                               bindValue="ID"
-                                               closeOnSelect="true"
-                                               openOnEnter="true"
-                                               [(ngModel)]='dagInfo.BAAN_ID'/>
+                                    <select class="form-select"
+                                            id="BAAN"
+                                            name="BAAN"
+                                            [(ngModel)]="dagInfo.BAAN_ID">
+                                        <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                                        <option [ngValue]="null"None>Strip</option>
+                                        <option [ngValue]="undefined" disabled hidden>Strip</option>
+                                        @for (item of baanTypes; track item.ID) {
+                                            <option [ngValue]="item.ID">{{ item.OMSCHRIJVING }}</option>
+                                        }
+                                    </select>
                                 </div>
                             </div>
                             <label for="STARTMETHODE" class="form-label">Start methode</label>
-                            <ng-select id="STARTMETHODE"
-                                       required
-                                       [items]="startMethodeTypes$ | async"
-                                       placeholder="Standaard start methode"
-                                       bindLabel="OMSCHRIJVING"
-                                       bindValue="ID"
-                                       closeOnSelect="true"
-                                       openOnEnter="true"
-                                       [(ngModel)]='dagInfo.STARTMETHODE_ID'/>
+                            <select class="form-select"
+                                    id="STARTMETHODE"
+                                    name="STARTMETHODE"
+                                    required
+                                    [(ngModel)]="dagInfo.STARTMETHODE_ID">
+                                <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                                <option [ngValue]="null" disabled>Standaard start methode</option>
+                                <option [ngValue]="undefined" disabled hidden>Standaard start methode</option>
+                                @for (item of startMethodeTypes; track item.ID) {
+                                    <option [ngValue]="item.ID">{{ item.OMSCHRIJVING }}</option>
+                                }
+                            </select>
                             <div class="mt-2 d-flex flex-row justify-content-between">
                                 <div>
                                     <input type="checkbox" id="DDWV" class="form-check-inline"
@@ -75,37 +84,46 @@
                             <div class="d-flex flex-row mb-2">
                                 <div class="col-7 ">
                                     <label for="VELD2" class="form-label">Vliegveld</label>
-                                    <ng-select id="VELD2"
-                                               [items]="veldTypes$ | async"
-                                               placeholder="Vliegveld waar we starten"
-                                               bindLabel="OMSCHRIJVING"
-                                               bindValue="ID"
-                                               closeOnSelect="true"
-                                               openOnEnter="true"
-                                               [(ngModel)]='dagInfo.VELD_ID2'/>
+                                    <select class="form-select"
+                                            id="VELD2"
+                                            name="VELD2"
+                                            [(ngModel)]="dagInfo.VELD_ID2">
+                                        <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                                        <option [ngValue]="null"None>Vliegveld waar we starten</option>
+                                        <option [ngValue]="undefined" disabled hidden>Vliegveld waar we starten</option>
+                                        @for (item of veldTypes; track item.ID) {
+                                            <option [ngValue]="item.ID">{{ item.OMSCHRIJVING }}</option>
+                                        }
+                                    </select>
 
                                 </div>
                                 <div class="col-5 ms-2">
                                     <label for="Baan" class="form-label">Strip</label>
-                                    <ng-select id="BAAN2"
-                                               [items]="baanTypes$ | async"
-                                               placeholder="Strip"
-                                               bindLabel="OMSCHRIJVING"
-                                               bindValue="ID"
-                                               closeOnSelect="true"
-                                               openOnEnter="true"
-                                               [(ngModel)]='dagInfo.BAAN_ID2'/>
+                                    <select class="form-select"
+                                            id="BAAN2"
+                                            name="BAAN2"
+                                            [(ngModel)]="dagInfo.BAAN_ID2">
+                                        <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                                        <option [ngValue]="null"None>Strip</option>
+                                        <option [ngValue]="undefined" disabled hidden>Strip</option>
+                                        @for (item of baanTypes; track item.ID) {
+                                            <option [ngValue]="item.ID">{{ item.OMSCHRIJVING }}</option>
+                                        }
+                                    </select>
                                 </div>
                             </div>
                             <label for="STARTMETHODE" class="form-label">Start methode</label>
-                            <ng-select id="STARTMETHODE2"
-                                       [items]="startMethodeTypes$ | async"
-                                       placeholder="Standaard start methode"
-                                       bindLabel="OMSCHRIJVING"
-                                       bindValue="ID"
-                                       closeOnSelect="true"
-                                       openOnEnter="true"
-                                       [(ngModel)]='dagInfo.STARTMETHODE_ID2'/>
+                            <select class="form-select"
+                                    id="STARTMETHODE2"
+                                    name="STARTMETHODE2"
+                                    [(ngModel)]="dagInfo.STARTMETHODE_ID2">
+                                <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                                <option [ngValue]="null"None>Standaard start methode</option>
+                                <option [ngValue]="undefined" disabled hidden>Standaard start methode</option>
+                                @for (item of startMethodeTypes; track item.ID) {
+                                    <option [ngValue]="item.ID">{{ item.OMSCHRIJVING }}</option>
+                                }
+                            </select>
                         </app-pegasus-card>
                     </div>
                     <div class="col-12 col-md-6 mt-4 mt-md-0">
@@ -207,7 +225,7 @@
             </app-pegasus-card>
             }
         </div>
-        <div class="row" id="toolbar">
+        <div class="row mt-2" id="toolbar">
             <div class="col-12">
                 <div class="d-flex justify-content-between">
                     @if (!deleteMode && !datumInToekomst()) {
@@ -215,7 +233,7 @@
                             <app-icon-button [disabled]="opslaanDisabled()"
                                              class="toolbarBtn"
                                              tekst="Opslaan"
-                                             iconNaam="far PlusSquare" (btnClicked)="opslaanDagInfo()"
+                                             iconNaam="fas Edit" (btnClicked)="opslaanDagInfo()"
                                              btnColor='btn-primary'/>
                         </div>
                     } @if (deleteMode) {
@@ -227,7 +245,7 @@
                                            iconNaam='fas Inbox'/>
                     </div>
                 }
-                    <div class="d-flex">
+                    <div class="d-flex gap-2">
                         @if (!deleteMode && toonDagRapport) {
                             <app-icon-button class="toolbarBtn"
                                              tekst="Dagrapport toevoegen"

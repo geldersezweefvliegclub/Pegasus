@@ -21,11 +21,11 @@ export class PegasusCardComponent {
     readonly exportImg = input("/assets/img/excel-logo.png");
     readonly Exporting = output<void>();
 
-    export() {
+    protected export() {
         this.Exporting.emit();
     }
 
-    hoogte() {
+    protected hoogte() {
         return (this.minimum()) ? "" : "h-100";
     }
 }

@@ -12,12 +12,15 @@ import { DateTime } from 'luxon';
     imports: [ModalComponent]
 })
 export class StartDetailsComponent  {
-  private readonly startService = inject(StartlijstService);
-
-  private readonly popup = viewChild.required(ModalComponent);
-  start: HeliosStartDataset | undefined;
   flarm: FlarmData;
-  ts: string;
+
+  // variablen in html formulier
+  protected start: HeliosStartDataset | undefined;
+  protected ts: string;
+
+  // private variable voor ts script
+  private readonly startService = inject(StartlijstService);
+  private readonly popup = viewChild.required(ModalComponent);
 
   openPopup(flarm: FlarmData) {
     const now = DateTime.now().hour * 60 + Math.round(DateTime.now().minute + DateTime.now().second / 60);

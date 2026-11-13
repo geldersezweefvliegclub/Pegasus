@@ -28,37 +28,34 @@ import { LoaderComponent } from '../../loader/loader.component';
     imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, NgbDatepicker, VoortgangComponent, IconButtonComponent, LoaderComponent]
 })
 export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
+    readonly competenties = input.required<HeliosCompetentiesDataset[]>();
+    readonly vliegerID = input.required<number>();
+    readonly aangepast = output<number>();
+
+    // variablen in html formulier
+    protected kalenderEersteDatum: NgbDateStruct;
+    protected kalenderLaatsteDatum: NgbDateStruct;
+    protected isSaving = false;
+    protected isLoading = false;
+    protected isVerwijderMode = false;
+    protected formTitel = "";
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+    protected progressie: HeliosBehaaldeProgressieDataset = {};
+    protected competentie: HeliosCompetentiesDataset | undefined
+    protected competentieString: string
+    protected geldigTot: DateTime | undefined;
+
+    // private variable voor ts script
     private readonly loginService = inject(LoginService);
     private readonly ledenService = inject(LedenService);
     private readonly typesService = inject(TypesService);
     private readonly progressieService = inject(ProgressieService);
-
     private readonly popup = viewChild.required(ModalComponent);
-    readonly competenties = input.required<HeliosCompetentiesDataset[]>();
-    readonly vliegerID = input.required<number>();
 
-    readonly aangepast = output<number>();
-
-    kalenderEersteDatum: NgbDateStruct;
-    kalenderLaatsteDatum: NgbDateStruct;
-
-    isSaving = false;
-    isLoading = false;
-    isVerwijderMode = false;
-
-    formTitel = "";
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
-
-    lid: HeliosLid;
-    progressie: HeliosBehaaldeProgressieDataset = {};
-    competentie: HeliosCompetentiesDataset | undefined
-    competentieString: string
-
+    private lid: HeliosLid;
     private typesAbonnement: Subscription;
-    topLevels: HeliosType[];
-
-    geldigTot: DateTime | undefined;
+    private topLevels: HeliosType[];
 
     ngOnInit() {
         // abonneer op wijziging van top level competenties
@@ -86,7 +83,7 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     // ophalen van een dag rapport
-    async ophalen(id:number): Promise<HeliosBehaaldeProgressieDataset> {
+    private async ophalen(id:number): Promise<HeliosBehaaldeProgressieDataset> {
         this.isLoading = true;
         this.progressieService.getProgressie(id).then ((p) => {
             this.progressie = p;
@@ -157,9 +154,8 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
         this.popup().open();
     }
 
-
     // maak een lange beschrijving van de competentie
-    vullenCompetentieString(id: number, init = true) : string {
+    private vullenCompetentieString(id: number, init = true) : string {
         if (init) {
             this.competentieString = "";
         }
@@ -184,7 +180,7 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     // uitvoeren van de actie waar we mee bezig zijn
-    uitvoeren() {
+    protected uitvoeren() {
         if (this.progressie.ID) {
             this.Aanpassen();
         } else {
@@ -193,7 +189,7 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     // opslaan van de starts van een nieuwe dag rapport
-    Toevoegen() {
+    private Toevoegen() {
         this.isSaving = true;
         this.progressieService.addProgressie(this.progressie).then((p) => {
             this.isSaving = false;
@@ -210,7 +206,7 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     // bestaande dag rapport is aangepast.
-    Aanpassen() {
+    private Aanpassen() {
         const ui = this.loginService.userInfo?.LidData;
         this.progressie.INSTRUCTEUR_ID =  ui?.ID;
 
@@ -230,7 +226,7 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     // markeer een track als verwijderd
-    Verwijderen() {
+    protected Verwijderen() {
         this.isSaving = true;
         this.progressieService.deleteProgressie(this.progressie.ID!).then(() => {
             this.isSaving = false;
@@ -246,7 +242,7 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     // sluiten van window en inform parent dat data aangepast is.
-    closePopup() {
+    private closePopup() {
         const id = this.progressie.ID;
         if (id === undefined) {
             console.error("Kan progressie niet sluiten zonder progressie-ID.");
@@ -257,7 +253,7 @@ export class ProgressieEditorComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     // Datum van de start aanpassen
-    datumAanpassen($datum: NgbDate) {
+    protected datumAanpassen($datum: NgbDate) {
         this.geldigTot = DateTime.fromObject({year: $datum.year, month: $datum.month, day: $datum.day});
         this.progressie.GELDIG_TOT = this.geldigTot.toISODate() as string;
     }

@@ -14,7 +14,7 @@ export class ZoekbarComponent {
     readonly zoeken = output<void>();
     readonly toonRefresh = input(true);
 
-    onInputChange(value: string) {
+    protected onInputChange(value: string) {
         this.zoekString = value;
         this.zoekStringChange.emit(value);
     }

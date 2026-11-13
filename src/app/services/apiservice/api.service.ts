@@ -11,13 +11,12 @@ export class APIService {
     private readonly sharedService = inject(SharedService);
     private readonly configService = inject(PegasusConfigService);
     private readonly storageService = inject(StorageService);
-
     private readonly URL:string = 'http://localhost:4200/api/'
+
     private BearerToken: string | null = null;
 
     constructor() {
         const configService = this.configService;
-
 
         const url = configService.getURL();
         if (url) {
@@ -87,7 +86,6 @@ export class APIService {
         {
             console.error(url, e)
         }
-
 
         return response;
     }
@@ -178,7 +176,6 @@ export class APIService {
 
         return url + args;
     }
-
 
     // Vul customer error  met http status code en de beschrijving uit X-Error-Message
     private handleError(response: Response): ErrorMessage {

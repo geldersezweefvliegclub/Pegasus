@@ -13,23 +13,24 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
     imports: [FaIconComponent, JournaalEditorComponent]
 })
 export class JournaalCardComponent implements OnInit {
+    @Input() melding: HeliosJournaalDataset;
+
+    // variablen in html formulier
+    protected readonly editor = viewChild.required(JournaalEditorComponent);
+    protected readonly iconEdit = faPenToSquare;
+
+    // private variable voor ts script
     private readonly sharedService = inject(SharedService);
 
-    @Input() melding: HeliosJournaalDataset;
-    readonly editor = viewChild.required(JournaalEditorComponent);
-
-    protected readonly iconEdit = faPenToSquare;
-    datumDM: string
 
     ngOnInit(): void {
-        this.datumDM = this.sharedService.datumDM(this.melding.DATUM!)    // jaar hoeft niet getoond te worden
     }
 
-    openEditor() {
+    protected openEditor() {
         this.editor().openPopup(this.melding as HeliosJournaalDataset);
     }
 
-    details(melding: HeliosJournaalDataset) {
+    protected details(melding: HeliosJournaalDataset) {
         window.alert("Gemeld door " + melding.MELDER + " op " +  this.sharedService.datumDMJ(melding.DATUM!));
     }
 }

@@ -40,38 +40,23 @@ type TijdInvoerRecord = Pick<HeliosStartDataset, 'ID'> & {
 })
 
 export class TijdInvoerComponent {
-    private readonly startlijstService = inject(StartlijstService);
-    private readonly configService = inject(PegasusConfigService);
-
     readonly OpslaanStarttijd = output<HeliosStart>();
     readonly OpslaanLandingstijd = output<HeliosStart>();
 
-    private readonly popup = viewChild.required(ModalComponent);
-    readonly tijdInvoerElement = viewChild.required<ElementRef>('tijdInvoerElement');
+    // variablen in html formulier
+    protected readonly tijdInvoerElement = viewChild.required<ElementRef>('tijdInvoerElement');
 
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
-    start: HeliosStart;
-
-    isLoading = false;
-    isSaving = false;
-    formTitel = "";
-    label = "";
-    overdag: string[];
-
-    tijdIngevoerd: string;
-    tijdOK = true;
-
-    Invoer: TypeTijdInvoer = TypeTijdInvoer.Starttijd;
-
-    constructor() {
-        const config = inject(NgbTypeaheadConfig);
-
-        config.showHint = true;
-    }
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+    protected isLoading = false;
+    protected isSaving = false;
+    protected formTitel = "";
+    protected label = "";
+    protected tijdIngevoerd: string;
+    protected tijdOK = true;
 
     // opbouwen van popup lijst met tijden (wordt getoond bij toetsenbord invoer)
-    search = (text$: Observable<string>) =>
+    protected search = (text$: Observable<string>) =>
         text$.pipe(
             debounceTime(300),
             distinctUntilChanged(),
@@ -79,6 +64,21 @@ export class TijdInvoerComponent {
                 : this.overdag.filter(v => v.startsWith(term)).splice(0, 10)    // max 10 items
             )
         );
+
+    // private variable voor ts script
+    private readonly startlijstService = inject(StartlijstService);
+    private readonly configService = inject(PegasusConfigService);
+    private readonly popup = viewChild.required(ModalComponent);
+
+    private start: HeliosStart;
+    private overdag: string[];
+    private Invoer: TypeTijdInvoer = TypeTijdInvoer.Starttijd;
+
+    constructor() {
+        const config = inject(NgbTypeaheadConfig);
+
+        config.showHint = true;
+    }
 
     // open popup, maar haal eerst de start op. De eerder ingevoerde tijd wordt als default waarde gebruikt
     // indien niet eerder ingvuld, dan de huidige tijd. Buiten de daglicht periode is het veld leeg
@@ -157,12 +157,12 @@ export class TijdInvoerComponent {
         setTimeout(()=> this.tijdInvoerElement().nativeElement.focus(), 200);
     }
 
-    closePopup() {
+    private closePopup() {
         this.popup().close();
     }
 
     // ophalen van de start, zodat we altijd met de laatste starts werken
-    async haalStartOp(id: number): Promise<void> {
+    private async haalStartOp(id: number): Promise<void> {
         this.isLoading = true;
         this.isSaving = false;
 
@@ -177,7 +177,7 @@ export class TijdInvoerComponent {
     }
 
     // Nu is het tijd om de ingevoerde tijd op te slaan
-    opslaan() {
+    protected opslaan() {
         const TimeParts = this.tijdIngevoerd.split(':')
         let tijd: string | undefined = undefined;
 
@@ -198,7 +198,7 @@ export class TijdInvoerComponent {
     }
 
     // De starttijd is ingevoerd/aangepast. Opslaan van de starttijd
-    opslaanStartTijd(start: HeliosStart) {
+    private opslaanStartTijd(start: HeliosStart) {
         this.isSaving = true;
         this.startlijstService.startTijd(start.ID as number, start.DATUM as string, start.STARTTIJD as string).then((s) => {
             const b = (s.STARTTIJD) ? `Starttijd ${s.STARTTIJD} opgeslagen` : 'Starttijd verwijderd'
@@ -215,7 +215,7 @@ export class TijdInvoerComponent {
     }
 
     // De landingstijd is ingevoerd/aangepast. Opslaan van de landingstijd
-    opslaanLandingsTijd(start: HeliosStart) {
+    private opslaanLandingsTijd(start: HeliosStart) {
         this.isSaving = true;
         this.startlijstService.landingsTijd(start.ID as number, start.DATUM as string, start.LANDINGSTIJD as string).then((s) =>
         {
@@ -232,9 +232,8 @@ export class TijdInvoerComponent {
         });
     }
 
-
     // De eerste tijd, op basis van de daglicht periode
-    vanTijd(): Date {
+    private vanTijd(): Date {
         const airport = this.configService.getAirport();
         const d = new Date(this.start.DATUM as string);
         const sunrise: Date = getSunrise(airport.Latitude, airport.Longitude, d);
@@ -255,7 +254,7 @@ export class TijdInvoerComponent {
     }
 
     // wat is de laatste tijd die ingevoerd mag worden op basis van daglicht periode
-    totTijd(): Date {
+    private totTijd(): Date {
         const airport = this.configService.getAirport();
         const d = new Date(this.start.DATUM as string);
         const sunset: Date = getSunset(airport.Latitude, airport.Longitude, d);
@@ -266,7 +265,7 @@ export class TijdInvoerComponent {
     }
 
     // vul een array met tijden van - tot
-    vullenOverdag(van: Date, tot: Date): void {
+    private vullenOverdag(van: Date, tot: Date): void {
         const start: number = van.getHours() * 60 + van.getMinutes();
         const eind: number = tot.getHours() * 60 + tot.getMinutes();
 
@@ -280,7 +279,7 @@ export class TijdInvoerComponent {
 
     // Help de gebruiker om invoer slimmer te maken, bijv toevoegen van : of een voorloop nul
     // Zorg ook dat maximale input 5 tekens is.
-    veldInvoer(newValue: string) {
+    protected veldInvoer(newValue: string) {
         let output: string;
         const inputParts = newValue.split(':');
 
@@ -313,7 +312,7 @@ export class TijdInvoerComponent {
     }
 
     // Welke invoer staan we toe, alleen cijfers en control toetsen
-    keyDown(event: KeyboardEvent) {
+    protected keyDown(event: KeyboardEvent) {
         if ((event.key == "ArrowDown") || (event.key == "ArrowUp") || (event.key == "ArrowLeft") || (event.key == "ArrowRight")) {
             return;
         }
@@ -342,7 +341,7 @@ export class TijdInvoerComponent {
     }
 
     // Ingevoerde tijd wordt een minuutje later
-    timeUp() {
+    protected timeUp() {
         const TijdParts = this.tijdInvoerElement().nativeElement.value.split(':');
 
         // conversie hh:mm naar minuten
@@ -362,7 +361,7 @@ export class TijdInvoerComponent {
     }
 
     // Ingevoerde tijd wordt een minuutje eerder
-    timeDown() {
+    protected timeDown() {
         const TijdParts = this.tijdInvoerElement().nativeElement.value.split(':');
 
         // conversie hh:mm naar minuten

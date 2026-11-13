@@ -29,18 +29,19 @@ export class LidInvoerComponent implements OnInit, OnChanges {
     readonly alleenInstructeurs = input(false);
     @Input() LID_ID: number | undefined;
     readonly vliegtuig = input<HeliosVliegtuigenDataset>();
-
     readonly LidChanged = output<number | undefined>();
-    EventEmitterDelay: number;
 
-    readonly infoIcon: IconDefinition = faInfoCircle;
+    // variablen in html formulier
+    protected readonly infoIcon: IconDefinition = faInfoCircle;
 
-    lidInput$ = new Subject<string | null>();
-    ledenFiltered: HeliosAanwezigLedenDataset[] = [];
-    aanwezigFiltered: HeliosAanwezigLedenDataset[] = [];
-    ledenSelectie$: Observable<HeliosAanwezigLedenDataset[]>;
+    protected lidInput$ = new Subject<string | null>();
+    protected ledenSelectie$: Observable<HeliosAanwezigLedenDataset[]>;
 
-    InputChangeEventFired = false;
+    // private variable voor ts script
+    private EventEmitterDelay: number;
+    private ledenFiltered: HeliosAanwezigLedenDataset[] = [];
+    private aanwezigFiltered: HeliosAanwezigLedenDataset[] = [];
+    private InputChangeEventFired = false;
 
     ngOnInit(): void {
         this.lidInput$.subscribe((newTerm) => {
@@ -162,7 +163,7 @@ export class LidInvoerComponent implements OnInit, OnChanges {
         }
     }
 
-    inputChange(id: number | undefined) {
+    protected inputChange(id: number | undefined) {
         clearTimeout(this.EventEmitterDelay);
         this.EventEmitterDelay = window.setTimeout(() => {
 

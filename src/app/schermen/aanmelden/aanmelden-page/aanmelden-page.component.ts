@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faInfoCircle, faStreetView } from '@fortawesome/free-solid-svg-icons';
-import { Observable, of, Subject, Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { debounceTime, skip } from 'rxjs/operators';
 import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
 import { DagVanDeWeek, DateDiff } from '../../../utils/Utils';
@@ -27,8 +27,7 @@ import { DaginfoService } from '../../../services/apiservice/daginfo.service';
 import {ErrorMessage, KeyValueArray} from '../../../types/Utils';
 import { SamenvattingComponent } from '../samenvatting/samenvatting.component';
 import {ProgressieService} from "../../../services/apiservice/progressie.service";
-import { NgTemplateOutlet, AsyncPipe, NgClass } from '@angular/common';
-import { NgSelectComponent } from '@ng-select/ng-select';
+import { NgTemplateOutlet, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { RouterLink } from '@angular/router';
@@ -49,11 +48,39 @@ export type HeliosAanwezigLedenDatasetExtended = HeliosAanwezigLedenDataset & {
 
 @Component({
     selector: 'app-aanmelden-page',
+    host: { class: 'scherm-pagina' },
     templateUrl: './aanmelden-page.component.html',
     styleUrls: ['./aanmelden-page.component.scss'],
-    imports: [ErrorComponent, IconButtonComponent, LidAanwezigEditorComponent, ModalComponent, NgSelectComponent, FormsModule, NgTemplateOutlet, PegasusCardComponent, SamenvattingComponent, FaIconComponent, RouterLink, AsyncPipe, NgClass]
+    imports: [ErrorComponent, IconButtonComponent, LidAanwezigEditorComponent, ModalComponent, FormsModule, NgTemplateOutlet, PegasusCardComponent, SamenvattingComponent, FaIconComponent, RouterLink, NgClass]
 })
 class AanmeldenPageComponent implements OnInit, OnDestroy {
+    // variablen in html formulier
+    protected readonly aanmeldenIcon: IconDefinition = faStreetView;
+    protected readonly infoIcon: IconDefinition = faInfoCircle;
+    protected readonly DagVanDeWeek = DagVanDeWeek;
+
+    // DATUM is optioneel in het type, zonder datum geeft NaN zodat zowel '< 0' als '>= 0' false zijn
+    protected readonly DateDiff = (datum: string | undefined): number => datum ? DateDiff(datum) : NaN;
+
+    protected datum: DateTime = DateTime.now();               // de gekozen dag
+    protected maandag: DateTime                               // de eerste dag van de week
+    protected error: ErrorMessage | undefined;
+    protected afmeldDatumDMY: string;                         // De datum waarop we ons afmelden
+    protected aanmeldenView = "week";
+    protected rooster: HeliosRoosterDataset[];                // rooster voor gekozen periode (dag/week/maand)
+    protected diensten: HeliosDienstenDataset[];              // Wie hebben er dienst
+    protected aanmeldingen: HeliosAanwezigLedenDataset[];     // De aanmeldingen
+    protected isLoadingRooster = false;
+    protected isLoadingDiensten = false;
+    protected isLoadingAanwezig = false;
+    protected toonDatumKnoppen = false;              // Mag de gebruiker een andere datum kiezen
+    protected isDDWVer = false;                      // DDWV'ers mogen geen club dagen zien
+    protected isBeheerder = false;                   // Beheerders mogen meer zien
+    protected isBeheerderDDWV = false;               // Beheerders mogen meer zien
+    protected veldTypes: HeliosType[] = [];
+    protected vliegveld: number | undefined;                      // laat aanmeldingen van een speciek vliegveld zien
+
+    // private variable voor ts script
     private readonly typesService = inject(TypesService);
     private readonly loginService = inject(LoginService);
     private readonly sharedService = inject(SharedService);
@@ -63,55 +90,22 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
     private readonly configService = inject(PegasusConfigService);
     private readonly progressieService = inject(ProgressieService);
     private readonly aanwezigLedenService = inject(AanwezigLedenService);
-
     private readonly bevestigAfmeldenPopup = viewChild.required(ModalComponent);
-    readonly aanmeldEditor = viewChild.required(LidAanwezigEditorComponent);
-    readonly samenvattingPopup = viewChild.required(SamenvattingComponent);
+    private readonly aanmeldEditor = viewChild.required(LidAanwezigEditorComponent);
+    private readonly samenvattingPopup = viewChild.required(SamenvattingComponent);
 
-
-    readonly aanmeldenIcon: IconDefinition = faStreetView;
-    readonly infoIcon: IconDefinition = faInfoCircle;
-
-    private aanwezigLedenAbonnement: Subscription;  // Wie zijn er op welke dag aanwezig
     private resizeSubscription: Subscription;       // Abonneer op aanpassing van window grootte (of draaien mobiel)
     private maandAbonnement: Subscription;          // volg de keuze van de kalender
     private datumAbonnement: Subscription;          // volg de keuze van de kalender
-    datum: DateTime = DateTime.now();               // de gekozen dag
-    maandag: DateTime                               // de eerste dag van de week
-
-
-    error: ErrorMessage | undefined;
-
+    private opvragenAbonnement: Subscription;
+    private aanwezigLedenAbonnement: Subscription;  // Wie zijn er op welke dag aanwezig
     private typesAbonnement: Subscription;
     private magAanmeldenDDWV: boolean;
-
-    afmeldDatumDMY: string;                         // De datum waarop we ons afmelden
-    afmeldDatum: DateTime;
-
-    private opvragenTrigger = new Subject<void>();  // alle verzoeken om data op te halen komen hier samen
-    private opvragenAbonnement: Subscription;
-    private ophaalVolgnummer = 0;                   // negeer antwoorden van verouderde verzoeken
-    isLoadingRooster = false;
-    isLoadingDiensten = false;
-    isLoadingAanwezig = false;
-
-    aanmeldenView = "week";
-    rooster: HeliosRoosterDataset[];                // rooster voor gekozen periode (dag/week/maand)
-    diensten: HeliosDienstenDataset[];              // Wie hebben er dienst
-    aanmeldingen: HeliosAanwezigLedenDataset[];     // De aanmeldingen
-    filteredAanmeldingen: HeliosAanwezigLedenDataset[];     // De aanmeldingen na filteren
-    dagInfo: HeliosDagInfosDataset[];               // De bijhoorende dag info
-
-    toonDatumKnoppen = false;              // Mag de gebruiker een andere datum kiezen
-    isDDWVer = false;                      // DDWV'ers mogen geen club dagen zien
-    isBeheerder = false;                   // Beheerders mogen meer zien
-    isBeheerderDDWV = false;               // Beheerders mogen meer zien
-
-    veldTypes$: Observable<HeliosType[]>;
-    vliegveld: number | undefined;                      // laat aanmeldingen van een speciek vliegveld zien
-
-    // Expose de functie DagVanDeWeek naar de .html file, want die kan daar niet direct bij.
-    protected readonly DagVanDeWeek = DagVanDeWeek;
+    private afmeldDatum: DateTime;
+    private opvragenTrigger = new Subject<void>();      // alle verzoeken om data op te halen komen hier samen
+    private ophaalVolgnummer = 0;                           // negeer antwoorden van verouderde verzoeken
+    private filteredAanmeldingen: HeliosAanwezigLedenDataset[];     // De aanmeldingen na filteren
+    private dagInfo: HeliosDagInfosDataset[];                       // De bijhorende dag info
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo?.Userinfo;
@@ -155,9 +149,8 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
 
         // abonneer op wijziging van types
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
-            this.veldTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));            // vliegvelden
+            this.veldTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 9});            // vliegvelden
         });
-
 
         const competentieIDs = (this.configService.DDWVtoestemmingID() !== undefined) ? this.configService.DDWVtoestemmingID().toString() + "," + this.configService.DDWVvragenlijstID().toString() :this.configService.DDWVvragenlijstID().toString();
         this.progressieService.getProgressiesLid(this.loginService.userInfo!.LidData?.ID!, competentieIDs).then((progressie:  HeliosBehaaldeProgressieDataset[]) => {
@@ -184,7 +177,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
         if (this.opvragenAbonnement) this.opvragenAbonnement.unsubscribe();
     }
 
-    onWindowResize() {
+    private onWindowResize() {
         // als je geen datum mag aanpassen, zie alleen vandaag
         if (!this.toonDatumKnoppen) {
             this.aanmeldenView = "dag"
@@ -196,7 +189,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
     }
 
     // verzoek om data op te halen, wordt via opvragenTrigger gebundeld
-    opvragen(): void {
+    protected opvragen(): void {
         this.opvragenTrigger.next();
     }
 
@@ -279,14 +272,14 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
     }
 
     // We gaan naar een nieuwe datum
-    zetDatum(nieuweDatum: DateTime) {
+    protected zetDatum(nieuweDatum: DateTime) {
         this.datum = nieuweDatum;
         this.maandag = this.datum.startOf('week'); // de eerste dag van de gekozen week
         this.opvragen();
     }
 
     // Is de datum in het verleden
-    verleden(datum: string | undefined) {
+    protected verleden(datum: string | undefined) {
         if (!datum) {
             return false;
         }
@@ -294,10 +287,8 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
         return d < DateTime.now()
     }
 
-
-
     // Toon datum als dd-mm-yyyy
-    datumDMY(dagDatum: string | undefined): string {
+    protected datumDMY(dagDatum: string | undefined): string {
         if (!dagDatum) {
             return '';
         }
@@ -306,7 +297,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
     }
 
     // toon popup dat de gebruiker zich wil afmelden voor de vliegdag
-    afmeldenPopup(datum: string | undefined) {
+    protected afmeldenPopup(datum: string | undefined) {
         if (!datum) {
             return;
         }
@@ -318,7 +309,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
     }
 
     // afmelding doorvoeren bij Helios
-    afmelden() {
+    protected afmelden() {
         this.isLoadingAanwezig = true;
         this.aanwezigLedenService.getAanwezig(this.afmeldDatum, this.afmeldDatum).then((a) => {
             const aanmeldingen = a!.filter((al: HeliosAanwezigLedenDataset) => {
@@ -345,7 +336,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
     }
 
     // openen van windows voor aanmelden vlieger
-    aanmeldenLidScherm(datum: string | undefined) {
+    protected aanmeldenLidScherm(datum: string | undefined) {
         if (!datum) {
             return;
         }
@@ -369,17 +360,17 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
     }
 
     // open van editor voor aanmelden
-    openLidAanwezigEditor(lidAanwezig: HeliosAanwezigLedenDataset) {
+    protected openLidAanwezigEditor(lidAanwezig: HeliosAanwezigLedenDataset) {
         this.aanmeldEditor().openPopup(lidAanwezig);
     }
 
     // hoe breed moeten de kolommen zijn in week view
-    KolomBreedte(): string {
+    protected KolomBreedte(): string {
         return `width: calc(100%/${this.rooster.length});`;
     }
 
     // staf lid voor deze dag
-    staf(dagDatum: string | undefined): boolean {
+    protected staf(dagDatum: string | undefined): boolean {
         if (!dagDatum) {
             return false;
         }
@@ -411,7 +402,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
         return idx >= 0;
     }
 
-    aanwezigen(dagDatum: string | undefined): HeliosAanwezigLedenDataset[] {
+    protected aanwezigen(dagDatum: string | undefined): HeliosAanwezigLedenDataset[] {
         if (!this.filteredAanmeldingen || !dagDatum) {
             return [];
         }
@@ -440,7 +431,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
         return aanwezig ? aanwezig : []
     }
 
-    isAangemeld(dagDatum: string | undefined): boolean {
+    protected isAangemeld(dagDatum: string | undefined): boolean {
         const ui = this.loginService.userInfo?.LidData;
 
         if (!this.aanmeldingen || !dagDatum) {
@@ -456,7 +447,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
         return aanwezig >= 0;
     }
 
-    magAanmelden(dagDatum: string | undefined): boolean {
+    protected magAanmelden(dagDatum: string | undefined): boolean {
         if (!dagDatum || this.isAangemeld(dagDatum)) {
             return false;
         }
@@ -524,7 +515,6 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
                     return false;          // andere lidtypes dus niet
             }
 
-
             if (!this.magAanmeldenDDWV)
             {
                 console.log(dagDatum, "DDWV vragenlijs is niet ingevuld, of geen DDWV toestemming");
@@ -536,7 +526,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
     }
 
     // Mogen we de dag tonen
-    magTonen(dagDatum: string | undefined): boolean {
+    protected magTonen(dagDatum: string | undefined): boolean {
         if (!this.rooster || !dagDatum) {
             return false;
         }
@@ -556,7 +546,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
         return true;
     }
 
-    naarDashboard(lidAanwezig: HeliosAanwezigLedenDataset): boolean {
+    protected naarDashboard(lidAanwezig: HeliosAanwezigLedenDataset): boolean {
         if (lidAanwezig.LIDTYPE_ID == 625) {   //  Geen dashboard link voor DDWV'ers
             return false;
         }
@@ -582,7 +572,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
         return false;
     }
 
-    toonBarometer(_: HeliosAanwezigLedenDataset) {
+    protected toonBarometer(_: HeliosAanwezigLedenDataset) {
         const ui = this.loginService.userInfo?.Userinfo;
         if (ui?.isBeheerder || ui?.isCIMT || ui?.isInstructeur) {
             return true;
@@ -590,7 +580,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
         return false
     }
 
-    kleurBarometer(lid: HeliosAanwezigLedenDataset) {
+    protected kleurBarometer(lid: HeliosAanwezigLedenDataset) {
         switch (lid.STATUS_BAROMETER) {
             case 'rood' :
                 return 'barometer-rood';
@@ -602,12 +592,12 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
     }
 
     // toon de samenvatting van de dag
-    samenvatting(rooster: HeliosRoosterDataset) {
+    protected samenvatting(rooster: HeliosRoosterDataset) {
         this.samenvattingPopup().openPopup(rooster)
     }
 
     // als we daginfo hebben, hoeven we niet meer te berekenen welke startmethode we gebruiken
-    dagInfoDefaultStartMetode(datum: string | undefined) {
+    protected dagInfoDefaultStartMetode(datum: string | undefined) {
         if (!this.dagInfo || !datum) {
             return undefined;
         }
@@ -619,7 +609,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
         return (dagInfo) ? dagInfo.STARTMETHODE_OMS : undefined
     }
 
-    filter() {
+    protected filter() {
         if (this.vliegveld) {
             this.filteredAanmeldingen = this.aanmeldingen.filter((s: HeliosAanwezigLedenDataset) => {
                 return ((s.VELD_ID == this.vliegveld) || (s.VELD_ID == undefined))
@@ -631,7 +621,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
     }
 
     // stuur email naar iedereen die is aangemeld
-    bulkEmail(dagDatum: string) {
+    protected bulkEmail(dagDatum: string) {
         const aanwezig = this.aanmeldingen.filter((a: HeliosAanwezigLedenDataset) => {
             return a.DATUM == dagDatum;
         });
@@ -649,10 +639,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
         window.location.href = `mailto:${toEmail}?bcc=${bcc}`;
     }
 
-    // DATUM is optioneel in het type, zonder datum geeft NaN zodat zowel '< 0' als '>= 0' false zijn
-    protected readonly DateDiff = (datum: string | undefined): number => datum ? DateDiff(datum) : NaN;
-
-    TypeBedrijf(DATUM: string | undefined, dagInRooster: HeliosRoosterDataset): string {
+    protected TypeBedrijf(DATUM: string | undefined, dagInRooster: HeliosRoosterDataset): string {
         const tbc = this.TypeBedrijfClass(DATUM, dagInRooster)
         switch (tbc) {
             case "geenBedrijf": return "Onvoldoende aanmeldingen";
@@ -662,8 +649,7 @@ class AanmeldenPageComponent implements OnInit, OnDestroy {
         return tbc;
     }
 
-
-    TypeBedrijfClass(DATUM: string | undefined, dagInRooster: HeliosRoosterDataset): string {
+    protected TypeBedrijfClass(DATUM: string | undefined, dagInRooster: HeliosRoosterDataset): string {
         if (this.aanmeldingen === undefined || !DATUM) {
             return "geenBedrijf";
         }

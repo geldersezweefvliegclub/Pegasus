@@ -22,7 +22,7 @@ import {
 } from '../../../shared/components/datatable/landingstijd-render/landingstijd-render.component';
 import { TijdInvoerComponent } from '../../../shared/components/editors/tijd-invoer/tijd-invoer.component';
 import { StartEditorComponent } from '../../../shared/components/editors/start-editor/start-editor.component';
-import { Observable, of, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
 import { nummerSort, tijdSort } from '../../../utils/Utils';
 import { ExportStartlijstComponent } from '../export-startlijst/export-startlijst.component';
@@ -39,9 +39,8 @@ import { DatatableComponent } from '../../../shared/components/datatable/datatab
 import { OpmerkingenRenderComponent } from '../opmerkingen-render/opmerkingen-render.component';
 import {DdwvService} from "../../../services/apiservice/ddwv.service";
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { AsyncPipe } from '@angular/common';
+
 import { FlarmLijstComponent } from '../flarm-lijst/flarm-lijst.component';
-import { NgSelectComponent } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import { ErrorComponent } from '../../../shared/components/error/error.component';
 import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
@@ -58,11 +57,60 @@ type HeliosStartDatasetExtended = HeliosStartDataset & {
 
 @Component({
     selector: 'app-startlijst-grid',
+    host: { class: 'scherm-pagina' },
     templateUrl: './vluchten-grid.component.html',
     styleUrls: ['./vluchten-grid.component.scss'],
-    imports: [AsyncPipe, DatatableComponent, ErrorComponent, ExportStartlijstComponent, FaIconComponent, FlarmLijstComponent, FormsModule, IconButtonComponent, NgSelectComponent, PegasusCardComponent, StartEditorComponent, StatusButtonComponent, SuccessComponent, TijdInvoerComponent, VluchtCardComponent, ZoekbarComponent]
+    imports: [DatatableComponent, ErrorComponent, ExportStartlijstComponent, FaIconComponent, FlarmLijstComponent, FormsModule, IconButtonComponent, PegasusCardComponent, StartEditorComponent, StatusButtonComponent, SuccessComponent, TijdInvoerComponent, VluchtCardComponent, ZoekbarComponent]
 })
 export class VluchtenGridComponent implements OnInit, OnDestroy {
+    // variablen in html formulier
+    protected readonly editor = viewChild.required(StartEditorComponent);
+
+    protected iconExpandShrink: IconDefinition = faChevronRight;
+    protected starts: HeliosStartDatasetExtended[] = [];
+    protected filteredStarts: HeliosStartDatasetExtended[] = [];
+    protected isLoading = false;
+    protected isStarttoren = false;
+    protected isExporting = false;
+    protected rowClassRules = {
+        'start_niet_wijzigbaar': (params: RowClassParams) => !params.data.inTijdspan,
+    }
+    protected frameworkComponents = {
+        dagnummerRender: DagnummerRenderComponent,
+        voorinRender: VoorinRenderComponent,
+        achterinRender: AchterinRenderComponent,
+        startTijdRender: StarttijdRenderComponent,
+        landingsTijdRender: LandingstijdRenderComponent,
+        checkboxRender: CheckboxRenderComponent,
+        deleteAction: DeleteActionComponent,
+        restoreAction: RestoreActionComponent,
+        opmerkingenRender: OpmerkingenRenderComponent
+    };
+    protected iconCardIcon: IconDefinition = faClipboardList;
+    protected downloadIcon: IconDefinition = faDownload;
+    protected veldTypes: HeliosType[] = [];
+    protected vliegveld: number | undefined;                      // laat vluchten van een speciek vliegveld zien
+    protected flarm: FlarmData[] = [];
+    protected zoekString: string;
+    protected deleteMode = false;        // zitten we in delete mode om starts te kunnen verwijderen
+    protected trashMode = false;         // zitten in restore mode om starts te kunnen terughalen
+    protected filterOn = false;
+    protected toonFlarm = true;
+    protected toonRefresh = true;
+    protected toonVeldFilter = true;
+    protected toonStartlijstKlein = false;     // Klein formaat van de startlijst
+    protected datum: DateTime = DateTime.now();         // de gekozen dag in de kalender
+    protected magFactureren = false;
+    protected magToevoegen = false;
+    protected magVerwijderen = false;
+    protected inTijdspan = false;          //  Mogen we starts aanpassen. Mag niet in de toekomst en ook niet meer dan xx dagen geleden.  xx is geconfigureerd in pegasus.config
+    protected magExporteren = false;
+    protected transactiesBezig = false;
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+    protected VliegerID: number | undefined = undefined;
+
+    // private variable voor ts script
     private readonly startlijstService = inject(StartlijstService);
     private readonly ddwvService = inject(DdwvService);
     private readonly loginService = inject(LoginService);
@@ -73,21 +121,11 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     private readonly configService = inject(PegasusConfigService);
     private readonly flarmService = inject(FlarmInputService);
     private readonly sharedService = inject(SharedService);
+    private readonly tijdInvoerEditor = viewChild.required(TijdInvoerComponent);
+    private readonly exportStartlijstKeuze = viewChild.required(ExportStartlijstComponent);
+    private readonly grid = viewChild.required(DatatableComponent);
 
-    readonly editor = viewChild.required(StartEditorComponent);
-    readonly tijdInvoerEditor = viewChild.required(TijdInvoerComponent);
-    readonly exportStartlijstKeuze = viewChild.required(ExportStartlijstComponent);
-    readonly grid = viewChild.required(DatatableComponent);
-
-    iconExpandShrink: IconDefinition = faChevronRight;
-
-    starts: HeliosStartDatasetExtended[] = [];
-    filteredStarts: HeliosStartDatasetExtended[] = [];
-    isLoading = false;
-    isStarttoren = false;
-    isExporting = false;
-
-    dataColumns: ColDef[] = [
+    private dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
         {field: 'DAGNUMMER', headerName: '#', cellRenderer: 'dagnummerRender', maxWidth:60, sortable: true},
         {field: 'REGISTRATIE', headerName: 'Registratie', sortable: true, hide: true},
@@ -148,14 +186,8 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         {field: 'hasFlarm', headerName: 'flarm', hide: true},
     ];
 
-    rowClassRules = {
-        'start_niet_wijzigbaar': (params: RowClassParams) => !params.data.inTijdspan,
-    }
-
-    columns: ColDef[] = this.dataColumns;
-
     // kolom om record te verwijderen
-    deleteColumn: ColDef[] = [{
+    private deleteColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 100,
         initialWidth: 100,
@@ -169,9 +201,8 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
             }
         },
     }];
-
     // kolom om terug te kunnen terughalen
-    restoreColumn: ColDef[] = [{
+    private restoreColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 100,
         initialWidth: 100,
@@ -185,60 +216,20 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
             }
         },
     }];
-
-    frameworkComponents = {
-        dagnummerRender: DagnummerRenderComponent,
-        voorinRender: VoorinRenderComponent,
-        achterinRender: AchterinRenderComponent,
-        startTijdRender: StarttijdRenderComponent,
-        landingsTijdRender: LandingstijdRenderComponent,
-        checkboxRender: CheckboxRenderComponent,
-        deleteAction: DeleteActionComponent,
-        restoreAction: RestoreActionComponent,
-        opmerkingenRender: OpmerkingenRenderComponent
-    };
-    iconCardIcon: IconDefinition = faClipboardList;
-    downloadIcon: IconDefinition = faDownload;
-
     private typesAbonnement: Subscription;              // Abonneer op aanpassing van vliegvelden
-    veldTypes$: Observable<HeliosType[]>;
-    vliegveld: number | undefined;                      // laat vluchten van een speciek vliegveld zien
     private resizeSubscription: Subscription;           // Abonneer op aanpassing van window grootte (of draaien mobiel)
     private dbEventAbonnement: Subscription;            // Abonneer op aanpassingen in de database
     private dienstenAbonnement: Subscription;
     private flarmStartAbonnement: Subscription;         // abonneer op wijziging van starts door flarm
-    rooster: HeliosRoosterDataset[] = [];
-    diensten: HeliosDienstenDataset[];
-    flarm: FlarmData[] = [];
-
-    zoekString: string;
-    zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
-    hasFlarmTimer: number;
-    refreshTimer: number;
-    deleteMode = false;        // zitten we in delete mode om starts te kunnen verwijderen
-    trashMode = false;         // zitten in restore mode om starts te kunnen terughalen
-
-    filterOn = false;
-    toonFlarm = true;
-    toonRefresh = true;
-    toonVeldFilter = true;
-    toonStartlijstKlein = false;     // Klein formaat van de startlijst
-
+    private rooster: HeliosRoosterDataset[] = [];
+    private diensten: HeliosDienstenDataset[];
+    private hasFlarmTimer: number;
+    private refreshTimer: number;
     private datumAbonnement: Subscription;    // volg de keuze van de kalender
-    datum: DateTime = DateTime.now();         // de gekozen dag in de kalender
+    private magWijzigen = false;
 
-    magFactureren = false;
-    magToevoegen = false;
-    magVerwijderen = false;
-    magWijzigen = false;
-    inTijdspan = false;          //  Mogen we starts aanpassen. Mag niet in de toekomst en ook niet meer dan xx dagen geleden.  xx is geconfigureerd in pegasus.config
-    magExporteren = false;
-
-    transactiesBezig = false;
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
-
-    VliegerID: number | undefined = undefined;
+    // afgeleid van bovenstaande variabelen, moet daarom na de declaratie ervan staan
+    protected columns: ColDef[] = this.dataColumns;
 
     ngOnInit(): void {
         // plaats de juiste kolommen in het grid
@@ -299,14 +290,13 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
 
         // abonneer op wijziging van types
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
-            this.veldTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));            // vliegvelden
+            this.veldTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 9});            // vliegvelden
         });
 
         // Roep onWindowResize aan zodra we het event ontvangen hebben
         this.resizeSubscription = this.sharedService.onResize$.subscribe(() => {
             this.onWindowResize()
         });
-
 
         const ui = this.loginService.userInfo?.Userinfo;
         this.magToevoegen = (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isStarttoren || ui?.isCIMT || ui?.isInstructeur || ui?.isDDWV || ui?.isClubVlieger) ?? false;
@@ -331,14 +321,13 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         clearTimeout(this.hasFlarmTimer);
     }
 
-
     // aantal kolommen dat we tonen is afhankelijk van scherm grootte
-    onWindowResize() {
+    private onWindowResize() {
         this.kolomDefinitie();
     }
 
     // mag de ingelogde gebruiker starts voor iedereen invullen of alleen voor zichzelf
-    beperkteInvoer(): boolean {
+    private beperkteInvoer(): boolean {
         this.VliegerID = this.loginService.userInfo?.LidData?.ID;   // als VliegerID gezet is, mogen we alleen voor onszelf invoeren
         const ui = this.loginService.userInfo?.Userinfo;
 
@@ -371,21 +360,21 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     }
 
     // openen van popup om nieuwe start te kunnen invoeren
-    addStart(): void {
+    protected addStart(): void {
         if (this.magToevoegen) {
             this.editor().openPopup(null);
         }
     }
 
     // openen van popup om bestaande start te kunnen aanpassen
-    openEditor(event?: RowDoubleClickedEvent) {
+    protected openEditor(event?: RowDoubleClickedEvent) {
         if (this.magWijzigen && !this.deleteMode && this.inTijdspan) {
             this.editor().openPopup(event?.data);
         }
     }
 
     // schakelen tussen deleteMode JA/NEE. In deleteMode kun je starts verwijderen
-    deleteModeJaNee() {
+    protected deleteModeJaNee() {
         if (this.magVerwijderen) {
             this.deleteMode = !this.deleteMode;
 
@@ -398,7 +387,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     }
 
     // schakelen tussen trashMode JA/NEE. In trashMode worden te verwijderde starts getoond
-    trashModeJaNee(actief: boolean) {
+    protected trashModeJaNee(actief: boolean) {
         this.trashMode = actief
 
         this.kolomDefinitie();
@@ -406,7 +395,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     }
 
     // Welke kolommen moet worden getoond in het grid
-    kolomDefinitie() {
+    private kolomDefinitie() {
         this.toonStartlijstKlein = (this.sharedService.getSchermSize() < SchermGrootte.xl);
         this.toonRefresh = (this.sharedService.getSchermSize() != SchermGrootte.xs);
         this.toonVeldFilter = (this.sharedService.getSchermSize() != SchermGrootte.xs);
@@ -423,7 +412,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     }
 
     // Opvragen van de starts via de api
-    opvragen() {
+    protected opvragen() {
         const queryParams: KeyValueArray = {};
         clearTimeout(this.refreshTimer);
 
@@ -493,7 +482,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     }
 
     // Filter start op een specifiek vliegveld, nodig tijdens zomerkamp op eigen veld en buitenland
-    filterStarts(): void {
+    protected filterStarts(): void {
         this.storageService.opslaan("VeldFilter", this.vliegveld, 24 * 2);   // 2 dagen
         if (!this.vliegveld) {
             this.filteredStarts = this.starts;
@@ -503,7 +492,7 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         }
     }
 
-    updateGrid() {
+    private updateGrid() {
         const now = DateTime.fromSQL(DateTime.now().toFormat("HH:mm"));
         for (const item of this.starts) {
             const idx = this.flarmService.flarmCache.findIndex((f) => f.START_ID == item.ID);
@@ -527,13 +516,13 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
         if (!this.toonStartlijstKlein) { this.grid().refreshGrid(); }
     }
     // keuze voor startlijst export
-    exporteerStartlijst() {
+    protected exporteerStartlijst() {
         this.exportStartlijstKeuze().openPopup();
     }
 
     // Export naar excel
     // ExportDMJ = "dag", "maand" of "jaar"
-    async exportDataset(exportDMJ: string) {
+    protected async exportDataset(exportDMJ: string) {
         this.isExporting = true;
 
         const datum: DateTime = DateTime.fromObject({
@@ -615,13 +604,12 @@ export class VluchtenGridComponent implements OnInit, OnDestroy {
     }
 
     // Als leden-filter aan staat, dan tonen we alleen de openstaande vluchten
-    filter(actief: boolean) {
+    protected filter(actief: boolean) {
         this.filterOn = actief;
         this.opvragen();
     }
 
-
-    maakTransacties() {
+    protected maakTransacties() {
         this.transactiesBezig = true;
         this.ddwvService.maakTransacties(this.datum).then(() => {
             this.transactiesBezig = false;

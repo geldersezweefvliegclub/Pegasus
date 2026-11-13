@@ -3,7 +3,7 @@ import { beheerRoutes, CustomRoute, routes } from '../../../routing.module';
 
 import { Router, RouterLinkActive, RouterLink } from '@angular/router';
 import { fas, faSignOutAlt, faWrench } from '@fortawesome/free-solid-svg-icons';
-import { NgbCalendar, NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 
 import { DateTime } from 'luxon';
 
@@ -32,36 +32,36 @@ import { VliegdagSelectieComponent } from '../vliegdag-selectie/vliegdag-selecti
 
 export class NavigatieComponent implements OnInit, OnDestroy {
     readonly loginService = inject(LoginService);
+    readonly hoofdscherm = input(false);
+
+    // variablen in html formulier
+    protected readonly popupKalender = viewChild.required(PopupKalenderComponent);
+    protected readonly logUitIcon: IconDefinition = faSignOutAlt;
+    protected readonly beheerIcon: IconDefinition = faWrench;
+
+    protected urlMenuItems: MenuItem[];
+    protected showBeheer = false;
+    protected beheerExcluded = false;
+
+    // private variable voor ts script
     private readonly router = inject(Router);
     private readonly calendar = inject(NgbCalendar);
     private readonly daginfoService = inject(DaginfoService);
     private readonly vliegtuigenService = inject(VliegtuigenService);
     private readonly sharedService = inject(SharedService);
     private readonly configService = inject(PegasusConfigService);
+    private readonly routes = routes;
+    private readonly beheerRoutes = beheerRoutes;
 
-    readonly hoofdscherm = input(false);
-    readonly popupKalender = viewChild.required(PopupKalenderComponent);
-
-    readonly routes = routes;
-    readonly beheerRoutes = beheerRoutes;
-    readonly logUitIcon: IconDefinition = faSignOutAlt;
-    readonly beheerIcon: IconDefinition = faWrench;
-
-    urlMenuItems: MenuItem[];
-    showBeheer = false;
-
-    vandaag = this.calendar.getToday();
-    datumDMY: string = this.vandaag.day + "-" + this.vandaag.month + "-" + this.vandaag.year;
-    kalenderIngave: NgbDateStruct = {year: this.vandaag.year, month: this.vandaag.month, day: this.vandaag.day};  // de gekozen dag
-
-    beheerExcluded = false;
-
-    private maandAbonnement: Subscription;          // volg de keuze van de kalender
+    private vandaag = this.calendar.getToday();
     private datumAbonnement: Subscription;          // volg de keuze van de kalender
     private dagInfoAbonnement: Subscription;
     private vliegtuigenAbonnement: Subscription;
     private userInfoAbonnement: Subscription;
     private resizeSubscription: Subscription;
+
+    // afgeleid van bovenstaande variabelen, moet daarom na de declaratie ervan staan
+    protected datumDMY: string = this.vandaag.day + "-" + this.vandaag.month + "-" + this.vandaag.year;
 
     ngOnInit() {
         this.toonMenuItems();
@@ -97,19 +97,7 @@ export class NavigatieComponent implements OnInit, OnDestroy {
             }
         });
 
-        // de datum zoals die in de kalender gekozen is
-        this.maandAbonnement = this.sharedService.kalenderMaandChange.subscribe(jaarMaand => {
-            if (jaarMaand.year > 1900) {        // 1900 is bij initialisatie
-                this.kalenderIngave = DateTime.fromObject({
-                    year: jaarMaand.year,
-                    month: jaarMaand.month,
-                    day: 1,
-                })
-            }
-        });
-
         this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
-            this.kalenderIngave = datum;
             this.datumDMY = datum.day + "-" + datum.month + "-" + datum.year;
         });
 
@@ -124,18 +112,17 @@ export class NavigatieComponent implements OnInit, OnDestroy {
         if (this.userInfoAbonnement) this.userInfoAbonnement.unsubscribe();
         if (this.dagInfoAbonnement) this.dagInfoAbonnement.unsubscribe();
         if (this.datumAbonnement) this.datumAbonnement.unsubscribe();
-        if (this.maandAbonnement) this.maandAbonnement.unsubscribe();
         if (this.resizeSubscription) this.resizeSubscription.unsubscribe();
         if (this.vliegtuigenAbonnement) this.vliegtuigenAbonnement.unsubscribe();
     }
 
     // als scherm dimensie aangepast worden, kunnen we meer/minder menu items tonen
-    onWindowResize() {
+    private onWindowResize() {
         this.toonMenuItems()
     }
 
     // welke menu items mogen getoond worden
-    toonMenuItems() {
+    private toonMenuItems() {
         const ui = this.loginService.userInfo?.Userinfo;
         const verbergen = this.configService.getVerborgenMenuItems();
 
@@ -296,33 +283,33 @@ export class NavigatieComponent implements OnInit, OnDestroy {
     }
 
     // array met alleen de active routes
-    activeRoutes() {
+    protected activeRoutes() {
         return this.routes.filter(route => route.excluded === false);
     }
 
     // array met alleen de active routes
-    activeBeheerRoutes() {
+    protected activeBeheerRoutes() {
         return this.beheerRoutes.filter(route => route.excluded === false);
     }
 
     // het is voorbij en we gaan terug naar de login pagina
-    Uitloggen(): void {
+    protected Uitloggen(): void {
         this.loginService.uitloggen();
         this.router.navigate(['/login']);
     }
 
-    toonLogo() {
+    protected toonLogo() {
         return (window.innerHeight > 1000)
     }
 
-    kleineDatum() {
+    protected kleineDatum() {
         if (this.hoofdscherm())
             return (window.innerHeight < 670)
 
         return (window.innerHeight < 850 || this.sharedService.getSchermSize() < SchermGrootte.xxl)
     }
 
-    toonIcon(iconNaam:string) : IconDefinition {
+    protected toonIcon(iconNaam:string) : IconDefinition {
         const parts: string[] = iconNaam.split(' ');
         let faIcon: IconDefinition = fas['faQuestion'];
 

@@ -3,7 +3,6 @@ import { ModalComponent } from '../../modal/modal.component';
 import { HeliosAgendaActiviteit, HeliosAgendaDataset, HeliosJournaal } from '../../../../types/Helios';
 import { AgendaService } from '../../../../services/apiservice/agenda';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
-import { LoginService } from '../../../../services/apiservice/login.service';
 import { DateTime } from 'luxon';
 import { ErrorComponent } from '../../error/error.component';
 import { SuccessComponent } from '../../success/success.component';
@@ -21,25 +20,21 @@ import { LoaderComponent } from '../../loader/loader.component';
     imports: [ErrorComponent, SuccessComponent, ModalComponent, NgbInputDatepicker, FormsModule, IconButtonComponent, NgxMaterialTimepickerModule, LoaderComponent]
 })
 export class AgendaEditorComponent  {
+  // variablen in html formulier
+  protected isLoading = false;
+  protected isSaving = false;
+  protected isVerwijderMode = false;
+  protected isRestoreMode = false;
+  protected formTitel = "";
+  protected activiteit: HeliosAgendaActiviteit = {}
+  protected success: SuccessMessage | undefined;
+  protected error: ErrorMessage | undefined;
+  protected eersteDag: DateTime | undefined;
+  protected laatsteDag: DateTime | undefined;
+
+  // private variable voor ts script
   private readonly agendaService = inject(AgendaService);
-  private readonly loginService = inject(LoginService);
-
   private readonly popup = viewChild.required(ModalComponent);
-
-  isLoading = false;
-  isSaving = false;
-
-  isVerwijderMode = false;
-  isRestoreMode = false;
-  formTitel = "";
-
-  activiteit: HeliosAgendaActiviteit = {}
-
-  success: SuccessMessage | undefined;
-  error: ErrorMessage | undefined;
-
-  eersteDag: DateTime | undefined;
-  laatsteDag: DateTime | undefined;
 
   openPopup(activiteit: HeliosAgendaDataset | null) {
     if (activiteit) {
@@ -72,11 +67,11 @@ export class AgendaEditorComponent  {
     this.popup().open();
   }
 
-  closePopup() {
+  private closePopup() {
     this.popup().close();
   }
 
-  haalAktiviteitOp(id: number): void {
+  private haalAktiviteitOp(id: number): void {
     this.isLoading = true;
 
     try {
@@ -111,7 +106,7 @@ export class AgendaEditorComponent  {
     this.popup().open();
   }
 
-  uitvoeren() {
+  protected uitvoeren() {
     this.isSaving = true;
     if (this.isRestoreMode) {
       this.Herstellen(this.activiteit);
@@ -131,7 +126,7 @@ export class AgendaEditorComponent  {
   }
 
   // opslaan van de starts van een nieuw vliegtuig
-  Toevoegen(activiteit: HeliosJournaal) {
+  private Toevoegen(activiteit: HeliosJournaal) {
 
     if (this.eersteDag && !this.laatsteDag) {
       const datum = DateTime.fromObject({year: this.eersteDag.year, month: this.eersteDag.month, day: this.eersteDag.day});
@@ -152,7 +147,7 @@ export class AgendaEditorComponent  {
     }
   }
 
-  Add (activiteit: HeliosAgendaActiviteit) {
+  private Add (activiteit: HeliosAgendaActiviteit) {
     this.agendaService.addActiviteit(activiteit).then(() => {
       this.success = {
         titel: "Agenda",
@@ -166,7 +161,7 @@ export class AgendaEditorComponent  {
   }
 
   // bestaand vliegtuig is aangepast. Opslaan van de starts
-  Aanpassen(activiteit: HeliosAgendaActiviteit) {
+  private Aanpassen(activiteit: HeliosAgendaActiviteit) {
 
     if (this.eersteDag)
     {
@@ -191,7 +186,7 @@ export class AgendaEditorComponent  {
   }
 
   // markeer een vliegtuig als verwijderd
-  Verwijderen(activiteit: HeliosAgendaActiviteit) {
+  protected Verwijderen(activiteit: HeliosAgendaActiviteit) {
     this.agendaService.deleteActiviteit(activiteit.ID!).then(() => {
       this.success = {
         titel: "Agenda",
@@ -205,7 +200,7 @@ export class AgendaEditorComponent  {
   }
 
   // de vliegtuig is weer terug, haal de markering 'verwijderd' weg
-  Herstellen(activiteit: HeliosAgendaActiviteit) {
+  protected Herstellen(activiteit: HeliosAgendaActiviteit) {
     this.agendaService.restoreActiviteit(activiteit.ID!).then(() => {
       this.success = {
         titel: "Activiteit",
@@ -218,12 +213,12 @@ export class AgendaEditorComponent  {
     })
   }
 
-  opslaanDisabled(): boolean {
+  protected opslaanDisabled(): boolean {
     return !this.vanTotOke();
   }
 
   // is eerste datum eerder dan eind datum?
-  vanTotOke(): boolean {
+  protected vanTotOke(): boolean {
     if (this.eersteDag && this.laatsteDag) {
       const begin = this.eersteDag.year * 10000 + this.eersteDag.month * 100 + this.eersteDag.day;
       const eind = this.laatsteDag.year * 10000 + this.laatsteDag.month * 100 + this.laatsteDag.day;

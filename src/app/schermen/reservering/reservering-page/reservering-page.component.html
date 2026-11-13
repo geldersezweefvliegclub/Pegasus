@@ -1,15 +1,15 @@
 <app-error [error]='error'/>
 <app-success [success]='success'/>
 
-<app-pegasus-card titel="Kist reservering"
+<app-pegasus-card class="scherm-vullend" titel="Kist reservering"
                   subtitel="Reserveer je kist voor een DDWV dag"
                   [icon]="reserveringIcon"
                   [exportEnabled]="this.magExporteren"
                   (Exporting)="exportDataset()">
 
-    <div class="h-100">
-        <div class="box h-100">
-            <div id="data" class="w-100">
+    <div class="scherm-kolom">
+        <div class="box scherm-kolom">
+            <div id="data" class="w-100 scherm-kolom">
                 @if (reserveringView === 'maand') {
                     <div class="dataContent w-100">
                         <ng-template *ngTemplateOutlet='maand'/>

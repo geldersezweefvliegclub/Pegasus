@@ -2,7 +2,6 @@ import { Component, OnInit, inject, viewChild } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { FacturenService } from '../../../services/apiservice/facturen.service';
 import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
-import {TransactiesService} from "../../../services/apiservice/transacties.service";
 import {HeliosTransactiesDataset} from "../../../types/Helios";
 import {DateTime} from "luxon";
 import { ErrorComponent } from '../error/error.component';
@@ -16,21 +15,21 @@ import { IconButtonComponent } from '../icon-button/icon-button.component';
     imports: [ErrorComponent, ModalComponent, NgbProgressbar, IconButtonComponent]
 })
 export class FactuurUploadenComponent implements OnInit {
-  private readonly facturenService = inject(FacturenService);
-  private readonly transactiesService = inject(TransactiesService);
+  success: SuccessMessage | undefined;
 
+  // variablen in html formulier
+  protected isBezig: boolean;
+  protected isKlaar: boolean;
+  protected counter: number;
+  protected max: number;
+  protected error: ErrorMessage | undefined;
+
+  // private variable voor ts script
+  private readonly facturenService = inject(FacturenService);
   private readonly popup = viewChild.required(ModalComponent);
 
-  isBezig: boolean;
-  isKlaar: boolean;
-  counter: number;
-  max: number;
   private IDs: number[] = [];
-
   private transacties: HeliosTransactiesDataset[] = [];
-
-  success: SuccessMessage | undefined;
-  error: ErrorMessage | undefined;
 
   ngOnInit(): void {
     this.isBezig = false;
@@ -75,7 +74,7 @@ export class FactuurUploadenComponent implements OnInit {
     }
   }
 
-  uploadEnkeleFactuur(sequence: number)
+  private uploadEnkeleFactuur(sequence: number)
   {
     this.counter = sequence + 1;
     this.facturenService.uploadFactuur(this.IDs[sequence]).then(() => {
@@ -94,7 +93,7 @@ export class FactuurUploadenComponent implements OnInit {
     });
   }
 
-  uploadEnkeleTransactieFactuur(sequence: number, datum: DateTime)
+  private uploadEnkeleTransactieFactuur(sequence: number, datum: DateTime)
   {
     this.counter = sequence + 1;
     this.facturenService.uploadTransactieFactuur(this.IDs[sequence], datum).then(() => {
@@ -113,7 +112,7 @@ export class FactuurUploadenComponent implements OnInit {
     });
   }
 
-  closePopup() {
+  protected closePopup() {
     this.popup().close();
   }
 }

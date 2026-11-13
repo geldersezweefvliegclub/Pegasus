@@ -1,23 +1,25 @@
 <app-error [error]='error'/>
 <app-success [success]='success'/>
 
-<app-pegasus-card titel="Audit"
+<app-pegasus-card class="scherm-vullend" titel="Audit"
                   subtitel="Een overzicht van alle wijzigingen"
                   [icon]="iconCardIcon"
                   [exportEnabled]="this.magExporten"
                   (Exporting)="exportDataset()">
-    <div class="box">
-        <div class="d-flex h-100">
+    <div class="box scherm-kolom">
+        <div class="d-flex scroll-vlak">
             <div class="col-9 h-100">
                 <app-datatable id='auditgrid'
                         [rowData]="data"
                         [columnDefs]="dataColumns"
+                        [frameworkComponents]="frameworkComponents"
+                        rowId="ID"
                         [loading]="isLoading"
                         (rowSelected)="selectRow($event)"
                                class='h-100 mt-n8'/>
             </div>
             @if (data) {
-                <div class="col-3 kolomRechts ml-2">
+                <div class="kolomRechts">
                     <div class="table-rechts">
                         <table>
                             <tr>
@@ -70,14 +72,14 @@
                 </div>
             }
         </div>
-        <div class="row justify-content-start mt-2" id="toolbar">
-            <div class="col-10">
-                <div class="row justify-content-between" id="zoekbar">
-                    <app-zoekbar class="col-12 col-md-8 flex-grow-1"
-                                 [(zoekString)]="zoekString"
-                                 (zoeken)='opvragen()'/>
-                </div>
-            </div>
+        <div class="mt-2" id="toolbar">
+            <app-zoekbar class="d-block col-12 col-md-6 col-xl-4"
+                         [(zoekString)]="zoekString"
+                         (zoeken)='opvragen()'>
+                @if (!isLoading && data.length < totaal) {
+                    <span class="laadStatus ms-2">{{ data.length | number }} van {{ totaal | number }} geladen</span>
+                }
+            </app-zoekbar>
         </div>
     </div>
 </app-pegasus-card>

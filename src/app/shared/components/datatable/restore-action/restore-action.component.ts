@@ -16,8 +16,11 @@ export interface RestoreButton {
     imports: [FaIconComponent]
 })
 export class RestoreActionComponent implements AgRendererComponent {
+  // variablen in html formulier
+  protected restoreIcon:IconDefinition = faUndo;
+
+  // private variable voor ts script
   private params: ICellRendererParams & RestoreButton;
-  restoreIcon:IconDefinition = faUndo;
 
   agInit(params: ICellRendererParams & RestoreButton): void {
     this.params = params;
@@ -27,7 +30,7 @@ export class RestoreActionComponent implements AgRendererComponent {
     return false;
   }
 
-  buttonClicked() {
+  protected buttonClicked() {
     this.params.onRestoreClicked(this.params.data.ID);
   }
 }

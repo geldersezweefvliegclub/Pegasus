@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { HeliosJournaal, HeliosLedenDataset, HeliosType, HeliosVliegtuigenDataset } from '../../../../types/Helios';
 import { TypesService } from '../../../../services/apiservice/types.service';
-import { Observable, of, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ModalComponent } from '../../modal/modal.component';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { JournaalService } from '../../../../services/apiservice/journaal.service';
@@ -10,8 +10,7 @@ import { LedenService } from '../../../../services/apiservice/leden.service';
 import { LoginService } from '../../../../services/apiservice/login.service';
 import { ErrorComponent } from '../../error/error.component';
 import { SuccessComponent } from '../../success/success.component';
-import { NgSelectComponent } from '@ng-select/ng-select';
-import { AsyncPipe } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { IconButtonComponent } from '../../icon-button/icon-button.component';
 import { LoaderComponent } from '../../loader/loader.component';
@@ -20,58 +19,54 @@ import { LoaderComponent } from '../../loader/loader.component';
     selector: 'app-melding-editor',
     templateUrl: './journaal-editor.component.html',
     styleUrls: ['./journaal-editor.component.scss'],
-    imports: [ErrorComponent, SuccessComponent, ModalComponent, NgSelectComponent, FormsModule, IconButtonComponent, LoaderComponent, AsyncPipe]
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, IconButtonComponent, LoaderComponent]
 })
 export class JournaalEditorComponent implements OnInit, OnDestroy {
+    magWijzigen = true;
+
+    // variablen in html formulier
+    protected clubVliegtuigen: HeliosVliegtuigenDataset[] = [];
+    protected techneuten: HeliosLedenDataset[] = [];
+    protected rollend: HeliosType[] = [];
+    protected categorie: HeliosType[];
+    protected status: HeliosType[];
+    protected isLoading = false;
+    protected isSaving = false;
+    protected isVerwijderMode = false;
+    protected isRestoreMode = false;
+    protected formTitel = "";
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+    protected melding: HeliosJournaal = {}
+
+    // private variable voor ts script
     private readonly typesService = inject(TypesService);
     private readonly ledenService = inject(LedenService);
     private readonly loginService = inject(LoginService);
     private readonly journaalService = inject(JournaalService);
     private readonly vliegtuigenService = inject(VliegtuigenService);
-
     private readonly popup = viewChild.required(ModalComponent);
 
     private vliegtuigenAbonnement: Subscription;
-    clubVliegtuigen$: Observable<HeliosVliegtuigenDataset[]>;
-
     private ledenAbonnement: Subscription;
-    techneuten$: Observable<HeliosLedenDataset[]>;
-
     private typesAbonnement: Subscription;
-    rollend$: Observable<HeliosType[]>;
-
-    categorie: HeliosType[];
-    status: HeliosType[];
-
-    isLoading = false;
-    isSaving = false;
-
-    magWijzigen = true;
-    isVerwijderMode = false;
-    isRestoreMode = false;
-    formTitel = "";
-
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
-
-    melding: HeliosJournaal = {}
 
     ngOnInit(): void {
         // abonneer op wijziging van rollend materieel
         this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
-            this.rollend$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP === 23})); // 23 is rollend materieel
+            this.rollend = dataset!.filter((t:HeliosType) => { return t.GROEP === 23}); // 23 is rollend materieel
             this.categorie = dataset!.filter((t: HeliosType) => { return t.GROEP === 24 });  // 24 is categorie
             this.status = dataset!.filter((t: HeliosType) => { return t.GROEP === 25 });     // 25 is status van de melding
         });
 
         // abonneer op wijziging van vliegtuigen
         this.vliegtuigenAbonnement = this.vliegtuigenService.vliegtuigenChange.subscribe(vliegtuigen => {
-            this.clubVliegtuigen$ = of(vliegtuigen!.filter((v) => { return v.CLUBKIST!; }));
+            this.clubVliegtuigen = vliegtuigen!.filter((v) => { return v.CLUBKIST!; });
         });
 
         // abonneer op wijziging van leden
         this.ledenAbonnement = this.ledenService.ledenChange.subscribe(leden => {
-            this.techneuten$ = of((leden) ? leden.filter((l) => { return l.TECHNICUS}) : []);
+            this.techneuten = (leden) ? leden.filter((l) => { return l.TECHNICUS}) : [];
         });
     }
 
@@ -125,11 +120,11 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
         this.popup().open();
     }
 
-    closePopup() {
+    private closePopup() {
         this.popup().close();
     }
 
-    haalMeldingOp(id: number): void {
+    private haalMeldingOp(id: number): void {
         this.isLoading = true;
 
         try {
@@ -162,7 +157,7 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
         this.popup().open();
     }
 
-    uitvoeren() {
+    protected uitvoeren() {
         this.isSaving = true;
         if (this.isRestoreMode) {
             this.Herstellen(this.melding);
@@ -182,7 +177,7 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
     }
 
     // opslaan van de starts van een nieuw vliegtuig
-    Toevoegen(melding: HeliosJournaal) {
+    private Toevoegen(melding: HeliosJournaal) {
         this.journaalService.addJournaal(melding).then(() => {
             this.success = {
                 titel: "Journaal",
@@ -196,7 +191,7 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
     }
 
     // bestaand vliegtuig is aangepast. Opslaan van de starts
-    Aanpassen(melding: HeliosJournaal) {
+    private Aanpassen(melding: HeliosJournaal) {
         this.journaalService.updateJournaal(melding).then(() => {
             this.success = {
                 titel: "Journaal",
@@ -210,7 +205,7 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
     }
 
     // markeer een vliegtuig als verwijderd
-    Verwijderen(melding: HeliosJournaal) {
+    protected Verwijderen(melding: HeliosJournaal) {
         this.journaalService.deleteJournaal(melding.ID!).then(() => {
             this.success = {
                 titel: "Journaal",
@@ -224,7 +219,7 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
     }
 
     // de vliegtuig is weer terug, haal de markering 'verwijderd' weg
-    Herstellen(melding: HeliosJournaal) {
+    protected Herstellen(melding: HeliosJournaal) {
         this.journaalService.restoreJournaal(melding.ID!).then(() => {
             this.success = {
                 titel: "Journaal",
@@ -237,12 +232,13 @@ export class JournaalEditorComponent implements OnInit, OnDestroy {
         })
     }
 
-    superGebruiker() {
+    protected superGebruiker() {
         const ui = this.loginService.userInfo?.LidData;
         return (ui?.BEHEERDER || ui?.CIMT || ui?.INSTRUCTEUR || ui?.TECHNICUS) ? true : false;
     }
 
-    opslaanDisabled(): boolean {
-        return ((this.melding.ROLLEND_ID === undefined) && (this.melding.VLIEGTUIG_ID === undefined))
+    protected opslaanDisabled(): boolean {
+        // null (van de server of na leegmaken) en undefined (nieuwe melding) betekenen allebei: niets gekozen
+        return ((this.melding.ROLLEND_ID == null) && (this.melding.VLIEGTUIG_ID == null))
     }
 }

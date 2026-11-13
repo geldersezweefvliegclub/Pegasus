@@ -10,9 +10,11 @@ import { NgClass } from '@angular/common';
 })
 export class ErrorComponent implements OnChanges{
   @Input() error: ErrorMessage | undefined = undefined;
-  readonly errorOverlay = viewChild.required<ElementRef>('errorOverlay');
 
-  showError = false;
+  // variablen in html formulier
+  protected readonly errorOverlay = viewChild.required<ElementRef>('errorOverlay');
+
+  protected showError = false;
 
   ngOnChanges(_: SimpleChanges) {
     this.showError = true;

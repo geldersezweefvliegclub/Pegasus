@@ -1,5 +1,6 @@
+// het rapport vult de ruimte onder de knoppen
 .hoogteIframe {
-  height: calc(100% - 38px);
-  max-height: calc(100% - 38px);
-  min-height: calc(100% - 38px);
+  flex: 1 1 auto;
+  min-height: 0;
+  border: 0;
 }

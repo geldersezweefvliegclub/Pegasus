@@ -5,10 +5,10 @@
                 <h4>Aanmeldingen</h4>
                 <table class="w-100">
                     <tr class="headerRow">
-                        <td class="cel" ngClass.gt-sm="w-25">Totaal</td>
-                        <td class="cel" ngClass.gt-sm="w-25">Brevethouders</td>
-                        <td class="cel" ngClass.gt-sm="w-25">Solisten</td>
-                        <td class="cel" ngClass.gt-sm="w-25">DBO'ers</td>
+                        <td class="cel kolom-25">Totaal</td>
+                        <td class="cel kolom-25">Brevethouders</td>
+                        <td class="cel kolom-25">Solisten</td>
+                        <td class="cel kolom-25">DBO'ers</td>
                     </tr>
                     <tr>
                         <td class="cel"><b>{{ samenvatting.aanmeldingen }}</b></td>
@@ -30,37 +30,39 @@
                     </tr>
                 </table>
                 <h4>Diensten</h4>
-                <table class="w-100">
-                    <tr class="headerRow">
-                        @if (rooster.CLUB_BEDRIJF) {
-                            <td class="cel" ngClass.gt-sm="w-20">DDI</td>
-                        } @if (rooster.CLUB_BEDRIJF) {
-                        <td class="cel" ngClass.gt-sm="w-20">Instructeur</td>
-                    }
-                        <td class="cel" ngClass.gt-sm="w-20">Startleider</td>
-                        <td class="cel" ngClass.gt-sm="w-20">Lierist</td>
-                        <td class="cel" ngClass.gt-sm="w-20">Sleepvlieger</td>
-                    </tr>
-                    <tr>
-                        @if (rooster.CLUB_BEDRIJF) {
-                            <td class="cel dienst">{{ ochtendDDI }}</td>
-                        } @if (rooster.CLUB_BEDRIJF) {
-                        <td class="cel dienst">{{ ochtendInstructeur }}</td>
-                    }
-                        <td class="cel dienst">{{ ochtendStartleider }}</td>
-                        <td class="cel dienst">{{ ochtendLierist }}</td>
-                        <td class="cel dienst">{{ ochtendSleper }}</td>
-                    </tr>
-                    @if (rooster.CLUB_BEDRIJF) {
-                        <tr>
-                            <td class="cel dienst">{{ middagDDI }}</td>
-                            <td class="cel dienst">{{ middagInstructeur }}</td>
-                            <td class="cel dienst">{{ middagStartleider }}</td>
-                            <td class="cel dienst">{{ middagLierist }}</td>
-                            <td class="cel dienst">{{ middagSleper }}</td>
+                <div class="table-responsive">
+                    <table class="w-100">
+                        <tr class="headerRow">
+                            @if (rooster.CLUB_BEDRIJF) {
+                                <td class="cel kolom-20">DDI</td>
+                            } @if (rooster.CLUB_BEDRIJF) {
+                            <td class="cel kolom-20">Instructeur</td>
+                        }
+                            <td class="cel kolom-20">Startleider</td>
+                            <td class="cel kolom-20">Lierist</td>
+                            <td class="cel kolom-20">Sleepvlieger</td>
                         </tr>
-                    }
-                </table>
+                        <tr>
+                            @if (rooster.CLUB_BEDRIJF) {
+                                <td class="cel dienst">{{ weergave.ochtendDDI }}</td>
+                            } @if (rooster.CLUB_BEDRIJF) {
+                            <td class="cel dienst">{{ weergave.ochtendInstructeur }}</td>
+                        }
+                            <td class="cel dienst">{{ weergave.ochtendStartleider }}</td>
+                            <td class="cel dienst">{{ weergave.ochtendLierist }}</td>
+                            <td class="cel dienst">{{ weergave.ochtendSleper }}</td>
+                        </tr>
+                        @if (rooster.CLUB_BEDRIJF) {
+                            <tr>
+                                <td class="cel dienst">{{ weergave.middagDDI }}</td>
+                                <td class="cel dienst">{{ weergave.middagInstructeur }}</td>
+                                <td class="cel dienst">{{ weergave.middagStartleider }}</td>
+                                <td class="cel dienst">{{ weergave.middagLierist }}</td>
+                                <td class="cel dienst">{{ weergave.middagSleper }}</td>
+                            </tr>
+                        }
+                    </table>
+                </div>
                 <hr>
                 <div class="d-flex">
                     <div>
@@ -78,10 +80,10 @@
                             }
                         </table>
                     </div>
-                    @if (samenvatting.overland.length > 0) {
+                    @if (samenvatting.overland?.length) {
                         <div class="ms-4"><h4>Overland aanvragen</h4>
                             <table>
-                                @for (ovl of samenvatting.overland; track $index) {
+                                @for (ovl of samenvatting.overland ?? []; track $index) {
                                     <tr>
                                         <td>
                                             {{ ovl.reg_call }}

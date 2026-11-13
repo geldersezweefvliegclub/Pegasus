@@ -20,25 +20,27 @@ import { LoaderComponent } from '../loader/loader.component';
     imports: [ErrorComponent, SuccessComponent, LoaderComponent, ProgressieEditorComponent]
 })
 export class PvbComponent implements OnInit, OnChanges, OnDestroy {
+    @Input() Vlieger: HeliosLid;
+
+    // variablen in html formulier
+    protected PVBs: PVB[];
+    protected competenties: HeliosCompetentiesDataset[];
+    protected isLoading = false;
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+
+    // private variable voor ts script
     private readonly loginService = inject(LoginService);
     private readonly configService = inject(PegasusConfigService);
     private readonly sharedService = inject(SharedService);
     private readonly competentieService = inject(CompetentieService);
     private readonly progressieService = inject(ProgressieService);
-
-    @Input() Vlieger: HeliosLid;
     private readonly editor = viewChild.required(ProgressieEditorComponent);
 
-    PVBs: PVB[];
-    gehaaldeProgressie: HeliosBehaaldeProgressieDataset[];
+    private gehaaldeProgressie: HeliosBehaaldeProgressieDataset[];
     private dbEventAbonnement: Subscription;
     private competentiesAbonnement: Subscription;
-    competenties: HeliosCompetentiesDataset[];
-    suspend = false;
-    isLoading = false;
-
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
+    private suspend = false;
 
     ngOnInit(): void {
         // Als in de progressie tabel is aangepast, moet we onze dataset ook aanpassen
@@ -69,7 +71,7 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    ophalen(): void {
+    protected ophalen(): void {
         if (!this.PVBs) // er zijn nog geen PVB geconfigureerd
             return;
 
@@ -99,7 +101,7 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
         });
     }
 
-    PVBgehaald(comptentieID: number): boolean {
+    protected PVBgehaald(comptentieID: number): boolean {
 
         if (!this.gehaaldeProgressie) return false;
 
@@ -110,7 +112,7 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     // De checkbox is soms disabled.
-    CheckDisabled(comptentieID: number): boolean {
+    protected CheckDisabled(comptentieID: number): boolean {
         const ui = this.loginService.userInfo?.Userinfo;
 
         if (this.Vlieger === undefined) {
@@ -133,12 +135,12 @@ export class PvbComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     // Progressie kan gezet worden via snelkeuze in deze component, lange weg kan via progressie boom
-    zetProgressie(id:number) {
+    protected zetProgressie(id:number) {
         this.editor().openNieuwPopup(id);
     }
 
     // Check of het ID uit de configuratie ook daadwerkelijk bestaat
-    competentieBestaat(id: number|undefined) {
+    protected competentieBestaat(id: number|undefined) {
         if (id == undefined)
             return false;
 

@@ -13,18 +13,19 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
     imports: [FaIconComponent]
 })
 export class StatusButtonComponent implements OnInit, OnDestroy {
-    private readonly sharedService = inject(SharedService);
-
     readonly tekst = input('');
     readonly disabled = input(false);
     readonly toonKlein = input(true);
     @Input() actief = false;
     readonly iconNaam = input<string>();
-
     readonly btnClicked = output<boolean>();
 
-    faIcon: IconDefinition;
-    toonTekst = true;
+    // variablen in html formulier
+    protected faIcon: IconDefinition;
+    protected toonTekst = true;
+
+    // private variable voor ts script
+    private readonly sharedService = inject(SharedService);
 
     private resizeSubscription: Subscription;
 
@@ -66,11 +67,11 @@ export class StatusButtonComponent implements OnInit, OnDestroy {
     }
 
     // op kleine scherm tonen we geen tekst bij de status button
-    onWindowResize() {
+    private onWindowResize() {
         this.toonTekst = (this.sharedService.getSchermSize() > SchermGrootte.md)
     }
 
-    buttonClicked() {
+    protected buttonClicked() {
         this.actief = !this.actief;
         this.btnClicked.emit(this.actief);
     }

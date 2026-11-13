@@ -1,14 +1,14 @@
 <app-error [error]='error'/>
 <app-success [success]='success'/>
 
-<app-pegasus-card titel="Vluchten"
+<app-pegasus-card class="scherm-vullend" titel="Vluchten"
                   subtitel="Een overzicht van de starts {{datum.day}}-{{datum.month}}-{{datum.year}}"
                   [icon]="iconCardIcon"
                   [exportEnabled]="this.magExporteren"
                   (Exporting)="exporteerStartlijst()">
-    <div class="box h-100">
+    <div class="box scherm-kolom">
         @if (!toonStartlijstKlein) {
-            <div id="data" class="d-flex data">
+            <div id="data" class="d-flex data scroll-vlak">
                 <div class="flex-row h-100 flex-grow-1">
                     <app-datatable id='startlijstgrid'
                             [rowData]="filteredStarts"
@@ -32,7 +32,7 @@
                 }
             </div>
         } @if (toonStartlijstKlein) {
-        <div id="datacard" class="data">
+        <div id="datacard" class="data scroll-vlak">
             @for (vlucht of filteredStarts; track vlucht.ID; let i = $index) {
                 <div>
                     <app-vlucht-card [start]='vlucht'/>
@@ -85,16 +85,18 @@
                             <div class="ms-2 d-flex justify-content-begin align-items-end flex-wrap"
                             >
                                 <label for="VELD" class="form-label me-2">Vliegveld:</label>
-                                <ng-select id="VELD" class="veldSelect"
-                                           [items]="veldTypes$ | async"
-                                           placeholder="Filter op vliegveld"
-                                           bindLabel="OMSCHRIJVING"
-                                           bindValue="ID"
-                                           closeOnSelect="true"
-                                           openOnEnter="true"
-                                           [searchable]="false"
-                                           (change)="filterStarts()"
-                                           [(ngModel)]='vliegveld'/>
+                                <select class="form-select veldSelect"
+                                        id="VELD"
+                                        name="VELD"
+                                        [(ngModel)]="vliegveld"
+                                        (ngModelChange)="filterStarts()">
+                                    <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                                    <option [ngValue]="null"None>Filter op vliegveld</option>
+                                    <option [ngValue]="undefined" disabled hidden>Filter op vliegveld</option>
+                                    @for (item of veldTypes; track item.ID) {
+                                        <option [ngValue]="item.ID">{{ item.OMSCHRIJVING }}</option>
+                                    }
+                                </select>
                             </div>
                         }
                     </app-zoekbar>

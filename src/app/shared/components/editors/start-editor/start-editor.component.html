@@ -53,8 +53,7 @@
                     <div class="col-6">
                         <div class="d-flex flex-column">
                             @if (start.CHECKSTART !== true && start.INSTRUCTIEVLUCHT !== true && magPaxVliegen()) {
-                                <div
-                                        ngClass.lt-md="mb-2">
+                                <div class="mb-2 mb-md-0">
                                     <input name="PAX" type="checkbox" class="form-check-input" id="PAX"
                                            [(ngModel)]="start.PAX">
                                     <label class="form-check-label ms-2" for="PAX">
@@ -62,7 +61,7 @@
                                     </label>
                                 </div>
                             } @if (start.PAX !== true && kanInstructieVluchtZijn()) {
-                            <div ngClass.lt-md="mb-2">
+                            <div class="mb-2 mb-md-0">
                                 <input name="PAX" type="checkbox" class="form-check-input" id="INSTRUCTIEVLUCHT"
                                        [(ngModel)]="start.INSTRUCTIEVLUCHT">
                                 <label class="form-check-label ms-2" for="PAX">
@@ -70,8 +69,7 @@
                                 </label>
                             </div>
                         } @if (start.PAX !== true && start.INSTRUCTIEVLUCHT && magCheckZetten()) {
-                            <div
-                                    ngClass.lt-md="mb-2">
+                            <div class="mb-2 mb-md-0">
                                 <input name="CHECKSTART" type="checkbox" class="form-check-input" id="CHECKSTART"
                                        [(ngModel)]="start.CHECKSTART">
                                 <label class="form-check-label ms-2" for="CHECKSTART">
@@ -198,35 +196,41 @@
             <div class="row secondaryFields pb-2">
                 <div class="col-12 col-md-5">
                     <label for="VELD" class="form-label">Veld</label>
-                    <ng-select id="VELD"
-                               [disabled]="isVerwijderMode || isRestoreMode"
-                               [items]="veldenTypes$ | async"
-                               placeholder="Start veld"
-                               bindLabel="OMSCHRIJVING"
-                               bindValue="ID"
-                               closeOnSelect="true"
-                               openOnEnter="true"
-                               required
-                               [(ngModel)]='start.VELD_ID'/>
+                    <select class="form-select"
+                            id="VELD"
+                            [disabled]="isVerwijderMode || isRestoreMode"
+                            name="VELD"
+                            required
+                            [(ngModel)]="start.VELD_ID">
+                        <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                        <option [ngValue]="null" disabled>Start veld</option>
+                        <option [ngValue]="undefined" disabled hidden>Start veld</option>
+                        @for (item of veldenTypes; track item.ID) {
+                            <option [ngValue]="item.ID">{{ item.OMSCHRIJVING }}</option>
+                        }
+                    </select>
                 </div>
                 @if (start.VLIEGTUIG_ID) {
                     <div class="col-12 col-md-3">
                         <label for="BAAN" class="form-label">Strip</label>
-                        <ng-select id="BAAN"
-                                   [disabled]="isVerwijderMode || isRestoreMode"
-                                   [items]="baanTypes$ | async"
-                                   placeholder="Strip"
-                                   bindLabel="OMSCHRIJVING"
-                                   bindValue="ID"
-                                   closeOnSelect="true"
-                                   openOnEnter="true"
-                                   [(ngModel)]='start.BAAN_ID'/>
+                        <select class="form-select"
+                                id="BAAN"
+                                [disabled]="isVerwijderMode || isRestoreMode"
+                                name="BAAN"
+                                [(ngModel)]="start.BAAN_ID">
+                            <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                            <option [ngValue]="null"None>Strip</option>
+                            <option [ngValue]="undefined" disabled hidden>Strip</option>
+                            @for (item of baanTypes; track item.ID) {
+                                <option [ngValue]="item.ID">{{ item.OMSCHRIJVING }}</option>
+                            }
+                        </select>
                     </div>
                 }
                 <div class="col-4 flex-row align-self-end">
                     @for (radiobutton of startMethodeTypesFiltered; track radiobutton.ID) {
                         <div class="col-12">
-                        <label ngClass.lt-md="mb-2">
+                        <label class="mb-2 mb-md-0">
                             <div class="SMinvalid"></div>
                             <input type="radio" name="options"
                                    (click)="start.STARTMETHODE_ID = radiobutton.ID"

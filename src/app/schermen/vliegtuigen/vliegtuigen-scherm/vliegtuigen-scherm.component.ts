@@ -21,7 +21,6 @@ import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
 
 import * as xlsx from 'xlsx';
 import { LoginService } from '../../../services/apiservice/login.service';
-import { Router } from '@angular/router';
 import { nummerSort } from '../../../utils/Utils';
 import { StartlijstService } from '../../../services/apiservice/startlijst.service';
 import { DateTime } from 'luxon';
@@ -46,27 +45,53 @@ export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
 
 @Component({
     selector: 'app-vliegtuigen-grid',
+    host: { class: 'scherm-pagina' },
     templateUrl: './vliegtuigen-scherm.component.html',
     styleUrls: ['./vliegtuigen-scherm.component.scss'],
     imports: [ErrorComponent, SuccessComponent, PegasusCardComponent, DatatableComponent, VliegtuigCardComponent, IconButtonComponent, StatusButtonComponent, ZoekbarComponent, VliegtuigEditorComponent, PopupJournaalComponent, VliegtuigLogboekComponent]
 })
 export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
+    prullenbakIcon: IconDefinition = faRecycle;
+
+    // variablen in html formulier
+    protected readonly editor = viewChild.required(VliegtuigEditorComponent);
+    protected readonly journaal = viewChild.required(PopupJournaalComponent);
+
+    protected data:HeliosVliegtuigenDatasetExtended[] = [];
+    protected logboek: HeliosLogboekDataset[] = [];
+    protected isLoading = false;
+    protected toonKlein = false;                 // Klein formaat van het scherm
+    protected rowClassRules = {
+        'rode_regel_niet_inzetbaar': (params: RowClassParams) => params.data.INZETBAAR === false,
+    }
+    protected columns: ColDef[];
+    protected frameworkComponents = {
+        zitplaatsRender: ZitplaatsRenderComponent,
+        handboekRender: HandboekRenderComponent,
+        checkboxRender: CheckboxRenderComponent,
+        iconRender: IconRenderComponent,
+        deleteAction: DeleteActionComponent,
+        restoreAction: RestoreActionComponent
+    };
+    protected iconCardIcon: IconDefinition = faPlane;
+    protected zoekString: string;
+    protected deleteMode = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
+    protected trashMode = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
+    protected magToevoegen = false;
+    protected magVerwijderen = false;
+    protected magWijzigen = false;
+    protected magExporten = false;
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+
+    // private variable voor ts script
     private readonly vliegtuigenService = inject(VliegtuigenService);
     private readonly startlijstService = inject(StartlijstService);
     private readonly loginService = inject(LoginService);
-    private readonly router = inject(Router);
     private readonly sharedService = inject(SharedService);
+    private readonly vliegtuigLogboek = viewChild.required(VliegtuigLogboekComponent);
 
-    readonly editor = viewChild.required(VliegtuigEditorComponent);
-    readonly journaal = viewChild.required(PopupJournaalComponent);
-    readonly vliegtuigLogboek = viewChild.required(VliegtuigLogboekComponent);
-
-    data:HeliosVliegtuigenDatasetExtended[] = [];
-    logboek: HeliosLogboekDataset[] = [];
-    isLoading = false;
-    toonKlein = false;                 // Klein formaat van het scherm
-
-    dataColumns: ColDef[] = [
+    private dataColumns: ColDef[] = [
         {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
         {field: 'REGISTRATIE', headerName: 'Registratie', cellRenderer: 'handboekRender', sortable: true},
         {field: 'CALLSIGN', headerName: 'Callsign', sortable: true},
@@ -82,7 +107,7 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
     ];
 
     // kolom om record te verwijderen
-    deleteColumn: ColDef[] = [{
+    private deleteColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 100,
         initialWidth: 100,
@@ -96,9 +121,8 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
             }
         },
     }];
-
     // kolom om terug te kunnen terughalen
-    restoreColumn: ColDef[] = [{
+    private restoreColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 100,
         initialWidth: 100,
@@ -112,9 +136,8 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
             }
         },
     }];
-
     // kolom om logboek te zien
-    iconColumn: ColDef[] = [{
+    private iconColumn: ColDef[] = [{
         pinned: 'left',
         maxWidth: 100,
         initialWidth: 100,
@@ -132,38 +155,8 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
             }
         },
     }];
-
-    rowClassRules = {
-        'rode_regel_niet_inzetbaar': (params: RowClassParams) => params.data.INZETBAAR === false,
-    }
-
-    columns: ColDef[];
-
-    frameworkComponents = {
-        zitplaatsRender: ZitplaatsRenderComponent,
-        handboekRender: HandboekRenderComponent,
-        checkboxRender: CheckboxRenderComponent,
-        iconRender: IconRenderComponent,
-        deleteAction: DeleteActionComponent,
-        restoreAction: RestoreActionComponent
-    };
-    iconCardIcon: IconDefinition = faPlane;
-    prullenbakIcon: IconDefinition = faRecycle;
-
-    zoekString: string;
-    zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
-    deleteMode = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
-    trashMode = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
-
-    magToevoegen = false;
-    magVerwijderen = false;
-    magWijzigen = false;
-    magClubkistWijzigen = false;
-    magExporten = false;
-
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
-
+    private zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
+    private magClubkistWijzigen = false;
     private dbEventAbonnement: Subscription;        // Abonneer op aanpassingen in de database
     private resizeSubscription: Subscription;       // Abonneer op aanpassing van window grootte (of draaien mobiel)
 
@@ -202,7 +195,7 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
     }
 
     // aanpassen wat we op het scherm kwijt kunnen nadat scherm groote gewijzigd is
-    onWindowResize() {
+    private onWindowResize() {
         if(this.sharedService.getSchermSize() == SchermGrootte.xs)
         {
             this.kolomDefinitie();
@@ -216,19 +209,19 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
     }
 
     // openen van popup om de starts van een nieuw vliegtuig te kunnen invoeren
-    addVliegtuig(): void {
+    protected addVliegtuig(): void {
         if (this.magToevoegen) {
             this.editor().openPopup(null);
         }
     }
 
     // openen van popup om gegevens van een bestaand vliegtuig aan te passen
-    dbClickVliegtuig(event?: RowDoubleClickedEvent) {
+    protected dbClickVliegtuig(event?: RowDoubleClickedEvent) {
         const vliegtuig = event?.data as HeliosVliegtuigenDataset;
         this.OpenEditor(vliegtuig);
     }
 
-    OpenEditor(vliegtuig: HeliosVliegtuigenDataset)
+    protected OpenEditor(vliegtuig: HeliosVliegtuigenDataset)
     {
         if (this.magWijzigen) {
             // clubkisten mag niet iedereen aanpassen
@@ -242,7 +235,7 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
     }
 
     // schakelen tussen deleteMode JA/NEE. In deleteMode kun je vliegtuigen verwijderen
-    deleteModeJaNee() {
+    protected deleteModeJaNee() {
         this.deleteMode = !this.deleteMode;
 
         if (this.trashMode) {
@@ -252,13 +245,13 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
     }
 
     // schakelen tussen trashMode JA/NEE. In trashMode worden te verwijderde vliegtuigen getoond
-    trashModeJaNee(actief: boolean) {
+    protected trashModeJaNee(actief: boolean) {
         this.trashMode = actief
         this.kolomDefinitie();
         this.opvragen();
     }
 
-    zetPermissie() {
+    private zetPermissie() {
         const ui = this.loginService.userInfo?.Userinfo;
 
         this.magClubkistWijzigen = ((ui?.isBeheerder || ui?.isCIMT) ?? false);
@@ -277,7 +270,7 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
     }
 
     // Welke kolommen moet worden getoond in het grid
-    kolomDefinitie() {
+    private kolomDefinitie() {
         this.toonKlein = (this.sharedService.getSchermSize() < SchermGrootte.xl);
 
         if (!this.deleteMode) {
@@ -311,7 +304,7 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
     }
 
     // Opvragen van de starts via de api
-    opvragen() {
+    protected opvragen() {
         clearTimeout(this.zoekTimer);
 
         this.zoekTimer = window.setTimeout(() => {
@@ -335,7 +328,6 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
                 });
                 this.laatste6Mnd();
 
-
             }).catch(e => {
                 this.isLoading = false;
                 this.error = e;
@@ -344,7 +336,7 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
     }
 
     // vlieger mag logboek bekijken als hij laaste 6 maanden op de kist gevlogen heeft
-    async laatste6Mnd() {
+    private async laatste6Mnd() {
         const nu:DateTime = DateTime.now();
 
         if (this.logboek.length == 0) { // als we nog starts hebben, dan halen we ze op
@@ -375,7 +367,7 @@ export class VliegtuigenSchermComponent implements OnInit, OnDestroy {
     }
 
     // Export naar excel
-    exportDataset() {
+    protected exportDataset() {
         const ws = xlsx.utils.json_to_sheet(this.data);
         const wb: xlsx.WorkBook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Blad 1');

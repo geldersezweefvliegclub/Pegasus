@@ -8,9 +8,9 @@ import { ICellRendererParams } from 'ag-grid-community';
     styleUrls: ['./handboek-render.component.scss']
 })
 export class HandboekRenderComponent implements AgRendererComponent {
-  url: string | undefined;
-  txt: string | undefined;
-
+  // variablen in html formulier
+  protected url: string | undefined;
+  protected txt: string | undefined;
 
   agInit(params: ICellRendererParams): void {
     this.url = (params.data.URL) ? params.data.URL : '';

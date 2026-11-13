@@ -1,3 +1,6 @@
+:host {
+  display: block;
+}
 
 // Verberg de preview in de ledenlijst want daar kan je niet naartoe slepen.
 // De preview doet denken dat je leden erin sleept, maar je sleept eigenlijk terug naar een al bestaand lid
@@ -6,7 +9,8 @@
 }
 
 #LEDENLIJST {
-  height: calc(100vh - 270px);
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
 }
 
@@ -84,7 +88,8 @@ thead {
   padding-left: 10px;
   width: 270px;
   flex-grow: 1;
-  flex-direction: row;
+  display: flex;
+  flex-direction: column;
 }
 
 td {

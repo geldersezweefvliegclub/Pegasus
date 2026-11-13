@@ -4,7 +4,6 @@ import { APIService } from './api.service';
 import { KeyValueArray } from '../../types/Utils';
 import {DateTime} from "luxon";
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -52,7 +51,6 @@ export class FacturenService {
       getParams['HASH'] = this.teDoenCache.hash;
     }
 
-
     try {
       const response: Response = await this.apiService.get('Facturen/NogTeFactureren', getParams);
       this.teDoenCache = await response.json();
@@ -63,8 +61,6 @@ export class FacturenService {
     }
     return this.teDoenCache?.dataset as HeliosFacturenDataset[];
   }
-
-
 
   async addFactuur(factuur: HeliosFactuur) {
     const response: Response = await this.apiService.post('Facturen/SaveObject', JSON.stringify(this.naarApiFormaat(factuur)));

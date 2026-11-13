@@ -8,15 +8,18 @@
                 <div class="row rowDagInfo2">
                     <div class="col-12 col-md-6">
                         <label for="VELD" class="form-label">Vliegveld</label>
-                        <ng-select id="VELD"
-                                   required
-                                   [items]="veldTypes$ | async"
-                                   placeholder="Vliegveld voor dagrapport "
-                                   bindLabel="OMSCHRIJVING"
-                                   bindValue="ID"
-                                   closeOnSelect="true"
-                                   openOnEnter="true"
-                                   [(ngModel)]='dagRapport.VELD_ID'/>
+                        <select class="form-select"
+                                id="VELD"
+                                name="VELD"
+                                required
+                                [(ngModel)]="dagRapport.VELD_ID">
+                            <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                            <option [ngValue]="null" disabled>Vliegveld voor dagrapport </option>
+                            <option [ngValue]="undefined" disabled hidden>Vliegveld voor dagrapport </option>
+                            @for (item of veldTypes; track item.ID) {
+                                <option [ngValue]="item.ID">{{ item.OMSCHRIJVING }}</option>
+                            }
+                        </select>
                     </div>
                 </div>
                 <!--

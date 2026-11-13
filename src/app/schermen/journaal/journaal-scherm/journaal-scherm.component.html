@@ -1,14 +1,14 @@
 <app-error [error]='error'/>
 <app-success [success]='success'/>
 
-<app-pegasus-card titel="Journaal"
+<app-pegasus-card class="scherm-vullend" titel="Journaal"
                   subtitel="Een overzicht van de meldingegn"
                   [icon]="iconCardIcon"
                   [exportEnabled]="this.magExporten"
                   (Exporting)="exportDataset()">
-    <div class="box h-100">
+    <div class="box scherm-kolom">
         @if (!toonKlein) {
-            <div id="data" class="data">
+            <div id="data" class="data scroll-vlak">
                 <app-datatable id='meldingengrid'
                         [pagination]="false"
                         [rowData]="data"
@@ -19,7 +19,7 @@
                                class='h-100 mt-n8'/>
             </div>
         } @if (toonKlein) {
-        <div id="datacard" class="data">
+        <div id="datacard" class="data scroll-vlak">
             @for (melding of data; track melding.ID; let i = $index) {
                 <div>
                     <app-journaal-card [melding]='melding'/>

@@ -1,9 +1,10 @@
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, inject, input, output } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, Type, inject, input, output } from '@angular/core';
 import {
     ColDef,
     GridApi,
     GridOptions,
     GridReadyEvent,
+    RowClassRules,
     RowDoubleClickedEvent,
     RowSelectedEvent,
 } from 'ag-grid-community';
@@ -18,11 +19,9 @@ import { AgGridAngular } from 'ag-grid-angular';
     imports: [AgGridAngular]
 })
 export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
-    private readonly sharedService = inject(SharedService);
-
-    readonly columnDefs = input([]);
-    readonly rowData = input([]);
-    readonly frameworkComponents = input({});
+    readonly columnDefs = input<ColDef[]>([]);
+    readonly rowData = input<unknown[]>([]);
+    readonly frameworkComponents = input<Record<string, Type<unknown>>>({});
     readonly id = input.required<string>();
     readonly loading = input(false);
     readonly sizeToFit = input(true);
@@ -31,12 +30,15 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     readonly rowHeight = input(40);
     readonly multipleSelection = input(false);
     readonly pagination = input(true);
-    readonly rowClassRules = input(null);
+    readonly rowClassRules = input<RowClassRules | null>(null);
+    // veld met een unieke sleutel per rij. Dan past ag-grid bij nieuwe rowData alleen de verschillen toe en blijven
+    // pagina, sortering, filter en selectie staan (nodig als data in blokken binnenkomt)
+    readonly rowId = input<string>();
     readonly rowDoubleClicked = output<RowDoubleClickedEvent>();
     readonly rowSelected = output<RowSelectedEvent>();
 
-
-    options: GridOptions = {
+    // variablen in html formulier
+    protected options: GridOptions = {
         theme: 'legacy',
         rowHeight: 40,
         headerHeight: 20,
@@ -50,18 +52,20 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
             flex: 1
         }
     };
-
-    defaultColDef: ColDef = {
+    protected defaultColDef: ColDef = {
         editable: false,              // Gaan niet editen in grid
         autoHeight: this.autoHeight(),
         filter: 'agTextColumnFilter', // use 'text' leden-filter by default
     };
+    protected noRowsTemplate;
+    protected loadingTemplate;
+
+    // private variable voor ts script
+    private readonly sharedService = inject(SharedService);
+
     private api: GridApi | undefined;
     private columnStateTimer: number | null = null;
     private resizeSubscription: Subscription;           // Abonneer op aanpassing van window grootte (of draaien mobiel)
-
-    noRowsTemplate;
-    loadingTemplate;
 
     constructor() {
         this.loadingTemplate = '<span><img src="assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Data wordt geladen .....</span>';
@@ -78,6 +82,11 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
             this.options.rowMultiSelectWithClick = true;
             // TODO test if this works to fix deprecation notice above.
             // this.options.rowSelection = {mode: 'multiRow', enableSelectionWithoutKeys: true}
+        }
+
+        const rowId = this.rowId();
+        if (rowId) {
+            this.options.getRowId = (params) => String(params.data[rowId]);
         }
 
         const rowClassRules = this.rowClassRules();
@@ -129,11 +138,11 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     // zorg dat alle kolomen weer netjes binnen het scherm passen
-    onWindowResize() {
+    private onWindowResize() {
         this.sizeColumnsToFit();
     }
 
-    gridReady(ready: GridReadyEvent) {
+    protected gridReady(ready: GridReadyEvent) {
         console.log(this.id(), "grid ready")
         this.api = ready.api;
 
@@ -145,7 +154,7 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         }, 5000)
     }
 
-    sizeColumnsToFit() {
+    private sizeColumnsToFit() {
         if (this.api) {
             if (this.sizeToFit()) {
                 this.api.sizeColumnsToFit();
@@ -156,11 +165,11 @@ export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    onRowDoubleClicked(event: RowDoubleClickedEvent) {
+    private onRowDoubleClicked(event: RowDoubleClickedEvent) {
         this.rowDoubleClicked.emit(event);
     }
 
-    onRowSelected(event: RowSelectedEvent) {
+    private onRowSelected(event: RowSelectedEvent) {
         this.rowSelected.emit(event);
     }
 

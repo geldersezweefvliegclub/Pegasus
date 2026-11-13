@@ -13,7 +13,6 @@ import { RouterLink } from '@angular/router';
 import { IconButtonComponent } from '../icon-button/icon-button.component';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
-
 @Component({
     selector: 'app-vlucht-card',
     templateUrl: './vlucht-card.component.html',
@@ -21,21 +20,22 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
     imports: [RouterLink, IconButtonComponent, FaIconComponent, TijdInvoerComponent, StartEditorComponent, TrackEditorComponent]
 })
 export class VluchtCardComponent implements OnInit {
+    readonly logboek = input<HeliosLogboekDataset>();
+    @Input() start: HeliosStartDataset;
+    readonly trackEditor = viewChild.required(TrackEditorComponent);
+
+    // variablen in html formulier
+    protected readonly iconEdit: IconDefinition = faPenToSquare;
+
+    protected inTijdspan = false;
+    protected datumDM: string;
+
+    // private variable voor ts script
     private readonly configService = inject(PegasusConfigService);
     private readonly loginService = inject(LoginService);
     private readonly sharedService = inject(SharedService);
-
-    readonly logboek = input<HeliosLogboekDataset>();
-    @Input() start: HeliosStartDataset;
-
-    readonly tijdInvoerEditor = viewChild.required(TijdInvoerComponent);
-    readonly trackEditor = viewChild.required(TrackEditorComponent);
-    readonly startEditor = viewChild.required(StartEditorComponent);
-
-    readonly iconEdit: IconDefinition = faPenToSquare;
-
-    inTijdspan = false;
-    datumDM: string;
+    private readonly tijdInvoerEditor = viewChild.required(TijdInvoerComponent);
+    private readonly startEditor = viewChild.required(StartEditorComponent);
 
     ngOnInit(): void {
         if (!this.start) {
@@ -68,7 +68,7 @@ export class VluchtCardComponent implements OnInit {
     }
 
     // Moeten we link tonen naar dashboard
-    naarDashboard(vlieger: boolean): boolean {
+    protected naarDashboard(vlieger: boolean): boolean {
         const ui = this.loginService.userInfo;
 
         if (vlieger) {
@@ -91,19 +91,19 @@ export class VluchtCardComponent implements OnInit {
     }
 
     // openen van popup om bestaande start te kunnen aanpassen
-    openStartEditor() {
+    protected openStartEditor() {
         if (this.inTijdspan) {
             this.startEditor().openPopup(this.start);
         }
     }
 
     // bestaande starttijd wijzigen door openen van starttijd popup
-    startTijdClicked() {
+    protected startTijdClicked() {
         this.tijdInvoerEditor().openStarttijdPopup(this.start);
     }
 
     // bestaande landingstijd wijzigen door openen van de landingstijd popup
-    landingsTijdClicked() {
+    protected landingsTijdClicked() {
         this.tijdInvoerEditor().openLandingsTijdPopup(this.start);
     }
 }

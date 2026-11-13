@@ -8,8 +8,8 @@ import { ICellRendererParams } from 'ag-grid-community';
     styleUrls: ['./zitplaats-render.component.scss']
 })
 export class ZitplaatsRenderComponent implements AgRendererComponent {
-  stoelen: number;
-
+  // variablen in html formulier
+  protected stoelen: number;
 
   agInit(params: ICellRendererParams): void {
     this.stoelen = params.value;

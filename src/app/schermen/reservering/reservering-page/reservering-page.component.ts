@@ -10,12 +10,10 @@ import { DateTime } from 'luxon';
 import { Subscription } from 'rxjs';
 import {
   HeliosBehaaldeProgressieDataset,
-  HeliosLedenDataset,
   HeliosReserveringenDataset,
   HeliosRoosterDataset,
   HeliosVliegtuigenDataset,
 } from '../../../types/Helios';
-import { LedenService } from '../../../services/apiservice/leden.service';
 import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
 import { VliegtuigenService } from '../../../services/apiservice/vliegtuigen.service';
 import { RoosterService } from '../../../services/apiservice/rooster.service';
@@ -27,7 +25,6 @@ import { KistSelectieComponent } from '../kist-selectie/kist-selectie.component'
 import { StorageService } from '../../../services/storage/storage.service';
 import { BoekingEditorComponent } from '../../../shared/components/editors/boeking-editor/boeking-editor.component';
 import { StartEditorComponent } from '../../../shared/components/editors/start-editor/start-editor.component';
-import { DaginfoService } from '../../../services/apiservice/daginfo.service';
 import * as xlsx from 'xlsx';
 import { ProgressieService } from '../../../services/apiservice/progressie.service';
 import { ErrorComponent } from '../../../shared/components/error/error.component';
@@ -41,6 +38,7 @@ export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
 
 @Component({
     selector: 'app-reservering-page',
+    host: { class: 'scherm-pagina' },
     templateUrl: './reservering-page.component.html',
     styleUrls: ['./reservering-page.component.scss'],
     imports: [
@@ -59,57 +57,48 @@ export type HeliosVliegtuigenDatasetExtended = HeliosVliegtuigenDataset & {
     ]
 })
 export class ReserveringPageComponent implements OnInit, OnDestroy {
+    // variablen in html formulier
+    protected readonly boeking = viewChild.required(BoekingEditorComponent);
+    protected readonly resetIcon: IconDefinition = faTimesCircle;
+    protected readonly assignIcon: IconDefinition = faCalendarCheck;
+    protected readonly reserveringIcon: IconDefinition = faAvianex;
+
+    protected filteredRooster: HeliosRoosterDataset[];
+    protected data: HeliosReserveringenDataset[] = [];
+    protected reserveringView = "maand";            // toon rooster voor maand, week of dag
+    protected magNogReserveren = false;
+    protected clubVliegtuigen: HeliosVliegtuigenDatasetExtended[];
+    protected clubVliegtuigenFiltered: HeliosVliegtuigenDatasetExtended[];
+    protected datum: DateTime = DateTime.now()                // de gekozen dag
+    protected maandag: DateTime                               // de eerste dag van de week
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+
+    // private variable voor ts script
     private readonly loginService = inject(LoginService);
-    private readonly ledenService = inject(LedenService);
     private readonly vliegtuigenService = inject(VliegtuigenService);
     private readonly reserveringenService = inject(ReserveringService);
     private readonly progressieService = inject(ProgressieService);
     private readonly roosterService = inject(RoosterService);
-    private readonly dagInfoService = inject(DaginfoService);
     private readonly storageService = inject(StorageService);
     private readonly sharedService = inject(SharedService);
+    private readonly kistSelector = viewChild.required(KistSelectieComponent);
     private readonly userInfo = this.loginService.userInfo?.Userinfo;
 
-    readonly kistSelector = viewChild.required(KistSelectieComponent);
-    readonly boeking = viewChild.required(BoekingEditorComponent);
-    readonly startEditor = viewChild.required(StartEditorComponent);
-
-    readonly resetIcon: IconDefinition = faTimesCircle;
-    readonly assignIcon: IconDefinition = faCalendarCheck;
-    readonly reserveringIcon: IconDefinition = faAvianex;
-
-    rooster: HeliosRoosterDataset[];
-    filteredRooster: HeliosRoosterDataset[];
-
-    private ledenAbonnement: Subscription;
-    alleLeden: HeliosLedenDataset[];
-
-    data: HeliosReserveringenDataset[] = [];
-    reserveringView = "maand";            // toon rooster voor maand, week of dag
-    zoekString: string;
-    isLoading = false;
+    private rooster: HeliosRoosterDataset[];
     private roosterPeriode: { beginDatum: DateTime, eindDatum: DateTime } | undefined;   // periode van het opgehaalde rooster
-    readonly magBoeken = (this.userInfo?.isBeheerder || this.userInfo?.isBeheerderDDWV) ?? false;
-    magNogReserveren = false;
-
     private vliegtuigenAbonnement: Subscription;
-    clubVliegtuigen: HeliosVliegtuigenDatasetExtended[];
-    clubVliegtuigenFiltered: HeliosVliegtuigenDatasetExtended[];
-
     private resizeSubscription: Subscription;       // Abonneer op aanpassing van window grootte (of draaien mobiel)
     private maandAbonnement: Subscription;          // volg de keuze van de kalender
     private datumAbonnement: Subscription;          // volg de keuze van de kalender
-    datum: DateTime = DateTime.now()                // de gekozen dag
-    maandag: DateTime                               // de eerste dag van de week
-    nu: DateTime = DateTime.now()                   // vandaag
+    private nu: DateTime = DateTime.now()                   // vandaag
+    private toonClubDDWV = 2;                       // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
+    private behaaldeCompetenties: string;
 
-    readonly toonDatumKnoppen = (this.userInfo?.isDDWV || this.userInfo?.isClubVlieger) ?? false;     // Mag de gebruiker een andere datum kiezen
-    toonClubDDWV = 2;                       // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
-    behaaldeCompetenties: string;
-    readonly magExporteren = this.userInfo?.isClubVlieger ?? false;
-
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
+    // afgeleid van bovenstaande variabelen, moet daarom na de declaratie ervan staan
+    protected readonly magBoeken = (this.userInfo?.isBeheerder || this.userInfo?.isBeheerderDDWV) ?? false;
+    protected readonly toonDatumKnoppen = (this.userInfo?.isDDWV || this.userInfo?.isClubVlieger) ?? false;     // Mag de gebruiker een andere datum kiezen
+    protected readonly magExporteren = this.userInfo?.isClubVlieger ?? false;
 
     ngOnInit(): void {
         this.bepaalDagWeek()
@@ -188,11 +177,6 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
             });
         });
 
-        // abonneer op wijziging van leden
-        this.ledenAbonnement = this.ledenService.ledenChange.subscribe(leden => {
-            this.alleLeden = (leden) ? leden : [];
-        });
-
         // Roep onWindowResize aan zodra we het event ontvangen hebben
         this.resizeSubscription = this.sharedService.onResize$.subscribe(() => {
             this.onWindowResize();
@@ -200,14 +184,13 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        if (this.ledenAbonnement) this.ledenAbonnement.unsubscribe();
         if (this.vliegtuigenAbonnement) this.vliegtuigenAbonnement.unsubscribe();
         if (this.datumAbonnement) this.datumAbonnement.unsubscribe();
         if (this.maandAbonnement) this.maandAbonnement.unsubscribe();
         if (this.resizeSubscription) this.resizeSubscription.unsubscribe();
     }
 
-    bepaalDagWeek(): void {
+    private bepaalDagWeek(): void {
         // als je geen datum mag aanpassen, zie alleen vandaag
         if (this.toonDatumKnoppen == false) {
             this.reserveringView = "dag"
@@ -223,7 +206,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
         }
     }
 
-    onWindowResize() {
+    private onWindowResize() {
         this.bepaalDagWeek()
 
         if (this.datum) {
@@ -231,13 +214,13 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
         }
     }
 
-    opvragen(): void {
+    protected opvragen(): void {
         this.opvragenRooster();
         this.opvragenReserveringen();
     }
 
     // Laat hele rooster zien, of alleen weekend / DDWV
-    applyRoosterFilter() {
+    private applyRoosterFilter() {
         if (!this.rooster) return;      // rooster is nog niet geladen, we kunnen niets doen
 
         const tmpRooster: HeliosRoosterDataset[] = [];
@@ -280,16 +263,16 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     }
 
     // openen van popup om nieuwe start te kunnen invoeren
-    toonKistSelectie(): void {
+    protected toonKistSelectie(): void {
         this.kistSelector().openPopup();
     }
 
     // openen van popup om nieuwe start te kunnen invoeren
-    nieuweBoeking(): void {
+    protected nieuweBoeking(): void {
         this.boeking().openPopup();
     }
 
-    ToggleWeekendDDWV() {
+    protected ToggleWeekendDDWV() {
         this.toonClubDDWV = ++this.toonClubDDWV % 3; // 0, gehele week, 1 = club dagen, 2 = alleen DDWV
 
         // in week view laten we niet alleen de clubdagen zien (normaal alleen zaterdag en zondag)
@@ -301,12 +284,12 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     }
 
     // Dit is al geimplementeerd in util.ts
-    DagVanDeWeek(Datum: string) {
+    protected DagVanDeWeek(Datum: string) {
         return DagVanDeWeek(Datum);
     }
 
     // Ga de reservering nu vastleggen in de database
-    toekennenReservering(datum: string, vliegtuigID: number) {
+    protected toekennenReservering(datum: string, vliegtuigID: number) {
         const ui = this.loginService.userInfo;
         const r = {DATUM: datum, LID_ID: ui!.LidData!.ID, VLIEGTUIG_ID: vliegtuigID, NAAM: ui!.LidData?.NAAM}
         this.reserveringenService.addReservering(r).then(() => {
@@ -322,7 +305,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     }
 
     // De reservering is niet langer meer van toepassing
-    verwijderReservering(datum: string, vliegtuigID: number) {
+    protected verwijderReservering(datum: string, vliegtuigID: number) {
         const idx: number = this.data.findIndex((reservering) => {
             return (reservering.DATUM == datum && reservering.VLIEGTUIG_ID == vliegtuigID)
         })
@@ -341,7 +324,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     }
 
     // Door wie is de kist geboekt
-    ToonNaam(datum: string, vliegtuigID: number): string {
+    protected ToonNaam(datum: string, vliegtuigID: number): string {
         const reservering = this.data.find((reservering) => {
             return (reservering.DATUM == datum && reservering.VLIEGTUIG_ID == vliegtuigID)
         })
@@ -362,7 +345,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     }
 
     // Door wie is de kist geboekt
-    ToonOpmerking(datum: string, vliegtuigID: number): string | undefined {
+    protected ToonOpmerking(datum: string, vliegtuigID: number): string | undefined {
         const reservering = this.data.find((reservering) => {
             return (reservering.DATUM == datum && reservering.VLIEGTUIG_ID == vliegtuigID)
         })
@@ -374,7 +357,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     }
 
     // Is de kist geboekt voor deze dag
-    isBeschikbaar(datum: string, vliegtuigID: number): boolean {
+    private isBeschikbaar(datum: string, vliegtuigID: number): boolean {
         const reservering = this.data.find((reservering) => {
             return (reservering.DATUM == datum && reservering.VLIEGTUIG_ID == vliegtuigID)
         })
@@ -382,7 +365,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     }
 
     // Is deze dag een club bedrijf
-    isClubBedrijf(datum: string): boolean {
+    protected isClubBedrijf(datum: string): boolean {
         const rooster = this.rooster.find((r) => {
             return (r.DATUM == datum);
         })
@@ -390,12 +373,12 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     }
 
     // is de datum in het verleden
-    isVerleden(datum: string): boolean {
+    private isVerleden(datum: string): boolean {
         return (DateTime.fromSQL(datum) < this.nu);
     }
 
     // is er een reserving die verwijderd mag worden
-    magVerwijderen(datum: string, vliegtuigID: number): boolean {
+    protected magVerwijderen(datum: string, vliegtuigID: number): boolean {
         const ui = this.loginService.userInfo;
         if (this.isVerleden(datum) && !ui?.Userinfo?.isBeheerder) {      // datum is in het verleden, verwijderen is niet meer mogelijk, behalve voor beheerder
             return false;
@@ -409,7 +392,6 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
             return false;
         }
 
-
         if (reservering.LID_ID == ui!.LidData!.ID) {
             return true;
         }
@@ -418,7 +400,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     }
 
     // Kan er een reservering gemaakt worden voor deze dag / vliegtuig. Reservering is mag maximaal 2 maanden in de toekomst zijn
-    magReserveren(datum: string, vliegtuigID: number): boolean {
+    protected magReserveren(datum: string, vliegtuigID: number): boolean {
         // indien er nog een reservering open staat, mag er niet meer gereserveerd worden
         if (!this.magNogReserveren)
             return false;
@@ -463,7 +445,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     }
 
     // html class om info te tonen
-    htmlClassReservering(datum: string, vliegtuigID: number): string {
+    protected htmlClassReservering(datum: string, vliegtuigID: number): string {
         if (!this.isBeschikbaar(datum, vliegtuigID)) {
             return "reservering";
         }
@@ -474,7 +456,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     // in popup is gekozen om vliegtuig wel of niet te tonen in het grid
     // hiermee worden er minder vligetuigen getoond en past het beter op het scherm
     // Wordt bovendien opgeslagen zodat we het kunnen toepassen wanneer de gebruiker opnieuw inlogt
-    changeTonen(vliegtuigID: number) {
+    protected changeTonen(vliegtuigID: number) {
         const idx = this.clubVliegtuigen.findIndex(v => v.ID == vliegtuigID);
         this.clubVliegtuigen[idx].Tonen = !this.clubVliegtuigen[idx].Tonen;
         this.storageService.opslaan("kistSelectieReservering", this.clubVliegtuigen);
@@ -485,7 +467,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
     }
 
     // Export naar excel
-    exportDataset() {
+    protected exportDataset() {
         // berperk het tot deze maand
         const toExcel = this.data.filter((r) => {
             const d: DateTime = DateTime.fromSQL(r.DATUM!);
@@ -499,7 +481,7 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
         xlsx.writeFile(wb, 'reserveringen ' + new Date().toJSON().slice(0, 10) + '.xlsx');
     }
 
-    zetDatum(nieuweDatum: DateTime) {
+    protected zetDatum(nieuweDatum: DateTime) {
         const opvragen: boolean = this.datum.month != nieuweDatum.month
 
         this.datum = nieuweDatum;
@@ -531,10 +513,8 @@ export class ReserveringPageComponent implements OnInit, OnDestroy {
 
         this.reserveringenService.getReserveringen(beginDatum, eindDatum).then((dataset) => {
             this.data = (dataset) ? dataset : [];
-            this.isLoading = false;
         }).catch(e => {
             this.error = e;
-            this.isLoading = false;
         });
     }
 

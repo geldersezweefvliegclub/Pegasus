@@ -6,10 +6,12 @@ import { PegasusCardComponent } from '../../../shared/components/pegasus-card/pe
 
 @Component({
     selector: 'app-hoofdscherm',
+    host: { class: 'scherm-pagina' },
     templateUrl: './hoofdscherm.component.html',
     styleUrls: ['./hoofdscherm.component.scss'],
     imports: [NavigatieComponent, PegasusCardComponent]
 })
 export class HoofdschermComponent {
-  readonly iconCardIcon: IconDefinition = faBars;
+  // variablen in html formulier
+  protected readonly iconCardIcon: IconDefinition = faBars;
 }

@@ -4,7 +4,7 @@ import { APIService } from './api.service';
 import { HeliosUserinfo } from '../../types/Helios';
 import { StorageService } from '../storage/storage.service';
 import { SharedService } from '../shared/shared.service';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { KeyValueArray } from '../../types/Utils';
 
 interface BearerToken {
@@ -23,22 +23,22 @@ type LoginResponse = BearerToken | HeliosJsLoginResponse;
 })
 
 export class LoginService  {
+    userInfo: HeliosUserinfo | null = null;
+    inloggenSucces: EventEmitter<void> = new EventEmitter<void>();
+
     private readonly apiService = inject(APIService);
     private readonly sharedService = inject(SharedService);
     private readonly storageService = inject(StorageService);
-
-    userInfo: HeliosUserinfo | null = null;
     private readonly userInfoStore = new BehaviorSubject(this.userInfo);
+
+    // afgeleid van bovenstaande variabelen, moet daarom na de declaratie ervan staan
     public readonly userInfoChange = this.userInfoStore.asObservable();      // nieuwe userInfo beschikbaar
-
-    inloggenSucces: EventEmitter<void> = new EventEmitter<void>();
-
-    private readonly dbEventAbonnement: Subscription;
 
     constructor() {
 
         // als we ons profiel aanpassen, dan moeten we userinfo ook aanpassen
-        this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
+        // service leeft net zo lang als de app, dit abonnement hoeft nooit opgezegd te worden
+        this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Leden") {
                 if (ev.data.ID == this.userInfo?.LidData?.ID) {
                     this.getUserInfo().then(() => this.userInfoStore.next(this.userInfo))    // afvuren event
@@ -140,7 +140,7 @@ export class LoginService  {
         await this.apiService.get('Login/SendSMS', undefined, headers);
     }
 
-    async getUserInfo(): Promise<void> {
+    private async getUserInfo(): Promise<void> {
         const urlParams = "";
 
         const response: Response = await this.apiService.get('Login/GetUserInfo' + urlParams);

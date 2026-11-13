@@ -8,10 +8,9 @@ import { ICellRendererParams } from 'ag-grid-community';
     styleUrls: ['./title-render.component.scss']
 })
 export class TitleRenderComponent implements AgRendererComponent {
-  omschrijving: string
-  titel: string
-
-
+  // variablen in html formulier
+  protected omschrijving: string
+  protected titel: string
 
   agInit(params: ICellRendererParams): void {
     this.omschrijving = params.data.OMSCHRIJVING;
@@ -21,5 +20,4 @@ export class TitleRenderComponent implements AgRendererComponent {
   refresh(_: ICellRendererParams): boolean {
     return false;
   }
-
 }

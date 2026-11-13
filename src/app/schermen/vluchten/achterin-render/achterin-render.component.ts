@@ -4,8 +4,6 @@ import { ICellRendererParams } from 'ag-grid-community';
 import { LoginService } from '../../../services/apiservice/login.service';
 import { RouterLink } from '@angular/router';
 
-
-
 @Component({
     selector: 'app-inzittende-render',
     templateUrl: './achterin-render.component.html',
@@ -14,14 +12,15 @@ import { RouterLink } from '@angular/router';
 })
 
 export class AchterinRenderComponent implements AgRendererComponent {
+    // variablen in html formulier
+    protected grid_inzittendenaam: string;
+    protected lidID: string;
+    protected naarDashboard = false;
+    protected warning = false;        // nog niet gestart, instructeur is onbekend
+    protected error = false;
+
+    // private variable voor ts script
     private readonly loginService = inject(LoginService);
-
-    grid_inzittendenaam: string;
-    lidID: string;
-    naarDashboard = false;
-
-    warning = false;        // nog niet gestart, instructeur is onbekend
-    error = false;
 
     // Als de inzittende geen clublid is, dan is de naam handmatig ingevoerd
     agInit(params: ICellRendererParams): void {

@@ -12,6 +12,7 @@ import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { AgendaEditorComponent } from '../../../shared/components/editors/agenda-editor/agenda-editor.component';
 import { DatumRenderComponent } from '../../../shared/components/datatable/datum-render/datum-render.component';
+import { TijdRenderComponent } from '../../../shared/components/datatable/tijd-render/tijd-render.component';
 import { DatatableComponent } from '../../../shared/components/datatable/datatable.component';
 import { ErrorComponent } from '../../../shared/components/error/error.component';
 import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
@@ -21,45 +22,50 @@ import { SuccessComponent } from '../../../shared/components/success/success.com
 
 @Component({
     selector: 'app-agenda-scherm',
+    host: { class: 'scherm-pagina' },
     templateUrl: './agenda-scherm.component.html',
     styleUrls: ['./agenda-scherm.component.scss'],
     imports: [AgendaEditorComponent, DatatableComponent, ErrorComponent, IconButtonComponent, PegasusCardComponent, StatusButtonComponent, SuccessComponent]
 })
 export class AgendaSchermComponent implements OnInit, OnDestroy {
+  // variablen in html formulier
+  protected readonly editor = viewChild.required(AgendaEditorComponent);
+
+  protected data:HeliosAgendaDataset[] = [];
+  protected isLoading = false;
+  protected deleteMode = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
+  protected trashMode = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
+  protected magToevoegen = false;
+  protected magVerwijderen = false;
+  protected success: SuccessMessage | undefined;
+  protected error: ErrorMessage | undefined;
+  protected columns: ColDef[];
+  protected frameworkComponents = {
+    datumRender: DatumRenderComponent,
+    tijdRender: TijdRenderComponent
+  };
+  protected iconCardIcon: IconDefinition = faCalendar
+
+  // private variable voor ts script
   private readonly loginService = inject(LoginService);
   private readonly sharedService = inject(SharedService);
   private readonly agendaService = inject(AgendaService);
 
-  readonly editor = viewChild.required(AgendaEditorComponent);
-
-  data:HeliosAgendaDataset[] = [];
-  isLoading = false;
-
   private dbEventAbonnement: Subscription;    // Abonneer op aanpassingen in de database
   private datumAbonnement: Subscription;      // volg de keuze van de kalender
   private maandAbonnement: Subscription;      // volg de keuze van de kalender
-  datum: DateTime = DateTime.now();           // de gekozen dag
-
-  deleteMode = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
-  trashMode = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
-
-  magToevoegen = false;
-  magVerwijderen = false;
-  magWijzigen = false;
-
-  success: SuccessMessage | undefined;
-  error: ErrorMessage | undefined;
-
-  dataColumns: ColDef[] = [
+  private datum: DateTime = DateTime.now();           // de gekozen dag
+  private magWijzigen = false;
+  private dataColumns: ColDef[] = [
     {field: 'ID', headerName: 'ID', sortable: true, hide: true, comparator: nummerSort},
     {field: 'DATUM', headerName: 'Datum', cellRenderer: 'datumRender', sortable: true, maxWidth: 100},
-    {field: 'TIJD', headerName: 'Tijd', maxWidth: 60},
+    {field: 'TIJD', headerName: 'Tijd', cellRenderer: 'tijdRender', maxWidth: 150},
     {field: 'KORT', headerName: 'Aktiviteit', sortable: true, width:200 , suppressSizeToFit: true, suppressAutoSize: true},
     {field: 'OMSCHRIJVING', headerName: 'Beschrijving', sortable: true},
   ];
 
   // kolom om record te verwijderen
-  deleteColumn: ColDef[] = [{
+  private deleteColumn: ColDef[] = [{
     pinned: 'left',
     maxWidth: 100,
     initialWidth: 100,
@@ -73,9 +79,8 @@ export class AgendaSchermComponent implements OnInit, OnDestroy {
       }
     },
   }];
-
   // kolom om terug te kunnen terughalen
-  restoreColumn: ColDef[] = [{
+  private restoreColumn: ColDef[] = [{
     pinned: 'left',
     maxWidth: 100,
     initialWidth: 100,
@@ -89,14 +94,6 @@ export class AgendaSchermComponent implements OnInit, OnDestroy {
       }
     },
   }];
-
-  columns: ColDef[];
-
-  frameworkComponents = {
-    datumRender: DatumRenderComponent
-  };
-
-  iconCardIcon: IconDefinition = faCalendar
 
   ngOnInit(): void {
     console.log("AgendaSchermComponent.ngOnInit");
@@ -160,12 +157,11 @@ export class AgendaSchermComponent implements OnInit, OnDestroy {
     if (this.datumAbonnement)       this.datumAbonnement.unsubscribe();
   }
 
-  opvragen() {
+  private opvragen() {
     this.isLoading = true;
 
     const startDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 1, day: 1});
     const eindDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 12, day: 31});
-
 
     this.agendaService.getAgenda(startDatum, eindDatum, 5000, this.trashMode).then((dataset) => {
       this.isLoading = false;
@@ -176,7 +172,7 @@ export class AgendaSchermComponent implements OnInit, OnDestroy {
     });
   }
 
-  kolomDefinitie() {
+  private kolomDefinitie() {
     if (!this.deleteMode) {
       this.columns = this.dataColumns;
     } else {
@@ -188,20 +184,20 @@ export class AgendaSchermComponent implements OnInit, OnDestroy {
     }
   }
 
-  addAgenda() {
+  protected addAgenda() {
     if (this.magToevoegen) {
       this.editor().openPopup(null);
     }
   }
 
-  openEditor(event?: RowDoubleClickedEvent) {
+  protected openEditor(event?: RowDoubleClickedEvent) {
     if (this.magWijzigen) {
       this.editor().openPopup(event?.data as HeliosAgendaDataset);
     }
   }
 
   // schakelen tussen deleteMode JA/NEE. In deleteMode kun je vliegtuigen verwijderen
-  deleteModeJaNee() {
+  protected deleteModeJaNee() {
     this.deleteMode = !this.deleteMode;
 
     if (this.trashMode) {
@@ -210,7 +206,7 @@ export class AgendaSchermComponent implements OnInit, OnDestroy {
     this.kolomDefinitie();
   }
 
-  trashModeJaNee(actief: boolean) {
+  protected trashModeJaNee(actief: boolean) {
     this.trashMode = actief
     this.kolomDefinitie();
     this.opvragen();

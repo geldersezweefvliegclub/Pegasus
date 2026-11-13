@@ -4,7 +4,6 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
-
 @Component({
     selector: 'app-modal',
     templateUrl: './modal.component.html',
@@ -12,13 +11,18 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
     imports: [FaIconComponent]
 })
 export class ModalComponent {
-    private modalService = inject(NgbModal);
-
     readonly titel = input('Editor');
     readonly popupClass = input<string>();
-    readonly content = viewChild.required<ElementRef>('content');
+    // header en footer blijven staan, alleen de body scrollt als de inhoud niet op het scherm past
+    readonly scrollable = input(true);
 
-    cross: IconDefinition = faTimes;
+    // variablen in html formulier
+    protected readonly content = viewChild.required<ElementRef>('content');
+
+    protected cross: IconDefinition = faTimes;
+
+    // private variable voor ts script
+    private modalService = inject(NgbModal);
     private modalRef: NgbModalRef;
 
     open() {
@@ -30,6 +34,7 @@ export class ModalComponent {
             ariaLabelledBy: 'modal-basic-title',
             backdrop: "static",
             windowClass: this.popupClass(),
+            scrollable: this.scrollable(),
         });
 
         this.modalRef.shown.subscribe(() => {

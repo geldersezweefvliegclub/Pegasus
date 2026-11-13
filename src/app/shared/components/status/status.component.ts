@@ -21,26 +21,28 @@ import { LoaderComponent } from '../loader/loader.component';
 })
 
 export class StatusComponent implements OnInit, OnChanges, OnDestroy {
+    @Input() Vlieger: HeliosLid;
+
+    // variablen in html formulier
+    protected checks: { Jaren: number[], Check: Check[] };
+    protected overig: Overig[];
+    protected competenties: HeliosCompetentiesDataset[];
+    protected isLoading = false;
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+
+    // private variable voor ts script
     private readonly loginService = inject(LoginService);
     private readonly configService = inject(PegasusConfigService);
     private readonly sharedService = inject(SharedService);
     private readonly competentieService = inject(CompetentieService);
     private readonly progressieService = inject(ProgressieService);
-
-    @Input() Vlieger: HeliosLid;
     private readonly editor = viewChild.required(ProgressieEditorComponent);
 
-    checks: { Jaren: number[], Check: Check[] };
-    overig: Overig[];
-    gehaaldeProgressie: HeliosBehaaldeProgressieDataset[];
+    private gehaaldeProgressie: HeliosBehaaldeProgressieDataset[];
     private dbEventAbonnement: Subscription;
     private competentiesAbonnement: Subscription;
-    competenties: HeliosCompetentiesDataset[];
-    suspend = false;
-    isLoading = false;
-
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
+    private suspend = false;
 
     ngOnInit(): void {
         // Als in de progressie tabel is aangepast, moet we onze dataset ook aanpassen
@@ -66,7 +68,7 @@ export class StatusComponent implements OnInit, OnChanges, OnDestroy {
         if (this.competentiesAbonnement)    this.competentiesAbonnement.unsubscribe();
     }
 
-    ophalen(): void {
+    protected ophalen(): void {
         if (!this.checks) // er zijn nog geen Checks
             return;
 
@@ -98,7 +100,7 @@ export class StatusComponent implements OnInit, OnChanges, OnDestroy {
         });
     }
 
-    CheckGehaald(comptentieID: number): boolean {
+    protected CheckGehaald(comptentieID: number): boolean {
         if (!this.gehaaldeProgressie) return false;
 
         if (this.gehaaldeProgressie.findIndex((p) => p.COMPETENTIE_ID == comptentieID) < 0) {
@@ -108,7 +110,7 @@ export class StatusComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    CheckDisabled(comptentieID: number): boolean {
+    protected CheckDisabled(comptentieID: number): boolean {
         const ui = this.loginService.userInfo?.Userinfo;
 
         if (this.Vlieger.ID == this.loginService.userInfo?.LidData?.ID) {
@@ -133,11 +135,11 @@ export class StatusComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     // Progressie kan gezet worden via snelkeuze in deze component, lange weg kan via progressie boom
-    zetProgressie(id:number) {
+    protected zetProgressie(id:number) {
         this.editor().openNieuwPopup(id);
     }
 
-    competentieBestaat(id: number) {
+    protected competentieBestaat(id: number) {
         if (this.competenties.length == 0)
             return false;
 

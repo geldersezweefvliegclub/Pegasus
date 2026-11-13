@@ -2,15 +2,15 @@ import { Component } from '@angular/core';
 import { ICellRendererParams } from 'ag-grid-community';
 import { AgRendererComponent } from 'ag-grid-angular';
 
-
 @Component({
     selector: 'app-leeftijd-render',
     templateUrl: './leeftijd-render.component.html',
     styleUrls: ['./leeftijd-render.component.scss']
 })
 export class LeeftijdRenderComponent implements AgRendererComponent {
-  value: string;
-  controleNodig: boolean;
+  // variablen in html formulier
+  protected value: string;
+  protected controleNodig: boolean;
 
   agInit(params: ICellRendererParams): void {
     this.value = params.value;

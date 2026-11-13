@@ -2,6 +2,12 @@
     overflow-y: auto;
 }
 
+// zonder min-height groeit de card-body mee met de inhoud, dan kan een pagina
+// (zoals aanmelden) zichzelf niet op schermhoogte houden met een eigen scrollende lijst
+.card-body {
+    min-height: 0;
+}
+
 .pegasus-alert {
     margin-bottom: 0;
     text-align: center;

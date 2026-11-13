@@ -12,11 +12,12 @@ export class AvatarComponent {
   readonly naam = input<string>('');      // titel van de popup, optioneel
   @Input() url = '';
   readonly vorm = input<'cirkel' | 'vierkant'>('cirkel');
+
+  // private variable voor ts script
   private readonly popup = viewChild.required(ModalComponent);
 
-
   // Toon grote avatar in popup window. Zonder avatar staat er een standaard symbool, dan geen popup
-  showPopup() {
+  protected showPopup() {
     if (!this.url) return;
     this.popup().open();
   }

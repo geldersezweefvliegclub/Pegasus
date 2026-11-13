@@ -16,14 +16,13 @@ export class TypesService {
 
     private typesCache: HeliosTypes = { dataset: []};        // return waarde van API call
     private cvTypesCache: HeliosTypes = { dataset: []};      // clubvliegtuigen type
-    private fallbackTimer: number;                           // Timer om te zorgen dat starts geladen echt is
-
     private typesStore = new BehaviorSubject(this.typesCache.dataset);
+
+    // afgeleid van bovenstaande variabelen, moet daarom na de declaratie ervan staan
     public readonly typesChange = this.typesStore.asObservable();      // nieuwe aanwezigheid beschikbaar
 
     constructor() {
         const loginService = this.loginService;
-
 
         // We hebben misschien eerder de lidTypes opgehaald. Die gebruiken we totdat de API starts heeft opgehaald
         if (this.storageService.ophalen('types') != null) {
@@ -34,7 +33,7 @@ export class TypesService {
         }
 
         // Deze timer kijkt periodiek of de starts er is. API call bij inloggen kan mislukt zijn dus dit is de fallback
-        this.fallbackTimer = window.setInterval(() => {
+        window.setInterval(() => {
             if (this.loginService.isIngelogd()) {
                 let ophalen = false;
                 if (this.typesCache === undefined) {

@@ -3,8 +3,7 @@ import { APIService } from './api.service';
 import { DateTime } from 'luxon';
 import { KeyValueArray } from '../../types/Utils';
 import { HeliosDagInfo, HeliosDagInfoDagen, HeliosDagInfosDataset, HeliosRoosterDataset } from '../../types/Helios';
-import { StorageService } from '../storage/storage.service';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { SharedService } from '../shared/shared.service';
 import { LoginService } from './login.service';
 import { RoosterService } from './rooster.service';
@@ -14,26 +13,26 @@ import { CustomJsonSerializer } from '../../utils/Utils';
     providedIn: 'root'
 })
 export class DaginfoService {
+    public dagInfo: HeliosDagInfo = {};             // hier kunnen de componenten de daginfo ophalen (bijv start invoer)
+
     private readonly apiService = inject(APIService);
     private readonly loginService = inject(LoginService);
     private readonly sharedService = inject(SharedService);
-    private readonly storageService = inject(StorageService);
     private readonly roosterService = inject(RoosterService);
 
     private dagInfoTotaalCache: HeliosDagInfoDagen = { dataset: []}; // return waarde van API call
     private dagenCache: HeliosDagInfoDagen = { dataset: []};         // return waarde van API call
-
-    private datumAbonnement: Subscription;         // volg de keuze van de kalender
     private datum: DateTime = DateTime.now();      // de gekozen dag
-
-    public dagInfo: HeliosDagInfo = {};             // hier kunnen de componenten de daginfo ophalen (bijv start invoer)
     private dagInfoStore = new BehaviorSubject(this.dagInfo);
+
+    // afgeleid van bovenstaande variabelen, moet daarom na de declaratie ervan staan
     public readonly dagInfoChange = this.dagInfoStore.asObservable();      // nieuwe dagInfo beschikbaar
 
     constructor() {
 
         // de datum zoals die in de kalender gekozen is
-        this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
+        // service leeft net zo lang als de app, dit abonnement hoeft nooit opgezegd te worden
+        this.sharedService.ingegevenDatum.subscribe(datum => {
             this.datum = DateTime.fromObject({
                 year: datum.year,
                 month: datum.month,
@@ -72,7 +71,6 @@ export class DaginfoService {
         return this.dagenCache?.dataset as [];
     }
 
-
     async getDagInfoDagen(verwijderd = false, startDatum: DateTime, eindDatum: DateTime, zoekString?: string, params: KeyValueArray = {}): Promise<HeliosDagInfosDataset[]> {
         const getParams: KeyValueArray = params;
 
@@ -107,7 +105,7 @@ export class DaginfoService {
     }
 
     // haal de daginfo op van een enkele dag
-    async getDagInfo(id: number | undefined, datum: DateTime | undefined): Promise<HeliosDagInfo> {
+    private async getDagInfo(id: number | undefined, datum: DateTime | undefined): Promise<HeliosDagInfo> {
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
             return {};
@@ -168,15 +166,5 @@ export class DaginfoService {
             this.dagInfoStore.next(this.dagInfo)
         });
         return response.json();
-    }
-
-    // deze dag kan verwijderd worden
-    async deleteDagInfo(id: number) {
-        await this.apiService.delete('Daginfo/DeleteObject', {'ID': id.toString()});
-    }
-
-    // haal een verwijderd record terug
-    async restoreDagInfo(id: number) {
-        await this.apiService.patch('Daginfo/RestoreObject', {'ID': id.toString()});
     }
 }

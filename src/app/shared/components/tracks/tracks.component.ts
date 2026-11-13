@@ -43,48 +43,44 @@ export interface TracksLedenDataset extends HeliosTracksDataset {
     imports: [ErrorComponent, SuccessComponent, FaIconComponent, AvatarComponent, RouterLink, IconButtonComponent, StatusButtonComponent, PegasusCardComponent, StatusComponent, PvbComponent, RecencyComponent, VliegerLogboekTotalenComponent, TrackEditorComponent]
 })
 export class TracksComponent implements OnInit, OnDestroy, OnChanges {
+    readonly VliegerID = input<number>();
+    readonly VliegerNaam = input('');
+    readonly toonLid = input(false);
+    iconCardIcon: IconDefinition = faAddressCard;
+    prullenbakIcon: IconDefinition = faRecycle;
+
+    // variablen in html formulier
+    protected iconRecency: IconDefinition = faTachometerAlt;
+    protected iconPVB: IconDefinition = faAvianex;
+    protected iconStatus: IconDefinition = faBookmark;
+    protected iconPlane: IconDefinition = faPlane;
+    protected deleteIcon: IconDefinition = faMinusCircle;
+    protected restoreIcon: IconDefinition = faUndo;
+    protected data: TracksLedenDataset[] = [];
+    protected datum: DateTime = DateTime.now();      // de gekozen dag
+    protected zoekString: string;
+    protected deleteMode = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
+    protected trashMode = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
+    protected isLoading = false;
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+    protected magToevoegen = true;
+    protected magVerwijderen = false;
+    protected magWijzigen = false;
+    protected geselecteerdLid: HeliosLedenDataset;
+
+    // private variable voor ts script
     private readonly trackService = inject(TracksService);
     private readonly ledenService = inject(LedenService);
     private readonly loginService = inject(LoginService);
     private readonly sharedService = inject(SharedService);
-
-    readonly VliegerID = input<number>();
-    readonly VliegerNaam = input('');
-    readonly toonLid = input(false);
-
-    readonly trackEditor = viewChild.required(TrackEditorComponent);
-
-    iconCardIcon: IconDefinition = faAddressCard;
-    prullenbakIcon: IconDefinition = faRecycle;
-    iconRecency: IconDefinition = faTachometerAlt;
-    iconPVB: IconDefinition = faAvianex;
-    iconStatus: IconDefinition = faBookmark;
-    iconPlane: IconDefinition = faPlane;
-    deleteIcon: IconDefinition = faMinusCircle;
-    restoreIcon: IconDefinition = faUndo;
+    private readonly trackEditor = viewChild.required(TrackEditorComponent);
 
     private dbEventAbonnement: Subscription;
     private ledenAbonnement: Subscription;
-    leden: HeliosLedenDataset[] = [];
-    data: TracksLedenDataset[] = [];
-
+    private leden: HeliosLedenDataset[] = [];
     private datumAbonnement: Subscription; // volg de keuze van de kalender
-    datum: DateTime = DateTime.now();      // de gekozen dag
-
-    zoekString: string;
-    zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
-    deleteMode = false;        // zitten we in delete mode om vliegtuigen te kunnen verwijderen
-    trashMode = false;         // zitten in restore mode om vliegtuigen te kunnen terughalen
-    isLoading = false;
-
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
-
-    magToevoegen = true;
-    magVerwijderen = false;
-    magWijzigen = false;
-
-    geselecteerdLid: HeliosLedenDataset;
+    private zoekTimer: number;                  // kleine vertraging om starts ophalen te beperken
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo?.Userinfo;
@@ -131,16 +127,16 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
     ngOnDestroy(): void {
         if (this.dbEventAbonnement)   this.dbEventAbonnement.unsubscribe();
         if (this.datumAbonnement)     this.datumAbonnement.unsubscribe();
-        if (this.datumAbonnement)     this.datumAbonnement.unsubscribe();
+        if (this.ledenAbonnement)     this.ledenAbonnement.unsubscribe();
     }
 
     // open de track editor om nieuwe track toe te voegen. Editor opent als popup
-    openTrackEditor() {
+    protected openTrackEditor() {
         this.trackEditor().openPopup(null, this.VliegerID(), undefined, this.VliegerNaam());
     }
 
     // open de track editor om nieuwe track toe te voegen. Editor opent als popup
-    replyTrackEditor(trk: TracksLedenDataset) {
+    protected replyTrackEditor(trk: TracksLedenDataset) {
         const tekst = "In reactie op: \n----------------\n" + trk.TEKST + "\n----------------\n";
         this.trackEditor().openPopup(null, trk.LID_ID, undefined, trk.LID_NAAM, tekst);
     }
@@ -152,7 +148,7 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     // openen van popup om gegevens van een bestaande track aan te passen
-    openEditor(trk: TracksLedenDataset) {
+    protected openEditor(trk: TracksLedenDataset) {
         const ui = this.loginService.userInfo?.LidData;
 
         // Je mag alleen tracks van jezelf wijzigen
@@ -165,17 +161,17 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     // openen van popup om track te verwijderen
-    openVerwijderPopup(trk: TracksLedenDataset) {
+    protected openVerwijderPopup(trk: TracksLedenDataset) {
         this.trackEditor().openVerwijderPopup(trk.ID as number, trk.LID_NAAM as string);
     }
 
     // openen van popup om track te hestellen
-    openRestorePopup(trk: TracksLedenDataset) {
+    protected openRestorePopup(trk: TracksLedenDataset) {
         this.trackEditor().openRestorePopup(trk.ID as number, trk.LID_NAAM as string);
     }
 
     // schakelen tussen deleteMode JA/NEE. In deleteMode kun je vliegtuigen verwijderen
-    deleteModeJaNee() {
+    protected deleteModeJaNee() {
         this.deleteMode = !this.deleteMode;
 
         if (this.trashMode) {
@@ -184,13 +180,13 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     // schakelen tussen trashMode JA/NEE. In trashMode worden te verwijderde vliegtuigen getoond
-    trashModeJaNee(actief: boolean) {
+    protected trashModeJaNee(actief: boolean) {
         this.trashMode = actief;
         this.opvragen();
     }
 
     // Opvragen van de starts via de api
-    opvragen(): void {
+    protected opvragen(): void {
         clearTimeout(this.zoekTimer);
 
         const maxTrackItems = (this.VliegerID()) ? -1 : 100; // alle tracks voor een vlieger, anders 100 items
@@ -208,12 +204,11 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
         }, 400);
     }
 
-    lidToevoegenAanTrack() {
+    private lidToevoegenAanTrack() {
         for (const item of this.data) {
             item.lid = this.leden.find(l => l.ID == item.LID_ID) as HeliosLedenDataset;
         }
     }
-
 
     ngOnChanges(changes: SimpleChanges) {
         if (Object.prototype.hasOwnProperty.call(changes, "VliegerID")) {
@@ -221,31 +216,31 @@ export class TracksComponent implements OnInit, OnDestroy, OnChanges {
         }
     }
 
-    trackSelected(s: TracksLedenDataset) {
+    protected trackSelected(s: TracksLedenDataset) {
         this.geselecteerdLid = this.leden.find(l => l.ID == s.LID_ID) as HeliosLedenDataset;
     }
 
-    tijdString(dt: string): string {
+    protected tijdString(dt: string): string {
         const datumtijd = this.sharedService.parseDatum(dt);
         return datumtijd.toFormat("HH:mm")
     }
 
-    datumString(dt: string): string {
+    protected datumString(dt: string): string {
         const datumtijd = this.sharedService.parseDatum(dt);
         return datumtijd.day + "-" + datumtijd.month + "-" + datumtijd.year;
     }
 
-    magTrackVerwijderen(trk: TracksLedenDataset) {
+    protected magTrackVerwijderen(trk: TracksLedenDataset) {
         const ui = this.loginService.userInfo;
         return (ui?.Userinfo?.isCIMT || ui?.Userinfo?.isBeheerder || ui?.LidData?.ID == trk.INSTRUCTEUR_ID);
     }
 
-    magTrackHerstellen(trk: TracksLedenDataset) {
+    protected magTrackHerstellen(trk: TracksLedenDataset) {
         const ui = this.loginService.userInfo;
         return  (ui?.Userinfo?.isCIMT || ui?.Userinfo?.isBeheerder || ui?.LidData?.ID == trk.INSTRUCTEUR_ID);
     }
 
-    lidColumn(): boolean {
+    protected lidColumn(): boolean {
         return this.sharedService.getSchermSize() >= SchermGrootte.md;
     }
 }

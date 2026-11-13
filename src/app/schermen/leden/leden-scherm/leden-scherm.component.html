@@ -1,13 +1,13 @@
 <app-error [error]='error'/>
 
-<app-pegasus-card titel="Ledenlijst"
+<app-pegasus-card class="scherm-vullend" titel="Ledenlijst"
                   subtitel="De ledenlijst"
                   [icon]="iconCardIcon"
                   [exportEnabled]="this.magExporteren"
                   (Exporting)="exportDataset()">
-    <div class="box h-100">
+    <div class="box scherm-kolom">
         @if (!toonKlein) {
-            <div id="data" class="data">
+            <div id="data" class="data scroll-vlak">
                 <app-datatable id='ledengrid'
                         rowHeight=70
                         [pagination]="toonBladwijzer"
@@ -21,7 +21,7 @@
                                class='h-100 mt-n8'/>
             </div>
         } @if (toonKlein) {
-        <div id="datacard" class="data">
+        <div id="datacard" class="data scroll-vlak">
             @if (isLoading) {
                 <div class="w-100 h-100">
                     <div class="spinnerPosition">

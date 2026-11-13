@@ -14,7 +14,6 @@ import {
   HeliosVliegtuigLogboekDataset,
   HeliosVliegtuigLogboekTotalen,
 } from '../../types/Helios';
-import { StorageService } from '../storage/storage.service';
 import { KeyValueArray } from '../../types/Utils';
 import { DateTime } from 'luxon';
 import { LoginService } from './login.service';
@@ -28,13 +27,11 @@ type parameters = Record<string, string>;
 export class StartlijstService {
     private readonly apiService = inject(APIService);
     private readonly loginService = inject(LoginService);
-    private readonly storageService = inject(StorageService);
 
     private startsCache: HeliosStarts = { dataset: []};                      // return waarde van API call
     private vliegdagenCache: HeliosVliegdagen = { dataset: []};              // return waarde van API call
     private logboekCache: HeliosLogboek = { dataset: []};                    // return waarde van API call logboek vlieger
     private vliegtuigLogboekCache: HeliosVliegtuigLogboek = { dataset: []};  // return waarde van API call
-
     private logboekTotalen: HeliosLogboekTotalen | null = null;         // totalen logboek voor vlieger
     private vliegtuigLogboekTotalen: HeliosVliegtuigLogboekTotalen;
 
@@ -167,7 +164,6 @@ export class StartlijstService {
         if (!this.loginService.isIngelogd()) {
             return {};
         }
-
 
         const response: Response = await this.apiService.get('Startlijst/GetVliegtuigLogboekTotalen',
             getParams

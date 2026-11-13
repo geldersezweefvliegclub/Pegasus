@@ -6,15 +6,18 @@
         <div body>
             <fieldset>
                 <label for="VELD" class="form-label">Veld</label>
-                <ng-select id="VELD"
-                           [items]="veldenTypes$ | async"
-                           placeholder="Vliegveld"
-                           bindLabel="OMSCHRIJVING"
-                           bindValue="ID"
-                           closeOnSelect="true"
-                           openOnEnter="true"
-                           required
-                           [(ngModel)]='aanwezig.VELD_ID'/>
+                <select class="form-select"
+                        id="VELD"
+                        name="VELD"
+                        required
+                        [(ngModel)]="aanwezig.VELD_ID">
+                    <!-- null: leeg van de server of leeggemaakt, undefined: nog niet ingevuld (verborgen) -->
+                    <option [ngValue]="null" disabled>Vliegveld</option>
+                    <option [ngValue]="undefined" disabled hidden>Vliegveld</option>
+                    @for (item of veldenTypes; track item.ID) {
+                        <option [ngValue]="item.ID">{{ item.OMSCHRIJVING }}</option>
+                    }
+                </select>
                 @if (!isDDWVer) {
                     <div class="mt-2">
                         <label class="form-label">Vliegtuig types</label>

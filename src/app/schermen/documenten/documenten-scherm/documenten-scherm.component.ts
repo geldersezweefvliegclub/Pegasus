@@ -21,33 +21,34 @@ import { StatusButtonComponent } from '../../../shared/components/status-button/
 
 @Component({
     selector: 'app-documenten-scherm',
+    host: { class: 'scherm-pagina' },
     templateUrl: './documenten-scherm.component.html',
     styleUrls: ['./documenten-scherm.component.scss'],
     imports: [DocumentEditorComponent, IconButtonComponent, PegasusCardComponent, StatusButtonComponent, FaIconComponent]
 })
 export class DocumentenSchermComponent implements OnInit, OnDestroy {
+    // variablen in html formulier
+    protected readonly editor = viewChild.required(DocumentEditorComponent);
+
+    protected iconCardIcon: IconDefinition = faFile;
+    protected toevoegenIcon: IconDefinition = faPlusCircle;
+    protected deleteIcon:IconDefinition = faMinusCircle;
+    protected restoreIcon:IconDefinition = faUndo;
+    protected upIcon: IconDefinition = faCaretSquareUp;
+    protected downIcon: IconDefinition = faCaretSquareDown;
+    protected documentGroepen: HeliosType[] = [];
+    protected documenten: HeliosDocumentenDataset[];
+    protected editMode = false;          // zitten we in edit mode om documenten te kunnen aanpassen
+    protected deleteMode = false;        // zitten we in delete mode om documenten te kunnen verwijderen
+    protected trashMode = false;         // zitten in restore mode om documenten te kunnen terughalen
+    protected magAanpassen = false;
+
+    // private variable voor ts script
     private readonly typesService = inject(TypesService);
     private readonly loginService = inject(LoginService);
     private readonly documentenService = inject(DocumentenService);
 
-    readonly editor = viewChild.required(DocumentEditorComponent);
-
-    iconCardIcon: IconDefinition = faFile;
-    toevoegenIcon: IconDefinition = faPlusCircle;
-    deleteIcon:IconDefinition = faMinusCircle;
-    restoreIcon:IconDefinition = faUndo;
-    upIcon: IconDefinition = faCaretSquareUp;
-    downIcon: IconDefinition = faCaretSquareDown;
-
     private typesAbonnement: Subscription;
-    documentGroepen: HeliosType[] = [];
-    documenten: HeliosDocumentenDataset[];
-
-    editMode = false;          // zitten we in edit mode om documenten te kunnen aanpassen
-    deleteMode = false;        // zitten we in delete mode om documenten te kunnen verwijderen
-    trashMode = false;         // zitten in restore mode om documenten te kunnen terughalen
-
-    magAanpassen = false;
 
     ngOnInit(): void {
         // abonneer op wijziging van documenten
@@ -69,11 +70,11 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
     }
 
     // ophalen document van de server
-    opvragen() {
+    protected opvragen() {
         this.documentenService.getDocumenten(this.trashMode).then((docs) => this.documenten = docs);
     }
 
-    toonDocumenten(groep: number): HeliosDocumentenDataset[] {
+    protected toonDocumenten(groep: number): HeliosDocumentenDataset[] {
         return (!this.documenten) ? [] :
             this.documenten.filter((d: HeliosDocumentenDataset) => {
                 return d.GROEP_ID == groep
@@ -81,13 +82,13 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
     }
 
     // schakelen tussen trashMode JA/NEE. In trashMode worden te verwijderde documenten getoond
-    trashModeJaNee(actief: boolean) {
+    protected trashModeJaNee(actief: boolean) {
         this.trashMode = actief
 
         this.opvragen();
     }
 
-    deleteModeJaNee() {
+    protected deleteModeJaNee() {
         this.deleteMode = !this.deleteMode;
 
         if (this.trashMode) {
@@ -96,7 +97,7 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
     }
 
     // mag document omlaag of omhoog geschoven worden in de lijst
-    toonOmhoogOmlaag(groep: number) {
+    protected toonOmhoogOmlaag(groep: number) {
         const lijst = this.documenten.filter((d: HeliosDocumentenDataset) => {
             return d.GROEP_ID == groep
         });
@@ -106,7 +107,7 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
         return true;
     }
 
-    delete(id: number) {
+    protected delete(id: number) {
         const doc = this.documenten.find(d => d.ID == id);
 
         if (doc) {
@@ -114,7 +115,7 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
         }
     }
 
-    restore(id: number) {
+    protected restore(id: number) {
         const doc = this.documenten.find(d => d.ID == id);
 
         if (doc) {
@@ -122,7 +123,7 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
         }
     }
 
-    aanpassen(id: number) {
+    protected aanpassen(id: number) {
         const doc = this.documenten.find(d => d.ID == id);
 
         if (doc) {
@@ -130,7 +131,7 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
         }
     }
 
-    toevoegen(id: number) {
+    protected toevoegen(id: number) {
         const doc: HeliosDocument = {
             GROEP_ID: id
         }
@@ -138,8 +139,7 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
         this.editor().openPopup(doc);
     }
 
-
-    omhoog(id: number) {
+    protected omhoog(id: number) {
         const doc = this.documenten.find(d => d.ID == id);
 
         if (doc) {
@@ -174,7 +174,7 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
         }
     }
 
-    omlaag(id: number) {
+    protected omlaag(id: number) {
         const doc = this.documenten.find(d => d.ID == id);
 
         if (doc) {
@@ -209,7 +209,7 @@ export class DocumentenSchermComponent implements OnInit, OnDestroy {
         }
     }
 
-    openUrl(url: string | URL) {
+    protected openUrl(url: string | URL) {
         window.open(url);
     }
 }

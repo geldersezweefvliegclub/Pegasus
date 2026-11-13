@@ -8,9 +8,7 @@ import {
 } from '../rooster-page/rooster-page.component';
 import { DienstenService } from '../../../services/apiservice/diensten.service';
 import { LoginService } from '../../../services/apiservice/login.service';
-import { HeliosDienst, HeliosDienstenDataset, HeliosRoosterDag, HeliosType } from '../../../types/Helios';
-import { Subscription } from 'rxjs';
-import { TypesService } from '../../../services/apiservice/types.service';
+import { HeliosDienst, HeliosDienstenDataset, HeliosRoosterDag } from '../../../types/Helios';
 import { RoosterService } from '../../../services/apiservice/rooster.service';
 import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
@@ -32,12 +30,6 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
     imports: [UitbetalenDdwvCrewEditorComponent, IconButtonComponent, FormsModule, NgTemplateOutlet, NgClass, FaIconComponent, DienstEditorComponent]
 })
 export class RoosterDagviewComponent implements OnInit, OnDestroy {
-    private readonly loginService = inject(LoginService);
-    private readonly typesService = inject(TypesService);
-    private readonly roosterService = inject(RoosterService);
-    private readonly dienstenService = inject(DienstenService);
-    readonly configService = inject(PegasusConfigService);
-
     @Input() rooster: HeliosRoosterDagExtended[];
     readonly leden = input.required<HeliosLedenDatasetExtended[]>();
     @Input() tonen: WeergaveData;
@@ -47,22 +39,25 @@ export class RoosterDagviewComponent implements OnInit, OnDestroy {
     readonly lidInRoosterClass = input.required<(dienst: HeliosDienstenDataset) => string>();
     readonly nieuweDatum = output<DateTime>();
 
-    readonly dienstEditor = viewChild.required(DienstEditorComponent);
+    // variablen in html formulier
+    protected readonly configService = inject(PegasusConfigService);
     protected readonly uitbetalen = viewChild.required(UitbetalenDdwvCrewEditorComponent);
+    protected readonly resetIcon: IconDefinition = faTimesCircle;
+    protected readonly assignIcon: IconDefinition = faCalendarCheck;
 
-    readonly resetIcon: IconDefinition = faTimesCircle;
-    readonly assignIcon: IconDefinition = faCalendarCheck;
+    protected isBeheerder: boolean;
+    protected isBeheerderDDWV: boolean;
+    protected magWijzigen = false;
+    protected isCIMT: boolean;
 
-    private typesAbonnement: Subscription;
-    dienstTypes: HeliosType[] = [];
+    // private variable voor ts script
+    private readonly loginService = inject(LoginService);
+    private readonly roosterService = inject(RoosterService);
+    private readonly dienstenService = inject(DienstenService);
+    private readonly dienstEditor = viewChild.required(DienstEditorComponent);
 
-    isBeheerder: boolean;
-    isBeheerderDDWV: boolean;
-    magWijzigen = false;
-    isCIMT: boolean;
-    dblKlik = false;
-
-    opslaanTimer: number;
+    private dblKlik = false;
+    private opslaanTimer: number;
 
     ngOnInit(): void {
         const ui = this.loginService.userInfo;
@@ -71,31 +66,24 @@ export class RoosterDagviewComponent implements OnInit, OnDestroy {
         this.isBeheerderDDWV = ui?.LidData?.DDWV_BEHEERDER ?? false;
         this.magWijzigen = (ui?.Userinfo?.isBeheerder || ui?.Userinfo?.isRooster) ? true : false;
 
-        // abonneer op wijziging van lidTypes
-        this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
-            this.dienstTypes = dataset!.filter((t: HeliosType) => {
-                return t.GROEP == 18
-            });    // type diensten
-        });
 
     }
 
     ngOnDestroy(): void {
-        if (this.typesAbonnement) this.typesAbonnement.unsubscribe();
     }
 
     // Dit is al geimplementeerd in util.ts
-    DagVanDeWeek(DATUM: string | null) {
+    protected DagVanDeWeek(DATUM: string | null) {
         return DagVanDeWeek(DATUM);
     }
 
     // laat parent weten dat we een nieuwe week willen zien. Parent laadt de starts
-    zetDatum(nieuweDatum: DateTime) {
+    protected zetDatum(nieuweDatum: DateTime) {
         this.nieuweDatum.emit(nieuweDatum)
     }
 
     // Double klik werkt niet, maar enkel klik wel. Dan is de workarround een boolean en een timer
-    openPopup(dag: HeliosRoosterDagExtended, typeDienstID: number) {
+    protected openPopup(dag: HeliosRoosterDagExtended, typeDienstID: number) {
         if (!dag.DDWV && !dag.CLUB_BEDRIJF) { return}  // geen vliegdag, winterwerk wordt niet ingedeeld
         if (!this.magWijzigen && !this.isBeheerderDDWV) { return }  // gebruiker mag niet wijzigen
         if (!this.magWijzigen && this.isBeheerderDDWV && dag.CLUB_BEDRIJF ) {   // DDWV beheer maakt geen rooster voor clubdag
@@ -110,7 +98,7 @@ export class RoosterDagviewComponent implements OnInit, OnDestroy {
         window.setTimeout(() => this.dblKlik = false, 350); // reset boolean na 350 msec
     }
 
-    opslaanRooster(datum: string) {
+    protected opslaanRooster(datum: string) {
         clearTimeout(this.opslaanTimer);
         const roosterIndex = this.rooster.findIndex((dag => dag.DATUM == datum));
 
@@ -136,7 +124,7 @@ export class RoosterDagviewComponent implements OnInit, OnDestroy {
         }, 1000);
     }
 
-    toekennenDienst(roosterdag: HeliosRoosterDagExtended, typeDienstID: number): void {
+    protected toekennenDienst(roosterdag: HeliosRoosterDagExtended, typeDienstID: number): void {
         const roosterIndex = this.rooster.findIndex((dag => dag.DATUM == roosterdag.DATUM));
 
         if (roosterIndex < 0) {
@@ -154,7 +142,7 @@ export class RoosterDagviewComponent implements OnInit, OnDestroy {
         this.dienstenService.addDienst(nieuweDienst)
     }
 
-    verwijderDienst(roosterdag: HeliosRoosterDagExtended, typeDienstID: number) {
+    protected verwijderDienst(roosterdag: HeliosRoosterDagExtended, typeDienstID: number) {
         const roosterIndex = this.rooster.findIndex((dag => dag.DATUM == roosterdag.DATUM));
 
         if (roosterIndex < 0) {
@@ -164,12 +152,12 @@ export class RoosterDagviewComponent implements OnInit, OnDestroy {
         this.dienstenService.deleteDienst(roosterdag.Diensten[typeDienstID].ID!).then(() => delete this.rooster[roosterIndex].Diensten[typeDienstID]);
     }
 
-    lidInRoosterDagClass(dienst: HeliosDienstenDataset, dag: HeliosRoosterDag) {
+    protected lidInRoosterDagClass(dienst: HeliosDienstenDataset, dag: HeliosRoosterDag) {
         return (dag.CLUB_BEDRIJF || dag.DDWV) ? this.lidInRoosterClass()(dienst) : "blanco";
     }
 
     // Hebben we een datum in de toekomst, vandaag is geen toekomst
-    datumInToekomst(datum: string): boolean {
+    protected datumInToekomst(datum: string): boolean {
         const nu: DateTime = DateTime.now();
         const d: DateTime = DateTime.fromSQL(datum);
 

@@ -16,25 +16,23 @@ import { LoaderComponent } from '../../loader/loader.component';
     imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, IconButtonComponent, LoaderComponent]
 })
 export class DocumentEditorComponent {
-    private readonly documentenService = inject(DocumentenService);
-
-    private readonly popup = viewChild.required(ModalComponent);
     readonly refresh = output<void>();
-    formTitel: string;
 
-    success: SuccessMessage | undefined;
-    error: ErrorMessage | undefined;
+    // variablen in html formulier
+    protected formTitel: string;
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+    protected isLoading = false;
+    protected isSaving = false;
+    protected isVerwijderMode = false;
+    protected isRestoreMode = false;
+    protected isDoc = true;
+    protected isUrl = false;
+    protected document: HeliosDocument;
 
-    isLoading = false;
-    isSaving = false;
-
-    isVerwijderMode = false;
-    isRestoreMode = false;
-
-    isDoc = true;
-    isUrl = false;
-
-    document: HeliosDocument;
+    // private variable voor ts script
+    private readonly documentenService = inject(DocumentenService);
+    private readonly popup = viewChild.required(ModalComponent);
 
     // open popup, maar haal eerst de start op. De eerder ingevoerde tijd wordt als default waarde gebruikt
     // indien niet eerder ingvuld, dan de huidige tijd. Buiten de daglicht periode is het veld leeg
@@ -59,7 +57,7 @@ export class DocumentEditorComponent {
         this.popup().open();
     }
 
-    closePopup() {
+    private closePopup() {
         this.popup().close();
     }
 
@@ -88,7 +86,7 @@ export class DocumentEditorComponent {
     }
 
     // uitvoeren van de actie waar we mee bezig zijn
-    uitvoeren() {
+    protected uitvoeren() {
         this.isSaving = true;
 
         if (this.isRestoreMode) {
@@ -117,7 +115,7 @@ export class DocumentEditorComponent {
         }
     }
 
-    verwijderen() {
+    private verwijderen() {
         this.documentenService.deleteDocument(this.document!.ID!).then(() => {
             this.success = {titel: "Document", beschrijving: "Verwijderen is geslaagd"}
             this.refresh.emit();
@@ -131,7 +129,7 @@ export class DocumentEditorComponent {
     }
 
     // het type herstellen, haal de markering 'verwijderd' weg
-    herstellen() {
+    private herstellen() {
         this.documentenService.restoreDocument(this.document.ID!).then(() => {
             this.isSaving = false;
             this.success = {
@@ -145,7 +143,7 @@ export class DocumentEditorComponent {
         })
     }
 
-    aanpassen() {
+    private aanpassen() {
         this.isSaving = true;
 
         this.documentenService.updateDocument(this.document).then(doc => {
@@ -161,7 +159,7 @@ export class DocumentEditorComponent {
         })
     }
 
-    toevoegen() {
+    private toevoegen() {
         this.isSaving = true;
 
         this.documentenService.addDocument(this.document).then(() => {
@@ -176,7 +174,7 @@ export class DocumentEditorComponent {
         });
     }
 
-    BijlageChange(event: Event) {
+    protected BijlageChange(event: Event) {
         const target = event.target as HTMLInputElement;
         const files = target.files as FileList;
 
@@ -189,7 +187,7 @@ export class DocumentEditorComponent {
 
     }
 
-    docUrl(p: string) {
+    protected docUrl(p: string) {
         this.isDoc = (p == "doc");
         this.isUrl = (p == "url");
     }

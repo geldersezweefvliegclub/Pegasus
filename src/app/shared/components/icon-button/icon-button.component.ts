@@ -14,8 +14,6 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
     imports: [FaIconComponent]
 })
 export class IconButtonComponent implements OnInit, OnDestroy {
-    private readonly sharedService = inject(SharedService);
-
     readonly tekst = input('');
     readonly iconNaam = input<string>('');  // optioneel, zonder icon alleen tekst
     readonly btnColor = input('btn-secondary');
@@ -27,8 +25,12 @@ export class IconButtonComponent implements OnInit, OnDestroy {
     readonly type = input<'button' | 'submit'>('button');
     readonly btnClicked = output<void>();
 
-    faIcon: IconDefinition;
-    toonTekst = false;
+    // variablen in html formulier
+    protected faIcon: IconDefinition;
+    protected toonTekst = false;
+
+    // private variable voor ts script
+    private readonly sharedService = inject(SharedService);
 
     private resizeSubscription: Subscription;
 
@@ -71,12 +73,12 @@ export class IconButtonComponent implements OnInit, OnDestroy {
     }
 
     // Voor kleine schermen, tonen we alleen icoontje en geen tekst
-    onWindowResize() {
+    private onWindowResize() {
         this.toonTekst = (this.sharedService.getSchermSize() > SchermGrootte.md)
     }
 
     // Voor de actie uit die gekoppeld is aan deze knop
-    buttonClicked($event: Event) {
+    protected buttonClicked($event: Event) {
         if (this.stopPropagation()) {
             $event.stopPropagation();           // zorg dat onderliggende element geen click event krijgen
         }

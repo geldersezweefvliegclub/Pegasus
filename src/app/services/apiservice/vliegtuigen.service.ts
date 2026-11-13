@@ -4,7 +4,7 @@ import { APIService } from './api.service';
 import { HeliosVliegtuig, HeliosVliegtuigen, HeliosVliegtuigenDataset } from '../../types/Helios';
 import { StorageService } from '../storage/storage.service';
 import { KeyValueArray } from '../../types/Utils';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { SharedService } from '../shared/shared.service';
 import { LoginService } from './login.service';
 import { CustomJsonSerializer } from '../../utils/Utils';
@@ -19,17 +19,14 @@ export class VliegtuigenService {
     private readonly storageService = inject(StorageService);
 
     private vliegtuigenCache: HeliosVliegtuigen = {dataset: []};     // return waarde van API call
-
     private overslaan = false;
-    private ophaalTimer: number;                                // Iedere 15 min halen we de leden op
-    private fallbackTimer: number;                              // Timer om te zorgen dat starts geladen echt is
     private vliegtuigenStore = new BehaviorSubject(this.vliegtuigenCache.dataset);
-    private dbEventAbonnement: Subscription;
+
+    // afgeleid van bovenstaande variabelen, moet daarom na de declaratie ervan staan
     public readonly vliegtuigenChange = this.vliegtuigenStore.asObservable();      // nieuwe vliegtuigen beschikbaar
 
     constructor() {
         const loginService = this.loginService;
-
 
         // We hebben misschien eerder de vliegtuigen opgehaald. Die gebruiken we totdat de API starts heeft opgehaald
         if (this.storageService.ophalen('vliegtuigen') != null) {
@@ -51,7 +48,7 @@ export class VliegtuigenService {
         }
 
         // Deze timer kijkt periodiek of de starts er is. API call bij inloggen kan mislukt zijn dus dit is de fallback
-        this.fallbackTimer = window.setInterval(() => {
+        window.setInterval(() => {
             if (this.loginService.isIngelogd()) {
                 let ophalen = false;
                 if (this.vliegtuigenCache === undefined) {
@@ -67,14 +64,15 @@ export class VliegtuigenService {
             }
         }, 1000 * 60);  // iedere minuut
 
-        this.ophaalTimer = window.setInterval(() => {
+        window.setInterval(() => {
             this.ophalenVliegtuigen().then(() => {
                 this.vliegtuigenStore.next(this.vliegtuigenCache.dataset)    // afvuren event
             });
         }, 1000 * 60 * 15);
 
         // Als vliegtuigen zijn aangepast, dan moeten we overzicht opnieuw ophalen
-        this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
+        // service leeft net zo lang als de app, dit abonnement hoeft nooit opgezegd te worden
+        this.sharedService.heliosEventFired.subscribe(ev => {
             if (ev.tabel == "Vliegtuigen") {
                 this.ophalenVliegtuigen().then(() => {
                     this.vliegtuigenStore.next(this.vliegtuigenCache.dataset)    // afvuren event
