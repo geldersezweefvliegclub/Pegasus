@@ -1,0 +1,155 @@
+import { Injectable, inject } from '@angular/core';
+import {
+  HeliosCompetentie,
+  HeliosCompetenties,
+  HeliosCompetentiesDataset,
+  HeliosCompetentiesBoom,
+  HeliosType,
+} from '../../types/Helios';
+import { KeyValueArray } from '../../types/Utils';
+import { APIService } from './api.service';
+import { StorageService } from '../storage/storage.service';
+import { BehaviorSubject } from 'rxjs';
+import { LoginService } from './login.service';
+import { CustomJsonSerializer } from '../../utils/Utils';
+
+@Injectable({
+    providedIn: 'root'
+})
+export class CompetentieService {
+    private readonly apiService = inject(APIService);
+    private readonly loginService = inject(LoginService);
+    private readonly storageService = inject(StorageService);
+
+    private competentiesCache: HeliosCompetenties = {dataset: []};  // return waarde van API call
+    private fallbackTimer: number;                           // Timer om te zorgen dat starts geladen echt is
+    private competentiesStore = new BehaviorSubject(this.competentiesCache.dataset);
+
+    public readonly competentiesChange = this.competentiesStore.asObservable();      // nieuwe aanwezigheid beschikbaar
+
+    private boom: HeliosCompetentiesBoom[] = [];
+
+    constructor() {
+        const loginService = this.loginService;
+
+        // We hebben misschien eerder de comptenties opgehaald. Die gebruiken we totdat de API starts heeft opgehaald
+        if (this.storageService.ophalen('competenties') != null) {
+            this.competentiesCache = this.storageService.ophalen('competenties') as HeliosCompetenties;
+            this.competentiesStore.next(this.competentiesCache.dataset!)    // afvuren event met opgeslagen vliegtuigen dataset
+        }
+
+        // Deze timer kijkt periodiek of de competenties er is. API call bij inloggen kan mislukt zijn dus dit is de fallback
+        this.fallbackTimer = window.setInterval(() => {
+            if (this.loginService.isIngelogd()) {
+                let ophalen = false;
+                if (this.competentiesCache === undefined) {
+                    ophalen = true
+                } else if (this.competentiesCache.dataset!.length < 1) {
+                    ophalen = true;
+                }
+                if (ophalen) {
+                    this.getCompetenties().then(() => {
+                        this.competentiesStore.next(this.competentiesCache.dataset!)    // afvuren event
+                    });
+                }
+            }
+        }, 1000 * 60);  // iedere minuut
+
+        // nadat we ingelogd zijn kunnen we de comptenties ophalen
+        const naInloggen = () => {
+            this.getCompetenties().then((_) => {
+                this.competentiesStore.next(this.competentiesCache.dataset!)    // afvuren event
+            });
+        };
+        loginService.inloggenSucces.subscribe(naInloggen);
+
+        // service wordt pas aangemaakt als een component hem injecteert, dat kan na het inloggenSucces event zijn
+        if (loginService.isIngelogd()) {
+            naInloggen();
+        }
+    }
+
+    private async getCompetenties(): Promise<HeliosCompetentiesDataset[]> {
+        const getParams: KeyValueArray = {};
+
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
+
+        // starttoren heeft geen competenties nodig
+        if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
+            return [];
+        }
+
+        if ((this.competentiesCache != undefined) && (this.competentiesCache.hash != undefined)) { // we hebben eerder de lijst opgehaald
+            getParams['HASH'] = this.competentiesCache.hash;
+        }
+
+        try {
+            const response = await this.apiService.get('Competenties/GetObjects', getParams);
+
+            this.competentiesCache = await response.json();
+            this.storageService.opslaan('competenties', this.competentiesCache);
+        } catch (e) {
+            if ((e.responseCode !== 304) && (e.responseCode !== 704)) { // server bevat dezelfde starts als cache
+                throw(e);
+            }
+        }
+        return this.competentiesCache?.dataset as HeliosCompetentiesDataset[];
+    }
+
+    async getBoom(): Promise<HeliosCompetentiesBoom[]> {
+        const getParams: KeyValueArray = {};
+
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return [];
+        }
+
+        // starttoren heeft geen comptenties nodig
+        if (this.loginService.userInfo?.Userinfo!.isStarttoren) {
+            return [];
+        }
+
+        const response: Response = await this.apiService.get('Competenties/CompetentiesBoom', getParams);
+        this.boom = await response.json();
+
+        return this.boom as HeliosCompetentiesBoom[];
+    }
+
+    async getCompetentie(id: number): Promise<HeliosType> {
+        // kunnen alleen data ophalen als we ingelogd zijn
+        if (!this.loginService.isIngelogd()) {
+            return {};
+        }
+        const response: Response = await this.apiService.get('Competenties/GetObject', {'ID': id.toString()});
+        return response.json();
+    }
+
+    async addCompetentie(competentie: HeliosCompetentie) {
+        const response: Response = await this.apiService.post('Competenties/SaveObject', JSON.stringify(this.naarApiFormaat(competentie)));
+        return response.json();
+    }
+
+    async updateCompetentie(competentie: HeliosCompetentie) {
+        const response: Response = await this.apiService.put('Competenties/SaveObject', JSON.stringify(this.naarApiFormaat(competentie), CustomJsonSerializer));
+        return response.json();
+    }
+
+    async deleteCompetentie(id: number) {
+        await this.apiService.delete('Competenties/DeleteObject', {'ID': id.toString()});
+    }
+
+    async restoreCompetentie(id: number) {
+        await this.apiService.patch('Competenties/RestoreObject', {'ID': id.toString()});
+    }
+
+    // SCORE is een integer in de API, de checkbox in de editor levert een boolean op. LEERFASE komt uit GetObjects
+    // en kan niet opgeslagen worden (onbekende velden geven HTTP 400)
+    private naarApiFormaat(competentie: HeliosCompetentie & {LEERFASE?: string}): HeliosCompetentie {
+        const {LEERFASE, ...data} = competentie;
+        if (data.SCORE !== undefined && data.SCORE !== null) data.SCORE = Number(data.SCORE);
+        return data;
+    }
+}

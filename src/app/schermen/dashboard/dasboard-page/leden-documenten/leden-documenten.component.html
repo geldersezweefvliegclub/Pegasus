@@ -16,14 +16,14 @@
             <div class="d-flex flex-column">
                 @for (doc of documenten; track doc.ID; let d = $index) {
                     <div>
-                        <div (dblclick)="aanpassen(doc.ID)" class="d-flex justify-content-between w-100"
+                        <div (dblclick)="aanpassen(doc.ID!)" class="d-flex justify-content-between w-100"
                              [class]="{'bovenlijn': doc.ONDERSTREEP && doc.BOVEN, 'onderlijn': doc.ONDERSTREEP && !doc.BOVEN }">
                             @if (deleteMode && !trashMode) {
-                                <button class="docContent btn btn-noborder" (click)="delete(doc.ID)">
+                                <button class="docContent btn btn-noborder" (click)="delete(doc.ID!)">
                                     <fa-icon [icon]='deleteIcon' class='deleteBtn'/>
                                 </button>
                             } @if (trashMode) {
-                            <button class="docContent btn btn-noborder" (click)="restore(doc.ID)">
+                            <button class="docContent btn btn-noborder" (click)="restore(doc.ID!)">
                                 <fa-icon [icon]='restoreIcon' class='restoreBtn'/>
                             </button>
                         } @if (!doc.LEGE_REGEL && !editMode) {

@@ -4,7 +4,7 @@
     <div body>
         @if (isBezig) {
             <div>
-                <ngb-progressbar type="info" [value]="counter" showValue="true" [max]="max"
+                <ngb-progressbar type="info" [value]="counter" [showValue]="true" [max]="max"
                                  [striped]='true'/>
             </div>
         } @if (isKlaar) {

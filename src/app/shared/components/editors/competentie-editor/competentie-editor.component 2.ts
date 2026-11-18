@@ -1,0 +1,224 @@
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
+import { ModalComponent } from '../../modal/modal.component';
+import { HeliosCompetentie, HeliosCompetentiesDataset, HeliosType } from '../../../../types/Helios';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { CompetentieService } from '../../../../services/apiservice/competentie.service';
+import { Observable, of, Subscription } from 'rxjs';
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { FormsModule } from '@angular/forms';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { LoaderComponent } from '../../loader/loader.component';
+import { AsyncPipe } from '@angular/common';
+
+export interface CompetentieLijst {
+    ID: number | undefined;
+    label: string | undefined;
+}
+
+@Component({
+    selector: 'app-competentie-editor',
+    templateUrl: './competentie-editor.component.html',
+    styleUrls: ['./competentie-editor.component.scss'],
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, NgSelectComponent, IconButtonComponent, LoaderComponent, AsyncPipe]
+})
+export class CompetentieEditorComponent implements OnInit, OnDestroy {
+    // variablen in html formulier
+    protected formTitel: string;
+    protected topLevels: HeliosType[];
+    protected lijst$: Observable<CompetentieLijst[]>;
+    protected competentie: HeliosCompetentie = {};
+    protected isLoading = false;
+    protected isSaving = false;
+    protected isVerwijderMode = false;
+    protected isRestoreMode = false;
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+
+    // private variable voor ts script
+    private readonly typesService = inject(TypesService);
+    private readonly competentieService = inject(CompetentieService);
+    private readonly popup = viewChild.required(ModalComponent);
+
+    private typesAbonnement: Subscription;
+    private competentiesAbonnement: Subscription;
+    private competenties: HeliosCompetentiesDataset[] = [];
+
+    ngOnInit() {
+        // abonneer op wijziging van top level competenties
+        this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
+            this.topLevels = dataset!.filter((t:HeliosType) => { return t.GROEP == 10});
+        });
+
+        // abonneer op wijziging van competenties
+        this.competentiesAbonnement = this.competentieService.competentiesChange.subscribe(dataset => {
+            this.competenties = dataset!;
+            this.filterBovenliggend()
+        });
+    }
+
+    ngOnDestroy(): void {
+        if (this.competentiesAbonnement) this.competentiesAbonnement.unsubscribe();
+        if (this.typesAbonnement)        this.typesAbonnement.unsubscribe();
+    }
+
+    // Open invoer popup voor de track. Als track ingevuld is, wijzigen we bestaande track
+    openPopup(competentie: HeliosCompetentie) {
+        this.competentie = competentie;   // vul alvast de editor met starts uit het grid
+        if (competentie.ID) {
+            this.formTitel = 'Bewerken';
+            this.haalCompetentieOp(competentie.ID!);    // maar starts kan gewijzigd zijn, dus toch even starts ophalen van API
+        } else {
+            this.formTitel = "Toevoegen"
+        }
+        this.isSaving = false;
+        this.isVerwijderMode = false;
+        this.isRestoreMode = false;
+        this.filterBovenliggend()
+        this.popup().open();
+    }
+
+    private closePopup() {
+        this.popup().close();
+    }
+
+    // ophalen van type uit de database (via API)
+    private haalCompetentieOp(id: number): void {
+        this.isLoading = true;
+
+        try {
+            this.competentieService.getCompetentie(id).then((competentie: HeliosCompetentie) => {
+                this.competentie = competentie;
+                this.isLoading = false;
+            });
+        } catch (_) {
+            this.isLoading = false;
+        }
+    }
+
+    // Toon popup om type te verwijderen
+    openVerwijderPopup(id: number) {
+        this.haalCompetentieOp(id);
+        this.formTitel = 'Verwijderen';
+
+        this.isSaving = false;
+        this.isVerwijderMode = true;
+        this.isRestoreMode = false;
+        this.popup().open();
+    }
+
+    // Toon popup om type uit de archief te halen
+    openRestorePopup(id: number) {
+        this.haalCompetentieOp(id);
+        this.formTitel = 'Herstellen';
+
+        this.isSaving = false;
+        this.isRestoreMode = true;
+        this.isVerwijderMode = false;
+        this.popup().open();
+    }
+
+    // uitvoeren van de actie waar we mee bezig zijn
+    protected uitvoeren() {
+        this.isSaving = true;
+        if (this.isRestoreMode) {
+            this.Herstellen(this.competentie);
+        }
+
+        if (this.isVerwijderMode) {
+            this.Verwijderen(this.competentie);
+        }
+
+        if (!this.isVerwijderMode && !this.isRestoreMode) {
+            if (this.competentie.ID) {
+                this.Aanpassen(this.competentie);
+            } else {
+                this.Toevoegen(this.competentie);
+            }
+        }
+    }
+
+    // opslaan in de database
+    private Toevoegen(competentie: HeliosCompetentie) {
+        this.competentieService.addCompetentie(competentie).then(() => {
+            this.success = {
+                titel: "Competentie",
+                beschrijving: "Competentie is toegevoegd"
+            }
+            this.closePopup();
+        }).catch(e => {
+            this.isSaving = false;
+            this.error = e;
+        })
+    }
+
+    // bestaande type is aangepast. Opslaan van het type
+    private Aanpassen(competentie: HeliosCompetentie) {
+        this.competentieService.updateCompetentie(competentie).then(() => {
+            this.success = {
+                titel: "Competentie",
+                beschrijving: "Competentie is gewijzigd"
+            }
+            this.closePopup();
+        }).catch(e => {
+            this.isSaving = false;
+            this.error = e;
+        })
+    }
+
+    // markeer een type als verwijderd
+    protected Verwijderen(competentie: HeliosCompetentie) {
+        this.competentieService.deleteCompetentie(competentie.ID!).then(() => {
+            this.success = {
+                titel: "Competentie",
+                beschrijving: "Competentie is verwijderd"
+            }
+            this.closePopup();
+        }).catch(e => {
+            this.isSaving = false;
+            this.error = e;
+        })
+    }
+
+    // het type herstellen, haal de markering 'verwijderd' weg
+    protected Herstellen(competentie: HeliosCompetentie) {
+        this.competentieService.restoreCompetentie(competentie.ID!).then(() => {
+            this.success = {
+                titel: "Competentie",
+                beschrijving: "Competentie is weer beschikbaar"
+            }
+            this.closePopup();
+        }).catch(e => {
+            this.isSaving = false;
+            this.error = e;
+        })
+    }
+
+    // Opslaan knop staat uit als we niet weten over wie het gaat, of er nog geen tekst is ingevoerd
+    protected opslaanDisabled() {
+        return !this.competentie.OMSCHRIJVING
+    }
+
+    protected parentChange(parentID: number) {
+        const parent = this.competenties.find(c => c.ID == parentID);
+
+        if (parent) {
+            this.competentie.OUDER_ID = parent.ID;
+            this.competentie.LEERFASE_ID = parent.LEERFASE_ID;
+        }
+    }
+
+    protected filterBovenliggend() {
+        const l = this.competenties.filter((c:HeliosCompetentiesDataset) => { return c.LEERFASE_ID == this.competentie.LEERFASE_ID})
+        this.lijst$ = of(l.map((i) => {
+            const l: CompetentieLijst = {
+                ID: i.ID,
+                label: '[' + i.ID + '] ' + i.OMSCHRIJVING
+            }
+            return l;
+        }))
+    }
+}
+

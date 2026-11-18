@@ -1,0 +1,382 @@
+import { Component, ElementRef, inject, output, viewChild } from '@angular/core';
+import { ModalComponent } from '../../modal/modal.component';
+import { HeliosStart, HeliosStartDataset } from '../../../../types/Helios';
+import { StartlijstService } from '../../../../services/apiservice/startlijst.service';
+
+import { Observable } from 'rxjs';
+import { NgbTypeaheadConfig } from '@ng-bootstrap/ng-bootstrap';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { getSunrise, getSunset } from 'sunrise-sunset-js';
+import { DateTime } from 'luxon';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { PegasusConfigService } from '../../../../services/shared/pegasus-config.service';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { FormsModule } from '@angular/forms';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { LoaderComponent } from '../../loader/loader.component';
+
+enum TypeTijdInvoer {
+    Starttijd,
+    Landingstijd
+}
+
+// de velden die we nodig hebben, de popup wordt geopend vanuit de startlijst en vanuit het logboek
+type TijdInvoerRecord = Pick<HeliosStartDataset, 'ID'> & {
+    DAGNUMMER?: number | null;
+    REG_CALL?: string | null;
+    DATUM?: string | null;
+    STARTTIJD?: string | null;
+    LANDINGSTIJD?: string | null;
+}
+
+@Component({
+    selector: 'app-tijd-invoer',
+    templateUrl: './tijd-invoer.component.html',
+    styleUrls: ['./tijd-invoer.component.scss'],
+    providers: [NgbTypeaheadConfig] // add NgbTypeaheadConfig to the component providers
+    ,
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, IconButtonComponent, LoaderComponent]
+})
+
+export class TijdInvoerComponent {
+    readonly OpslaanStarttijd = output<HeliosStart>();
+    readonly OpslaanLandingstijd = output<HeliosStart>();
+
+    // variablen in html formulier
+    protected readonly tijdInvoerElement = viewChild.required<ElementRef>('tijdInvoerElement');
+
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+    protected isLoading = false;
+    protected isSaving = false;
+    protected formTitel = "";
+    protected label = "";
+    protected tijdIngevoerd: string;
+    protected tijdOK = true;
+
+    // opbouwen van popup lijst met tijden (wordt getoond bij toetsenbord invoer)
+    protected search = (text$: Observable<string>) =>
+        text$.pipe(
+            debounceTime(300),
+            distinctUntilChanged(),
+            map(term => term.length < 2 ? []
+                : this.overdag.filter(v => v.startsWith(term)).splice(0, 10)    // max 10 items
+            )
+        );
+
+    // private variable voor ts script
+    private readonly startlijstService = inject(StartlijstService);
+    private readonly configService = inject(PegasusConfigService);
+    private readonly popup = viewChild.required(ModalComponent);
+
+    private start: HeliosStart;
+    private overdag: string[];
+    private Invoer: TypeTijdInvoer = TypeTijdInvoer.Starttijd;
+
+    constructor() {
+        const config = inject(NgbTypeaheadConfig);
+
+        config.showHint = true;
+    }
+
+    // open popup, maar haal eerst de start op. De eerder ingevoerde tijd wordt als default waarde gebruikt
+    // indien niet eerder ingvuld, dan de huidige tijd. Buiten de daglicht periode is het veld leeg
+    openStarttijdPopup(record: TijdInvoerRecord) {
+        this.isSaving = false;
+        this.Invoer = TypeTijdInvoer.Starttijd;                 // dan weten we later dat we een starttijd aan het invoeren zijn
+
+        this.haalStartOp(record.ID as number).then(() => {
+            this.vullenOverdag(this.vanTijd(), this.totTijd())
+            if (this.start.STARTTIJD) {
+                this.tijdIngevoerd = this.start.STARTTIJD;      // starttijd kan ondertussen gewijzigd zijn
+            } else if (!this.overdag.includes(this.tijdIngevoerd)) {
+                this.tijdIngevoerd = "";    // actuele tijd buiten daglicht periode
+                this.tijdOK = false;
+            }
+        });
+
+        // bij aanroepan van starttijd uit logboek hebben we geen dagnummer
+        if (record.DAGNUMMER) {
+            this.formTitel = 'Vlucht: #' + record.DAGNUMMER + ', ' + record.REG_CALL;
+        }
+        else {
+            this.formTitel = 'Vlucht: ' + record.DATUM + ', ' + record.REG_CALL;
+        }
+        this.label = 'Start';
+
+        if (record.STARTTIJD) {
+            this.tijdIngevoerd = record.STARTTIJD;
+            this.tijdOK = true;
+        } else {
+            // Zet de huidige tijd als default
+            this.tijdIngevoerd = (DateTime.now().toISOTime() as string).substring(0, 5);
+            this.tijdOK = true;
+        }
+        this.popup().open();
+
+        // geef tijd invoer de focus, moeten wachten tot alles op het scherm staat
+        setTimeout(()=> this.tijdInvoerElement().nativeElement.focus(), 200);
+    }
+
+    // open popup, maar haal eerst de start op. De eerder ingevoerde tijd wordt als default waarde gebruikt
+    // indien niet eerder ingvuld, dan de huidige tijd. Buiten de daglicht periode is het veld leeg
+    openLandingsTijdPopup(record: TijdInvoerRecord) {
+        this.isSaving = false;
+        this.Invoer = TypeTijdInvoer.Landingstijd;                 // dan weten we later dat we een landingstijd aan het invoeren zijn
+
+        this.haalStartOp(record.ID as number).then(() => {
+            this.vullenOverdag(this.vanTijd(), this.totTijd())
+            if (this.start.LANDINGSTIJD) {
+                this.tijdIngevoerd = this.start.LANDINGSTIJD;       // landingstijd kan ondertussen gewijzigd zijn
+            } else if (!this.overdag.includes(this.tijdIngevoerd)) {
+                this.tijdIngevoerd = "";    // actuele tijd buiten daglicht periode
+                this.tijdOK = false;
+            }
+        });
+
+        // bij aanroepan van landingstijd uit logboek hebben we geen dagnummer
+        if (record.DAGNUMMER) {
+            this.formTitel = 'Vlucht: #' + record.DAGNUMMER + ', ' + record.REG_CALL;
+        }
+        else {
+            this.formTitel = 'Vlucht: ' + record.DATUM + ', ' + record.REG_CALL;
+        }
+        this.label = 'Landing';
+
+        if (record.LANDINGSTIJD) {
+            this.tijdIngevoerd = record.LANDINGSTIJD;
+            this.tijdOK = true;
+        } else {
+            // Zet de huidige tijd als default
+            this.tijdIngevoerd = (DateTime.now().toISOTime() as string).substring(0, 5);
+            this.tijdOK = true;
+        }
+        this.popup().open();
+        // geef tijd invoer de focus, moeten wachten tot alles op het scherm staat
+        setTimeout(()=> this.tijdInvoerElement().nativeElement.focus(), 200);
+    }
+
+    private closePopup() {
+        this.popup().close();
+    }
+
+    // ophalen van de start, zodat we altijd met de laatste starts werken
+    private async haalStartOp(id: number): Promise<void> {
+        this.isLoading = true;
+        this.isSaving = false;
+
+        try {
+            await this.startlijstService.getStart(id).then((start) => {
+                this.start = start;
+                this.isLoading = false;
+            });
+        } catch (_) {
+            this.isLoading = false;
+        }
+    }
+
+    // Nu is het tijd om de ingevoerde tijd op te slaan
+    protected opslaan() {
+        const TimeParts = this.tijdIngevoerd.split(':')
+        let tijd: string | undefined = undefined;
+
+        if (TimeParts.length > 1) {   // zorg dat we goede formaat hebben
+            const hrs: string = TimeParts[0];
+            const min: string = (TimeParts[1] + "00").substring(0, 2); // ivm autocomplete moeten we aanvullen
+            tijd = hrs + ":" + min
+        }
+
+        if (this.Invoer == TypeTijdInvoer.Starttijd) {
+            this.start.STARTTIJD = tijd;
+            this.opslaanStartTijd(this.start);
+        }
+        else {
+            this.start.LANDINGSTIJD = tijd;
+            this.opslaanLandingsTijd(this.start);
+        }
+    }
+
+    // De starttijd is ingevoerd/aangepast. Opslaan van de starttijd
+    private opslaanStartTijd(start: HeliosStart) {
+        this.isSaving = true;
+        this.startlijstService.startTijd(start.ID as number, start.DATUM as string, start.STARTTIJD as string).then((s) => {
+            const b = (s.STARTTIJD) ? `Starttijd ${s.STARTTIJD} opgeslagen` : 'Starttijd verwijderd'
+            this.success = {
+                titel: "Startlijst",
+                beschrijving: b
+            }
+            this.isSaving = false;
+            this.closePopup();
+        }).catch(e => {
+            this.isSaving = false;
+            this.error = e;
+        });
+    }
+
+    // De landingstijd is ingevoerd/aangepast. Opslaan van de landingstijd
+    private opslaanLandingsTijd(start: HeliosStart) {
+        this.isSaving = true;
+        this.startlijstService.landingsTijd(start.ID as number, start.DATUM as string, start.LANDINGSTIJD as string).then((s) =>
+        {
+            const b = (s.LANDINGSTIJD) ? `Landingstijd ${s.LANDINGSTIJD} opgeslagen` : 'Landingstijd verwijderd'
+            this.success = {
+                titel: "Startlijst",
+                beschrijving: b
+            }
+            this.isSaving = false;
+            this.closePopup();
+        }).catch(e => {
+            this.isSaving = false;
+            this.error = e;
+        });
+    }
+
+    // De eerste tijd, op basis van de daglicht periode
+    private vanTijd(): Date {
+        const airport = this.configService.getAirport();
+        const d = new Date(this.start.DATUM as string);
+        const sunrise: Date = getSunrise(airport.Latitude, airport.Longitude, d);
+
+        let begin: Date = sunrise;
+
+        if (this.start.VELD_ID == -1) {
+            // VELD_ID = xxx Starten op ander veld, dan klopt sunrise niet. Dan maar vanaf 9:00
+            begin = new Date(new Date().setHours(9));
+        }
+
+        // Als we ladingstijd invoeren, moet de tijd later zijn dan de starttijd
+        if (this.Invoer == TypeTijdInvoer.Landingstijd  &&  this.start.STARTTIJD) {
+            const TimeParts = this.start.STARTTIJD.split(':')
+            begin.setHours(+TimeParts[0], +TimeParts[1]);
+        }
+        return begin;
+    }
+
+    // wat is de laatste tijd die ingevoerd mag worden op basis van daglicht periode
+    private totTijd(): Date {
+        const airport = this.configService.getAirport();
+        const d = new Date(this.start.DATUM as string);
+        const sunset: Date = getSunset(airport.Latitude, airport.Longitude, d);
+        sunset.setHours(sunset.getHours() + 1); // 1 uurtje extra voor landing in schemer
+
+        // VELD_ID = xxx Starten op ander veld, dan klopt sunset niet. Dan maar tot 22:00
+        return (this.start.VELD_ID == -1) ? new Date(new Date().setHours(22)) : sunset;
+    }
+
+    // vul een array met tijden van - tot
+    private vullenOverdag(van: Date, tot: Date): void {
+        const start: number = van.getHours() * 60 + van.getMinutes();
+        const eind: number = tot.getHours() * 60 + tot.getMinutes();
+
+        this.overdag = [];
+        for (let min = start; min <= eind; min++) {
+            const uurStr = Math.floor(min / 60).toString().padStart(2, '0');
+            const minStr = (min % 60).toString().padStart(2, '0');
+            this.overdag.push(uurStr + ":" + minStr);
+        }
+    }
+
+    // Help de gebruiker om invoer slimmer te maken, bijv toevoegen van : of een voorloop nul
+    // Zorg ook dat maximale input 5 tekens is.
+    protected veldInvoer(newValue: string) {
+        let output: string;
+        const inputParts = newValue.split(':');
+
+        if ((+inputParts[0] > 2) && (+inputParts[0] <= 9)) {
+            output = inputParts[0].toString().padStart(2, '0');
+        } else {
+            output = inputParts[0];
+        }
+
+        if (output.length == 2) {
+            output += ":";
+        }
+
+        if (inputParts.length > 1) {
+            if ((+inputParts[1] > 5) && (+inputParts[1] <= 9)) {
+                output += inputParts[1].toString().padStart(2, '0');
+            } else {
+                output += inputParts[1];
+            }
+        }
+
+        this.tijdInvoerElement().nativeElement.value = output.substring(0, 5);
+        const result = this.overdag.findIndex((t) =>
+                    {
+                        return t.startsWith(this.tijdInvoerElement().nativeElement.value);
+                    }, this.tijdInvoerElement().nativeElement.value);
+
+        // tijd moet overdag zijn en volledig zijn. als tijdOK = true, dan kan je pas opslaan
+        this.tijdOK = ((result && (inputParts.length > 1)) || this.tijdIngevoerd == "");
+    }
+
+    // Welke invoer staan we toe, alleen cijfers en control toetsen
+    protected keyDown(event: KeyboardEvent) {
+        if ((event.key == "ArrowDown") || (event.key == "ArrowUp") || (event.key == "ArrowLeft") || (event.key == "ArrowRight")) {
+            return;
+        }
+
+        if ((event.key == "End") || (event.key == "Home")) {
+            return;
+        }
+
+        if ((event.key == "Copy") || (event.key == "Paste") || (event.key == "Cut")) {
+            return;
+        }
+
+        if ((event.key == "Delete") || (event.key == "Backspace")) {
+            return;
+        }
+
+        if ((event.key.match(/[0-9]/)) && (this.tijdIngevoerd.length < 5)) {
+            return;
+        }
+
+        if (event.key == "Enter") {
+            this.opslaan();
+
+        }
+        event.preventDefault();
+    }
+
+    // Ingevoerde tijd wordt een minuutje later
+    protected timeUp() {
+        const TijdParts = this.tijdInvoerElement().nativeElement.value.split(':');
+
+        // conversie hh:mm naar minuten
+        let minuten = +TijdParts[0] * 60;
+        minuten += (TijdParts.length > 1) ? +TijdParts[1] : 0;
+
+        minuten++;  // minuutje meer
+
+        // en nu van minuten naar hh:mm
+        const uurStr = Math.floor(minuten / 60).toString().padStart(2, '0');
+        const minStr = (minuten % 60).toString().padStart(2, '0');
+        const tijd: string = (uurStr + ":" + minStr);
+
+        if (this.overdag.includes(tijd)) {
+            this.tijdIngevoerd = tijd;
+        }
+    }
+
+    // Ingevoerde tijd wordt een minuutje eerder
+    protected timeDown() {
+        const TijdParts = this.tijdInvoerElement().nativeElement.value.split(':');
+
+        // conversie hh:mm naar minuten
+        let minuten = +TijdParts[0] * 60;
+        minuten += (TijdParts.length > 1) ? +TijdParts[1] : 0;
+
+        minuten--;  // minuutje minder
+
+        // en nu van minuten naar hh:mm
+        const uurStr = Math.floor(minuten / 60).toString().padStart(2, '0');
+        const minStr = (minuten % 60).toString().padStart(2, '0');
+        const tijd: string = (uurStr + ":" + minStr);
+
+        if (this.overdag.includes(tijd)) {
+            this.tijdIngevoerd = tijd;
+        }
+    }
+}

@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { LedenService } from '../../../services/apiservice/leden.service';
-import { HeliosLedenDataset } from '../../../types/Helios';
+import { HeliosVerjaardag } from '../../../types/Helios';
 
 @Component({
     selector: 'app-verjaardagen',
@@ -9,7 +9,7 @@ import { HeliosLedenDataset } from '../../../types/Helios';
 })
 export class VerjaardagenComponent implements OnInit {
   // variablen in html formulier
-  protected verjaardagen: HeliosLedenDataset[] = [];
+  protected verjaardagen: HeliosVerjaardag[] = [];
 
   // private variable voor ts script
   private readonly ledenService = inject(LedenService);

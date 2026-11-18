@@ -19,7 +19,7 @@
                         <div class="col-8">
                             <label class="form-label" for="TEKST">Tekst</label>
                             <input name="test" type="text" class="form-control" id="TEKST"
-                                   [(ngModel)]="document.TEKST" [disabled]="document.LEGE_REGEL">
+                                   [(ngModel)]="document.TEKST" [disabled]="!!document.LEGE_REGEL">
                         </div>
                         <div class="col-4">
                             <label class="form-label" for="VOLGORDE">Volgorde</label>
@@ -32,7 +32,7 @@
                     <div class="col-1">
                         <input type="checkbox"
                                [ngModel]="isDoc"
-                               [disabled]="document.LEGE_REGEL"
+                               [disabled]="!!document.LEGE_REGEL"
                                (change)="docUrl('doc')"
                                class="form-check-inline">
                     </div>
@@ -52,7 +52,7 @@
                         <div class="col-1">
                         <input type="checkbox"
                                [ngModel]="isUrl"
-                               [disabled]="document.LEGE_REGEL"
+                               [disabled]="!!document.LEGE_REGEL"
                                (change)="docUrl('url')"
                                class="form-check-inline">
                         </div>

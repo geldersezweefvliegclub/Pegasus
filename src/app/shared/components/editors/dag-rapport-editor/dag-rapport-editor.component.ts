@@ -2,8 +2,7 @@ import { Component, OnDestroy, OnInit, inject, input, output, viewChild } from '
 import { ModalComponent } from '../../modal/modal.component';
 import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
-import { faCloudSunRain, faFlagCheckered, faFrown, faTruck } from '@fortawesome/free-solid-svg-icons';
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';
+import { faCloudSunRain, faFlagCheckered, faFrown, faPaperPlane, faTruck } from '@fortawesome/free-solid-svg-icons';
 import { ComposeMeteoComponent } from './compose-meteo/compose-meteo.component';
 import { ComposeBedrijfComponent } from './compose-bedrijf/compose-bedrijf.component';
 import { faArtstation } from '@fortawesome/free-brands-svg-icons';

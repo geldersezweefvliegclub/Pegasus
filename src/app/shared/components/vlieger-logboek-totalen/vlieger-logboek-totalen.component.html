@@ -3,7 +3,7 @@
 
 @if (data) {
     <div class="overflow-auto">
-        @if (data.starts.length > 0) {
+        @if ((data.starts?.length ?? 0) > 0) {
             <div>
         <table class="vliegtuigenTabel">
             <tr class="headerRow">
@@ -29,17 +29,17 @@
                     Totaal {{ datum.year }}
                 </td>
                 <td class="kolom2">
-                    {{ data.jaar.STARTS }}
+                    {{ data.jaar?.STARTS }}
                 </td>
                 <td class="kolom3">
-                    {{ data.jaar.VLIEGTIJD }}
+                    {{ data.jaar?.VLIEGTIJD }}
                 </td>
             </tr>
         </table>
             </div>
-        } @if (data.jaar.INSTRUCTIE_STARTS > 0) {
-        <p><b>Instructie</b>: {{ data.jaar.INSTRUCTIE_STARTS }} starts en {{ data.jaar.INSTRUCTIE_UREN }} uren</p>
-    } @if (data.starts.length > 0) {
+        } @if ((data.jaar?.INSTRUCTIE_STARTS ?? 0) > 0) {
+        <p><b>Instructie</b>: {{ data.jaar?.INSTRUCTIE_STARTS }} starts en {{ data.jaar?.INSTRUCTIE_UREN }} uren</p>
+    } @if ((data.starts?.length ?? 0) > 0) {
         <div>
         <p class="textStartMethode"><b>Start methode</b></p>
         <table class="startsTabel">

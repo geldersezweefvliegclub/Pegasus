@@ -20,7 +20,7 @@
     <form>
     <div class="row">
         <div class="col-12 col-xl-7 col-xxl-8">
-            <app-pegasus-card [titel]="titel" [subtitel]="subtitel" class="h-100" [img]="avatar">
+            <app-pegasus-card [titel]="titel" [subtitel]="subtitel" class="h-100" [img]="avatar ?? ''">
                 <div avatar>
                     @if (!this.isVerwijderMode() && !this.isRestoreMode()) {
                         <app-image-crop (opslaan)="uploadFoto($event)" (cropped)="setAvatar($event)"
@@ -281,7 +281,7 @@
                                         <app-lid-invoer id='ZUSTERCLUB_ID'
                                                 placeholder="Zusterclub"
                                                 label="Zusterclub"
-                                                [LID_ID]="lid.ZUSTERCLUB_ID"
+                                                [LID_ID]="lid.ZUSTERCLUB_ID ?? undefined"
                                                 [leden]="zusterclubs"
                                                 (LidChanged)="lid.ZUSTERCLUB_ID=$event"
                                         />
@@ -369,7 +369,7 @@
                             <app-lid-invoer id="BUDDY"
                                             placeholder="Selecteer buddy"
                                             label="Buddy 1"
-                                            [LID_ID]="lid.BUDDY_ID"
+                                            [LID_ID]="lid.BUDDY_ID ?? undefined"
                                             [disabled]="isDisabled('BUDDY')"
                                             [leden]="instructeurs"
                                             (LidChanged)="lid.BUDDY_ID = $event"
@@ -379,7 +379,7 @@
                             <app-lid-invoer id="BUDDY2"
                                             placeholder="Selecteer buddy"
                                             label="Buddy 1"
-                                            [LID_ID]="lid.BUDDY_ID2"
+                                            [LID_ID]="lid.BUDDY_ID2 ?? undefined"
                                             [disabled]="isDisabled('BUDDY')"
                                             [leden]="instructeurs"
                                             (LidChanged)="lid.BUDDY_ID2 = $event"
@@ -590,11 +590,11 @@
         <div class="row mt-2 justify-content-end">
             <div class="col-3 d-flex justify-content-end">
                 @if (!isLoading && !isSaving && lid.ID !== undefined && !isRestoreMode() && !isVerwijderMode()) {
-                    <app-icon-button [disabled]='informatieGroup.invalid || persoonGroup.invalid'
+                    <app-icon-button [disabled]='!!(informatieGroup.invalid || persoonGroup.invalid)'
                             iconNaam="fas Edit" btnColor="btn-primary" [toonKlein]=false
                                      tekst='Opslaan' (btnClicked)='uitvoeren()'/>
                 } @if (!isLoading && !isSaving && lid.ID === undefined && !isRestoreMode() && !isVerwijderMode()) {
-                <app-icon-button [disabled]='informatieGroup.invalid || persoonGroup.invalid'
+                <app-icon-button [disabled]='!!(informatieGroup.invalid || persoonGroup.invalid)'
                         iconNaam="fas Plus" btnColor="btn-primary" [toonKlein]=false
                                  tekst='Opslaan' (btnClicked)='uitvoeren()'/>
             } @if (!isLoading && !isSaving && isVerwijderMode()) {

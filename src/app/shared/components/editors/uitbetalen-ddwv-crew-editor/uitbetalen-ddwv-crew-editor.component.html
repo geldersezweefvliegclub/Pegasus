@@ -12,7 +12,7 @@
                                 <input type="checkbox" class="form-check-inline"
                                        [id]="'dienst_' + dienst.ID"
                                        [name]="'dienst_' + dienst.ID"
-                                       (change)="selectieChanged($event, dienst.ID)">
+                                       (change)="selectieChanged($event, dienst.ID!)">
                 </td>
                         } @if (!dienst.UITBETAALD) {
                         <td>{{ dienst.NAAM }}</td>

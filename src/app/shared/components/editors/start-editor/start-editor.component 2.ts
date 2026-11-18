@@ -1,0 +1,859 @@
+import { Component, OnInit, inject, input, viewChild } from '@angular/core';
+import {
+    HeliosAanwezigLedenDataset,
+    HeliosBehaaldeProgressieDataset,
+    HeliosLedenDataset,
+    HeliosStart,
+    HeliosStartDataset,
+    HeliosType,
+    HeliosVliegtuigenDataset,
+} from '../../../../types/Helios';
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { ModalComponent } from '../../modal/modal.component';
+import { StartlijstService } from '../../../../services/apiservice/startlijst.service';
+import { VliegtuigenService } from '../../../../services/apiservice/vliegtuigen.service';
+import { AanwezigVliegtuigService } from '../../../../services/apiservice/aanwezig-vliegtuig.service';
+import { Observable, of, Subscription } from 'rxjs';
+import { DateTime, Interval } from 'luxon';
+import { LedenService } from '../../../../services/apiservice/leden.service';
+import { AanwezigLedenService } from '../../../../services/apiservice/aanwezig-leden.service';
+import { SharedService } from '../../../../services/shared/shared.service';
+import { DaginfoService } from '../../../../services/apiservice/daginfo.service';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { VliegtuigInvoerComponent } from './vliegtuig-invoer/vliegtuig-invoer.component';
+import { ProgressieService } from '../../../../services/apiservice/progressie.service';
+import { LoginService } from '../../../../services/apiservice/login.service';
+import { PegasusConfigService } from '../../../../services/shared/pegasus-config.service';
+import { NgbDate, NgbDateParserFormatter, NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateFRParserFormatter } from '../../../ngb-date-fr-parser-formatter';
+import { TransactieEditorComponent } from '../transactie-editor/transactie-editor.component';
+import { DienstenService } from '../../../../services/apiservice/diensten.service';
+import { RoosterService } from '../../../../services/apiservice/rooster.service';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { FormsModule } from '@angular/forms';
+import { NgClass, AsyncPipe } from '@angular/common';
+import { LidInvoerComponent } from './lid-invoer/lid-invoer.component';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { LoaderComponent } from '../../loader/loader.component';
+
+@Component({
+    selector: 'app-start-editor',
+    templateUrl: './start-editor.component.html',
+    styleUrls: ['./start-editor.component.scss'],
+    providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
+    imports: [ErrorComponent, SuccessComponent, TransactieEditorComponent, ModalComponent, IconButtonComponent, NgbInputDatepicker, FormsModule, NgClass, VliegtuigInvoerComponent, LidInvoerComponent, NgSelectComponent, LoaderComponent, AsyncPipe]
+})
+
+export class StartEditorComponent implements OnInit {
+    readonly VliegerID = input<number>();                     // wordt gezet bij aanroep vanuit logboek
+    readonly VliegveldID = input<number>();       // wordt gezet als we van start / vluchten een start aanmaken
+
+    // variablen in html formulier
+    protected start: HeliosStart & Pick<HeliosStartDataset, 'DAGNUMMER'> = {};      // DAGNUMMER alleen om te tonen, bepaalt Helios.js zelf
+    protected toonTranactieKnop = false;        // Moet de transactie editor geopend kunnen worden?
+    protected toonVliegerNaam = false;
+    protected toonInzittendeNaam = 0;             // 0, naam hoeft niet ingevoerd te worden
+
+                                                // 1, naam mag ingevoerd worden, maar ook inzittende combobox tonen
+                                                // 2, toon alleen de naam invoer
+    protected toonStartMethode = true;
+    protected toonWaarschuwing = false;          // mag het lid op die vliegtuig vliegen volgens kruisjeslijst?
+    protected medicalWaarschuwing = false;       // Controleer op geldigheid medical
+    protected startVerbod = false;               // Vlieger heeft een startverbod
+    protected startMethodeTypesFiltered: HeliosType[];
+    protected veldenTypes$: Observable<HeliosType[]>;
+    protected baanTypes$: Observable<HeliosType[]>;
+    protected vliegtuigen: HeliosVliegtuigenDataset[] = [];
+    protected aanwezigVliegtuigen: HeliosVliegtuigenDataset[] = [];
+    protected gekozenVliegtuig: HeliosVliegtuigenDataset;     // het gekozen vliegtuig uit de editor
+
+    // 607 = zusterclub
+    // 610 = oprotkabel
+    // 612 = penningmeester
+    // 613 = systeem gebruiker
+    // 620 = Wachtlijst
+    // 625 = DDWV'er
+    protected exclLidtypeAlsInzittende = "607,610,612,613,620"
+    protected exclLidtypeAlsVlieger = "613,620"
+    protected leden: HeliosLedenDataset[] = [];
+    protected aanwezigLeden: HeliosAanwezigLedenDataset[] = [];
+    protected datum: DateTime = DateTime.now();           // de gekozen dag
+    protected isLoading = false;
+    protected isSaving = false;
+    protected magAltijdWijzigen = false;
+    protected magDatumAanpassen = false;
+    protected isVerwijderMode = false;
+    protected isRestoreMode = false;
+    protected formTitel = "";
+    protected vandaag: DateTime = DateTime.now();
+    protected minDatum: DateTime = DateTime.now();
+    protected startDatum: DateTime;
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+
+    // private variable voor ts script
+    private readonly typesService = inject(TypesService);
+    private readonly ledenService = inject(LedenService);
+    private readonly loginService = inject(LoginService);
+    private readonly sharedService = inject(SharedService);
+    private readonly daginfoService = inject(DaginfoService);
+    private readonly roosterService = inject(RoosterService);
+    private readonly dienstenService = inject(DienstenService);
+    private readonly configService = inject(PegasusConfigService);
+    private readonly startlijstService = inject(StartlijstService);
+    private readonly progressieService = inject(ProgressieService);
+    private readonly vliegtuigenService = inject(VliegtuigenService);
+    private readonly aanwezigLedenService = inject(AanwezigLedenService);
+    private readonly aanwezigVliegtuigenService = inject(AanwezigVliegtuigService);
+    private readonly popup = viewChild.required(ModalComponent);
+    private readonly vliegtuigInvoerComponent = viewChild.required(VliegtuigInvoerComponent);
+    private readonly transactieEditor = viewChild.required(TransactieEditorComponent);
+
+    private typesAbonnement: Subscription;
+    private startMethodeTypes: HeliosType[];
+    private vliegtuigenAbonnement: Subscription;
+    private aanwezigVliegtuigenAbonnement: Subscription;
+    private ledenAbonnement: Subscription;
+    private aanwezigLedenAbonnement: Subscription;
+    private datumAbonnement: Subscription;      // volg de keuze van de kalender
+
+    ngOnInit(): void {
+        const ui = this.loginService.userInfo?.Userinfo;
+
+        if (ui?.isBeheerder || ui?.isBeheerderDDWV) {
+            this.minDatum = DateTime.fromObject({year: this.vandaag.year-1, month:1, day:1})
+            this.toonTranactieKnop = true;
+        }
+        else {
+            this.minDatum = this.vandaag.plus({days: -1 * this.configService.maxZelfEditDagen()});
+        }
+
+        // de datum zoals die in de kalender gekozen is, we halen dan de dag afhankelijke gegevens op
+        this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
+            this.datum = DateTime.fromObject({
+                year: datum.year,
+                month: datum.month,
+                day: datum.day
+            })
+            this.magWijzigen(this.datum.toISODate() as string);
+        });
+
+        // abonneer op wijziging van lidTypes
+        this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
+            this.startMethodeTypes = dataset!.filter((t:HeliosType) => { return t.GROEP == 5});
+            this.veldenTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));
+            this.baanTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 1}));
+        });
+
+        // abonneer op wijziging van vliegtuigen
+        this.vliegtuigenAbonnement = this.vliegtuigenService.vliegtuigenChange.subscribe(vliegtuigen => {
+            this.vliegtuigen = (vliegtuigen) ? vliegtuigen : [];
+        });
+
+        // abonneer op wijziging van leden
+        this.ledenAbonnement = this.ledenService.ledenChange.subscribe(leden => {
+            this.leden = (leden) ? leden : [];
+        });
+
+        // abonneer op wijziging van aanwezige leden
+        this.aanwezigLedenAbonnement = this.aanwezigLedenService.aanwezigChange.subscribe(dataset => {
+            this.aanwezigLeden = dataset!;
+        });
+
+        // abonneer op wijziging van aanwezige vliegtuigen
+        this.aanwezigVliegtuigenAbonnement = this.aanwezigVliegtuigenService.aanwezigChange.subscribe(dataset => {
+            // Als er starts is, even in juiste formaat zetten. Aanwezig moet hetzelfde formaat hebben als vliegtuigen
+            this.aanwezigVliegtuigen = [];
+
+            for (const item of (dataset ?? [])) {
+                this.aanwezigVliegtuigen.push(
+                  {
+                      ID: item.VLIEGTUIG_ID,
+                      REGISTRATIE: item.REGISTRATIE,
+                      REG_CALL: item.REG_CALL,
+                      CALLSIGN: item.CALLSIGN,
+                      TYPE_ID: item.TYPE_ID,
+                      SLEEPKIST: item.SLEEPKIST,
+                      TMG: item.TMG,
+                      ZELFSTART: item.ZELFSTART,
+                      CLUBKIST: item.CLUBKIST,
+                      ZITPLAATSEN: item.ZITPLAATSEN
+                  });
+
+            }
+        });
+    }
+
+    openPopup(start: HeliosStartDataset | null) {
+        if (start) {
+            // vul alvast de editor met starts uit het grid
+            this.start = {
+                ID: start.ID,
+                DATUM: start.DATUM,
+                DAGNUMMER: start.DAGNUMMER,
+                VLIEGTUIG_ID: start.VLIEGTUIG_ID,
+                VLIEGER_ID: start.VLIEGER_ID,
+                INZITTENDE_ID: start.INZITTENDE_ID,
+                VLIEGERNAAM: start.VLIEGERNAAM,
+                INZITTENDENAAM: start.INZITTENDENAAM,
+                STARTTIJD: start.STARTTIJD,
+                LANDINGSTIJD: start.LANDINGSTIJD,
+
+                STARTMETHODE_ID: start.STARTMETHODE_ID,
+                VELD_ID: start.VELD_ID,
+                BAAN_ID: start.BAAN_ID,
+                PAX: start.PAX,
+                CHECKSTART: start.CHECKSTART,
+                SLEEPKIST_ID: start.SLEEPKIST_ID,
+                SLEEP_HOOGTE: start.SLEEP_HOOGTE,
+
+                OPMERKINGEN: start.OPMERKINGEN,
+                EXTERNAL_ID: start.EXTERNAL_ID
+            };
+            if (start.ID) {
+                this.formTitel = 'Start bewerken';
+                this.haalStartOp(start.ID as number); // maar starts kan gewijzigd zijn, dus toch even starts ophalen van API
+            }
+            else
+            {
+                this.formTitel = `Start aanmaken`;
+            }
+        } else {
+            this.formTitel = `Start aanmaken`;
+
+            let veld_id: number | null | undefined = this.VliegveldID();
+            let baan_id = undefined;
+            let startmethode_id = undefined;
+
+            const VliegveldID = this.VliegveldID();
+            if (!VliegveldID) {
+                veld_id = this.daginfoService.dagInfo.VELD_ID;
+                baan_id = this.daginfoService.dagInfo.BAAN_ID;
+                startmethode_id = this.daginfoService.dagInfo.STARTMETHODE_ID;
+            }
+            else if ((VliegveldID == this.daginfoService.dagInfo.VELD_ID) ||
+                (VliegveldID == this.daginfoService.dagInfo.VELD_ID2)) {
+                veld_id = (VliegveldID == this.daginfoService.dagInfo.VELD_ID2) ? this.daginfoService.dagInfo.VELD_ID2 : this.daginfoService.dagInfo.VELD_ID;
+                baan_id = (VliegveldID == this.daginfoService.dagInfo.VELD_ID2) ? this.daginfoService.dagInfo.BAAN_ID2 : this.daginfoService.dagInfo.BAAN_ID;
+                startmethode_id = (VliegveldID == this.daginfoService.dagInfo.VELD_ID2) ? this.daginfoService.dagInfo.STARTMETHODE_ID2 : this.daginfoService.dagInfo.STARTMETHODE_ID;
+            }
+
+            const VliegerID = this.VliegerID();
+            this.start = {
+                ID: undefined,
+                DATUM: this.datum.toISODate() as string,
+                DAGNUMMER: undefined,
+                VLIEGTUIG_ID: undefined,
+                VLIEGER_ID: (VliegerID && !this.magAltijdWijzigen) ? VliegerID : undefined,      // Vlieger ID is bekend als we vanuit logboek start toevoegen
+                INZITTENDE_ID: undefined,
+                VLIEGERNAAM: undefined,
+                INZITTENDENAAM: undefined,
+                STARTTIJD: undefined,
+                LANDINGSTIJD: undefined,
+
+                STARTMETHODE_ID: startmethode_id,
+                VELD_ID: veld_id,
+                BAAN_ID: baan_id,
+                PAX: false,
+                CHECKSTART: false,
+                SLEEPKIST_ID: undefined,
+                SLEEP_HOOGTE: undefined,
+
+                OPMERKINGEN: undefined,
+                EXTERNAL_ID: undefined
+            };
+        }
+        // Zet de juiste parameters (doe alsof er invoer heeft plaatsgevonden), heeft invloed op het tonen van velden in de editor
+        this.vliegtuigGeselecteerd(this.start.VLIEGTUIG_ID);
+        this.vliegerGeselecteerd(this.start.VLIEGER_ID)
+
+        this.isVerwijderMode = false;
+        this.isRestoreMode = false;
+        this.isSaving = false;
+
+        const ui = this.loginService.userInfo?.Userinfo;
+        this.startDatum = DateTime.fromSQL(this.start.DATUM!);
+
+        const nu:  DateTime = DateTime.now()
+        const diff = Interval.fromDateTimes(this.startDatum, nu);
+        this.magDatumAanpassen = ((Math.floor(diff.length("days")) <= this.configService.maxZelfEditDagen()) && (!ui?.isStarttoren) || ui!.isBeheerder! || ui!.isBeheerderDDWV!);
+
+        this.popup().open();
+
+        // open de lijst met vliegtuigen, bij aan,maken nieuwe start
+        if (!start) {
+            this.vliegtuigInvoerComponent().ngSelect().open();
+        }
+    }
+
+    private closePopup() {
+        this.popup().close();
+    }
+
+    // Ophalen van de start uit de database (via API)
+    private haalStartOp(id: number): void {
+        this.isLoading = true;
+
+        try {
+            this.startlijstService.getStart(id).then((start) => {
+                this.start = start;
+                this.isLoading = false;
+
+                // zet de juiste parameters (doe alsof er invoer heeft plaatsgevonden)
+                this.vliegtuigGeselecteerd(this.start.VLIEGTUIG_ID);
+                this.vliegerGeselecteerd(this.start.VLIEGER_ID);
+
+                // vliegtuigen & leden kunnen nog niet geladen zijn, daarom herhalen we het nog een keer
+                setTimeout(() => {
+                    this.vliegtuigGeselecteerd(this.start.VLIEGTUIG_ID);
+                    this.vliegerGeselecteerd(this.start.VLIEGER_ID);
+                }, 2000);
+            });
+        } catch (_) {
+            this.isLoading = false;
+        }
+    }
+
+    // Er is een vliegtuig geselecteerd in de dropdown box
+    protected vliegtuigGeselecteerd(id: number | null | undefined) {
+        this.start.VLIEGTUIG_ID = id;
+        this.gekozenVliegtuig = this.vliegtuigen.find(vliegtuig => vliegtuig.ID == id) as HeliosVliegtuigenDataset;
+        this.vliegtuigTypeBevoegd();
+
+        this.startMethodeTypesFiltered = [];
+        if (this.gekozenVliegtuig) {
+            // 501 = Slepen
+            // 550 = Lierstart
+            if (!this.gekozenVliegtuig.TMG && !this.gekozenVliegtuig.SLEEPKIST) {
+                this.toonStartMethode = true;
+                this.startMethodeTypesFiltered.push(this.startMethodeTypes.find(type => type.ID == 501) as HeliosType);
+                this.startMethodeTypesFiltered.push(this.startMethodeTypes.find(type => type.ID == 550) as HeliosType);
+            }
+
+            // 507 = Zelfstart
+            if (this.gekozenVliegtuig.ZELFSTART) {
+                this.toonStartMethode = true;
+                this.startMethodeTypesFiltered.push(this.startMethodeTypes.find(type => type.ID == 506) as HeliosType);
+            }
+
+            // Deze kunnen niet gesleept of gelierd worden
+            if (this.gekozenVliegtuig.TMG || this.gekozenVliegtuig.SLEEPKIST) {
+                this.startMethodeTypesFiltered.push(this.startMethodeTypes.find(type => type.ID == 507) as HeliosType);
+                this.start.STARTMETHODE_ID = 507;
+                this.toonStartMethode = false;
+            }
+
+            // Als het vliegtuig een DBO trainer is, dan zetten we meteen dat het een instructievlucht is
+            // Maar dat doen we alleen bij nieuwe invoer
+            if ((this.gekozenVliegtuig.ZITPLAATSEN == 2) && (this.gekozenVliegtuig.TRAINER) && (this.start.ID == undefined)) {
+                this.start.INSTRUCTIEVLUCHT = true;
+            }
+
+            // Voor eenzitters is het natuurlijk nooit een instructie start
+            if (this.gekozenVliegtuig.ZITPLAATSEN == 1) {
+                this.start.INSTRUCTIEVLUCHT = false;
+            }
+        }
+
+        // Indien clubkist dan mogen er een aantal lidtypes hierop niet vliegen
+        // 607 = zusterclub
+        // 610 = oprotkabel
+        // 613 = systeem gebruiker
+        // 625 = DDWV'er
+        this.exclLidtypeAlsVlieger = (this.gekozenVliegtuig?.CLUBKIST) ? "607,610,613,625" : "613";
+
+        this.tonenInzittendeNaam();
+    }
+
+    // De vlieger is nu ingevoerd
+    protected vliegerGeselecteerd(id: number | null | undefined) {
+        this.start.VLIEGER_ID = id;
+        const gekozenVlieger = this.leden.find(lid => lid.ID == id) as HeliosLedenDataset;
+
+        if (!gekozenVlieger) {
+            this.toonVliegerNaam = false;
+        } else {
+            switch (gekozenVlieger.LIDTYPE_ID) {
+                case 609:   // nieuw lid
+                {
+                    this.toonVliegerNaam = true;
+                    break;
+                }
+                case 607:   // zusterclub
+                case 610:   // oprotkabel
+                case 612:   // penningmeester
+                {
+                    this.toonVliegerNaam = true;
+                    break;
+                }
+                default: {
+                    this.toonVliegerNaam = false;
+                    break;
+                }
+            }
+        }
+        this.tonenInzittendeNaam();
+        this.vliegtuigTypeBevoegd();
+        this.medicalCheck();
+        this.startVerbodCheck();
+    }
+
+    // De inzittende is nu ook bekend
+    protected inzittendeGeselecteerd($event: number |undefined ) {
+        this.start.INZITTENDE_ID = $event;
+        this.tonenInzittendeNaam();
+        this.vliegtuigTypeBevoegd();
+
+        this.medicalCheck();
+    }
+
+    //  this.toonInzittendeNaam: 0, naam hoeft niet ingevoerd te worden
+    //  this.toonInzittendeNaam: 1, naam mag ingevoerd worden, maar ook inzittende combobox tonen
+    //  this.toonInzittendeNaam: 2, toon alleen de naam invoer
+    private tonenInzittendeNaam() {
+        if ((this.gekozenVliegtuig) && (this.gekozenVliegtuig.ZITPLAATSEN !== 2)) return false;  // voor eenzitters geen naam tonen
+        const gekozenVlieger = this.leden.find(lid => lid.ID == this.start.VLIEGER_ID) as HeliosLedenDataset;
+        const gekozenInzittende = this.leden.find(lid => lid.ID == this.start.INZITTENDE_ID) as HeliosLedenDataset;
+
+        if (gekozenVlieger) {
+            switch (gekozenVlieger.LIDTYPE_ID) {
+                case 607:   // zusterclub
+                case 610:   // oprotkabel
+                case 612:   // penningmeester
+                {
+                    this.toonInzittendeNaam = 2;
+                    return;
+                }
+                default :
+                {
+                    this.toonInzittendeNaam = 0;
+                    break;
+                }
+            }
+        }
+
+        if (gekozenInzittende) {
+            this.toonInzittendeNaam = (gekozenInzittende.LIDTYPE_ID == 609) ? 1 : 0; // 609 = nieuwlid
+        }
+        else {
+            this.toonInzittendeNaam = 0;
+        }
+    }
+
+    // toon popup om vlucht te verwijderen
+    openVerwijderPopup(id: number) {
+        this.haalStartOp(id);
+        this.formTitel = 'Start verwijderen';
+
+        this.isSaving = false;
+        this.isVerwijderMode = true;
+        this.isRestoreMode = false;
+        this.popup().open();
+    }
+
+    // toon popup om eerder verwijderde vlucht weer terug ui de prullenbak te halen
+    openRestorePopup(id: number) {
+        this.haalStartOp(id);
+        this.formTitel = 'Start herstellen';
+
+        this.isSaving = false;
+        this.isRestoreMode = true;
+        this.isVerwijderMode = false;
+        this.popup().open();
+    }
+
+    // Opslaan van de informatie
+    protected uitvoeren() {
+        // extra vraag om instructie vlucht, indien nodig
+        let doorgaan = true;
+
+        if (this.gekozenVliegtuig.ZITPLAATSEN == 2 && !this.isVerwijderMode && !this.isRestoreMode) {
+            const inzittende = this.leden.find(lid => lid.ID == this.start.INZITTENDE_ID) as HeliosLedenDataset;
+
+            if (inzittende && inzittende.INSTRUCTEUR && !this.start.INSTRUCTIEVLUCHT) {
+                doorgaan = confirm("Bevestig dat dit GEEN instructie vlucht is.");
+            }
+        }
+
+        if (doorgaan) {
+            this.isSaving = true;
+            if (this.isRestoreMode) {
+                this.Herstellen();
+            }
+
+            if (this.isVerwijderMode) {
+                this.Verwijderen();
+            }
+
+            if (!this.isVerwijderMode && !this.isRestoreMode) {
+                if (!this.toonVliegerNaam) {
+                    this.start.VLIEGERNAAM = undefined;
+                }
+                if (this.toonInzittendeNaam == 0 && !this.start.PAX) {
+                    this.start.INZITTENDENAAM = undefined;
+                }
+
+                if (this.start.ID) {
+                    this.Aanpassen();
+                } else {
+                    this.Toevoegen();
+                }
+            }
+        }
+    }
+
+    // nieuwe start is ingevoerd, nu opslaan
+    private Toevoegen() {
+        if (!this.toonVliegerNaam) {
+            this.start.VLIEGERNAAM = undefined;
+        }
+        if (this.toonInzittendeNaam == 0 && !this.start.PAX) {
+            this.start.INZITTENDENAAM = undefined;
+        }
+        if (this.start.PAX) {
+            this.start.INZITTENDE_ID = undefined;
+        }
+
+        this.startlijstService.addStart(this.start).then((s) => {
+            this.success = {
+                titel: "Startlijst",
+                beschrijving: `Vlucht #${s.DAGNUMMER} is toegevoegd`
+            }
+            this.closePopup();
+        }).catch(e => {
+            this.isSaving = false;
+            this.error = e;
+        })
+    }
+
+    // bestaande start is aangepast, nu opslaan
+    private Aanpassen() {
+        if (!this.toonVliegerNaam) {
+            this.start.VLIEGERNAAM = undefined;
+        }
+        if (!this.toonInzittendeNaam) {
+            this.start.INZITTENDENAAM = undefined;
+        }
+        if (this.start.PAX) {
+            this.start.INZITTENDE_ID = undefined;
+        }
+
+        this.startlijstService.updateStart(this.start).then(() => {
+            this.success = {
+                titel: "Startlijst",
+                beschrijving: `Vlucht #${this.start.DAGNUMMER} is aangepast`
+            }
+
+            this.closePopup();
+        }).catch(e => {
+            this.isSaving = false;
+            this.error = e;
+        })
+    }
+
+    // markeer een start als verwijderd
+    protected Verwijderen() {
+        this.startlijstService.deleteStart(this.start.ID!).then(() => {
+            this.success = {
+                titel: "Startlijst",
+                beschrijving: `Vlucht #${this.start.DAGNUMMER} is verwijderd`
+            }
+            this.closePopup();
+        }).catch(e => {
+            this.isSaving = false;
+            this.error = e;
+        });
+    }
+
+    // de start moet hersteld worden, haal de markering 'verwijderd' weg
+    protected Herstellen() {
+        this.startlijstService.restoreStart(this.start.ID!).then(() => {
+            this.success = {
+                titel: "Startlijst",
+                beschrijving: `Vlucht #${this.start.DAGNUMMER} is hersteld`
+            }
+            this.closePopup();
+        }).catch(e => {
+            this.isSaving = false;
+            this.error = e;
+        });
+    }
+
+    // Heeft de vlieger een startverbod
+    private startVerbodCheck()
+    {
+        const gekozenVlieger = this.leden.find(lid => lid.ID == this.start.VLIEGER_ID) as HeliosLedenDataset;
+        this.startVerbod = (gekozenVlieger) ? gekozenVlieger.STARTVERBOD == true: false;
+    }
+
+    // check of medical op orde is. Check inzittende wanneer het een instructie vlucht is
+    private medicalCheck() {
+        const checkID = this.start.INSTRUCTIEVLUCHT ? this.start.INZITTENDE_ID : this.start.VLIEGER_ID
+        const gekozenVlieger = this.leden.find(lid => lid.ID == checkID) as HeliosLedenDataset;
+
+        if (!gekozenVlieger) {
+            this.medicalWaarschuwing = false;   // er is nog geen vlieger geselecteerd
+        } else {
+            switch (gekozenVlieger.LIDTYPE_ID) {
+                case 609:   // nieuw lid
+                case 607:   // zusterclub
+                case 610:   // oprotkabel
+                case 612:   // penningmeester
+                {
+                    this.medicalWaarschuwing = false;
+                    break;
+                }
+                default: {
+                    if (!gekozenVlieger.MEDICAL) {
+                        this.medicalWaarschuwing = true;   // medical niet ingevoerd
+                    }
+                    else {
+                        // is medical verlopen op de vliegdag?
+
+                        const d = DateTime.fromSQL(gekozenVlieger.MEDICAL);
+                        this.medicalWaarschuwing =  (d < this.datum);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    // Mag het lid vliegen op het gekozen vliegtuig. Alleen van toepassing op clubkisten
+    // Voor instructie vlucht, checken we de inzittende ipv vlieger
+    private vliegtuigTypeBevoegd() {
+        // moeten natuurlijk vlieger en vliegtuig ingevoerd hebben
+        if (!this.start.VLIEGTUIG_ID || !this.start.VLIEGER_ID) {
+            this.toonWaarschuwing = false;
+            return;
+        }
+
+        // alleen controle op clubvliegtuigen
+        if (this.gekozenVliegtuig.CLUBKIST == false) {
+            this.toonWaarschuwing = false;
+            return;
+        }
+        const checkID = this.start.INSTRUCTIEVLUCHT ? this.start.INZITTENDE_ID : this.start.VLIEGER_ID
+        const gekozenVlieger = this.leden.find(lid => lid.ID == checkID) as HeliosLedenDataset;
+
+        if (gekozenVlieger) {
+            switch (gekozenVlieger.LIDTYPE_ID) {
+                case 609:   // nieuw lid
+                case 607:   // zusterclub
+                case 610:   // oprotkabel
+                case 612:   // penningmeester
+                {
+                    this.toonWaarschuwing = false;
+                    return;
+                }
+            }
+        }
+
+        if (this.start.INZITTENDE_ID) {
+            const inzittende = this.leden.find(lid => lid.ID == this.start.INZITTENDE_ID) as HeliosLedenDataset;
+
+            if (inzittende.INSTRUCTEUR == true) {  // als inzittende een instructeur is, geven we geen waarschuwing
+                this.toonWaarschuwing = false;
+                return;
+            }
+        }
+
+        let competentieIDs = "";
+        if (this.gekozenVliegtuig.BEVOEGDHEID_LOKAAL_ID) {
+            competentieIDs = this.gekozenVliegtuig.BEVOEGDHEID_LOKAAL_ID.toString();
+        }
+        if (this.gekozenVliegtuig.BEVOEGDHEID_OVERLAND_ID) {
+            if (competentieIDs != "") {
+                competentieIDs += ",";
+            }
+            competentieIDs += this.gekozenVliegtuig.BEVOEGDHEID_OVERLAND_ID;
+        }
+
+        if (competentieIDs == "") {             // Blijkbaar is er geen bevoegdheid nodig
+            this.toonWaarschuwing = false;
+            return;
+        }
+
+        this.progressieService.getProgressiesLid(this.start.VLIEGER_ID, competentieIDs).then((progressie:  HeliosBehaaldeProgressieDataset[]) => {
+            this.toonWaarschuwing = progressie.length <= 0;
+        });
+    }
+
+    // mag de gebruiker de vlucht afvinken als trainingsvlucht
+    protected magCheckZetten() {
+        const ui = this.loginService.userInfo?.Userinfo;
+        const magCheckZetten = (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) ? true : false;
+
+        if (magCheckZetten == false) {
+            return false;
+        }
+
+        if (!this.start.INSTRUCTIEVLUCHT) {
+            return false; // alleen een instructie vlucht kan afgetekend worden als trainingsvlucht
+        }
+
+        const gekozenVlieger = this.leden.find(lid => lid.ID == this.start.VLIEGER_ID) as HeliosLedenDataset;
+        if (!gekozenVlieger) {
+            return false;   // Vlieger moet bekend zijn
+        } else {
+            // Checkstart alleen mogelijk bij leden
+            switch (gekozenVlieger.LIDTYPE_ID) {
+                case 600:  break;  // Student
+                case 601:  break;  // Erelid
+                case 602:  break;  // Lid
+                case 603:  break;  // Jeugdlid
+                case 604:  break;  // Private owner
+                case 605:  break;  // Veteraan
+                case 606:  break;  // Donateur
+                case 608:  break;  // 5 Rittenkaart
+                case 611:  break;  // Cursist
+                default: {
+                    return false;
+                }
+            }
+        }
+
+        // Trainingsvlucht is alleen van toepassing voor brevethouders
+        if (gekozenVlieger.STATUSTYPE_ID !== 1903) {
+            return false;
+        }
+
+        // De inzittende moet wel een instructeur zijn
+        if (this.start.INZITTENDE_ID) {
+            const inzittende = this.leden.find(lid => lid.ID == this.start.INZITTENDE_ID) as HeliosLedenDataset;
+
+            if ((inzittende.INSTRUCTEUR == true) || (inzittende.CIMT == true)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Kan de vlucht een instructie vlucht zijn? Instrcuteur moet dan achterin
+    protected kanInstructieVluchtZijn() {
+        const inzittende = this.leden.find(lid => lid.ID == this.start.INZITTENDE_ID) as HeliosLedenDataset;
+        if (!inzittende) {
+            return true;            // Inzittende is niet ingevoerd, laten we checkbox maar tonen
+        }
+        return inzittende.INSTRUCTEUR;  // Is inzittende een instructeur
+    }
+
+    // Is de start methode ingevoerd
+    protected StartMethodeIngevuld(): string {
+        if (this.start.STARTMETHODE_ID) {
+            return ""
+        }
+        else {
+            return "SMinvalid"
+        }
+    }
+
+    // Er mag alleen opgeslagen worden als aan de minimale voorwaarden zijn voldaan
+    protected opslaanDisabled() {
+        if (!this.start.VLIEGTUIG_ID || !this.start.STARTMETHODE_ID || !this.start.VELD_ID || this.startVerbod) {
+            return true;
+        }
+
+        if (this.toonVliegerNaam && !this.start.VLIEGERNAAM) {
+            return true;
+        }
+
+        // als je niet altijd mag wijzigen, dan moet je vlieger of inzittende zijn
+        if (!this.magAltijdWijzigen) {
+            const ui = this.loginService.userInfo!.LidData!;
+
+            return (this.start.VLIEGER_ID == ui.ID || this.start.INZITTENDE_ID) ? false : true;
+        }
+
+        return false;
+    }
+
+    // Mag de vlieger pax vliegen? Staat in zijn profiel (dus niet in progressiekaart)
+    protected magPaxVliegen() {
+        const gekozenVlieger = this.leden.find(lid => lid.ID == this.start.VLIEGER_ID) as HeliosLedenDataset;
+        if (!gekozenVlieger) {
+            return true;            // Vlieger is niet ingevoerd, laten we checkbox maar tonen
+        }
+        return gekozenVlieger.PAX;  // Mag vlieger PAX vliegen
+    }
+
+    // Mogen de vlieger voorin / achterin omgewisseld worden?
+    protected magOmwisselen() {
+        if (this.gekozenVliegtuig?.ZITPLAATSEN !== 2)     return false;
+        if (this.start.PAX == true)                       return false;
+        if (this.start.INSTRUCTIEVLUCHT == true)          return false;
+
+        return true;
+    }
+
+    // De knop omwissellen is gebruikt, dus nu vlieger en inzittende omwisselen. Soms alleen de ingevoerde namen, anders de ID's
+    protected omwisselen() {
+        let alleenNamenOmwisselen = false;
+
+        const gekozenVlieger = this.leden.find(lid => lid.ID == this.start.VLIEGER_ID) as HeliosLedenDataset;
+        if (gekozenVlieger) {
+            switch (gekozenVlieger.LIDTYPE_ID) {
+                case 607:   // zusterclub
+                case 610:   // oprotkabel
+                case 612:   // penningmeester
+                {
+                    alleenNamenOmwisselen = true;
+                }
+            }
+        }
+
+        // tijdelijke variablen
+        const tmpID = this.start.VLIEGER_ID;
+        const tmpNaam = this.start.VLIEGERNAAM;
+
+        if (!alleenNamenOmwisselen) {
+            this.vliegerGeselecteerd(this.start.INZITTENDE_ID);
+            this.start.INZITTENDE_ID = tmpID;
+        }
+
+        this.start.VLIEGERNAAM = this.start.INZITTENDENAAM;
+        this.start.INZITTENDENAAM = tmpNaam;
+    }
+
+    // Datum van de start aanpassen
+    protected datumAanpassen($datum: NgbDate) {
+        this.startDatum = DateTime.fromObject({year: $datum.year, month: $datum.month, day: $datum.day});
+        this.start.DATUM = this.startDatum.toISODate() as string;
+
+        this.magWijzigen(this.start.DATUM);
+    }
+
+    private magWijzigen(datum: string) {
+        const ui = this.loginService.userInfo!;
+        const dt = DateTime.fromSQL(datum);
+
+        this.magAltijdWijzigen = false;
+
+        if (ui.Userinfo!.isBeheerder || ui.Userinfo!.isBeheerderDDWV || ui.Userinfo!.isCIMT || ui.Userinfo?.isStarttoren) {
+            this.magAltijdWijzigen = true;
+        }
+        else {
+            this.roosterService.getRooster(dt, dt).then((rooster) => {
+                if ((rooster) && (rooster.length >0)) {
+                    if (rooster[0].DDWV && !rooster[0].CLUB_BEDRIJF) {
+                        // er is alleen DDWV bedrijf, dan mag de DDWV crew alles aanpassen
+                        this.dienstenService.getDiensten(dt, dt).then((diensten) => {
+                            diensten.forEach(lid => {
+                                if (lid.LID_ID == ui.LidData!.ID!) {
+                                    this.magAltijdWijzigen = true;
+                                }
+                            })
+                        })
+                    }
+                }
+            })
+        }
+    }
+
+    // open de transactie om sleep of 3e lierstart strippen te afschrijven
+    protected toonTransactieEditor(VLIEGER_ID: number) {
+       this.transactieEditor().openPopup(VLIEGER_ID, this.start.DATUM ?? undefined)
+    }
+}

@@ -69,12 +69,12 @@ export class DocumentenService {
     }
 
     async addDocument(doc: HeliosDocument) {
-        const response: Response = await this.apiService.post('Documenten/SaveObject', JSON.stringify(doc));
+        const response: Response = await this.apiService.post('Documenten/SaveObject', JSON.stringify(this.naarApiFormaat(doc)));
         return response.json();
     }
 
     async updateDocument(doc: HeliosDocument) {
-        const response: Response = await this.apiService.put('Documenten/SaveObject', JSON.stringify(doc));
+        const response: Response = await this.apiService.put('Documenten/SaveObject', JSON.stringify(this.naarApiFormaat(doc)));
         return response.json();
     }
 
@@ -85,5 +85,11 @@ export class DocumentenService {
     async restoreDocument(id: number) {
         await this.apiService.patch('Documenten/RestoreObject', {'ID': id.toString()});
     }
-}
 
+    // DATUM (aanmaakdatum) bepaalt Helios.js zelf, GROEP (omschrijving van de groep) komt uit GetObjects.
+    // Deze velden mogen niet meegestuurd worden (onbekende velden geven HTTP 400)
+    private naarApiFormaat(doc: HeliosDocument & {DATUM?: string; GROEP?: string}): HeliosDocument {
+        const {DATUM, GROEP, ...data} = doc;
+        return data;
+    }
+}

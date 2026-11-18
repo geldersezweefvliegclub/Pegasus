@@ -1,0 +1,109 @@
+import { Component, Input, OnInit, inject, input, viewChild } from '@angular/core';
+import { HeliosLogboekDataset, HeliosStartDataset } from '../../../types/Helios';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { TijdInvoerComponent } from '../editors/tijd-invoer/tijd-invoer.component';
+import { TrackEditorComponent } from '../editors/track-editor/track-editor.component';
+import { StartEditorComponent } from '../editors/start-editor/start-editor.component';
+import { DateTime, Interval } from 'luxon';
+import { SharedService } from '../../../services/shared/shared.service';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { RouterLink } from '@angular/router';
+import { IconButtonComponent } from '../icon-button/icon-button.component';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+
+@Component({
+    selector: 'app-vlucht-card',
+    templateUrl: './vlucht-card.component.html',
+    styleUrls: ['./vlucht-card.component.scss'],
+    imports: [RouterLink, IconButtonComponent, FaIconComponent, TijdInvoerComponent, StartEditorComponent, TrackEditorComponent]
+})
+export class VluchtCardComponent implements OnInit {
+    readonly logboek = input<HeliosLogboekDataset>();
+    @Input() start: HeliosStartDataset;
+    readonly trackEditor = viewChild.required(TrackEditorComponent);
+
+    // variablen in html formulier
+    protected readonly iconEdit: IconDefinition = faPenToSquare;
+
+    protected inTijdspan = false;
+    protected datumDM: string;
+
+    // private variable voor ts script
+    private readonly configService = inject(PegasusConfigService);
+    private readonly loginService = inject(LoginService);
+    private readonly sharedService = inject(SharedService);
+    private readonly tijdInvoerEditor = viewChild.required(TijdInvoerComponent);
+    private readonly startEditor = viewChild.required(StartEditorComponent);
+
+    ngOnInit(): void {
+        if (!this.start) {
+            const logboek = this.logboek();
+            if (!logboek) {
+                throw new Error('VluchtCardComponent requires either start or logboek input');
+            }
+
+            this.start = JSON.parse(JSON.stringify(logboek));    // alles harmoniseren naar start object
+
+            // mismatch start & logboek oplossen, in logboek zijn VLIEGERNAAM en INZITTENDENAAM altijd ingevuld
+            // bij een start zijn de namen VLIEGERNAAM_LID en INZITTENDENAAM_LID
+            // VLIEGERNAAM en INZITTENDENAAM  worden gebruikt voor handmatig naam invoer
+            this.start.VLIEGERNAAM_LID = logboek.VLIEGERNAAM ?? undefined;
+            this.start.VLIEGERNAAM = undefined;
+            this.start.INZITTENDENAAM_LID = logboek.INZITTENDENAAM ?? undefined;
+            this.start.INZITTENDENAAM = undefined
+        }
+
+        const ui = this.loginService.userInfo;
+        const nu: DateTime = DateTime.now()
+
+        const diff = Interval.fromDateTimes(DateTime.fromSQL(this.start.DATUM!), nu);
+        if (diff.length("days") > this.configService.maxZelfEditDagen()) {
+            this.inTijdspan = ui!.Userinfo!.isBeheerder!;   // alleen beheerder mag na xx dagen wijzigen. xx is geconfigureerd in pegasus.config
+        } else {
+            this.inTijdspan = true; // zitten nog binnen de termijn
+        }
+        this.datumDM = this.sharedService.datumDM(this.start.DATUM!)    // jaar hoeft niet getoond te worden
+    }
+
+    // Moeten we link tonen naar dashboard
+    protected naarDashboard(vlieger: boolean): boolean {
+        const ui = this.loginService.userInfo;
+
+        if (vlieger) {
+            if (this.start.VLIEGER_ID == undefined || this.start.VLIEGER_ID == ui!.LidData?.ID) {
+                return false;
+            }
+            if (this.start.VLIEGERNAAM) {
+                return false;
+            }
+        }
+        else {
+            if (this.start.INZITTENDE_ID == undefined || this.start.INZITTENDE_ID == ui!.LidData?.ID) {
+                return false;
+            }
+            if (this.start.INZITTENDENAAM) {
+                return false;
+            }
+        }
+        return (ui!.Userinfo!.isBeheerder || ui!.Userinfo!.isCIMT || ui!.Userinfo!.isInstructeur) as boolean;
+    }
+
+    // openen van popup om bestaande start te kunnen aanpassen
+    protected openStartEditor() {
+        if (this.inTijdspan) {
+            this.startEditor().openPopup(this.start);
+        }
+    }
+
+    // bestaande starttijd wijzigen door openen van starttijd popup
+    protected startTijdClicked() {
+        this.tijdInvoerEditor().openStarttijdPopup(this.start);
+    }
+
+    // bestaande landingstijd wijzigen door openen van de landingstijd popup
+    protected landingsTijdClicked() {
+        this.tijdInvoerEditor().openLandingsTijdPopup(this.start);
+    }
+}

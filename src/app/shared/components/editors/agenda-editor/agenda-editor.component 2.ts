@@ -1,0 +1,236 @@
+import { Component, inject, viewChild } from '@angular/core';
+import { ModalComponent } from '../../modal/modal.component';
+import { HeliosAgendaActiviteit, HeliosAgendaDataset, HeliosJournaal } from '../../../../types/Helios';
+import { AgendaService } from '../../../../services/apiservice/agenda';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { LoginService } from '../../../../services/apiservice/login.service';
+import { DateTime } from 'luxon';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { LoaderComponent } from '../../loader/loader.component';
+
+@Component({
+    selector: 'app-agenda-editor',
+    templateUrl: './agenda-editor.component.html',
+    styleUrls: ['./agenda-editor.component.scss'],
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, NgbInputDatepicker, FormsModule, IconButtonComponent, NgxMaterialTimepickerModule, LoaderComponent]
+})
+export class AgendaEditorComponent  {
+  // variablen in html formulier
+  protected isLoading = false;
+  protected isSaving = false;
+  protected isVerwijderMode = false;
+  protected isRestoreMode = false;
+  protected formTitel = "";
+  protected activiteit: HeliosAgendaActiviteit = {}
+  protected success: SuccessMessage | undefined;
+  protected error: ErrorMessage | undefined;
+  protected eersteDag: DateTime | undefined;
+  protected laatsteDag: DateTime | undefined;
+
+  // private variable voor ts script
+  private readonly agendaService = inject(AgendaService);
+  private readonly loginService = inject(LoginService);
+  private readonly popup = viewChild.required(ModalComponent);
+
+  openPopup(activiteit: HeliosAgendaDataset | null) {
+    if (activiteit) {
+      // vul alvast de editor met starts uit het grid
+      this.activiteit = {
+        ID: activiteit.ID,
+        DATUM: activiteit.DATUM,
+        TIJD: activiteit.TIJD,
+        KORT: activiteit.KORT,
+        OMSCHRIJVING: activiteit.OMSCHRIJVING,
+      }
+
+      this.formTitel = 'Activiteit bewerken';
+      this.haalAktiviteitOp(activiteit.ID!); // maar activiteit kan gewijzigd zijn, dus toch even starts ophalen van API
+    } else {
+      this.activiteit = {
+        ID: undefined,
+        DATUM: undefined,
+        TIJD: undefined,
+        KORT: undefined,
+        OMSCHRIJVING: undefined,
+      }
+
+      this.formTitel = 'Activiteit aanmaken';
+    }
+
+    this.isSaving = false;
+    this.isVerwijderMode = false;
+    this.isRestoreMode = false;
+    this.popup().open();
+  }
+
+  private closePopup() {
+    this.popup().close();
+  }
+
+  private haalAktiviteitOp(id: number): void {
+    this.isLoading = true;
+
+    try {
+      this.agendaService.getActiviteit(id).then((activiteit) => {
+        this.activiteit = activiteit;
+
+        this.eersteDag = DateTime.fromSQL(activiteit.DATUM!)
+        this.isLoading = false;
+      });
+    } catch (_) {
+      this.isLoading = false;
+    }
+  }
+
+  openVerwijderPopup(id: number) {
+    this.haalAktiviteitOp(id);
+    this.formTitel = 'Activiteit verwijderen';
+
+    this.isSaving = false;
+    this.isVerwijderMode = true;
+    this.isRestoreMode = false;
+    this.popup().open();
+  }
+
+  openRestorePopup(id: number) {
+    this.haalAktiviteitOp(id);
+    this.formTitel = 'Activiteit herstellen';
+
+    this.isSaving = false;
+    this.isRestoreMode = true;
+    this.isVerwijderMode = false;
+    this.popup().open();
+  }
+
+  protected uitvoeren() {
+    this.isSaving = true;
+    if (this.isRestoreMode) {
+      this.Herstellen(this.activiteit);
+    }
+
+    if (this.isVerwijderMode) {
+      this.Verwijderen(this.activiteit);
+    }
+
+    if (!this.isVerwijderMode && !this.isRestoreMode) {
+      if (this.activiteit.ID) {
+        this.Aanpassen(this.activiteit);
+      } else {
+        this.Toevoegen(this.activiteit);
+      }
+    }
+  }
+
+  // opslaan van de starts van een nieuw vliegtuig
+  private Toevoegen(activiteit: HeliosJournaal) {
+
+    if (this.eersteDag && !this.laatsteDag) {
+      const datum = DateTime.fromObject({year: this.eersteDag.year, month: this.eersteDag.month, day: this.eersteDag.day});
+      activiteit.DATUM = datum.toISODate() as string;
+      this.Add(activiteit);
+    }
+    else if (this.eersteDag && this.laatsteDag) {
+      const van = DateTime.fromObject({year: this.eersteDag.year, month: this.eersteDag.month, day: this.eersteDag.day});
+      const tot = DateTime.fromObject({year: this.laatsteDag.year, month: this.laatsteDag.month, day: this.laatsteDag.day});
+
+      const diff = tot.diff(van, 'days').days;
+
+      for (let i = 0; i <= diff; i++) {
+        const datum = van.plus({days: i});
+        activiteit.DATUM = datum.toISODate() as string;
+        this.Add(activiteit);
+      }
+    }
+  }
+
+  private Add (activiteit: HeliosAgendaActiviteit) {
+    this.agendaService.addActiviteit(activiteit).then(() => {
+      this.success = {
+        titel: "Agenda",
+        beschrijving: "Activiteit is toegevoegd"
+      }
+      this.closePopup();
+    }).catch(e => {
+      this.isSaving = false;
+      this.error = e;
+    })
+  }
+
+  // bestaand vliegtuig is aangepast. Opslaan van de starts
+  private Aanpassen(activiteit: HeliosAgendaActiviteit) {
+
+    if (this.eersteDag)
+    {
+      const datum = DateTime.fromObject({
+        year: this.eersteDag.year,
+        month: this.eersteDag.month,
+        day: this.eersteDag.day
+      });
+      activiteit.DATUM = datum.toISODate() as string;
+
+      this.agendaService.updateActiviteit(activiteit).then(() => {
+        this.success = {
+          titel: "Agenda",
+          beschrijving: "Activiteit is aangepast"
+        }
+        this.closePopup();
+      }).catch(e => {
+        this.isSaving = false;
+        this.error = e;
+      })
+    }
+  }
+
+  // markeer een vliegtuig als verwijderd
+  protected Verwijderen(activiteit: HeliosAgendaActiviteit) {
+    this.agendaService.deleteActiviteit(activiteit.ID!).then(() => {
+      this.success = {
+        titel: "Agenda",
+        beschrijving: "Activiteit is verwijderd"
+      }
+      this.closePopup();
+    }).catch(e => {
+      this.isSaving = false;
+      this.error = e;
+    })
+  }
+
+  // de vliegtuig is weer terug, haal de markering 'verwijderd' weg
+  protected Herstellen(activiteit: HeliosAgendaActiviteit) {
+    this.agendaService.restoreActiviteit(activiteit.ID!).then(() => {
+      this.success = {
+        titel: "Activiteit",
+        beschrijving: "Activiteit is weer beschikbaar"
+      }
+      this.closePopup();
+    }).catch(e => {
+      this.isSaving = false;
+      this.error = e;
+    })
+  }
+
+  protected opslaanDisabled(): boolean {
+    return !this.vanTotOke();
+  }
+
+  // is eerste datum eerder dan eind datum?
+  protected vanTotOke(): boolean {
+    if (this.eersteDag && this.laatsteDag) {
+      const begin = this.eersteDag.year * 10000 + this.eersteDag.month * 100 + this.eersteDag.day;
+      const eind = this.laatsteDag.year * 10000 + this.laatsteDag.month * 100 + this.laatsteDag.day;
+
+      return (begin <= eind) ? true : false;
+    }
+
+    if (this.eersteDag && !this.laatsteDag) {
+      return true;
+    }
+    return false;
+  }
+}

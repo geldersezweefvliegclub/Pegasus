@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, input, output } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, input, output, TemplateRef } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
 import { HeliosAanwezigLedenDataset, HeliosLedenDataset, HeliosVliegtuigenDataset } from '../../../../../types/Helios';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
@@ -20,7 +20,7 @@ export class LidInvoerComponent implements OnInit, OnChanges {
     readonly aanwezig = input<HeliosAanwezigLedenDataset[]>([]);
     readonly placeholder = input("");
     @Input() label = "";
-    @Input() uitleg: string;
+    @Input() uitleg: string | TemplateRef<unknown> | undefined;     // tekst of template voor de popover
     readonly disabled = input(false);
     readonly required = input(false);
     readonly veldID = input<number>();
@@ -34,7 +34,7 @@ export class LidInvoerComponent implements OnInit, OnChanges {
     // variablen in html formulier
     protected readonly infoIcon: IconDefinition = faInfoCircle;
 
-    protected lidInput$ = new Subject<string | null>();
+    protected lidInput$ = new Subject<string>();         // zoektekst van ng-select (typeahead)
     protected ledenSelectie$: Observable<HeliosAanwezigLedenDataset[]>;
 
     // private variable voor ts script

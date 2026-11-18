@@ -1,0 +1,151 @@
+import { Component, OnDestroy, OnInit, inject, input, output, viewChild } from '@angular/core';
+import {
+    HeliosVliegtuigenDatasetExtended,
+} from '../../../../schermen/reservering/reservering-page/reservering-page.component';
+import { ModalComponent } from '../../modal/modal.component';
+import { Subscription } from 'rxjs';
+import { HeliosLedenDataset, HeliosReservering } from '../../../../types/Helios';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { LedenService } from '../../../../services/apiservice/leden.service';
+import { NgbDate, NgbDateParserFormatter, NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateFRParserFormatter } from '../../../ngb-date-fr-parser-formatter';
+import { DateTime } from 'luxon';
+import { ReserveringService } from '../../../../services/apiservice/reservering.service';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { FormsModule } from '@angular/forms';
+import { LidInvoerComponent } from '../start-editor/lid-invoer/lid-invoer.component';
+import { VliegtuigInvoerComponent } from '../start-editor/vliegtuig-invoer/vliegtuig-invoer.component';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+
+import { LoaderComponent } from '../../loader/loader.component';
+
+@Component({
+    selector: 'app-boeking-editor',
+    templateUrl: './boeking-editor.component.html',
+    styleUrls: ['./boeking-editor.component.scss'],
+    providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, FormsModule, LidInvoerComponent, VliegtuigInvoerComponent, NgbInputDatepicker, IconButtonComponent, LoaderComponent]
+})
+export class BoekingEditorComponent implements OnInit, OnDestroy {
+    readonly clubVliegtuigen = input<HeliosVliegtuigenDatasetExtended[]>([]);
+    readonly boekingToegevoegd = output<void>();
+
+    // variablen in html formulier
+    protected leden: HeliosLedenDataset[] = [];
+    protected isSaving = false;
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+    protected lidID: number | undefined;
+    protected vliegtuigID: number;
+    protected opmerkingen: string;
+    protected eersteDag: NgbDate | null;
+    protected laatsteDag: NgbDate | null;
+
+    // private variable voor ts script
+    private readonly ledenService = inject(LedenService);
+    private readonly reserveringenService = inject(ReserveringService);
+    private readonly popup = viewChild.required(ModalComponent);
+
+    private ledenAbonnement: Subscription;
+
+    ngOnInit(): void {
+        // abonneer op wijziging van leden
+        this.ledenAbonnement = this.ledenService.ledenChange.subscribe(leden => {
+            this.leden = (leden) ? leden : [];
+        });
+    }
+
+    ngOnDestroy(): void {
+        if (this.ledenAbonnement) this.ledenAbonnement.unsubscribe();
+    }
+
+    // Openen van popup scherm
+    openPopup() {
+        this.isSaving = false;
+        this.popup().open();
+    }
+
+    // Aan wie wordt het vliegtuig toegekend
+    protected lidGeselecteerd(id: number | undefined) {
+        this.lidID = id;
+    }
+
+    // Voor welk vliegtuig gaan we de reservering toevoegen
+    protected vliegtuigGeselecteerd(id: number) {
+        this.vliegtuigID = id;
+    }
+
+    // is eerste datum eerder dan eind datum?
+    protected vanTotOke(): boolean {
+        if (this.eersteDag && this.laatsteDag) {
+            const begin = this.eersteDag.year * 10000 + this.eersteDag.month * 100 + this.eersteDag.day;
+            const eind = this.laatsteDag.year * 10000 + this.laatsteDag.month * 100 + this.laatsteDag.day;
+
+            return (begin <= eind) ? true : false;
+        }
+        return false;
+    }
+
+    // als we niet aan de invoer condities voldoen, moet de invoerbutton uitgeschakeld zijn
+    protected opslaanDisabled(): boolean {
+        if (this.lidID && this.vliegtuigID && this.eersteDag && this.laatsteDag) {
+            return !this.vanTotOke();
+        }
+        return false;
+    }
+
+    // controle & aanmaken van de reserveringen
+    protected async aanmakenReserveringen() {
+        if (this.eersteDag && this.laatsteDag) {
+            this.isSaving = true;
+
+            const beginDatum: DateTime = DateTime.fromObject({day: this.eersteDag.day, month: this.eersteDag.month, year: this.eersteDag.year});
+            const eindDatum: DateTime = DateTime.fromObject({day: this.laatsteDag.day, month: this.laatsteDag.month, year: this.laatsteDag.year});
+
+            const dataset = await this.reserveringenService.getReserveringen(beginDatum, eindDatum);    // opvragen reserveringen in deze periode
+            const kist = this.clubVliegtuigen().find(v => v.ID == this.vliegtuigID)
+
+            //controle of kist al gereseveerd is in deze periode
+            for (const item of dataset) {
+                if (item.VLIEGTUIG_ID == this.vliegtuigID) {
+
+                    const d = DateTime.fromSQL(item.DATUM!);
+                    const datum = d.day + "-" + d.month + "-" + d.year
+
+                    this.error = { beschrijving: kist!.REG_CALL + " is op " + datum + " reeds gereserveerd" };
+                    this.isSaving = false;
+                    return;
+                }
+            }
+
+            let datum: DateTime = DateTime.fromObject({day: this.eersteDag?.day, month: this.eersteDag?.month, year: this.eersteDag?.year});
+            const eind: DateTime = DateTime.fromObject({day: this.laatsteDag?.day, month: this.laatsteDag?.month, year: this.laatsteDag?.year});
+
+            const reservering: HeliosReservering = {
+                IS_GEBOEKT: true,
+                LID_ID: this.lidID,
+                VLIEGTUIG_ID: this.vliegtuigID,
+                OPMERKINGEN: this.opmerkingen
+            }
+
+            // Toevoegen van reserveringen door aanroepen API
+            while (datum <= eind)
+            {
+                reservering.DATUM = datum.toISODate() as string;
+                try {
+                    await this.reserveringenService.addReservering(reservering);
+                }
+                catch (e) {
+                    e.beschrijving += " " + datum.day + "-" + datum.month + "-" + datum.year;
+                    this.error = e;
+                }
+                datum = datum.plus({days:1});
+            }
+
+            this.boekingToegevoegd.emit();
+            this.isSaving = false;
+            this.popup().close();
+        }
+    }
+}

@@ -271,7 +271,7 @@ export class RoosterMaandviewComponent implements OnInit, OnDestroy {
         }
     }
 
-    protected onDropInRooster(event: CdkDragDrop<HeliosLedenDataset>, roosterdag: HeliosRoosterDagExtended, typeDienstID: number): void {
+    protected onDropInRooster(event: CdkDragDrop<HeliosRoosterDagExtended>, roosterdag: HeliosRoosterDagExtended, typeDienstID: number): void {
         // Haal de nieuwe en oude ID's op. Een id is bijvoorbeeld:
         // 1800,0
         // 0 is de index in het rooster, dus de eerste dag van de maand.

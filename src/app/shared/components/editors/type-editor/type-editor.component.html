@@ -7,7 +7,7 @@
             <div class="row mb-2">
                 <div class="col-8">
                     <label for="CODE" class="form-label">Code</label>
-                    <input type="text" name="CODE" class="form-control" id="CODE" [disabled]="type.READ_ONLY"
+                    <input type="text" name="CODE" class="form-control" id="CODE" [disabled]="!!type.READ_ONLY"
                            [(ngModel)]="type.CODE">
                 </div>
                 <div class="col-4">
@@ -34,7 +34,7 @@
                 <div class="col-12">
                     <label for="OMSCHRIJVING" class="form-label">Omschrijving</label>
                     <input type="text" name="OMSCHRIJVING" class="form-control" id="OMSCHRIJVING"
-                           [disabled]="type.READ_ONLY"
+                           [disabled]="!!type.READ_ONLY"
                            [(ngModel)]="type.OMSCHRIJVING">
                 </div>
             </div>

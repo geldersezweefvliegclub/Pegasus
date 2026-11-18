@@ -1,0 +1,503 @@
+import { ChangeDetectorRef, Component, inject, input, OnDestroy, OnInit } from '@angular/core';
+import { NgbDate, NgbDateParserFormatter, NgbInputDatepicker, NgbPopover } from '@ng-bootstrap/ng-bootstrap';
+import { DateTime } from 'luxon';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faEye, faEyeSlash, faInfo, faInfoCircle, faUser } from '@fortawesome/free-solid-svg-icons';
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { HeliosLedenDataset, HeliosLid, HeliosType } from '../../../../types/Helios';
+import { LedenService } from '../../../../services/apiservice/leden.service';
+import { LoginService } from '../../../../services/apiservice/login.service';
+import { NgbDateFRParserFormatter } from '../../../ngb-date-fr-parser-formatter';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { ImageService } from '../../../../services/apiservice/image.service';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { SchermGrootte, SharedService } from '../../../../services/shared/shared.service';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { FormsModule } from '@angular/forms';
+import { PegasusCardComponent } from '../../pegasus-card/pegasus-card.component';
+import { ImageCropComponent } from '../../image-crop/image-crop.component';
+import { WachtwoordMatchValidatorDirective } from './wachtwoord-match-validator.directive';
+import { TelefoonValidatorDirective } from './telefoon-validator.directive';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { NgClass } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { WachtwoordSterkteValidatorDirective } from './wachtwoord-sterkte-validator.directive';
+import { LidInvoerComponent } from '../start-editor/lid-invoer/lid-invoer.component';
+import { LoaderComponent } from '../../loader/loader.component';
+
+@Component({
+    selector: 'app-lid-editor',
+    templateUrl: './lid-editor.component.html',
+    styleUrls: ['./lid-editor.component.scss'],
+    providers: [{ provide: NgbDateParserFormatter, useClass: NgbDateFRParserFormatter }],
+    imports: [ErrorComponent, SuccessComponent, FormsModule, PegasusCardComponent, ImageCropComponent, WachtwoordMatchValidatorDirective, TelefoonValidatorDirective, NgbInputDatepicker, IconButtonComponent, NgClass, FaIconComponent, NgbPopover, WachtwoordSterkteValidatorDirective, LidInvoerComponent, LoaderComponent]
+})
+export class LidEditorComponent implements OnInit, OnDestroy {
+    readonly lidID = input.required<number>();
+    readonly isVerwijderMode = input(false);
+    readonly isRestoreMode = input(false);
+
+    // variablen in html formulier
+    protected readonly informatieIcon: IconDefinition = faInfo;
+    protected readonly infoIcon: IconDefinition = faInfoCircle;
+
+    protected instructeurs: HeliosLedenDataset[] = [];
+    protected zusterclubs: HeliosLedenDataset[] = []
+    protected lidTypes: HeliosType[];
+    protected statusTypes: HeliosType[];
+    protected lid: HeliosLid = {};
+    protected wachtwoordVerborgen = true;
+    protected oogIcon: IconDefinition = faEye;
+    protected controleWachtwoord = '';
+    protected wachtwoord = '';
+    protected subtitel = 'Instellen van gegevens en voorkeuren';
+    protected titel = 'Aanpassen profiel';
+    protected avatar: string | null | undefined;
+    protected isLoading = false;
+    protected isSaving = false;
+    protected isMobiel = true;
+    protected MedicalDatum: NgbDate | null;
+    protected GeboorteDatum: NgbDate | null;
+    protected vandaag: DateTime = DateTime.now();
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+
+    // private variable voor ts script
+    private readonly router = inject(Router);
+    private readonly typesService = inject(TypesService);
+    private readonly ledenService = inject(LedenService);
+    private readonly loginService = inject(LoginService);
+    private readonly imageService = inject(ImageService);
+    private readonly sharedService = inject(SharedService);
+    private readonly changeDetector = inject(ChangeDetectorRef);
+
+    private resizeSubscription: Subscription;       // Abonneer op aanpassing van window grootte (of draaien mobiel)
+    private ledenAbonnement: Subscription;
+    private typesAbonnement: Subscription;
+
+    ngOnInit(): void {
+        this.onWindowResize();
+
+        // abonneer op wijziging van lidTypes
+        this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
+            this.lidTypes = dataset!.filter((t: HeliosType) => { return t.GROEP == 6  });          // lidtypes
+            this.statusTypes = dataset!.filter((t: HeliosType) => { return t.GROEP == 19  });      // status types (DBO, solo, brevet)```````
+        });
+
+        // abonneer op wijziging van leden, maar hebben alleen instructeurs nodig
+        this.ledenAbonnement = this.ledenService.ledenChange.subscribe(leden => {
+            this.zusterclubs = (leden) ? leden.filter((lid) => lid.LIDTYPE_ID == 607) : [];
+            this.instructeurs = (leden) ? leden.filter((lid) => lid.INSTRUCTEUR == true) : [];
+
+            if (!leden) {
+                this.instructeurs = [];
+            }
+            else {
+                this.instructeurs = leden.filter((lid: HeliosLedenDataset) => {
+                    return lid.INSTRUCTEUR;
+                });
+            }
+        })
+
+        // Roep onWindowResize aan zodra we het event ontvangen hebben
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(() => {
+            this.onWindowResize();
+        });
+
+        this.opvragen();
+    }
+
+    ngOnDestroy() {
+        if (this.resizeSubscription) this.resizeSubscription.unsubscribe();
+        this.ledenAbonnement.unsubscribe();
+        this.typesAbonnement.unsubscribe();
+    }
+
+    private onWindowResize() {
+        this.isMobiel = (this.sharedService.getSchermSize() <= SchermGrootte.md);
+    }
+
+    // opvragen van lid informatie, of creeer nieuw lid
+    private opvragen() {
+        // als lidID > 0, dan wijzigen we een bestaand lid profiel
+        if (this.lidID() >= 0) {
+            this.isLoading = true;
+
+            if (this.isRestoreMode()) {
+                this.titel = 'Lid herstellen';
+                this.subtitel = 'Een oud lid is weer terug, maak de verwijdering ongedaan';
+            } else if (this.isVerwijderMode()) {
+                this.titel = 'Lid verwijderen';
+                this.subtitel = 'Geen lid meer dan markeren als verwijderd';
+            }
+
+            try {
+                this.ledenService.getLid(this.lidID()).then((lid: HeliosLid) => {
+                    this.lid = lid;
+
+                    // gebruik twee locale variable voor datum ingave
+                    this.MedicalDatum = this.converteerDatumNaarNgbDate(lid.MEDICAL);
+                    this.GeboorteDatum = this.converteerDatumNaarNgbDate(lid.GEBOORTE_DATUM);
+                    this.avatar = lid.AVATAR + "";  // voorkom dat lid.avatar undefined is. Dan kan je geen avatar uploaden
+                    this.isLoading = false;
+                });
+            } catch (_) {
+                this.isLoading = false;
+            }
+        } else {
+            this.titel = 'Lid aanmaken';
+            this.subtitel = 'Toevoegen van een nieuw lid';
+
+            this.MedicalDatum = null;
+            this.GeboorteDatum = null;
+        }
+    }
+
+    // opslaan van starts
+    protected uitvoeren() {
+        // even kijken of wachtwoorden ingevuld en goed zijn
+        if (this.wachtwoord === '' || (this.controleWachtwoord !== this.wachtwoord)) {
+            this.lid.WACHTWOORD = undefined;
+        } else {
+            this.lid.WACHTWOORD = this.wachtwoord;
+        }
+
+        // en nu de twee locale variablen terug in het object zetten
+        if (this.GeboorteDatum != null) {
+            this.lid.GEBOORTE_DATUM = this.converteerDatumNaarISO(this.GeboorteDatum);
+        } else {
+            this.lid.GEBOORTE_DATUM = undefined;
+        }
+
+        if (this.MedicalDatum != null) {
+            this.lid.MEDICAL = this.converteerDatumNaarISO(this.MedicalDatum);
+        } else {
+            this.lid.MEDICAL = undefined;
+        }
+
+        // opbouwen van de volledige naam
+        this.lid.NAAM = "";
+        if (this.lid.VOORNAAM && this.lid.VOORNAAM!.length > 0) {
+            this.lid.NAAM += this.lid.VOORNAAM;
+        }
+        if (this.lid.TUSSENVOEGSEL && this.lid.TUSSENVOEGSEL!.length > 0) {
+            if (this.lid.NAAM != "") {
+                this.lid.NAAM += " ";
+            }
+            this.lid.NAAM += this.lid.TUSSENVOEGSEL;
+        }
+        if (this.lid.ACHTERNAAM && this.lid.ACHTERNAAM!.length > 0) {
+            if (this.lid.NAAM != "") {
+                this.lid.NAAM += " ";
+            }
+            this.lid.NAAM += this.lid.ACHTERNAAM;
+        }
+
+        // nu opslaan van de starts
+        if (this.isRestoreMode()) {
+            this.restore()
+        } else if (this.isVerwijderMode()) {
+            this.delete()
+        } else if (this.lid.ID != undefined && this.lid.ID >= 0) {
+            this.updateLid()
+        } else {
+            this.nieuwLid()
+        }
+    }
+
+    // markeer lid als verwijderd
+    private delete(): void {
+        this.isSaving = true;
+        this.ledenService.deleteLid(this.lidID()).then(() => {
+            this.isSaving = false;
+            this.error = undefined;
+            this.success = {titel: "Profiel", beschrijving: this.lid.NAAM + " is verwijderd"}
+
+            setTimeout(() => this.router.navigate(['/leden']), 3000);
+        }).catch(e => {
+            this.isSaving = false;
+            this.success = undefined;
+            this.error = e;
+        });
+    }
+
+    // haal een lid terug door verwijderd vlag te resetten
+    private restore(): void {
+        this.isSaving = true;
+        this.ledenService.restoreLid(this.lid.ID!).then(() => {
+            this.isSaving = false;
+            this.error = undefined;
+            this.success = {titel: "Profiel", beschrijving: this.lid.NAAM + " is weer beschikbaar"}
+
+            setTimeout(() => this.router.navigate(['/leden']), 3000);
+        }).catch(e => {
+            this.isSaving = false;
+            this.success = undefined;
+            this.error = e;
+        });
+    }
+
+    // update bestaand lid
+    private updateLid(): void {
+        this.isSaving = true;
+        this.ledenService.updateLid(this.lid).then((l) => {
+            this.isSaving = false;
+            this.error = undefined;
+
+            const ui = this.loginService.userInfo?.LidData
+            if (this.lidID() == ui!.ID) {
+                this.success = {titel: "Profiel", beschrijving: "Uw profiel is aangepast"}
+            } else {
+                this.success = {titel: "Profiel", beschrijving: "Profiel " + l.NAAM + " is aangepast"}
+            }
+        }).catch(e => {
+            this.isSaving = false;
+            this.success = undefined;
+            this.error = e;
+        });
+    }
+
+    // nieuw lid toevoegen aan het leden bestand
+    private nieuwLid(): void {
+        this.isSaving = true;
+        this.ledenService.addLid(this.lid).then((l) => {
+            this.lid = l;
+            this.isSaving = false;
+            this.error = undefined;
+            this.success = {titel: "Profiel", beschrijving: l.NAAM + " is toegevoegd"}
+
+            setTimeout(() => this.router.navigate(['/leden']), 3000);
+        }).catch(e => {
+            this.isSaving = false;
+            this.success = undefined;
+            this.error = e;
+        });
+    }
+
+    // Datum velden moeten in YYYY-MM-DD aan api worden aangeboden
+    private converteerDatumNaarISO($event: NgbDate): string {
+        const unformatted = DateTime.fromObject($event);
+        return unformatted.isValid ? (unformatted.toISODate() as string) : '';
+    }
+
+    // Datum velden komen in ISO formaat van API, conversie naar NgbDate zodat invoer gedaan kan worden
+    private converteerDatumNaarNgbDate(datum: string | null | undefined): NgbDate | null {
+        if (datum) {
+            return NgbDate.from(DateTime.fromSQL(datum));
+        } else
+            return null;
+    }
+
+    // Laat het wachtwoorden wel / niet zien
+    protected verbergWachtwoord() {
+        this.wachtwoordVerborgen = !this.wachtwoordVerborgen;
+        this.oogIcon = this.wachtwoordVerborgen ? faEye : faEyeSlash;
+    }
+
+    // Avatar is aangepast in editor, meteen avatar in het profiel aanpassen
+    protected setAvatar($event: string) {
+        this.avatar = $event;
+        this.changeDetector.detectChanges();
+    }
+
+    // nu opslaan van de avatar
+    protected uploadFoto(image: string) {
+        this.setAvatar(image);
+        try {
+            this.imageService.uploadFoto(this.lidID(), image).then(() => {
+                this.success = {titel: "upload avatar", beschrijving: "Foto is succesvol opgeslagen"};
+            });
+        } catch (e) {
+            this.success = undefined;
+            this.error = e;
+        }
+    }
+
+    // Voor sommige gebruikers is 2 factor authenticatie verplicht
+    protected isgoogleAuthNodig(): boolean {
+        if (this.lid.BEHEERDER || this.lid.DDWV_BEHEERDER || this.lid.INSTRUCTEUR || this.lid.CIMT ||
+            this.lid.DDWV_CREW || this.lid.ROOSTER || this.lid.STARTTOREN || this.lid.RAPPORTEUR) {
+            this.lid.AUTH = true;
+            return true;
+        }
+        return false;
+    }
+
+    // Logica om te bepalen of je veld wel/niet mag invullen
+    protected isDisabled(veld: string) {
+        const ui = this.loginService.userInfo?.Userinfo;
+
+        if (this.isRestoreMode() || this.isVerwijderMode()) {
+            return true;
+        }
+
+        switch (veld) {
+            case 'BASIS' : {
+                if (ui?.isBeheerder || ui?.isBeheerderDDWV || ui?.isRooster || this.ikBenHetZelf())
+                    return false;
+                break;
+            }
+            case 'googleAuth': {
+                return this.isgoogleAuthNodig();
+            }
+            case 'gebruiker':
+            case 'lidnummer':
+            case 'lidmaatschap': {
+                if (ui?.isBeheerder || ui?.isBeheerderDDWV) {
+                    return false;
+                }
+                break;
+            }
+            case 'STATUS': {
+                if (ui?.isBeheerder || ui?.isCIMT) {
+                    return false;
+                }
+                break;
+            }
+            case 'LIERIST':
+            case 'STARTLEIDER':
+            case 'SLEEPVLIEGER': {
+                if (ui?.isBeheerder || ui?.isRooster) {
+                    return false;
+                }
+                break;
+            }
+            case 'GMAIL':
+            case 'CIMT':
+            case 'TECHNICUS':
+            case 'STARTTOREN':
+            case 'RAPPORTEUR':
+            case 'ROOSTER':
+            case 'BEHEERDER':
+            case 'DDWV_BEHEERDER':
+            case 'OPGEZEGD':
+            case 'STARTVERBOD': {
+                if (ui?.isBeheerder) {
+                    return false;
+                }
+                break;
+            }
+            case 'INSTRUCTEUR': {
+                if (ui?.isBeheerder || ui?.isCIMT) {
+                    return false;
+                }
+                break;
+            }
+            case 'DDWV_CREW': {
+                if (ui?.isBeheerder || ui?.isBeheerderDDWV) {
+                    return false;
+                }
+                break;
+            }
+            case 'BUDDY': {
+                if (ui?.isBeheerder || ui?.isCIMT) {
+                    return false;
+                }
+                break;
+            }
+            case 'OPMERKINGEN': {
+                if (ui?.isBeheerder || ui?.isCIMT || ui?.isRooster) {
+                    return false;
+                }
+                break;
+            }
+            case 'DIENSTEN': {
+                if (ui?.isBeheerder || ui?.isRooster) {
+                    return false;
+                }
+                break;
+            }
+
+            default:
+                console.log("Veld " + veld + " niet in switch");
+        }
+        return true;
+    }
+
+    // Logica om te bepalen of je veld wel/niet mag zien
+    protected isVisible(veld: string) {
+        const ui = this.loginService.userInfo?.Userinfo;
+
+        switch (veld) {
+            case 'wachtwoorden': {
+                if (ui?.isBeheerder || ui?.isBeheerderDDWV || this.ikBenHetZelf()) {
+                    return true;
+                }
+                break;
+            }
+
+            case 'email_daginfo' : {
+                if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT) {
+                    return true;
+                }
+                break;
+            }
+            case 'OPGEZEGD': {
+                if (ui?.isBeheerder || this.ikBenHetZelf()) {
+                    return true;
+                }
+                break;
+            }
+            case 'STARTVERBOD': {
+                if (ui?.isBeheerder || this.ikBenHetZelf()) {
+                    return true;
+                }
+                break;
+            }
+            case 'OPMERKINGEN': {
+                if (ui?.isBeheerder || ui?.isInstructeur || ui?.isCIMT || ui?.isRooster || this.ikBenHetZelf()) {
+                    return true;
+                }
+                break;
+            }
+
+            case 'DIENSTEN': {
+                if (ui?.isBeheerder || ui?.isRooster) {
+                    return true;
+                }
+                break;
+            }
+        }
+        return false;
+    }
+
+    // Ben ik mijn eigen profiel aan het aanpassen?
+    private ikBenHetZelf(): boolean {
+        return this.loginService.userInfo?.LidData?.ID == this.lidID()
+    }
+
+    // Als veld disabled is, dan extra class toevoegen voor label
+    protected disabledClass(veld: string) {
+        if (this.isDisabled(veld)) {
+            return "disableVeld";
+        }
+        return '';
+    }
+
+    // Toon de QR code voor Google Authenticator
+    protected toonSecret() {
+        if (this.isRestoreMode() || this.isVerwijderMode()) {
+            return false;
+        }
+
+        if (this.lid.AUTH == false) {
+            return false;
+        }
+        return this.lid.SECRET?.startsWith("http");     // heeft url als secret gevuld is
+    }
+
+    // Check of medical ingevoerd is, of misschien wel verlopen is.
+    protected medicalVerlopen() {
+        if (this.MedicalDatum == null) {
+            return false;
+        }
+        const d = DateTime.fromObject({
+            year: this.MedicalDatum.year,
+            month: this.MedicalDatum.month,
+            day: this.MedicalDatum.day
+        })
+        return (d < DateTime.now());
+    }
+}

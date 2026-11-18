@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { APIService } from './api.service';
 
-import { HeliosLeden, HeliosLedenDataset, HeliosLid } from '../../types/Helios';
+import { HeliosLeden, HeliosLedenDataset, HeliosLid, HeliosVerjaardag } from '../../types/Helios';
 import { KeyValueArray } from '../../types/Utils';
 import { BehaviorSubject } from 'rxjs';
 import { SharedService } from '../shared/shared.service';
@@ -139,7 +139,7 @@ export class LedenService {
         await this.apiService.patch('Leden/RestoreObject', {'ID': id.toString()});
     }
 
-    public async getVerjaardagen(): Promise<HeliosLedenDataset[]> {
+    public async getVerjaardagen(): Promise<HeliosVerjaardag[]> {
         // kunnen alleen data ophalen als we ingelogd zijn
         if (!this.loginService.isIngelogd()) {
             return [];

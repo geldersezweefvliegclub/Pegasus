@@ -1,0 +1,37 @@
+import { Component } from '@angular/core';
+import { ICellRendererParams } from 'ag-grid-community';
+import { AgRendererComponent } from 'ag-grid-angular';
+import {HeliosStartDataset} from "../../../../types/Helios";
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+
+export interface TijdButton {
+  tijdClicked(data: HeliosStartDataset): void;
+}
+
+@Component({
+    selector: 'app-landingstijd-render',
+    templateUrl: './landingstijd-render.component.html',
+    styleUrls: ['./landingstijd-render.component.scss'],
+    imports: [IconButtonComponent]
+})
+
+export class LandingstijdRenderComponent implements AgRendererComponent {
+  // variablen in html formulier
+  protected params: ICellRendererParams & TijdButton;
+  protected landingsTijd: string;         // string met de tijd om te tonen
+  protected toonButton = false;
+
+  agInit(params: ICellRendererParams & TijdButton): void {
+    this.params = params;
+    this.landingsTijd = params.data.LANDINGSTIJD;
+    this.toonButton = ((params.data.STARTTIJD) && (!params.data.LANDINGSTIJD))
+  }
+
+  refresh(_: ICellRendererParams): boolean {
+    return false;
+  }
+
+  protected tijdClicked() {
+    this.params.tijdClicked(this.params.data);
+  }
+}

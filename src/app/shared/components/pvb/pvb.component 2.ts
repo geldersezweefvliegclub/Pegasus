@@ -1,0 +1,152 @@
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, inject, viewChild } from '@angular/core';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { ProgressieService } from '../../../services/apiservice/progressie.service';
+import { HeliosBehaaldeProgressieDataset, HeliosCompetentiesDataset, HeliosLid } from '../../../types/Helios';
+import { ErrorMessage, HeliosActie, SuccessMessage } from '../../../types/Utils';
+import { SharedService } from '../../../services/shared/shared.service';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { CompetentieService } from '../../../services/apiservice/competentie.service';
+import { Subscription } from 'rxjs';
+import { ProgressieEditorComponent } from '../editors/progressie-editor/progressie-editor.component';
+import { PVB } from '../../../types/IPegasusConfig';
+import { ErrorComponent } from '../error/error.component';
+import { SuccessComponent } from '../success/success.component';
+import { LoaderComponent } from '../loader/loader.component';
+
+@Component({
+    selector: 'app-pvb',
+    templateUrl: './pvb.component.html',
+    styleUrls: ['./pvb.component.scss'],
+    imports: [ErrorComponent, SuccessComponent, LoaderComponent, ProgressieEditorComponent]
+})
+export class PvbComponent implements OnInit, OnChanges, OnDestroy {
+    @Input() Vlieger: HeliosLid;
+
+    // variablen in html formulier
+    protected PVBs: PVB[];
+    protected competenties: HeliosCompetentiesDataset[];
+    protected isLoading = false;
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+
+    // private variable voor ts script
+    private readonly loginService = inject(LoginService);
+    private readonly configService = inject(PegasusConfigService);
+    private readonly sharedService = inject(SharedService);
+    private readonly competentieService = inject(CompetentieService);
+    private readonly progressieService = inject(ProgressieService);
+    private readonly editor = viewChild.required(ProgressieEditorComponent);
+
+    private gehaaldeProgressie: HeliosBehaaldeProgressieDataset[];
+    private dbEventAbonnement: Subscription;
+    private competentiesAbonnement: Subscription;
+    private suspend = false;
+
+    ngOnInit(): void {
+        // Als in de progressie tabel is aangepast, moet we onze dataset ook aanpassen
+        this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
+            if (ev.tabel == "Progressie") {
+                if (!this.suspend && (ev.actie == HeliosActie.Add || ev.actie == HeliosActie.Delete)) {
+                    this.ophalen();
+                }
+            }
+        });
+
+        // abonneer op wijziging van competenties
+        this.competentiesAbonnement = this.competentieService.competentiesChange.subscribe(dataset => {
+            this.competenties = dataset!;
+        });
+        this.PVBs = this.configService.getPVB();
+        this.ophalen();
+    }
+
+    ngOnDestroy(): void {
+        if (this.dbEventAbonnement)         this.dbEventAbonnement.unsubscribe();
+        if (this.competentiesAbonnement)    this.competentiesAbonnement.unsubscribe();
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (Object.prototype.hasOwnProperty.call(changes, "Vlieger")) {
+            this.ophalen()
+        }
+    }
+
+    protected ophalen(): void {
+        if (!this.PVBs) // er zijn nog geen PVB geconfigureerd
+            return;
+
+        // Als vlieger niet bekend is, kunnen we niets ophalen
+        if (!this.Vlieger) {
+            return;
+        }
+
+        // maak CSV string met de competentie IDs van de PVBs
+        const comptentieIDs = this.PVBs.map((p: PVB) => {
+            let str = "";
+            if (p.Lokaal != undefined) str += p.Lokaal;
+            if (p.Overland != undefined) {
+                str += (str == undefined) ? "" : ",";
+                str += p.Overland;
+            }
+            return str;
+        }).join(',');
+
+        this.isLoading = true;
+        this.progressieService.getProgressiesLid(this.Vlieger.ID!, comptentieIDs).then((p) => {
+            this.gehaaldeProgressie = p;
+            this.isLoading = false;
+        }).catch(e => {
+            this.error = e;
+            this.isLoading = false;
+        });
+    }
+
+    protected PVBgehaald(comptentieID: number): boolean {
+
+        if (!this.gehaaldeProgressie) return false;
+
+        if (this.gehaaldeProgressie.findIndex((p) => p.COMPETENTIE_ID == comptentieID) >= 0) {
+            return true;
+        }
+        return false;
+    }
+
+    // De checkbox is soms disabled.
+    protected CheckDisabled(comptentieID: number): boolean {
+        const ui = this.loginService.userInfo?.Userinfo;
+
+        if (this.Vlieger === undefined) {
+            return true;    // als de vlieger niet bekend is, kunnen er ook geen vinkjes gezet worden
+        }
+        if (this.Vlieger.ID == this.loginService.userInfo?.LidData?.ID) {
+            return true;    // niet voor jezelf vinkjes zetten
+        }
+
+        if (!ui?.isBeheerder && !ui?.isInstructeur && !ui?.isCIMT) {
+            return true;    // alleen beheerder, instructeuers en CIMT mogen competentie zetten
+        }
+
+        if (!this.gehaaldeProgressie) return false;
+
+        if (this.gehaaldeProgressie.findIndex((p) => p.COMPETENTIE_ID == comptentieID) >= 0) {
+            return true;
+        }
+        return false;
+    }
+
+    // Progressie kan gezet worden via snelkeuze in deze component, lange weg kan via progressie boom
+    protected zetProgressie(id:number) {
+        this.editor().openNieuwPopup(id);
+    }
+
+    // Check of het ID uit de configuratie ook daadwerkelijk bestaat
+    protected competentieBestaat(id: number|undefined) {
+        if (id == undefined)
+            return false;
+
+        if (this.competenties.length == 0)
+            return false;
+        return (this.competenties.findIndex(c => c.ID == id) >= 0);
+    }
+}
+

@@ -31,7 +31,7 @@
                                                     <input type="checkbox"
                                                            [ngModel]="t.Geselecteerd"
                                                            class="form-check-inline"
-                                                           (change)="zetVoorkeur($event, t.ID)">
+                                                           (change)="zetVoorkeur($event, t.ID!)">
                                                 </td>
                                                 <td class="kolom2">
                                                     {{ t.OMSCHRIJVING }}
@@ -45,11 +45,11 @@
             </div>
                 }
                 <app-vliegtuig-invoer id="VLIEGTUIG"
-                                      [VLIEGTUIG_ID]="aanwezig.OVERLAND_VLIEGTUIG_ID"
+                                      [VLIEGTUIG_ID]="aanwezig.OVERLAND_VLIEGTUIG_ID ?? undefined"
                                       [vliegtuigen]="vliegtuigenFiltered"
                                       (VliegtuigChanged)="aanwezig.OVERLAND_VLIEGTUIG_ID = $event"
                                       label="Overland"
-                                      verplicht="false"
+                                      [verplicht]="false"
                 />
                 <div class="mt-2 px-2">
                     <label class="form-label" for="OPMERKINGEN">Opmerking</label>

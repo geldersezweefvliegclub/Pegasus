@@ -6,7 +6,7 @@
     @for (a of agenda; track a.ID) {
         <tr>
             <ng-template #tipContent><span class="oms">{{ a.OMSCHRIJVING }}</span></ng-template>
-            <td>{{ datumDM(a.DATUM) }}</td>
+            <td>{{ datumDM(a.DATUM!) }}</td>
             <td>
                 <div class="d-flex flex-row">
                     @if (a.TIJD) {

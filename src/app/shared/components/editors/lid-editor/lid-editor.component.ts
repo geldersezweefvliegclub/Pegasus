@@ -297,8 +297,8 @@ export class LidEditorComponent implements OnInit, OnDestroy {
     }
 
     // Avatar is aangepast in editor, meteen avatar in het profiel aanpassen
-    protected setAvatar($event: string) {
-        this.avatar = $event;
+    protected setAvatar($event: string | null | undefined) {
+        this.avatar = $event ?? undefined;
         this.changeDetector.detectChanges();
     }
 

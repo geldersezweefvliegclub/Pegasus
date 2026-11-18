@@ -8,7 +8,7 @@
             <app-lid-invoer id="LID"
                             placeholder="Selecteer lid"
                             label="Lid"
-                            [LID_ID]="transactie.LID_ID"
+                            [LID_ID]="transactie.LID_ID ?? undefined"
                             excludeLidTypes="600,607,609,610,612,613,620"
                             [required]=true
                             [leden]="leden"

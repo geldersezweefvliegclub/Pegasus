@@ -36,7 +36,7 @@
             <div class="row my-2">
                 <div class="col-12 col-md-6">
                     <label for="TYPE_ID" class="form-label">Type</label>
-                    <select class="form-select" [required]="vliegtuig.CLUBKIST" [(ngModel)]="vliegtuig.TYPE_ID"
+                    <select class="form-select" [required]="!!vliegtuig.CLUBKIST" [(ngModel)]="vliegtuig.TYPE_ID"
                             id="TYPE_ID"
                             name="TYPE_ID">
                         <option [ngValue]="-1">onbekend</option>
@@ -50,7 +50,7 @@
                 @if (vliegtuig.CLUBKIST) {
                     <div class="col-12 col-md-3">
                     <label for="VOLGORDE" class="form-label">Volgorde</label>
-                    <input [required]="vliegtuig.CLUBKIST" name="zitplaatsen" type="number" class="form-control"
+                    <input [required]="!!vliegtuig.CLUBKIST" name="zitplaatsen" type="number" class="form-control"
                            id="VOLGORDE"
                            [(ngModel)]="vliegtuig.VOLGORDE"
                            min="1" max="25"

@@ -58,7 +58,7 @@
         }
 
         <div class="flex-grow-1"></div>
-        @if (!this.loginService.userInfo?.Userinfo.isStarttoren) {
+        @if (!this.loginService.userInfo?.Userinfo?.isStarttoren) {
             <div class="-d-flex row align-content-end">
                 <div class="p-0 col-12 col-sm-6 col-md-3">
                     <a class="menuButton menuItemScherm" (click)="showBeheer = !showBeheer">
@@ -145,7 +145,7 @@
             </div>
 
             <!-- onderste sectie -->
-            @if (!this.loginService.userInfo?.Userinfo.isStarttoren) {
+            @if (!this.loginService.userInfo?.Userinfo?.isStarttoren) {
                 <div class="list-group list-group-flush p-3">
                     <!-- Beheer -->
                     @if (!beheerExcluded) {

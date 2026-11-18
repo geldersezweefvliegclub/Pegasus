@@ -29,7 +29,7 @@
                     <option [ngValue]=4>Zelfstandig</option>
                     <option [ngValue]=5>Volledig bekwaam</option>
                 </select>
-                <app-voortgang class='mt-2' [status]='progressie.SCORE'/>
+                <app-voortgang class='mt-2' [status]="progressie.SCORE ?? 0"/>
             </div>
         }
             <div class="row my-2">

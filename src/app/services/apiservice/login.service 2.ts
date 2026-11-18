@@ -1,0 +1,158 @@
+import { EventEmitter, Injectable, inject } from '@angular/core';
+import { APIService } from './api.service';
+
+import { HeliosUserinfo } from '../../types/Helios';
+import { StorageService } from '../storage/storage.service';
+import { SharedService } from '../shared/shared.service';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { KeyValueArray } from '../../types/Utils';
+
+interface BearerToken {
+    TOKEN: string;
+}
+
+interface HeliosJsLoginResponse {
+    Refresh: { AccessToken: string, ExpiresInMs: number };
+    Authentication: { AccessToken: string, ExpiresInMs: number };
+}
+
+type LoginResponse = BearerToken | HeliosJsLoginResponse;
+
+@Injectable({
+    providedIn: 'root'
+})
+
+export class LoginService  {
+    userInfo: HeliosUserinfo | null = null;
+    inloggenSucces: EventEmitter<void> = new EventEmitter<void>();
+
+    private readonly apiService = inject(APIService);
+    private readonly sharedService = inject(SharedService);
+    private readonly storageService = inject(StorageService);
+    private readonly userInfoStore = new BehaviorSubject(this.userInfo);
+
+    public readonly userInfoChange = this.userInfoStore.asObservable();      // nieuwe userInfo beschikbaar
+
+    private readonly dbEventAbonnement: Subscription;
+
+    constructor() {
+
+        // als we ons profiel aanpassen, dan moeten we userinfo ook aanpassen
+        this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
+            if (ev.tabel == "Leden") {
+                if (ev.data.ID == this.userInfo?.LidData?.ID) {
+                    this.getUserInfo().then(() => this.userInfoStore.next(this.userInfo))    // afvuren event
+                }
+            }
+        });
+    }
+
+    isIngelogd(): boolean {
+        if (this.userInfo) {
+            return true;
+        }
+
+        const opgeslagenUserInfo = this.storageService.ophalen<HeliosUserinfo>("userInfo", "session")
+        if (opgeslagenUserInfo && this.storageService.ophalen("bearer", "session")) {
+            this.userInfo = opgeslagenUserInfo;
+            return true;
+        }
+
+        return false;
+    }
+
+    async login(gebruikersnaam: string, wachtwoord: string, token?: string): Promise<number | undefined> {
+        const headers = new Headers(
+        {
+            'Authorization': 'Basic ' + btoa(`${gebruikersnaam}:${wachtwoord}`)
+        });
+
+        let params: KeyValueArray = {};
+        if ((token) && (token !== "")) {
+            params = {'token': token as string}
+        }
+
+        const response: Response = await this.apiService.get('Login/Login', params, headers);
+
+        if (response.ok) {
+            const login: LoginResponse = await response.json();
+            const bearerToken = this.getAccessToken(login);
+
+            this.storageService.opslaan("bearer", bearerToken, null, "session");
+            this.apiService.setBearerToken(bearerToken);
+
+            await this.getUserInfo();
+            this.successEmit();
+
+            return this.userInfo!.LidData!.ID;
+        }
+        return undefined;
+    }
+
+    // Bepaal de bearer token uit de login response, ongeacht of deze van de php helios backend
+    // ({TOKEN}) of van de helios.js backend ({Authentication, Refresh}) afkomstig is
+    private getAccessToken(login: LoginResponse): string {
+        if ('Authentication' in login) {
+            return login.Authentication.AccessToken;
+        }
+        return login.TOKEN;
+    }
+
+    // Haal nieuw token op zodat de sessie alive blijft
+    async relogin(): Promise<boolean> {
+        try {
+            const response: Response = await this.apiService.get('Login/Relogin');
+            if (response.ok) {
+                const login: LoginResponse = await response.json();
+                const bearerToken = this.getAccessToken(login);
+
+                this.storageService.opslaan("bearer", bearerToken);
+                this.apiService.setBearerToken(bearerToken);
+            }
+        }
+        catch (_) {
+            this.apiService.setBearerToken();
+            return false;
+        }
+        return true;
+    }
+
+    // Verstuur een mail met het nieuwe wachtwoord
+    async resetWachtwoord(gebruikersnaam: string) {
+        const headers = new Headers();
+        const base64encoded = btoa(`${gebruikersnaam}:""`);
+        headers.append('Authorization', `Basic ${base64encoded}`);
+
+        await this.apiService.get('Login/ResetWachtwoord', undefined, headers);
+    }
+
+    // laat iedereen weten dat we ingelogd zijn, we wachten even zodat alle componenten geladen zijn
+    // doen we dat niet, dan komt abbonement later dan event en missen het event
+    successEmit() {
+        setTimeout(() => this.inloggenSucces.emit(), 100);
+    }
+
+    async sendSMS(gebruikersnaam: string, wachtwoord: string): Promise<void> {
+        const headers = new Headers();
+        const base64encoded = btoa(`${gebruikersnaam}:${wachtwoord}`);
+        headers.append('Authorization', `Basic ${base64encoded}`);
+
+        await this.apiService.get('Login/SendSMS', undefined, headers);
+    }
+
+    private async getUserInfo(): Promise<void> {
+        const urlParams = "";
+
+        const response: Response = await this.apiService.get('Login/GetUserInfo' + urlParams);
+        if (response.ok) {
+            this.userInfo = await response.json();
+            this.storageService.opslaan("userInfo", this.userInfo, null, "session");
+        }
+    }
+
+    uitloggen(): void {
+        this.userInfo = null;
+        this.storageService.verwijder("userInfo", "session");
+        this.storageService.verwijder("bearer", "session");
+    }
+}

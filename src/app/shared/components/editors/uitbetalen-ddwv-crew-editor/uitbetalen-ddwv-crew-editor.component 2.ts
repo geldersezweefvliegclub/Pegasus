@@ -1,0 +1,63 @@
+import { Component, inject, output, viewChild } from '@angular/core';
+import { ModalComponent } from '../../modal/modal.component';
+import { ErrorMessage, KeyValueArray, SuccessMessage } from '../../../../types/Utils';
+import { HeliosDienstenDataset } from '../../../../types/Helios';
+import { HeliosRoosterDagExtended } from '../../../../schermen/rooster/rooster-page/rooster-page.component';
+import { DdwvService } from '../../../../services/apiservice/ddwv.service';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+
+@Component({
+    selector: 'app-uitbetalen-ddwv-crew-editor',
+    templateUrl: './uitbetalen-ddwv-crew-editor.component.html',
+    styleUrls: ['./uitbetalen-ddwv-crew-editor.component.scss'],
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, IconButtonComponent]
+})
+export class UitbetalenDdwvCrewEditorComponent  {
+    readonly refresh = output<void>();
+    isLoading = false;
+    isSaving = false;
+
+    // variablen in html formulier
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+    protected diensten: HeliosDienstenDataset[];
+
+    // private variable voor ts script
+    private readonly ddwvService = inject(DdwvService);
+    private readonly popup = viewChild.required(ModalComponent);
+
+    private datum: string;
+    private uitbetalenCrew: KeyValueArray = {};
+
+    // open popup, maar haal eerst de start op. De eerder ingevoerde tijd wordt als default waarde gebruikt
+    // indien niet eerder ingvuld, dan de huidige tijd. Buiten de daglicht periode is het veld leeg
+    openPopup(rooster: HeliosRoosterDagExtended) {
+        this.datum = rooster.DATUM!;
+        this.diensten = rooster.Diensten.filter((d) => d != null);
+
+        this.popup().open();
+    }
+
+    protected uitbetalen() {
+        let IDs = "";
+
+        Object.entries(this.uitbetalenCrew).forEach(([key, value]) => {
+            if (value == true) {     // alleen als er echt uitbetaald moet worden
+                if (IDs !== "") {
+                    IDs = IDs.concat(',');
+                }
+                IDs = IDs.concat(`${key}`)
+            }
+        })
+        this.ddwvService.betaalCrew(this.datum, IDs).then(() => {
+            this.success = { titel: "Uitbetaling", beschrijving: "Transactie(s) opgeslagen"};
+            this.popup().close();
+        }).catch((e) => this.error = e)
+    }
+
+    protected selectieChanged($event: Event, ID: number) {
+        this.uitbetalenCrew[ID.toString()] = ($event.target as HTMLInputElement).checked;
+    }
+}

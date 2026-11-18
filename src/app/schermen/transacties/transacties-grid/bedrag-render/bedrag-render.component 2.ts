@@ -1,0 +1,25 @@
+import { Component } from '@angular/core';
+import { ICellRendererParams } from 'ag-grid-community';
+import { AgRendererComponent } from 'ag-grid-angular';
+import { DecimalPipe } from '@angular/common';
+
+@Component({
+    selector: 'app-bedrag-render',
+    templateUrl: './bedrag-render.component.html',
+    styleUrls: ['./bedrag-render.component.scss'],
+    imports: [DecimalPipe]
+})
+export class BedragRenderComponent implements AgRendererComponent {
+    // variablen in html formulier
+    protected bedrag: number | undefined;
+    protected betaald: boolean | undefined;
+
+    agInit(params: ICellRendererParams): void {
+        this.bedrag = params.value;
+        this.betaald = params.data.BETAALD;
+    }
+
+    refresh(_: ICellRendererParams): boolean {
+        return false;
+    }
+}

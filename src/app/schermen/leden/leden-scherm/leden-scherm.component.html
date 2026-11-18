@@ -9,7 +9,7 @@
         @if (!toonKlein) {
             <div id="data" class="data scroll-vlak">
                 <app-datatable id='ledengrid'
-                        rowHeight=70
+                        [rowHeight]="70"
                         [pagination]="toonBladwijzer"
                         [sizeToFit]="true"
                         [rowData]="leden"

@@ -1,0 +1,189 @@
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, inject, input, output } from '@angular/core';
+import {
+    ColDef,
+    GridApi,
+    GridOptions,
+    GridReadyEvent,
+    RowDoubleClickedEvent,
+    RowSelectedEvent,
+} from 'ag-grid-community';
+import { SharedService } from '../../../services/shared/shared.service';
+import { Subscription } from 'rxjs';
+import { AgGridAngular } from 'ag-grid-angular';
+
+@Component({
+    selector: 'app-datatable',
+    templateUrl: './datatable.component.html',
+    styleUrls: ['./datatable.component.scss'],
+    imports: [AgGridAngular]
+})
+export class DatatableComponent implements OnInit, OnChanges, OnDestroy {
+    readonly columnDefs = input([]);
+    readonly rowData = input([]);
+    readonly frameworkComponents = input({});
+    readonly id = input.required<string>();
+    readonly loading = input(false);
+    readonly sizeToFit = input(true);
+    readonly autoSizeColumns = input(false);
+    readonly autoHeight = input(false);
+    readonly rowHeight = input(40);
+    readonly multipleSelection = input(false);
+    readonly pagination = input(true);
+    readonly rowClassRules = input(null);
+    readonly rowDoubleClicked = output<RowDoubleClickedEvent>();
+    readonly rowSelected = output<RowSelectedEvent>();
+
+    // variablen in html formulier
+    protected options: GridOptions = {
+        theme: 'legacy',
+        rowHeight: 40,
+        headerHeight: 20,
+        paginationAutoPageSize: true,
+        rowSelection: 'single',
+        pagination: true,
+        onRowDoubleClicked: this.onRowDoubleClicked.bind(this),
+        onRowClicked: this.onRowSelected.bind(this),
+        defaultColDef: {
+            resizable: true,
+            flex: 1
+        }
+    };
+    protected defaultColDef: ColDef = {
+        editable: false,              // Gaan niet editen in grid
+        autoHeight: this.autoHeight(),
+        filter: 'agTextColumnFilter', // use 'text' leden-filter by default
+    };
+    protected noRowsTemplate;
+    protected loadingTemplate;
+
+    // private variable voor ts script
+    private readonly sharedService = inject(SharedService);
+
+    private api: GridApi | undefined;
+    private columnStateTimer: number | null = null;
+    private resizeSubscription: Subscription;           // Abonneer op aanpassing van window grootte (of draaien mobiel)
+
+    constructor() {
+        this.loadingTemplate = '<span><img src="assets/img/zandloper.gif" alt="zandloper, even wachten" width=100px> Data wordt geladen .....</span>';
+        this.noRowsTemplate = '<span>Geen informatie beschikbaar</span>';
+    }
+
+    ngOnInit() {
+        this.defaultColDef.autoHeight = this.autoHeight();
+        this.options.pagination = this.pagination();
+
+        if (this.multipleSelection())
+        {
+            this.options.rowSelection = 'multiple'
+            this.options.rowMultiSelectWithClick = true;
+            // TODO test if this works to fix deprecation notice above.
+            // this.options.rowSelection = {mode: 'multiRow', enableSelectionWithoutKeys: true}
+        }
+
+        const rowClassRules = this.rowClassRules();
+        if (rowClassRules) {
+            this.options.rowClassRules = rowClassRules;
+        }
+
+        // Roep onWindowResize aan zodra we het event ontvangen hebben
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(() => {
+            this.onWindowResize()
+        });
+    }
+
+    ngOnDestroy(): void {
+        if (this.columnStateTimer) {
+            clearInterval(this.columnStateTimer);
+        }
+
+        if (this.resizeSubscription) {
+            this.resizeSubscription.unsubscribe();
+        }
+
+        this.api = undefined;
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        this.options.pagination = this.pagination();
+
+        if (this.multipleSelection()) {
+            this.options.rowSelection = 'multiple'
+            this.options.rowMultiSelectWithClick = true;
+        }
+        else {
+            this.options.rowSelection = 'single'
+        }
+
+        if (this.api) {
+            this.api.setGridOption("columnDefs", this.columnDefs());
+            this.api.setGridOption("rowData", this.rowData());
+
+            if (Object.prototype.hasOwnProperty.call(changes, "loading")) {
+                this.api.setGridOption("loading", changes["loading"].currentValue);
+            }
+        }
+        else
+        {
+            console.log("no api", this.id())
+        }
+    }
+
+    // zorg dat alle kolomen weer netjes binnen het scherm passen
+    private onWindowResize() {
+        this.sizeColumnsToFit();
+    }
+
+    protected gridReady(ready: GridReadyEvent) {
+        console.log(this.id(), "grid ready")
+        this.api = ready.api;
+
+        this.api!.setGridOption("columnDefs", this.columnDefs());
+        this.api!.sizeColumnsToFit()
+
+        this.columnStateTimer = window.setInterval(() => {
+            this.sizeColumnsToFit()
+        }, 5000)
+    }
+
+    private sizeColumnsToFit() {
+        if (this.api) {
+            if (this.sizeToFit()) {
+                this.api.sizeColumnsToFit();
+            }
+            if (this.autoSizeColumns()) {
+                this.api.autoSizeAllColumns(false);
+            }
+        }
+    }
+
+    private onRowDoubleClicked(event: RowDoubleClickedEvent) {
+        this.rowDoubleClicked.emit(event);
+    }
+
+    private onRowSelected(event: RowSelectedEvent) {
+        this.rowSelected.emit(event);
+    }
+
+    refreshGrid() {
+        if (this.api) {
+            this.api.refreshCells({force: true});
+        }
+    }
+
+    filteredRecords() {
+        const rowData: unknown[] = [];
+        if (this.api) {
+            this.api.forEachNodeAfterFilter(node => {
+                rowData.push(node.data);
+            });
+        }
+        return rowData;
+    }
+
+    selectedRecords() {
+        if (this.api) {
+            return this.api.getSelectedRows()
+        }
+        return []
+    }
+}

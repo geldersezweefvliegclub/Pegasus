@@ -7,7 +7,7 @@
             <app-lid-invoer id="LID"
                             placeholder="Selecteer lid"
                             label="Lid"
-                            [LID_ID]="track.LID_ID"
+                            [LID_ID]="track.LID_ID ?? undefined"
                             [disabled]="isVerwijderMode || isRestoreMode"
                             excludeLidTypes="600,607,609,610,612,613,620,625"
                             [required]=true

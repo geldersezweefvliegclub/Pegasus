@@ -1,0 +1,137 @@
+import { Component, OnInit, inject, viewChild } from '@angular/core';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { ErrorMessage } from '../../../types/Utils';
+import { Router } from '@angular/router';
+
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { CodeInputComponent, CodeInputModule } from 'angular-code-input';
+import { StorageService } from '../../../services/storage/storage.service';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { ErrorComponent } from '../../../shared/components/error/error.component';
+import { FormsModule } from '@angular/forms';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+
+import { LoaderComponent } from '../../../shared/components/loader/loader.component';
+
+@Component({
+    selector: 'app-login-page',
+    templateUrl: './login-page.component.html',
+    styleUrls: ['./login-page.component.scss'],
+    imports: [ErrorComponent, FormsModule, FaIconComponent, CodeInputModule, LoaderComponent]
+})
+
+export class LoginPageComponent implements OnInit {
+    // variablen in html formulier
+    protected oogIcon: IconDefinition = faEye;
+    protected privacyUrl : string | undefined;
+    protected privacyOk: boolean;
+    protected gebruikersnaam = '';
+    protected wachtwoord = '';
+    protected wachtwoordVerborgen = true;
+    protected showSecret = false;
+    protected isLoading = false;
+    protected error: ErrorMessage;
+    protected toonFoto: string = this.urlFoto();
+
+    // private variable voor ts script
+    private readonly loginService = inject(LoginService);
+    private readonly configService = inject(PegasusConfigService);
+    private readonly storageService = inject(StorageService);
+    private readonly router = inject(Router);
+    private readonly codeInput = viewChild.required(CodeInputComponent);
+
+    private secret = '';
+    private fotoAlbum = [
+        "/assets/img/15143.jpg",
+        "/assets/img/17424.jpg",
+        "/assets/img/17552.jpg",
+        "/assets/img/17924.jpg",
+        "/assets/img/18473.jpg",
+        "/assets/img/18498.jpg",
+        "/assets/img/19172.jpg",
+        "/assets/img/19348.jpg",
+        "/assets/img/19715.jpg",
+        "/assets/img/17424.jpg",
+        "/assets/img/17562.jpg",
+        "/assets/img/18455.jpg",
+        "/assets/img/18492.jpg",
+        "/assets/img/18500.jpg",
+        "/assets/img/19218.jpg",
+        "/assets/img/19507.jpg",
+        "/assets/img/50832.jpg",
+        "/assets/img/20201025.jpg",
+        "/assets/img/20201025.jpg"
+    ];
+
+    ngOnInit() {
+        setInterval(() => {
+            this.toonFoto = this.urlFoto()
+        }, 15000)
+
+        this.privacyOk = this.storageService.ophalen("privacyOk") == "true";
+        this.privacyUrl = this.configService.privacyURL();
+    }
+
+    // geef de url terug van een willekeurige foto
+    private urlFoto(): string {
+        const index = Math.floor(Math.random() * this.fotoAlbum.length)
+        return this.fotoAlbum[index];
+    }
+
+    // De Google authenticator is aangepast. Variable opslaan in this.secret
+    protected onSecurityCodeChanged(code: string) {
+        this.secret = code;
+    }
+
+    // Nu gaan we inloggen
+    protected login(): void {
+        this.isLoading = true;
+        this.loginService.login(this.gebruikersnaam, this.wachtwoord, this.secret).then(() => {
+            this.isLoading = false;
+            this.storageService.opslaan("privacyOk", "true", 60 * 24 * 90);     // 90 dagen
+
+            const url = (this.storageService.ophalen("url")) ? this.storageService.ophalen("url") : "/";
+            this.router.navigate([url]);
+        }).catch(e => {
+            this.isLoading = false;
+
+            if (e.responseCode == 406) {
+                this.showSecret = true;
+
+                // kleine timeout om component eerst zichtbaar te maken
+                setTimeout(() => this.codeInput().focusOnField(0), 250)
+
+            } else {
+                this.error = e;
+            }
+        })
+    }
+
+    protected verbergWachtwoord() {
+        this.wachtwoordVerborgen = !this.wachtwoordVerborgen;
+        this.oogIcon = this.wachtwoordVerborgen ? faEye : faEyeSlash;
+    }
+
+    protected showLostPassword(): boolean {
+        return this.gebruikersnaam.length > 2;
+    }
+
+    // Als je geen Google authenticator hebt, kan de code per SMS verstuurd worden door het backend
+    protected sendSMS(): void {
+        this.isLoading = true;
+        this.loginService.sendSMS(this.gebruikersnaam, this.wachtwoord).then(() => {
+            this.isLoading = false;
+            this.secret = '';
+            alert("U ontvangt spoedig een SMS met de inlogcode.");
+        }).catch(e => {
+            this.error = e;
+            this.isLoading = false;
+        })
+    }
+
+    // stuur een email met nieuw wachtwoord
+    protected recoverEmail() {
+        this.loginService.resetWachtwoord(this.gebruikersnaam).then(() => alert("Een SMS met het nieuwe wachtwoord is verstuurd"));
+    }
+}

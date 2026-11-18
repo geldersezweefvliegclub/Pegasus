@@ -1,0 +1,221 @@
+import { Component, OnDestroy, OnInit, inject, output, viewChild } from '@angular/core';
+import { ModalComponent } from '../../modal/modal.component';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { HeliosAanwezigLedenDataset, HeliosType, HeliosVliegtuigenDataset } from '../../../../types/Helios';
+import { Observable, of, Subscription } from 'rxjs';
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { AanwezigLedenService } from '../../../../services/apiservice/aanwezig-leden.service';
+import { VliegtuigenService } from '../../../../services/apiservice/vliegtuigen.service';
+import { LoginService } from '../../../../services/apiservice/login.service';
+import { StorageService } from '../../../../services/storage/storage.service';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { VliegtuigInvoerComponent } from '../start-editor/vliegtuig-invoer/vliegtuig-invoer.component';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { LoaderComponent } from '../../loader/loader.component';
+import { AsyncPipe } from '@angular/common';
+
+type HeliosTypeExtended = HeliosType & {
+    Geselecteerd?: boolean;
+}
+
+@Component({
+    selector: 'app-lid-aanwezig-editor',
+    templateUrl: './lid-aanwezig-editor.component.html',
+    styleUrls: ['./lid-aanwezig-editor.component.scss'],
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, NgSelectComponent, FormsModule, VliegtuigInvoerComponent, IconButtonComponent, LoaderComponent, AsyncPipe]
+})
+export class LidAanwezigEditorComponent implements OnInit, OnDestroy {
+    readonly opgeslagen = output<number>();
+
+    // variablen in html formulier
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+    protected aanwezig: HeliosAanwezigLedenDataset;
+    protected isDDWVer = false;
+    protected isLoading = false;
+    protected isSaving = false;
+    protected formTitel = "";
+    protected veldenTypes$: Observable<HeliosType[]>;
+    protected vliegtuigTypes: HeliosTypeExtended[];
+    protected vliegtuigen: HeliosVliegtuigenDataset[] = [];
+    protected vliegtuigenFiltered: HeliosVliegtuigenDataset[] = [];
+
+    // private variable voor ts script
+    private readonly aanwezigLedenService = inject(AanwezigLedenService);
+    private readonly vliegtuigenService = inject(VliegtuigenService);
+    private readonly storageService = inject(StorageService);
+    private readonly loginService = inject(LoginService);
+    private readonly typesService = inject(TypesService);
+    private readonly popup = viewChild.required(ModalComponent);
+
+    private typesAbonnement: Subscription;
+    private vliegtuigenAbonnement: Subscription;
+
+    ngOnInit(): void {
+        // abonneer op wijziging van vliegtuigen
+        this.vliegtuigenAbonnement = this.vliegtuigenService.vliegtuigenChange.subscribe(vliegtuigen => {
+            this.vliegtuigen = (vliegtuigen) ? vliegtuigen : [];
+        });
+
+        this.typesService.getClubVliegtuigTypes().then((records) => {
+            this.vliegtuigTypes = records;
+
+            for (const item of this.vliegtuigTypes) {
+                item.Geselecteerd = false;
+            }
+            this.vliegtuigTypes.sort(function compareFn(a, b) {
+                const vA = (a.SORTEER_VOLGORDE) ? a.SORTEER_VOLGORDE : 100;
+                const vB = (b.SORTEER_VOLGORDE) ? b.SORTEER_VOLGORDE : 100;
+
+                return vA - vB;
+            });
+        })
+
+        // abonneer op wijziging van types
+        this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
+            this.veldenTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));
+        });
+    }
+
+    ngOnDestroy() : void {
+        if (this.typesAbonnement) this.typesAbonnement.unsubscribe();
+        if (this.vliegtuigenAbonnement) this.vliegtuigenAbonnement.unsubscribe();
+    }
+
+    // open popup, maar haal eerst de aanwezigheid op.
+    openPopup(record: HeliosAanwezigLedenDataset) {
+        this.isSaving = false;
+        const ui = this.loginService.userInfo;
+        this.isDDWVer = ui!.Userinfo!.isDDWV!;
+
+        this.aanwezig = record;
+
+        if (this.isDDWVer) {
+            this.vliegtuigenFiltered = this.vliegtuigen.filter((v) => v.CLUBKIST == false);
+        }
+        else {
+            this.vliegtuigenFiltered = this.vliegtuigen;
+        }
+
+        // Ophalen uit de database, er kan iets veranderd zijn. Alleen als we bestaand record aanpassen
+        if (record.ID) {
+            this.isLoading = true
+            this.aanwezigLedenService.getAanwezigLid(record.ID!).then((a) => {
+                this.isLoading = false;
+                this.aanwezig = a;
+                this.vliegtuigType2Vinkjes(this.aanwezig!.VOORKEUR_VLIEGTUIG_TYPE);
+            }).catch(e => {
+                this.isLoading = false;
+                this.error = e;
+            });
+        } else {
+            const ui = this.loginService.userInfo?.LidData
+
+            // Als we onszelf aanmelden, dan kijken of een default setting hebben
+            if (this.aanwezig.LID_ID == ui!.ID) {
+                this.vliegtuigType2Vinkjes(this.storageService.ophalen('aanmeldingVoorkeurVliegtuigsTypes') as string | undefined);
+                const vID = this.storageService.ophalen('aanmeldingOverlandVliegtuigID')
+
+                if (vID) {
+                    this.aanwezig.OVERLAND_VLIEGTUIG_ID = +vID;     // + teken voor conversie van string naar int
+                }
+                this.aanwezig.VELD_ID = this.storageService.ophalen("aanmeldingVeldTypes") as number | undefined
+            }
+            else {
+                this.vliegtuigType2Vinkjes("");
+            }
+        }
+
+        this.formTitel = 'Aanmelding: ' + record.NAAM
+        this.popup().open();
+    }
+
+    // zet vinkje geselecteerd in de vliegtuig types. Wordt later gebruikt om toe te voegen bij aanmelden
+    protected zetVoorkeur(event: Event, id: number) {
+        const idx = this.vliegtuigTypes.findIndex(t => t.ID == id)
+
+        this.vliegtuigTypes[idx].Geselecteerd = (event.target as HTMLInputElement).checked;
+
+        let voorkeur = '';
+        for (const item of this.vliegtuigTypes) {
+            if (item.Geselecteerd) {
+                voorkeur += (voorkeur == '') ? '' : ',';
+                voorkeur += item.ID!.toString();
+            }
+        }
+        this.aanwezig.VOORKEUR_VLIEGTUIG_TYPE = (voorkeur !== "") ? voorkeur : undefined;
+    }
+
+    private vliegtuigType2Vinkjes(types: string | null | undefined) {
+        this.vliegtuigTypes.forEach((vliegtuigType) => {
+            vliegtuigType.Geselecteerd = false;
+        });
+
+        if (types) {
+            types.split(',').forEach((vliegtuigTypeID) => {
+                const idx = this.vliegtuigTypes.findIndex(t => t.ID == parseInt(vliegtuigTypeID))
+
+                if (idx >= 0) {
+                    this.vliegtuigTypes[idx].Geselecteerd = true;
+                }
+            });
+        }
+    }
+
+    protected opslaan() {
+        this.isSaving = true;
+
+        const ui = this.loginService.userInfo?.LidData
+
+        // Als we onszelf aanmelden, dan onthouden we welke vliegtuigtypes / voorkeur vliegtuif we ingevoerd hebben
+        if (this.aanwezig.LID_ID == ui!.ID) {
+            this.storageService.opslaan("aanmeldingVeldTypes", this.aanwezig.VELD_ID, -1);
+            this.storageService.opslaan("aanmeldingVoorkeurVliegtuigsTypes", this.aanwezig.VOORKEUR_VLIEGTUIG_TYPE, -1);
+
+            const overlandVliegtuig = this.vliegtuigen.find(v => v.ID == this.aanwezig!.OVERLAND_VLIEGTUIG_ID);
+            if (overlandVliegtuig?.CLUBKIST) {
+                this.storageService.verwijder("aanmeldingOverlandVliegtuigID");
+            } else {
+                this.storageService.opslaan("aanmeldingOverlandVliegtuigID", this.aanwezig!.OVERLAND_VLIEGTUIG_ID ? this.aanwezig!.OVERLAND_VLIEGTUIG_ID.toString() : null, -1);
+            }
+        }
+
+        // update of nieuwe aanmelding
+        if (this.aanwezig.ID) {
+            this.aanwezigLedenService.updateAanmelding(this.aanwezig).then(a => {
+                this.success = {titel: "Aanmelden", beschrijving: "Aanmelden bijgewerkt"}
+                this.aanwezigLedenService.updateAanwezigCache();
+                this.opgeslagen.emit(a.ID);
+
+                this.aanwezig = a;
+                this.isSaving = false;
+                this.popup().close();
+            }).catch(e => {
+                this.error = e;
+                this.isSaving = false;
+            })
+        } else {
+            this.aanwezigLedenService.aanmelden(this.aanwezig).then((a) => {
+                this.success = {titel: "Aanmelden", beschrijving: "Aanmelding is geslaagd"}
+                this.aanwezigLedenService.updateAanwezigCache();
+                this.opgeslagen.emit(a.ID);
+
+                this.isSaving = false;
+                this.popup().close();
+            }).catch(e => {
+                this.error = e;
+                this.isSaving = false;
+            });
+        }
+    }
+
+    protected knopUit(): boolean {
+        if (this.aanwezig) {
+            return !(this.aanwezig.VELD_ID! > 0)
+        }
+        return true;
+    }
+}

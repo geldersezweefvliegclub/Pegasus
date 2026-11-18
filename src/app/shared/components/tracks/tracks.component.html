@@ -31,7 +31,7 @@
                             <td class="naamCell">
                                 <div class="d-flex">
                                     @if (trk.lid) {
-                                        <app-avatar [url]='trk.lid.AVATAR' [naam]='trk.lid.NAAM'/>
+                                        <app-avatar [url]="trk.lid.AVATAR ?? ''" [naam]="trk.lid.NAAM ?? ''"/>
                                     }
                                     <div class="naam text-nowrap"><a aria-label="Naar dashboard"
                                                                      [routerLink]="['/dashboard']"
@@ -44,7 +44,7 @@
                                 @if (!lidColumn()) {
                                     <div class="d-flex">
                                         @if (trk.lid) {
-                                            <app-avatar [url]='trk.lid.AVATAR' [naam]='trk.lid.NAAM'/>
+                                            <app-avatar [url]="trk.lid.AVATAR ?? ''" [naam]="trk.lid.NAAM ?? ''"/>
                                         }
                                         <div class="naam text-nowrap"><a aria-label="Naar dashboard"
                                                                          [routerLink]="['/dashboard']"
@@ -53,7 +53,7 @@
                                     </div>
                                 }
                                 <div class="trackHeader">
-                                    Op {{ datumString(trk.INGEVOERD) }} om {{ tijdString(trk.INGEVOERD) }}
+                                    Op {{ datumString(trk.INGEVOERD!) }} om {{ tijdString(trk.INGEVOERD!) }}
                                     schreef {{ trk.INSTRUCTEUR_NAAM }}
                                 </div>
                                 <div class="tekstbox">
@@ -141,7 +141,7 @@
                                           class="kleineKaart"
                                           titel="Status"
                                           subtitel="Vliegstatus"
-                                          minimum="true"
+                                          [minimum]="true"
                                           [icon]="iconStatus">
                             <app-status [Vlieger]='geselecteerdLid'/>
                         </app-pegasus-card>
@@ -151,9 +151,9 @@
                                           class="kleineKaart"
                                           titel="PVB"
                                           subtitel="Proef van bekwaamheid"
-                                          minimum="true"
+                                          [minimum]="true"
                                           [icon]="iconPVB">
-                            <app-pvb [VliegerID]='geselecteerdLid.ID'/>
+                            <app-pvb [Vlieger]="geselecteerdLid"/>
                         </app-pegasus-card>
                     </div>
                     <div class="container">
@@ -161,7 +161,7 @@
                                           class="kleineKaart"
                                           titel="Recency"
                                           subtitel="Trainingsbarometer"
-                                          minimum="true"
+                                          [minimum]="true"
                                           [icon]="iconRecency">
                             <app-recency [Vlieger]='geselecteerdLid' [naam]='geselecteerdLid.NAAM'/>
                         </app-pegasus-card>
@@ -171,9 +171,9 @@
                                           class="kleineKaart"
                                           titel="Totalen {{datum.year}}"
                                           subtitel="Per vliegtuig"
-                                          minimum="true"
+                                          [minimum]="true"
                                           [icon]="iconPlane">
-                            <app-vlieger-logboek-totalen [VliegerID]='geselecteerdLid.ID'/>
+                            <app-vlieger-logboek-totalen [VliegerID]="geselecteerdLid.ID!"/>
                         </app-pegasus-card>
                     </div>
                 </div>

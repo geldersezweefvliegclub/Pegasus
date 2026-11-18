@@ -1,0 +1,237 @@
+import { Component, OnDestroy, OnInit, inject, input, output, viewChild } from '@angular/core';
+import { ModalComponent } from '../../modal/modal.component';
+import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { faCloudSunRain, faFlagCheckered, faFrown, faTruck } from '@fortawesome/free-solid-svg-icons';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons/faPaperPlane';
+import { ComposeMeteoComponent } from './compose-meteo/compose-meteo.component';
+import { ComposeBedrijfComponent } from './compose-bedrijf/compose-bedrijf.component';
+import { faArtstation } from '@fortawesome/free-brands-svg-icons';
+import { DateTime } from 'luxon';
+import { Observable, of, Subscription } from 'rxjs';
+import { SchermGrootte, SharedService } from '../../../../services/shared/shared.service';
+import { HeliosDagRapport, HeliosType } from '../../../../types/Helios';
+import { TypesService } from '../../../../services/apiservice/types.service';
+import { DagRapportenService } from '../../../../services/apiservice/dag-rapporten.service';
+import { ErrorComponent } from '../../error/error.component';
+import { SuccessComponent } from '../../success/success.component';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { PegasusCardComponent } from '../../pegasus-card/pegasus-card.component';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { LoaderComponent } from '../../loader/loader.component';
+import { AsyncPipe } from '@angular/common';
+
+@Component({
+    selector: 'app-dag-rapport-editor',
+    templateUrl: './dag-rapport-editor.component.html',
+    styleUrls: ['./dag-rapport-editor.component.scss'],
+    imports: [ErrorComponent, SuccessComponent, ModalComponent, NgSelectComponent, FormsModule, PegasusCardComponent, IconButtonComponent, LoaderComponent, ComposeMeteoComponent, ComposeBedrijfComponent, AsyncPipe]
+})
+export class DagRapportEditorComponent implements OnInit, OnDestroy {
+    readonly veld_id = input<number>();
+    readonly aangepast = output<number>();
+
+    // variablen in html formulier
+    protected readonly iconVliegend: IconDefinition = faPaperPlane;
+    protected readonly iconRollend: IconDefinition = faTruck;
+    protected readonly iconVerslag: IconDefinition = faFlagCheckered;
+    protected readonly iconIncident: IconDefinition = faFrown;
+
+    protected datum: DateTime = DateTime.now();              // de gekozen dag
+    protected veldTypes$: Observable<HeliosType[]>;
+    protected dagRapport: HeliosDagRapport;
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+    protected isSaving = false;
+    protected isLoading = false;
+    protected isVerwijderMode = false;
+    protected isRestoreMode = false;
+    protected formTitel = "";
+
+    // private variable voor ts script
+    private readonly typesService = inject(TypesService);
+    private readonly sharedService = inject(SharedService);
+    private readonly dagRapportenService = inject(DagRapportenService);
+    private readonly popup = viewChild.required(ModalComponent);
+    private readonly meteoWizard = viewChild.required(ComposeMeteoComponent);
+    private readonly bedrijfWizard = viewChild.required(ComposeBedrijfComponent);
+    private readonly iconMeteo: IconDefinition = faCloudSunRain;
+    private readonly iconBedrijf: IconDefinition = faArtstation;
+
+    private datumAbonnement: Subscription;         // volg de keuze van de kalender
+    private typesAbonnement: Subscription;
+
+    ngOnInit(): void {
+        // abonneer op wijziging van lidTypes
+        this.typesAbonnement = this.typesService.typesChange.subscribe(dataset => {
+            this.veldTypes$ = of(dataset!.filter((t:HeliosType) => { return t.GROEP == 9}));            // vliegvelden
+        });
+
+        // de datum zoals die in de kalender gekozen is
+        this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
+            this.datum = DateTime.fromObject({
+                year: datum.year,
+                month: datum.month,
+                day: datum.day
+            })
+        })
+    }
+
+    ngOnDestroy(): void {
+        if (this.typesAbonnement)       this.typesAbonnement.unsubscribe();
+        if (this.datumAbonnement)       this.datumAbonnement.unsubscribe();
+    }
+
+    // ophalen van een dag rapport
+    private ophalen(id:number) {
+        this.isLoading = true;
+        this.dagRapportenService.getDagRapport(id).then ((dr) => {
+            this.dagRapport = dr
+            this.isLoading = false;
+        }).catch(_ => {
+            this.isLoading = false;
+        });
+    }
+
+    // Openen van popup scherm
+    openPopup(dagRapport: HeliosDagRapport|undefined = undefined) {
+        this.isSaving = false;
+        this.isVerwijderMode = false;
+        this.isRestoreMode = false;
+
+        if (dagRapport) {
+            this.dagRapport = dagRapport;
+            this.ophalen(dagRapport.ID!)
+            this.formTitel = "Aanpassen dag rapport voor " + this.sharedService.datumDMJ(dagRapport.DATUM!)
+        }
+        else {
+            this.dagRapport = {
+                DATUM: this.datum.toISODate() as string,
+                VELD_ID: this.veld_id()
+            }
+            this.formTitel = "Nieuw dag rapport voor " + this.sharedService.datumDMJ(this.datum.toISODate() as string)
+        }
+        this.popup().open();
+    }
+
+    // Toon popup om dagrapport te verwijderen
+    openVerwijderPopup(dagRapport: HeliosDagRapport) {
+        this.ophalen(dagRapport.ID!);
+        this.formTitel = "Dag rapport verwijderen voor " + this.sharedService.datumDMJ(dagRapport.DATUM!)
+
+        this.isSaving = false;
+        this.isVerwijderMode = true;
+        this.isRestoreMode = false;
+        this.popup().open();
+    }
+
+    // Toon popup om dagrapport uit de prullenbak te halen
+    openRestorePopup(dagRapport: HeliosDagRapport) {
+        this.ophalen(dagRapport.ID!);
+        this.formTitel = "Dag rapport herstellen voor " + this.sharedService.datumDMJ(dagRapport.DATUM!)
+
+        this.isSaving = false;
+        this.isRestoreMode = true;
+        this.isVerwijderMode = false;
+        this.popup().open();
+    }
+
+    // uitvoeren van de actie waar we mee bezig zijn
+    protected uitvoeren() {
+        this.isSaving = true;
+        if (this.isRestoreMode) {
+            this.Herstellen(this.dagRapport);
+        }
+
+        if (this.isVerwijderMode) {
+            this.Verwijderen(this.dagRapport);
+        }
+
+        if (!this.isVerwijderMode && !this.isRestoreMode) {
+            if (this.dagRapport.ID) {
+                this.Aanpassen();
+            } else {
+                this.Toevoegen();
+            }
+        }
+    }
+
+    // opslaan van de starts van een nieuwe dag rapport
+    private Toevoegen() {
+        this.dagRapportenService.addDagRapport(this.dagRapport).then((dr) => {
+            this.isSaving = false;
+            this.success = {
+                titel: "Dag rapporten",
+                beschrijving: "Rapport is toegevoegd"
+            }
+            this.dagRapport = dr;
+            this.closePopup();
+        }).catch(e => {
+            this.isSaving = false;
+            this.error = e;
+        })
+    }
+
+    // bestaande dag rapport is aangepast.
+    private Aanpassen() {
+        this.dagRapportenService.updateDagRapport(this.dagRapport).then((_) => {
+            this.isSaving = false;
+            this.success = {
+                titel: "Dag rapporten",
+                beschrijving: "Rapport is aangepast"
+            }
+            this.closePopup();
+        }).catch(e => {
+            this.isSaving = false;
+            this.error = e;
+        });
+    }
+
+    // markeer een track als verwijderd
+    protected Verwijderen(dr:HeliosDagRapport) {
+        this.dagRapportenService.deleteDagRapport(dr.ID!).then(() => {
+            this.isSaving = false;
+            this.success = {
+                titel: "Dag rapporten",
+                beschrijving: "Rapport is verwijderd"
+            }
+            this.closePopup();
+        }).catch(e => {
+            this.isSaving = false;
+            this.error = e;
+        })
+    }
+
+    // de track herstellen, haal de markering 'verwijderd' weg
+    // markeer een track als verwijderd
+    protected Herstellen(dr:HeliosDagRapport) {
+        this.dagRapportenService.restoreRapport (dr.ID!).then(() => {
+            this.isSaving = false;
+            this.success = {
+                titel: "Dag rapporten",
+                beschrijving: "Rapport is hersteld"
+            }
+            this.closePopup();
+        }).catch(e => {
+            this.isSaving = false;
+            this.error = e;
+        })
+    }
+
+    // sluiten van window en inform parent dat data aangepast is.
+    private closePopup() {
+        const id = this.dagRapport.ID;
+        if (id === undefined || id === null) {
+            console.error("Kan dagrapport niet sluiten zonder rapport-ID.");
+            return;
+        }
+        this.aangepast.emit(id)
+        this.popup().close();
+    }
+
+    // Hoe groot moet de popup worden
+    protected popupClass() {
+        return (this.sharedService.getSchermSize() > SchermGrootte.md) ? "popupMedium" : "popupLarge";
+    }
+}

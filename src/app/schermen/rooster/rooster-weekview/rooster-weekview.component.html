@@ -20,11 +20,11 @@
             <thead>
             <tr style="vertical-align: top;">
                 <td></td>
-                @for (dagInRooster of rooster; track dagInRooster.DATUM; let r = $index) {
+                @for (dagInRooster of rooster; track dagInRooster.DATUM; let i = $index) {
                     <td class="dagInRooster" [style]="KolomBreedte()"
-                        [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
+                        [ngClass]="DagVanDeWeek(dagInRooster.DATUM!)">
                         <div>
-                            {{ DagVanDeWeek(dagInRooster.DATUM) }}
+                            {{ DagVanDeWeek(dagInRooster.DATUM!) }}
                             <div>
                                 {{ dagInRooster.DATUM | slice:8:10 }}-{{ dagInRooster.DATUM | slice:5:7 }}
                             </div>
@@ -33,7 +33,7 @@
                             <input type="checkbox" class="form-check-inline" [id]="'DDWV' + i"
                                    [name]="'DDWV' + i"
                                    [(ngModel)]="dagInRooster.DDWV"
-                                   (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
+                                   (ngModelChange)="opslaanRooster(dagInRooster.DATUM!)"
                                    [disabled]="!magWijzigen && !isCIMT && !isBeheerderDDWV">
                             <label [for]="'DDWV' + i" class="form-check-label">DDWV</label>
                         </div>
@@ -42,7 +42,7 @@
                                    [id]="'Clubbedrijf' + i"
                                    [name]="'Clubbedrijf' + i"
                                    [(ngModel)]="dagInRooster.CLUB_BEDRIJF"
-                                   (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
+                                   (ngModelChange)="opslaanRooster(dagInRooster.DATUM!)"
                                    [disabled]="!magWijzigen && !isCIMT && !isBeheerderDDWV">
                             <label [for]="'Clubbedrijf' + i"
                                    class="labelClub form-check-label">Club
@@ -53,7 +53,7 @@
                                [id]="'Winterwerk' + i"
                                [name]="'Winterwerk' + i"
                                [(ngModel)]="dagInRooster.WINTER_WERK"
-                               (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
+                               (ngModelChange)="opslaanRooster(dagInRooster.DATUM!)"
                                [disabled]="!magWijzigen">
                         <label [for]="'Clubbedrijf' + i"
                                class="labelClub form-check-label">Winterwerk</label>
@@ -69,7 +69,7 @@
                               [id]="'OPMERKINGEN' + i"
                               [name]="'OPMERKINGEN' + i"
                               [(ngModel)]="dagInRooster.OPMERKINGEN"
-                              (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
+                              (ngModelChange)="opslaanRooster(dagInRooster.DATUM!)"
                               [disabled]="!magWijzigen && !isCIMT && !isBeheerderDDWV"
                               class="w-100 text-invoer form-control opmerkingen"
                               [rows]="2" style="resize: none"></textarea>
@@ -195,7 +195,7 @@
                                 <div class="d-flex flex-row">
                                     <input type="range" class="form-range" min="1" max="25"
                                            [(ngModel)]="dagInRooster.MIN_SLEEPSTART"
-                                           (change)="opslaanRooster(dagInRooster.DATUM)"
+                                           (change)="opslaanRooster(dagInRooster.DATUM!)"
                                            [disabled]="!magWijzigen">
                                     <div class="ms-2 me-1">{{ dagInRooster.MIN_SLEEPSTART }}</div>
                                 </div>
@@ -212,7 +212,7 @@
                                 <div class="d-flex flex-row">
                                     <input type="range" class="form-range" min="1" max="25"
                                            [(ngModel)]="dagInRooster.MIN_LIERSTART"
-                                           (change)="opslaanRooster(dagInRooster.DATUM)" [disabled]="!magWijzigen">
+                                           (change)="opslaanRooster(dagInRooster.DATUM!)" [disabled]="!magWijzigen">
                                     <div class="ms-2 me-1">{{ dagInRooster.MIN_LIERSTART }}</div>
                                 </div>
                             }
@@ -224,7 +224,7 @@
                     <td></td>
                     @for (dagInRooster of rooster; track dagInRooster.DATUM; let i = $index) {
                         <td class="dagInRooster" [style]="KolomBreedte()">
-                            @if (!datumInToekomst(dagInRooster.DATUM) && dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF && (isBeheerderDDWV || isBeheerder)) {
+                            @if (!datumInToekomst(dagInRooster.DATUM!) && dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF && (isBeheerderDDWV || isBeheerder)) {
                                 <div class="w-100">
                                     <app-icon-button class="toolbarBtn"
                                                      tekst="Uitbetalen"

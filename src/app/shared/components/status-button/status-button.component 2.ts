@@ -1,0 +1,78 @@
+import { Component, Input, OnDestroy, OnInit, inject, input, output } from '@angular/core';
+import { SchermGrootte, SharedService } from '../../../services/shared/shared.service';
+import { far, IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
+
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+
+@Component({
+    selector: 'app-status-button',
+    templateUrl: './status-button.component.html',
+    styleUrls: ['./status-button.component.scss'],
+    imports: [FaIconComponent]
+})
+export class StatusButtonComponent implements OnInit, OnDestroy {
+    readonly tekst = input('');
+    readonly disabled = input(false);
+    readonly toonKlein = input(true);
+    @Input() actief = false;
+    readonly iconNaam = input<string>();
+    readonly btnClicked = output<boolean>();
+
+    // variablen in html formulier
+    protected faIcon: IconDefinition;
+    protected toonTekst = true;
+
+    // private variable voor ts script
+    private readonly sharedService = inject(SharedService);
+
+    private resizeSubscription: Subscription;
+
+    ngOnInit(): void {
+        const iconNaam = this.iconNaam();
+        if (iconNaam) {
+            const parts: string[] = iconNaam.split(' ');
+
+            if (parts.length != 2) {
+                console.error('iconNaam moet 2 parameters hebben');
+                this.faIcon = fas['faQuestion'];
+            } else {
+                if (parts[0] == 'fas') {
+                    this.faIcon = fas['fa' + parts[1]];
+                } else {
+                    this.faIcon = far['fa' + parts[1]];
+                }
+
+                if (!this.faIcon) {
+                    console.log('fa' + parts[1]);
+                    console.log('fas', fas);
+                    console.log('far', far);
+                    this.faIcon = fas['faExclamation'];
+                }
+            }
+        }
+
+        // Roep onWindowResize aan zodra we het event ontvangen hebben
+        this.resizeSubscription = this.sharedService.onResize$.subscribe(()=> {
+            this.onWindowResize()
+        });
+        this.onWindowResize();
+    }
+
+    ngOnDestroy(): void {
+        if (this.resizeSubscription) {
+            this.resizeSubscription.unsubscribe();
+        }
+    }
+
+    // op kleine scherm tonen we geen tekst bij de status button
+    private onWindowResize() {
+        this.toonTekst = (this.sharedService.getSchermSize() > SchermGrootte.md)
+    }
+
+    protected buttonClicked() {
+        this.actief = !this.actief;
+        this.btnClicked.emit(this.actief);
+    }
+}

@@ -1,0 +1,107 @@
+import { Component, Input, OnChanges, OnInit, SimpleChanges, input, output, viewChild } from '@angular/core';
+import { Observable, of, Subject } from 'rxjs';
+import { HeliosVliegtuigenDataset } from '../../../../../types/Helios';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
+
+@Component({
+    selector: 'app-vliegtuig-invoer',
+    templateUrl: './vliegtuig-invoer.component.html',
+    styleUrls: ['./vliegtuig-invoer.component.scss'],
+    imports: [NgSelectComponent, FormsModule, AsyncPipe]
+})
+export class VliegtuigInvoerComponent implements OnInit, OnChanges {
+    @Input() vliegtuigen: HeliosVliegtuigenDataset[] = [];
+    @Input() aanwezig: HeliosVliegtuigenDataset[] = [];
+    readonly label = input("");
+    readonly disabled = input(false);
+    readonly Sleep = input(false);
+    readonly verplicht = input(true);
+    @Input() VLIEGTUIG_ID: number | undefined;
+    readonly VliegtuigChanged = output<number>();
+    readonly ngSelect = viewChild.required(NgSelectComponent);
+
+    // variablen in html formulier
+    protected vliegtuigInput$ = new Subject<string>();
+    protected vliegtuigenSelectie$: Observable<HeliosVliegtuigenDataset[]>;
+    protected inzetbaar = true;
+
+    // private variable voor ts script
+    private EventEmitterDelay: number;
+
+    ngOnInit(): void {
+        this.vliegtuigInput$.subscribe((newTerm) => {
+            const nweLijst = this.zoekVliegtuig(newTerm);
+            this.vliegtuigenSelectie$ = of(nweLijst);
+
+            if (newTerm && nweLijst.length > 0) {
+                this.VLIEGTUIG_ID = nweLijst[0].ID;
+                this.inputChange(this.VLIEGTUIG_ID);
+            }
+        });
+    }
+
+    // zoek naar records die overeenkomen met input
+    // als geen vliegtuigen aanwezig zijn, dan gebruiken we de volledige lijst met vliegtuigen
+    private zoekVliegtuig(term: string | null): HeliosVliegtuigenDataset[] {
+        const searchTerm = term ? term : '';
+
+        // bekijk of aanwezig vliegtuigen voldoen
+        const nweLijst = this.aanwezig.filter((vliegtuig: HeliosVliegtuigenDataset) => {
+            return vliegtuig.REG_CALL!.toLowerCase().includes(searchTerm.toLowerCase());
+        });
+
+        // Indien de lijst 5 items, of meer heeft, toon dan deze lijst
+        if ((nweLijst.length > 0) && ((nweLijst.length >= 5) || (searchTerm.length < 2))) {
+            return nweLijst
+        }
+
+        // nee, aantal aanwezige vliegtuigen <= 4, dan alle vliegtuigen
+        // dit is bedacht omdat
+        // stel dat E12 is aanwezig, maar de E1 nog niet. Dan wordt bij intypen E1 alleen de E12 getoond
+        // maar nu niet meer, nu wordt ook de E1 getoond
+        const nweLijst2 = this.vliegtuigen.filter((vliegtuig: HeliosVliegtuigenDataset) => {
+            return vliegtuig.REG_CALL!.toLowerCase().includes(searchTerm.toLowerCase());
+        });
+
+        return nweLijst2;
+    }
+
+    // De Input datasets zijn gewijzigd, zorg dat combobox goede starts krijgt via vliegtuigenSelectie$
+    ngOnChanges(changes: SimpleChanges) {
+        // bij update van VLIEGTUIG_ID kijken we alleen of waarde geldig is
+        if ((Object.prototype.hasOwnProperty.call(changes, "VLIEGTUIG_ID")) &&  this.vliegtuigenSelectie$) {
+            return;
+        }
+
+        // Indien we sleepkist moeten invoeren, halen we de andere kisten weg uit het array
+        if (this.Sleep()) {
+            this.aanwezig = this.aanwezig.filter((vliegtuig: HeliosVliegtuigenDataset) => {
+                return (vliegtuig.SLEEPKIST == true);
+            });
+
+            this.vliegtuigen = this.vliegtuigen.filter((vliegtuig: HeliosVliegtuigenDataset) => {
+                return (vliegtuig.SLEEPKIST == true);
+            });
+        }
+
+        if (this.aanwezig.length > 0) {
+            this.vliegtuigenSelectie$ = of(this.aanwezig);
+        } else {
+            this.vliegtuigenSelectie$ = of(this.vliegtuigen);
+        }
+    }
+
+    protected inputChange(id: number | undefined) {
+        if (!id) {
+            return;
+        }
+        const vliegtuig = this.vliegtuigen.find(v => v.ID == id);
+        this.inzetbaar = (vliegtuig) ? vliegtuig.INZETBAAR! : true;
+
+        // niet alle event doorgeven naar parent.
+        clearTimeout(this.EventEmitterDelay);
+        this.EventEmitterDelay = window.setTimeout(() => this.VliegtuigChanged.emit(id), 500);
+    }
+}

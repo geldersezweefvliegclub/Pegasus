@@ -1,0 +1,112 @@
+import { Component, Input, inject, input, output, viewChild } from '@angular/core';
+import { DienstenService } from '../../../services/apiservice/diensten.service';
+import { RoosterService } from '../../../services/apiservice/rooster.service';
+import { HeliosDienst, HeliosDienstenDataset, HeliosRoosterDataset } from '../../../types/Helios';
+import { DateTime } from 'luxon';
+import { ModalComponent } from '../modal/modal.component';
+import { FormsModule } from '@angular/forms';
+import { IconButtonComponent } from '../icon-button/icon-button.component';
+
+@Component({
+    selector: 'app-dag-rooster',
+    templateUrl: './dag-rooster.component.html',
+    styleUrls: ['./dag-rooster.component.scss'],
+    imports: [ModalComponent, FormsModule, IconButtonComponent]
+})
+export class DagRoosterComponent {
+    readonly opslaan = output<string>();
+    readonly Datum = input.required<DateTime>();
+    @Input() magWijzigen = false;
+
+    // variablen in html formulier
+    protected rooster: HeliosRoosterDataset;
+    protected diensten: HeliosDienstenDataset[];
+
+    // private variable voor ts script
+    private readonly roosterService = inject(RoosterService);
+    private readonly dienstenService = inject(DienstenService);
+    private readonly popup = viewChild.required(ModalComponent);
+
+    // Open leden-filter dialoog met de leden-filter opties
+    openPopup() {
+        this.ophalen();
+        this.popup().open();
+    }
+
+    private ophalen(): void {
+        const Datum = this.Datum();
+        if (Datum) {
+            this.roosterService.getRooster(Datum, Datum).then(r => {
+                this.rooster = r[0]
+            })
+
+            this.dienstenService.getDiensten(Datum, Datum).then(d => {
+                this.diensten = d;
+            })
+        }
+    }
+
+    // Datum in de titel in het juiste formaat
+    protected toonDatum() {
+        return (this.Datum()) ? this.Datum().day + "-" + this.Datum().month + "-" + this.Datum().year : "";
+    }
+
+    protected afwezig(i: number) {
+        if ((this.diensten[i].AANWEZIG) && (this.diensten[i].AFWEZIG)) {
+            this.diensten[i].AANWEZIG = false;
+        }
+        this.diensten[i].ROOSTER_ID = -1; // indicatie dat afwezigheid is aangepast
+    }
+
+    protected aanwezig(i: number) {
+        if ((this.diensten[i].AANWEZIG) && (this.diensten[i].AFWEZIG)) {
+            this.diensten[i].AFWEZIG = false;
+        }
+        // indicatie dat dienst is aangepast
+        this.diensten[i].ROOSTER_ID = -1; // indicatie dat aanwezigheid is aangepast
+    }
+
+    protected opslaanData() {
+        let aanwezigString = "";
+        let afwezigString = "";
+        let onbekendString = "";
+
+        this.diensten.forEach((dienst) => {
+            if (dienst.ROOSTER_ID! < 0) { // indicatie dat er een aanpassing is gedaan
+
+                dienst.AANWEZIG = (dienst.AANWEZIG) ? true : false
+                dienst.AFWEZIG = (dienst.AFWEZIG) ? true : false
+
+                const update: HeliosDienst = {
+                    ID: dienst.ID,
+                    AANWEZIG: dienst.AANWEZIG,
+                    AFWEZIG: dienst.AFWEZIG
+                }
+                this.dienstenService.updateDienst(update);
+            }
+            if (dienst.AANWEZIG) {
+                aanwezigString += (aanwezigString.length == 0) ? dienst.NAAM : ', ' + dienst.NAAM
+            } else if (dienst.AFWEZIG) {
+                afwezigString += (afwezigString.length == 0) ? dienst.NAAM : ', ' + dienst.NAAM
+            } else {
+                onbekendString += (onbekendString.length == 0) ? dienst.NAAM : ', ' + dienst.NAAM
+            }
+
+        });
+
+        let tekst = "";
+
+        if (aanwezigString.length > 0) {
+            tekst += 'Afwezig: ' + afwezigString  + '\n\n';
+        }
+        if (aanwezigString.length > 0) {
+            tekst += 'Aanwezig: ' + aanwezigString + '\n\n';
+        }
+        if (aanwezigString.length > 0) {
+            tekst += 'Onbekend: ' + onbekendString;
+        }
+
+        this.opslaan.emit(tekst);
+        this.popup().close();
+    }
+}

@@ -66,7 +66,7 @@ export class StartEditorComponent implements OnInit, OnDestroy {
     protected baanTypes: HeliosType[] = [];
     protected vliegtuigen: HeliosVliegtuigenDataset[] = [];
     protected aanwezigVliegtuigen: HeliosVliegtuigenDataset[] = [];
-    protected gekozenVliegtuig: HeliosVliegtuigenDataset;     // het gekozen vliegtuig uit de editor
+    protected gekozenVliegtuig: HeliosVliegtuigenDataset | undefined;     // het gekozen vliegtuig uit de editor
 
     // 607 = zusterclub
     // 610 = oprotkabel
@@ -327,7 +327,7 @@ export class StartEditorComponent implements OnInit, OnDestroy {
     // Er is een vliegtuig geselecteerd in de dropdown box
     protected vliegtuigGeselecteerd(id: number | null | undefined) {
         this.start.VLIEGTUIG_ID = id;
-        this.gekozenVliegtuig = this.vliegtuigen.find(vliegtuig => vliegtuig.ID == id) as HeliosVliegtuigenDataset;
+        this.gekozenVliegtuig = this.vliegtuigen.find(vliegtuig => vliegtuig.ID == id);
         this.vliegtuigTypeBevoegd();
 
         this.startMethodeTypesFiltered = [];
@@ -477,7 +477,7 @@ export class StartEditorComponent implements OnInit, OnDestroy {
         // extra vraag om instructie vlucht, indien nodig
         let doorgaan = true;
 
-        if (this.gekozenVliegtuig.ZITPLAATSEN == 2 && !this.isVerwijderMode && !this.isRestoreMode) {
+        if (this.gekozenVliegtuig?.ZITPLAATSEN == 2 && !this.isVerwijderMode && !this.isRestoreMode) {
             const inzittende = this.leden.find(lid => lid.ID == this.start.INZITTENDE_ID) as HeliosLedenDataset;
 
             if (inzittende && inzittende.INSTRUCTEUR && !this.start.INSTRUCTIEVLUCHT) {
@@ -639,7 +639,7 @@ export class StartEditorComponent implements OnInit, OnDestroy {
         }
 
         // alleen controle op clubvliegtuigen
-        if (this.gekozenVliegtuig.CLUBKIST == false) {
+        if (!this.gekozenVliegtuig || this.gekozenVliegtuig.CLUBKIST == false) {
             this.toonWaarschuwing = false;
             return;
         }

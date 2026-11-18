@@ -1,0 +1,66 @@
+import { Component, inject } from '@angular/core';
+import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
+import { AgRendererComponent } from 'ag-grid-angular';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { ICellRendererParams } from 'ag-grid-community';
+import { LoginService } from '../../../../services/apiservice/login.service';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+
+export interface buttonClicked {
+    onTrackClicked(lidID: number, startID: number, naam: string, tekst: string): void;
+}
+
+@Component({
+    selector: 'app-track-render',
+    templateUrl: './track-render.component.html',
+    styleUrls: ['./track-render.component.scss'],
+    imports: [FaIconComponent]
+})
+export class TrackRenderComponent implements AgRendererComponent {
+    // variablen in html formulier
+    protected params: ICellRendererParams & buttonClicked;
+    protected trackIcon: IconDefinition = faAddressCard;
+    protected LID_ID: number;
+
+    // private variable voor ts script
+    private readonly loginService = inject(LoginService);
+
+    private NAAM: string;
+
+    agInit(params: ICellRendererParams & buttonClicked): void {
+        this.params = params;
+        this.LID_ID = -1;
+
+        const ui = this.loginService.userInfo;
+        if (this.params.data.INZITTENDE_ID) {
+            if (ui!.LidData!.ID !== this.params.data.INZITTENDE_ID) {
+                this.LID_ID = params.data.INZITTENDE_ID;
+                this.NAAM = params.data.INZITTENDENAAM;
+            }
+        }
+        if (ui!.LidData!.ID !== this.params.data.VLIEGER_ID) {
+            this.LID_ID = params.data.VLIEGER_ID;
+            this.NAAM = params.data.VLIEGERNAAM;
+        }
+    }
+
+    refresh(_: ICellRendererParams): boolean {
+        return false;
+    }
+
+    protected buttonClicked() {
+        const startID = this.params.data.ID;
+
+        // datum naar dd-mm-yyyy
+        const datum = this.params.data.DATUM.split('-')[2] + "-" + this.params.data.DATUM.split('-')[1] + "-" + this.params.data.DATUM.split('-')[0];
+
+        let tekst = "Betreft: Een #STARTMETHODE# met de #REG_CALL# op #DATUM# om #STARTTIJD# met een duur van #DUUR# (hh:mm) \n\n";
+        tekst = tekst.replace(/#STARTMETHODE#/, (this.params.data.STARTMETHODE) ? this.params.data.STARTMETHODE : "start");
+        tekst = tekst.replace(/#REG_CALL#/, this.params.data.REG_CALL);
+        tekst = tekst.replace(/#DATUM#/, datum);
+        tekst = tekst.replace(/#STARTTIJD#/, this.params.data.STARTTIJD);
+        tekst = tekst.replace(/#DUUR#/, this.params.data.DUUR);
+
+        this.params.onTrackClicked(this.LID_ID, startID, this.NAAM, tekst);
+    }
+}

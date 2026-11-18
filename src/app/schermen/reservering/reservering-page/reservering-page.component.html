@@ -86,11 +86,11 @@
 
             @for (dagInRooster of filteredRooster; track dagInRooster.DATUM; let r = $index) {
                 <tr
-                        [ngClass]="isClubBedrijf(dagInRooster.DATUM) ? 'clubBedrijf' : ''">
-                    <td class="WeekdagKolom" [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
+                        [ngClass]="isClubBedrijf(dagInRooster.DATUM!) ? 'clubBedrijf' : ''">
+                    <td class="WeekdagKolom" [ngClass]="DagVanDeWeek(dagInRooster.DATUM!)">
                         <div class="rotation-wrapper">
                             <div class="dayOfTheWeek">
-                                {{ DagVanDeWeek(dagInRooster.DATUM) }}
+                                {{ DagVanDeWeek(dagInRooster.DATUM!) }}
                             </div>
                         </div>
                     </td>
@@ -161,8 +161,8 @@
                     <td></td>
                     @for (dagInRooster of filteredRooster; track dagInRooster.DATUM; let r = $index) {
                         <td
-                                [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
-                            {{ DagVanDeWeek(dagInRooster.DATUM) }}
+                                [ngClass]="DagVanDeWeek(dagInRooster.DATUM!)">
+                            {{ DagVanDeWeek(dagInRooster.DATUM!) }}
                             @if (dagInRooster.CLUB_BEDRIJF) {
                                 <div class="me-2">Clubbedrijf</div>
                             } @if (dagInRooster.DDWV) {
@@ -179,7 +179,7 @@
                         <td>{{ clubKist.CALLSIGN }}</td>
                         @for (dagInRooster of filteredRooster; track dagInRooster.DATUM; let r = $index) {
                             <td
-                                    [ngClass]="isClubBedrijf(dagInRooster.DATUM) ? 'clubBedrijf' : ''">
+                                    [ngClass]="isClubBedrijf(dagInRooster.DATUM!) ? 'clubBedrijf' : ''">
                                 <ng-container [ngTemplateOutlet]="reservering"
                                               [ngTemplateOutletContext]='{dag:dagInRooster.DATUM,vliegtuigID:clubKist.ID}'/>
                     </td>
@@ -205,7 +205,7 @@
                                      btnColor='btn-secondary'/>
             </div>
             }
-            {{ DagVanDeWeek(datum.toISODate()) }} <br>{{ datum.day }}-{{ datum.month }}-{{ datum.year }}
+            {{ DagVanDeWeek(datum.toISODate()!) }} <br>{{ datum.day }}-{{ datum.month }}-{{ datum.year }}
             @if (toonDatumKnoppen) {
                 <div>
                     <app-icon-button class='toolbarBtn mx-2'

@@ -52,10 +52,10 @@
             <tbody>
             @for (dagInRooster of rooster; track dagInRooster.DATUM; let i = $index) {
                 <tr>
-                    <td class="WeekdagKolom" [ngClass]="DagVanDeWeek(dagInRooster.DATUM)">
+                    <td class="WeekdagKolom" [ngClass]="DagVanDeWeek(dagInRooster.DATUM!)">
                         <div class="rotation-wrapper">
                             <div class="dayOfTheWeek">
-                                {{ DagVanDeWeek(dagInRooster.DATUM) }}
+                                {{ DagVanDeWeek(dagInRooster.DATUM!) }}
                             </div>
                         </div>
                     </td>
@@ -69,7 +69,7 @@
                                     <input type="checkbox" class="form-check-inline" [id]="'DDWV' + i"
                                            [name]="'DDWV' + i"
                                            [(ngModel)]="dagInRooster.DDWV"
-                                           (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
+                                           (ngModelChange)="opslaanRooster(dagInRooster.DATUM!)"
                                            [disabled]="!magWijzigen && !isCIMT && !isBeheerderDDWV">
                                     <label [for]="'DDWV' + i" class="form-check-label">DDWV</label>
                                 </div>
@@ -78,7 +78,7 @@
                                            [id]="'Clubbedrijf' + i"
                                            [name]="'Clubbedrijf' + i"
                                            [(ngModel)]="dagInRooster.CLUB_BEDRIJF"
-                                           (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
+                                           (ngModelChange)="opslaanRooster(dagInRooster.DATUM!)"
                                            [disabled]="!magWijzigen && !isCIMT! && !isBeheerderDDWV">
                                     <label [for]="'Clubbedrijf' + i"
                                            class="labelClub form-check-label">Club
@@ -89,7 +89,7 @@
                                            [id]="'Winterwerk' + i"
                                            [name]="'Winterwerk' + i"
                                            [(ngModel)]="dagInRooster.WINTER_WERK"
-                                           (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
+                                           (ngModelChange)="opslaanRooster(dagInRooster.DATUM!)"
                                            [disabled]="!magWijzigen">
                                     <label [for]="'Winterwerk' + i"
                                            class="labelClub form-check-label">Winterwerk</label>
@@ -115,7 +115,7 @@
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID].NAAM : "" }}
                                         </div>
                                     </div>
-                                    @if (zelfIndelen()(configService.OCHTEND_DDI_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID]) {
+                                    @if (zelfIndelen()(configService.OCHTEND_DDI_TYPE_ID, dagInRooster.DATUM!) && !dagInRooster.Diensten[configService.OCHTEND_DDI_TYPE_ID]) {
                                         <div
                                                 (click)="toekennenDienst(dagInRooster, configService.OCHTEND_DDI_TYPE_ID, mijnID, mijnNaam)">
                                             <ng-template *ngTemplateOutlet='assign'/>
@@ -142,7 +142,7 @@
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID].NAAM : "" }}
                                     </div>
                                 </div>
-                                @if (zelfIndelen()(configService.MIDDAG_DDI_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID]) {
+                                @if (zelfIndelen()(configService.MIDDAG_DDI_TYPE_ID, dagInRooster.DATUM!) && !dagInRooster.Diensten[configService.MIDDAG_DDI_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.MIDDAG_DDI_TYPE_ID, mijnID, mijnNaam)">
                                         <ng-template *ngTemplateOutlet='assign'/>
@@ -174,7 +174,7 @@
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID].NAAM : "" }}
                                     </div>
                                 </div>
-                                @if (zelfIndelen()(configService.OCHTEND_INSTRUCTEUR_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID]) {
+                                @if (zelfIndelen()(configService.OCHTEND_INSTRUCTEUR_TYPE_ID, dagInRooster.DATUM!) && !dagInRooster.Diensten[configService.OCHTEND_INSTRUCTEUR_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.OCHTEND_INSTRUCTEUR_TYPE_ID, mijnID, mijnNaam)">
                                         <ng-template *ngTemplateOutlet='assign'/>
@@ -201,7 +201,7 @@
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID].NAAM : "" }}
                                 </div>
                             </div>
-                            @if (zelfIndelen()(configService.MIDDAG_INSTRUCTEUR_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) {
+                            @if (zelfIndelen()(configService.MIDDAG_INSTRUCTEUR_TYPE_ID, dagInRooster.DATUM!) && !dagInRooster.Diensten[configService.MIDDAG_INSTRUCTEUR_TYPE_ID]) {
                                 <div
                                         (click)="toekennenDienst(dagInRooster, configService.MIDDAG_INSTRUCTEUR_TYPE_ID, mijnID, mijnNaam)">
                                     <ng-template *ngTemplateOutlet='assign'/>
@@ -232,7 +232,7 @@
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID].NAAM : "" }}
                                     </div>
                                 </div>
-                                @if (((zelfIndelen()(configService.OCHTEND_STARTLEIDER_TYPE_ID, dagInRooster.DATUM)) || (isDDWVCrew && dagInRooster.DDWV && sharedService.datumInToekomst(dagInRooster.DATUM))) && !dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID]) {
+                                @if (((zelfIndelen()(configService.OCHTEND_STARTLEIDER_TYPE_ID, dagInRooster.DATUM!)) || (isDDWVCrew && dagInRooster.DDWV && sharedService.datumInToekomst(dagInRooster.DATUM!))) && !dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.OCHTEND_STARTLEIDER_TYPE_ID, mijnID, mijnNaam)">
                                         <ng-template *ngTemplateOutlet='assign'/>
@@ -259,7 +259,7 @@
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID].NAAM : "" }}
                                 </div>
                             </div>
-                            @if (zelfIndelen()(configService.MIDDAG_STARTLEIDER_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID]) {
+                            @if (zelfIndelen()(configService.MIDDAG_STARTLEIDER_TYPE_ID, dagInRooster.DATUM!) && !dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_TYPE_ID]) {
                                 <div
                                         (click)="toekennenDienst(dagInRooster, configService.MIDDAG_STARTLEIDER_TYPE_ID, mijnID, mijnNaam)">
                                     <ng-template *ngTemplateOutlet='assign'/>
@@ -291,7 +291,7 @@
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID].NAAM : "" }}
                                     </div>
                                 </div>
-                                @if ((zelfIndelen()(configService.OCHTEND_STARTLEIDER_IO_TYPE_ID, dagInRooster.DATUM)) && !dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]) {
+                                @if ((zelfIndelen()(configService.OCHTEND_STARTLEIDER_IO_TYPE_ID, dagInRooster.DATUM!)) && !dagInRooster.Diensten[configService.OCHTEND_STARTLEIDER_IO_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.OCHTEND_STARTLEIDER_IO_TYPE_ID, mijnID, mijnNaam)">
                                         <ng-template *ngTemplateOutlet='assign'/>
@@ -318,7 +318,7 @@
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID].NAAM : "" }}
                                 </div>
                             </div>
-                            @if (zelfIndelen()(configService.MIDDAG_STARTLEIDER_IO_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID]) {
+                            @if (zelfIndelen()(configService.MIDDAG_STARTLEIDER_IO_TYPE_ID, dagInRooster.DATUM!) && !dagInRooster.Diensten[configService.MIDDAG_STARTLEIDER_IO_TYPE_ID]) {
                                 <div
                                         (click)="toekennenDienst(dagInRooster, configService.MIDDAG_STARTLEIDER_IO_TYPE_ID, mijnID, mijnNaam)">
                                     <ng-template *ngTemplateOutlet='assign'/>
@@ -349,7 +349,7 @@
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID].NAAM : "" }}
                                     </div>
                                 </div>
-                                @if (((zelfIndelen()(configService.OCHTEND_LIERIST_TYPE_ID, dagInRooster.DATUM)) || (isDDWVCrew && dagInRooster.DDWV && sharedService.datumInToekomst(dagInRooster.DATUM))) && !dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID]) {
+                                @if (((zelfIndelen()(configService.OCHTEND_LIERIST_TYPE_ID, dagInRooster.DATUM!)) || (isDDWVCrew && dagInRooster.DDWV && sharedService.datumInToekomst(dagInRooster.DATUM!))) && !dagInRooster.Diensten[configService.OCHTEND_LIERIST_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.OCHTEND_LIERIST_TYPE_ID, mijnID, mijnNaam)">
                                         <ng-template *ngTemplateOutlet='assign'/>
@@ -376,7 +376,7 @@
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID].NAAM : "" }}
                                 </div>
                             </div>
-                            @if (zelfIndelen()(configService.MIDDAG_LIERIST_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID]) {
+                            @if (zelfIndelen()(configService.MIDDAG_LIERIST_TYPE_ID, dagInRooster.DATUM!) && !dagInRooster.Diensten[configService.MIDDAG_LIERIST_TYPE_ID]) {
                                 <div
                                         (click)="toekennenDienst(dagInRooster, configService.MIDDAG_LIERIST_TYPE_ID, mijnID, mijnNaam)">
                                     <ng-template *ngTemplateOutlet='assign'/>
@@ -408,7 +408,7 @@
                                 {{ (dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID]) ? dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID].NAAM : "" }}
                                     </div>
                                 </div>
-                                @if (zelfIndelen()(configService.OCHTEND_HULPLIERIST_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID]) {
+                                @if (zelfIndelen()(configService.OCHTEND_HULPLIERIST_TYPE_ID, dagInRooster.DATUM!) && !dagInRooster.Diensten[configService.OCHTEND_HULPLIERIST_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.OCHTEND_HULPLIERIST_TYPE_ID, mijnID, mijnNaam)">
                                         <ng-template *ngTemplateOutlet='assign'/>
@@ -435,7 +435,7 @@
                                 {{ (dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID]) ? dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID].NAAM : "" }}
                                 </div>
                             </div>
-                            @if (zelfIndelen()(configService.MIDDAG_HULPLIERIST_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID]) {
+                            @if (zelfIndelen()(configService.MIDDAG_HULPLIERIST_TYPE_ID, dagInRooster.DATUM!) && !dagInRooster.Diensten[configService.MIDDAG_HULPLIERIST_TYPE_ID]) {
                                 <div
                                         (click)="toekennenDienst(dagInRooster, configService.MIDDAG_HULPLIERIST_TYPE_ID, mijnID, mijnNaam)">
                                     <ng-template *ngTemplateOutlet='assign'/>
@@ -465,7 +465,7 @@
                                 {{ (dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID]) ? dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID].NAAM : "" }}
                                     </div>
                                 </div>
-                                @if (zelfIndelen()(configService.SLEEPVLIEGER_TYPE_ID, dagInRooster.DATUM) && !dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID]) {
+                                @if (zelfIndelen()(configService.SLEEPVLIEGER_TYPE_ID, dagInRooster.DATUM!) && !dagInRooster.Diensten[configService.SLEEPVLIEGER_TYPE_ID]) {
                                     <div
                                             (click)="toekennenDienst(dagInRooster, configService.SLEEPVLIEGER_TYPE_ID, mijnID, mijnNaam)">
                                         <ng-template *ngTemplateOutlet='assign'/>
@@ -481,7 +481,7 @@
                     </td>
                 } @if (tonen.toonClubDDWV === 2) {
                     <td>
-                        @if (!datumInToekomst(dagInRooster.DATUM) && dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF && (isBeheerderDDWV || isBeheerder)) {
+                        @if (!datumInToekomst(dagInRooster.DATUM!) && dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF && (isBeheerderDDWV || isBeheerder)) {
                             <div class="w-100 ms-2">
                                 <app-icon-button class="toolbarBtn"
                                                  tekst="Uitbetalen"
@@ -489,13 +489,13 @@
                                                  (btnClicked)="uitbetalen().openPopup(dagInRooster)"
                                                  btnColor='btn-secondary'/>
                             </div>
-                        } @if (datumInToekomst(dagInRooster.DATUM) && dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF) {
+                        } @if (datumInToekomst(dagInRooster.DATUM!) && dagInRooster.DDWV && !dagInRooster.CLUB_BEDRIJF) {
                         <div class="w-100">
                             <div class="d-flex flex-row">
                                 <label class="form-label me-2" for="SLEEPSTARTS">Slepen</label>
                                 <input id="SLEEPSTARTS" type="range" class="form-range" min="1" max="25"
                                        [(ngModel)]="dagInRooster.MIN_SLEEPSTART"
-                                       (change)="opslaanRooster(dagInRooster.DATUM)"
+                                       (change)="opslaanRooster(dagInRooster.DATUM!)"
                                        [disabled]="!magWijzigen && !isBeheerderDDWV">
                                 <div class="ms-2 me-1">{{ dagInRooster.MIN_SLEEPSTART }}</div>
                             </div>
@@ -503,7 +503,7 @@
                                 <label class="form-label me-2" for="LIERSTARTS">Lierstarts</label>
                                 <input id="LIERSTARTS" type="range" class="form-range" min="1" max="25"
                                        [(ngModel)]="dagInRooster.MIN_LIERSTART"
-                                       (change)="opslaanRooster(dagInRooster.DATUM)"
+                                       (change)="opslaanRooster(dagInRooster.DATUM!)"
                                        [disabled]="!magWijzigen && !isBeheerderDDWV">
                                 <div class="ms-2 me-1">{{ dagInRooster.MIN_LIERSTART }}</div>
                             </div>
@@ -516,7 +516,7 @@
                               [id]="'OPMERKINGEN' + i"
                               [name]="'OPMERKINGEN' + i"
                               [(ngModel)]="dagInRooster.OPMERKINGEN"
-                              (ngModelChange)="opslaanRooster(dagInRooster.DATUM)"
+                              (ngModelChange)="opslaanRooster(dagInRooster.DATUM!)"
                               [disabled]="!magWijzigen && !isCIMT && !isBeheerderDDWV"
                               class="w-100 text-invoer form-control opmerkingen"
                               [rows]="2" style="resize: none"></textarea>
@@ -565,7 +565,7 @@
                                 </div>
                             }
                         <div class="avatar">
-                            <app-avatar [url]='lid.AVATAR' [naam]='lid.NAAM'/>
+                            <app-avatar [url]="lid.AVATAR ?? ''" [naam]="lid.NAAM ?? ''"/>
                         </div>
                         <div class="naam">
                             {{ lid.NAAM }}

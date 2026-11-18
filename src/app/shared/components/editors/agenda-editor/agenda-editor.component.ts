@@ -6,7 +6,7 @@ import { ErrorMessage, SuccessMessage } from '../../../../types/Utils';
 import { DateTime } from 'luxon';
 import { ErrorComponent } from '../../error/error.component';
 import { SuccessComponent } from '../../success/success.component';
-import { NgbInputDatepicker } from '@ng-bootstrap/ng-bootstrap';
+import { NgbInputDatepicker, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { IconButtonComponent } from '../../icon-button/icon-button.component';
 
@@ -29,8 +29,8 @@ export class AgendaEditorComponent  {
   protected activiteit: HeliosAgendaActiviteit = {}
   protected success: SuccessMessage | undefined;
   protected error: ErrorMessage | undefined;
-  protected eersteDag: DateTime | undefined;
-  protected laatsteDag: DateTime | undefined;
+  protected eersteDag: NgbDateStruct | undefined;     // waarde van de datepicker (jaar, maand, dag)
+  protected laatsteDag: NgbDateStruct | undefined;
 
   // private variable voor ts script
   private readonly agendaService = inject(AgendaService);
@@ -78,7 +78,8 @@ export class AgendaEditorComponent  {
       this.agendaService.getActiviteit(id).then((activiteit) => {
         this.activiteit = activiteit;
 
-        this.eersteDag = DateTime.fromSQL(activiteit.DATUM!)
+        const datum = DateTime.fromSQL(activiteit.DATUM!);
+        this.eersteDag = {year: datum.year, month: datum.month, day: datum.day};
         this.isLoading = false;
       });
     } catch (_) {

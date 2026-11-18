@@ -1,0 +1,177 @@
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, fromEvent, Observable, Subject } from 'rxjs';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { ErrorMessage, HeliosEvent, KalenderMaand } from '../../types/Utils';
+import { DateTime } from 'luxon';
+
+export interface FilterLedenData {
+    leden: boolean,
+    ddwv: boolean,
+    crew: boolean,
+    wachtlijst: boolean,
+    lieristen: boolean,
+    lio: boolean,
+    startleiders: boolean,
+    instructeurs: boolean,
+    sleepvliegers: boolean,
+    beheerders: boolean,
+    ddwvBeheerders: boolean,
+}
+
+export enum SchermGrootte {
+    /* bootstrap defintie
+    X-Small	            xs	<576px
+    Small	            sm	≥576px
+    Medium	            md	≥768px
+    Large	            lg	≥992px
+    Extra large	        xl	≥1200px
+    Extra extra large	xxl	≥1400px
+    */
+    xs,
+    sm,
+    md,
+    lg,
+    xl,
+    xxl
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class SharedService {
+    // om de ledenlijst te filteren
+    public ledenlijstFilter: FilterLedenData = {
+        leden: true,
+        ddwv: false,
+        crew: false,
+        wachtlijst: false,
+        instructeurs: false,
+        startleiders: false,
+        lieristen: false,
+        lio: false,
+        sleepvliegers: false,
+        beheerders: false,
+        ddwvBeheerders: false
+    }
+
+    private nu = new Date()
+    private vandaag: NgbDateStruct = {
+        year: this.nu.getFullYear(),
+        month: this.nu.getMonth() + 1,
+        day: this.nu.getDate()
+    };
+    private datum: NgbDateStruct;
+    private kalenderMaand: KalenderMaand = {year: 1900, month: 1};                          // initieele waarde ver in verleden
+    private datumStore = new BehaviorSubject(this.vandaag);
+
+    public readonly ingegevenDatum = this.datumStore.asObservable();                // nieuwe datum gekozen
+
+    private kalenderMaandStore = new BehaviorSubject(this.kalenderMaand);
+
+    public readonly kalenderMaandChange = this.kalenderMaandStore.asObservable();   // nieuwe maand / jaar gekozen in de kalender
+
+    private heliosEventSubject: Subject<HeliosEvent> = new Subject<HeliosEvent>();          // starts in de database is aangepast
+
+    // laat andere component weten dat er iets in de database is aangepast
+    public readonly heliosEventFired: Observable<HeliosEvent> = this.heliosEventSubject.asObservable();
+
+    private heliosFailedSubject: Subject<ErrorMessage> = new Subject<ErrorMessage>();       // api call heef gefaald
+
+    // laat andere component weten dat er iets in de database is aangepast
+    public readonly heliosEventFailed: Observable<ErrorMessage> = this.heliosFailedSubject.asObservable();
+
+    private resizeSubject = new Subject<Window>();                                                 // resize window, of draaien mobiel device
+
+    constructor() {
+        fromEvent(window, 'resize').subscribe((x: Event) => this.resizeSubject.next(x.target as Window));
+    }
+
+    // afvuren event dat een andere maand / jaar gekozen is in de kalender
+    zetKalenderMaand(kalenderMaand: KalenderMaand) {
+        this.kalenderMaandStore.next(kalenderMaand)
+    }
+
+    // De gebruiker heeft een andere datum gekozen in de kalender
+    zetKalenderDatum(datum: NgbDateStruct) {
+        if (this.datum != datum && datum != null)
+        {
+            this.datum = datum;
+            this.datumStore.next(datum)
+        }
+    }
+
+    getKalenderDatum(): NgbDateStruct {
+         return this.datum;
+    }
+
+    // Er is iets in de database gewijzigd
+    fireHeliosEvent(event: HeliosEvent) {
+        this.heliosEventSubject.next(event);
+    }
+
+    // Er is iets in de database gewijzigd
+    fireHeliosFailure(error: ErrorMessage) {
+        this.heliosFailedSubject.next(error);
+    }
+
+    // datum als dd-mm-jjjj
+    datumDMJ(ISOdatum: string): string {
+        return this.formatDatum(ISOdatum, 'dd-MM-yyyy');
+    }
+
+    // datum als dd-mm
+    datumDM(ISOdatum: string): string {
+        return this.formatDatum(ISOdatum, 'dd-MM');
+    }
+
+    // datum en tijd als dd-mm-jjjj uu:mm:ss
+    datumTijdDMJ(ISOdatum: string): string {
+        return this.formatDatum(ISOdatum, 'dd-MM-yyyy HH:mm:ss');
+    }
+
+    // Helios.js geeft ISO 8601 (2026-10-15T13:45:00.000Z, in UTC), de PHP API gaf 2026-10-15 13:45:00.
+    // Beide worden omgezet naar lokale tijd
+    parseDatum(datum: string): DateTime {
+        const dt = DateTime.fromISO(datum);
+        return dt.isValid ? dt : DateTime.fromSQL(datum);
+    }
+
+    // Een onbekend formaat wordt ongewijzigd teruggegeven
+    private formatDatum(datum: string, formaat: string): string {
+        const dt = this.parseDatum(datum);
+        return dt.isValid ? dt.toFormat(formaat) : datum;
+    }
+
+    // Hebben we een datum in de toekomst, vandaag is geen toekomst
+    datumInToekomst(datum: string): boolean {
+        const nu: DateTime = DateTime.now();
+        const d: DateTime = DateTime.fromSQL(datum);
+
+        return (d > nu) // datum is in het toekomst
+    }
+
+    get onResize$(): Observable<Window> {
+        return this.resizeSubject.asObservable();
+    }
+
+    // Wat is scherm grootte
+    public getSchermSize() : SchermGrootte {
+        if (window.innerWidth >= 1400) {
+            return SchermGrootte.xxl;
+        }
+        else if (window.innerWidth >= 1200) {
+            return SchermGrootte.xl;
+        }
+        else if (window.innerWidth >= 992) {
+            return SchermGrootte.lg;
+        }
+        else if (window.innerWidth >= 768) {
+            return SchermGrootte.md;
+        }
+        else if (window.innerWidth >= 576) {
+            return SchermGrootte.sm;
+        }
+        return SchermGrootte.xs;
+    }
+}
+

@@ -52,7 +52,7 @@
                             <ngx-timepicker-field class="timepicker" id="ACTIVITEIT_BEGINTIJD"
                                                   [format]="24"
                                                   [minutesGap]="5"
-                                                  [defaultTime]="activiteit.TIJD"
+                                                  [defaultTime]="activiteit.TIJD ?? ''"
                                                   [(ngModel)]="activiteit.TIJD"
                                                   [controlOnly]='true'/>
                             <app-icon-button class="timeResetBtn" iconNaam="fas Trash"

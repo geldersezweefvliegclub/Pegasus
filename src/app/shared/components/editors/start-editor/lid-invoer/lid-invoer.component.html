@@ -7,7 +7,7 @@
 }
 
 <ng-select id="LID"
-           [items]="ledenSelectie$ | async"
+           [items]="(ledenSelectie$ | async) ?? []"
            [disabled]="disabled()"
            [placeholder]="placeholder()"
            [required]="required()"

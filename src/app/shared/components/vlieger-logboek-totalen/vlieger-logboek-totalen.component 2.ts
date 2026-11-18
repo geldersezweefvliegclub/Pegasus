@@ -1,0 +1,134 @@
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, inject, input } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { DateTime } from 'luxon';
+import { HeliosLogboekTotalen } from '../../../types/Helios';
+import { StartlijstService } from '../../../services/apiservice/startlijst.service';
+import { SharedService } from '../../../services/shared/shared.service';
+import { ErrorMessage, SuccessMessage } from '../../../types/Utils';
+import { ErrorComponent } from '../error/error.component';
+import { SuccessComponent } from '../success/success.component';
+import { LoaderComponent } from '../loader/loader.component';
+
+@Component({
+    selector: 'app-vlieger-logboek-totalen',
+    templateUrl: './vlieger-logboek-totalen.component.html',
+    styleUrls: ['./vlieger-logboek-totalen.component.scss'],
+    imports: [ErrorComponent, SuccessComponent, LoaderComponent]
+})
+export class VliegerLogboekTotalenComponent implements OnInit, OnChanges, OnDestroy {
+    readonly VliegerID = input.required<number>();
+
+    // variablen in html formulier
+    protected datum: DateTime = DateTime.now();               // de gekozen dag
+    protected data: HeliosLogboekTotalen;
+    protected isLoading = false;
+    protected success: SuccessMessage | undefined;
+    protected error: ErrorMessage | undefined;
+
+    // private variable voor ts script
+    private readonly startlijstService = inject(StartlijstService);
+    private readonly sharedService = inject(SharedService);
+
+    private dbEventAbonnement: Subscription;
+    private maandAbonnement: Subscription;          // volg de keuze van de kalender
+    private datumAbonnement: Subscription;          // volg de keuze van de kalender
+
+    ngOnInit(): void {
+        setTimeout(() => {
+            // de datum zoals die in de kalender gekozen is
+            this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(datum => {
+                if (datum.year != 1900) {
+                    // ophalen is alleen nodig als er een ander jaar gekozen is in de kalendar
+                    const ophalen = ((this.data == undefined) || (this.datum.year != datum.year))
+                    this.datum = DateTime.fromObject({
+                        year: datum.year,
+                        month: datum.month,
+                        day: datum.day
+                    })
+
+                    if (ophalen) {
+                        this.data = {
+                            "totaal": 0,
+                            "hash": "0",
+                            "starts": [],
+                            "vliegtuigen": [],
+                            "jaar": {
+                                "STARTS": 0,
+                                "INSTRUCTIE_STARTS": 0,
+                                "INSTRUCTIE_UREN": "0:00",
+                                "VLIEGTIJD": "0:00"
+                            }
+                        }
+                        this.opvragen();
+                    }
+                }
+            })
+
+            // de datum zoals die in de kalender gekozen is
+            this.datumAbonnement = this.sharedService.kalenderMaandChange.subscribe(datum => {
+                if (datum.year != 1900) {
+                    // ophalen is alleen nodig als er een ander jaar gekozen is in de kalendar
+                    const ophalen = ((this.data == undefined) || (this.datum.year != datum.year))
+                    this.datum = DateTime.fromObject({
+                        year: datum.year,
+                        month: datum.month,
+                        day: 1
+                    })
+
+                    if (ophalen) {
+                        this.data = {
+                            "totaal": 0,
+                            "hash": "0",
+                            "starts": [],
+                            "vliegtuigen": [],
+                            "jaar": {
+                                "STARTS": 0,
+                                "INSTRUCTIE_STARTS": 0,
+                                "INSTRUCTIE_UREN": "0:00",
+                                "VLIEGTIJD": "0:00"
+                            }
+                        }
+                        this.opvragen();
+                    }
+                }
+            })
+
+            // Als in de startlijst tabel is aangepast, moet we onze dataset ook aanpassen
+            this.dbEventAbonnement = this.sharedService.heliosEventFired.subscribe(ev => {
+                if (ev.tabel == "Startlijst") {
+                    this.opvragen();
+                }
+            });
+        }, 250);
+    }
+
+    ngOnDestroy(): void {
+        if (this.dbEventAbonnement) this.dbEventAbonnement.unsubscribe();
+        if (this.datumAbonnement) this.datumAbonnement.unsubscribe();
+        if (this.maandAbonnement) this.maandAbonnement.unsubscribe();
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (Object.prototype.hasOwnProperty.call(changes, "VliegerID")) {
+            this.opvragen()
+        }
+    }
+
+    // opvragen van de totalen uit het vlieger logboek
+    private opvragen(): void {
+        if (this.datum) {
+            if (this.datum.year == 1900) {        // 1900 is initialisatie
+                return;
+            }
+
+            this.isLoading = true;
+            this.startlijstService.getLogboekTotalen(this.VliegerID(), this.datum.year).then((dataset) => {
+                this.isLoading = false;
+                this.data = dataset;
+            }).catch(e => {
+                this.error = e;
+                this.isLoading = false;
+            });
+        }
+    }
+}

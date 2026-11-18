@@ -25,10 +25,10 @@
                                 <div class="d-flex">
                                     @if (deleteMode && trashMode) {
                                         <fa-icon [icon]="restoreIcon" class="restoreBtn me-2"
-                                                 (click)='editor().openRestorePopup(t.ID);'/>
+                                                 (click)='editor().openRestorePopup(t.ID!);'/>
                                     } @if (deleteMode && !trashMode && !t.READ_ONLY) {
                                     <fa-icon [icon]="deleteIcon" class="deleteBtn me-2"
-                                             (click)='editor().openVerwijderPopup(t.ID);'/>
+                                             (click)='editor().openVerwijderPopup(t.ID!);'/>
                                 } @if (deleteMode && !trashMode && t.READ_ONLY) {
                                     <div style="width: 23px;"></div>
                                 }
@@ -53,13 +53,13 @@
                                          ruimte van dezelfde breedte, zodat de bedragen niet verspringen -->
                                     @if (t.ID === geselecteerdID && i !== 0) {
                                         <fa-icon class="upBtn mx-3" [icon]="upIcon"
-                                                 (click)='omhoog(t.ID)'/>
+                                                 (click)='omhoog(t.ID!)'/>
                                     } @else {
                                         <div class="mx-3" style="min-width: 18px;max-width: 18px;"></div>
                                     }
                                     @if (t.ID === geselecteerdID && i !== (filteredTypes.length - 1)) {
                                         <fa-icon class="downBtn me-5" [icon]="downIcon"
-                                                 (click)='omlaag(t.ID)'/>
+                                                 (click)='omlaag(t.ID!)'/>
                                     } @else {
                                         <div style="width:66px;"></div>
                                     }

@@ -1,7 +1,7 @@
 
 <label for="VLIEGTUIG-INVOER" class="form-label">{{label()}}</label>
 <ng-select id="VLIEGTUIG-INVOER"
-           [items]="vliegtuigenSelectie$ | async"
+           [items]="(vliegtuigenSelectie$ | async) ?? []"
            [disabled]="disabled()"
            placeholder="Selecteer vliegtuig"
            bindLabel="REG_CALL"

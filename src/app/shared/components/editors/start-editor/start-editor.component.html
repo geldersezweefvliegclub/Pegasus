@@ -39,7 +39,7 @@
                 <div class="col-12 col-md-5">
                     <app-vliegtuig-invoer id="VLIEGTUIG"
                                           [disabled]="isVerwijderMode || isRestoreMode"
-                                          [VLIEGTUIG_ID]="start.VLIEGTUIG_ID"
+                                          [VLIEGTUIG_ID]="start.VLIEGTUIG_ID ?? undefined"
                                           [aanwezig]="(start.DATUM === datum.toISODate()) ? aanwezigVliegtuigen : []"
                                           [vliegtuigen]="vliegtuigen"
                                           (VliegtuigChanged)="vliegtuigGeselecteerd($event)"
@@ -89,14 +89,14 @@
                                 <app-lid-invoer id="VLIEGER" class="w-100"
                                                 [placeholder]="gekozenVliegtuig?.ZITPLAATSEN === 2 ? 'Wie zit voorin?' : 'Wie is de vlieger' "
                                                 [label]="gekozenVliegtuig?.ZITPLAATSEN === 2 ? 'Voorin' : 'Vlieger' "
-                                                [LID_ID]="start.VLIEGER_ID"
-                                                [disabled]="isVerwijderMode || isRestoreMode || ((VliegerID() === start.VLIEGER_ID && VliegerID() >0) && !magAltijdWijzigen)"
+                                                [LID_ID]="start.VLIEGER_ID ?? undefined"
+                                                [disabled]="isVerwijderMode || isRestoreMode || ((VliegerID() === start.VLIEGER_ID && (VliegerID() ?? 0) > 0) && !magAltijdWijzigen)"
                                                 [aanwezig]="aanwezigLeden"
                                                 [excludeLidTypes]="exclLidtypeAlsVlieger"
                                                 [leden]="leden"
-                                                [alleenPaxVliegers]="start.PAX"
+                                                [alleenPaxVliegers]="!!start.PAX"
                                                 [vliegtuig]="gekozenVliegtuig"
-                                                [veldID]="start.VELD_ID"
+                                                [veldID]="start.VELD_ID ?? undefined"
                                                 (LidChanged)="vliegerGeselecteerd($event)"
                                                 [uitleg]="start.PAX ? alleenPAX : undefined"
                                 />
@@ -104,7 +104,7 @@
                                     <div class="ms-2 d-flex align-items-end">
                                         <app-icon-button id="ddwvPiloot" class="toolbarBtn" style="color: white"
                                                          iconNaam="fas EuroSign"
-                                                         (btnClicked)="toonTransactieEditor(start.VLIEGER_ID)"
+                                                         (btnClicked)="toonTransactieEditor(start.VLIEGER_ID!)"
                                                          btnColor='euroBtn'/>
                                     </div>
                                 }
@@ -143,11 +143,11 @@
                                 <app-lid-invoer id="INZITTENDE" class="w-100"
                                                 placeholder="Wie zit achterin"
                                                 label="Achterin"
-                                                [LID_ID]="start.INZITTENDE_ID"
-                                                [disabled]="isVerwijderMode || isRestoreMode || ((VliegerID() === start.INZITTENDE_ID && VliegerID() >0) && !magAltijdWijzigen)"
+                                                [LID_ID]="start.INZITTENDE_ID ?? undefined"
+                                                [disabled]="isVerwijderMode || isRestoreMode || ((VliegerID() === start.INZITTENDE_ID && (VliegerID() ?? 0) > 0) && !magAltijdWijzigen)"
                                                 [aanwezig]="aanwezigLeden"
                                                 [excludeLidTypes]="exclLidtypeAlsInzittende"
-                                                [alleenInstructeurs]="start.INSTRUCTIEVLUCHT"
+                                                [alleenInstructeurs]="!!start.INSTRUCTIEVLUCHT"
                                                 [leden]="leden"
                                                 (LidChanged)="inzittendeGeselecteerd($event)"
                                                 [uitleg]="start.INSTRUCTIEVLUCHT ? alleenInstructeurs : undefined"
@@ -156,7 +156,7 @@
                                     <div class="ms-2 d-flex align-items-end">
                                         <app-icon-button id="ddwvInzittende" class="toolbarBtn" style="color: white"
                                                          iconNaam="fas EuroSign"
-                                                         (btnClicked)="toonTransactieEditor(start.INZITTENDE_ID)"
+                                                         (btnClicked)="toonTransactieEditor(start.INZITTENDE_ID!)"
                                                          btnColor='euroBtn'/>
                                     </div>
                                 }
@@ -246,8 +246,8 @@
                 <div class="col-12 col-md-6">
                     <label for="SLEEPVLIEGTUIG" class="form-label">Sleepkist</label>
                     <app-vliegtuig-invoer id="SLEEPVLIEGTUIG"
-                                          Sleep="true"
-                                          verplicht="false"
+                                          [Sleep]="true"
+                                          [verplicht]="false"
                                           [disabled]="isVerwijderMode || isRestoreMode"
                                           [aanwezig]="aanwezigVliegtuigen"
                                           [vliegtuigen]="vliegtuigen"

@@ -1,0 +1,196 @@
+import { Injectable, inject } from '@angular/core';
+import { ErrorMessage, HeliosActie, KeyValueArray } from '../../types/Utils';
+import { SharedService } from '../shared/shared.service';
+import { PegasusConfigService } from '../shared/pegasus-config.service';
+import { StorageService } from "../storage/storage.service";
+
+@Injectable({
+    providedIn: 'root'
+})
+export class APIService {
+    private readonly sharedService = inject(SharedService);
+    private readonly configService = inject(PegasusConfigService);
+    private readonly storageService = inject(StorageService);
+    private readonly URL:string = 'http://localhost:4200/api/'
+
+    private BearerToken: string | null = null;
+
+    constructor() {
+        const configService = this.configService;
+
+        const url = configService.getURL();
+        if (url) {
+            this.URL = url;
+        };
+
+        this.setBearerToken(this.storageService.ophalen<string>("bearer", "session"))
+    }
+
+    // opslaan van de token die we met inloggen hebben verkregen
+    setBearerToken(token?: string | null) {
+        if (!token) {
+            return;
+        }
+
+        this.BearerToken = token;
+    }
+
+    async get(url: string, params?: KeyValueArray, headers?: Headers): Promise<Response> {
+        if (params) {
+            url = this.prepareEndpoint(url, params);
+        }
+
+        const apiHeaders: Headers =  (headers) ? headers : new Headers();
+        if (!apiHeaders?.has('Authorization') && this.BearerToken) {
+            apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
+        }
+
+        const response = await fetch(`${this.URL}${url}`, {
+            method: 'GET',
+            headers: apiHeaders,
+            credentials: 'include'
+        });
+
+        if (!response.ok) {
+            this.handleError(response);
+        }
+        return response;
+    }
+
+    // Aanroepen post request om het aanmaken van nieuw record
+    // Dit is een string voor JSON, of FormData voor foto's
+    async post(url: string, body: string|FormData, headers?: Headers): Promise<Response> {
+        const apiHeaders: Headers =  (headers) ? headers : new Headers();
+        if (!apiHeaders?.has('Authorization') && this.BearerToken) {
+            apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
+        }
+        // Content-Type niet zetten voor FormData - de browser moet zelf de multipart boundary bepalen
+        if (!apiHeaders?.has('Content-Type') && typeof body === 'string') {
+            apiHeaders.append('Content-Type', 'application/json');
+        }
+        const response = await fetch(`${this.URL}${url}`, {
+            method: 'POST',
+            headers: apiHeaders,
+            body: body,
+            credentials: 'include'
+        });
+        if (!response.ok) {     // elke 2xx is goed, Helios.js geeft 201 bij aanmaken record
+            this.handleError(response);
+        }
+        try {
+            response.clone().json().then((d) => {
+                this.sharedService.fireHeliosEvent({actie: HeliosActie.Add, tabel: url.split('/')[0], data: d});
+            });
+        }
+        catch (e)
+        {
+            console.error(url, e)
+        }
+
+        return response;
+    }
+
+    // Aanroepen put request om record te wijzigen
+    async put(url: string, body: string, headers?: Headers): Promise<Response> {
+
+        const apiHeaders: Headers =  (headers) ? headers : new Headers();
+        if (!apiHeaders?.has('Authorization') && this.BearerToken) {
+            apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
+        }
+        if (!apiHeaders?.has('Content-Type')) {
+            apiHeaders.append('Content-Type', 'application/json');
+        }
+        const response = await fetch(`${this.URL}${url}`, {
+            method: 'PUT',
+            headers: apiHeaders,
+            body: body,
+            credentials: 'include'
+        });
+        if (!response.ok) {     // elke 2xx is goed
+            this.handleError(response);
+        }
+        response.clone().json().then((d) => {
+            this.sharedService.fireHeliosEvent({actie: HeliosActie.Update, tabel: url.split('/')[0], data: d});
+        });
+        return response;
+    }
+
+    // Aanroepen delete request om record te verwijderen
+    async delete(url: string, params: KeyValueArray): Promise<void> {
+        if (params) {
+            url = this.prepareEndpoint(url, params);
+        }
+
+        const apiHeaders: Headers = new Headers();
+        if (!apiHeaders?.has('Authorization') && this.BearerToken) {
+            apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
+        }
+
+        const response = await fetch(`${this.URL}${url}`, {
+            method: 'DELETE',
+            headers: apiHeaders,
+            credentials: 'include'
+        });
+        if (!response.ok) {     // elke 2xx is goed, Helios.js geeft 204 bij verwijderen
+            this.handleError(response);
+        }
+        this.sharedService.fireHeliosEvent({actie: HeliosActie.Delete, tabel: url.split('/')[0], data: params});   // params bevat het ID
+    }
+
+    // Aanroepen patch request om verwijderen record ongedaan te maken
+    async patch(url: string, params: KeyValueArray): Promise<void> {
+        if (params) {
+            url = this.prepareEndpoint(url, params);
+        }
+
+        const apiHeaders: Headers = new Headers();
+        if (!apiHeaders?.has('Authorization') && this.BearerToken) {
+            apiHeaders.append('Authorization', "Bearer " + this.BearerToken);
+        }
+
+        const response = await fetch(`${this.URL}${url}`, {
+            method: 'PATCH',
+            headers: apiHeaders,
+            credentials: 'include'
+        });
+
+        if (!response.ok) {     // elke 2xx is goed, Helios.js geeft 200 bij herstellen
+            this.handleError(response);
+        }
+        this.sharedService.fireHeliosEvent({actie: HeliosActie.Restore, tabel: url.split('/')[0], data: params});   // params bevat het ID
+    }
+
+    private prepareEndpoint(url: string, params: KeyValueArray): string {
+        let args = "";
+
+        // Loop vervolgens door het key:value object heen
+        // Als het object op index 0 is, voeg vraagteken toe. Als object niet op de laatste plek staat, voeg & toe.
+        Object.entries(params).forEach(([key, value]) => {
+            if (args == "") {
+                args = args.concat('?');
+            } else {
+                args = args.concat('&');
+            }
+            args = args.concat(`${key}=${value}`)
+        })
+
+        return url + args;
+    }
+
+    // Vul customer error  met http status code en de beschrijving uit X-Error-Message
+    private handleError(response: Response): ErrorMessage {
+        let beschrijving = response.headers.get('X-Error-Message')      // Helios implementaie fout melding
+        if (!beschrijving) {
+            // HTTP status en naam, bijv "409 Conflict". Bij HTTP/2 is statusText leeg, dan alleen de status
+            beschrijving = `${response.status} ${response.statusText}`.trim();
+        }
+
+        const error: ErrorMessage = {
+            responseCode: response.status,
+            beschrijving: beschrijving
+        }
+
+        this.sharedService.fireHeliosFailure(error);
+        throw error;
+    }
+}

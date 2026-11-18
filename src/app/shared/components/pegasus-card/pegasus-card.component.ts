@@ -15,8 +15,8 @@ export class PegasusCardComponent {
     readonly icon = input<IconDefinition>(faQuestionCircle);
     readonly minimum = input(false);
     @Input() img: string
-    readonly titel = input.required();
-    readonly subtitel = input.required();
+    readonly titel = input.required<string>();
+    readonly subtitel = input.required<string>();
     readonly exportEnabled = input(false);
     readonly exportImg = input("/assets/img/excel-logo.png");
     readonly Exporting = output<void>();

@@ -1,0 +1,35 @@
+import { Component } from '@angular/core';
+import { ICellRendererParams } from 'ag-grid-community';
+import { AgRendererComponent } from 'ag-grid-angular';
+import {HeliosStartDataset} from "../../../../types/Helios";
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
+
+export interface TijdButton {
+  tijdClicked(data: HeliosStartDataset): void;
+}
+
+@Component({
+    selector: 'app-starttijd-render',
+    templateUrl: './starttijd-render.component.html',
+    styleUrls: ['./starttijd-render.component.scss'],
+    imports: [IconButtonComponent]
+})
+
+export class StarttijdRenderComponent implements AgRendererComponent {
+  // variablen in html formulier
+  protected params: ICellRendererParams & TijdButton;
+  protected startTijd: string;         // string met de tijd om te tonen
+
+  agInit(params: ICellRendererParams & TijdButton): void {
+      this.params = params;
+      this.startTijd = params.data.STARTTIJD;
+  }
+
+  refresh(_: ICellRendererParams): boolean {
+    return false;
+  }
+
+  protected tijdClicked() {
+    this.params.tijdClicked(this.params.data);
+  }
+}

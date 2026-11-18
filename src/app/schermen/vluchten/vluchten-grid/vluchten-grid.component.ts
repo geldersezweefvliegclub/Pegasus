@@ -3,8 +3,7 @@ import { StartlijstService } from '../../../services/apiservice/startlijst.servi
 import {
   CheckboxRenderComponent,
 } from '../../../shared/components/datatable/checkbox-render/checkbox-render.component';
-import { faChevronRight, faDownload } from '@fortawesome/free-solid-svg-icons';
-import { faClipboardList } from '@fortawesome/free-solid-svg-icons/faClipboardList';
+import { faChevronRight, faClipboardList, faDownload } from '@fortawesome/free-solid-svg-icons';
 import { ColDef, RowClassParams, RowDoubleClickedEvent } from 'ag-grid-community';
 import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { DeleteActionComponent } from '../../../shared/components/datatable/delete-action/delete-action.component';

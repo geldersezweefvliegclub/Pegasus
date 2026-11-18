@@ -134,6 +134,6 @@
 
 <app-tijd-invoer/>
 @if (start) {
-    <app-start-editor [VliegerID]='start.VLIEGER_ID'/>
+    <app-start-editor [VliegerID]="start.VLIEGER_ID ?? undefined"/>
 }
 <app-track-editor/>

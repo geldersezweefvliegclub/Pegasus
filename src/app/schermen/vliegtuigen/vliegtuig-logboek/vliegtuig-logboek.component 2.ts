@@ -1,0 +1,74 @@
+import { Component, OnInit, inject, viewChild } from '@angular/core';
+import { HeliosVliegtuig, HeliosVliegtuigLogboekDataset } from '../../../types/Helios';
+import { StartlijstService } from '../../../services/apiservice/startlijst.service';
+import { Subscription } from 'rxjs';
+import { DateTime } from 'luxon';
+import { SharedService } from '../../../services/shared/shared.service';
+import { VliegtuigenService } from '../../../services/apiservice/vliegtuigen.service';
+import { ModalComponent } from '../../../shared/components/modal/modal.component';
+import { ErrorMessage } from '../../../types/Utils';
+import { ErrorComponent } from '../../../shared/components/error/error.component';
+
+@Component({
+    selector: 'app-vliegtuig-logboek',
+    templateUrl: './vliegtuig-logboek.component.html',
+    styleUrls: ['./vliegtuig-logboek.component.scss'],
+    imports: [ErrorComponent, ModalComponent]
+})
+export class VliegtuigLogboekComponent implements OnInit {
+    // variablen in html formulier
+    protected data: HeliosVliegtuigLogboekDataset[] = [];
+    protected vliegtuig: HeliosVliegtuig = {};
+    protected isLoading = false;
+    protected error: ErrorMessage | undefined;
+
+    // private variable voor ts script
+    private readonly startlijstService = inject(StartlijstService);
+    private readonly vliegtuigenService = inject(VliegtuigenService);
+    private readonly sharedService = inject(SharedService);
+    private readonly popup = viewChild.required(ModalComponent);
+
+    private vliegtuigID:  number;
+    private datumAbonnement: Subscription; // volg de keuze van de kalender
+    private datum: DateTime = DateTime.now();      // de gekozen dag
+
+    ngOnInit(): void {
+
+        // de datum zoals die in de kalender gekozen is
+        this.datumAbonnement = this.sharedService.ingegevenDatum.subscribe(jaarMaand => {
+            this.datum = DateTime.fromObject({
+                year: jaarMaand.year,
+                month: jaarMaand.month,
+                day: 1
+            })
+        })
+    }
+
+    showPopup(ID: number) {
+        this.vliegtuigID = ID;
+        this.opvragen();
+        this.popup().open();
+    }
+
+    closePopup() {
+        this.popup().close();
+    }
+
+    // Opvragen van de starts via de api
+    private opvragen() {
+        this.isLoading = true;
+
+        const startDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 1, day: 1});
+        const eindDatum: DateTime = DateTime.fromObject({year: this.datum.year, month: 12, day: 31});
+
+        this.vliegtuigenService.getVliegtuig(this.vliegtuigID).then((vliegtuig) => this.vliegtuig = vliegtuig);
+        this.startlijstService.getVliegtuigLogboek(this.vliegtuigID, startDatum, eindDatum, 5).then((dataset) => {
+            dataset.forEach((dag) => dag.DATUM = this.sharedService.datumDMJ(dag.DATUM!))
+            this.data = dataset;
+            this.isLoading = false;
+        }).catch(e => {
+            this.error = e;
+        });
+    }
+}
+

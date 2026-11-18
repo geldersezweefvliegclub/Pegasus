@@ -1,0 +1,133 @@
+import { Component, inject, input, output, viewChild } from '@angular/core';
+import { ModalComponent } from '../../../shared/components/modal/modal.component';
+import { HeliosAanwezigSamenvatting, HeliosDienstenDataset, HeliosRoosterDataset } from '../../../types/Helios';
+import { DateTime } from 'luxon';
+import { AanwezigLedenService } from '../../../services/apiservice/aanwezig-leden.service';
+import { SharedService } from '../../../services/shared/shared.service';
+import { LoginService } from '../../../services/apiservice/login.service';
+import { PegasusConfigService } from '../../../services/shared/pegasus-config.service';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
+
+@Component({
+    selector: 'app-samenvatting',
+    templateUrl: './samenvatting.component.html',
+    styleUrls: ['./samenvatting.component.scss'],
+    imports: [ModalComponent, IconButtonComponent]
+})
+export class SamenvattingComponent {
+    readonly diensten = input.required<HeliosDienstenDataset[]>();
+    readonly bulkEmail = output<string>();
+
+    // variablen in html formulier
+    protected samenvatting: HeliosAanwezigSamenvatting | undefined;
+    protected toonBulkEmail = false;
+    protected formTitel: string;
+    protected rooster: HeliosRoosterDataset;
+    protected ochtendDDI = "";
+    protected ochtendInstructeur = "";
+    protected ochtendStartleider = "";
+    protected ochtendLierist = "";
+    protected ochtendSleper = "";
+    protected middagDDI = "";
+    protected middagInstructeur = "";
+    protected middagStartleider = "";
+    protected middagLierist = "";
+    protected middagSleper = "";
+
+    // private variable voor ts script
+    private readonly sharedService = inject(SharedService);
+    private readonly loginService = inject(LoginService);
+    private readonly configService = inject(PegasusConfigService);
+    private readonly aanwezigLedenService = inject(AanwezigLedenService);
+    private readonly popup = viewChild.required(ModalComponent);
+
+    openPopup(rooster: HeliosRoosterDataset) {
+        const ui = this.loginService.userInfo;
+        if (ui!.Userinfo!.isBeheerder || ui?.Userinfo!.isCIMT)
+            this.toonBulkEmail = true;
+        else {
+            const diensten = this.diensten();
+            if (!diensten) {
+                this.toonBulkEmail = false;
+            }
+            // als de ingelode gebruiker dienst heeft, dan toegang tot bulk email
+            const idx = diensten.findIndex((d) => {
+                return (d.DATUM == rooster.DATUM && d.LID_ID == ui!.LidData!.ID)
+            });
+            this.toonBulkEmail = (idx >= 0);
+        }
+
+        this.formTitel = "Samenvatting " + this.sharedService.datumDMJ(rooster.DATUM!)
+
+        this.rooster = rooster;
+        this.samenvatting = undefined;
+
+        this.aanwezigLedenService.getSamenvatting(DateTime.fromSQL(rooster.DATUM!)).then((s) => this.samenvatting = s);
+        this.dienstNamen();
+        this.popup().open();
+    }
+
+    // stuur alle aangemelde leden een email. Die hebben we alleen niet hier, maar 1 niveau hoger in aanmeld pagina
+    protected sendBulkEmail() {
+       const datum = this.rooster.DATUM;
+       if (datum === undefined) {
+           console.error("Kan bulk email niet versturen zonder roosterdatum.");
+           return;
+       }
+       this.bulkEmail.emit(datum);
+    }
+
+    // zet de namen van de diensten
+    private dienstNamen() {
+        this.ochtendDDI = "";
+        this.ochtendInstructeur = "";
+        this.ochtendStartleider = "";
+        this.ochtendLierist = "";
+        this.ochtendSleper = "";
+
+        this.middagDDI = "";
+        this.middagInstructeur = "";
+        this.middagStartleider = "";
+        this.middagLierist = "";
+        this.middagSleper = "";
+
+        const dagDiensten = this.diensten().filter((dienst) => dienst.DATUM == this.rooster.DATUM)
+
+        console.log(this.diensten())
+        dagDiensten.forEach((dienst) => {
+            switch (dienst.TYPE_DIENST_ID) {
+                case this.configService.OCHTEND_DDI_TYPE_ID:
+                    this.ochtendDDI = dienst.NAAM!;
+                    break;
+                case this.configService.OCHTEND_INSTRUCTEUR_TYPE_ID:
+                    this.ochtendInstructeur = dienst.NAAM!;
+                    break;
+                case this.configService.OCHTEND_LIERIST_TYPE_ID:
+                    this.ochtendLierist = dienst.NAAM!;
+                    break;
+                // case this.configService.OCHTEND_HULPLIERIST_TYPE_ID:
+                case this.configService.OCHTEND_STARTLEIDER_TYPE_ID:
+                    this.ochtendStartleider = dienst.NAAM!;
+                    break;
+                // case this.configService.OCHTEND_STARTLEIDER_IO_TYPE_ID:
+                case this.configService.MIDDAG_DDI_TYPE_ID:
+                    this.middagDDI = dienst.NAAM!;
+                    break;
+                case this.configService.MIDDAG_INSTRUCTEUR_TYPE_ID:
+                    this.middagInstructeur = dienst.NAAM!;
+                    break;
+                case this.configService.MIDDAG_LIERIST_TYPE_ID:
+                    this.middagLierist = dienst.NAAM!;
+                    break;
+                // case this.configService.MIDDAG_HULPLIERIST_TYPE_ID:
+                case this.configService.MIDDAG_STARTLEIDER_TYPE_ID:
+                    this.middagStartleider = dienst.NAAM!;
+                    break;
+                // case this.configService.MIDDAG_STARTLEIDER_IO_TYPE_ID:
+                case this.configService.SLEEPVLIEGER_TYPE_ID:
+                    this.ochtendSleper = dienst.NAAM!;
+                    break;
+            }
+        })
+    }
+}
